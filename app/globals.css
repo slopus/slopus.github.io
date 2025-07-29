@@ -31,10 +31,6 @@ a {
   text-decoration: none;
 }
 
-.font-mono {
-  font-family: var(--font-ibm-plex-mono);
-}
-
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

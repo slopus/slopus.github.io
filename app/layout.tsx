@@ -19,13 +19,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Happy - Claude Code Mobile Client',
     description: 'Free, open-source mobile app for Claude Code. Control Claude AI from your phone with end-to-end encryption and seamless workflow.',
-    url: 'https://happycoder.com',
+    url: 'https://slopus.github.io',
     siteName: 'Happy',
     images: [
       {
-        url: '/happy-og-image.jpg',
-        width: 1200,
-        height: 630,
+        url: '/og-image.jpg',
+        width: 1280,
+        height: 959,
         alt: 'Happy - Claude Code Mobile Client',
       },
     ],
