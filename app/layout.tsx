@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: 'Happy',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/og-image.png',
         width: 1280,
         height: 959,
         alt: 'Happy - Claude Code Mobile Client',
