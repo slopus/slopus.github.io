@@ -49,10 +49,10 @@ jobs:
       - name: Build with Next.js
         run: npm run export
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          static_site_generator: next
+      #- name: Setup Pages
+      #  uses: actions/configure-pages@v5
+      #  with:
+      #    static_site_generator: next
 
       - name: Create .nojekyll file
         run: touch ./out/.nojekyll

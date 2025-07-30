@@ -17,11 +17,11 @@ export default async function DocsLayout({
       navbar={
         <Navbar 
           logo={<b>Your Logo</b>}
-          projectLink="https://github.com/your-repo"
+          projectLink="https://github.com/slopus/happy"
         />
       }
       pageMap={pageMap}
-      docsRepositoryBase="https://github.com/your-repo/tree/main/docs"
+      docsRepositoryBase="https://github.com/slopus/slopus.github.io/tree/main/content"
       editLink="Edit this page"
       footer={<Footer>© 2025 Slopus</Footer>}
     >
