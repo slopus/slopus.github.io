@@ -13,7 +13,7 @@ export default async function DocsLayout({
   
   return (
     <Layout
-      banner={<Banner storageKey="docs-banner">Your banner content</Banner>}
+      //banner={<Banner storageKey="docs-banner">Your banner content</Banner>}
       navbar={
         <Navbar 
           logo={<b>Your Logo</b>}
@@ -21,7 +21,7 @@ export default async function DocsLayout({
         />
       }
       pageMap={pageMap}
-      docsRepositoryBase="https://github.com/slopus/slopus.github.io/tree/main/content"
+      docsRepositoryBase="https://github.com/slopus/slopus.github.io/tree/main"
       editLink="Edit this page"
       footer={<Footer>© 2025 Slopus</Footer>}
     >

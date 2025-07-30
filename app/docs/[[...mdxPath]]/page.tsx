@@ -24,5 +24,5 @@ export default async function Page(props: {
     <Wrapper toc={toc} metadata={metadata}>
       <MDXContent {...props} params={params} />
     </Wrapper>
-  )
+  );
 }

@@ -3,9 +3,9 @@ import React from 'react'
 export default {
   logo: <span>Happy</span>,
   project: {
-    link: 'https://github.com/your-username/happy-coder',
+    link: 'https://github.com/slopus/happy',
   },
-  docsRepositoryBase: 'https://github.com/your-username/happy-coder',
+  docsRepositoryBase: 'https://github.com/slopus/slopus.github.io',
   footer: {
     text: 'Happy - Claude Code Mobile Client',
   },
