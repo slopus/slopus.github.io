@@ -54,6 +54,9 @@ jobs:
         with:
           static_site_generator: next
 
+      - name: Create .nojekyll file
+        run: touch ./out/.nojekyll
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

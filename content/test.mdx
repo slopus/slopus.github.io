@@ -1,0 +1,36 @@
+## Hello MDX
+
+This is a test MDX file demonstrating basic Nextra functionality.
+
+### Features
+
+- **Markdown**: Write content in Markdown
+- **Components**: Import and use React components
+- **Code blocks**: Syntax highlighting included
+
+```javascript
+// Example code block
+function hello() {
+  console.log("Hello from Nextra!");
+}
+```
+
+### Static Counter Example
+
+Instead of an interactive counter, here's how you could document a counter component:
+
+```jsx
+import { useState } from 'react'
+
+export function Counter({ children }) {
+  const [count, setCount] = useState(0)
+  return (
+    <button onClick={() => setCount(prev => prev + 1)}>
+      {children}
+      {count}
+    </button>
+  )
+}
+```
+
+> Note: Interactive components with hooks need special handling in Nextra for static generation.

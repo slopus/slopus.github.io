@@ -61,7 +61,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${ibmPlexMono.variable} font-mono`}>
+      <body className={`${ibmPlexMono.variable}`}>
         {children}
       </body>
     </html>
