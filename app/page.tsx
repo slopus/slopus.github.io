@@ -80,7 +80,7 @@ export default function Home() {
   }
   
   return (
-    <main className="min-h-screen relative text-white flex flex-col items-center justify-center p-8 font-mono">
+    <main className="min-h-screen relative text-white flex flex-col items-center justify-center p-8 font-mono max-w-screen overflow-x-hidden">
       {/* Background Video */}
       <video
         autoPlay
