@@ -1,0 +1,143 @@
+# How It Works
+
+Happy Coder lets you watch and control Claude Code from your phone. It uses
+strong encryption to keep your code private. This page explains how the system
+works.
+
+## The Three Parts
+
+Happy Coder has three main parts that work together:
+
+**1. CLI Program (`happy`)** - This runs on your computer. It starts Claude Code
+and watches what it does. Then it encrypts this information and sends it to a
+server.
+
+**2. Mobile App** - This runs on your phone. It gets the encrypted data from the
+server and shows you what Claude Code is doing. All the display code lives
+here.
+
+**3. Relay Server** - This connects your computer and phone. It passes encrypted
+messages between them. The server can't read your data - it just moves
+encrypted blobs around.
+
+> **Diagram needed**: Show three boxes (CLI, Server, Mobile App) with arrows
+showing encrypted data flow. CLI encrypts and sends to Server, Server stores
+blob and forwards to Mobile App, Mobile App decrypts and displays.
+
+## Why You Need the Server
+
+The server solves a simple problem: firewalls. Your phone and computer are
+usually on different networks. They can't talk directly to each other.
+
+The server acts like a post office. Both your phone and computer connect out to
+the server. This works because firewalls usually allow outgoing connections. The
+server stores messages until both devices are ready.
+
+Without the server, you'd need to set up port forwarding and deal with changing
+IP addresses. That's hard and often doesn't work on mobile networks.
+
+## Trust and Security
+
+You might wonder: "The developers run the server. Why should I trust them?"
+
+Good question! You don't have to trust us. Here's why:
+
+### Your Data Stays Private
+
+Your phone and computer share a secret key through a QR code. The server never
+sees this key. Before sending any data, your computer encrypts it with this key.
+The server only sees encrypted blobs - it can't read them.
+
+> **Diagram needed**: Show the encryption flow. QR code containing secret key
+scanned by CLI, both devices now have shared secret, all messages encrypted with
+this secret before sending to server.
+
+### How Your Devices Connect
+
+Your phone and computer use their shared secret key to find each other:
+
+**Zero Round-Trip Authentication**: Each device sends everything at once:
+1. The device picks a random challenge (not the server!)
+2. The device signs this challenge with its secret key
+3. The device sends: challenge + signature + public key
+
+The server checks the signature matches the public key. If it does, you're
+connected. This happens instantly - no back-and-forth needed.
+
+**Extra Security**: 
+- The server only saves a hash of your public key
+- The actual public key is deleted from memory right after you connect
+- If someone looks at the server's hard drive, they can't even see what public keys were used
+
+This design stops many attacks. The server can't trick you into revealing your
+secret key. Even if someone hacks the server, they can't read your data.
+
+> **Diagram needed**: Show the authentication flow with challenge-response
+mechanism. Include the public key hash as channel ID, and the cryptographic
+proof process.
+
+### Run Your Own Server
+
+The server is small - only 900 lines of code. You can:
+- Read all the code in a few minutes
+- Check that it really just forwards messages
+- Run your own server (takes 2 minutes to set up)
+- Write your own server from our spec
+
+Both the phone app and CLI have settings to use your own server. It's easy to switch.
+
+## How Data Moves
+
+When you run `happy` on your computer:
+
+1. The CLI starts Claude Code
+2. Claude Code starts working on your project
+3. The CLI watches what Claude Code does
+4. It encrypts this information with your secret key
+5. It sends the encrypted blob to the server
+6. The server saves the blob and sends it to your phone
+7. Your phone decrypts it and shows you what's happening
+
+The server never knows what you're working on. It just sees encrypted data with timestamps.
+
+## Why Save Encrypted Blobs?
+
+The server saves encrypted blobs for two good reasons:
+
+**See Your History**: When you close Claude Code, the CLI program stops. But you
+can still open your phone app next week and see what you built. You can copy
+old ideas into new projects. This is really helpful for keeping track of your
+work.
+
+**Handle Bad Connections**: This is the big one. Say you're on a train or
+hiking. Your phone loses signal all the time. But your computer at home stays
+connected to the server. It keeps sending updates about what Claude Code is
+doing.
+
+When your phone gets signal again, it catches up on everything it missed. You
+don't lose any messages. You can check Claude Code's progress whenever you have
+signal.
+
+> **Diagram needed**: Show the resilient connection scenario - CLI with stable
+connection continuously uploading, phone with intermittent connection catching
+up on missed messages when it reconnects, database storing all encrypted blobs
+in between.
+
+## For Contributors
+
+Every part of Happy Coder is open source: the CLI, the app, and the relay
+server. We use a relay server to connect your devices across different networks.
+The server can't read your data because everything is encrypted with keys that
+never leave your devices. 
+
+**Important**: Keep the server dumb. Don't add server
+features. Put your logic in the mobile app where it belongs. If you need more
+capabilities from the CLI, keep it simple there too. Use the generic API to run
+a command and report the output back to the mobile app. Do not build lots of
+logic into the CLI.  Let the mobile app do the real work.
+
+## Summary
+
+This design keeps your code private no matter what happens to the server. Even
+if someone hacks it, they just get encrypted blobs they can't read. The server
+knows nothing and can tell nothing. That's the whole point.

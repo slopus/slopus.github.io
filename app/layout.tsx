@@ -60,7 +60,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" theme="light" className="light" style={{ colorScheme: 'light' }} {...({} as any)}>
       <body className={`${ibmPlexMono.variable}`}>
         {children}
       </body>

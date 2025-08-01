@@ -1,0 +1,90 @@
+# How It Works
+
+Happy Coder connects your mobile device to Claude Code running on your computer through an encrypted relay server. This page explains the technical architecture.
+
+## The Three Components
+
+Happy Coder consists of three parts:
+
+**1. CLI Program (`happy`)** - Runs on your computer, starts Claude Code as a subprocess, monitors what Claude Code is doing step by step, encrypts this information, and uploads it to the server via WebSocket.
+
+**2. Mobile App** - Receives the encrypted data from the server, decrypts it, and displays Claude Code's progress. All display and control logic lives in the mobile app.
+
+**3. Relay Server** - Forwards encrypted messages between the CLI and mobile app. Stores encrypted blobs in a database for history. The server has no idea what you stored there - it's just a dumb pipe.
+
+> **Diagram needed**: Show three boxes (CLI, Server, Mobile App) with arrows showing encrypted data flow. CLI encrypts and sends to Server, Server stores blob and forwards to Mobile App, Mobile App decrypts and displays.
+
+## Why Do You Need the Server?
+
+The server exists for one reason: to work around firewalls. Both your mobile app and the CLI program connect outward to the server, avoiding any requirement to open holes in firewalls. The server provides a persistent mailbox where messages can be stored and retrieved.
+
+Without the server, your phone and laptop would need to connect directly to each other, which is difficult when they're on different networks (like when your phone is on cellular and your laptop is on home WiFi).
+
+## Trust and Security
+
+You're probably wondering: "The server is hosted by the developers. Why should I trust them?"
+
+The answer is that you don't have to trust us. Here's why:
+
+### End-to-End Encryption
+
+The CLI program and mobile app exchange encryption keys using QR codes. The server never sees these keys. When the CLI sends data about what Claude Code is doing, it encrypts everything first. The server only sees encrypted blobs - it has no way to decrypt them.
+
+> **Diagram needed**: Show the encryption flow. QR code containing secret key scanned by CLI, both devices now have shared secret, all messages encrypted with this secret before sending to server.
+
+### How Connection Works
+
+Since the mobile app and CLI program share the same secret key, they also share the same public key. Here's how they find each other through the server:
+
+**Zero Round-Trip Authentication**: The client sends everything needed in a single shot:
+1. The client picks its own random challenge data (not the server)
+2. The client signs this challenge with its secret key
+3. The client sends: challenge + signature + public key
+
+This design prevents the server from choosing specific challenges that might leak information about your secret key through cryptographic attacks. The server is completely untrusted.
+
+**Defense in Depth**: 
+- The server receives the public key but immediately computes its hash
+- Only the hash is stored in the database - not the public key itself
+- The public key exists in server memory only briefly during connection establishment
+- After authentication, the public key is deleted from server memory
+- Anyone examining the server's disk sees only hashes, not actual public keys
+
+**Fast Reconnection**: This zero round-trip design means instant connections. When your mobile connection drops and reconnects, there's no back-and-forth handshake - you send authentication, establish connection, and immediately start receiving your encrypted data stream. The data flowing from the relay server is still encrypted, so you need the private key in your mobile app to read anything.
+
+> **Diagram needed**: Show the authentication flow with challenge-response mechanism. Include the public key hash as channel ID, and the cryptographic proof process.
+
+### Open Source and Self-Hosting
+
+The server is only about 900 lines of Socket.IO code. You can:
+- Read the entire codebase in a few minutes
+- Verify it's just forwarding encrypted messages
+- Deploy your own server (takes about 2 minutes)
+- Generate your own server implementation with a single Claude Code prompt using our specification
+
+Both the mobile app and CLI have simple configuration options to point to your own server instead of ours.
+
+## Data Flow
+
+When you run `happy` on your computer:
+
+1. The CLI wrapper starts Claude Code as a subprocess
+2. As Claude Code works, the CLI captures its activity
+3. This information is encrypted using your secret key
+4. The encrypted blob is sent to the server via WebSocket
+5. The server stores the blob and forwards it to your mobile app
+6. Your mobile app decrypts the blob and displays the information
+
+The server never decrypts anything. It just sees encrypted blobs with metadata like timestamps and channel IDs.
+
+## Contributing
+
+Since all display and control logic lives in the mobile app, adding features is straightforward. You don't need to modify the server - it's just plumbing. The server specification is simple enough that you could implement your own compatible server very quickly.
+
+## Summary
+
+Every single component of Happy Coder is open source - the CLI, the mobile app, and the server. We designed this system with zero-trust architecture for a reason. 
+
+**Important for contributors**: Don't implement features on the server. We're not looking for server-side features. The server must remain a dumb pipe to maintain the zero-trust model. Put all logic in the mobile app client. If you need information from the CLI program, keep the processing there absolutely minimal - just capture and encrypt. Let the mobile app do all the heavy lifting.
+
+This architecture ensures that even if someone compromises the server, they learn nothing about your code or what you're working on. The server knows nothing, stores encrypted blobs, and forwards messages. That's it.

@@ -24,6 +24,29 @@ const nextConfig = withNextra({
   images: {
     unoptimized: true,
   },
+  turbopack: {
+    rules: {
+      '*.notes.txt': {
+        loaders: ['ignore-loader'],
+        as: '*.js',
+      },
+      '*.talk.txt': {
+        loaders: ['ignore-loader'],
+        as: '*.js',
+      },
+    },
+  },
+
+  // For production build (webpack)
+  webpack: (config, { webpack }) => {
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /\.(notes|talk)\.txt$/,
+        contextRegExp: /content/,
+      })
+    );
+    return config;
+  },
 });
 
 export default nextConfig 
