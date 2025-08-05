@@ -3,6 +3,7 @@
 import AppStoreButton from '@/components/AppStoreButton'
 import GooglePlayButton from '@/components/GooglePlayButton'
 import NpmButton from '@/components/NpmButton'
+import BrowserButton from '@/components/BrowserButton'
 import Header from '@/components/Header'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
@@ -59,6 +60,7 @@ export default function Home() {
           <>
             <NpmButton href="https://www.npmjs.com/package/happy-coder" />
             <AppStoreButton href="https://google.com" />
+            <BrowserButton href="https://google.com" />
           </>
         )
       case 'android':
@@ -66,6 +68,7 @@ export default function Home() {
           <>
             <NpmButton href="https://www.npmjs.com/package/happy-coder" />
             <GooglePlayButton href="https://google.com" />
+            <BrowserButton href="https://google.com" />
           </>
         )
       case 'desktop':
@@ -75,6 +78,7 @@ export default function Home() {
             <NpmButton href="https://www.npmjs.com/package/happy-coder" />
             <GooglePlayButton href="https://google.com" />
             <AppStoreButton href="https://google.com" />
+            <BrowserButton href="https://google.com" />
           </>
         )
     }
