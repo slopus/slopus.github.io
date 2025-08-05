@@ -3,6 +3,7 @@
 import AppStoreButton from '@/components/AppStoreButton'
 import GooglePlayButton from '@/components/GooglePlayButton'
 import NpmButton from '@/components/NpmButton'
+import Header from '@/components/Header'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { Bricolage_Grotesque } from 'next/font/google'
@@ -80,7 +81,9 @@ export default function Home() {
   }
   
   return (
-    <main className="min-h-screen relative text-white flex flex-col items-center justify-center p-8 font-mono max-w-screen overflow-x-hidden">
+    <>
+      <Header />
+      <main className="min-h-screen relative text-white flex flex-col items-center justify-center p-8 font-mono max-w-screen overflow-x-hidden">
       {/* Background Video */}
       <video
         autoPlay
@@ -238,5 +241,6 @@ export default function Home() {
         </div>
       </div>
     </main>
+    </>
   )
 } 
