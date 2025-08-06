@@ -52,6 +52,9 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/site.webmanifest',
+  verification: {
+    google: 'YBRFhTOzLKIGqYceYX-zfdC5esIATrKfbmPtkCuuHm0',
+  },
 }
 
 import { Footer, Layout, Navbar } from 'nextra-theme-docs'
