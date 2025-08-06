@@ -6,6 +6,18 @@ export default {
     link: 'https://github.com/slopus/happy',
   },
   docsRepositoryBase: 'https://github.com/slopus/slopus.github.io',
+  navbar: {
+    extraContent: (
+      <div className="flex items-center gap-4">
+        <a href="/docs" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+          Documentation
+        </a>
+        <a href="https://app.happy.engineering" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+          Web App
+        </a>
+      </div>
+    )
+  },
   footer: {
     text: 'Happy - Claude Code Mobile Client',
   },

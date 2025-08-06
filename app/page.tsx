@@ -3,8 +3,6 @@
 import AppStoreButton from '@/components/AppStoreButton'
 import GooglePlayButton from '@/components/GooglePlayButton'
 import NpmButton from '@/components/NpmButton'
-import BrowserButton from '@/components/BrowserButton'
-import Header from '@/components/Header'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { Bricolage_Grotesque } from 'next/font/google'
@@ -15,6 +13,12 @@ const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ['latin'],
 })
 
+
+// Download links constants
+const NPM_LINK = 'https://www.npmjs.com/package/happy-coder'
+const GOOGLE_PLAY_LINK = 'https://play.google.com/store/apps/details?id=com.ex3ndr.happy'
+const APP_STORE_LINK = 'https://apps.apple.com/us/app/happy-claude-code-client/id6748571505'
+
 export default function Home() {
   // Background video source
   const videoSrc = '/water1-small.mp4'
@@ -22,8 +26,8 @@ export default function Home() {
   // Device detection state
   const [deviceType, setDeviceType] = useState<'ios' | 'android' | 'desktop'>('desktop')
   
-  // Scroll position for animation
-  const [scrollProgress, setScrollProgress] = useState(0)
+  // Animation state for load animation
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     // Client-side device detection
@@ -37,19 +41,12 @@ export default function Home() {
       setDeviceType('desktop')
     }
 
-    // Scroll event listener for animation
-    const handleScroll = () => {
-      const scrollTop = window.scrollY
-      const windowHeight = window.innerHeight
-      const documentHeight = document.documentElement.scrollHeight - windowHeight
-      
-      // Calculate scroll progress (0 to 1) - faster animation
-      const progress = Math.min(scrollTop / (documentHeight * 0.45), 1)
-      setScrollProgress(progress)
-    }
+    // Trigger animation after component mounts
+    const timer = setTimeout(() => {
+      setIsLoaded(true)
+    }, 500) // Small delay for a smooth entrance effect
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => clearTimeout(timer)
   }, [])
 
   // Render store buttons based on device type
@@ -58,27 +55,24 @@ export default function Home() {
       case 'ios':
         return (
           <>
-            <NpmButton href="https://www.npmjs.com/package/happy-coder" />
-            <AppStoreButton href="https://google.com" />
-            <BrowserButton href="https://google.com" />
+            <NpmButton href={NPM_LINK} />
+            <AppStoreButton href={APP_STORE_LINK} />
           </>
         )
       case 'android':
         return (
           <>
-            <NpmButton href="https://www.npmjs.com/package/happy-coder" />
-            <GooglePlayButton href="https://google.com" />
-            <BrowserButton href="https://google.com" />
+            <NpmButton href={NPM_LINK} />
+            <GooglePlayButton href={GOOGLE_PLAY_LINK} />
           </>
         )
       case 'desktop':
       default:
         return (
           <>
-            <NpmButton href="https://www.npmjs.com/package/happy-coder" />
-            <GooglePlayButton href="https://google.com" />
-            <AppStoreButton href="https://google.com" />
-            <BrowserButton href="https://google.com" />
+            <NpmButton href={NPM_LINK} />
+            <GooglePlayButton href={APP_STORE_LINK} />
+            <AppStoreButton href={APP_STORE_LINK} />
           </>
         )
     }
@@ -86,8 +80,10 @@ export default function Home() {
   
   return (
     <>
-      <Header />
-      <main className="min-h-screen relative text-white flex flex-col items-center justify-center p-8 font-mono max-w-screen overflow-x-hidden">
+      <main className="min-h-screen relative text-white flex flex-col items-center justify-center p-8 font-mono max-w-screen overflow-x-hidden" style={{
+          marginTop: "calc(-1 * var(--nextra-navbar-height))",
+          paddingTop: "calc(var(--spacing) * 8 + var(--nextra-navbar-height))",
+      }}>
       {/* Background Video */}
       <video
         autoPlay
@@ -122,7 +118,7 @@ export default function Home() {
           {renderStoreButtons()}
         </div>
         
-        {/* App Screenshot with sliding animation */}
+        {/* App Screenshot with load animation */}
         <div className="mb-16 relative">
           <div 
             className="relative w-[300px] max-w-[80%] h-auto mx-auto"
@@ -130,12 +126,16 @@ export default function Home() {
           >
             {/* App 2 - slides to the left */}
             <div 
-              className="absolute inset-0 transition-transform duration-75 ease-out"
+              className="absolute inset-0 transition-all duration-1000 ease-out"
               style={{
-                transform: `translateX(${-scrollProgress * 120}px) translateY(${scrollProgress * 20}px) translateZ(${-scrollProgress * 50}px) rotate(${-scrollProgress * 15}deg) rotateY(${scrollProgress * 25}deg) rotateX(${scrollProgress * 10}deg)`,
+                transform: isLoaded 
+                  ? 'translateX(-120px) translateY(20px) translateZ(-50px) rotate(-15deg) rotateY(25deg) rotateX(10deg)'
+                  : 'translateX(0px) translateY(0px) translateZ(0px) rotate(0deg) rotateY(0deg) rotateX(0deg)',
                 transformOrigin: 'bottom center',
                 transformStyle: 'preserve-3d',
-                filter: `drop-shadow(${scrollProgress * 20}px ${scrollProgress * 10}px ${scrollProgress * 30}px rgba(0,0,0,0.3))`,
+                filter: isLoaded 
+                  ? 'drop-shadow(20px 10px 30px rgba(0,0,0,0.3))'
+                  : 'drop-shadow(0px 0px 0px rgba(0,0,0,0))',
                 zIndex: 1
               }}
             >
@@ -150,12 +150,16 @@ export default function Home() {
 
             {/* App 1 - slides to the right */}
             <div 
-              className="absolute inset-0 transition-transform duration-75 ease-out"
+              className="absolute inset-0 transition-all duration-1000 ease-out"
               style={{
-                transform: `translateX(${scrollProgress * 120}px) translateY(${scrollProgress * 20}px) translateZ(${-scrollProgress * 50}px) rotate(${scrollProgress * 15}deg) rotateY(${-scrollProgress * 25}deg) rotateX(${scrollProgress * 10}deg)`,
+                transform: isLoaded 
+                  ? 'translateX(120px) translateY(20px) translateZ(-50px) rotate(15deg) rotateY(-25deg) rotateX(10deg)'
+                  : 'translateX(0px) translateY(0px) translateZ(0px) rotate(0deg) rotateY(0deg) rotateX(0deg)',
                 transformOrigin: 'bottom center',
                 transformStyle: 'preserve-3d',
-                filter: `drop-shadow(${-scrollProgress * 20}px ${scrollProgress * 10}px ${scrollProgress * 30}px rgba(0,0,0,0.3))`,
+                filter: isLoaded 
+                  ? 'drop-shadow(-20px 10px 30px rgba(0,0,0,0.3))'
+                  : 'drop-shadow(0px 0px 0px rgba(0,0,0,0))',
                 zIndex: 1
               }}
             >
@@ -170,10 +174,14 @@ export default function Home() {
 
             {/* App 3 - main image on top */}
             <div 
-              className="relative z-10"
+              className="relative z-10 transition-all duration-1000 ease-out"
               style={{
-                filter: `drop-shadow(0px ${scrollProgress * 5}px ${scrollProgress * 15}px rgba(0,0,0,0.2))`,
-                transform: `translateZ(${scrollProgress * 10}px)`,
+                filter: isLoaded 
+                  ? 'drop-shadow(0px 5px 15px rgba(0,0,0,0.2))'
+                  : 'drop-shadow(0px 0px 0px rgba(0,0,0,0))',
+                transform: isLoaded 
+                  ? 'translateZ(10px)'
+                  : 'translateZ(0px)',
                 transformStyle: 'preserve-3d'
               }}
             >

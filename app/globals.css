@@ -4,6 +4,8 @@
   --font-mono: var(--font-ibm-plex-mono);
   --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
   --background-image-gradient-conic: conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops));
+  
+  --nextra-search-background-color: #f0f0f0; /* Change search background color */
 }
 
 :root {

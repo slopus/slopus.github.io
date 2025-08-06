@@ -54,15 +54,36 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest',
 }
 
-export default function RootLayout({
+import { Footer, Layout, Navbar } from 'nextra-theme-docs'
+import { getPageMap } from 'nextra/page-map'
+import 'nextra-theme-docs/style.css' // Required!
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+   const pageMap = await getPageMap()
+
   return (
-    <html lang="en" theme="light" className="light" style={{ colorScheme: 'light' }} {...({} as any)}>
+    <html lang="en" dir="ltr" suppressHydrationWarning>
       <body className={`${ibmPlexMono.variable}`}>
-        {children}
+        <Layout
+          //banner={<Banner storageKey="docs-banner">Your banner content</Banner>}
+          navbar={
+            <Navbar 
+              logo={<b>Happy</b>}
+              projectLink="https://github.com/slopus/happy"
+            />
+          }
+          pageMap={pageMap}
+          docsRepositoryBase="https://github.com/slopus/slopus.github.io/tree/main"
+          sidebar={{
+            defaultMenuCollapseLevel: 3,
+          }}
+        >
+          {children}
+        </Layout>
       </body>
     </html>
   )
