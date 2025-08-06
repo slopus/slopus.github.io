@@ -71,7 +71,7 @@ export default function Home() {
         return (
           <>
             <NpmButton href={NPM_LINK} />
-            <GooglePlayButton href={APP_STORE_LINK} />
+            <GooglePlayButton href={GOOGLE_PLAY_LINK} />
             <AppStoreButton href={APP_STORE_LINK} />
           </>
         )
@@ -141,7 +141,7 @@ export default function Home() {
             >
               <Image
                 src="/app-2.png"
-                alt="Rafty App Screenshot 2"
+                alt="Claude Code in Happy Coder App Screenshot 2"
                 width={400}
                 height={866}
                 className="w-full h-auto"
@@ -165,7 +165,7 @@ export default function Home() {
             >
               <Image
                 src="/app-1.png"
-                alt="Rafty App Screenshot"
+                alt="Claude Code in Happy Coder App Screenshot"
                 width={400}
                 height={866}
                 className="w-full h-auto"
@@ -187,7 +187,7 @@ export default function Home() {
             >
               <Image
                 src="/app-3.png"
-                alt="Rafty App Screenshot 3"
+                alt="Claude Code in Happy Coder App Screenshot 3"
                 width={400}
                 height={866}
                 className="w-full h-auto"
