@@ -100,17 +100,15 @@ export default function Home() {
       
       {/* Content */}
       <div className="relative z-20 max-w-4xl mx-auto text-center">
-        {/* Logo */}
-        <div className="mb-6 mt-6">
-          <h1 className={`${bricolageGrotesque.className} text-4xl md:text-5xl font-bold text-black font-mono`}>
+        {/* Logo and Subtitle */}
+        <div className="mb-6 mt-6 bg-[#6999ac]/50 backdrop-blur-[32px] border-2 border-white/20 rounded-[32px] p-8 text-shadow-lg">
+          <h1 className={`${bricolageGrotesque.className} text-4xl md:text-5xl font-bold text-white font-mono mb-4`}>
             Happy Coder
           </h1>
-        </div>
-        
-        {/* Subtitle */}
-        <div className="text-3xl md:text-4xl leading-[100%] mb-8 text-black">
-          <p className="mb-2 leading-[80%]">Claude Code</p>
-          <p className="leading-[80%]">in your pocket.</p>
+          
+          <div className="text-3xl md:text-4xl leading-[100%] text-white">
+            <p className="font-bold">Claude Code in your pocket</p>
+          </div>
         </div>
         
         {/* App Store Badges */}
@@ -197,59 +195,54 @@ export default function Home() {
         </div>
         
         {/* Features List */}
-        <div className="text-xl leading-normal mb-20 text-white">
-          <ul className="space-y-2 max-w-md mx-auto text-center">
-            <li className="flex items-center justify-center">
-              <span className="text-white mr-3">•</span>
-              End-to-End Encrypted
+        <div className="text-2xl leading-normal mb-12 bg-[#6999ac]/50 backdrop-blur-[32px] border-2 border-white/20 rounded-[32px] p-8 font-bold text-shadow-lg">
+          <ul className="space-y-3 max-w-md mx-auto text-left text-white list-disc pl-6">
+            <li>
+              Open Source: MIT License
             </li>
-            <li className="flex items-center justify-center">
-              <span className="text-white text-shadow-sm/50 mr-3">•</span>
-              Open Source
-            </li>
-            <li className="flex items-center justify-center">
-              <span className="text-white text-shadow-lg mr-3">•</span>
+            <li>
               Native mobile UX
             </li>
-            <li className="flex items-center justify-center">
-              <span className="text-white mr-3">•</span>
+            <li>
               Seamless Workflow
+            </li>
+            <li>
+              End-to-End Encrypted
             </li>
           </ul>
         </div>
         
         {/* Installation Guide */}
-        <div className="text-base leading-normal mb-20 text-white">
-          <h3 className="text-xl font-semibold mb-4">How to get started:</h3>
-          <ol className="space-y-2 max-w-md mx-auto text-left">
-            <li className="flex items-start">
-              <span className="text-white mr-3 mt-1">1.</span>
+        <div className="text-base leading-normal mb-12 bg-[#6999ac]/50 backdrop-blur-[32px] border-2 border-white/20 rounded-[32px] p-8 text-shadow-md">
+          <h3 className="text-xl font-semibold mb-4 text-white">How to get started:</h3>
+          <ol className="space-y-2 max-w-md mx-auto text-left text-white list-decimal font-bold pl-6">
+            <li>
               Download the mobile app
             </li>
-            <li className="flex items-start">
-              <span className="text-white mr-3 mt-1">2.</span>
+            <li>
               Install the NPM package on your computer and run 'happy'
             </li>
-            <li className="flex items-start">
-              <span className="text-white mr-3 mt-1">3.</span>
+            <li>
               Scan the QR code
             </li>
           </ol>
         </div>
         
         {/* Footer */}
-        <div className="text-sm leading-normal text-white">
-          Made in San Francisco 🌉
-        </div>
-        
-        {/* Legal Links */}
-        <div className="text-sm leading-normal text-white mt-4 flex justify-center space-x-6">
-          <Link href="/privacy" className="hover:text-gray-300 transition-colors">
-            Privacy Policy
-          </Link>
-          <Link href="/terms" className="hover:text-gray-300 transition-colors">
-            Terms of Use
-          </Link>
+        <div className="bg-[#6999ac]/50 backdrop-blur-[32px] border-2 border-white/20 rounded-[32px] p-6 text-shadow-md">
+          <div className="text-sm leading-normal text-white mb-4">
+            Made in San Francisco 🌉
+          </div>
+          
+          {/* Legal Links */}
+          <div className="text-sm leading-normal text-white flex justify-center space-x-6">
+            <Link href="/privacy" className="hover:text-gray-300 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-gray-300 transition-colors">
+              Terms of Use
+            </Link>
+          </div>
         </div>
       </div>
     </main>
