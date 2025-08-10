@@ -25,6 +25,10 @@
   background-color: rgba(255, 255, 255, 0.5);
 }
 
+.nextra-body-typesetting-article > main {
+  max-width: 72ch;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(

@@ -101,9 +101,11 @@ temp/
 *.njsproj
 *.sln
 *.sw?
+grove/
 
 # OS generated files
 Thumbs.db
 ehthumbs.db
 Desktop.ini 
 .vercel
+
