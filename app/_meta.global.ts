@@ -18,7 +18,7 @@ const meta = {
             "guides": "Guides",
             'faq': 'FAQ',
             'features': 'Features',
-            'contributing': 'Contributing'
+            //'contributing': 'Contributing'
         }
     },
     webapp: {

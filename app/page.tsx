@@ -7,6 +7,13 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { Bricolage_Grotesque } from 'next/font/google'
 import Link from 'next/link'
+import SetupSteps from '@/components/marketing/SetupSteps'
+import ConnectionVisual from '@/components/marketing/ConnectionVisual'
+import DownloadGrid from '@/components/marketing/DownloadGrid'
+import Features from '@/components/marketing/Features'
+import ExampleSetups from '@/components/marketing/ExampleSetups'
+import GithubLink from '@/components/marketing/GithubLink'
+import MobileSetup from '@/components/marketing/MobileSetup'
 
 const bricolageGrotesque = Bricolage_Grotesque({
   weight: '700',
@@ -100,6 +107,15 @@ export default function Home() {
       
       {/* Content */}
       <div className="relative z-20 max-w-4xl mx-auto text-center">
+        <ConnectionVisual />
+        <MobileSetup />
+        <SetupSteps />
+        <DownloadGrid />
+        <Features />
+        <ExampleSetups />
+        <GithubLink />
+
+
         {/* Logo and Subtitle */}
         <div className="mb-6 mt-6 bg-[#6999ac]/50 backdrop-blur-[32px] border-2 border-white/20 rounded-[32px] p-8 text-shadow-lg">
           <h1 className={`${bricolageGrotesque.className} text-4xl md:text-5xl font-bold text-white font-mono mb-4`}>
