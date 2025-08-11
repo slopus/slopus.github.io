@@ -8,14 +8,17 @@ const meta = {
     },
     docs: {
         type: 'page',
-        title: 'Documentation',
+        title: 'Docs',
         // items: {
         //     index: ''
         // },
         items: {
             "index": "Introduction",
             "how-it-works": "How It Works",
-            "guides": "Guides"
+            "guides": "Guides",
+            'faq': 'FAQ',
+            'features': 'Features',
+            'contributing': 'Contributing'
         }
     },
     webapp: {

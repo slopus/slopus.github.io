@@ -1,0 +1,114 @@
+# FAQ Content Notes - SEO Focused "People Also Ask" Questions
+
+## Research and Technical Information
+
+These are the questions from SEO research that people commonly search for:
+
+1. Does Claude Code have an app?
+2. Can you use Claude on mobile?
+3. Can I do coding in a mobile app?
+4. Does Claude have an Apple app?
+5. How do I install the Claude app?
+6. Is Claude better than ChatGPT for coding?
+7. Which Claude is best for coding?
+8. How to use the Claude app?
+9. How much does Claude code cost?
+
+## Detailed Technical Answers (Before Simplification)
+
+### Does Claude Code have an app?
+Yes! Claude Code has a mobile companion app called "Happy Coder" that allows developers to control Claude Code remotely from their mobile devices. The setup involves:
+1. Installing the Happy Coder mobile app from App Store/Google Play
+2. Installing the `happy-coder` NPM package on your computer
+3. Running `happy` command on your computer to start the relay
+4. Scanning a QR code to connect your phone to your computer's Claude Code session
+
+The connection is end-to-end encrypted and allows real-time synchronization between desktop CLI and mobile app.
+
+### Can you use Claude on mobile?
+Important distinction: Claude (the consumer AI chat product) is separate from Claude Code (the developer CLI tool).
+
+For Claude: Yes, access claude.ai web interface on mobile browsers.
+
+For Claude Code: Yes, through the Happy Coder mobile app which provides remote control of Claude Code running on your computer. This enables mobile coding workflows where you can start conversations on mobile, continue on desktop, and seamlessly handoff between devices.
+
+### Can I do coding in a mobile app?
+Yes, with the Happy Coder app you can absolutely do coding tasks on mobile. The app is designed for specific mobile-optimized coding workflows:
+- Planning and brainstorming features during commutes
+- Requesting code changes while away from desk
+- Voice interaction for rubber duck debugging
+- Reviewing Claude Code progress via push notifications
+- Pre-sleep task seeding (setting up work for Claude Code to complete overnight)
+
+The key insight is that mobile coding isn't about replicating desktop productivity, but using mobile for tasks it's good at (thinking, planning, exploration) while using desktop for what it's good at (precise editing, multi-monitor review).
+
+### Does Claude have an Apple app?
+Claude (consumer product): Anthropic has a iOS app, or use claude.ai web interface.
+
+Claude Code: Yes, the Happy Coder app is available on the App Store for iPhone and iPad. It's the best free and 100% open source mobile client that controls Claude Code.
+
+### How do I install the Claude app?
+For Happy Coder (mobile Claude Code client):
+1. Download Happy Coder app from App Store (iOS) or Google Play (Android)
+2. Install happy-coder package on computer: `npm install -g happy-coder`
+3. Run `happy` command on computer
+4. Scan QR code with mobile app to establish encrypted connection
+
+For Claude Code CLI (desktop):
+- Install via npm: `npm install -g claude-code`
+- Configure API credentials
+- Works on macOS, Linux, Windows
+
+For Claude (consumer): Visit claude.ai in web browser.
+
+### Is Claude better than ChatGPT for coding?
+This is subjective and depends on specific use cases. Claude Code offers several advantages:
+- Deep repository understanding and analysis
+- File editing capabilities with context awareness
+- IDE integrations
+- Specialized coding workflows
+- Better handling of large codebases
+- More accurate code refactoring
+
+ChatGPT has its own strengths in code generation and explanation. The choice depends on workflow preferences and specific needs.
+
+### Which Claude is best for coding?
+Claude-3.5 Sonnet is currently the most capable model for coding tasks, offering the best balance of:
+- Code comprehension
+- Problem-solving ability
+- Context handling
+- Speed of response
+- Accuracy in complex programming tasks
+
+Claude Code CLI uses the most appropriate model automatically, but users can specify model preferences in configuration.
+
+### How to use the Claude app?
+For Claude Code CLI:
+1. Install the tool
+2. Configure API credentials
+3. Navigate to your project directory
+4. Use commands like `claude-code <task description>`
+5. Interactive mode available for ongoing conversations
+6. IDE extensions provide integrated access
+
+For web Claude: Visit claude.ai, create account, start chatting.
+
+### How much does Claude code cost?
+Claude Code usage is based on Anthropic's API pricing:
+- Pay-per-use model based on tokens processed
+- Costs vary by model used (Claude-3.5 Sonnet, etc.)
+- Typical coding sessions cost $0.01-$1.00 depending on complexity
+- No subscription required for the CLI tool itself
+- Enterprise plans available for teams
+- Free tier available with usage limits
+
+## Content Organization Strategy
+
+Structure as FAQ with clear sections:
+1. Installation and Setup
+2. Platform Availability  
+3. Usage and Features
+4. Pricing and Plans
+5. Comparison with Alternatives
+
+Each answer should be comprehensive but accessible, targeting the specific search intent behind each question.
