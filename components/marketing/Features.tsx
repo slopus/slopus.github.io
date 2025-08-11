@@ -10,7 +10,7 @@ const Features = () => {
   ];
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 mb-6">
+    <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
       <div className="space-y-3">
         {features.map((feature, index) => (
           <div key={index} className="flex items-start gap-3">

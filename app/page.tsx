@@ -8,10 +8,7 @@ import { useState, useEffect } from 'react'
 import { Bricolage_Grotesque } from 'next/font/google'
 import Link from 'next/link'
 import SetupSteps from '@/components/marketing/SetupSteps'
-import ConnectionVisual from '@/components/marketing/ConnectionVisual'
-import DownloadGrid from '@/components/marketing/DownloadGrid'
-import Features from '@/components/marketing/Features'
-import ExampleSetups from '@/components/marketing/ExampleSetups'
+import { BentoBoxes } from '@/components/marketing'
 import GithubLink from '@/components/marketing/GithubLink'
 import MobileSetup from '@/components/marketing/MobileSetup'
 
@@ -107,13 +104,9 @@ export default function Home() {
       
       {/* Content */}
       <div className="relative z-20 max-w-4xl mx-auto text-center">
-        <ConnectionVisual />
-        <MobileSetup />
-        <SetupSteps />
-        <DownloadGrid />
-        <Features />
-        <ExampleSetups />
-        <GithubLink />
+        {/* TODO make the bento boxes design look nice
+        <BentoBoxes />
+        */}
 
 
         {/* Logo and Subtitle */}

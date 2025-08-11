@@ -3,7 +3,7 @@ import { Smartphone, Monitor, ArrowRight } from 'lucide-react';
 
 const ConnectionVisual = () => {
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-6">
+    <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
       <div className="text-center text-gray-500 text-xs uppercase tracking-wider mb-5">
         Connect to Claude Code Anywhere
       </div>

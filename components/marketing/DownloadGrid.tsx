@@ -3,7 +3,7 @@ import { Globe } from 'lucide-react';
 
 const DownloadGrid = () => {
   return (
-    <div className="grid grid-cols-2 gap-3 mb-6">
+    <div className="grid grid-cols-2 gap-3">
       <button className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl p-4 flex flex-col items-center justify-center min-h-[80px] active:scale-95 transition-transform">
         <span className="text-2xl mb-1">🍎</span>
         <span className="text-white text-sm font-medium">App Store</span>

@@ -9,3 +9,4 @@ export { default as MobileSetup } from './MobileSetup';
 export { default as GithubLink } from './GithubLink';
 export { default as Footer } from './Footer';
 export { default as MobileLandingPage } from './MobileLandingPage';
+export { default as BentoBoxes } from './BentoBoxes';

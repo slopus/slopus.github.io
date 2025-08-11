@@ -57,18 +57,6 @@ export default function SeamlessPage() {
 
   return (
     <div className="font-sans text-gray-900 bg-white leading-relaxed">
-      {/* Navigation */}
-      <nav className="py-5 border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-5 flex justify-between items-center">
-          <div className="text-xl font-semibold font-mono">happy-coder</div>
-          <div className="flex gap-8 items-center">
-            <a href="#docs" className="text-gray-600 text-sm no-underline">Documentation</a>
-            <a href="#github" className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded-md text-sm bg-white text-gray-900 no-underline hover:bg-gray-50 hover:border-gray-900">
-              ⭐ Star on GitHub
-            </a>
-          </div>
-        </div>
-      </nav>
 
       {/* Hero Section */}
       <section className="py-24 pb-16">
