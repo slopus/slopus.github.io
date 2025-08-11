@@ -29,6 +29,10 @@
   max-width: 72ch;
 }
 
+article.nextra-body-typesetting-article h1 {
+  text-align: left !important;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
