@@ -73,27 +73,29 @@ export default function SeamlessPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <div>
               <h1 className="text-3xl sm:text-5xl font-bold mb-5 leading-tight">
-                Your Claude Code CLI,&nbsp;Now Seamlessly Mobile
+                Native Mobile App for Claude Code CLI
               </h1>
+              {/*
               <p className="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed">
                 The only tool that gives you real-time handoff between your terminal and phone. 
                 Start on your laptop, continue on your phone, pick up where you left off.
               </p>
+              */}
               
-              <div className="mb-10">
-                <div className="flex items-start mb-4 text-base text-gray-700">
+              <div className="mb-10 text-lg sm:text-xl">
+                <div className="flex items-start mb-4 text-gray-700">
                   <span className="text-green-500 mr-2.5 font-bold">✓</span>
                   <span>Real-time sync between CLI and mobile - same session, everywhere</span>
                 </div>
-                <div className="flex items-start mb-4 text-base text-gray-700">
+                <div className="flex items-start mb-4 text-gray-700">
                   <span className="text-green-500 mr-2.5 font-bold">✓</span>
                   <span>100% Free & Open Source (MIT Licensed)</span>
                 </div>
-                <div className="flex items-start mb-4 text-base text-gray-700">
+                <div className="flex items-start mb-4 text-gray-700">
                   <span className="text-green-500 mr-2.5 font-bold">✓</span>
                   <span>Works with your existing Claude Code workflow</span>
                 </div>
-                <div className="flex items-start mb-4 text-base text-gray-700">
+                <div className="flex items-start mb-4 text-gray-700">
                   <span className="text-green-500 mr-2.5 font-bold">✓</span>
                   <span>Multiple concurrent sessions support</span>
                 </div>

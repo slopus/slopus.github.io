@@ -30,7 +30,7 @@ const Terminal: React.FC<TerminalProps> = ({ command, className = "", variant = 
   const isLight = variant === 'light';
   
   const containerClasses = isLight 
-    ? 'bg-gray-50 border-gray-200 hover:border-blue-400 hover:bg-blue-50'
+    ? 'bg-gray-50 border-gray-200 hover:border-blue-400 hover:bg-blue-50 border border-gray-300'
     : 'bg-white/5 backdrop-blur-sm border-white/10 hover:border-blue-500/30 hover:bg-blue-500/10';
     
   const copyButtonClasses = isLight

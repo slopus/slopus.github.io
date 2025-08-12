@@ -1,7 +1,15 @@
-# Happy Coder: Mobile Claude Code Client - Feature Specification
+---
+asIndexPage: true
+theme:
+  typesetting: 'article'
+---
+import { Cards } from 'nextra/components'
+import { BoxIcon } from 'lucide-react'
 
-Happy Coder enables developers to access Claude Code and other AI coding agents from mobile devices (phones), providing seamless handoff between desktop and mobile environments. Mobile coding is not about matching desktop productivity - it's about using the right tool for the right task. Mobile excels at thinking, planning, exploration, and maintaining momentum when away from your desk. Desktop excels at precise editing, detailed review, and multi-monitor workflows. The power comes from seamlessly combining both in a single continuous session.
+# All Features of Happy Coder: Mobile Claude Code Client
 
+Happy Coder provides a native mobile experience for Claude Code, including file mentions, slash commands, and custom agents. Happy Coder also provides many extra quality of life features, including voice coding, push notifications.
+ 
 ## Core Architecture Features
 
 ### 1. Real-Time CLI Synchronization
@@ -26,7 +34,6 @@ Happy Coder enables developers to access Claude Code and other AI coding agents 
 - Cross-device cursor position and selection state sync
 
 ### 2. Multi-Session Management
-S
 
 **Engineering Description**: Support for multiple concurrent Claude Code sessions with independent state management. Each session maintains its own project context, conversation history, and terminal state. Sessions can be paused, resumed, and switched between seamlessly.
 
@@ -45,8 +52,8 @@ S
 > **User Story**: As a security-conscious developer, I want my code and conversations to remain private even from the service provider, so I can use the tool with proprietary or sensitive codebases without compromising confidentiality.
 
 **Technical Implementation**:
-- ChaCha20-Poly1305 encryption for all data in transit
-- ECDH key exchange via QR code scanning
+- AES encryption for all data in transit
+- Key exchange via QR code scanning
 - Zero round-trip authentication protocol
 - Public key hashing for channel identification
 - Open-source relay server for self-hosting
@@ -67,9 +74,13 @@ S
 - Session persistence independent of network connectivity
 - Simple relay server with no access to plaintext data
 
+### 5. File Mentions
+
+### 6. Slash Commands and Custom Agents
+
 ## Mobile-Optimized User Experience Features
 
-### 5. Push Notification System
+### 7. Push Notification System
 
 **Engineering Description**: Push notifications triggered by Claude Code state changes. Notifications 
 include session status updates, completion alerts, error notifications, and input requests. Unlike social media apps where notification fatigue is a concern, work-focused notifications prioritize immediate awareness over filtering - when you're actively developing, you need to know when each async operation completes to make the next work mode decision.
@@ -82,34 +93,34 @@ include session status updates, completion alerts, error notifications, and inpu
 - Deep linking to specific sessions and exact completion points
 - Rich notification content with operation details
 
-### 6. Voice Agent Integration
+### 8. Voice Agent Integration
 
 **Engineering Description**: AI-powered voice interface that acts as an intermediary between the user and Claude Code. The voice agent processes natural language input, maintains conversational context, and generates structured prompts for Claude Code execution.
 
-> **User Story**: As a developer, I want to brainstorm and iterate on coding ideas through voice conversation before committing to a Claude Code execution, so I can think through problems conversationally without immediately locking in a time-consuming code generation process.
+**User Stories**:
+
+> As a developer, I want to brainstorm and iterate on coding ideas through voice conversation before committing to a Claude Code execution, so I can think through problems conversationally without immediately locking in a time-consuming code generation process.
+
+> As a developer, I want to work through my ideas in a low-pressure conversational format where I can think out loud and refine my approach before sending Claude Code off to make actual changes, so I can avoid costly mistakes and poorly-defined requirements.
+
+<Cards.Card
+  icon={<BoxIcon />}
+  title="Voice Coding Blog Post"
+  href="/docs/features/voice-coding"
+  arrow
+  className="max-w-sm my-4"
+/>
+
 
 **Technical Implementation**:
-- Speech-to-text with Eleven Labs
+- Speech-to-text (STT) with Eleven Labs
+- Text-to-speech (TTS) with Eleven Labs
 - Conversation state management with its own context independent of claude code session.
-- Text-to-speech
-- Agentic assistant that can send messages to claude code and has some special prompts to get better results in turning rubber duck style stream of conciousness planning into a concrete request for claude code to execute.
-
-### 7. Smart Planning Mode
-
-**Engineering Description**: Conversation-first interface for developing and refining development plans before execution. Includes conversation history analysis, plan validation, and seamless transition from planning to execution mode.
-
-> **User Story**: As a developer, I want to work through my ideas in a low-pressure conversational format where I can think out loud and refine my approach before sending Claude Code off to make actual changes, so I can avoid costly mistakes and poorly-defined requirements.
-
-**Technical Implementation**:
-- Conversation threading with plan extraction
-- Requirement validation and conflict detection
-- Plan export to structured Claude Code prompts
-- Conversation-to-execution handoff protocol
-- Historical plan analysis and template suggestion
+- Agentic assistant (Claude Sonnet 4) that can send messages to claude code and has some special prompts to get better results in turning rubber duck style stream of conciousness planning into a concrete request for claude code to execute.
 
 ## Productivity Enhancement Features
 
-### 8. Pre-Sleep Task Seeding
+### 9. Pre-Sleep Task Seeding
 
 > **User Story**: As a developer, I've always heard about the productivity hack of leaving something unfinished to start the next morning, but it never worked for me because setting up a meaningful task took 10-20 minutes - too long to be spontaneous, especially when I'd already overstayed at the office to finish something and didn't want to spend another 20 minutes setting myself up for tomorrow. 
 >

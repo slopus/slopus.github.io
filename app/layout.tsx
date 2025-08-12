@@ -1,5 +1,10 @@
 import type { Metadata } from 'next'
-import { IBM_Plex_Mono } from 'next/font/google'
+import { IBM_Plex_Mono, Bricolage_Grotesque } from 'next/font/google'
+const bricolageGrotesque = Bricolage_Grotesque({
+  weight: '700',
+  subsets: ['latin'],
+})
+
 import './globals.css'
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -75,7 +80,7 @@ export default async function RootLayout({
           //banner={<Banner storageKey="docs-banner">Your banner content</Banner>}
           navbar={
             <Navbar 
-              logo={<b>Happy</b>}
+              logo={<b className={bricolageGrotesque.className}>Happy Coder</b>}
               projectLink="https://github.com/slopus/happy"
             />
           }
