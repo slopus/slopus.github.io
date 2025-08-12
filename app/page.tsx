@@ -26,7 +26,7 @@ const APP_STORE_LINK = 'https://apps.apple.com/us/app/happy-claude-code-client/i
 
 export default function Home() {
   // Background video source
-  const videoSrc = '/water1-small.mp4'
+  const videoSrc = '/riding-bg-2.mp4'
   
   // Device detection state
   const [deviceType, setDeviceType] = useState<'ios' | 'android' | 'desktop'>('desktop')
@@ -95,8 +95,6 @@ export default function Home() {
       
       {/* Content */}
       <div className="relative z-20 max-w-4xl mx-auto text-center">
-        <BentoBoxes />
-
 
         {/* Logo and Subtitle */}
         <div className="mb-6 mt-6 bg-[#6999ac]/50 backdrop-blur-[32px] border-2 border-white/20 rounded-[32px] p-8 text-shadow-lg">
