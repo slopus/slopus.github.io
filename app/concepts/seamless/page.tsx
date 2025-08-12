@@ -5,7 +5,10 @@ import AppStoreButton from '@/components/AppStoreButton';
 import GooglePlayButton from '@/components/GooglePlayButton';
 import NpmButton from '@/components/NpmButton';
 import StarOnGithubButton from '@/components/GithubButton';
+import LaunchWebAppButton from '@/components/WebAppButton';
 import { Image } from 'nextra/components';
+import { BentoBoxes } from '@/components/marketing';
+import PhoneBundle from '@/components/phones/PhoneBundle';
 
 // Download links constants (same as main page)
 const NPM_LINK = 'https://www.npmjs.com/package/happy-coder';
@@ -57,16 +60,22 @@ export default function SeamlessPage() {
 
   return (
     <div className="font-sans text-gray-900 bg-white leading-relaxed">
+        {/* App Screenshot with load animation */}
+        <PhoneBundle 
+          size="medium" 
+          className="mb-16" 
+          animationDelay={500}
+        />
 
       {/* Hero Section */}
       <section className="py-24 pb-16">
         <div className="max-w-6xl mx-auto px-5">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <div>
-              <h1 className="text-5xl font-bold mb-5 leading-tight">
+              <h1 className="text-3xl sm:text-5xl font-bold mb-5 leading-tight">
                 Your Claude Code CLI,&nbsp;Now Seamlessly Mobile
               </h1>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+              <p className="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed">
                 The only tool that gives you real-time handoff between your terminal and phone. 
                 Start on your laptop, continue on your phone, pick up where you left off.
               </p>
@@ -96,8 +105,7 @@ export default function SeamlessPage() {
                 </div>
                 <div className="flex gap-4 items-center">
                   <StarOnGithubButton href="https://github.com/slopus/happy" />
-                  <span className="text-gray-300">|</span>
-                  <a href="#" className="text-gray-600 text-sm no-underline hover:text-black hover:underline">View Documentation</a>
+                  <LaunchWebAppButton href="https://app.happy.engineering" />
                 </div>
               </div>
             </div>
@@ -118,6 +126,12 @@ export default function SeamlessPage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="py-16">
+        <div className="max-w-6xl mx-auto px-5">
+          <BentoBoxes />
         </div>
       </section>
 

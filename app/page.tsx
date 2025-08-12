@@ -11,6 +11,7 @@ import SetupSteps from '@/components/marketing/SetupSteps'
 import { BentoBoxes } from '@/components/marketing'
 import GithubLink from '@/components/marketing/GithubLink'
 import MobileSetup from '@/components/marketing/MobileSetup'
+import { PhoneBundle } from '@/components/phones'
 
 const bricolageGrotesque = Bricolage_Grotesque({
   weight: '700',
@@ -29,9 +30,6 @@ export default function Home() {
   
   // Device detection state
   const [deviceType, setDeviceType] = useState<'ios' | 'android' | 'desktop'>('desktop')
-  
-  // Animation state for load animation
-  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     // Client-side device detection
@@ -44,13 +42,6 @@ export default function Home() {
     } else {
       setDeviceType('desktop')
     }
-
-    // Trigger animation after component mounts
-    const timer = setTimeout(() => {
-      setIsLoaded(true)
-    }, 500) // Small delay for a smooth entrance effect
-
-    return () => clearTimeout(timer)
   }, [])
 
   // Render store buttons based on device type
@@ -104,9 +95,7 @@ export default function Home() {
       
       {/* Content */}
       <div className="relative z-20 max-w-4xl mx-auto text-center">
-        {/* TODO make the bento boxes design look nice
         <BentoBoxes />
-        */}
 
 
         {/* Logo and Subtitle */}
@@ -126,82 +115,11 @@ export default function Home() {
         </div>
         
         {/* App Screenshot with load animation */}
-        <div className="mb-16 relative">
-          <div 
-            className="relative w-[300px] max-w-[80%] h-auto mx-auto"
-            style={{ perspective: '1000px' }}
-          >
-            {/* App 2 - slides to the left */}
-            <div 
-              className="absolute inset-0 transition-all duration-1000 ease-out"
-              style={{
-                transform: isLoaded 
-                  ? 'translateX(-120px) translateY(20px) translateZ(-50px) rotate(-15deg) rotateY(25deg) rotateX(10deg)'
-                  : 'translateX(0px) translateY(0px) translateZ(0px) rotate(0deg) rotateY(0deg) rotateX(0deg)',
-                transformOrigin: 'bottom center',
-                transformStyle: 'preserve-3d',
-                filter: isLoaded 
-                  ? 'drop-shadow(20px 10px 30px rgba(0,0,0,0.3))'
-                  : 'drop-shadow(0px 0px 0px rgba(0,0,0,0))',
-                zIndex: 1
-              }}
-            >
-              <Image
-                src="/app-2.png"
-                alt="Claude Code in Happy Coder App Screenshot 2"
-                width={400}
-                height={866}
-                className="w-full h-auto"
-              />
-            </div>
-
-            {/* App 1 - slides to the right */}
-            <div 
-              className="absolute inset-0 transition-all duration-1000 ease-out"
-              style={{
-                transform: isLoaded 
-                  ? 'translateX(120px) translateY(20px) translateZ(-50px) rotate(15deg) rotateY(-25deg) rotateX(10deg)'
-                  : 'translateX(0px) translateY(0px) translateZ(0px) rotate(0deg) rotateY(0deg) rotateX(0deg)',
-                transformOrigin: 'bottom center',
-                transformStyle: 'preserve-3d',
-                filter: isLoaded 
-                  ? 'drop-shadow(-20px 10px 30px rgba(0,0,0,0.3))'
-                  : 'drop-shadow(0px 0px 0px rgba(0,0,0,0))',
-                zIndex: 1
-              }}
-            >
-              <Image
-                src="/app-1.png"
-                alt="Claude Code in Happy Coder App Screenshot"
-                width={400}
-                height={866}
-                className="w-full h-auto"
-              />
-            </div>
-
-            {/* App 3 - main image on top */}
-            <div 
-              className="relative z-10 transition-all duration-1000 ease-out"
-              style={{
-                filter: isLoaded 
-                  ? 'drop-shadow(0px 5px 15px rgba(0,0,0,0.2))'
-                  : 'drop-shadow(0px 0px 0px rgba(0,0,0,0))',
-                transform: isLoaded 
-                  ? 'translateZ(10px)'
-                  : 'translateZ(0px)',
-                transformStyle: 'preserve-3d'
-              }}
-            >
-              <Image
-                src="/app-3.png"
-                alt="Claude Code in Happy Coder App Screenshot 3"
-                width={400}
-                height={866}
-                className="w-full h-auto"
-              />
-            </div>
-          </div>
-        </div>
+        <PhoneBundle 
+          size="medium" 
+          className="mb-16" 
+          animationDelay={500}
+        />
         
         {/* Features List */}
         <div className="text-2xl leading-normal mb-12 bg-[#6999ac]/50 backdrop-blur-[32px] border-2 border-white/20 rounded-[32px] p-8 font-bold text-shadow-lg">

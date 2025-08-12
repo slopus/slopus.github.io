@@ -10,12 +10,12 @@ const Features = () => {
   ];
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+    <div className="border border-gray-200 rounded-2xl p-5 shadow-sm" style={{backgroundColor: '#f5f5f9'}}>
       <div className="space-y-3">
         {features.map((feature, index) => (
-          <div key={index} className="flex items-start gap-3">
-            <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
-            <span className="text-gray-300 text-sm">{feature}</span>
+          <div key={index} className="flex items-start gap-3 text-left">
+            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+            <span className="text-gray-700 text-sm">{feature}</span>
           </div>
         ))}
       </div>

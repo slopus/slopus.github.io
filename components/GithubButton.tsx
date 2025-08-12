@@ -11,7 +11,7 @@ export default function StarOnGithubButton({ href, className = '' }: GithubButto
       href={href} 
       target="_blank" 
       rel="noopener noreferrer" 
-      className={`group px-8 py-4 border border-border rounded-lg font-semibold transition-all hover:border-primary hover:text-primary hover:bg-primary/5 flex items-center gap-3 ${className}`}
+      className={`group px-4 py-4 border border-border rounded-lg font-semibold transition-all hover:border-primary hover:text-primary hover:bg-primary/5 flex items-center gap-3 ${className}`}
     >
       <svg 
         stroke="currentColor" 
@@ -43,3 +43,4 @@ export default function StarOnGithubButton({ href, className = '' }: GithubButto
     </a>
   );
 }
+

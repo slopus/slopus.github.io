@@ -9,13 +9,13 @@ const ExampleSetups = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-br from-indigo-500/10 to-purple-600/10 border border-indigo-500/30 rounded-2xl p-5">
-      <h3 className="text-white font-semibold text-base mb-3">Example Setups</h3>
+    <div className="border border-gray-200 rounded-2xl p-5 shadow-sm" style={{backgroundColor: '#f5f5f9'}}>
+      <h3 className="text-gray-900 font-semibold text-base mb-3">Example Setups</h3>
       <div className="space-y-3">
         {examples.map((example, index) => (
           <div key={index} className="flex items-start gap-3">
             <span className="text-lg">{example.icon}</span>
-            <span className="text-gray-300 text-sm">{example.text}</span>
+            <span className="text-gray-700 text-sm">{example.text}</span>
           </div>
         ))}
       </div>

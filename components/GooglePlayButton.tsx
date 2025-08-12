@@ -5,12 +5,13 @@ interface GooglePlayButtonProps {
 }
 
 const GooglePlayButton: React.FC<GooglePlayButtonProps> = ({ href }) => (
-  <a className="flex justify-center py-1 mr-2" href={href} target="_blank" rel="noopener noreferrer">
+  <a className="h-12 sm:h-16" href={href} target="_blank" rel="noopener noreferrer">
     <svg
-      className="w-[220px] h-[74px]"
+      className="h-full w-auto flex-shrink-0"
       viewBox="0 0 180 53.333"
       xmlSpace="preserve"
       xmlns="http://www.w3.org/2000/svg"
+      preserveAspectRatio="xMidYMid meet"
     >
       <path
         d="M173.33 53.333H6.67c-3.667 0-6.666-3-6.666-6.667V6.669C.004 3 3.004 0 6.67 0h166.66c3.667 0 6.667 3 6.667 6.666v40c0 3.666-3 6.666-6.667 6.666"
@@ -42,7 +43,7 @@ const GooglePlayButton: React.FC<GooglePlayButtonProps> = ({ href }) => (
       ></path>
       <path
         d="M63.193 13.042h-3.89v.963h2.915c-.08.785-.392 1.402-.919 1.85-.527.447-1.2.672-1.995.672-.873 0-1.613-.304-2.22-.908-.593-.616-.895-1.379-.895-2.298 0-.918.302-1.68.896-2.298.606-.604 1.346-.906 2.219-.906.448 0 .875.077 1.266.246.392.169.706.404.952.706l.74-.74a3.33 3.33 0 0 0-1.288-.885 4.396 4.396 0 0 0-1.67-.314c-1.165 0-2.152.404-2.959 1.21-.806.808-1.21 1.804-1.21 2.981 0 1.177.404 2.175 1.21 2.982.806.806 1.794 1.21 2.958 1.21 1.223 0 2.198-.392 2.948-1.188.66-.662.998-1.558.998-2.679 0-.19-.023-.391-.056-.604zM64.7 9.309v8.025h4.685v-.986h-3.654v-2.545h3.296v-.963H65.73v-2.544h3.654V9.31zm11.255.987V9.31H70.44v.987h2.242v7.038h1.031v-7.038zm4.992-.987h-1.03v8.025h1.03zm6.807.987V9.31h-5.515v.987h2.242v7.038h1.031v-7.038zm10.406.057c-.796-.82-1.77-1.223-2.936-1.223s-2.141.404-2.937 1.21c-.796.796-1.187 1.794-1.187 2.981s.391 2.186 1.187 2.982c.796.806 1.77 1.21 2.937 1.21 1.155 0 2.14-.404 2.936-1.21.796-.796 1.187-1.794 1.187-2.982 0-1.177-.391-2.173-1.187-2.968zm-5.133.67c.593-.604 1.323-.906 2.197-.906.873 0 1.603.302 2.186.906.594.594.885 1.369.885 2.298 0 .932-.291 1.704-.885 2.298-.583.604-1.313.908-2.186.908-.874 0-1.604-.304-2.197-.908-.582-.606-.873-1.366-.873-2.298 0-.929.291-1.691.873-2.298zm8.77 1.313-.043-1.548h.043l4.08 6.546h1.076V9.309h-1.03v4.695l.043 1.548h-.044l-3.9-6.243h-1.256v8.025h1.031z"
-        fill="#fff"
+          fill="#fff"
         stroke="#fff"
         strokeMiterlimit="10"
         strokeWidth=".267"
@@ -50,5 +51,23 @@ const GooglePlayButton: React.FC<GooglePlayButtonProps> = ({ href }) => (
     </svg>
   </a>
 );
+
+// TODO see if we should use this png resource, I am not using it right now, but maybe I should?
+export function OtherGooglePlayButton({ href }: { href: string }) {
+  return (
+    <a 
+    className="inline-block transition-transform hover:scale-105" 
+    href={href} 
+    target="_blank" 
+    rel="noopener noreferrer"
+    >
+    <img
+      alt="Get it on Google Play"
+      src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+      className="h-[60px] w-auto"
+    />
+    </a>
+  )
+}
 
 export default GooglePlayButton;

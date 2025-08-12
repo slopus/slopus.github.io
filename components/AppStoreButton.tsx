@@ -5,12 +5,13 @@ interface AppStoreButtonProps {
 }
 
 const AppStoreButton: React.FC<AppStoreButtonProps> = ({ href }) => (
-  <a className="flex justify-center py-1" href={href} target="_blank" rel="noopener noreferrer">
+  <a className="h-12 sm:h-16" href={href} target="_blank" rel="noopener noreferrer">
     <svg
-      className="w-[200px] h-[70px]"
-      viewBox="0, 0, 238, 80"
+      className="h-full w-auto flex-shrink-0"
+      viewBox="0 0 238 80"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      preserveAspectRatio="xMidYMid meet"
     >
       <g clipPath="url(#app-store-button_svg__a)">
         <path
