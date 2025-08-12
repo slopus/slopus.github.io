@@ -15,7 +15,7 @@ const APP_STORE_LINK = 'https://apps.apple.com/us/app/happy-claude-code-client/i
 
 export default function HeroSection() {
   // Background video source (using existing video)
-  const videoSrc = '/water1-small.mp4'
+  const videoSrc = '/riding-bg-2.mp4'
   
   // Device detection state
   const [deviceType, setDeviceType] = useState<'ios' | 'android' | 'desktop'>('desktop')
@@ -39,14 +39,12 @@ export default function HeroSection() {
       case 'ios':
         return (
           <>
-            <NpmButton href={NPM_LINK} />
             <AppStoreButton href={APP_STORE_LINK} />
           </>
         )
       case 'android':
         return (
           <>
-            <NpmButton href={NPM_LINK} />
             <GooglePlayButton href={GOOGLE_PLAY_LINK} />
           </>
         )
@@ -54,7 +52,6 @@ export default function HeroSection() {
       default:
         return (
           <>
-            <NpmButton href={NPM_LINK} />
             <GooglePlayButton href={GOOGLE_PLAY_LINK} />
             <AppStoreButton href={APP_STORE_LINK} />
           </>
@@ -92,18 +89,8 @@ export default function HeroSection() {
         </video>
         
         {/* Gradient overlays for better text readability */}
-        <div 
-          className="absolute inset-0" 
-          style={{
-            background: 'linear-gradient(rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0.25) 100%)'
-          }}
-        />
-        <div 
-          className="absolute inset-0" 
-          style={{
-            background: 'radial-gradient(transparent 0%, transparent 40%, rgba(255, 255, 255, 0.5) 100%)'
-          }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/45 via-white/25 to-white/15" />
+        <div className="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-white/25" />
         <div 
           className="absolute inset-0 pointer-events-none" 
           style={{
@@ -112,54 +99,29 @@ export default function HeroSection() {
         />
         
         <div className="absolute inset-0 flex items-start justify-center pt-8 md:pt-12">
-          <div className="relative p-6 sm:p-10 md:p-14 pt-12 sm:pt-16 md:pt-20 animate-fadeIn">
-            <style jsx>{`
-
-              
-              @keyframes fadeIn {
-                from {
-                  opacity: 0;
-                  transform: translateY(-20px);
-                }
-                to {
-                  opacity: 1;
-                  transform: translateY(0);
-                }
-              }
-              
-              .animate-fadeIn {
-                animation: fadeIn 0.6s ease-out;
-              }
-            `}</style>
+          <div className="relative p-6 sm:p-10 md:p-14 pt-12 sm:pt-16 md:pt-20 animate-in fade-in slide-in-from-top-4 duration-600">
             
             <div className="text-center">
               <div className="space-y-4 mb-8">
                 <h2 
-                  className="text-2xl sm:text-2xl md:text-3xl font-semibold text-[#1a1a1a] mb-3" 
-                  style={{ textShadow: 'rgba(255, 255, 255, 0.9) 0px 2px 12px' }}
+                  className="text-2xl sm:text-2xl md:text-3xl font-semibold text-[#1a1a1a] mb-3 drop-shadow-[0_2px_12px_rgba(255,255,255,0.9)]"
                 >
                   Your Claude Code CLI, Now Seamlessly Mobile
                 </h2>
               </div>
               <PhoneBundle size="small" /> 
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <button className="px-8 sm:px-14 py-4 sm:py-5 bg-amber-500/90 hover:bg-amber-500 text-black font-semibold rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-amber-500/50 border-2 border-amber-400/50 font-mono text-lg sm:text-xl w-full sm:w-auto">
-                  Go to App
-                </button>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  {renderStoreButtons()}
-                </div>
+              <div className="flex gap-2 justify-center items-center flex-wrap w-screen mt-12">
+                {renderStoreButtons()}
               </div>
               
               <div className="mt-6 flex flex-col items-center space-y-2">
                 <span 
-                  className="text-[#1a1a1a]/60 text-sm" 
-                  style={{ textShadow: 'rgba(255, 255, 255, 0.8) 0px 2px 8px' }}
+                  className="text-md font-semibold drop-shadow-[0_2px_8px_rgba(255,255,255,0.8)]"
                 >
                   Then get started with:
                 </span>
-                <Terminal command="npm install happy-coder && happy" />
+                <Terminal command="npm install happy-coder && happy" variant="light" />
 
               </div>
             </div>
@@ -170,8 +132,7 @@ export default function HeroSection() {
     </section>
     <section>
         <span 
-          className="text-[#1a1a1a]/60 text-sm" 
-          style={{ textShadow: 'rgba(255, 255, 255, 0.8) 0px 2px 8px' }}
+          className="text-[#1a1a1a]/60 text-sm drop-shadow-[0_2px_8px_rgba(255,255,255,0.8)]"
         >
           Then get started with:
         </span>

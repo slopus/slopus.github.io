@@ -7,7 +7,7 @@ interface TerminalProps {
   variant?: 'dark' | 'light';
 }
 
-const Terminal: React.FC<TerminalProps> = ({ command, className = "", variant = 'dark' }) => {
+const Terminal: React.FC<TerminalProps> = ({ command, className = "", variant = 'light' }) => {
   const [isCopied, setIsCopied] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
@@ -57,9 +57,14 @@ const Terminal: React.FC<TerminalProps> = ({ command, className = "", variant = 
     <div className={`relative rounded-lg transition-all duration-200 p-4 shadow-lg ${containerClasses} ${className}`}>
       <button 
         onClick={handleCopy}
-        className={`absolute top-2 right-2 p-1.5 rounded-md transition-all duration-200 group ${copyButtonClasses} ${
+        className={`float-right -mr-2 -mt-2 p-1.5 rounded-md transition-all duration-200 group ${copyButtonClasses} ${
           isClicked ? 'scale-95' : 'scale-100'
         }`}
+        style={{
+          shapeOutside: 'inset(0 0 0 0)',
+          marginLeft: '8px',
+          marginBottom: '4px'
+        }}
       >
         {isCopied ? (
           <Check 
@@ -73,8 +78,8 @@ const Terminal: React.FC<TerminalProps> = ({ command, className = "", variant = 
           />
         )}
       </button>
-      <div className="flex items-center">
-        <span className={`font-mono text-sm mr-2 select-none ${dollarSignClasses}`} style={{textShadow}}>$</span>
+      <div className="flex items-center text-left">
+        <span className={`font-mono text-sm mr-2 select-none self-start ${dollarSignClasses}`} style={{textShadow}}>$</span>
         <code className={`font-mono text-sm tracking-wide ${commandTextClasses}`} style={{textShadow}}>
           {command}
         </code>

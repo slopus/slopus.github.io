@@ -111,6 +111,8 @@ export default function SeamlessPage() {
             </div>
             
             <div className="relative h-[500px]">
+              <PhoneBundle size="medium" />
+              {/*
               <div className="absolute w-full h-[300px] top-0 left-0 bg-gray-900 text-gray-300 p-5 font-mono rounded-xl shadow-2xl flex items-center justify-center">
                 Terminal Screenshot
               </div>
@@ -124,6 +126,7 @@ export default function SeamlessPage() {
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-4 py-2 bg-green-500 text-white rounded-full text-xs font-semibold z-10">
                 ⚡ Real-time Sync
               </div>
+              */}
             </div>
           </div>
         </div>
