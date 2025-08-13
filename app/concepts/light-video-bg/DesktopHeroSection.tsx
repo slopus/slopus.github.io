@@ -56,7 +56,7 @@ export default function DesktopHeroSection() {
   }
 
   return (
-    <section className="py-8 md:py-12 xl:py-24 pb-16 hidden sm:block">
+    <section className="py-8 pb-24 md:py-24 xl:py-32 hidden sm:block">
       <div className="max-w-6xl mx-auto px-5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <div>
@@ -96,7 +96,7 @@ export default function DesktopHeroSection() {
             
           </div>
           
-          <div className="relative h-[500px]">
+          <div className="relative">
             <PhoneBundle size="medium" />
           </div>
         </div>

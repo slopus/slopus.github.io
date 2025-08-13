@@ -1,20 +1,50 @@
-# Introduction
+import { Cards } from 'nextra/components'
+import { DownloadIcon } from 'lucide-react'
+import DiscordIcon from '@/components/DiscordIcon'
+
+# Getting Started
+
+<div className="flex gap-2 my-2 items-center">
+    <Cards.Card
+        icon={<DownloadIcon />}
+        title="Download"
+        href="/download"
+    />
+    <Cards.Card
+        title="Start Tutorial"
+        href="/docs/guides/tutorial"
+        arrow
+    />
+</div>
+
+
 
 Welcome to the Happy Coder documentation! Here you'll find detailed information about the API, configuration, and advanced features.
 
-## Getting Started
+
+It's free and open source.
+
+
+## Learn More 
+
+<Cards>
+    <Cards.Card
+        title="Video Guides"
+        href="/docs/guides"
+        arrow
+        className="max-w-sm my-4"
+    />
+    <Cards.Card
+        icon={<DiscordIcon />}
+        title="Chat"
+        href="https://discord.gg/happy-coder"
+        className="max-w-sm my-4"
+    />
+</Cards>
+
 
 - **[Installation](/docs/installation)** - How to install and set up Happy Coder
 - **[Quick Start](/guides/quick-start)** - Get up and running quickly
 
-## API Reference
+## Features
 
-*API documentation coming soon!*
-
-## Configuration
-
-*Configuration options coming soon!*
-
-## Examples
-
-*Code examples coming soon!*
