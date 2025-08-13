@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react'
 import { Bricolage_Grotesque } from 'next/font/google'
 import Link from 'next/link'
 import SetupSteps from '@/components/marketing/SetupSteps'
-import { BentoBoxes } from '@/components/marketing'
+import { BentoBoxes, YoutubeDemoSection } from '@/components/marketing'
 import GithubLink from '@/components/marketing/GithubLink'
 import MobileSetup from '@/components/marketing/MobileSetup'
 import { PhoneBundle } from '@/components/phones'
@@ -44,6 +44,12 @@ export default function Home() {
     <>
       <MobileHeroSection />
       <DesktopHeroSection />
+      
+      <YoutubeDemoSection 
+        youtubeId="YOUR_YOUTUBE_VIDEO_ID"
+        title="See Happy Coder in Action"
+      />
+      
       <section className="relative">
         <div className="absolute" style={{
           backgroundImage: `url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMiAyIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxjaXJjbGUgaWQ9IkRvdCIgY3g9IjAuMSIgY3k9IjAuMSIgcj0iMC4wNSIgZmlsbD0iIzk1OTM5MyIgLz4KPC9zdmc+")`,
