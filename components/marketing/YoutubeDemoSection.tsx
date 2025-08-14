@@ -12,7 +12,7 @@ interface YoutubeDemoSectionProps {
 export default function YoutubeDemoSection({ 
   youtubeId, 
   posterImage = "/app-1.png", // Default to existing app screenshot
-  title = "See Claude Code in Action"
+  title
 }: YoutubeDemoSectionProps) {
   const [showVideo, setShowVideo] = useState(false)
 
@@ -27,7 +27,7 @@ export default function YoutubeDemoSection({
   return (
     <>
       <section 
-        className="container mx-auto px-4 py-8 md:pb-24 max-w-[800px]" 
+        className="container mx-auto px-4 py-8 md:pb-12 max-w-[1200px]" 
         aria-label="Product demo video"
       >
         <div className="relative w-full rounded-2xl bg-white dark:bg-gray-800 overflow-hidden shadow-lg dark:shadow-[0_0_40px_rgba(255,255,255,0.1)] dark:ring-1 dark:ring-white/20">
@@ -38,7 +38,7 @@ export default function YoutubeDemoSection({
               alt="Demo video thumbnail"
               fill
               className="object-cover"
-              sizes="(max-width: 800px) 100vw, 800px"
+              sizes="(max-width: 1200px) 100vw, 1200px"
             />
             
             {/* Play Button Overlay */}
@@ -72,7 +72,7 @@ export default function YoutubeDemoSection({
           />
           
           {/* Video Container */}
-          <div className="relative z-50 w-full max-w-5xl mx-4">
+          <div className="relative z-50 w-full mx-4">
             <div className="aspect-video relative rounded-lg overflow-hidden">
               <iframe
                 className="absolute inset-0 w-full h-full rounded-lg"

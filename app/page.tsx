@@ -13,30 +13,103 @@ import GithubLink from '@/components/marketing/GithubLink'
 import MobileSetup from '@/components/marketing/MobileSetup'
 import { PhoneBundle } from '@/components/phones'
 import MobileHeroSection from '@/app/concepts/light-video-bg/MobileHeroSection'
-import DesktopHeroSection from '@/app/concepts/light-video-bg/DesktopHeroSection'
 import TextBasedFeatures from '@/components/marketing/TextBasedFeatures'
+import AdaptiveTerminal from '@/components/AdaptiveTerminal'
+import LaunchWebAppButton from '@/components/WebAppButton'
+import StarOnGithubButton from '@/components/GithubButton'
 
-function AppScreenshot({ title, description, href }: { title: string, description: string, href?: string }) {
+const GOOGLE_PLAY_LINK = 'https://play.google.com/store/apps/details?id=com.ex3ndr.happy'
+const APP_STORE_LINK = 'https://apps.apple.com/us/app/happy-claude-code-client/id6748571505'
+
+
+function DesktopHeroSection() {
+  // Device detection state
+  const [deviceType, setDeviceType] = useState<'ios' | 'android' | 'desktop'>('desktop')
+
+  useEffect(() => {
+    // Client-side device detection
+    const userAgent = navigator.userAgent.toLowerCase()
+    
+    if (/iphone|ipad|ipod/.test(userAgent)) {
+      setDeviceType('ios')
+    } else if (/android/.test(userAgent)) {
+      setDeviceType('android')
+    } else {
+      setDeviceType('desktop')
+    }
+  }, [])
+
+  // Render store buttons based on device type
+  const renderStoreButtons = () => {
+    switch (deviceType) {
+      case 'ios':
+        return (
+          <>
+            <AppStoreButton href={APP_STORE_LINK} />
+          </>
+        )
+      case 'android':
+        return (
+          <>
+            <GooglePlayButton href={GOOGLE_PLAY_LINK} />
+          </>
+        )
+      case 'desktop':
+      default:
+        return (
+          <>
+            <GooglePlayButton href={GOOGLE_PLAY_LINK} />
+            <AppStoreButton href={APP_STORE_LINK} />
+          </>
+        )
+    }
+  }
+
   return (
-          <div className="flex flex-col items-center">
-            <div className="relative transform hover:scale-105 transition-transform duration-300 max-w-[375px]">
-              
-              <Image
-                src={href || "/app-3.png"}
-                alt="Claude Code in Happy Coder App Screenshot"
-                width={323}
-                height={700}
-                className="w-full h-auto border-4 rounded-[40px]"
-              />
+    <section className="py-8 pb-24 md:py-24 xl:py-32 hidden sm:block font-mono">
+      <div className="max-w-[72ch] mx-auto px-5">
+        <div className="">
+          <div>
+            <h1 className="text-3xl sm:text-3xl font-bold mb-5 leading-tight">
+             Happy: Use Claude Code Anywhere 
+            </h1>
+      
+            <YoutubeDemoSection 
+              youtubeId="GCS0OG9QMSE"
+              posterImage="https://img.youtube.com/vi/GCS0OG9QMSE/maxresdefault.jpg"
+            />
+            
+            <div className="mb-6 text-base text-gray-700 dark:text-gray-300">
+              <div className="flex items-start mb-4 ">
+                <span>No workflow disruption - Claude Code runs on your machine</span>
+              </div>
+              <div className="flex items-start mb-4">
+                <span>Open Source (MIT Licensed)</span>
+              </div>
+              <div className="flex items-start mb-4">
+                <span>Secure - end to end encryption</span>
+              </div>
+              <div className="flex items-start mb-4">
+                <span>Multiple active sessions across multiple machines</span>
+              </div>
+                <AdaptiveTerminal command="npm i -g happy-coder && happy"  />
             </div>
-            <div className="mt-6 text-left max-w-[320px]">
-              <h3 className="font-semibold text-lg sm:text-xl mb-1">{title}</h3>
-              <p className="text-gray-400 text-sm sm:text-base">
-                {description}
-              </p>
+            
+            <div className="flex flex-col gap-5">
+              <div className="flex gap-4 flex-wrap">
+                {renderStoreButtons()}
+                <LaunchWebAppButton href="https://app.happy.engineering" />
+                <StarOnGithubButton href="https://github.com/slopus/happy" />
+              </div>
+              <div className="flex gap-4 items-center">
+              </div>
             </div>
+            
           </div>
-  );
+        </div>
+      </div>
+    </section>
+  )
 }
 
 export default function Home() {
@@ -44,56 +117,21 @@ export default function Home() {
 
   return (
     <>
-      <MobileHeroSection />
-      <DesktopHeroSection />
-      
-      
+      <div className="max-w-[72ch] mx-auto px-5">
+        <h1 className="text-3xl sm:text-3xl font-bold mb-5 leading-tight">
+          Happy: Use Claude Code Anywhere 
+        </h1>
+      </div>
       <YoutubeDemoSection 
         youtubeId="GCS0OG9QMSE"
         posterImage="https://img.youtube.com/vi/GCS0OG9QMSE/maxresdefault.jpg"
-        title="See Happy Claude Code Client in Action"
       />
       
-      <section className="max-w-[72ch] mx-auto">
+      
+      <section className="max-w-[72ch] mx-auto py-12">
       <TextBasedFeatures />
       <div className="h-12"></div>
       <TextBasedHowItWorks />
-      </section>
-
-      
-      <section className="relative">
-        <div className="absolute bg-[#faf9f5] dark:bg-[#282828]" style={{
-          backgroundImage: `url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMiAyIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxjaXJjbGUgaWQ9IkRvdCIgY3g9IjAuMSIgY3k9IjAuMSIgcj0iMC4wNSIgZmlsbD0iIzk1OTM5MyIgLz4KPC9zdmc+")`,
-          backgroundRepeat: 'repeat',
-          backgroundPosition: '8px 8px',
-          backgroundSize: '16px 16px',
-          width: '100%',
-          height: '100%',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          zIndex: -1,
-        }}></div>
-        <div className="max-w-6xl mx-auto px-5 pb-24">
-        <h2 className="text-left text-5xl font-bold pt-12 md:pt-24 pb-12 bg-grey-100">
-          Features
-        </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 md:gap-16 lg:gap-20 max-w-7xl mx-auto flex-wrap">
-            <AppScreenshot title="Parallel Sessions" description="Connect multiple computers to one mobile app. Run Claude Code agents simultaneously across different machines. manage your workstation, home server, and vm instances from one place." href="/feature-multiple-parallel-sessions.png" />
-            <AppScreenshot title="Launch new sessions" description="Start Claude Code sessions from your phone while commuting or away from desk. Choose any connected machine and project directory. When you sit down at your computer, continue the same session in the terminal." href="/feature-create-new-session.png"/>
-            <AppScreenshot title="Plan Mode" description="All existing Claude Code modes work identically on mobile. Plan Mode, execution mode, and other CLI modes pass through seamlessly. No mobile-specific limitations or adaptations." href="/feature-plan-mode.png" />
-            <AppScreenshot title="Permission Prompts" description="MCP tool calls and file edit operations trigger real-time permission requests on mobile with push notifications." href="/feature-permission-prompts.png"/>
-            <AppScreenshot title="Custom Slash Commands" description="All Claude Code slash commands and custom agents from ~/.claude/agents/ are available on mobile. Type / to see your complete agent library." href="/feature-custom-slash-commands.png"/>
-            {/*
-            <AppScreenshot title="Push Notifications" description="TODO describe this feature" />
-            <AppScreenshot title="Voice Control" description="TODO describe this feature" />
-            <AppScreenshot title="Web App" description="TODO describe this feature" />
-            <AppScreenshot title="Seamless handoff" description="TODO describe this feature" />
-            */}
-            <AppScreenshot title="File Browser" description="Browse your complete project file tree directly from your phone. Perfect for exploring codebases on-the-go or quickly locating where specific functions, types, or components are defined without needing your desktop." href="/feature-file-browser.png"/>
-            <AppScreenshot title="Thinking State" description="Monitor all your Claude Code agents at a glance from the home screen. See real-time status indicators showing which agents are actively thinking, waiting for input, or ready for new tasks across all your connected machines." href="/feature-thinking-state.png"/>
-          </div>
-        </div>
       </section>
     </>
   )
