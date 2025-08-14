@@ -19,6 +19,7 @@ function AppScreenshot({ title, description, href }: { title: string, descriptio
   return (
           <div className="flex flex-col items-center">
             <div className="relative transform hover:scale-105 transition-transform duration-300 max-w-[375px]">
+              
               <Image
                 src={href || "/app-3.png"}
                 alt="Claude Code in Happy Coder App Screenshot"
@@ -27,7 +28,7 @@ function AppScreenshot({ title, description, href }: { title: string, descriptio
                 className="w-full h-auto border-4 rounded-[40px]"
               />
             </div>
-            <div className="mt-6 text-left max-w-[250px]">
+            <div className="mt-6 text-left max-w-[320px]">
               <h3 className="font-semibold text-lg sm:text-xl mb-1">{title}</h3>
               <p className="text-gray-400 text-sm sm:text-base" style={{textShadow: "rgba(0, 0, 0, 0.7) 0px 2px 4px;"}}>
                 {description}
@@ -46,15 +47,15 @@ export default function Home() {
       <DesktopHeroSection />
       
       <YoutubeDemoSection 
-        youtubeId="YOUR_YOUTUBE_VIDEO_ID"
-        title="See Happy Coder in Action"
+        youtubeId="GCS0OG9QMSE"
+        posterImage="https://img.youtube.com/vi/GCS0OG9QMSE/maxresdefault.jpg"
+        title="See Happy Claude Code Client in Action"
       />
       
       <section className="relative">
-        <div className="absolute" style={{
+        <div className="absolute bg-[#faf9f5] dark:bg-[#282828]" style={{
           backgroundImage: `url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMiAyIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxjaXJjbGUgaWQ9IkRvdCIgY3g9IjAuMSIgY3k9IjAuMSIgcj0iMC4wNSIgZmlsbD0iIzk1OTM5MyIgLz4KPC9zdmc+")`,
           backgroundRepeat: 'repeat',
-          backgroundColor: '#faf9f5',
           backgroundPosition: '8px 8px',
           backgroundSize: '16px 16px',
           width: '100%',
@@ -69,16 +70,19 @@ export default function Home() {
           Features
         </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 md:gap-16 lg:gap-20 max-w-7xl mx-auto flex-wrap">
-            <AppScreenshot title="Plan Mode" description="TODO describe this feature" />
-            <AppScreenshot title="Custom Slash Commands" description="TODO describe this feature" />
-            <AppScreenshot title="Parallel Sessions" description="TODO describe this feature" />
+            <AppScreenshot title="Parallel Sessions" description="Connect multiple computers to one mobile app. Run Claude Code agents simultaneously across different machines. manage your workstation, home server, and vm instances from one place." href="feature-multiple-parallel-sessions.png" />
+            <AppScreenshot title="Launch new sessions" description="Start Claude Code sessions from your phone while commuting or away from desk. Choose any connected machine and project directory. When you sit down at your computer, continue the same session in the terminal." href="/feature-create-new-session.png"/>
+            <AppScreenshot title="Plan Mode" description="All existing Claude Code modes work identically on mobile. Plan Mode, execution mode, and other CLI modes pass through seamlessly. No mobile-specific limitations or adaptations." href="/feature-plan-mode.png" />
+            <AppScreenshot title="Permission Prompts" description="TODO describe this feature" href="feature-permission-prompts.png"/>
+            <AppScreenshot title="Custom Slash Commands" description="TODO describe this feature" href="/feature-custom-slash-commands.png"/>
+            {/*
             <AppScreenshot title="Push Notifications" description="TODO describe this feature" />
-            <AppScreenshot title="Permission Prompts" description="TODO describe this feature" />
             <AppScreenshot title="Voice Control" description="TODO describe this feature" />
-            <AppScreenshot title="Launch new sessions" description="TODO describe this feature" />
             <AppScreenshot title="Web App" description="TODO describe this feature" />
             <AppScreenshot title="Seamless handoff" description="TODO describe this feature" />
-            <AppScreenshot title="File Browser" description="TODO describe this feature" href="/feature-file-browser.jpg"/>
+            */}
+            <AppScreenshot title="File Browser" description="TODO describe this feature" href="/feature-file-browser.png"/>
+            <AppScreenshot title="Thinking State" description="TODO describe this feature" href="/feature-thinking-state.png"/>
           </div>
         </div>
       </section>

@@ -64,20 +64,20 @@ export default function DesktopHeroSection() {
               Native Mobile App for Claude Code CLI
             </h1>
             
-            <div className="mb-6 text-lg sm:text-xl">
-              <div className="flex items-start mb-4 text-gray-700">
+            <div className="mb-6 text-lg sm:text-xl text-gray-700 dark:text-gray-300">
+              <div className="flex items-start mb-4 ">
                 <span className="text-green-500 mr-2.5 font-bold">✓</span>
                 <span>Real-time sync between CLI and mobile - same session, everywhere</span>
               </div>
-              <div className="flex items-start mb-4 text-gray-700">
+              <div className="flex items-start mb-4">
                 <span className="text-green-500 mr-2.5 font-bold">✓</span>
                 <span>100% Free & Open Source (MIT Licensed)</span>
               </div>
-              <div className="flex items-start mb-4 text-gray-700">
+              <div className="flex items-start mb-4">
                 <span className="text-green-500 mr-2.5 font-bold">✓</span>
                 <span>Works with your existing Claude Code workflow</span>
               </div>
-              <div className="flex items-start mb-4 text-gray-700">
+              <div className="flex items-start mb-4">
                 <span className="text-green-500 mr-2.5 font-bold">✓</span>
                 <span>Multiple concurrent sessions support</span>
               </div>

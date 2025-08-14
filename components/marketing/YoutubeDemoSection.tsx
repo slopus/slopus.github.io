@@ -27,10 +27,10 @@ export default function YoutubeDemoSection({
   return (
     <>
       <section 
-        className="container mx-auto px-4 py-8 max-w-[800px]" 
+        className="container mx-auto px-4 py-8 md:pb-24 max-w-[800px]" 
         aria-label="Product demo video"
       >
-        <div className="relative w-full rounded-lg bg-white border overflow-hidden shadow-lg">
+        <div className="relative w-full rounded-2xl bg-white dark:bg-gray-800 overflow-hidden shadow-lg dark:shadow-[0_0_40px_rgba(255,255,255,0.1)] dark:ring-1 dark:ring-white/20">
           {/* Poster Image with Play Button */}
           <div className="relative aspect-video">
             <Image
@@ -56,7 +56,7 @@ export default function YoutubeDemoSection({
         
         {/* Optional title */}
         {title && (
-          <h2 className="text-center text-2xl font-bold mt-6 text-gray-900">
+          <h2 className="text-center text-3xl font-bold mt-6 text-gray-900 dark:text-gray-100">
             {title}
           </h2>
         )}
