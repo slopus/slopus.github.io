@@ -118,8 +118,8 @@ export default function Home() {
 
   return (
     <>
-      <div className="max-w-[72ch] mx-auto px-5">
-        <h1 className="text-3xl sm:text-3xl font-bold mb-5 leading-tight">
+      <div className="max-w-[72ch] mx-auto px-5 pt-8 sm:pt-0">
+        <h1 className="text-3xl sm:text-3xl font-bold leading-tight">
           Happy: Use Claude Code Anywhere 
         </h1>
       </div>
@@ -127,7 +127,7 @@ export default function Home() {
         youtubeId="GCS0OG9QMSE"
         posterImage="https://img.youtube.com/vi/GCS0OG9QMSE/maxresdefault.jpg"
       />
-      <section className="max-w-[72ch] mx-auto">
+      <section className="max-w-[72ch] mx-auto px-2.5 sm:px-0">
             <div className="mb-6 text-base text-gray-700 dark:text-gray-300 font-mono">
               <div className="flex items-start mb-4 ">
                 <span>No workflow disruption - Claude Code runs on your machine</span>
@@ -156,7 +156,7 @@ export default function Home() {
       </section>
       
       
-      <section className="max-w-[72ch] mx-auto py-12">
+      <section className="max-w-[72ch] mx-auto py-12 px-2.5 sm:px-0">
       <TextBasedFeatures />
       <div className="h-12"></div>
       <TextBasedHowItWorks />
