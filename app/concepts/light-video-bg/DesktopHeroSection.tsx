@@ -7,6 +7,7 @@ import StarOnGithubButton from '@/components/GithubButton'
 import LaunchWebAppButton from '@/components/WebAppButton'
 import PhoneBundle from '@/components/phones/PhoneBundle'
 import Terminal from '@/components/Terminal'
+import AdaptiveTerminal from '@/components/AdaptiveTerminal'
 
 // Download links constants
 const GOOGLE_PLAY_LINK = 'https://play.google.com/store/apps/details?id=com.ex3ndr.happy'
@@ -81,7 +82,7 @@ export default function DesktopHeroSection() {
                 <span className="text-green-500 mr-2.5 font-bold">✓</span>
                 <span>Multiple concurrent sessions support</span>
               </div>
-                <Terminal command="npm i -g happy-coder && happy" variant="light" />
+                <AdaptiveTerminal command="npm i -g happy-coder && happy"  />
             </div>
             
             <div className="flex flex-col gap-5">

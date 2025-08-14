@@ -8,13 +8,12 @@ import { useState, useEffect } from 'react'
 import { Bricolage_Grotesque } from 'next/font/google'
 import Link from 'next/link'
 import SetupSteps from '@/components/marketing/SetupSteps'
-import { BentoBoxes, TextBasedHowItWorks, YoutubeDemoSection } from '@/components/marketing'
+import { BentoBoxes, YoutubeDemoSection } from '@/components/marketing'
 import GithubLink from '@/components/marketing/GithubLink'
 import MobileSetup from '@/components/marketing/MobileSetup'
 import { PhoneBundle } from '@/components/phones'
 import MobileHeroSection from '@/app/concepts/light-video-bg/MobileHeroSection'
 import DesktopHeroSection from '@/app/concepts/light-video-bg/DesktopHeroSection'
-import TextBasedFeatures from '@/components/marketing/TextBasedFeatures'
 
 function AppScreenshot({ title, description, href }: { title: string, description: string, href?: string }) {
   return (
@@ -47,19 +46,11 @@ export default function Home() {
       <MobileHeroSection />
       <DesktopHeroSection />
       
-      
       <YoutubeDemoSection 
         youtubeId="GCS0OG9QMSE"
         posterImage="https://img.youtube.com/vi/GCS0OG9QMSE/maxresdefault.jpg"
         title="See Happy Claude Code Client in Action"
       />
-      
-      <section className="max-w-[72ch] mx-auto">
-      <TextBasedFeatures />
-      <div className="h-12"></div>
-      <TextBasedHowItWorks />
-      </section>
-
       
       <section className="relative">
         <div className="absolute bg-[#faf9f5] dark:bg-[#282828]" style={{

@@ -67,9 +67,28 @@ S
 - Session persistence independent of network connectivity
 - Simple relay server with no access to plaintext data
 
+### 5. Permission Prompts for MCP Tools and Edit Operations
+
+**Engineering Description**: Real-time permission system that intercepts MCP tool calls and file edit operations initiated by Claude Code, presenting mobile developers with contextual Allow/Deny prompts before execution. When Claude Code attempts to use MCP tools (Model Context Protocol integrations like JIRA, Linear, GitHub APIs) or perform sensitive file operations, the mobile app displays the exact operation details and waits for explicit user approval before proceeding.
+
+> **User Story 1**: As a developer using Claude Code with JIRA integration while commuting, I want to see exactly what tickets Claude Code wants to create or modify before it makes those API calls, so I can approve legitimate automation while preventing accidental changes to production systems.
+
+> **User Story 2**: As a developer, I want to review and approve file modifications that Claude Code proposes to make while I'm away from my desk, so I can maintain control over my codebase even when using AI agents remotely through my phone.
+
+> **User Story 3**: As a security-conscious developer, I want to explicitly authorize each MCP tool operation (database queries, API calls, external integrations) that Claude Code attempts, so I can ensure no unauthorized actions occur in my development environment even when I'm not actively monitoring the desktop session.
+
+**Technical Implementation**:
+- Interceptor middleware in CLI that pauses execution for permission-required operations
+- Real-time permission request serialization and transmission to mobile app
+- Mobile UI components for displaying operation context with Allow/Deny buttons
+- Encrypted request/response flow through relay server maintaining zero-trust architecture
+- Operation queuing system that preserves Claude Code session state during permission waits
+- Granular permission categories (file operations, API calls, system commands, external integrations)
+- Per-session permission memory with option to "Remember for this session"
+
 ## Mobile-Optimized User Experience Features
 
-### 5. Push Notification System
+### 6. Push Notification System
 
 **Engineering Description**: Push notifications triggered by Claude Code state changes. Notifications 
 include session status updates, completion alerts, error notifications, and input requests. Unlike social media apps where notification fatigue is a concern, work-focused notifications prioritize immediate awareness over filtering - when you're actively developing, you need to know when each async operation completes to make the next work mode decision.
@@ -82,7 +101,7 @@ include session status updates, completion alerts, error notifications, and inpu
 - Deep linking to specific sessions and exact completion points
 - Rich notification content with operation details
 
-### 6. Voice Agent Integration
+### 7. Voice Agent Integration
 
 **Engineering Description**: AI-powered voice interface that acts as an intermediary between the user and Claude Code. The voice agent processes natural language input, maintains conversational context, and generates structured prompts for Claude Code execution.
 
@@ -94,7 +113,7 @@ include session status updates, completion alerts, error notifications, and inpu
 - Text-to-speech
 - Agentic assistant that can send messages to claude code and has some special prompts to get better results in turning rubber duck style stream of conciousness planning into a concrete request for claude code to execute.
 
-### 7. Smart Planning Mode
+### 8. Smart Planning Mode
 
 **Engineering Description**: Conversation-first interface for developing and refining development plans before execution. Includes conversation history analysis, plan validation, and seamless transition from planning to execution mode.
 
@@ -109,7 +128,7 @@ include session status updates, completion alerts, error notifications, and inpu
 
 ## Productivity Enhancement Features
 
-### 8. Pre-Sleep Task Seeding
+### 9. Pre-Sleep Task Seeding
 
 > **User Story**: As a developer, I've always heard about the productivity hack of leaving something unfinished to start the next morning, but it never worked for me because setting up a meaningful task took 10-20 minutes - too long to be spontaneous, especially when I'd already overstayed at the office to finish something and didn't want to spend another 20 minutes setting myself up for tomorrow. 
 >

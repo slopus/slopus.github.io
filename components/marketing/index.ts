@@ -11,3 +11,5 @@ export { default as Footer } from './Footer';
 export { default as MobileLandingPage } from './MobileLandingPage';
 export { default as BentoBoxes } from './BentoBoxes';
 export { default as YoutubeDemoSection } from './YoutubeDemoSection';
+export { default as TextBasedFeatures } from './TextBasedFeatures';
+export { default as TextBasedHowItWorks } from './TextBasedHowItWorks';
