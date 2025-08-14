@@ -97,7 +97,8 @@ function DesktopHeroSection() {
             
             <div className="flex flex-col gap-5">
               <div className="flex gap-4 flex-wrap">
-                {renderStoreButtons()}
+                <GooglePlayButton href={GOOGLE_PLAY_LINK} />
+                <AppStoreButton href={APP_STORE_LINK} />
                 <LaunchWebAppButton href="https://app.happy.engineering" />
                 <StarOnGithubButton href="https://github.com/slopus/happy" />
               </div>
@@ -126,6 +127,33 @@ export default function Home() {
         youtubeId="GCS0OG9QMSE"
         posterImage="https://img.youtube.com/vi/GCS0OG9QMSE/maxresdefault.jpg"
       />
+      <section className="max-w-[72ch] mx-auto">
+            <div className="mb-6 text-base text-gray-700 dark:text-gray-300 font-mono">
+              <div className="flex items-start mb-4 ">
+                <span>No workflow disruption - Claude Code runs on your machine</span>
+              </div>
+              <div className="flex items-start mb-4">
+                <span>Open Source (MIT Licensed)</span>
+              </div>
+              <div className="flex items-start mb-4">
+                <span>Secure - end to end encryption</span>
+              </div>
+              <div className="flex items-start mb-10">
+                <span>Multiple active sessions across multiple machines</span>
+              </div>
+              <AdaptiveTerminal command="npm i -g happy-coder && happy"  />
+            </div>
+            
+            <div className="flex flex-col gap-5">
+              <div className="flex gap-4 flex-wrap">
+                <GooglePlayButton href={GOOGLE_PLAY_LINK} />
+                <AppStoreButton href={APP_STORE_LINK} />
+                <LaunchWebAppButton href="https://app.happy.engineering" />
+              </div>
+              <div className="flex gap-4 items-center">
+              </div>
+            </div>
+      </section>
       
       
       <section className="max-w-[72ch] mx-auto py-12">
