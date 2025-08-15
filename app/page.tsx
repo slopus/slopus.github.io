@@ -17,6 +17,7 @@ import TextBasedFeatures from '@/components/marketing/TextBasedFeatures'
 import AdaptiveTerminal from '@/components/AdaptiveTerminal'
 import LaunchWebAppButton from '@/components/WebAppButton'
 import StarOnGithubButton from '@/components/GithubButton'
+import VideoComposite from '@/components/VideoComposite'
 
 const GOOGLE_PLAY_LINK = 'https://play.google.com/store/apps/details?id=com.ex3ndr.happy'
 const APP_STORE_LINK = 'https://apps.apple.com/us/app/happy-claude-code-client/id6748571505'
@@ -118,15 +119,14 @@ export default function Home() {
 
   return (
     <>
-      <div className="max-w-[72ch] mx-auto px-5 pt-8 sm:pt-0">
+      <div className="max-w-[74ch] mx-auto px-2.5 sm:px-[2ch] pt-8">
         <h1 className="text-3xl sm:text-3xl font-bold leading-tight">
           Happy: Use Claude Code Anywhere 
         </h1>
       </div>
-      <YoutubeDemoSection 
-        youtubeId="GCS0OG9QMSE"
-        posterImage="https://img.youtube.com/vi/GCS0OG9QMSE/maxresdefault.jpg"
-      />
+      
+      <VideoComposite />
+      
       <section className="max-w-[72ch] mx-auto px-2.5 sm:px-0">
             <div className="mb-6 text-base text-gray-700 dark:text-gray-300 font-mono">
               <div className="flex items-start mb-4 ">
@@ -161,6 +161,10 @@ export default function Home() {
       <div className="h-12"></div>
       <TextBasedHowItWorks />
       </section>
+      <YoutubeDemoSection 
+        youtubeId="GCS0OG9QMSE"
+        posterImage="https://img.youtube.com/vi/GCS0OG9QMSE/maxresdefault.jpg"
+      />
     </>
   )
 } 
