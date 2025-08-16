@@ -7,11 +7,11 @@ export default function VideoComposite() {
   const simVideoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    // Sync video playback when terminal video starts playing
     const terminalVideo = terminalVideoRef.current
     const simVideo = simVideoRef.current
 
     if (terminalVideo && simVideo) {
+      // Sync play/pause state
       const syncPlayback = () => {
         if (terminalVideo.paused) {
           simVideo.pause()
@@ -20,12 +20,29 @@ export default function VideoComposite() {
         }
       }
 
+      // Sync timeline position when user seeks
+      const syncTimePosition = () => {
+        const currentTime = terminalVideo.currentTime
+        // Only sync if there's a significant difference (avoid infinite loops)
+        if (Math.abs(simVideo.currentTime - currentTime) > 0.1) {
+          simVideo.currentTime = currentTime
+        }
+      }
+
+      // Add event listeners for play/pause sync
       terminalVideo.addEventListener('play', syncPlayback)
       terminalVideo.addEventListener('pause', syncPlayback)
+      
+      // Add event listeners for timeline sync
+      terminalVideo.addEventListener('seeked', syncTimePosition)
+      terminalVideo.addEventListener('timeupdate', syncTimePosition)
 
       return () => {
+        // Clean up all event listeners
         terminalVideo.removeEventListener('play', syncPlayback)
         terminalVideo.removeEventListener('pause', syncPlayback)
+        terminalVideo.removeEventListener('seeked', syncTimePosition)
+        terminalVideo.removeEventListener('timeupdate', syncTimePosition)
       }
     }
   }, [])
@@ -39,6 +56,7 @@ export default function VideoComposite() {
           <video
             ref={terminalVideoRef}
             src="/take-3-short-term.mp4"
+            poster="/take-3-short-term-poster.jpg"
             className="w-full h-full object-cover"
             controls
             loop
@@ -51,6 +69,7 @@ export default function VideoComposite() {
         <video
           ref={simVideoRef}
           src="/take-3-short-sim.mp4"
+          poster="/take-3-short-sim-poster.jpg"
           className="absolute bottom-0 right-0 w-[50%] h-auto"
           loop
           muted

@@ -2,6 +2,8 @@
 
 How Happy Coder compares to other mobile Claude Code solutions.
 
+**Key Distinction**: Some solutions run AI agents on your local machine (Happy Coder, Omnara, ClaudeCodeUI), while others run them on cloud VMs (Terragon, Cursor). This affects privacy, performance, and which tools work.
+
 ## Quick Comparison Table
 
 | Feature | Happy Coder | Omnara | ClaudeCodeUI | Terragon | Cursor Mobile | SSH + tmux |
@@ -25,9 +27,9 @@ How Happy Coder compares to other mobile Claude Code solutions.
 
 **Key Differences:**
 - **Where code runs**: Both run on YOUR computer locally.
-- **Privacy**: Both keep your code on your machine, though Happy uses end-to-end encryption for mobile sync.
+- **Privacy**: Happy has end-to-end encryption. Omnara stores plain text conversations on their servers (unless self-hosted).
 - **Cost**: Omnara charges $9/month. Happy is free forever.
-- **Control**: Both give you control over your local environment.
+- **Self-hosting**: Both support self-hosting for complete privacy control.
 
 **Choose Omnara if:**
 - You prefer their specific UI/UX
@@ -36,9 +38,10 @@ How Happy Coder compares to other mobile Claude Code solutions.
 
 **Choose Happy Coder if:**
 - You want to use your existing development environment
-- You prefer end-to-end encryption for mobile sync
+- Privacy is critical (true end-to-end encryption)
 - You want to avoid monthly subscriptions
 - You prefer open source solutions
+- You don't want to self-host for privacy
 
 ### Happy Coder vs siteboon/ClaudeCodeUI
 
@@ -46,9 +49,10 @@ How Happy Coder compares to other mobile Claude Code solutions.
 
 **Key Differences:**
 - **Infrastructure**: Both run on your local machine.
+- **Privacy**: Happy has end-to-end encryption. ClaudeCodeUI stores plain text conversations on their servers (unless self-hosted).
 - **Pricing model**: ClaudeCodeUI may charge for usage in paid tiers. Happy is free.
-- **Workflow**: Both integrate with your existing local workflow.
 - **Mobile experience**: Happy offers native mobile apps, ClaudeCodeUI is web-based.
+- **Self-hosting**: Both support self-hosting for complete privacy control.
 
 **The Trust Problem:**
 These startups will pivot. They always do. Today's "free tier" becomes tomorrow's "$29/month minimum." Happy Coder can't rugpull you because it's open source.
@@ -138,7 +142,11 @@ This matters more than you think.
 
 **Happy Coder**: Nobody. End-to-end encrypted. The relay server only sees encrypted blobs.
 
-**Local Execution** (Omnara, ClaudeCodeUI): Your code stays on your machine, similar privacy to Happy Coder.
+**Local Execution** (Omnara, ClaudeCodeUI): 
+- Code execution happens on your machine
+- BUT their servers store plain text conversations and code
+- Their employees can read everything
+- Self-hosting option eliminates this risk
 
 **Cloud VM Providers** (Terragon, Cursor):
 - Their servers run your code
@@ -160,8 +168,10 @@ This matters more than you think.
 - Self-host for complete control
 
 **Local Execution** (Omnara, ClaudeCodeUI):
-- You control retention (data stays on your machine)
-- Similar control to Happy Coder
+- Code runs on your machine, but servers store plain text conversations
+- Their employees can read your code and conversations
+- Self-hosting option available - solves privacy if you host your own server
+- You control retention only if self-hosted
 
 **Cloud VM Providers** (Terragon, Cursor):
 - They control retention

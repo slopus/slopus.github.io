@@ -130,7 +130,7 @@ export default function Home() {
       
       <VideoComposite />
       
-      <section className="max-w-[72ch] mx-auto px-2.5 sm:px-0">
+      <section className="max-w-[72ch] mx-auto px-2.5 md:px-0">
             <div className="mb-6 text-base text-gray-700 dark:text-gray-300 font-mono">
               <div className="flex items-start mb-4 ">
                 <span>No workflow disruption. Claude Code runs on your machine</span>
@@ -155,6 +155,7 @@ export default function Home() {
                 <GooglePlayButton href={GOOGLE_PLAY_LINK} />
                 <AppStoreButton href={APP_STORE_LINK} />
                 <LaunchWebAppButton href="https://app.happy.engineering" />
+                <StarOnGithubButton href="https://github.com/slopus/happy" />
               </div>
               <div className="flex gap-4 items-center">
               </div>
@@ -162,7 +163,7 @@ export default function Home() {
       </section>
       
       
-      <section className="max-w-[72ch] mx-auto py-12 px-2.5 sm:px-0">
+      <section className="max-w-[72ch] mx-auto py-12 px-2.5 md:px-0">
       <TextBasedFeatures />
       <div className="h-12"></div>
       <TextBasedHowItWorks />
