@@ -19,7 +19,8 @@ export default function LaunchWebAppButton({ href, className = '' }: WebAppButto
         className="mr-2" 
         size={20}
       />
-      <span style={{ fontSize: '14.25px' }}>Launch Web App</span>
+      <span style={{ fontSize: '14.25px' }} className="sm:hidden">Launch Web App</span>
+      <span style={{ fontSize: '17px' }} className="hidden sm:inline">Launch Web App</span>
     </a>
   );
 }

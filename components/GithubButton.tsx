@@ -28,7 +28,8 @@ export default function StarOnGithubButton({ href, className = '' }: GithubButto
           fill="white"
         />
       </svg>
-      <span style={{ fontSize: '14.25px' }}>Star on GitHub</span>
+      <span style={{ fontSize: '14.25px' }} className="sm:hidden">Star on GitHub</span>
+      <span style={{ fontSize: '17px' }} className="hidden sm:inline">Star on GitHub</span>
     </a>
   );
 }

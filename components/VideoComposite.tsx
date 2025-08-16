@@ -48,9 +48,9 @@ export default function VideoComposite() {
   }, [])
 
   return (
-    <section className="max-w-[75ch] mx-auto px-2.5 py-8 sm:pl-[1ch] sm:pr-0">
-      {/* Scalable container - change w-[600px] to scale everything */}
-      <div className="relative mx-auto aspect-[600/670]">
+    <section className="max-w-[75ch] mx-auto px-2.5 py-4 sm:pl-[1ch] sm:pr-0">
+      {/* Scalable container - 70% scale on desktop */}
+      <div className="relative mx-auto aspect-[600/670] sm:scale-[0.7] sm:origin-top sm:-mb-[30%]">
         {/* Terminal video - positioned top-left */}
         <div className="absolute top-0 left-0 h-[74.6%] aspect-[500/512] bg-gray-900 text-gray-300 rounded-xl overflow-hidden shadow-2xl flex items-center justify-center">
           <video
