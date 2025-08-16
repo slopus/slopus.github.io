@@ -91,6 +91,7 @@ export default async function RootLayout({
           }
           pageMap={pageMap}
           docsRepositoryBase="https://github.com/slopus/slopus.github.io/tree/main"
+          search={false}
           sidebar={{
             defaultMenuCollapseLevel: 3,
           }}
