@@ -80,7 +80,12 @@ export default async function RootLayout({
           //banner={<Banner storageKey="docs-banner">Your banner content</Banner>}
           navbar={
             <Navbar 
-              logo={<b className={bricolageGrotesque.className}>Happy</b>}
+              logo={
+                <div className="flex items-center gap-2">
+                  <img src="/favicon.svg" alt="Happy" className="w-6 h-6" />
+                  <b className={bricolageGrotesque.className}>Happy</b>
+                </div>
+              }
               projectLink="https://github.com/slopus/happy"
             />
           }
