@@ -13,6 +13,7 @@ const meta = {
         //     index: ''
         // },
         items: {
+            "welcome": "Welcome",
             "index": "Getting Started",
             "how-it-works": "How It Works",
             "guides": "Guides",

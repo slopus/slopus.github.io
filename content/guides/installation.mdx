@@ -1,0 +1,380 @@
+# Installation Guide
+
+Get Happy Coder running in 2 minutes. Control Claude Code from your phone.
+
+## Quick Install
+
+### 1. Install on Your Computer
+
+```bash
+npm install -g happy-coder
+```
+
+### 2. Download Mobile App
+
+- **iPhone/iPad**: [App Store](https://apps.apple.com/us/app/happy-claude-code-client/id6748571505)
+- **Android**: [Google Play](https://play.google.com/store/apps/details?id=com.ex3ndr.happy)
+- **Web App**: [app.happy.engineering](https://app.happy.engineering)
+
+### 3. Connect Your Devices
+
+```bash
+happy  # Shows QR code
+```
+
+Scan the QR code with your phone. You're connected!
+
+## Platform-Specific Guides
+
+### macOS Installation
+
+**Requirements:**
+- macOS 10.15 or newer
+- Node.js 18+ (install via [brew](https://brew.sh/): `brew install node`)
+- Claude Code CLI already installed
+
+**Install Happy CLI:**
+```bash
+npm install -g happy-coder
+```
+
+**First Run:**
+```bash
+# Start Happy with Claude Code
+happy
+
+# Or start the background daemon that will let you spawn new claude code
+# sessions from your phone in any project directory you want
+happy --dir ~/projects/my-app
+```
+
+**Troubleshooting macOS:**
+- **Permission denied**: Use `sudo npm install -g happy-coder`
+- **Command not found**: Add npm global bin to PATH: `export PATH=$PATH:$(npm bin -g)`
+- **Port already in use**: Happy uses port 8765 by default. Kill existing process: `lsof -ti:8765 | xargs kill`
+
+### Windows Installation
+
+**Requirements:**
+- Windows 10 or newer
+- Node.js 18+ (download from [nodejs.org](https://nodejs.org))
+- Claude Code CLI already installed
+
+**Install Happy CLI:**
+```powershell
+# Open PowerShell as Administrator
+npm install -g happy-coder
+```
+
+**First Run:**
+```powershell
+# Start Happy
+happy
+```
+
+**Windows-Specific Setup:**
+1. **Windows Defender**: May prompt on first run. Click "Allow"
+2. **Corporate firewall**: May need IT to whitelist Happy
+3. **WSL users**: Install in WSL for better performance
+
+**Troubleshooting Windows:**
+- **'happy' not recognized**: Restart terminal after install
+- **EACCES error**: Run PowerShell as Administrator
+- **Firewall blocking**: Add exception for Node.js in Windows Defender
+
+### Linux Installation
+
+**Requirements:**
+- Ubuntu 20.04+, Debian 11+, Fedora 35+, or similar
+- Node.js 18+ 
+- Claude Code CLI already installed
+
+**Install Node.js (if needed):**
+```bash
+# Ubuntu/Debian
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Fedora/RHEL
+sudo dnf install nodejs
+
+# Arch
+sudo pacman -S nodejs npm
+```
+
+**Install Happy CLI:**
+```bash
+npm install -g happy-coder
+```
+
+**First Run:**
+```bash
+happy
+```
+
+**Linux-Specific Notes:**
+- **Headless servers**: Happy works great on servers without GUI
+- **SSH sessions**: Use tmux/screen to keep Happy running
+- **Docker**: See our [Docker guide](/guides/docker) for containerized setup
+
+**Troubleshooting Linux:**
+- **Permission denied**: Don't use sudo with npm. Fix npm permissions:
+  ```bash
+  mkdir ~/.npm-global
+  npm config set prefix '~/.npm-global'
+  export PATH=~/.npm-global/bin:$PATH
+  ```
+- **Port issues**: Check with `netstat -tlnp | grep 8765`
+
+### Mobile App Installation
+
+#### iOS (iPhone/iPad)
+
+**Requirements:**
+- iOS 14.0 or newer
+- 100MB free space
+
+**Install:**
+1. Open [App Store link](https://apps.apple.com/us/app/happy-claude-code-client/id6748571505)
+2. Tap "Get"
+3. Open Happy Coder app
+4. Allow camera access (for QR scanning)
+
+**iOS-Specific Features:**
+- Face ID/Touch ID for app security
+- Siri Shortcuts for voice commands
+- Share sheet integration
+- Background fetch for notifications
+
+#### Android
+
+**Requirements:**
+- Android 7.0 or newer
+- 80MB free space
+
+**Install:**
+1. Open [Google Play link](https://play.google.com/store/apps/details?id=com.ex3ndr.happy)
+2. Tap "Install"
+3. Open Happy app
+4. Grant camera permission
+
+**Android-Specific Features:**
+- Quick Settings tile for fast access
+- Android Auto support (coming soon)
+- Custom notification channels
+- Battery optimization exemption (for background sync)
+
+## Advanced Installation Options
+
+### Install Specific Version
+
+```bash
+# Install specific version
+npm install -g happy-coder@1.2.3
+
+# Install from GitHub
+npm install -g github:slopus/happy-cli
+```
+
+### Docker Installation
+
+Run Happy in a container:
+
+```bash
+docker run -it --rm \
+  -v ~/.happy:/root/.happy \
+  -v $(pwd):/workspace \
+  -p 8765:8765 \
+  happycoder/cli
+```
+
+See [Docker guide](/guides/docker) for persistent setup.
+
+### Install from Source
+
+```bash
+# Clone repository
+git clone https://github.com/slopus/happy
+cd happy/cli
+
+# Install dependencies
+npm install
+
+# Build
+npm run build
+
+# Link globally
+npm link
+```
+
+## Verify Installation
+
+After installing, verify everything works:
+
+```bash
+# Check CLI version
+happy --version
+
+# Run diagnostics
+happy doctor
+
+# Test Claude Code integration
+happy test
+```
+
+Expected output:
+```
+Happy Coder v1.2.3
+✓ Node.js 18.0.0
+✓ Claude Code detected
+✓ Network accessible
+✓ Encryption working
+✓ Ready to connect
+```
+
+## Configuration
+
+### CLI Configuration
+
+Happy CLI reads config from (in order):
+1. Command line arguments
+2. Environment variables
+3. `.happyrc` file
+4. `~/.config/happy/config.json`
+
+**Common settings:**
+```bash
+# Set custom port
+happy --port 8766
+
+# Use custom relay server
+export HAPPY_SERVER_URL="https://relay.mycompany.com"
+happy
+
+# Disable analytics
+export HAPPY_TELEMETRY=false
+```
+
+### Mobile App Configuration
+
+In the app Settings:
+- **Relay Server URL**: Use your own server
+- **Encryption**: Choose algorithm (AES-256 default)
+- **Notifications**: Configure what triggers alerts
+- **Voice Agent**: Customize AI voice settings
+
+## Integration with Claude Code
+
+Happy Coder wraps your existing Claude Code installation:
+
+```bash
+# Happy automatically finds Claude Code
+happy
+
+# Or specify Claude Code path
+happy --claude-path /usr/local/bin/claude-code
+
+# Pass arguments to Claude Code
+happy -- --model opus-4.1 --max-tokens 8000
+```
+
+## Updating
+
+### Update CLI
+
+```bash
+# Check current version
+happy --version
+
+# Update to latest
+npm update -g happy-coder
+
+# Force reinstall
+npm install -g happy-coder --force
+```
+
+### Update Mobile App
+
+Apps auto-update by default. To manually update:
+- **iOS**: App Store → Updates → Update
+- **Android**: Play Store → My Apps → Update
+
+## Uninstall
+
+### Remove CLI
+
+```bash
+# Uninstall global package
+npm uninstall -g happy-coder
+
+# Remove config files
+rm -rf ~/.config/happy
+rm -rf ~/.happy
+```
+
+### Remove Mobile App
+
+- **iOS**: Long press app icon → Remove App
+- **Android**: Settings → Apps → Happy Coder → Uninstall
+
+## Common Issues
+
+### "Claude Code not found"
+
+Happy needs Claude Code installed first:
+```bash
+# Install Claude Code
+npm install -g claude-code
+
+# Verify it works
+claude-code --version
+
+# Then run Happy
+happy
+```
+
+### "Cannot connect to relay server"
+
+Check network:
+```bash
+# Test default relay
+curl https://relay.happy.engineering/health
+
+# Test custom relay
+curl https://your-relay.com/health
+```
+
+If blocked, [self-host your relay](/guides/self-hosting).
+
+### "QR code won't scan"
+
+1. Ensure good lighting
+2. Clean camera lens
+3. Try manual connection:
+   ```bash
+   happy --show-code
+   ```
+   Enter the code manually in app
+
+### "Session keeps disconnecting"
+
+Usually network related:
+- Check WiFi stability
+- Disable VPN temporarily
+- Try cellular data
+- Reduce firewall restrictions
+
+## Getting Help
+
+- **Documentation**: [docs.happy.engineering](https://docs.happy.engineering)
+- **GitHub Issues**: [github.com/slopus/happy/issues](https://github.com/slopus/happy/issues)
+- **Discord Community**: [discord.gg/happy-coder](https://discord.gg/happy-coder)
+
+## Next Steps
+
+You're ready to use Claude Code from anywhere! Try these next:
+
+1. [Quick Start Tutorial](/guides/quick-start) - First coding session
+2. [Voice Coding Setup](/features/voice-coding-with-claude-code) - Hands-free coding
+3. [Team Setup](/guides/team-setup) - Share with your team
+4. [Self-Hosting Guide](/guides/self-hosting) - Run your own relay

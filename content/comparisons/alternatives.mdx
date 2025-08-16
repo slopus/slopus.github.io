@@ -1,0 +1,256 @@
+# Happy Coder vs Alternatives
+
+How Happy Coder compares to other mobile Claude Code solutions.
+
+## Quick Comparison Table
+
+| Feature | Happy Coder | Omnara | ClaudeCodeUI | Terragon | Cursor Mobile | SSH + tmux |
+|---------|------------|---------|---------------------|----------|---------------|------------|
+| **Price** | Free | $9/month | Free tier, then usage | Free (beta), then TBD | Included with Cursor | Free |
+| **Open Source** | Yes (MIT) | No | Yes (GPL) | No | No | Yes |
+| **Runs on YOUR machine** | ✅ | ✅  | ✅  | ❌ | ❌ | ✅ |
+| **End-to-end encryption** | ✅ | ❌ | ❌ | ❌ | ❌ | Depends |
+| **Self-hostable** | ✅ | ✅  | ✅  | ❌ | ❌ | N/A |
+| **Real-time sync** | ✅ | ✅  | ❌ | ❌ | ❌ | ✅ |
+| **Voice coding** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Native mobile UI** | ✅ | ✅ | PWA | PWA | PWA | ❌ |
+| **MCP tools support** | ✅ | ✅  | Limited | Limited | ✅ | ✅ |
+| **Custom agents** | ✅ | ✅  | ✅  | ❌ | ✅ | ✅ |
+
+## Detailed Comparisons
+
+### Happy Coder vs Omnara
+
+**Omnara** runs Claude Code locally on your machine, similar to Happy Coder.
+
+**Key Differences:**
+- **Where code runs**: Both run on YOUR computer locally.
+- **Privacy**: Both keep your code on your machine, though Happy uses end-to-end encryption for mobile sync.
+- **Cost**: Omnara charges $9/month. Happy is free forever.
+- **Control**: Both give you control over your local environment.
+
+**Choose Omnara if:**
+- You prefer their specific UI/UX
+- You don't mind paying for a subscription
+- You want their particular feature set
+
+**Choose Happy Coder if:**
+- You want to use your existing development environment
+- You prefer end-to-end encryption for mobile sync
+- You want to avoid monthly subscriptions
+- You prefer open source solutions
+
+### Happy Coder vs siteboon/ClaudeCodeUI
+
+**ClaudeCodeUI** is an open-source solution that runs Claude Code locally on your machine.
+
+**Key Differences:**
+- **Infrastructure**: Both run on your local machine.
+- **Pricing model**: ClaudeCodeUI may charge for usage in paid tiers. Happy is free.
+- **Workflow**: Both integrate with your existing local workflow.
+- **Mobile experience**: Happy offers native mobile apps, ClaudeCodeUI is web-based.
+
+**The Trust Problem:**
+These startups will pivot. They always do. Today's "free tier" becomes tomorrow's "$29/month minimum." Happy Coder can't rugpull you because it's open source.
+
+### Happy Coder vs Terragon
+
+**Terragon** offers a comprehensive platform for AI agent management, running on cloud VMs.
+
+**Key Differences:**
+- **Infrastructure**: Terragon runs on cloud VMs. Happy uses your machines.
+- **Pricing**: Currently free during beta, but at a bare minimum will charge for
+VM usage at those high retail cloud prices. Expect dollars per hour. Happy is
+free forever.
+- **Complexity**: Terragon has dashboards, analytics, team management. Happy is simple.
+- **Lock-in**: Terragon wants to own your workflow. Happy works with what you have.
+- **Scope**: Terragon tries to do everything. Happy does one thing well.
+
+**Choose Terragon if:**
+- You want an enterprise platform
+- You need team management features
+- You're okay with vendor lock-in
+- You don't mind paying for spinning up VMs in the cloud
+
+**Choose Happy Coder if:**
+- You value simplicity
+- You want to keep your existing workflow
+- You prefer open source tools
+- You want to avoid paying extra for functionality you already have on your own computer.
+
+### Happy Coder vs Cursor Mobile
+
+**Cursor** has mobile features for their IDE.
+
+**Key Differences:**
+- **Integration**: Cursor mobile only works with Cursor IDE. Happy works with any Claude Code setup.
+- **Flexibility**: Cursor runs on their infrastructure. Happy runs anywhere.
+- **Cost**: Cursor mobile comes with Cursor subscription. Happy is free.
+
+**The Reality:**
+Cursor is building an IDE empire. Their mobile feature is one piece of a larger platform play. Happy Coder just wants to let you use Claude Code from your phone.
+
+### Happy Coder vs SSH + tmux
+
+**The Developer Way**: SSH into your machine, attach to tmux, run Claude Code.
+
+**Why Happy is Better:**
+- **Mobile-optimized UI**: No squinting at tiny terminal text
+- **Voice coding**: Try doing that with SSH
+- **Push notifications**: Know when Claude is done
+- **Better disconnection handling**: No broken tmux sessions
+- **Purpose-built**: Designed specifically for Claude Code
+
+**But SSH + tmux is:**
+- More work to set up
+- Painful on mobile (tiny text, hard to type)
+- No Claude Code-specific features
+- Connection drops break everything
+
+**The Verdict:**
+If you enjoy suffering, use SSH + tmux. If you want something that just works, use Happy Coder.
+
+## Why "Free" Matters
+
+Let's talk about the elephant in the room: sustainability.
+
+**VC-Funded Competitors:**
+- Take VC money
+- Offer unsustainable free tiers
+- Burn cash for growth
+- Eventually need to make money
+- Change pricing, add restrictions
+- You're stuck or forced to migrate
+
+**Happy Coder:**
+- No VC funding
+- No burn rate
+- Open source forever
+- Self-hostable
+- Can't rugpull you
+- Community-driven
+
+## The Privacy Comparison
+
+This matters more than you think.
+
+### Who Can See Your Code?
+
+**Happy Coder**: Nobody. End-to-end encrypted. The relay server only sees encrypted blobs.
+
+**Local Execution** (Omnara, ClaudeCodeUI): Your code stays on your machine, similar privacy to Happy Coder.
+
+**Cloud VM Providers** (Terragon, Cursor):
+- Their servers run your code
+- They have full access
+- Their employees could read it
+- Subject to subpoenas
+- Vulnerable to breaches
+
+**SSH + tmux**: Direct connection, but:
+- No encryption by default
+- Vulnerable to MITM attacks
+- Logs might leak sensitive data
+
+### Data Retention
+
+**Happy Coder**: 
+- You control retention
+- Delete anytime
+- Self-host for complete control
+
+**Local Execution** (Omnara, ClaudeCodeUI):
+- You control retention (data stays on your machine)
+- Similar control to Happy Coder
+
+**Cloud VM Providers** (Terragon, Cursor):
+- They control retention
+- Backups you can't delete
+- Data might persist after account deletion
+
+## Performance Comparison
+
+Real-world latency numbers:
+
+| Solution | Latency | Why |
+|----------|---------|-----|
+| Happy Coder | ~300ms | Direct connection to your machine |
+| Cloud Providers | 500-2000ms | VM spin-up + network hops |
+| SSH + tmux | ~100ms | Direct but terrible UX on mobile |
+| Cursor Mobile | 400-1500ms | Depends on their infrastructure load |
+
+Happy Coder gives you near-native performance because Claude Code runs on your actual machine.
+
+## Feature Comparison Deep Dive
+
+### MCP Tools Support
+
+**Local Execution (Happy Coder, Omnara, ClaudeCodeUI)**: Full MCP support. Since agents run on your machine, all your local MCP tools work natively.
+
+**Cloud VM Execution (Terragon, Cursor)**: Limited MCP support. Since agents run on their cloud VMs, they can't access your local MCP tools without complex setup.
+
+### Custom Agents
+
+**Local Execution (Happy Coder, Omnara, ClaudeCodeUI)**: Full support for custom agents. Your local `~/.claude/agents/` directory works directly since agents run on your machine.
+
+**Cloud VM Execution (Terragon, Cursor)**: Limited or platform-specific agent support. You'd need to recreate or upload agents to their cloud environment.
+
+### Voice Coding
+
+**Happy Coder**: Built-in voice agent with customizable prompts.
+
+**Others**: Not available.
+
+### Session Persistence
+
+**Happy Coder**: Sessions persist on your machine. Pick up exactly where you left off.
+
+**Others**: Sessions die when VMs shut down. Context lost.
+
+## The Bottom Line
+
+### Choose Happy Coder When:
+- You value privacy and control
+- You want to use your existing setup
+- You're tired of subscription fatigue
+- You prefer open source
+- You want it to just work
+
+### Choose Alternatives When:
+- You need a fully managed service
+- You don't care about privacy
+- You're okay with vendor lock-in
+- You have budget for subscriptions
+- You trust startups not to change
+
+## Migration Guide
+
+Coming from another solution? Here's how to switch:
+
+### From Cloud Providers
+1. Install Happy Coder: `npm install -g happy-coder`
+2. No migration needed - your code is already on your machine
+3. Start using Happy immediately
+
+### From SSH + tmux
+1. Install Happy Coder
+2. Your workflow stays the same, just better mobile UX
+3. Keep tmux as backup if you want
+
+### From Cursor
+1. Happy works alongside Cursor
+2. Use Happy for mobile, Cursor for desktop
+3. Or replace Cursor entirely - your choice
+
+## Try It Risk-Free
+
+Happy Coder is open source. No sign-up, no credit card, no trial period. Just install and use.
+
+```bash
+npm install -g happy-coder
+happy
+```
+
+If you don't like it, uninstall with one command. No cancellation process, no retention team, no dark patterns.
+
+That's the difference between a tool built for developers and a product built for investors.

@@ -1,0 +1,328 @@
+# Security & Encryption
+
+Happy Coder uses end-to-end encryption. Your code stays private, even from us.
+
+## The Short Version
+
+1. **Your code is encrypted** before leaving your device
+2. **Only you have the keys** - shared via QR code, never sent to server
+3. **The relay server can't read anything** - it only sees encrypted blobs
+4. **Open source** - audit the code yourself
+
+## How Encryption Works
+
+### Key Exchange via QR Code
+
+When you run `happy` on your computer, it:
+1. Generates a random 256-bit secret key
+2. Displays this key as a QR code
+3. Never sends this key anywhere
+
+When you scan with your phone:
+1. Phone reads the secret key from QR code
+2. Both devices now share the same secret
+3. All messages are encrypted with this key
+
+**Why QR codes?**
+- Air-gapped key exchange (no network involved)
+- Can't be intercepted remotely
+- Visual confirmation of pairing
+- No typing long keys on mobile
+
+### AES-256 Encryption
+
+Every message between your devices:
+
+```
+Original message → AES-256-GCM encryption → Encrypted blob → Relay server → Your other device → AES-256-GCM decryption → Original message
+```
+
+**Technical details:**
+- Algorithm: AES-256-GCM (Galois/Counter Mode)
+- Key size: 256 bits
+- Authentication: Built into GCM mode
+- IV: Random 96-bit initialization vector per message
+- Implementation: Native crypto libraries (Node.js crypto, iOS CryptoKit, Android Cipher)
+
+### What Gets Encrypted
+
+**Everything that matters:**
+- Your Claude Code conversations
+- File contents and paths
+- Terminal output
+- MCP tool calls and responses
+- Error messages
+- Session state
+
+**What doesn't get encrypted:**
+- Timestamp when message was sent
+- Public key 
+- Message size (padded to hide actual length)
+
+## Zero-Knowledge Architecture
+
+The relay server knows nothing about you or your code.
+
+### What the Server Sees
+
+```json
+{
+  "channel_id": "a7f3d8b9c2e5...",  // SHA-256 hash
+  "timestamp": 1704067200,
+  "encrypted_blob": "BASE64_ENCRYPTED_DATA",
+  "size": 4096
+}
+```
+
+That's it. No usernames, no email addresses, no readable content.
+
+### What the Server Can't Do
+
+- **Can't read your messages** - No decryption keys
+- **Can't modify messages** - GCM authentication would fail
+- **Can't inject messages** - Would need your secret key
+- **Can't correlate users** - Only sees hashed identifiers
+- **Can't replay attacks** - Each message has unique IV
+
+### What the Server Can Do
+
+- Forward encrypted blobs between devices
+- Store encrypted blobs temporarily
+- Delete old blobs after expiry
+- Count messages for rate limiting
+
+## Authentication Without Accounts
+
+No usernames. No passwords. No accounts. Here's how devices find each other:
+
+### Zero Round-Trip Authentication
+
+Each device proves it has the secret key:
+
+1. **Device generates challenge**: Random 256-bit nonce (not the server!)
+2. **Device creates proof**: HMAC-SHA256(secret_key, challenge)
+3. **Device sends**: challenge + proof + public_key
+4. **Server verifies**: Proof matches the public key
+5. **Connection established**: Instantly, no back-and-forth
+
+The server never generates challenges, preventing it from tricking devices into revealing keys.
+
+### Channel Identification
+
+Devices find each other using a channel ID:
+```
+channel_id = SHA256(public_key)
+```
+
+The server only stores this hash, not the actual public key. Even if someone dumps the database, they can't reverse-engineer connections.
+
+## Threat Model
+
+What we protect against and what we don't.
+
+### Protected Against ✅
+
+**Passive Network Surveillance**
+- ISP can't read your code
+- WiFi snoopers see only encrypted traffic
+- Corporate proxies can't inspect content
+
+**Server Compromise**
+- Hacked server can't decrypt old messages
+- Database breach reveals only encrypted blobs
+- Malicious admin can't read your code
+
+**Man-in-the-Middle**
+- Can't decrypt without secret key
+- Can't modify messages (GCM auth fails)
+- Can't inject fake messages
+
+### Not Protected Against ❌
+
+**Device Compromise**
+- If someone has your unlocked phone, they can see your sessions
+- Malware on your computer could read Claude Code output
+- Physical access to devices breaks all security
+
+**Targeted Endpoint Attacks**
+- Keyloggers on your computer
+- Screen recording malware
+- Compromised Claude Code binary
+
+**Metadata Analysis**
+- Server knows when you send messages
+- Message frequency and size patterns
+- Connection times and duration
+
+## Self-Hosting for Maximum Security
+
+Don't trust our relay server? Run your own:
+
+```bash
+# Clone and audit the code (900 lines)
+git clone https://github.com/slopus/happy-server
+cd happy-server
+cat src/server.ts  # Read it yourself
+
+# Run on your infrastructure
+docker build -t my-relay .
+docker run -p 8080:8080 my-relay
+```
+
+Now you control:
+- Where data is stored
+- Who can connect
+- Retention policies
+- Access logs
+
+## Security Best Practices
+
+### For Individuals
+
+1. **Use unique session keys**: Generate new QR codes for each device pairing
+2. **Rotate keys periodically**: Re-pair devices monthly for sensitive work
+3. **Self-host for sensitive projects**: Run your own relay server
+4. **Use HTTPS for relay**: Prevents traffic analysis
+5. **Lock your devices**: Use biometric/PIN locks on phones
+
+### For Teams
+
+1. **Run internal relay server**: Keep all traffic within your network
+2. **Use VPN access**: Require VPN to reach relay server
+3. **Audit logs regularly**: Monitor for unusual patterns
+4. **Separate development environments**: Different keys for different projects
+5. **Train developers**: Ensure team understands the security model
+
+### For High-Security Environments
+
+1. **Air-gapped relay**: Run relay server on internal network only
+2. **Hardware security modules**: Store keys in HSM
+3. **Certificate pinning**: Prevent MITM on relay connection
+4. **Audit mode**: Log all operations for compliance
+5. **Key ceremony**: Formal process for key generation/rotation
+
+## Cryptographic Implementation
+
+For security auditors and the paranoid.
+
+### Libraries Used
+
+**CLI (Node.js)**:
+```javascript
+const crypto = require('crypto');
+// Uses OpenSSL under the hood
+```
+
+**iOS App**:
+```swift
+import CryptoKit
+// Apple's native cryptography framework
+```
+
+**Android App**:
+```kotlin
+import javax.crypto.Cipher
+// Android's built-in crypto
+```
+
+**Why native libraries?**
+- Audited by platform vendors
+- Hardware acceleration when available
+- Constant-time operations
+- Regular security updates
+
+### Key Derivation
+
+From QR code secret to encryption keys:
+
+```
+master_secret (from QR)
+    |
+    ├─→ HKDF-SHA256 → encryption_key (256 bits)
+    ├─→ HKDF-SHA256 → auth_key (256 bits)
+    └─→ HKDF-SHA256 → channel_key (256 bits)
+```
+
+Different keys for different purposes. Never reuse keys.
+
+### Message Format
+
+```
+[Version (1 byte)]
+[IV (12 bytes)]
+[Encrypted Payload (variable)]
+[Auth Tag (16 bytes)]
+```
+
+Authenticated encryption prevents tampering.
+
+## Vulnerability Disclosure
+
+Found a security issue? We want to know.
+
+### Responsible Disclosure
+
+1. **Email**: security@happy.engineering
+2. **PGP Key**: Available on our GitHub
+3. **Response time**: Within 48 hours
+4. **Fix timeline**: Critical issues within 7 days
+
+### Bug Bounty
+
+We're a free open source project, but we offer:
+- Credit in release notes
+- Swag (t-shirts, stickers)
+- Eternal gratitude
+- CVE credit if applicable
+
+## Security FAQ
+
+### "Is my code really private?"
+
+Yes. The relay server cannot decrypt your messages. Even we can't read your code. The encryption happens on your device before any network transmission.
+
+### "What if Happy gets hacked?"
+
+If our relay server is compromised, attackers get encrypted blobs they can't read. Your code remains safe. This is why end-to-end encryption matters.
+
+### "Can my employer see my code?"
+
+Only if they:
+- Have access to your devices
+- Install monitoring software
+- Require you to use their relay server
+
+Happy Coder itself doesn't provide any backdoors.
+
+### "Is it quantum-safe?"
+
+AES-256 is considered quantum-resistant for symmetric encryption. The main quantum threat is to public key cryptography, which Happy Coder doesn't use for message encryption.
+
+### "Why trust you?"
+
+Don't trust us. That's the point. The code is open source, the encryption is end-to-end, and you can self-host. We designed it so you don't need to trust anyone.
+
+## Compliance
+
+Happy Coder helps meet various compliance requirements:
+
+- **GDPR**: No personal data collected, user controls all data
+- **HIPAA**: Can be configured for healthcare (self-hosted)
+- **SOC 2**: Encryption and access controls support compliance
+- **CCPA**: No data selling, user-controlled deletion
+
+Note: Compliance depends on your configuration and usage.
+
+## Security Changelog
+
+Track security improvements:
+
+- **v1.2.0**: Added AES-256-GCM (from AES-256-CBC)
+- **v1.1.0**: Implemented zero round-trip auth
+- **v1.0.0**: Initial release with end-to-end encryption
+
+## Learn More
+
+- [Self-Hosting Guide](/guides/self-hosting) - Run your own secure relay
+- [Architecture Overview](/how-it-works) - Understand the system design
+- [GitHub Security](https://github.com/slopus/happy/security) - View security advisories

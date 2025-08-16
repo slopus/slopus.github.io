@@ -1,0 +1,74 @@
+# Content Strategy for Happy Coder Documentation
+
+## Target Audience
+Developers who:
+- Already pay $20-200/month for Claude Code
+- Want to use Claude Code away from their desk
+- Value privacy and open source
+- Currently struggle with SSH/tmux/terminal apps on mobile
+- Don't want vendor lock-in from VC-funded startups
+
+## SEO Keywords to Target
+Primary:
+- "claude code mobile app"
+- "claude code on phone"
+- "control claude code remotely"
+- "claude code iOS/Android"
+
+Secondary:
+- "claude code alternative to cursor mobile"
+- "open source claude code client"
+- "self hosted claude code"
+- "claude code voice coding"
+- "claude code MCP tools mobile"
+
+Long-tail:
+- "how to use claude code from phone"
+- "claude code session from anywhere"
+- "claude code without desktop"
+- "claude code hands free coding"
+
+## Content Priorities
+
+### 1. Installation & Setup (HIGH PRIORITY - User Journey Start)
+- Platform-specific guides with screenshots
+- Troubleshooting common issues
+- Self-hosting guide (differentiator!)
+
+### 2. Use Cases & Workflows (HIGH PRIORITY - Demonstrate Value)
+- Karl's home server automation story
+- Voice coding while walking
+- Pre-sleep task seeding
+- Emergency debugging from phone
+
+### 3. Comparisons (MEDIUM PRIORITY - Capture Comparison Searches)
+- vs Omnara (they charge, we're free)
+- vs Siteboon/ClaudeCodeUI (they host, we don't)
+- vs Terragon (they control workflow, we don't)
+- vs Cursor Mobile (they run VMs, we use your machine)
+- vs SSH+tmux (we're purpose-built for Claude Code)
+
+### 4. Technical Documentation (MEDIUM PRIORITY - Build Trust)
+- Security/encryption details
+- CLI reference
+- Configuration options
+- API documentation
+
+### 5. Community (LOW PRIORITY - Future Growth)
+- Contributing guide
+- Plugin development
+- Community showcases
+
+## Key Differentiators to Emphasize
+
+1. **True Extension, Not Replacement**: Happy extends your reach to YOUR machines, not cloud VMs
+2. **Unix Philosophy**: One tool, one job, composable
+3. **Zero Lock-in**: Open source, self-hostable, no proprietary workflow
+4. **Privacy First**: End-to-end encryption, relay server can't read your code
+5. **Free Forever**: No VC funding to chase, no pivot coming
+
+## Content Voice
+- Direct, no fluff (developers hate marketing speak)
+- Technical but accessible (10th grade reading level per CLAUDE.md)
+- Focus on solving real problems
+- Use concrete examples (Karl's setup, Pavel's testimonial)

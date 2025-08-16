@@ -1,0 +1,363 @@
+# Self-Hosting Happy Server - Notes
+
+## Overview
+Many developers want to run their own relay server for complete control over their infrastructure. This guide walks through setting up your own Happy Server in about 3 minutes.
+
+## Why Self-Host?
+
+### Complete Control
+- Your server, your rules
+- No dependency on third-party infrastructure
+- Customize rate limits and storage as needed
+
+### Enhanced Privacy
+- Keep all encrypted blobs on your own hardware
+- Full audit trail of all connections
+- No third-party has any record of your usage
+
+### Team Deployments
+- Run a server for your entire development team
+- Keep all team communications within your network
+- Integrate with your existing infrastructure
+
+## Prerequisites
+
+- Docker installed on your server
+- A server with a public IP address (or accessible within your network)
+- About 1GB of disk space for the server and logs
+- Network access from both your computer and mobile device
+
+## Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/slopus/happy-server
+cd happy-server
+```
+
+The entire server is only about 900 lines of code. You can read through it in a few minutes to verify it's just forwarding encrypted messages.
+
+## Step 2: Build the Docker Image
+
+```bash
+docker build -t happy-server:latest .
+```
+
+This creates a Docker image with the Happy Server. The build process is straightforward and takes about 30 seconds.
+
+## Step 3: Push to Your Container Registry (Optional)
+
+If you're deploying to a cloud provider or using Kubernetes:
+
+```bash
+# Tag for your registry
+docker tag happy-server:latest your-registry.com/happy-server:latest
+
+# Push to registry
+docker push your-registry.com/happy-server:latest
+```
+
+## Step 4: Run the Server
+
+### Basic Docker Run
+
+```bash
+docker run -d \
+  --name happy-server \
+  -p 8080:8080 \
+  -v $(pwd)/data:/data \
+  --restart unless-stopped \
+  happy-server:latest
+```
+
+### Docker Compose
+
+Create a `docker-compose.yml`:
+
+```yaml
+version: '3.8'
+services:
+  happy-server:
+    image: happy-server:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+    environment:
+      - MAX_BLOB_SIZE=100MB  # Optional: customize limits
+      - RATE_LIMIT=2000      # Optional: messages per second
+```
+
+Then run:
+```bash
+docker-compose up -d
+```
+
+### Kubernetes Deployment
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: happy-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: happy-server
+  template:
+    metadata:
+      labels:
+        app: happy-server
+    spec:
+      containers:
+      - name: happy-server
+        image: your-registry.com/happy-server:latest
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: happy-server-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: happy-server
+spec:
+  selector:
+    app: happy-server
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: LoadBalancer
+```
+
+## Step 5: Configure SSL/TLS (Recommended)
+
+For production use, you should use HTTPS. Here's a simple setup with Caddy as a reverse proxy:
+
+```bash
+# Install Caddy
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo tee /etc/apt/trusted.gpg.d/caddy-stable.asc
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+sudo apt update
+sudo apt install caddy
+
+# Configure Caddy
+sudo tee /etc/caddy/Caddyfile <<EOF
+your-domain.com {
+    reverse_proxy localhost:8080
+}
+EOF
+
+# Restart Caddy
+sudo systemctl restart caddy
+```
+
+Caddy automatically obtains and renews SSL certificates from Let's Encrypt.
+
+## Step 6: Configure Happy Coder Mobile App
+
+1. Open the Happy Coder app on your phone
+2. Go to Settings
+3. Find "Relay Server URL"
+4. Enter your server URL:
+   - With SSL: `https://your-domain.com`
+   - Without SSL: `http://your-server-ip:8080`
+5. Save the settings
+
+## Step 7: Configure Happy CLI
+
+On your computer, configure the CLI to use your server:
+
+```bash
+# Set the server URL in your environment
+export HAPPY_SERVER_URL="https://your-domain.com"
+
+# Or add to your shell profile (.bashrc, .zshrc, etc.)
+echo 'export HAPPY_SERVER_URL="https://your-domain.com"' >> ~/.bashrc
+
+# Alternatively, use a config file
+happy config set server-url https://your-domain.com
+```
+
+## Step 8: Test the Connection
+
+1. Run `happy` on your computer
+2. Scan the QR code with your mobile app
+3. Verify the connection works
+
+You should see "Connected to relay server" in both the CLI and mobile app.
+
+## Monitoring and Maintenance
+
+### View Server Logs
+
+```bash
+docker logs -f happy-server
+```
+
+### Check Server Health
+
+The server exposes a health endpoint:
+
+```bash
+curl http://your-server:8080/health
+```
+
+### Backup Encrypted Blobs
+
+The server stores encrypted blobs in the `/data` directory. To backup:
+
+```bash
+# Create backup
+tar -czf happy-backup-$(date +%Y%m%d).tar.gz ./data
+
+# Or use rsync for incremental backups
+rsync -av ./data/ backup-server:/backups/happy-server/
+```
+
+Remember: These blobs are encrypted. Even if someone gets your backups, they can't read your code without the encryption keys from your devices.
+
+## Performance Tuning
+
+### For Small Teams (1-10 developers)
+
+The default configuration works fine:
+- 1 CPU core
+- 512MB RAM
+- 10GB disk space
+
+### For Larger Teams (10-100 developers)
+
+Increase resources:
+- 2-4 CPU cores
+- 2GB RAM
+- 100GB disk space
+- Consider running multiple instances behind a load balancer
+
+### Rate Limiting
+
+The default rate limit is 1,000 messages per second, which is more than enough for most teams. To adjust:
+
+```bash
+docker run -d \
+  -e RATE_LIMIT=5000 \
+  # ... other options
+  happy-server:latest
+```
+
+## Troubleshooting
+
+### Connection Refused
+
+Check that:
+1. The server is running: `docker ps`
+2. The port is open: `netstat -tlnp | grep 8080`
+3. Firewall allows connections: `sudo ufw allow 8080`
+
+### Certificate Issues
+
+If using self-signed certificates:
+1. Export your certificate
+2. Install it on your mobile device
+3. Trust the certificate in your device settings
+
+### High Memory Usage
+
+Encrypted blobs are stored indefinitely by default. To clean old blobs:
+
+```bash
+# Remove blobs older than 30 days
+find ./data -type f -mtime +30 -delete
+```
+
+Or configure automatic cleanup in the server environment:
+
+```bash
+docker run -d \
+  -e BLOB_RETENTION_DAYS=30 \
+  # ... other options
+  happy-server:latest
+```
+
+## Security Considerations
+
+### Network Security
+
+1. **Use HTTPS in production** - Prevents man-in-the-middle attacks
+2. **Firewall rules** - Only allow connections from your network if possible
+3. **VPN access** - Consider requiring VPN for team deployments
+
+### Server Security
+
+1. **Regular updates** - Keep Docker and your OS updated
+2. **Limited access** - Don't run the server as root
+3. **Monitoring** - Set up alerts for unusual activity
+
+### Data Security
+
+Remember that the server never sees unencrypted data:
+- All data is encrypted on your devices before sending
+- The server only stores and forwards encrypted blobs
+- Only devices with the shared secret can decrypt messages
+
+## Advanced Configurations
+
+### Running Behind Corporate Proxy
+
+If your company uses a proxy:
+
+```bash
+docker run -d \
+  -e HTTP_PROXY=http://proxy.company.com:8080 \
+  -e HTTPS_PROXY=http://proxy.company.com:8080 \
+  # ... other options
+  happy-server:latest
+```
+
+### High Availability Setup
+
+For mission-critical deployments, run multiple servers:
+
+1. Deploy 3+ instances
+2. Use a load balancer (HAProxy, nginx, or cloud LB)
+3. Share storage between instances (NFS, S3, etc.)
+4. Configure health checks
+
+### Integration with Existing Infrastructure
+
+The Happy Server can integrate with:
+- **Prometheus** - Metrics endpoint at `/metrics`
+- **Grafana** - Pre-built dashboards available
+- **ELK Stack** - JSON structured logs
+- **Kubernetes** - Helm chart available
+
+## Cost Comparison
+
+### Self-Hosted
+- **Small VPS**: $5-10/month (DigitalOcean, Linode)
+- **Home server**: Free (Raspberry Pi, old laptop)
+- **Cloud (AWS/GCP)**: $20-50/month depending on usage
+
+### Managed Alternatives
+- **Omnara**: $9/month per user + Claude Code costs
+- **Terragon**: Free tier limited, then usage-based
+- **Siteboon**: Usage-based pricing
+- **Conductor**: Free tier, then $29/month
+
+Self-hosting Happy Server gives you unlimited usage for just the cost of a small server.
+
+## Summary
+
+Setting up your own Happy Server takes about 3 minutes and gives you:
+- Complete control over your infrastructure
+- Enhanced privacy with no third-party involvement  
+- Unlimited usage for your entire team
+- No vendor lock-in or surprise pricing changes
+
+The server is simple, auditable, and designed to do one thing well: relay encrypted messages between your devices. It's the Unix philosophy applied to mobile Claude Code access.

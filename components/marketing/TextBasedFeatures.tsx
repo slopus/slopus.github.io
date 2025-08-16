@@ -4,7 +4,7 @@ const TextBasedFeatures = () => {
   const features = [
     {
       title: "Zero workflow distribution",
-      description: "Keep using your favorite tools, editors, and development environments exactly as before. Happy integrates with your existing setup without requiring any changes how you work."
+      description: "Keep using your favorite tools, editors, and development environments exactly as before. Happy integrates with your existing setup without requiring any changes to how you work."
     },
     {
       title: "Multiple Active Sessions", 
@@ -20,7 +20,7 @@ const TextBasedFeatures = () => {
     },
     {
       title: "Secure", 
-      description: "Happy uses end to end encryption.No one can read your messages or code."
+      description: "Happy uses End to End Encryption. No one can read your messages or code."
     },
     {
       title: "Smart Push Notifications",
@@ -34,7 +34,7 @@ const TextBasedFeatures = () => {
 
   return (
     <>
-      <h3 className="font-mono font-semibold text-lg mb-4 text-gray-900 dark:text-gray-100">Features:</h3>
+      <h3 className="font-mono font-semibold text-lg mb-4 text-gray-900 dark:text-gray-100">Why Happy?</h3>
       <div className="font-mono text-sm space-y-3">
         {features.map((feature, index) => (
           <div key={index} className="text-gray-800 dark:text-gray-200">

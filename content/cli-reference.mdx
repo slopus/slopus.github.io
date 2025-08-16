@@ -1,0 +1,473 @@
+# CLI Reference
+
+Complete reference for the `happy` command line interface.
+
+## Basic Usage
+
+```bash
+happy [options] [-- claude-code-args]
+```
+
+Start Happy Coder with default settings:
+```bash
+happy
+```
+
+## Common Commands
+
+### Start a Session
+
+```bash
+# Basic start
+happy
+
+# With project directory
+happy --dir ~/projects/my-app
+
+# With session name
+happy --session-name "backend-api"
+
+# With custom port
+happy --port 8766
+```
+
+### View Sessions
+
+```bash
+# List active sessions
+happy list
+
+# Show session details
+happy info --session-id abc123
+```
+
+### Health Check
+
+```bash
+# Check if everything works
+happy doctor
+
+# Test Claude Code integration
+happy test
+```
+
+## Options
+
+### Connection Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--port PORT` | Local port for connections | 8765 |
+| `--host HOST` | Local host to bind | localhost |
+| `--server URL` | Custom relay server URL | relay.happy.engineering |
+| `--no-relay` | Direct connection (LAN only) | false |
+
+**Examples:**
+```bash
+# Custom port
+happy --port 9000
+
+# Custom relay server
+happy --server https://relay.mycompany.com
+
+# LAN-only mode
+happy --no-relay --host 0.0.0.0
+```
+
+### Session Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--session-name NAME` | Name for this session | Random |
+| `--session-id ID` | Resume existing session | None |
+| `--dir PATH` | Working directory | Current dir |
+| `--headless` | No terminal UI | false |
+
+**Examples:**
+```bash
+# Named session
+happy --session-name "feature-branch"
+
+# Resume session
+happy --session-id abc123def456
+
+# Headless for CI/CD
+happy --headless --session-name "ci-build"
+```
+
+### Claude Code Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--claude-path PATH` | Path to Claude Code binary | Auto-detect |
+| `--model MODEL` | AI model to use | opus-4.1 |
+| `--max-tokens NUM` | Max tokens per response | 8000 |
+| `--agent NAME` | Start with specific agent | None |
+| `--mcp-config PATH` | MCP tools config file | ~/.claude/mcp.json |
+
+**Examples:**
+```bash
+# Specific Claude Code binary
+happy --claude-path /usr/local/bin/claude-code
+
+# Use different model
+happy --model sonnet-4
+
+# Start with agent
+happy --agent bedtime
+
+# Custom MCP config
+happy --mcp-config ~/work-mcp-tools.json
+```
+
+### Security Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--encryption ALGO` | Encryption algorithm | aes-256-gcm |
+| `--key-size BITS` | Encryption key size | 256 |
+| `--no-qr` | Show text code instead of QR | false |
+| `--require-auth` | Require authentication | false |
+
+**Examples:**
+```bash
+# Text code for manual entry
+happy --no-qr
+
+# Require authentication
+happy --require-auth
+```
+
+### Display Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--verbose` | Verbose output | false |
+| `--quiet` | Minimal output | false |
+| `--no-color` | Disable colored output | false |
+| `--json` | JSON output format | false |
+
+**Examples:**
+```bash
+# Debug mode
+happy --verbose
+
+# Quiet mode for scripts
+happy --quiet --json
+```
+
+## Passing Arguments to Claude Code
+
+Everything after `--` goes to Claude Code:
+
+```bash
+# Pass model and token settings
+happy -- --model opus-4.1 --max-tokens 10000
+
+# Pass a specific task
+happy -- "refactor the auth system"
+
+# Combine Happy and Claude options
+happy --port 9000 -- --model sonnet-4 --verbose
+```
+
+## Environment Variables
+
+Configure Happy via environment variables:
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `HAPPY_SERVER_URL` | Default relay server | `https://relay.company.com` |
+| `HAPPY_PORT` | Default port | `8766` |
+| `HAPPY_SESSION_NAME` | Default session name | `dev-session` |
+| `HAPPY_CLAUDE_PATH` | Claude Code binary path | `/usr/local/bin/claude-code` |
+| `HAPPY_TELEMETRY` | Enable/disable telemetry | `false` |
+| `HAPPY_LOG_LEVEL` | Log verbosity | `debug` |
+
+**Examples:**
+```bash
+# Set default server
+export HAPPY_SERVER_URL="https://relay.mycompany.com"
+happy  # Uses company relay
+
+# Disable telemetry
+export HAPPY_TELEMETRY=false
+
+# Debug logging
+export HAPPY_LOG_LEVEL=debug
+happy
+```
+
+## Configuration Files
+
+Happy reads config from (in priority order):
+1. Command line arguments
+2. Environment variables  
+3. `.happyrc` in current directory
+4. `~/.config/happy/config.json`
+
+### Project Config (.happyrc)
+
+```json
+{
+  "server": "https://relay.company.com",
+  "port": 8766,
+  "session_name": "my-project",
+  "claude_args": ["--model", "opus-4.1"],
+  "mcp_config": "./project-mcp.json"
+}
+```
+
+### Global Config (~/.config/happy/config.json)
+
+```json
+{
+  "server": "https://relay.happy.engineering",
+  "encryption": "aes-256-gcm",
+  "telemetry": false,
+  "theme": "dark",
+  "notifications": true
+}
+```
+
+## Subcommands
+
+### happy list
+
+List all active sessions:
+
+```bash
+happy list [options]
+
+Options:
+  --all          Show all sessions (including inactive)
+  --json         Output as JSON
+  --verbose      Show detailed info
+```
+
+### happy info
+
+Show session details:
+
+```bash
+happy info [options]
+
+Options:
+  --session-id   Session to inspect (required)
+  --json         Output as JSON
+```
+
+### happy kill
+
+Terminate a session:
+
+```bash
+happy kill [options]
+
+Options:
+  --session-id   Session to kill (required)
+  --all          Kill all sessions
+  --force        Force kill without confirmation
+```
+
+### happy doctor
+
+Check system health:
+
+```bash
+happy doctor [options]
+
+Options:
+  --verbose      Show detailed diagnostics
+  --fix          Attempt to fix issues
+```
+
+Output:
+```
+✓ Node.js 18.0.0
+✓ Claude Code detected
+✓ Network accessible
+✓ Encryption working
+✓ Relay server reachable
+```
+
+### happy config
+
+Manage configuration:
+
+```bash
+# Show current config
+happy config show
+
+# Set a value
+happy config set server https://relay.company.com
+
+# Get a value
+happy config get server
+
+# Reset to defaults
+happy config reset
+```
+
+### happy logs
+
+View session logs:
+
+```bash
+happy logs [options]
+
+Options:
+  --session-id   Session to view (default: current)
+  --tail         Follow log output
+  --lines N      Show last N lines
+  --grep PATTERN Filter logs
+```
+
+## Advanced Usage
+
+### Running in CI/CD
+
+```yaml
+# GitHub Actions example
+- name: Run Claude Code Analysis
+  run: |
+    happy --headless \
+      --session-name "pr-${{ github.event.number }}" \
+      -- "review this PR and suggest improvements"
+```
+
+### Multiple Concurrent Sessions
+
+```bash
+# Terminal 1: Frontend
+happy --port 8765 --session-name frontend
+
+# Terminal 2: Backend  
+happy --port 8766 --session-name backend
+
+# Terminal 3: Database
+happy --port 8767 --session-name database
+```
+
+### Scripting with Happy
+
+```bash
+#!/bin/bash
+# Start Happy in background
+happy --headless --session-name batch &
+HAPPY_PID=$!
+
+# Wait for connection
+sleep 5
+
+# Send commands via API
+curl -X POST http://localhost:8765/api/message \
+  -d '{"text": "generate tests for user.js"}'
+
+# Cleanup
+kill $HAPPY_PID
+```
+
+### Docker Usage
+
+```bash
+# Run in container
+docker run -it \
+  -v $(pwd):/workspace \
+  -p 8765:8765 \
+  happycoder/cli \
+  --dir /workspace
+
+# With docker-compose
+services:
+  happy:
+    image: happycoder/cli
+    ports:
+      - "8765:8765"
+    volumes:
+      - .:/workspace
+    command: --dir /workspace --headless
+```
+
+## Troubleshooting Commands
+
+### Debug Connection Issues
+
+```bash
+# Verbose connection logs
+happy --verbose --log-level debug
+
+# Test relay server
+curl https://relay.happy.engineering/health
+
+# Check local port
+lsof -i :8765
+```
+
+### Reset Everything
+
+```bash
+# Kill all sessions
+happy kill --all
+
+# Clear config
+happy config reset
+
+# Remove all data
+rm -rf ~/.config/happy
+rm -rf ~/.happy
+```
+
+### Performance Tuning
+
+```bash
+# Increase message buffer
+happy --buffer-size 10000
+
+# Reduce encryption overhead (less secure)
+happy --encryption aes-128-gcm
+
+# Optimize for slow networks
+happy --compression gzip
+```
+
+## Exit Codes
+
+Happy uses standard exit codes:
+
+| Code | Meaning |
+|------|---------|
+| 0 | Success |
+| 1 | General error |
+| 2 | Invalid arguments |
+| 3 | Claude Code not found |
+| 4 | Port already in use |
+| 5 | Network error |
+| 6 | Authentication failed |
+| 7 | Session not found |
+
+Use in scripts:
+```bash
+if happy test; then
+  echo "Happy Coder is working!"
+else
+  echo "Something's wrong, exit code: $?"
+fi
+```
+
+## Getting Help
+
+```bash
+# Show help
+happy --help
+
+# Show version
+happy --version
+
+# Show detailed command help
+happy [command] --help
+```
+
+For more help:
+- GitHub: [github.com/slopus/happy](https://github.com/slopus/happy)
+- Discord: [discord.gg/happy-coder](https://discord.gg/happy-coder)

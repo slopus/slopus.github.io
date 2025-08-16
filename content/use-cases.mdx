@@ -1,0 +1,245 @@
+# Real Developer Use Cases
+
+How developers actually use Happy Coder to control Claude Code from their phones.
+
+## Karl's Home Automation Setup
+
+Karl runs Claude Code on a Mac Mini in his basement. He uses Happy Coder to control it from anywhere in his house.
+
+**The Problem:** Karl needed Claude Code available on-demand for home automation tasks, but keeping it running 24/7 was expensive. His cron job that restarted Claude Code every 5 minutes was burning through his usage limits.
+
+**The Solution:** Now Karl starts Claude Code sessions from his phone only when needed. He uses MCP tools to:
+- Control his Windows VM for testing Electron apps
+- Take screenshots of running applications
+- Deploy builds from staging to production
+- Run automated tests across different OSes
+
+**The Result:** 90% reduction in Claude Code usage costs. Full control of his development pipeline from his couch.
+
+```bash
+# Karl's setup on Mac Mini
+happy --dir ~/automation --mcp-config ~/mcp-tools.json
+
+# From his phone, he can now:
+# - Start Windows VM
+# - Test Electron app installation
+# - Take screenshots for verification
+# - Promote builds to stable
+```
+
+## Emergency Debugging from Anywhere
+
+You're at dinner. Your phone buzzes - production is down. Instead of rushing home:
+
+1. Open Happy Coder on your phone
+2. Connect to your work machine's Claude Code session
+3. Tell Claude: "Check the logs for the API error in the last hour"
+4. Claude investigates while you finish dessert
+5. Review the fix on your phone, approve the changes
+
+Real example from Pavel:
+> "Was at my kid's soccer game when our API started throwing 500s. Used Happy to have Claude Code check the logs, identify the bad deploy, and roll back. Fixed in 10 minutes without leaving the field."
+
+## Voice Coding While Walking
+
+Perfect for when you need to think through problems away from your desk.
+
+**Morning Walk Workflow:**
+```
+You: "Hey Claude, I'm thinking about refactoring our auth system.
+     The JWT tokens are getting too complex."
+
+Voice Agent: "I'll help you plan that refactoring. Let me understand
+             the current setup first..."
+
+[30 minutes of back-and-forth while walking]
+
+You: "Great, implement the token service we discussed."
+
+[Get home to find the refactor ready for review]
+```
+
+The voice agent translates your casual speech into proper Claude Code prompts. You think out loud, it handles the details.
+
+## Pre-Sleep Task Seeding
+
+The productivity hack that actually works now.
+
+**Traditional approach (never worked):**
+- Need 20 minutes at desk to set up tomorrow's task
+- Too tired after 8 hours of coding
+- Never happens
+
+**With Happy Coder:**
+```bash
+# From bed at 10 PM
+happy --agent bedtime
+
+# Describe what you want to work on
+"I need to add rate limiting to our API endpoints.
+Start with the /auth routes."
+
+# Claude Code works while you sleep
+# Wake up to ready-to-review code
+```
+
+One developer reported: "I finally do that 'leave something unfinished' trick because it takes 5 minutes from my phone instead of another desk session."
+
+## Async Code Reviews
+
+Review and guide Claude Code's work during "dead time."
+
+**On the train:**
+- Check Claude's progress on refactoring
+- Review the approach
+- Suggest adjustments
+- Claude implements while you commute
+
+**In waiting rooms:**
+- Queue up the next set of tests to write
+- Review Claude's test coverage
+- Add edge cases you just thought of
+
+**During meetings (we've all been there):**
+- Quietly guide Claude through bug fixes
+- Review small PRs
+- Plan the next sprint's technical tasks
+
+## Multi-Machine Development
+
+Control Claude Code on all your machines from one phone.
+
+**Common setups:**
+- MacBook for development
+- Linux server for deployment testing  
+- Windows VM for cross-platform checks
+- Raspberry Pi for IoT projects
+
+```bash
+# Start sessions on each machine
+happy --session-name "macbook-dev"    # On MacBook
+happy --session-name "linux-deploy"   # On Linux server
+happy --session-name "windows-test"   # On Windows VM
+
+# Switch between them instantly on your phone
+```
+
+Real developer quote: "I have Claude Code running on three machines. I switch between them on my phone like browser tabs."
+
+## Team Collaboration Patterns
+
+How teams use Happy Coder together.
+
+### Pair Programming Redux
+- Senior dev guides Claude Code from phone
+- Junior dev watches changes in real-time on desktop
+- Both see the same session, same context
+- Natural mentoring through AI assistance
+
+### Distributed Debugging
+- One dev runs Claude Code on staging server
+- Team members connect via Happy Coder
+- Everyone sees the debugging session
+- Collaborate on fixes without screen sharing
+
+### Architecture Discussions
+- Start Claude Code session during design meeting
+- Have Claude generate example implementations
+- Team reviews on phones while discussing
+- Iterate on designs with immediate code examples
+
+## CI/CD Integration
+
+Trigger Claude Code from your CI pipeline, monitor from your phone.
+
+```yaml
+# .github/workflows/ai-review.yml
+- name: AI Code Review
+  run: |
+    happy --headless --session-name "pr-${{ github.event.number }}"
+    claude-code review --pr ${{ github.event.number }}
+```
+
+Get notifications on your phone when Claude finishes reviewing PRs.
+
+## Personal Productivity Workflows
+
+### The Rubber Duck Pattern
+Voice conversation with Claude while doing other things:
+- Cooking: Design your API while making dinner
+- Exercising: Work through algorithm problems on the treadmill
+- Commuting: Plan refactors during your drive
+
+### The Inspiration Capture
+Ideas hit at weird times. Capture them immediately:
+- Shower thought about optimization? Tell Claude before you forget
+- Dream about a bug fix? Queue it up from bed
+- Random insight during lunch? Start implementing right away
+
+### The Context Switcher
+Working on multiple projects? Keep them all going:
+```bash
+# Terminal 1: Personal project
+happy --session personal-blog
+
+# Terminal 2: Work project  
+happy --session work-api
+
+# Terminal 3: Open source contribution
+happy --session oss-contrib
+
+# Switch between all three from your phone
+```
+
+## Accessibility Wins
+
+Happy Coder helps developers with different needs:
+
+### RSI/Carpal Tunnel Relief
+- Use voice coding to rest your hands
+- Review code on phone with minimal typing
+- Guide Claude verbally instead of typing prompts
+
+### ADHD-Friendly Workflows
+- Capture ideas immediately when they strike
+- Work in short bursts from anywhere
+- Change physical locations while maintaining context
+
+### Remote Work Enhancement
+- Code from coffee shops without lugging laptop
+- Emergency fixes from anywhere
+- Better work-life balance with mobile flexibility
+
+## The "Real" Use Cases
+
+Let's be honest about what developers actually do:
+
+### The 11 PM Anxiety Fix
+Can't sleep thinking about that bug? Tell Claude to investigate. Either it finds something (you were right!) or it doesn't (you can sleep now).
+
+### The Meeting Escape
+Stuck in a pointless meeting? Queue up real work for Claude. At least something productive happens.
+
+### The Procrastination Productivity
+Don't feel like coding but need progress? Describe what you want to Claude from your couch. Sometimes starting is the hardest part.
+
+### The Imposter Syndrome Helper
+Worried your approach is wrong? Talk it through with Claude via voice while walking. Often you know more than you think.
+
+## Getting Started with Use Cases
+
+Try these beginner-friendly workflows:
+
+1. **Evening Planning**: Before bed, describe tomorrow's first task to Claude
+2. **Morning Review**: Check what Claude built overnight while having coffee
+3. **Lunch Break Coding**: Quick fixes during lunch without opening laptop
+4. **Weekend Experiments**: Try new ideas from the couch
+
+Remember: Happy Coder isn't about coding on your phone. It's about controlling Claude Code from anywhere, maintaining momentum, and capturing ideas when they strike.
+
+## Share Your Use Case
+
+Found a creative way to use Happy Coder? Share it:
+- GitHub Discussions: [github.com/slopus/happy/discussions](https://github.com/slopus/happy/discussions)
+- Twitter: Tag #HappyCoder
+- Discord: [discord.gg/happy-coder](https://discord.gg/happy-coder)

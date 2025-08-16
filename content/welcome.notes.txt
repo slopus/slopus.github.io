@@ -1,0 +1,109 @@
+# Welcome Page Content Notes
+
+## Core Concept
+Happy Coder is a platform that lets you run Claude Code from anywhere - your phone, tablet, or any device with a browser. Unlike cloud-based solutions, Happy Coder runs Claude Code on machines YOU control and own.
+
+## Key Differentiators from Terragon and Similar Services
+
+### You Own the Infrastructure
+- Terragon: Rents machines on your behalf, charges for compute time, runs on their infrastructure
+- Happy Coder: Runs on YOUR machines - desktop, laptop, homelab, VPS, Raspberry Pi, or any internet-connected computer
+- Complete control over hardware, OS, environment, dependencies, and configurations
+
+### Use Cases Enabled by Self-Hosting
+- Run on specialized or esoteric hardware (GPUs, ARM devices, custom builds)
+- Work with air-gapped or high-security environments
+- Use custom development environments and toolchains
+- Integrate with internal systems behind firewalls
+- Experiment and hack without cloud costs or restrictions
+- Run multiple concurrent sessions across different machines
+
+## Technical Architecture
+
+### Three Core Components
+
+1. **CLI Program (happy)**
+   - Runs on your computer alongside Claude Code
+   - Monitors and captures Claude Code's actions and outputs
+   - Encrypts all data before transmission
+   - Maintains full local control over code execution
+
+2. **Mobile/Web Interface**
+   - Access from phone, tablet, or any browser
+   - Receives encrypted data stream from your machine
+   - Full console parity - every Claude Code feature works
+   - Real-time synchronization with your local session
+   - Voice commands and smart notifications
+
+3. **Relay Server**
+   - Simple message broker between your devices
+   - Only handles encrypted blobs - cannot read your code or data
+   - End-to-end encryption ensures privacy
+   - Open source and self-hostable if desired
+
+## Key Features
+
+### Zero Workflow Distribution
+- Keep your existing development setup exactly as-is
+- No need to change editors, tools, or environments
+- Happy integrates seamlessly without disruption
+
+### Multiple Active Sessions
+- Run several Claude Code instances simultaneously
+- Switch between different projects and contexts
+- Manage frontend, backend, DevOps tasks in parallel
+- Each session runs on the machine you choose
+
+### Full Console Parity
+- Every Claude Code feature available on mobile
+- Plan mode, custom agents, all commands work
+- True mobile development, not just monitoring
+
+### Open Source and Free
+- Complete transparency in how it works
+- Active community and contribution-friendly codebase
+- No subscription fees or usage charges
+- Self-host everything if you prefer
+
+### Security Through Encryption
+- End-to-end encryption for all data transmission
+- Your code never leaves your machines unencrypted
+- Relay server cannot access your content
+- Complete privacy and control
+
+### Smart Push Notifications
+- Get alerted when input is needed
+- Notifications when code is ready for review
+- Error and completion alerts
+- Stay productive without constant monitoring
+
+### Real-Time Voice Execution
+- Voice commands execute instantly
+- Not just transcription - actual voice-to-action
+- Code, debug, and manage projects hands-free
+- Perfect for mobile productivity
+
+## Getting Started Flow
+
+1. Install Happy CLI on your development machine
+2. Start a Claude Code session through Happy
+3. Connect from mobile app or web interface
+4. Continue working from anywhere
+
+## Primary Use Cases
+
+- **Mobile Development**: Start tasks on desktop, review/continue on phone
+- **Remote Work**: Access your home/office machine from anywhere
+- **Team Collaboration**: Share sessions securely with teammates
+- **Long-Running Tasks**: Monitor and control builds/tests remotely
+- **Experimentation**: Run Claude Code on various hardware configurations
+- **Security-First Environments**: Keep code on your infrastructure
+
+## Value Propositions
+
+1. **Freedom**: Run on any hardware you own
+2. **Control**: Your machines, your rules, your data
+3. **Flexibility**: Adapt to any development workflow
+4. **Cost**: No cloud charges, just your own infrastructure
+5. **Privacy**: End-to-end encryption, self-hostable
+6. **Productivity**: Work from anywhere without compromises

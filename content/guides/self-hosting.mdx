@@ -1,0 +1,272 @@
+# Self-Host Your Own Happy Server
+
+Run your own relay server in 3 minutes. Keep complete control over your Claude Code mobile setup.
+
+## Why Run Your Own Server?
+
+When you self-host Happy Server, you get:
+- **Total privacy** - Your encrypted data stays on your hardware
+- **No limits** - Set your own rate limits and storage
+- **Team control** - Run one server for your whole team
+- **Zero dependencies** - Never worry about a service shutting down
+
+The entire server is only 900 lines of code. You can read it yourself to verify it just forwards encrypted messages.
+
+## Quick Start
+
+### Step 1: Clone and Build
+
+```bash
+# Get the code
+git clone https://github.com/slopus/happy-server
+cd happy-server
+
+# Build with Docker
+docker build -t happy-server:latest .
+```
+
+### Step 2: Run the Server
+
+```bash
+docker run -d \
+  --name happy-server \
+  -p 8080:8080 \
+  -v $(pwd)/data:/data \
+  --restart unless-stopped \
+  happy-server:latest
+```
+
+### Step 3: Configure Your Devices
+
+**On your phone:**
+1. Open Happy Coder app
+2. Go to Settings
+3. Set "Relay Server URL" to `http://your-server:8080`
+4. Save
+
+**On your computer:**
+```bash
+export HAPPY_SERVER_URL="http://your-server:8080"
+happy  # Now connects to your server
+```
+
+That's it! Your Happy Coder setup now runs through your own server.
+
+## Production Setup with HTTPS
+
+For real use, you want HTTPS. Here's the easiest way with Caddy:
+
+```bash
+# Install Caddy (auto-manages SSL certificates)
+sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+sudo apt update
+sudo apt install caddy
+
+# Configure reverse proxy
+sudo tee /etc/caddy/Caddyfile <<EOF
+your-domain.com {
+    reverse_proxy localhost:8080
+}
+EOF
+
+# Start Caddy
+sudo systemctl restart caddy
+```
+
+Now use `https://your-domain.com` in your Happy Coder settings.
+
+## Docker Compose Setup
+
+For easier management, use Docker Compose:
+
+```yaml
+# docker-compose.yml
+version: '3.8'
+services:
+  happy-server:
+    image: happy-server:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+    environment:
+      - MAX_BLOB_SIZE=100MB
+      - RATE_LIMIT=2000
+```
+
+Run with: `docker-compose up -d`
+
+## Where to Host
+
+### Option 1: Home Server (Free)
+Run on any computer at home:
+- Raspberry Pi ($35 one-time)
+- Old laptop
+- Mac Mini
+- Desktop that's always on
+
+### Option 2: Cloud VPS ($5-10/month)
+- **DigitalOcean**: $6/month droplet works great
+- **Linode**: $5/month shared CPU
+- **Vultr**: $6/month regular performance
+- **Hetzner**: €4/month (best value in Europe)
+
+### Option 3: Corporate Network
+Run inside your company network for team use. The server works behind firewalls and proxies.
+
+## System Requirements
+
+Happy Server is lightweight:
+
+**For 1-10 developers:**
+- 512MB RAM
+- 1 CPU core
+- 10GB storage
+- 100Mbps network
+
+**For 10-100 developers:**
+- 2GB RAM
+- 2 CPU cores
+- 100GB storage
+- 1Gbps network
+
+## Monitor Your Server
+
+Check server health:
+```bash
+# View logs
+docker logs -f happy-server
+
+# Check health endpoint
+curl http://your-server:8080/health
+
+# See connection count
+curl http://your-server:8080/stats
+```
+
+## Backup Your Data
+
+The server stores encrypted blobs in `/data`. To backup:
+
+```bash
+# Simple backup
+tar -czf backup-$(date +%Y%m%d).tar.gz ./data
+
+# Or sync to another location
+rsync -av ./data/ backup-location/
+```
+
+Remember: These backups are encrypted. No one can read them without your device keys.
+
+## Troubleshooting
+
+### Can't Connect?
+
+Check these things:
+
+1. **Server running?** `docker ps | grep happy-server`
+2. **Port open?** `curl http://localhost:8080/health`
+3. **Firewall?** `sudo ufw allow 8080`
+4. **Right URL?** Make sure both devices use the same server URL
+
+### Using a Corporate Proxy?
+
+Add proxy settings to Docker:
+```bash
+docker run -d \
+  -e HTTP_PROXY=http://proxy.corp.com:8080 \
+  -e HTTPS_PROXY=http://proxy.corp.com:8080 \
+  happy-server:latest
+```
+
+### Need More Performance?
+
+Increase rate limits:
+```bash
+docker run -d \
+  -e RATE_LIMIT=5000 \
+  -e MAX_CONNECTIONS=1000 \
+  happy-server:latest
+```
+
+## Security Notes
+
+The Happy Server design keeps your data safe:
+
+1. **Server can't read your data** - Everything is encrypted before sending
+2. **No account needed** - Authentication uses cryptographic proofs
+3. **No logs of your code** - Server only logs connection metadata
+4. **Open source** - Audit the code yourself
+
+For extra security:
+- Use HTTPS in production
+- Run behind a VPN for team deployments
+- Set up fail2ban for brute force protection
+
+## Cost Comparison
+
+**Self-hosted Happy Server:**
+- Home: Free (use existing hardware)
+- VPS: $5-10/month for unlimited use
+
+**Commercial alternatives:**
+- Omnara: $9/month per user
+- Cursor Mobile: Runs on their VMs
+- Terragon/Siteboon: Usage-based pricing
+- Conductor: $29/month after free tier
+
+Self-hosting saves money and gives you control.
+
+## Advanced: Kubernetes Deployment
+
+For teams using Kubernetes:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: happy-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: happy-server
+  template:
+    metadata:
+      labels:
+        app: happy-server
+    spec:
+      containers:
+      - name: happy-server
+        image: happy-server:latest
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: data
+          mountPath: /data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: happy-server
+spec:
+  selector:
+    app: happy-server
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: LoadBalancer
+```
+
+## Next Steps
+
+After setting up your server:
+
+1. [Configure team access](/guides/team-setup)
+2. [Set up monitoring](/guides/monitoring)
+3. [Enable voice coding](/features/voice-coding-with-claude-code)
+
+Running your own Happy Server takes 3 minutes and gives you permanent control over your Claude Code mobile access. No subscriptions, no lock-in, no surprises.

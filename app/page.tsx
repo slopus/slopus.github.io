@@ -88,10 +88,13 @@ function DesktopHeroSection() {
                 <span>Open Source (MIT Licensed)</span>
               </div>
               <div className="flex items-start mb-4">
-                <span>Secure - end to end encryption</span>
+                <span>Secure - End to End Encryption</span>
               </div>
               <div className="flex items-start mb-4">
                 <span>Multiple active sessions across multiple machines</span>
+              </div>
+              <div className="flex items-start mb-4">
+                <span></span>
               </div>
                 <AdaptiveTerminal command="npm i -g happy-coder && happy"  />
             </div>
@@ -130,16 +133,19 @@ export default function Home() {
       <section className="max-w-[72ch] mx-auto px-2.5 sm:px-0">
             <div className="mb-6 text-base text-gray-700 dark:text-gray-300 font-mono">
               <div className="flex items-start mb-4 ">
-                <span>No workflow disruption - Claude Code runs on your machine</span>
+                <span>No workflow disruption. Claude Code runs on your machine</span>
               </div>
               <div className="flex items-start mb-4">
                 <span>Open Source (MIT Licensed)</span>
               </div>
               <div className="flex items-start mb-4">
-                <span>Secure - end to end encryption</span>
+                <span>Secure. End to End Encryption</span>
+              </div>
+              <div className="flex items-start mb-4">
+                <span>Multiple active sessions across multiple machines</span>
               </div>
               <div className="flex items-start mb-10">
-                <span>Multiple active sessions across multiple machines</span>
+                <span>Hands free control with voice agent. Not just dictation.</span>
               </div>
               <AdaptiveTerminal command="npm i -g happy-coder && happy"  />
             </div>
