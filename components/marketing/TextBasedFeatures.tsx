@@ -3,7 +3,7 @@ import React from 'react';
 const TextBasedFeatures = () => {
   const features = [
     {
-      title: "Zero workflow distribution",
+      title: "Zero workflow disruption",
       description: "Keep using your favorite tools, editors, and development environments exactly as before. Happy integrates with your existing setup without requiring any changes to how you work."
     },
     {
@@ -11,11 +11,11 @@ const TextBasedFeatures = () => {
       description: "Run several Claude Code instances simultaneously across different projects. Switch between frontend, backend, and DevOps tasks without losing context or momentum."
     },
     {
-      title: "Full console parity",
-      description: "Access all Claude Code features on your phone. From plan mode to custom agents, if it works in the terminal, it works in Happy."
+      title: "Everything from the terminal, on your phone",
+      description: "Access all Claude Code features on mobile. From plan mode to custom agents, if it works in the terminal, it works in Happy."
     },
     {
-      title: "Open source and Free",
+      title: "Open source and free",
       description: "Well organized codebase makes it easy to contribute. Friendly community."
     },
     {
@@ -24,7 +24,7 @@ const TextBasedFeatures = () => {
     },
     {
       title: "Smart Push Notifications",
-      description: "Get alerted when your input is needed, Get alerted when your input is needed, when code is ready to review, or when something went wrong."
+      description: "Get alerted when your input is needed, when code is ready to review, or when something went wrong."
     },
     {
       title: "Real-Time Voice Execution",

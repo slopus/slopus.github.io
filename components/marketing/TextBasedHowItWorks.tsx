@@ -12,7 +12,7 @@ const TextBasedHowItWorks = () => {
     },
     {
       title: "Relay Server",
-      description: "This connects your computer and phone. It passes encrypted messages between them. The server can't read your data. it just moves encrypted blobs around."
+      description: "This connects your computer and phone. It passes encrypted messages between them. The server can't read your data. It just moves encrypted blobs around."
     }
   ];
 
@@ -21,9 +21,10 @@ const TextBasedHowItWorks = () => {
       <h3 className="font-mono font-semibold text-lg mb-4 text-gray-900 dark:text-gray-100">How does it work?</h3>
       <div className="font-mono text-sm space-y-4">
         <div className="leading-relaxed text-gray-800 dark:text-gray-200">
-          Start Happy CLI and you'll have a regular Claude Code session. But you can continue that same session from a mobile app{' '}
-          (<a href="/download" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 underline">Download</a>){' '}
-          or web app (<a href="https://app.happy.engineering/" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 underline">https://app.happy.engineering/</a>)
+          Start Happy CLI and you'll have a regular Claude Code session. But you can continue that same session from{' '}
+          <a href="https://apps.apple.com/us/app/happy-claude-code-client/id6748571505" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 underline">iOS</a>,{' '}
+          <a href="https://play.google.com/store/apps/details?id=com.ex3ndr.happy" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 underline">Android</a>,{' '}
+          or <a href="https://app.happy.engineering/" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 underline">Web</a>
         </div>
         
         <div className="text-gray-800 dark:text-gray-200">

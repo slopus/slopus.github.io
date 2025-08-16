@@ -12,13 +12,14 @@ export default function LaunchWebAppButton({ href, className = '' }: WebAppButto
       href={href} 
       target="_blank" 
       rel="noopener noreferrer" 
-      className={`group px-2 py-2 sm:px-4 sm:py-4 border border-border rounded-lg font-semibold transition-all hover:border-primary hover:text-primary hover:bg-primary/5 flex items-center gap-3 ${className}`}
+      className={`inline-flex items-center justify-center text-white rounded-xl hover:opacity-90 transition-opacity font-medium w-[170px] h-[50px] sm:w-[203px] sm:h-[60px] overflow-hidden ${className}`}
+      style={{ backgroundColor: '#000', boxShadow: '0 0 0 1px #a2a2a1' }}
     >
       <ExternalLink 
-        className="text-lg group-hover:text-emerald-500 transition-colors" 
-        size={16}
+        className="mr-2" 
+        size={20}
       />
-      <span>Launch Web App</span>
+      <span style={{ fontSize: '14.25px' }}>Launch Web App</span>
     </a>
   );
 }

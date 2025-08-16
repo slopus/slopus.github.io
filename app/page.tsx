@@ -72,7 +72,7 @@ function DesktopHeroSection() {
         <div className="">
           <div>
             <h1 className="text-3xl sm:text-3xl font-bold mb-5 leading-tight">
-             Happy: Use Claude Code Anywhere 
+              Claude Code Anywhere
             </h1>
       
             <YoutubeDemoSection 
@@ -82,32 +82,25 @@ function DesktopHeroSection() {
             
             <div className="mb-6 text-base text-gray-700 dark:text-gray-300">
               <div className="flex items-start mb-4 ">
-                <span>No workflow disruption - Claude Code runs on your machine</span>
+                <span>Works seamlessly with your existing tools and workflow</span>
               </div>
               <div className="flex items-start mb-4">
-                <span>Open Source (MIT Licensed)</span>
+                <span>Open source (MIT licensed)</span>
               </div>
               <div className="flex items-start mb-4">
-                <span>Secure - End to End Encryption</span>
+                <span>Secure with end-to-end encryption</span>
               </div>
               <div className="flex items-start mb-4">
                 <span>Multiple active sessions across multiple machines</span>
               </div>
-              <div className="flex items-start mb-4">
-                <span></span>
-              </div>
                 <AdaptiveTerminal command="npm i -g happy-coder && happy"  />
             </div>
             
-            <div className="flex flex-col gap-5">
-              <div className="flex gap-4 flex-wrap">
-                <GooglePlayButton href={GOOGLE_PLAY_LINK} />
-                <AppStoreButton href={APP_STORE_LINK} />
-                <LaunchWebAppButton href="https://app.happy.engineering" />
-                <StarOnGithubButton href="https://github.com/slopus/happy" />
-              </div>
-              <div className="flex gap-4 items-center">
-              </div>
+            <div className="grid grid-cols-2 gap-4 sm:flex sm:gap-4 sm:flex-wrap">
+              <GooglePlayButton href={GOOGLE_PLAY_LINK} />
+              <AppStoreButton href={APP_STORE_LINK} />
+              <LaunchWebAppButton href="https://app.happy.engineering" />
+              <StarOnGithubButton href="https://github.com/slopus/happy" />
             </div>
             
           </div>
@@ -124,7 +117,7 @@ export default function Home() {
     <>
       <div className="max-w-[74ch] mx-auto px-2.5 sm:px-[2ch] pt-8">
         <h1 className="text-3xl sm:text-3xl font-bold leading-tight">
-          Happy: Use Claude Code Anywhere 
+          Claude Code Anywhere
         </h1>
       </div>
       
@@ -133,32 +126,28 @@ export default function Home() {
       <section className="max-w-[72ch] mx-auto px-2.5 md:px-0">
             <div className="mb-6 text-base text-gray-700 dark:text-gray-300 font-mono">
               <div className="flex items-start mb-4 ">
-                <span>No workflow disruption. Claude Code runs on your machine</span>
-              </div>
-              <div className="flex items-start mb-4">
-                <span>Open Source (MIT Licensed)</span>
-              </div>
-              <div className="flex items-start mb-4">
-                <span>Secure. End to End Encryption</span>
+                <span>Hands-free control with voice agent—not just dictation</span>
               </div>
               <div className="flex items-start mb-4">
                 <span>Multiple active sessions across multiple machines</span>
               </div>
+              <div className="flex items-start mb-4">
+                <span>Works seamlessly with your existing tools and workflow</span>
+              </div>
+              <div className="flex items-start mb-4">
+                <span>Secure with end-to-end encryption</span>
+              </div>
               <div className="flex items-start mb-10">
-                <span>Hands free control with voice agent. Not just dictation.</span>
+                <span>Open source (MIT licensed)</span>
               </div>
               <AdaptiveTerminal command="npm i -g happy-coder && happy"  />
             </div>
             
-            <div className="flex flex-col gap-5">
-              <div className="flex gap-4 flex-wrap">
-                <GooglePlayButton href={GOOGLE_PLAY_LINK} />
-                <AppStoreButton href={APP_STORE_LINK} />
-                <LaunchWebAppButton href="https://app.happy.engineering" />
-                <StarOnGithubButton href="https://github.com/slopus/happy" />
-              </div>
-              <div className="flex gap-4 items-center">
-              </div>
+            <div className="grid grid-cols-2 gap-4 sm:flex sm:gap-4 sm:flex-wrap">
+              <GooglePlayButton href={GOOGLE_PLAY_LINK} />
+              <AppStoreButton href={APP_STORE_LINK} />
+              <LaunchWebAppButton href="https://app.happy.engineering" />
+              <StarOnGithubButton href="https://github.com/slopus/happy" />
             </div>
       </section>
       
