@@ -55,8 +55,8 @@ export default function VideoComposite() {
         <div className="absolute top-0 left-0 h-[74.6%] aspect-[500/512] bg-gray-900 text-gray-300 rounded-xl overflow-hidden shadow-2xl flex items-center justify-center">
           <video
             ref={terminalVideoRef}
-            src="/take-3-short-term.mp4"
-            poster="/take-3-short-term-poster.jpg"
+            src="/take-4-short-term.mp4"
+            poster="/take-4-short-term-poster.jpg"
             className="w-full h-full object-cover"
             controls
             loop
@@ -68,8 +68,8 @@ export default function VideoComposite() {
         {/* Phone video - positioned bottom-right */}
         <video
           ref={simVideoRef}
-          src="/take-3-short-sim.mp4"
-          poster="/take-3-short-sim-poster.jpg"
+          src="/take-4-short-sim.mp4"
+          poster="/take-4-short-sim-poster.jpg"
           className="absolute bottom-0 right-0 w-[50%] h-auto"
           loop
           muted
