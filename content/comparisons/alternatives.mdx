@@ -183,16 +183,27 @@ If you enjoy suffering, use SSH + tmux. If you want something that just works, u
 
 ### Happy Coder vs Claudia
 
-**Claudia** is a YC startup offering a desktop coding agent with AGPL licensing as a channel to their paid services.
+**Claudia** is a YC startup offering a desktop coding agent with AGPL licensing
+as a marketing channel to sell their paid "AI Software Engineer" alternative to
+claude code.
 
 **Key Differences:**
-- **Business Model**: Claudia uses AGPL as a sales funnel for paid tiers. Happy is truly free.
+- **Business Model**: Claudia uses this desktop app as a sales funnel for their alternative to Claude Code. Happy is truly free and will let you use any coding agent.
 - **Privacy**: Happy has end-to-end encryption. Claudia stores conversations on their servers.
 - **Sustainability**: Claudia needs to monetize users eventually. Happy has no such pressure.
 - **Lock-in**: Claudia wants you in their ecosystem. Happy works with your existing setup.
 
 **The AGPL Strategy:**
 Claudia's AGPL license looks open source, but it's designed to make commercial use difficult, pushing users toward their paid proprietary offerings. It's "open source" marketing for a proprietary business.
+
+**The Contribution Lock-In:**
+Here's the hidden cost of AGPL: if you contribute a fix or change to Claudia, you can't actually reuse that larger work in your own projects because it's mixed with AGPL code. Your contribution gets locked away.
+
+But it's worse than that. All the mental work you put in to understand how the AGPL system works - the data flow patterns, the architectural decisions, the clever solutions to hard problems - now you have the risk that you can't use that knowledge in your own projects. You become "tainted" by having worked with AGPL sources.
+
+This creates a chilling effect: smart developers avoid contributing to AGPL projects precisely because they don't want to contaminate their ability to work on commercial projects later.
+
+With Happy's MIT license, when you contribute and improve a subsystem, you can take that subsystem and integrate it into your own projects. The knowledge you gain makes you more valuable, not legally restricted. We're all sharing and all benefiting together - true collaborative development.
 
 **Choose Claudia if:**
 - You don't mind eventual paid subscriptions
