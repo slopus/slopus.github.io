@@ -1,5 +1,5 @@
 import { Cards } from 'nextra/components'
-import { RocketIcon } from 'lucide-react'
+import { BellIcon, RocketIcon, AudioLinesIcon, NetworkIcon, GithubIcon, LightbulbIcon, HandshakeIcon } from 'lucide-react'
 import { Card } from '@/components/Card'
 
 # Welcome
@@ -33,36 +33,53 @@ Whether you're hacking on a personal project, working with specialized hardware,
 
 ## Getting Started
 
-<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+<div className="grid gap-4 sm:grid-cols-2">
     <Card
-    icon={<RocketIcon />}
-    title="Quick Start"
-    description="Create your first task from your phone"
-    href="/docs/guides/quick-start"
+        icon={<RocketIcon />}
+        title="Quick Start"
+        description="Create your first task from your phone"
+        href="/docs/guides/quick-start"
     />
+    <Card
+        icon={<NetworkIcon />}
+        title="Managing Sessions"
+        description="Start, stop, and switch between multiple Claude Code instances"
+        href="/docs/features/parallel-sessions"
+    />
+    <Card
+        icon={<AudioLinesIcon />}
+        title="Voice Commands"
+        description="Use voice to code hands-free while on the go"
+        href="/docs/guides/quick-start"
+    />
+    <Card
+        icon={<BellIcon />}
+        title="Push Notifications"
+        description="Get notified when Claude Code needs input or finishes tasks"
+        href="/docs/guides/quick-start"
+    />
+    
 </div>
-Set up Happy Coder in minutes and start your first remote session. Install the CLI on your development machine.
-Connect your phone or tablet to control Claude Code
-
-## Using Happy Coder
-
-### Managing Sessions
-Start, stop, and switch between multiple Claude Code instances
-
-### Voice Commands
-Use voice to code hands-free while on the go
-
-### Notifications
-Get alerts when Claude Code needs input or finishes tasks
-
 
 ## Resources
 
-### Examples
-See what you can build with Happy Coder
-
-### Community
-Join our Discord to get help and share ideas
-
-### Contributing
-Help improve Happy Coder - we welcome contributions
+<div className="grid gap-4 sm:grid-cols-2">
+    <Card
+        icon={<LightbulbIcon />}
+        title="Examples"
+        description="See what you can build with Happy Coder"
+        href="/docs/use-cases/"
+    />
+    <Card
+        icon={<GithubIcon />}
+        title="Community"
+        description="Visit our github repository to get help and share ideas"
+        href="https://github.com/slopus/happy"
+    />
+    <Card
+        icon={<HandshakeIcon />}
+        title="Contributing"
+        description="Help improve Happy Coder - we welcome contributions"
+        href="/docs/guides/contributing"
+    />
+</div>
