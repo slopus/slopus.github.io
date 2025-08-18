@@ -1,19 +1,41 @@
+import { Steps } from 'nextra/components'
+import Image from 'next/image'
+
 # Quick Start Guide
 
 Welcome to the Happy Coder quick start guide! This guide will help you get up and running with Claude Code in your pocket.
 
 ## Installation
 
-1. **Download the mobile app** from your device's app store
-2. **Install the NPM package** on your computer:
-   ```bash
-   npm install -g happy-coder
-   ```
-3. **Run the CLI tool**:
-   ```bash
-   happy
-   ```
-4. **Scan the QR code** with your mobile app
+<Steps>
+
+### Download Mobile App
+
+- **iPhone/iPad**: [App Store](https://apps.apple.com/us/app/happy-claude-code-client/id6748571505)
+- **Android**: [Google Play](https://play.google.com/store/apps/details?id=com.ex3ndr.happy)
+- **Web App**: [app.happy.engineering](https://app.happy.engineering)
+
+### Install on Your Computer
+
+```bash
+npm install -g happy-coder
+```
+
+Happy requires Node.js 18 or later (released  April 19, 2022) because we use these features:
+- Top-level await (Node.js 14.8+)
+- Better ES module support (Node.js 16+)
+- Stable fetch API (Node.js 18+)
+- Dependencies: Some of the dependencies like @anthropic-ai/claude-code and packages like chalk v5+ require Node.js 18+
+
+### Scan the QR code with your mobile app
+
+```bash
+happy --auth # Shows QR code
+```
+
+<Image className="my-4 rounded-lg border dark:border-gray-800 border-gray-200 shadow-lg dark:shadow-[0_0_40px_rgba(255,255,255,0.1)] dark:ring-1 dark:ring-white/20" src="/img/docs/cli-auth-example.png" alt="Screenshot of terminal showing the QR code plus secret code for manual entry" width={377} height={286} />
+
+</Steps>
 
 ## First Steps
 
