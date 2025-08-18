@@ -179,11 +179,9 @@ Now you control:
 
 ### For Individuals
 
-1. **Use unique session keys**: Generate new QR codes for each device pairing
-2. **Rotate keys periodically**: Re-pair devices monthly for sensitive work
-3. **Self-host for sensitive projects**: Run your own relay server
-4. **Use HTTPS for relay**: Prevents traffic analysis
-5. **Lock your devices**: Use biometric/PIN locks on phones
+1. **Rotate keys periodically**: Re-pair devices monthly for sensitive work
+2. **Self-host for sensitive projects**: Run your own relay server. Use HTTPS to prevent traffic analysis.
+3. **Lock your devices**: Use biometric/PIN locks on phones
 
 ### For Teams
 
@@ -192,69 +190,6 @@ Now you control:
 3. **Audit logs regularly**: Monitor for unusual patterns
 4. **Separate development environments**: Different keys for different projects
 5. **Train developers**: Ensure team understands the security model
-
-### For High-Security Environments
-
-1. **Air-gapped relay**: Run relay server on internal network only
-2. **Hardware security modules**: Store keys in HSM
-3. **Certificate pinning**: Prevent MITM on relay connection
-4. **Audit mode**: Log all operations for compliance
-5. **Key ceremony**: Formal process for key generation/rotation
-
-## Cryptographic Implementation
-
-For security auditors and the paranoid.
-
-### Libraries Used
-
-**CLI (Node.js)**:
-```javascript
-const crypto = require('crypto');
-// Uses OpenSSL under the hood
-```
-
-**iOS App**:
-```swift
-import CryptoKit
-// Apple's native cryptography framework
-```
-
-**Android App**:
-```kotlin
-import javax.crypto.Cipher
-// Android's built-in crypto
-```
-
-**Why native libraries?**
-- Audited by platform vendors
-- Hardware acceleration when available
-- Constant-time operations
-- Regular security updates
-
-### Key Derivation
-
-From QR code secret to encryption keys:
-
-```
-master_secret (from QR)
-    |
-    ├─→ HKDF-SHA256 → encryption_key (256 bits)
-    ├─→ HKDF-SHA256 → auth_key (256 bits)
-    └─→ HKDF-SHA256 → channel_key (256 bits)
-```
-
-Different keys for different purposes. Never reuse keys.
-
-### Message Format
-
-```
-[Version (1 byte)]
-[IV (12 bytes)]
-[Encrypted Payload (variable)]
-[Auth Tag (16 bytes)]
-```
-
-Authenticated encryption prevents tampering.
 
 ## Vulnerability Disclosure
 
@@ -285,14 +220,12 @@ Yes. The relay server cannot decrypt your messages. Even we can't read your code
 
 If our relay server is compromised, attackers get encrypted blobs they can't read. Your code remains safe. This is why end-to-end encryption matters.
 
-### "Can my employer see my code?"
+### "Can anyone see my code?"
 
 Only if they:
 - Have access to your devices
-- Install monitoring software
-- Require you to use their relay server
 
-Happy Coder itself doesn't provide any backdoors.
+Happy Coder itself doesn't provide any enterprise management features.
 
 ### "Is it quantum-safe?"
 
