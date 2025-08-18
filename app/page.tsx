@@ -157,10 +157,12 @@ export default function Home() {
       <div className="h-12"></div>
       <TextBasedHowItWorks />
       </section>
+      {/*
       <YoutubeDemoSection 
         youtubeId="GCS0OG9QMSE"
         posterImage="https://img.youtube.com/vi/GCS0OG9QMSE/maxresdefault.jpg"
       />
+      */}
     </>
   )
 } 
