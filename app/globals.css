@@ -14,23 +14,6 @@
   --font-ibm-plex-mono: 'IBM Plex Mono', monospace;
 }
 
-/* Mobile menu dark theme fix */
-[data-nextra-mobile-menu] {
-  background-color: #000 !important;
-}
-
-[data-nextra-mobile-menu] * {
-  color: #fff !important;
-}
-
-[data-nextra-mobile-menu] a {
-  color: rgba(255, 255, 255, 0.7) !important;
-}
-
-[data-nextra-mobile-menu] a:hover {
-  color: #fff !important;
-  background-color: rgba(255, 255, 255, 0.1) !important;
-}
 
 /* Dark overlay behind menu */
 .nextra-nav-container-blur {
@@ -67,8 +50,17 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+.nextra-mobile-nav {
+  background-color: #fff;
+}
+
+html.dark .nextra-mobile-nav {
+  background-color: #1a1a1a !important;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
-} 
+}
+
