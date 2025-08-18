@@ -1,3 +1,5 @@
+import { Steps } from 'nextra/components'
+
 # Self-Host Your Own Happy Server
 
 Run your own relay server in minutes. Keep complete control over your Claude Code mobile setup.
@@ -15,7 +17,8 @@ verify it just forwards encrypted messages.
 
 ## Quick Start
 
-### Step 1: Clone and Build
+<Steps>
+### Clone and Build
 
 ```bash
 # Get the code
@@ -26,7 +29,7 @@ cd happy-server
 docker build -t happy-server:latest .
 ```
 
-### Step 2: Run the Server
+### Run the Server
 
 ```bash
 docker run -d \
@@ -47,7 +50,7 @@ docker run -d \
 - `SEED`: A secure random seed for token generation
 - `PORT`: The port the application listens on (3005)
 
-### Step 3: Configure Your Devices
+### Configure Your Devices
 
 **On your phone:**
 1. Open Happy app
@@ -57,9 +60,11 @@ docker run -d \
 
 **On your computer:**
 ```bash
-export HANDY_SERVER_URL="http://your-server:3000"
+export HAPPY_SERVER_URL="http://your-server:3000"
 # Configure your CLI to use your server
 ```
+
+</Steps>
 
 That's it! Your Happy setup now runs through your own server.
 
@@ -103,7 +108,7 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/handy
+      - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/happy-server
       - REDIS_URL=redis://localhost:6379
       - SEED=your-seed-for-token-generation
       - PORT=3005
@@ -114,7 +119,7 @@ services:
   postgres:
     image: postgres:15
     environment:
-      - POSTGRES_DB=handy
+      - POSTGRES_DB=happy-server
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
@@ -303,7 +308,7 @@ metadata:
   name: happy-secrets
 type: Opaque
 stringData:
-  DATABASE_URL: "postgresql://postgres:postgres@postgres-service:5432/handy"
+  DATABASE_URL: "postgresql://postgres:postgres@postgres-service:5432/happy-server"
   REDIS_URL: "redis://redis-service:6379"
   SEED: "your-secure-seed-for-token-generation"
   PORT: "3005"
