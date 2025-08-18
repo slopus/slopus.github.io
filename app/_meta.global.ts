@@ -13,8 +13,8 @@ const meta = {
         //     index: ''
         // },
         items: {
-            "welcome": "Welcome",
-            "index": "Getting Started",
+            "index": "Welcome",
+            "quick-start": "Quick Start",
             "how-it-works": "How It Works",
             "guides": "Guides",
             'faq': 'FAQ',
