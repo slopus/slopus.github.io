@@ -8,7 +8,8 @@
     "postbuild": "pagefind --site .next/server/app --output-path out/_pagefind && next-sitemap",
     "export": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "composite-video": "npx tsx scripts/generate-realtime-sync-demo-video.ts"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.11",
@@ -20,10 +21,12 @@
     "react-dom": "19.1.1"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@types/commander": "^2.12.0",
+    "@types/node": "^20.19.11",
     "@types/react": "19.1.9",
     "@types/react-dom": "19.1.7",
     "autoprefixer": "^10.4.16",
+    "commander": "^14.0.0",
     "eslint": "^8.0.0",
     "eslint-config-next": "15.4.5",
     "ignore-loader": "^0.1.2",
