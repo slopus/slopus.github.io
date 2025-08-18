@@ -13,7 +13,7 @@ interface CardProps {
   className?: string;
 }
 
-export const Card: React.FC<CardProps> = ({ 
+export const DocsLinkCard: React.FC<CardProps> = ({ 
   icon, 
   title, 
   description, 
@@ -66,4 +66,4 @@ export const Card: React.FC<CardProps> = ({
   );
 };
 
-export default Card;
+export default DocsLinkCard;
