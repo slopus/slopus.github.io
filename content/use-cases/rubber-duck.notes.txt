@@ -1,0 +1,6 @@
+
+### The Rubber Duck Pattern
+Voice conversation with Claude while doing other things:
+- Cooking: Design your API while making dinner
+- Exercising: Work through algorithm problems on the treadmill
+- Commuting: Plan refactors during your drive

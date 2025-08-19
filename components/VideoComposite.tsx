@@ -68,8 +68,9 @@ export default function VideoComposite() {
         {/* Phone video - positioned bottom-right */}
         <video
           ref={simVideoRef}
-          src="/take-4-short-sim.mp4"
-          poster="/take-4-short-sim-poster.jpg"
+          src="/take-4-short-sim.webm"
+          // Need a PNG because we have an alpha channel
+          poster="/take-4-short-sim-poster.png"
           className="absolute bottom-0 right-0 w-[50%] h-auto"
           loop
           muted

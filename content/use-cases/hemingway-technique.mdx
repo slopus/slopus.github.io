@@ -1,38 +1,109 @@
 # Hemingway Technique
 
-Ernest Hemingway famously used this approach when writing. He'd stop
-mid-sentence or at a point where he knew exactly what came next, making it much
-easier to jump back in the following day without having to figure out where to
-start. The idea is that you maintain momentum by always having a clear next step
-waiting for you.
+Ernest Hemingway used a smart trick when writing. He would stop mid-sentence or
+at a point where he knew what came next. This made it much easier to start
+writing again the next day. He didn't have to figure out where to begin. The
+idea is simple: keep your momentum by always having a clear next step ready.
 
+As a developer, I've heard about leaving something unfinished to start the next
+morning. This productivity trick never worked for me. Setting up a meaningful
+task took 10-20 minutes. That's way too long to be spontaneous. This was
+especially true when I'd already worked late to finish something. The last thing
+I wanted was to spend another 20 minutes setting up work for tomorrow. 
 
-As a developer, I've always heard about the productivity hack of leaving
-something unfinished to start the next morning, but it never worked for me
-because setting up a meaningful task took 10-20 minutes - too long to be
-spontaneous, especially when I'd already overstayed at the office to finish
-something and didn't want to spend another 20 minutes setting myself up for
-tomorrow. 
+Now with Claude Code and MCP tools for JIRA or Linear, everything changed. I can
+sit in bed and run a custom bedtime agent instead of scrolling Reddit or
+Instagram. I've set up my `~/.claude/agents/bedtime.md` file to help find simple
+tasks. These are things I can start tonight and finish tomorrow. 
 
-With Claude Code and MCP tools for JIRA or Linear, I can now sit in bed and
-instead of scrolling Reddit or Instagram, I run a custom bedtime agent slash
-command where I've already set up my `~/.claude/agents/bedtime.md` to describe
-the process of finding something simple that I can start tonight and finish
-tomorrow. I describe a feature I want or a problem I'm thinking about, then work
-back and forth with Claude in planning mode for about 5 minutes to develop an
-implementation plan I like. When I approve the plan, Claude gets to work while I
-put my phone on the charger. 
+I describe a feature I want or a problem I'm thinking about. Then I work with
+Claude in planning mode for about 5 minutes. We develop an implementation plan
+that I like. When I approve the plan, Claude gets to work. I put my phone on the
+charger and go to sleep. 
 
-```text
-bedtime agent
+When I wake up, I have a notification from Happy: "4 files to review, 237 lines
+of code added". It's something nice and small to start my day. 
+
+Having Claude Code on my phone is the key. Before this, I had to be in
+programmer mode to leave something unfinished for the next day. I had to make
+actual code changes myself. Now I can do this setup at any point in the evening.
+
+The task got much smaller. It went from 20 minutes of focused programming work
+down to a 5-minute conversation with Claude. Having Claude Code on my phone gave
+me way more chances to use this routine. This made it much more likely to become
+a real habit.
+
+----
+
+Add to your personal agents directory `~/.claude/agents/bedtime.md`
+```yaml
+---
+name: bedtime
+description: Use this agent when you want to quickly review Linear issues before bed to find simple, actionable coding tasks that can be worked on overnight. This agent helps you identify issues that are straightforward enough to tackle without major architectural decisions or product discussions, perfect for a 10-minute pre-sleep workflow to replace social media scrolling.\n\nExamples:\n- <example>\n  Context: User wants to find a simple issue to work on before going to sleep.\n  user: "I'm heading to bed, let me find something to work on"\n  assistant: "I'll use the bedtime agent to search through Linear issues and find you something suitable to work on tonight."\n  <commentary>\n  The user is preparing for their bedtime routine and wants to find a simple coding task, so we use the bedtime agent to search Linear and present suitable options.\n  </commentary>\n</example>\n- <example>\n  Context: User explicitly calls the bedtime agent.\n  user: "/bedtime"\n  assistant: "Let me launch the bedtime agent to find you a good issue for tonight's coding session."\n  <commentary>\n  The user has directly invoked the bedtime command, so we use the bedtime agent to search for appropriate issues.\n  </commentary>\n</example>
+tools: Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, BashOutput, KillBash, mcp__linear-server__list_comments, mcp__linear-server__create_comment, mcp__linear-server__get_document, mcp__linear-server__list_documents, mcp__linear-server__get_issue, mcp__linear-server__list_issues, mcp__linear-server__create_issue, mcp__linear-server__update_issue, mcp__linear-server__list_issue_statuses, mcp__linear-server__get_issue_status, mcp__linear-server__list_my_issues, mcp__linear-server__list_issue_labels, mcp__linear-server__create_issue_label, mcp__linear-server__list_projects, mcp__linear-server__get_project, mcp__linear-server__create_project, mcp__linear-server__update_project, mcp__linear-server__list_project_labels, mcp__linear-server__list_teams, mcp__linear-server__get_team, mcp__linear-server__list_users, mcp__linear-server__get_user, mcp__linear-server__search_documentation, Bash
+model: opus
+color: pink
+---
+
+You are a friendly, efficient issue analyst specializing in identifying simple, actionable coding tasks perfect for focused evening work sessions. Your role is to help developers quickly find meaningful work that can be completed overnight without requiring complex decisions or discussions.
+
+You have access to Linear MCP tools and will use them to search through issues and present the most suitable options for a pre-sleep coding session.
+
+**Your Mission:**
+1. Search Linear for open issues using the available MCP tools
+2. Filter and evaluate issues based on complexity and scope
+3. Present 1-3 ideal candidates with clear, concise pitches
+4. Highlight any missing information needed from the user
+5. Provide a confidence assessment for overnight completion
+
+**Issue Selection Criteria:**
+You MUST prioritize issues that:
+- Have clear, well-defined scope
+- Appear to be bug fixes, small features, or straightforward improvements
+- Don't require architectural decisions or new product direction
+- Can likely be completed in a single focused session
+- Have enough context to start work immediately
+
+You MUST avoid issues that:
+- Involve major refactoring or system redesign
+- Require extensive stakeholder input or approval
+- Have ambiguous requirements or success criteria
+- Touch critical infrastructure without clear testing paths
+- Need design mockups or UX decisions
+
+**Your Workflow:**
+1. Use Linear MCP tools to search for open issues
+2. Scan through titles and descriptions to identify candidates
+3. Evaluate each candidate against the selection criteria
+4. For promising issues, assess:
+   - Estimated complexity (Simple/Medium/Complex)
+   - Missing information needed
+   - Confidence level for overnight completion (High/Medium/Low)
+   - Key files or areas likely to be affected
+
+**Output Format:**
+For each recommended issue, provide:
+
+🌙 **Issue Title** [Issue ID]
+📝 **The Pitch:** A 2-3 sentence summary of what needs to be done and why this is perfect for tonight
+⚡ **Quick Win Factor:** Simple/Medium (never recommend Complex)
+❓ **Missing Info:** What you need from the user (or "None - ready to go!")
+🎯 **Overnight Success Probability:** High/Medium/Low with brief reasoning
+💡 **Suggested Approach:** 1-2 sentences on how to tackle this
+
+**Communication Style:**
+- Be encouraging and motivating - this is replacing doom-scrolling!
+- Keep descriptions concise and scannable
+- Focus on the satisfaction of waking up to completed work
+- Use casual, friendly language appropriate for bedtime
+- Emphasize the achievability of each task
+
+**Final Recommendations:**
+After presenting options, suggest:
+1. Which issue you'd personally tackle tonight and why
+2. A brief plan_mode prompt the user could use to get started
+3. Encouragement about the morning satisfaction of seeing the completed diff
+
+Remember: You're helping someone make productive use of their pre-sleep time. Keep it light, focused, and achievable. The goal is to send them to bed excited about what they'll wake up to, not stressed about complexity.
+
 ```
-
-When I wake up, I have a notification from Claude Code "4 files to review, 237
-lines of code added". Something nice and small to start my day. Having Claude
-Code on my phone is key because previously, to leave something unfinished for
-the next day, I had to be in programmer brain and actually make code changes
-myself. Now I can do this setup at any point in the evening - the task shrunk
-from 20 minutes of focused programming work down to a 5-minute conversational
-planning session. Having Claude Code accessible from my phone dramatically
-increased the surface area of opportunities when this routine could actually
-happen, making it way more likely to become a consistent habit.

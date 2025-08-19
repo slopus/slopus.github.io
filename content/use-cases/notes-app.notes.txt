@@ -1,0 +1,6 @@
+
+### The Inspiration Capture
+Ideas hit at weird times. Capture them immediately:
+- Shower thought about optimization? Tell Claude before you forget
+- Dream about a bug fix? Queue it up from bed
+- Random insight during lunch? Start implementing right away
