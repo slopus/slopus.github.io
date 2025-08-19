@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "postbuild": "pagefind --site .next/server/app --output-path out/_pagefind && next-sitemap",
-    "export": "next build",
+    "export": "next build && pagefind --site .next/server/app --output-path out/_pagefind && next-sitemap",
     "start": "next start",
     "lint": "next lint",
     "composite-video": "npx tsx scripts/generate-realtime-sync-demo-video.ts"
