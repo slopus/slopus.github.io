@@ -58,6 +58,14 @@ html.dark .nextra-mobile-nav {
   background-color: #1a1a1a !important;
 }
 
+.nextra-steps {
+  --x-color-nextra-bg: #fff;
+}
+
+html.dark .nextra-steps {
+  --x-color-nextra-bg: #1a1a1a;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

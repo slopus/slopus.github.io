@@ -21,7 +21,7 @@ export const DocsLinkCard: React.FC<CardProps> = ({
   className = "" 
 }) => {
   const cardClasses = `
-    block rounded-lg border bg-fd-card p-4 text-fd-card-foreground 
+    block rounded-lg border border-gray-200 bg-fd-card p-4 text-fd-card-foreground 
     shadow-md transition-colors @max-lg:col-span-full 
     hover:bg-fd-accent/80
     dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100

@@ -1,31 +1,11 @@
-# Real Developer Use Cases
+---
+asIndexPage: true
+---
+
+# Use Cases
 
 How developers actually use Happy Coder to control Claude Code from their phones.
 
-## Karl's Home Automation Setup
-
-Karl runs Claude Code on a Mac Mini in his basement. He uses Happy Coder to control it from anywhere in his house.
-
-**The Problem:** Karl needed Claude Code available on-demand for home automation tasks, but keeping it running 24/7 was expensive. His cron job that restarted Claude Code every 5 minutes was burning through his usage limits.
-
-**The Solution:** Now Karl starts Claude Code sessions from his phone only when needed. He uses MCP tools to:
-- Control his Windows VM for testing Electron apps
-- Take screenshots of running applications
-- Deploy builds from staging to production
-- Run automated tests across different OSes
-
-**The Result:** 90% reduction in Claude Code usage costs. Full control of his development pipeline from his couch.
-
-```bash
-# Karl's setup on Mac Mini
-happy --dir ~/automation --mcp-config ~/mcp-tools.json
-
-# From his phone, he can now:
-# - Start Windows VM
-# - Test Electron app installation
-# - Take screenshots for verification
-# - Promote builds to stable
-```
 
 ## Emergency Debugging from Anywhere
 
@@ -40,50 +20,7 @@ You're at dinner. Your phone buzzes - production is down. Instead of rushing hom
 Real example from Pavel:
 > "Was at my kid's soccer game when our API started throwing 500s. Used Happy to have Claude Code check the logs, identify the bad deploy, and roll back. Fixed in 10 minutes without leaving the field."
 
-## Voice Coding While Walking
 
-Perfect for when you need to think through problems away from your desk.
-
-**Morning Walk Workflow:**
-```
-You: "Hey Claude, I'm thinking about refactoring our auth system.
-     The JWT tokens are getting too complex."
-
-Voice Agent: "I'll help you plan that refactoring. Let me understand
-             the current setup first..."
-
-[30 minutes of back-and-forth while walking]
-
-You: "Great, implement the token service we discussed."
-
-[Get home to find the refactor ready for review]
-```
-
-The voice agent translates your casual speech into proper Claude Code prompts. You think out loud, it handles the details.
-
-## Pre-Sleep Task Seeding
-
-The productivity hack that actually works now.
-
-**Traditional approach (never worked):**
-- Need 20 minutes at desk to set up tomorrow's task
-- Too tired after 8 hours of coding
-- Never happens
-
-**With Happy Coder:**
-```bash
-# From bed at 10 PM
-happy --agent bedtime
-
-# Describe what you want to work on
-"I need to add rate limiting to our API endpoints.
-Start with the /auth routes."
-
-# Claude Code works while you sleep
-# Wake up to ready-to-review code
-```
-
-One developer reported: "I finally do that 'leave something unfinished' trick because it takes 5 minutes from my phone instead of another desk session."
 
 ## Async Code Reviews
 
@@ -130,18 +67,6 @@ Real developer quote: "I have Claude Code running on three machines. I switch be
 
 How teams use Happy Coder together.
 
-### Pair Programming Redux
-- Senior dev guides Claude Code from phone
-- Junior dev watches changes in real-time on desktop
-- Both see the same session, same context
-- Natural mentoring through AI assistance
-
-### Distributed Debugging
-- One dev runs Claude Code on staging server
-- Team members connect via Happy Coder
-- Everyone sees the debugging session
-- Collaborate on fixes without screen sharing
-
 ### Architecture Discussions
 - Start Claude Code session during design meeting
 - Have Claude generate example implementations
@@ -162,19 +87,7 @@ Trigger Claude Code from your CI pipeline, monitor from your phone.
 
 Get notifications on your phone when Claude finishes reviewing PRs.
 
-## Personal Productivity Workflows
 
-### The Rubber Duck Pattern
-Voice conversation with Claude while doing other things:
-- Cooking: Design your API while making dinner
-- Exercising: Work through algorithm problems on the treadmill
-- Commuting: Plan refactors during your drive
-
-### The Inspiration Capture
-Ideas hit at weird times. Capture them immediately:
-- Shower thought about optimization? Tell Claude before you forget
-- Dream about a bug fix? Queue it up from bed
-- Random insight during lunch? Start implementing right away
 
 ### The Context Switcher
 Working on multiple projects? Keep them all going:
@@ -242,4 +155,3 @@ Remember: Happy Coder isn't about coding on your phone. It's about controlling C
 Found a creative way to use Happy Coder? Share it:
 - GitHub Discussions: [github.com/slopus/happy/discussions](https://github.com/slopus/happy/discussions)
 - Twitter: Tag #HappyCoder
-- Discord: [discord.gg/happy-coder](https://discord.gg/happy-coder)

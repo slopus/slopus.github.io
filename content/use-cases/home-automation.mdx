@@ -1,0 +1,24 @@
+## Karl's Home Automation Setup
+
+Karl runs Claude Code on a Mac Mini in his basement. He uses Happy Coder to control it from anywhere in his house.
+
+**The Problem:** Karl needed Claude Code available on-demand for home automation tasks, but keeping it running 24/7 was expensive. His cron job that restarted Claude Code every 5 minutes was burning through his usage limits.
+
+**The Solution:** Now Karl starts Claude Code sessions from his phone only when needed. He uses MCP tools to:
+- Control his Windows VM for testing Electron apps
+- Take screenshots of running applications
+- Deploy builds from staging to production
+- Run automated tests across different OSes
+
+**The Result:** 90% reduction in Claude Code usage costs. Full control of his development pipeline from his couch.
+
+```bash
+# Karl's setup on Mac Mini
+happy --dir ~/automation --mcp-config ~/mcp-tools.json
+
+# From his phone, he can now:
+# - Start Windows VM
+# - Test Electron app installation
+# - Take screenshots for verification
+# - Promote builds to stable
+```

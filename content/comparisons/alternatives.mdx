@@ -42,7 +42,7 @@ How Happy Coder compares to other mobile Claude Code solutions.
 **Key Differences:**
 - **Where code runs**: Both run on YOUR computer locally.
 - **Privacy**: Happy has end-to-end encryption. Omnara stores plain text conversations on their servers (unless self-hosted).
-- **Cost**: Omnara charges $9/month. Happy is free forever.
+- **Cost**: Omnara charges $9/month. Happy is free.
 - **Self-hosting**: Both support self-hosting for complete privacy control.
 
 **Choose Omnara if:**
@@ -79,7 +79,7 @@ These startups will pivot. They always do. Today's "free tier" becomes tomorrow'
 - **Infrastructure**: Terragon runs on cloud VMs. Happy uses your machines.
 - **Pricing**: Currently free during beta, but at a bare minimum will charge for
 VM usage at those high retail cloud prices. Expect dollars per hour. Happy is
-free forever.
+free.
 - **Complexity**: Terragon has dashboards, analytics, team management. Happy is simple.
 - **Lock-in**: Terragon wants to own your workflow. Happy works with what you have.
 - **Scope**: Terragon tries to do everything. Happy does one thing well.
@@ -220,7 +220,7 @@ Let's talk about the elephant in the room: sustainability.
 **Happy Coder:**
 - No VC funding
 - No burn rate
-- Open source forever
+- Permissive open source
 - Self-hostable
 - Can't rugpull you
 - Community-driven
@@ -231,7 +231,7 @@ This matters more than you think.
 
 ### Who Can See Your Code?
 
-**Happy Coder**: Nobody. End-to-end encrypted. The relay server only sees encrypted blobs.
+**Happy Coder**: Nobody. End-to-end encrypted. The free community relay server only sees encrypted blobs.
 
 **Local Execution** (Omnara, ClaudeCodeUI): 
 - Code execution happens on your machine
@@ -261,7 +261,7 @@ This matters more than you think.
 **Local Execution** (Omnara, ClaudeCodeUI):
 - Code runs on your machine, but servers store plain text conversations
 - Their employees can read your code and conversations
-- Self-hosting option available - solves privacy if you host your own server
+- Self-hosting option available. Solves privacy if you host your own server
 - You control retention only if self-hosted
 
 **Cloud VM Providers** (Terragon, Cursor):
@@ -269,26 +269,13 @@ This matters more than you think.
 - Backups you can't delete
 - Data might persist after account deletion
 
-## Performance Comparison
-
-Real-world latency numbers:
-
-| Solution | Latency | Why |
-|----------|---------|-----|
-| Happy Coder | ~300ms | Direct connection to your machine |
-| Cloud Providers | 500-2000ms | VM spin-up + network hops |
-| SSH + tmux | ~100ms | Direct but terrible UX on mobile |
-| Cursor Mobile | 400-1500ms | Depends on their infrastructure load |
-
-Happy Coder gives you near-native performance because Claude Code runs on your actual machine.
-
 ## Feature Comparison Deep Dive
 
 ### MCP Tools Support
 
 **Local Execution (Happy Coder, Omnara, ClaudeCodeUI)**: Full MCP support. Since agents run on your machine, all your local MCP tools work natively.
 
-**Cloud VM Execution (Terragon, Cursor)**: Limited MCP support. Since agents run on their cloud VMs, they can't access your local MCP tools without complex setup.
+**Cloud VM Execution (Terragon, Cursor)**: Extra work to get MCP working. Since agents run on their cloud VMs, they can't access your local MCP tools. You have to set up MCP tools all over again.
 
 ### Custom Agents
 
@@ -301,12 +288,6 @@ Happy Coder gives you near-native performance because Claude Code runs on your a
 **Happy Coder**: Built-in voice agent with customizable prompts.
 
 **Others**: Not available.
-
-### Session Persistence
-
-**Happy Coder**: Sessions persist on your machine. Pick up exactly where you left off.
-
-**Others**: Sessions die when VMs shut down. Context lost.
 
 ## The Bottom Line
 
@@ -330,7 +311,7 @@ Coming from another solution? Here's how to switch:
 
 ### From Cloud Providers
 1. Install Happy Coder: `npm install -g happy-coder`
-2. No migration needed - your code is already on your machine
+2. No migration needed. Your code is already on your machine
 3. Start using Happy immediately
 
 ### From SSH + tmux

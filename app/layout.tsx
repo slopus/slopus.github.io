@@ -93,7 +93,7 @@ export default async function RootLayout({
           docsRepositoryBase="https://github.com/slopus/slopus.github.io/tree/main"
           search={false}
           sidebar={{
-            defaultMenuCollapseLevel: 3,
+            defaultMenuCollapseLevel: 1,
           }}
         >
           {children}

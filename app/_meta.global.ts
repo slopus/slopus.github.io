@@ -20,12 +20,18 @@ const meta = {
             'faq': 'FAQ',
             'features': 'Features',
             //'contributing': 'Contributing'
+            'comparisons': 'Comparisons',
+            'use-cases': {
+                //collapsed: true,
+                //type: 'page',
+                
+            },
         }
     },
     webapp: {
         href: 'https://app.happy.engineering',
         title: 'Web App',
-        display: 'hidden'
+        // display: 'hidden'
     }
 }
 
