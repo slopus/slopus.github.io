@@ -9,6 +9,7 @@ import AdaptiveTerminal from '@/components/AdaptiveTerminal'
 import LaunchWebAppButton from '@/components/WebAppButton'
 import StarOnGithubButton from '@/components/GithubButton'
 import VideoComposite from '@/components/VideoComposite'
+import Testimonials from '@/components/Testimonials'
 
 const GOOGLE_PLAY_LINK = 'https://play.google.com/store/apps/details?id=com.ex3ndr.happy'
 const APP_STORE_LINK = 'https://apps.apple.com/us/app/happy-claude-code-client/id6748571505'
@@ -144,9 +145,13 @@ export default function Home() {
       
       
       <section className="max-w-[72ch] mx-auto py-12 px-2.5 md:px-0">
-      <TextBasedFeatures />
-      <div className="h-12"></div>
-      <TextBasedHowItWorks />
+        <TextBasedFeatures />
+      </section>
+      <section className="max-w-5xl mx-auto">
+        <Testimonials layout="masonry" />
+      </section>
+      <section className="max-w-[72ch] mx-auto py-12 px-2.5 md:px-0">
+        <TextBasedHowItWorks />
       </section>
       {/*
       <YoutubeDemoSection 

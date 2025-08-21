@@ -1,0 +1,259 @@
+/* CSS Variables */
+:root {
+  --clr-text: #374151;
+  --clr-text-lt: hsla(217, 19%, 37%, 1);
+  --clr-primary: #6701E6;
+  --clr-background: #ffffff;
+  --clr-border: hsla(0, 0%, 90%, 1);
+  --clr-highlight: #ffcd3640;
+  --clr-rating: #FBBF24;
+  --box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.07);
+  --border-radius: 1rem;
+  --border-width: 1px;
+  --padding: 16px;
+  --font: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+/* Dark mode variables when .dark class is applied to html */
+.dark {
+  --clr-background: #000000;
+  --clr-primary: #28DBC9;
+  --clr-text: #F4F4F5;
+  --clr-highlight: #ffcd3640;
+  --clr-text-lt: hsla(240, 5%, 86%, 1);
+  --clr-rating: #FBBF24;
+  --clr-border: hsla(0, 0%, 10%, 1);
+  --font: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.07);
+}
+
+/* Dark mode fallback using prefers-color-scheme */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --clr-background: #000000;
+    --clr-primary: #28DBC9;
+    --clr-text: #F4F4F5;
+    --clr-highlight: #ffcd3640;
+    --clr-text-lt: hsla(240, 5%, 86%, 1);
+    --clr-rating: #FBBF24;
+    --clr-border: hsla(0, 0%, 10%, 1);
+    --font: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    --box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.07);
+  }
+}
+
+.swiper-horizontal {
+  touch-action: pan-y;
+}
+.swiper, swiper-container {
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+  z-index: 1;
+  display: block;
+}
+
+.swipper-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  transition-property: transform;
+  transition-timing-function: var(--swiper-wrapper-transition-timing-function, initial);
+  box-sizing: content-box;
+}
+
+.sj-card .sj-card-details {
+  align-items: center;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  gap: .5rem;
+  display: flex;
+}
+.sj-card .sj-card-details {
+  color: var(--clr-text-lt);
+  font-size: .875rem;
+  line-height: 1.25rem;
+}
+
+.sj-card {
+  background-color: var(--clr-background);
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  font-family: var(--font);
+}
+
+.sj-card .sj-text-card {
+  padding: var(--padding);
+  border-width: var(--border-width);
+  box-shadow: var(--box-shadow);
+  border-color: var(--clr-border);
+  border-radius: var(--border-radius);
+}
+
+.sj-card .sj-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sj-endorser-view-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sj-avatar-container {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.sj-endorser-name {
+  color: var(--clr-text);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.sj-desc {
+  color: var(--clr-text-lt);
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.sj-spacer {
+  flex-grow: 1;
+}
+
+.sj-integration-fixed-icon {
+  margin-top: 0.25rem;
+  align-self: flex-start;
+}
+
+.sj-content {
+  font-size: 16px;
+  color: var(--clr-text);
+  line-height: 24px;
+  white-space: pre-line;
+  letter-spacing: -0.025em;
+}
+
+.sj-content a {
+  color: var(--clr-primary);
+}
+
+.sj-attachment-container {
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.sj-media {
+  border-radius: 0.25rem;
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.sj-card-details {
+  align-items: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  gap: 0.5rem;
+  display: flex;
+  color: var(--clr-text-lt);
+}
+
+.sj-heart {
+  color: #9ca3af;
+}
+
+.sj-heart:hover {
+  fill: currentColor;
+  color: #f87171;
+}
+
+.sj-card .sj-content a {
+  color: var(--clr-primary);
+}
+
+/* Masonry layout styles */
+.masonry-grid {
+  column-gap: 1rem;
+  orphans: 1;
+  widows: 1;
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+/* Mobile horizontal scroll improvements */
+@media (max-width: 768px) {
+  .sj-container {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  
+  .sj-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+  
+  /* Ensure cards don't shrink too much on mobile */
+  .sj-card {
+    min-width: 280px;
+  }
+  
+  /* Add scroll indicators for mobile */
+  .sj-container > div > div {
+    position: relative;
+  }
+  
+  .sj-container > div > div::after {
+    content: '';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 40px;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1));
+    border-radius: 2px;
+    pointer-events: none;
+  }
+  
+  /* Improve touch scrolling */
+  .sj-container > div > div {
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
+  }
+  
+  /* Add scroll snap for better mobile experience */
+  .sj-container > div > div {
+    scroll-snap-type: x mandatory;
+  }
+  
+  .sj-container > div > div > div {
+    scroll-snap-align: start;
+  }
+}
+
+/* Smooth transitions for layout changes */
+.sj-container > div > div {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Ensure masonry items have smooth transitions */
+.masonry-item {
+  transition: opacity 0.3s ease-in-out;
+}
