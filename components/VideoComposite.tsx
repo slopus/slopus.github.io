@@ -56,7 +56,7 @@ export default function VideoComposite() {
           <video
             ref={terminalVideoRef}
             src="/take-4-short-term.mp4"
-            poster="/take-4-short-term-poster.jpg"
+            poster="/take-4-short-term-poster.png"
             className="w-full h-full object-cover"
             controls
             loop
