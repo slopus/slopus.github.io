@@ -1,0 +1,129 @@
+name: Check for Dead Links
+
+on:
+  workflow_run:
+    workflows: ["Deploy to GitHub Pages"]
+    types:
+      - completed
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Wait for deployment to be ready
+        run: |
+          echo "Waiting 30 seconds for deployment to be fully available..."
+          sleep 30
+
+      - name: Install lychee
+        run: |
+          wget https://github.com/lycheeverse/lychee/releases/latest/download/lychee-x86_64-unknown-linux-gnu.tar.gz
+          tar -xzf lychee-x86_64-unknown-linux-gnu.tar.gz
+          sudo mv lychee /usr/local/bin/
+
+      - name: Check for dead links
+        id: lychee
+        run: |
+          # Run lychee and capture output
+          lychee --format json --output results.json https://happy.engineering/ || true
+          
+          # Check if any links failed
+          if [ -f "results.json" ]; then
+            FAILED_COUNT=$(jq '[.[] | select(.status == "Failed")] | length' results.json)
+            echo "failed_count=$FAILED_COUNT" >> $GITHUB_OUTPUT
+            
+            if [ "$FAILED_COUNT" -gt 0 ]; then
+              echo "has_failures=true" >> $GITHUB_OUTPUT
+              # Format the failed links for the issue body
+              echo "FAILED_LINKS<<EOF" >> $GITHUB_OUTPUT
+              jq -r '.[] | select(.status == "Failed") | "- **\(.url)** - \(.chain[0].status // "Unknown error")"' results.json >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+            else
+              echo "has_failures=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "has_failures=false" >> $GITHUB_OUTPUT
+            echo "failed_count=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check for existing issue
+        id: existing-issue
+        if: steps.lychee.outputs.has_failures == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'broken-links'
+            });
+            
+            const existingIssue = issues.data.find(issue => 
+              issue.title.includes('Dead Links Found')
+            );
+            
+            return existingIssue ? existingIssue.number : null;
+
+      - name: Create or update issue
+        if: steps.lychee.outputs.has_failures == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const failedLinks = `${{ steps.lychee.outputs.FAILED_LINKS }}`;
+            const failedCount = ${{ steps.lychee.outputs.failed_count }};
+            const existingIssueNumber = ${{ steps.existing-issue.outputs.result }};
+            
+            const issueBody = `## 🔗 Dead Links Detected
+            
+            The post-deployment link check found **${failedCount}** broken link${failedCount > 1 ? 's' : ''}:
+            
+            ${failedLinks}
+            
+            **Deployment:** ${{ github.event.workflow_run.html_url }}
+            **Site:** https://happy.engineering/
+            **Checked on:** ${new Date().toISOString()}
+            
+            Please fix these broken links to ensure a good user experience.
+            
+            ---
+            *This issue was automatically created by the post-deployment link checker.*`;
+            
+            if (existingIssueNumber) {
+              // Update existing issue
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssueNumber,
+                body: `## 🔄 New Dead Links Found\n\n${issueBody}`
+              });
+              
+              console.log(`Updated existing issue #${existingIssueNumber}`);
+            } else {
+              // Create new issue
+              const issue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `🔗 Dead Links Found on https://happy.engineering (${failedCount} link${failedCount > 1 ? 's' : ''})`,
+                body: issueBody,
+                labels: ['bug', 'broken-links'],
+                assignees: [context.repo.owner]
+              });
+              
+              console.log(`Created new issue #${issue.data.number}`);
+            }
+
+      - name: Success message
+        if: steps.lychee.outputs.has_failures == 'false'
+        run: |
+          echo "✅ No dead links found on https://happy.engineering/"
