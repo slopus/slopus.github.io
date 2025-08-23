@@ -27,7 +27,7 @@ const AdaptiveTerminal: React.FC<AdaptiveTerminalProps> = ({ command, className 
   };
 
   return (
-    <div className={`relative rounded-lg transition-all duration-200 p-4 shadow-lg
+    <div className={`col-span-2 relative rounded-lg transition-all duration-200 p-4 shadow-lg
       bg-gray-50 border border-gray-300 border-gray-200 hover:border-blue-400 hover:bg-blue-50
       dark:bg-white/5 dark:backdrop-blur-sm dark:border-white/10 dark:hover:border-blue-500/30 dark:hover:bg-blue-500/10
       ${className}`}>

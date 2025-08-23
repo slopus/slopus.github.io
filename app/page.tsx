@@ -108,15 +108,30 @@ export default function Home() {
   return (
     <>
       <div className="max-w-[74ch] mx-auto px-2.5 sm:px-[2ch] pt-8">
-        <h1 className="text-3xl sm:text-3xl font-bold leading-tight">
+        <h1 className="text-3xl sm:text-3xl font-bold leading-tight mb-2">
           Claude Code Anywhere
         </h1>
+        <p className="text-base text-gray-700 dark:text-gray-300 mb-2">
+        Spawn and control multiple Claude Codes in parallel. Happy Coder runs on
+        your hardware, works from your phone and desktop, and costs nothing.
+        Open source.
+        </p>
       </div>
       
       <VideoComposite />
       
       <section className="max-w-[72ch] mx-auto px-2.5 md:px-0">
-            <div className="mb-6 text-base text-gray-700 dark:text-gray-300 font-mono">
+            <div className="mb-6">
+              <AdaptiveTerminal command="npm i -g happy-coder && happy"  />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 sm:flex sm:gap-4 sm:flex-wrap">
+              <GooglePlayButton href={GOOGLE_PLAY_LINK} />
+              <AppStoreButton href={APP_STORE_LINK} />
+              <LaunchWebAppButton href="https://app.happy.engineering" />
+              <StarOnGithubButton href="https://github.com/slopus/happy" />
+            </div>
+            <div className="mt-6 text-base text-gray-700 dark:text-gray-300 font-mono">
               <div className="flex items-start mb-4 ">
                 <span>Hands-free control with voice agent—not just dictation</span>
               </div>
@@ -132,14 +147,6 @@ export default function Home() {
               <div className="flex items-start mb-10">
                 <span>Open source (MIT licensed)</span>
               </div>
-              <AdaptiveTerminal command="npm i -g happy-coder && happy"  />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4 sm:flex sm:gap-4 sm:flex-wrap">
-              <GooglePlayButton href={GOOGLE_PLAY_LINK} />
-              <AppStoreButton href={APP_STORE_LINK} />
-              <LaunchWebAppButton href="https://app.happy.engineering" />
-              <StarOnGithubButton href="https://github.com/slopus/happy" />
             </div>
       </section>
       
