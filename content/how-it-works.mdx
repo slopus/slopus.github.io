@@ -20,9 +20,30 @@ here.
 messages between them. The server can't read your data - it just moves
 encrypted blobs around.
 
-> **Diagram needed**: Show three boxes (CLI, Server, Mobile App) with arrows
-showing encrypted data flow. CLI encrypts and sends to Server, Server stores
-blob and forwards to Mobile App, Mobile App decrypts and displays.
+```mermaid
+flowchart LR
+    %% --- Nodes (with responsibility sublabels) ---------------------------
+    subgraph Computer
+        happy["CLI<br>Encrypts & Sends"]
+    end
+    subgraph Happy Server
+        relay["Relay Server<br>Stores & Forwards"]
+    end
+    subgraph Phone
+        app["Mobile App<br>Decrypts & Displays"]
+    end
+
+    %% --- Encrypted data flow --------------------------------------------
+    happy -->|encrypted data| relay
+    relay -->|encrypted blob| app
+
+    %% --- Styling ---------------------------------------------------------
+    classDef nodeGrey fill:#d3d3d3,stroke:#a9a9a9,color:#000,stroke-width:1.5px;
+    class happy,relay,app nodeGrey
+
+    classDef linkGrey stroke:#a9a9a9,stroke-width:1.5px;
+    linkStyle 0,1 stroke:#a9a9a9,stroke-width:1.5px;
+```
 
 ## Why You Need the Relay Server
 
