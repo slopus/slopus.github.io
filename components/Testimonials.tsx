@@ -215,7 +215,7 @@ const TestimonialsContainer: React.FC<{
   const getLayoutClasses = () => {
     switch (effectiveLayout) {
       case 'horizontal':
-        return "flex gap-4 overflow-x-auto pb-2 items-start";
+        return "flex gap-4 overflow-x-auto pb-2 items-start swiper-horizontal";
       case 'masonry':
         return "masonry-grid";
       default:

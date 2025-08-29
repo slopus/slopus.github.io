@@ -232,11 +232,15 @@
     pointer-events: none;
   }
   
-  /* Improve touch scrolling */
+  /* I could not figure out why this breaks the masonry grid single column
+   * scrolling on mobile. I think its because if we are using masonry layout then
+   * we should have touch-action: pan-y.
   .sj-container > div > div {
     touch-action: pan-x;
     overscroll-behavior-x: contain;
+    
   }
+    */
   
   /* Add scroll snap for better mobile experience */
   .sj-container > div > div {
