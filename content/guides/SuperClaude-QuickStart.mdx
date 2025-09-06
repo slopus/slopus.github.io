@@ -1,0 +1,130 @@
+import { Steps } from 'nextra/components'
+
+# SuperClaude Quick Start
+
+SuperClaude is a powerful framework that enhances your development environment by adding specialized commands, intelligent agents, and new workflows. While it can be used on its own, it’s designed to work seamlessly with Happy Coder to supercharge your productivity.
+
+This guide will get you up and running in just a few minutes.
+
+<Steps>
+
+### 1. Install SuperClaude
+
+First, install the SuperClaude package using pip, Python’s package installer. Open your terminal and run the following command:
+
+```bash
+pip install SuperClaude
+```
+
+This command downloads and installs the core framework on your system.
+
+### 2. Configure Components
+
+Next, install the essential components for SuperClaude to function correctly. This one-time setup command configures everything you need, including the Managed Component Pool (MCP), core functionalities, agents, and documentation.
+
+```bash
+SuperClaude install --yes --components mcp core agents mcp_docs modes commands
+```
+
+The `--yes` flag automatically confirms the installation, making it faster.
+
+### 3. How It Works with Happy Coder
+
+SuperClaude is designed to integrate seamlessly into your Happy Coder workflow. You don't need to switch between tools. Simply use the `/sc:` commands and `@agent-` invocations directly within your Happy Coder environment.
+
+#### Common Workflows in Happy Coder
+
+Here are a few examples of how you can combine SuperClaude commands within Happy Coder to accomplish complex tasks:
+
+**New Project Setup:**
+1.  `/sc:brainstorm "A new mobile app for task management"`
+2.  `/sc:design "system architecture for the task app"`
+3.  `/sc:workflow "implementation plan"`
+
+**Feature Development:**
+1.  `/sc:implement "User authentication with social login"`
+2.  `@agent-security "Review the authentication implementation for vulnerabilities"`
+3.  `/sc:test --type e2e "user login flow"`
+
+**Bug Investigation:**
+1.  `/sc:troubleshoot "Users are reporting a 500 error on the dashboard"`
+2.  `/sc:analyze --focus problem-area`
+3.  `/sc:improve --fix --safe-mode`
+
+</Steps>
+
+That’s it! You’re now ready to use SuperClaude.
+
+## Common Use Cases
+
+SuperClaude is designed to support a wide range of development tasks. Here are a few examples of what you can do:
+
+- **Domain-Specific Expertise on Demand:** Leverage 14 specialized AI agents for tasks like security reviews (`@agent-security`), UI architecture (`@agent-frontend-architect`), or database design (`@agent-database`).
+- **Full Development Lifecycle Support:** Use 22 available `/sc:` commands to manage your entire workflow, from brainstorming (`/sc:brainstorm`) and implementation (`/sc:implement`) to testing (`/sc:test`) and documentation (`/sc:document`).
+- **Extended Capabilities with MCP Servers:** Connect to 6 powerful external servers to get up-to-date documentation, perform complex analysis, generate UI components, and run browser tests automatically.
+- **Adaptive Workflows with Behavioral Modes:** Switch between 6 adaptive modes, such as `Brainstorming` for project discovery or `Business Panel` for strategic analysis, to tailor the AI's behavior to your current task.
+
+## Available Commands
+
+SuperClaude provides 22 commands to streamline your development process. Here are some of the most essential ones:
+
+| Command | Purpose | Example |
+|---|---|---|
+| `/sc:brainstorm` | Interactive requirements discovery and project planning. | `/sc:brainstorm "e-commerce platform"` |
+| `/sc:implement` | Full-stack feature implementation with intelligent routing. | `/sc:implement "JWT login system"` |
+| `/sc:analyze` | Comprehensive code analysis (quality, security, performance). | `/sc:analyze . --focus security` |
+| `/sc:test` | Comprehensive testing with coverage analysis. | `/sc:test --type unit --coverage` |
+| `/sc:improve` | Systematic code improvements and optimizations. | `/sc:improve src/ --type performance` |
+| `/sc:document` | Generation of code and API documentation. | `/sc:document --type api` |
+| `/sc:troubleshoot` | Systematic issue diagnosis with root cause analysis. | `/sc:troubleshoot "500 error on login"` |
+| `/sc:business-panel`| Multi-expert business strategy analysis. | `/sc:business-panel "our go-to-market strategy"`|
+
+For a full list of commands, see the [Commands Guide](https://github.com/SuperClaude-Org/SuperClaude_Framework/blob/master/Docs/User-Guide/commands.md).
+
+## MCP Servers
+
+The Managed Component Pool (MCP) integrates external servers to provide specialized, real-time capabilities. These servers are activated automatically based on your requests.
+
+| Server | Purpose | Triggers |
+|---|---|---|
+| **context7** | Access to official library documentation and patterns. | Library imports, API names |
+| **sequential-thinking**| Structured multi-step reasoning and analysis. | `--think` flag, debugging |
+| **magic** | Modern UI component generation. | `component`, `UI`, frontend |
+| **playwright** | Browser automation and E2E testing. | `test`, `e2e`, `browser` |
+| **morphllm-fast-apply**| Efficient, pattern-based code transformations. | Multi-file edits, refactoring |
+| **serena** | Semantic code understanding and project memory. | Large projects, sessions |
+
+## Available Agents
+
+SuperClaude comes with 14 specialized agents you can invoke with the `@agent-` prefix. Each agent has a specific area of expertise.
+
+| Agent | Expertise |
+|---|---|
+| `@agent-system-architect` | Large-scale distributed system design. |
+| `@agent-backend-architect` | Robust server-side system and API design. |
+| `@agent-frontend-architect`| Modern web application architecture and UX. |
+| `@agent-devops-architect` | Infrastructure automation and CI/CD pipelines. |
+| `@agent-security-engineer` | Application security and threat modeling. |
+| `@agent-performance-engineer`| System performance optimization and scalability. |
+| `@agent-quality-engineer` | Comprehensive testing strategy and QA. |
+| `@agent-root-cause-analyst`| Systematic problem investigation and debugging. |
+| `@agent-refactoring-expert`| Code quality improvement and technical debt management. |
+| `@agent-python-expert` | Production-ready Python development. |
+| `@agent-requirements-analyst`| Requirements discovery and specification development. |
+| `@agent-technical-writer` | Clear and concise technical documentation. |
+| `@agent-learning-guide` | Educational content design and mentorship. |
+| `@agent-socratic-mentor` | Explains design patterns and concepts. |
+
+## Behavioral Modes
+
+SuperClaude uses 5 behavioral modes that are automatically activated based on your task. These modes change the AI's behavior to better suit the situation.
+
+| Mode | Purpose |
+|---|---|
+| **Brainstorming** | Interactive discovery for new projects and unclear requirements. |
+| **Introspection** | Meta-cognitive analysis to expose the AI's reasoning process. |
+| **Task Management** | Hierarchical task organization for complex, multi-step operations. |
+| **Orchestration** | Intelligent tool selection and parallel execution for complex analysis. |
+| **Token Efficiency**| Compressed communication to reduce token usage on large operations. |
+
+For more detailed information, advanced configurations, and to contribute, check out the [official SuperClaude repository on GitHub](https://github.com/SuperClaude-Org/SuperClaude_Framework).
