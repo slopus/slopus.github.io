@@ -28,6 +28,11 @@ const meta = {
             },
         }
     },
+    tools: {
+        type: 'page',
+        title: 'Tools',
+        href: '/tools/'
+    },
     webapp: {
         href: 'https://app.happy.engineering',
         title: 'Web App',
