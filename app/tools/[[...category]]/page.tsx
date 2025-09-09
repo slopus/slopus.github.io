@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { Suspense } from 'react'
 import ToolsClient from './ToolsClient'
 
 const TOOL_CATEGORIES = [
@@ -58,5 +59,9 @@ export default async function ToolsPage({ params }: ToolsPageProps) {
   const resolvedParams = await params
   const initialCategory = resolvedParams.category?.[0] as ToolCategory | undefined
   
-  return <ToolsClient initialCategory={initialCategory || null} />
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ToolsClient initialCategory={initialCategory || null} />
+    </Suspense>
+  )
 }
