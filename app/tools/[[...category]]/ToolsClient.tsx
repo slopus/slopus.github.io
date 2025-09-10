@@ -1,7 +1,14 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { TierList } from '@/components/TierList'
+import { TierListExample } from '@/components/TierListExample'
+import { SearchResults } from '@/components/SearchResults'
+import { resourceLoader } from '@/utils/resource-loader'
+import { SearchQuery, SearchResult } from '@/utils/search-core'
+import { DevResource } from '@/types/dev-resource'
+import { useSearchQuery } from '@/hooks/useSearchUrlSync'
+import { type ToolCategory, TOOL_CATEGORIES } from '@/utils/search-core'
 
 /*
 * Faceted Search URL Strategy:
@@ -15,85 +22,137 @@ import { useEffect, useState } from 'react'
  * - Extensible for future facets (tags, license, etc.)
  */
 
-const TOOL_CATEGORIES = [
-  'mcp',
-  'agents', 
-  'commands',
-  'settings',
-  'hooks',
-  'templates'
-] as const
 
-type ToolCategory = typeof TOOL_CATEGORIES[number]
+
 
 interface ToolsClientProps {
-  initialCategory?: ToolCategory | null
+  initialCategoryFilter: ToolCategory[]
+  searchResults: SearchResult[]
+  totalCount: number
 }
 
-export default function ToolsClient({ initialCategory }: ToolsClientProps) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [currentCategory, setCurrentCategory] = useState<ToolCategory | null>(initialCategory || null)
-  const [searchQuery, setSearchQuery] = useState('')
+export default function ToolsClient({ 
+  initialCategoryFilter,
+  searchResults,
+  totalCount
+}: ToolsClientProps) {
+  // Client-side state
+  const [allResources, setAllResources] = useState<DevResource[] | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [results, setResults] = useState<SearchResult[]>(searchResults)
   const [mounted, setMounted] = useState(false)
-  const [hasInteracted, setHasInteracted] = useState(false)
+
+  // URL-synced search query state
+  const [query, setQuery] = useSearchQuery({
+    text: '',
+    categoryFilter: initialCategoryFilter,
+    limit: undefined
+  })
+
+  // Debounced search execution (separate concern from URL sync)
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
+  useEffect(() => {
+    if (!resourceLoader.isSearchReady()) return
+
+    // Clear existing timeout
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current)
+    }
+
+    // Debounce search execution by 300ms
+    debounceTimeoutRef.current = setTimeout(() => {
+      const newResults = resourceLoader.search(query)
+      setResults(newResults)
+    }, 300)
+
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current)
+      }
+    }
+  }, [query])
+  
+  // Load resources lazily on client
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout
+    
+    const loadResources = async () => {
+      if (allResources || isLoading) return
+      
+      try {
+        setIsLoading(true)
+        setError(null)
+        const resources = await resourceLoader.loadResources()
+        setAllResources(resources)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load resources')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    // Load immediately if user has searched, otherwise after 3 seconds
+    if (query.text.trim() || query.categoryFilter.length !== initialCategoryFilter.length) {
+      loadResources()
+    } else {
+      timeoutId = setTimeout(loadResources, 3000)
+    }
+    
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId)
+    }
+  }, [allResources, isLoading, query ])
+  
+  // Perform immediate search when resources become available (no debouncing for resource loading)
+  useEffect(() => {
+    if (!resourceLoader.isSearchReady()) return
+    const newResults = resourceLoader.search(query)
+    setResults(newResults)
+  }, [allResources]) // Only trigger when resources become available
   
   const categoryDisplayNames: Record<ToolCategory, string> = {
     'mcp': 'MCP Servers',
-    'agents': 'Agents',
-    'commands': 'Commands',
-    'settings': 'Settings', 
-    'hooks': 'Hooks',
-    'templates': 'Templates'
+    'agent': 'Agents',
+    'command': 'Commands',
+    'setting': 'Settings', 
+    'hook': 'Hooks',
+    'template': 'Templates'
   }
 
-  // Initialize from URL params after mount
+  // Simple mount tracker
   useEffect(() => {
-    const queryCategory = searchParams.get('category') as ToolCategory | null
-    const querySearch = searchParams.get('q') || ''
+    setMounted(true)
+  }, [])
 
-    // If we have query params, we're in interactive mode
-    if (queryCategory || querySearch) {
-      setHasInteracted(true)
-      setCurrentCategory(queryCategory || null)
-      setSearchQuery(querySearch)
+  // Handle category changes
+  const handleCategoryChange = (category: ToolCategory | null, isShiftClick = false) => {
+    let newSelectedCategories: ToolCategory[]
+    const currentCategories = query.categoryFilter
+    
+    if (category === null) {
+      // "All" button clicked - clear all selections
+      newSelectedCategories = []
+    } else if (isShiftClick) {
+      // Shift+click: toggle the category in the selection
+      if (currentCategories.includes(category)) {
+        newSelectedCategories = currentCategories.filter(c => c !== category)
+      } else {
+        newSelectedCategories = [...currentCategories, category]
+      }
     } else {
-      // Use initial category from path, not yet interactive
-      setCurrentCategory(initialCategory || null)
-      setSearchQuery('')
+      // Regular click: select only this category
+      newSelectedCategories = [category]
     }
     
-    setMounted(true)
-  }, [initialCategory, searchParams])
-
-  // Handle category changes - switches to faceted search mode
-  const handleCategoryChange = (category: ToolCategory | null) => {
-    setCurrentCategory(category)
-    setHasInteracted(true) // Mark as interactive - switch to query param URLs
-    
-    const newParams = new URLSearchParams()
-    if (category) newParams.set('category', category)
-    if (searchQuery) newParams.set('q', searchQuery)
-    
-    const queryString = newParams.toString()
-    const newUrl = queryString ? `/tools?${queryString}` : '/tools'
-    
-    router.push(newUrl, { scroll: false })
+    // Update query state - URL sync happens automatically
+    setQuery(prev => ({ ...prev, categoryFilter: newSelectedCategories }))
   }
 
-  // Handle search changes - switches to faceted search mode
-  const handleSearchChange = (query: string) => {
-    setSearchQuery(query)
-    setHasInteracted(true) // Mark as interactive - switch to query param URLs
-    
-    const newParams = new URLSearchParams()
-    if (currentCategory) newParams.set('category', currentCategory)
-    if (query) newParams.set('q', query)
-    
-    const queryString = newParams.toString()
-    const newUrl = queryString ? `/tools?${queryString}` : '/tools'
-    
-    router.push(newUrl, { scroll: false })
+  // Handle search text changes
+  const handleSearchChange = (text: string) => {
+    // Update query state - URL sync happens automatically
+    setQuery(prev => ({ ...prev, text }))
   }
 
   // Don't render until mounted to avoid hydration mismatch
@@ -117,9 +176,9 @@ export default function ToolsClient({ initialCategory }: ToolsClientProps) {
         <div className="border-b border-gray-200 dark:border-gray-700">
           <nav className="-mb-px flex space-x-8">
             <button
-              onClick={() => handleCategoryChange(null)}
+              onClick={(e) => handleCategoryChange(null, e.shiftKey)}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                !currentCategory
+                query.categoryFilter.length === 0
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
@@ -129,18 +188,32 @@ export default function ToolsClient({ initialCategory }: ToolsClientProps) {
             {TOOL_CATEGORIES.map((category) => (
               <button
                 key={category}
-                onClick={() => handleCategoryChange(category)}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  currentCategory === category
+                onClick={(e) => handleCategoryChange(category, e.shiftKey)}
+                className={`py-2 px-1 border-b-2 font-medium text-sm relative ${
+                  (query.categoryFilter as ToolCategory[]).includes(category)
                     ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                 }`}
+                title={`Click to select only ${categoryDisplayNames[category]}, Shift+click to toggle selection`}
               >
                 {categoryDisplayNames[category]}
+                {(query.categoryFilter).includes(category) && query.categoryFilter.length > 1 && (
+                  <span className="ml-1 inline-flex items-center justify-center w-4 h-4 text-xs bg-blue-500 text-white rounded-full">
+                    ✓
+                  </span>
+                )}
               </button>
             ))}
           </nav>
         </div>
+        {query.categoryFilter.length > 1 && (
+          <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Multiple filters active: {(query.categoryFilter).map(cat => categoryDisplayNames[cat]).join(', ')}
+            <span className="ml-2 text-xs text-gray-500">
+              (Shift+click tabs to toggle)
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Search Bar */}
@@ -153,36 +226,37 @@ export default function ToolsClient({ initialCategory }: ToolsClientProps) {
           </div>
           <input
             type="text"
-            value={searchQuery}
+            value={query.text}
             onChange={(e) => handleSearchChange(e.target.value)}
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white dark:bg-gray-800 dark:border-gray-600 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-            placeholder={`Search ${currentCategory ? categoryDisplayNames[currentCategory].toLowerCase() : 'all tools'}...`}
+            placeholder={`Search ${
+              query.categoryFilter.length === 0 
+                ? 'all tools' 
+                : query.categoryFilter.length === 1 
+                  ? categoryDisplayNames[(query.categoryFilter as ToolCategory[])[0]].toLowerCase()
+                  : `${query.categoryFilter.length} selected categories`
+            }...`}
           />
         </div>
       </div>
 
-      {/* Content Area */}
-      <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-8 text-center">
-        <h2 className="text-xl font-semibold mb-4">
-          {currentCategory ? `${categoryDisplayNames[currentCategory]} Coming Soon` : 'Tools Coming Soon'}
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400 mb-4">
-          {currentCategory 
-            ? `We're building a comprehensive directory of ${categoryDisplayNames[currentCategory].toLowerCase()} for Claude Code.`
-            : "We're building a comprehensive directory of tools and resources for Claude Code."
-          }
-        </p>
-        {currentCategory === 'mcp' && (
-          <p className="text-sm text-gray-500 dark:text-gray-500">
-            This will showcase MCP servers similar to the design you provided, with search, filtering, and easy installation.
-          </p>
-        )}
-        {searchQuery && (
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-            Searching for: "{searchQuery}"
-          </p>
-        )}
-      </div>
+      {/* Search Results */}
+      <SearchResults 
+        results={results}
+        isLoading={isLoading}
+        error={error}
+        searchQuery={query.text}
+        categoryFilter={query.categoryFilter}
+      />
+      
+      {/* Show total count when not searching */}
+      {!query.text && !isLoading && !error && (
+        <div className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
+          {resourceLoader.isSearchReady() ? resourceLoader.getTotalCount() : totalCount} total resources available
+        </div>
+      )}
+      
+      <TierListExample />
     </div>
   )
 }
