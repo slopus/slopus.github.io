@@ -1,5 +1,7 @@
 import { ToolCategory } from '@/utils/search-core'
 import { DevResource } from '../types/dev-resource'
+import { useResponsivePageSize } from '@/hooks/useResponsivePageSize'
+import { usePagination } from '@/hooks/usePagination'
 
 interface SearchResult {
   item: DevResource
@@ -22,13 +24,28 @@ export function SearchResults({
   searchQuery, 
   categoryFilter,
 }: SearchResultsProps) {
+  const pageSize = useResponsivePageSize()
+  const {
+    currentPage,
+    totalPages,
+    paginatedItems,
+    nextPage,
+    previousPage,
+    goToPage,
+    canGoNext,
+    canGoPrevious
+  } = usePagination({ items: results, pageSize })
+
   console.log("SearchResults: Rendering with", { 
     resultsLength: results.length, 
     isLoading, 
     error, 
     searchQuery, 
     categoryFilter,
-    searchQueryTrimmed: searchQuery.trim()
+    searchQueryTrimmed: searchQuery.trim(),
+    currentPage,
+    totalPages,
+    pageSize
   })
   
   if (isLoading) {
@@ -116,11 +133,25 @@ export function SearchResults({
         )}
       </div>
 
-      <div className="grid gap-4">
-        {results.map((result, index) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {paginatedItems.map((result, index) => (
           <SearchResultCard key={`${result.item.type}-${result.item.name}-${index}`} result={result} />
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPrevious={previousPage}
+          onNext={nextPage}
+          onGoToPage={goToPage}
+          canGoNext={canGoNext}
+          canGoPrevious={canGoPrevious}
+          totalItems={results.length}
+          pageSize={pageSize}
+        />
+      )}
     </div>
   )
 }
@@ -186,6 +217,124 @@ function SearchResultCard({ result }: { result: SearchResult }) {
             </div>
           </div>
         )}
+      </div>
+    </div>
+  )
+}
+
+interface PaginationControlsProps {
+  currentPage: number
+  totalPages: number
+  onPrevious: () => void
+  onNext: () => void
+  onGoToPage: (page: number) => void
+  canGoNext: boolean
+  canGoPrevious: boolean
+  totalItems: number
+  pageSize: number
+}
+
+function PaginationControls({
+  currentPage,
+  totalPages,
+  onPrevious,
+  onNext,
+  onGoToPage,
+  canGoNext,
+  canGoPrevious,
+  totalItems,
+  pageSize
+}: PaginationControlsProps) {
+  const startItem = (currentPage - 1) * pageSize + 1
+  const endItem = Math.min(currentPage * pageSize, totalItems)
+
+  const getVisiblePages = () => {
+    const delta = 2
+    const range = []
+    const rangeWithDots = []
+
+    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+      range.push(i)
+    }
+
+    if (currentPage - delta > 2) {
+      rangeWithDots.push(1, '...')
+    } else {
+      rangeWithDots.push(1)
+    }
+
+    rangeWithDots.push(...range)
+
+    if (currentPage + delta < totalPages - 1) {
+      rangeWithDots.push('...', totalPages)
+    } else if (totalPages > 1) {
+      rangeWithDots.push(totalPages)
+    }
+
+    return rangeWithDots
+  }
+
+  const visiblePages = getVisiblePages()
+
+  return (
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="text-sm text-gray-700 dark:text-gray-300">
+        Showing <span className="font-medium">{startItem}</span> to{' '}
+        <span className="font-medium">{endItem}</span> of{' '}
+        <span className="font-medium">{totalItems}</span> results
+      </div>
+
+      <div className="flex items-center gap-2">
+        <button
+          onClick={onPrevious}
+          disabled={!canGoPrevious}
+          className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700"
+        >
+          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Previous
+        </button>
+
+        <div className="flex items-center gap-1">
+          {visiblePages.map((page, index) => {
+            if (page === '...') {
+              return (
+                <span key={`dots-${index}`} className="px-3 py-2 text-gray-500 dark:text-gray-400">
+                  ...
+                </span>
+              )
+            }
+
+            const pageNumber = page as number
+            const isCurrentPage = pageNumber === currentPage
+
+            return (
+              <button
+                key={pageNumber}
+                onClick={() => onGoToPage(pageNumber)}
+                className={`inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md ${
+                  isCurrentPage
+                    ? 'text-blue-600 bg-blue-50 border-blue-500 dark:text-blue-400 dark:bg-blue-900/20 dark:border-blue-400'
+                    : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700'
+                }`}
+              >
+                {pageNumber}
+              </button>
+            )
+          })}
+        </div>
+
+        <button
+          onClick={onNext}
+          disabled={!canGoNext}
+          className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700"
+        >
+          Next
+          <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
     </div>
   )
