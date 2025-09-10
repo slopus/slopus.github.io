@@ -1,0 +1,15 @@
+# Happy Coder vs DIY Terminal Setup
+
+The main difference is that Happy Coder is built specifically for Claude Code's UI needs rather than being a general terminal emulator.
+
+## Practical advantages:
+
+- **Better visibility into tool calls** - See file edits and tool details without spamming ctrl+r (which expands everything). The UI shows you what actually matters.
+- **Offline message queuing** - You can type messages and review git diffs even without connection. Messages queue up and send when you're back online. Termux needs both ends connected simultaneously.
+- **Multiple voice inputs** - Native dictation + ElevenLabs STT integrated (and it's open source so we can add more providers)
+- **Push notifications** - Get pinged when Claude needs permission or has been idle >60s instead of constantly checking
+- **Touch UI that actually works** - Proper text selection and UI elements sized for fingers, not mouse cursors
+
+Basically, Termux/Terminus gives you raw terminal access which works but is clunky on mobile. Happy Coder gives you a purpose-built interface for the specific workflow of interacting with Claude Code from your phone.
+
+Plus being open source means if something annoys you, you can just fix it.
