@@ -1,4 +1,4 @@
-import { ToolCategory } from '@/utils/search-core'
+import { ToolKind } from '@/utils/search-core'
 import { DevResource } from '../types/dev-resource'
 import { useResponsivePageSize } from '@/hooks/useResponsivePageSize'
 import { usePagination } from '@/hooks/usePagination'
@@ -14,7 +14,7 @@ interface SearchResultsProps {
   isLoading: boolean
   error: string | null
   searchQuery: string
-  categoryFilter: ToolCategory[]
+  kindFilter: ToolKind[]
 }
 
 export function SearchResults({ 
@@ -22,7 +22,7 @@ export function SearchResults({
   isLoading, 
   error, 
   searchQuery, 
-  categoryFilter,
+  kindFilter,
 }: SearchResultsProps) {
   const pageSize = useResponsivePageSize()
   const {
@@ -41,7 +41,7 @@ export function SearchResults({
     isLoading, 
     error, 
     searchQuery, 
-    categoryFilter,
+    kindFilter,
     searchQueryTrimmed: searchQuery.trim(),
     currentPage,
     totalPages,
@@ -82,18 +82,18 @@ export function SearchResults({
   // Always show the actual results - this is a directory site, not a search engine!
 
   if (results.length === 0) {
-    const hasCategoryFilter = categoryFilter.length > 0
-    const categoryText = hasCategoryFilter 
-      ? categoryFilter.length === 1 
-        ? categoryFilter[0] 
-        : categoryFilter.join(', ')
+    const hasKindFilter = kindFilter.length > 0
+    const kindText = hasKindFilter 
+      ? kindFilter.length === 1 
+        ? kindFilter[0] 
+        : kindFilter.join(', ')
       : ''
     
     return (
       <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-8 text-center">
         <h2 className="text-xl font-semibold mb-4">No results found</h2>
         <p className="text-gray-600 dark:text-gray-400 mb-4">
-          No resources found for "{searchQuery}"{hasCategoryFilter ? ` in ${categoryText}` : ''}.
+          No resources found for "{searchQuery}"{hasKindFilter ? ` in ${kindText}` : ''}.
         </p>
         <p className="text-sm text-gray-500 dark:text-gray-500">
           Try adjusting your search terms or browse all resources.
@@ -102,11 +102,11 @@ export function SearchResults({
     )
   }
 
-  const hasCategoryFilter = categoryFilter.length > 0
-  const categoryText = hasCategoryFilter 
-    ? categoryFilter.length === 1 
-      ? categoryFilter[0] 
-      : categoryFilter.join(', ')
+  const hasKindFilter = kindFilter.length > 0
+  const kindText = hasKindFilter 
+    ? kindFilter.length === 1 
+      ? kindFilter[0] 
+      : kindFilter.join(', ')
     : ''
 
   return (
@@ -117,12 +117,12 @@ export function SearchResults({
             // When there's a search query, show "X results for 'query'"
             <>
               {results.length} result{results.length !== 1 ? 's' : ''} for "{searchQuery}"
-              {hasCategoryFilter && ` in ${categoryText}`}
+              {hasKindFilter && ` in ${kindText}`}
             </>
           ) : (
             // When there's no search query but category filters, show "X CategoryName Resources"
             <>
-              {results.length} {categoryText} Resource{results.length !== 1 ? 's' : ''}
+              {results.length} {kindText} Resource{results.length !== 1 ? 's' : ''}
             </>
           )}
         </h2>

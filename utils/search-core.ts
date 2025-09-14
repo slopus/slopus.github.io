@@ -1,7 +1,7 @@
 import Fuse, {type IFuseOptions, type Expression} from 'fuse.js'
 import { DevResource } from '../types/dev-resource'
 
-export const TOOL_CATEGORIES = [
+export const TOOL_KINDS = [
     'mcp',
     'agent', 
     'command',
@@ -10,7 +10,7 @@ export const TOOL_CATEGORIES = [
     'template'
   ] as const
   
-  export type ToolCategory = typeof TOOL_CATEGORIES[number]
+  export type ToolKind = typeof TOOL_KINDS[number]
 
 // Search configuration with extended search enabled
 export const SEARCH_CONFIG: IFuseOptions<DevResource> = {
@@ -38,7 +38,7 @@ export const SEARCH_CONFIG: IFuseOptions<DevResource> = {
 // Search query data structure
 export interface SearchQuery {
   text: string
-  categoryFilter: ToolCategory[]
+  kindFilter: ToolKind[]
   limit?: number
 }
 
@@ -61,7 +61,7 @@ export interface SearchResult {
  * - buildSearchExpression("database", ["mcp", "agent"]) →
  *   { $and: [{ $or: [{ name: "database" }, ...] }, { type: "=mcp | =agent" }] }
  */
-export function buildSearchExpression(text: string, categoryFilter: string[]): Expression | null {
+export function buildSearchExpression(text: string, kindFilter: string[]): Expression | null {
   text = text.trim()
   
   // Build text search part - search across content fields with fuzzy matching
@@ -79,12 +79,12 @@ export function buildSearchExpression(text: string, categoryFilter: string[]): E
   
   // Build type filter using exact matching with extended search operators
   let typeExpression: Expression | null = null
-  if (categoryFilter && categoryFilter.length > 0) {
-    if (categoryFilter.length === 1) {
-      typeExpression = { type: `=${categoryFilter[0]}` }
+  if (kindFilter && kindFilter.length > 0) {
+    if (kindFilter.length === 1) {
+      typeExpression = { type: `=${kindFilter[0]}` }
     } else {
       // Multiple types: =mcp | =agent
-      const typeQuery = categoryFilter.map(type => `=${type}`).join(' | ')
+      const typeQuery = kindFilter.map(type => `=${type}`).join(' | ')
       typeExpression = { type: typeQuery }
     }
   }
@@ -112,10 +112,10 @@ export function performSearch(
   query: SearchQuery
 ): SearchResult[] {
   console.log("original limit", query.limit)
-  const { text, categoryFilter, limit = allResources.length } = query
+  const { text, kindFilter, limit = allResources.length } = query
 
   // Build logical search expression that combines text and facets
-  const searchExpression = buildSearchExpression(text, categoryFilter)
+  const searchExpression = buildSearchExpression(text, kindFilter)
   console.log("searchExpression", searchExpression)
   
   // If no query at all, return all resources
@@ -149,8 +149,8 @@ export function createFuseInstance(
 /**
  * Debug function to see the generated search expression
  */
-export function debugSearchExpression(text: string, categoryFilter: string[]): Expression | null {
-  return buildSearchExpression(text, categoryFilter)
+export function debugSearchExpression(text: string, kindFilter: string[]): Expression | null {
+  return buildSearchExpression(text, kindFilter)
 }
 
 /**

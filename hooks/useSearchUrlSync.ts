@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { SearchQuery, type ToolCategory } from '@/utils/search-core'
+import { SearchQuery, type ToolKind } from '@/utils/search-core'
 
 /**
  * CLIENT-SIDE SEARCH URL SYNCHRONIZATION
@@ -12,11 +12,11 @@ import { SearchQuery, type ToolCategory } from '@/utils/search-core'
  * 
  * Features supported:
  * - Full text search (the 'q' parameter)
- * - Faceted search starting with 'category' facet
+ * - Faceted search starting with 'kind' facet
  * - Future facets planned: tags, license, etc.
  * 
  * Special business rule: SEO-friendly URLs like /tools/agents are equivalent to 
- * /tools/?category=agent, but we don't update the browser URL until user interaction
+ * /tools/?kind=agent, but we don't update the browser URL until user interaction
  * to preserve clean URLs for crawlers and direct links.
  */
 
@@ -26,8 +26,8 @@ import { SearchQuery, type ToolCategory } from '@/utils/search-core'
 export function searchQueryToUrl(query: SearchQuery, basePath = '/tools'): string {
   const params = new URLSearchParams()
   
-  if (query.categoryFilter.length > 0) {
-    params.set('category', query.categoryFilter.join(','))
+  if (query.kindFilter.length > 0) {
+    params.set('kind', query.kindFilter.join(','))
   }
   
   if (query.text.trim()) {
@@ -45,8 +45,8 @@ export function urlToSearchQuery(url: string): SearchQuery {
   const urlObj = new URL(url, window.location.origin)
   const params = urlObj.searchParams
   
-  const categoryFilter: ToolCategory[] = []
-  for (const candidate of params.get('category')?.split(',').filter(Boolean) || []) {
+  const kindFilter: ToolKind[] = []
+  for (const candidate of params.get('kind')?.split(',').filter(Boolean) || []) {
     switch (candidate) {
       case 'mcp':
       case 'agent':
@@ -54,14 +54,14 @@ export function urlToSearchQuery(url: string): SearchQuery {
       case 'setting':
       case 'hook':
       case 'template':
-        categoryFilter.push(candidate)
+        kindFilter.push(candidate)
         break;
     }
   }
   
   return {
     text: params.get('q') || '',
-    categoryFilter,
+    kindFilter,
     limit: undefined
   }
 }
@@ -89,7 +89,7 @@ export function useSearchQuery(initialQuery: SearchQuery): [SearchQuery, (query:
     
     // Only become URL controlled if URL has meaningful search params
     // This preserves SEO-friendly URLs like /tools/agents
-    if (urlQuery.text || urlQuery.categoryFilter.length > 0) {
+    if (urlQuery.text || urlQuery.kindFilter.length > 0) {
       setQueryState(urlQuery)
       setIsUrlControlled(true)
     }

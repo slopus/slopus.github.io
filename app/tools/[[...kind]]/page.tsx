@@ -6,7 +6,7 @@ import {
   createFuseInstance,
   SearchResult,
   performSearch,
-  type ToolCategory,
+  type ToolKind,
 } from "@/utils/search-core";
 
 const PAGES_FOR_SEO = [
@@ -18,27 +18,27 @@ const PAGES_FOR_SEO = [
   "templates",
 ] as const;
 
-type CategoryPages = (typeof PAGES_FOR_SEO)[number];
+type KindPages = (typeof PAGES_FOR_SEO)[number];
 
 export async function generateStaticParams() {
   return [
-    { category: [] },
-    { category: ['mcp'] },
-    { category: ['agents'] },
-    { category: ['commands'] },
-    { category: ['settings'] },
-    { category: ['hooks'] },
-    { category: ['templates'] },
+    { kind: [] },
+    { kind: ['mcp'] },
+    { kind: ['agents'] },
+    { kind: ['commands'] },
+    { kind: ['settings'] },
+    { kind: ['hooks'] },
+    { kind: ['templates'] },
   ];
 }
 
 export async function generateMetadata(props: {
-  params: Promise<{ category?: string[] }>;
+  params: Promise<{ kind?: string[] }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const category = params.category?.[0];
+  const kind = params.kind?.[0];
 
-  if (!category) {
+  if (!kind) {
     return {
       title: "Claude Code Tools & Resources",
       description:
@@ -46,7 +46,7 @@ export async function generateMetadata(props: {
     };
   }
 
-  const categoryTitles: Record<CategoryPages, string> = {
+  const kindTitles: Record<KindPages, string> = {
     mcp: "MCP Servers",
     agents: "Agents",
     commands: "Commands",
@@ -55,7 +55,7 @@ export async function generateMetadata(props: {
     templates: "Templates",
   };
 
-  const title = categoryTitles[category as CategoryPages] || "Tools";
+  const title = kindTitles[kind as KindPages] || "Tools";
 
   return {
     title: `${title} | Claude Code Tools`,
@@ -64,7 +64,7 @@ export async function generateMetadata(props: {
 }
 
 interface ToolsPageProps {
-  params: Promise<{ category?: CategoryPages[] }>;
+  params: Promise<{ kind?: KindPages[] }>;
 }
 
 export default async function ToolsPage({ params }: ToolsPageProps) {
@@ -74,33 +74,33 @@ export default async function ToolsPage({ params }: ToolsPageProps) {
   const data = loadAllDevResources();
   const fuse = createFuseInstance(data);
   
-  // Determine category filter based on route
-  let categoryFilter: ToolCategory[] = [];
+  // Determine kind filter based on route
+  let kindFilter: ToolKind[] = [];
 // Static generation for SEO - only return route parameters, not data
-  switch (resolvedParams.category?.[0]) {
+  switch (resolvedParams.kind?.[0]) {
     case 'mcp':
-      categoryFilter = ['mcp'];
+      kindFilter = ['mcp'];
       break;
     case 'agents':
-      categoryFilter = ['agent'];
+      kindFilter = ['agent'];
       break;
     case 'commands':
-      categoryFilter = ['command'];
+      kindFilter = ['command'];
       break;
     case 'settings':
-      categoryFilter = ['setting'];
+      kindFilter = ['setting'];
       break;
     case 'hooks':
-      categoryFilter = ['hook'];
+      kindFilter = ['hook'];
       break;
     case 'templates':
-      categoryFilter = ['template'];
+      kindFilter = ['template'];
       break;
   }
   
   const searchResults = performSearch(data, fuse, {
     text: "",
-    categoryFilter,
+    kindFilter,
     limit: 20,
   });
 
@@ -110,7 +110,7 @@ export default async function ToolsPage({ params }: ToolsPageProps) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <ToolsClient
-        initialCategoryFilter={categoryFilter}
+        initialKindFilter={kindFilter}
         searchResults={searchResults}
         totalCount={data.length}
       />

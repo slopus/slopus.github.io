@@ -8,17 +8,17 @@ import { resourceLoader } from '@/utils/resource-loader'
 import { SearchQuery, SearchResult } from '@/utils/search-core'
 import { DevResource } from '@/types/dev-resource'
 import { useSearchQuery } from '@/hooks/useSearchUrlSync'
-import { type ToolCategory, TOOL_CATEGORIES } from '@/utils/search-core'
+import { type ToolKind, TOOL_KINDS } from '@/utils/search-core'
 
 /*
 * Faceted Search URL Strategy:
  * - SEO Entry Points: Clean URLs like /tools/agents for crawlers and direct links
- * - Interactive State: Once user interacts with ANY facet, switch to /tools?category=X&q=Y
+ * - Interactive State: Once user interacts with ANY facet, switch to /tools?kind=X&q=Y
  * 
  * This gives us:
  * - Clean URLs for SEO (/tools/mcp-servers, /tools/agents)
- * - Faceted search state in query params after interaction (/tools?category=hooks&q=search)
- * - Category treated as just another search facet alongside query
+ * - Faceted search state in query params after interaction (/tools?kind=hooks&q=search)
+ * - Kind treated as just another search facet alongside query
  * - Extensible for future facets (tags, license, etc.)
  */
 
@@ -26,13 +26,13 @@ import { type ToolCategory, TOOL_CATEGORIES } from '@/utils/search-core'
 
 
 interface ToolsClientProps {
-  initialCategoryFilter: ToolCategory[]
+  initialKindFilter: ToolKind[]
   searchResults: SearchResult[]
   totalCount: number
 }
 
 export default function ToolsClient({ 
-  initialCategoryFilter,
+  initialKindFilter,
   searchResults,
   totalCount
 }: ToolsClientProps) {
@@ -46,7 +46,7 @@ export default function ToolsClient({
   // URL-synced search query state
   const [query, setQuery] = useSearchQuery({
     text: '',
-    categoryFilter: initialCategoryFilter,
+    kindFilter: initialKindFilter,
     limit: undefined
   })
 
@@ -93,7 +93,7 @@ export default function ToolsClient({
     }
     
     // Load immediately if user has searched, otherwise after 3 seconds
-    if (query.text.trim() || query.categoryFilter.length !== initialCategoryFilter.length) {
+    if (query.text.trim() || query.kindFilter.length !== initialKindFilter.length) {
       loadResources()
     } else {
       timeoutId = setTimeout(loadResources, 3000)
@@ -111,7 +111,7 @@ export default function ToolsClient({
     setResults(newResults)
   }, [allResources]) // Only trigger when resources become available
   
-  const categoryDisplayNames: Record<ToolCategory, string> = {
+  const kindDisplayNames: Record<ToolKind, string> = {
     'mcp': 'MCP Servers',
     'agent': 'Agents',
     'command': 'Commands',
@@ -125,28 +125,28 @@ export default function ToolsClient({
     setMounted(true)
   }, [])
 
-  // Handle category changes
-  const handleCategoryChange = (category: ToolCategory | null, isShiftClick = false) => {
-    let newSelectedCategories: ToolCategory[]
-    const currentCategories = query.categoryFilter
+  // Handle kind changes
+  const handleKindChange = (kind: ToolKind | null, isShiftClick = false) => {
+    let newSelectedKinds: ToolKind[]
+    const currentKinds = query.kindFilter
     
-    if (category === null) {
+    if (kind === null) {
       // "All" button clicked - clear all selections
-      newSelectedCategories = []
+      newSelectedKinds = []
     } else if (isShiftClick) {
-      // Shift+click: toggle the category in the selection
-      if (currentCategories.includes(category)) {
-        newSelectedCategories = currentCategories.filter(c => c !== category)
+      // Shift+click: toggle the kind in the selection
+      if (currentKinds.includes(kind)) {
+        newSelectedKinds = currentKinds.filter(c => c !== kind)
       } else {
-        newSelectedCategories = [...currentCategories, category]
+        newSelectedKinds = [...currentKinds, kind]
       }
     } else {
-      // Regular click: select only this category
-      newSelectedCategories = [category]
+      // Regular click: select only this kind
+      newSelectedKinds = [kind]
     }
     
     // Update query state - URL sync happens automatically
-    setQuery(prev => ({ ...prev, categoryFilter: newSelectedCategories }))
+    setQuery(prev => ({ ...prev, kindFilter: newSelectedKinds }))
   }
 
   // Handle search text changes
@@ -176,28 +176,28 @@ export default function ToolsClient({
         <div className="border-b border-gray-200 dark:border-gray-700">
           <nav className="-mb-px flex space-x-8">
             <button
-              onClick={(e) => handleCategoryChange(null, e.shiftKey)}
+              onClick={(e) => handleKindChange(null, e.shiftKey)}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                query.categoryFilter.length === 0
+                query.kindFilter.length === 0
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
               All
             </button>
-            {TOOL_CATEGORIES.map((category) => (
+            {TOOL_KINDS.map((kind) => (
               <button
-                key={category}
-                onClick={(e) => handleCategoryChange(category, e.shiftKey)}
+                key={kind}
+                onClick={(e) => handleKindChange(kind, e.shiftKey)}
                 className={`py-2 px-1 border-b-2 font-medium text-sm relative ${
-                  (query.categoryFilter as ToolCategory[]).includes(category)
+                  (query.kindFilter as ToolKind[]).includes(kind)
                     ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                 }`}
-                title={`Click to select only ${categoryDisplayNames[category]}, Shift+click to toggle selection`}
+                title={`Click to select only ${kindDisplayNames[kind]}, Shift+click to toggle selection`}
               >
-                {categoryDisplayNames[category]}
-                {(query.categoryFilter).includes(category) && query.categoryFilter.length > 1 && (
+                {kindDisplayNames[kind]}
+                {(query.kindFilter).includes(kind) && query.kindFilter.length > 1 && (
                   <span className="ml-1 inline-flex items-center justify-center w-4 h-4 text-xs bg-blue-500 text-white rounded-full">
                     ✓
                   </span>
@@ -206,9 +206,9 @@ export default function ToolsClient({
             ))}
           </nav>
         </div>
-        {query.categoryFilter.length > 1 && (
+        {query.kindFilter.length > 1 && (
           <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Multiple filters active: {(query.categoryFilter).map(cat => categoryDisplayNames[cat]).join(', ')}
+            Multiple filters active: {(query.kindFilter).map(cat => kindDisplayNames[cat]).join(', ')}
             <span className="ml-2 text-xs text-gray-500">
               (Shift+click tabs to toggle)
             </span>
@@ -230,11 +230,11 @@ export default function ToolsClient({
             onChange={(e) => handleSearchChange(e.target.value)}
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white dark:bg-gray-800 dark:border-gray-600 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             placeholder={`Search ${
-              query.categoryFilter.length === 0 
+              query.kindFilter.length === 0 
                 ? 'all tools' 
-                : query.categoryFilter.length === 1 
-                  ? categoryDisplayNames[(query.categoryFilter as ToolCategory[])[0]].toLowerCase()
-                  : `${query.categoryFilter.length} selected categories`
+                : query.kindFilter.length === 1 
+                  ? kindDisplayNames[(query.kindFilter as ToolKind[])[0]].toLowerCase()
+                  : `${query.kindFilter.length} selected kinds`
             }...`}
           />
         </div>
@@ -246,7 +246,7 @@ export default function ToolsClient({
         isLoading={isLoading}
         error={error}
         searchQuery={query.text}
-        categoryFilter={query.categoryFilter}
+        kindFilter={query.kindFilter}
       />
       
       {/* Show total count when not searching */}
