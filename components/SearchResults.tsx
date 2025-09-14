@@ -162,62 +162,58 @@ function SearchResultCard({ result }: { result: SearchResult }) {
   const templateItem = isTemplate ? item as any : null
 
   return (
-    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-md transition-shadow">
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-              {item.type}
-            </span>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-              {item.category}
-            </span>
-            {isTemplate && templateItem?.subtype && (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                {templateItem.subtype}
-              </span>
-            )}
-          </div>
-          
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            {item.name}
-          </h3>
-          
-          {item.description && (
-            <p className="text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-              {item.description}
-            </p>
-          )}
-          
-          {isTemplate && templateItem?.installCommand && (
-            <div className="bg-gray-50 dark:bg-gray-800 rounded p-3 mb-3">
-              <code className="text-sm text-gray-800 dark:text-gray-200">
-                {templateItem.installCommand}
-              </code>
-            </div>
-          )}
-          
-          <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-            {'path' in item && <span>Path: {item.path}</span>}
-            {isTemplate && templateItem?.files && (
-              <span className={`${'path' in item ? 'ml-4' : ''}`}>
-                {templateItem.files.length} file{templateItem.files.length !== 1 ? 's' : ''}
-              </span>
-            )}
-            {isTemplate && templateItem?.id && !('path' in item) && (
-              <span>ID: {templateItem.id}</span>
-            )}
-          </div>
-        </div>
-        
-        {result.score && (
-          <div className="ml-4 text-right">
-            <div className="text-sm text-gray-500 dark:text-gray-400">
-              Match: {((1 - result.score) * 100).toFixed(0)}%
-            </div>
-          </div>
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-md transition-shadow relative">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+          {item.type}
+        </span>
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+          {item.category}
+        </span>
+        {isTemplate && templateItem?.subtype && (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+            {templateItem.subtype}
+          </span>
         )}
       </div>
+      
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+        {item.name}
+      </h3>
+      
+      {item.description && (
+        <p className="text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+          {item.description}
+        </p>
+      )}
+      
+      {isTemplate && templateItem?.installCommand && (
+        <div className="bg-gray-50 dark:bg-gray-800 rounded p-3 mb-3">
+          <code className="text-sm text-gray-800 dark:text-gray-200">
+            {templateItem.installCommand}
+          </code>
+        </div>
+      )}
+      
+      <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-8">
+        {'path' in item && <span>Path: {item.path}</span>}
+        {isTemplate && templateItem?.files && (
+          <span className={`${'path' in item ? 'ml-4' : ''}`}>
+            {templateItem.files.length} file{templateItem.files.length !== 1 ? 's' : ''}
+          </span>
+        )}
+        {isTemplate && templateItem?.id && !('path' in item) && (
+          <span>ID: {templateItem.id}</span>
+        )}
+      </div>
+      
+      {result.score && (
+        <div className="absolute bottom-4 right-4">
+          <div className="text-sm text-gray-500 dark:text-gray-400">
+            Match: {((1 - result.score) * 100).toFixed(0)}%
+          </div>
+        </div>
+      )}
     </div>
   )
 }
