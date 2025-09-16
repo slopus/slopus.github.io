@@ -1,68 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './Testimonials.css';
-
-// Custom hook to track window width
-const useWindowWidth = () => {
-  const [windowWidth, setWindowWidth] = useState<number>(() => {
-    // Check if we're in a browser environment
-    if (typeof window !== 'undefined') {
-      return window.innerWidth;
-    }
-    return 1024; // Default fallback for SSR
-  });
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return windowWidth;
-};
-
-// Custom hook to track if component has mounted
-const useHasMounted = () => {
-  const [hasMounted, setHasMounted] = useState(false);
-
-  useEffect(() => {
-    // Add a small delay to ensure horizontal layout is fully rendered
-    const timer = setTimeout(() => {
-      setHasMounted(true);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  return hasMounted;
-};
-
-// Function to calculate card width based on screen size
-const calculateCardWidth = (screenWidth: number): number => {
-  // Account for container padding (p-7 = 28px on each side = 56px total)
-  // and gaps between cards (gap-4 = 16px between each card)
-  const containerPadding = 56;
-  
-  if (screenWidth < 590) {
-    // Mobile: Single card takes most of the width
-    return Math.max(280, screenWidth - containerPadding - 20); // Extra margin for safety
-  } else if (screenWidth < 900) {
-    // At 590px and above: Show 2 cards
-    const availableWidth = screenWidth - containerPadding;
-    const gapWidth = 16; // gap-4 between 2 cards = 1 gap
-    return Math.max(280, (availableWidth - gapWidth) / 2);
-  } else {
-    // At 900px and above: Show 3 cards, but cap at 350px max
-    const availableWidth = screenWidth - containerPadding;
-    const gapWidth = 32; // gap-4 between 3 cards = 2 gaps
-    const calculatedWidth = (availableWidth - gapWidth) / 3;
-    return Math.min(350, calculatedWidth);
-  }
-};
 
 // Types for testimonials data
 export interface Testimonial {
@@ -197,86 +134,19 @@ const TestimonialsContainer: React.FC<{
   testimonials: Testimonial[];
   layout?: TestimonialLayout;
 }> = ({ testimonials, layout = 'horizontal' }) => {
-  const windowWidth = useWindowWidth();
-  const hasMounted = useHasMounted();
-  const cardWidth = calculateCardWidth(windowWidth);
-
-  // Determine the effective layout - start with horizontal on mobile until mounted
-  const effectiveLayout = (() => {
-    if (layout === 'masonry' && hasMounted) {
-      // Only use masonry after component has mounted
-      return 'masonry';
-    }
-    // Default to horizontal for better mobile experience
-    return 'horizontal';
-  })();
-
-  // Layout-specific classes and styles
-  const getLayoutClasses = () => {
-    switch (effectiveLayout) {
-      case 'horizontal':
-        return "flex gap-4 overflow-x-auto pb-2 items-start swiper-horizontal";
-      case 'masonry':
-        return "masonry-grid";
-      default:
-        return "flex gap-4 overflow-x-auto pb-2 items-start";
-    }
-  };
-
-  const getCardClasses = () => {
-    switch (effectiveLayout) {
-      case 'horizontal':
-        return "flex-shrink-0";
-      case 'masonry':
-        return "masonry-item";
-      default:
-        return "flex-shrink-0";
-    }
-  };
-
-  const getContainerStyle = (): React.CSSProperties => {
-    if (effectiveLayout === 'masonry') {
-      return {
-        columns: windowWidth < 590 ? 1 : windowWidth < 900 ? 2 : 3,
-        columnGap: '1rem',
-        columnFill: 'balance' as const
-      };
-    }
-    return {};
-  };
-
-  const getCardStyle = (testimonial: Testimonial): React.CSSProperties => {
-    if (effectiveLayout === 'masonry') {
-      return {
-        breakInside: 'avoid' as const,
-        marginBottom: '1rem',
-        width: '100%'
-      };
-    }
-    return { width: `${cardWidth}px` };
-  };
+  // Use CSS classes for responsive layout - no JavaScript calculations needed
+  const containerClass = layout === 'masonry' 
+    ? 'testimonials-masonry' 
+    : 'testimonials-horizontal';
 
   return (
     <div className="p-7" data-id="d4c7d44a-95be-4b3c-978f-4ba863490a54">
-      <div className="sj-container ">
+      <div className="sj-container">
         <div className="relative w-full px-0">
           <div className="w-full">
-            {/* Loading indicator for layout transition */}
-            {layout === 'masonry' && !hasMounted && (
-              <div className="text-center text-sm text-gray-500 mb-4">
-                Loading masonry layout...
-              </div>
-            )}
-            <div 
-              className={getLayoutClasses()}
-              style={getContainerStyle()}
-            >
+            <div className={containerClass}>
               {testimonials.map((testimonial) => (
-                <div 
-                  key={testimonial.id} 
-                  className={getCardClasses()}
-                  style={getCardStyle(testimonial)}
-                >
+                <div key={testimonial.id}>
                   <TestimonialCard testimonial={testimonial} />
                 </div>
               ))}

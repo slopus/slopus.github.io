@@ -184,7 +184,58 @@
   color: var(--clr-primary);
 }
 
-/* Masonry layout styles */
+/* Responsive Testimonials Layout - Mobile First Approach */
+/* 
+ * Default: Horizontal scroll for mobile
+ * Breakpoints match the original JS logic:
+ * - <590px: 1 column (horizontal scroll)
+ * - 590px-899px: 2 columns (masonry grid)  
+ * - >=900px: 3 columns (masonry grid)
+ *
+ * Container padding accounts for p-7 (56px total) and gap-4 (16px between items)
+ */
+
+/* Default horizontal layout for mobile */
+.testimonials-horizontal {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  align-items: flex-start;
+  touch-action: pan-x;
+}
+
+.testimonials-horizontal > * {
+  flex-shrink: 0;
+  width: 280px; /* Minimum card width, matches original JS calculation */
+}
+
+/* CSS Grid masonry layout for tablets and desktop */
+.testimonials-masonry {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr; /* Single column on mobile by default */
+}
+
+.testimonials-masonry > * {
+  width: 100%;
+}
+
+/* Tablet: 2 columns at 590px+ (matches original breakpoint) */
+@media (min-width: 590px) {
+  .testimonials-masonry {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: 3 columns at 900px+ (matches original breakpoint) */
+@media (min-width: 900px) {
+  .testimonials-masonry {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Legacy masonry styles - keeping for backwards compatibility */
 .masonry-grid {
   column-gap: 1rem;
   orphans: 1;
