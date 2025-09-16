@@ -382,6 +382,6 @@ Usually network related:
 You're ready to use Claude Code from anywhere! Try these next:
 
 1. [Quick Start Tutorial](/guides/quick-start) - First coding session
-2. [Voice Coding Setup](/features/voice-coding-with-claude-code) - Hands-free coding
+2. [Voice Coding Setup](/docs/features/voice-coding-with-claude-code) - Hands-free coding
 3. [Team Setup](/guides/team-setup) - Share with your team
 4. [Self-Hosting Guide](/guides/self-hosting) - Run your own relay
