@@ -82,7 +82,7 @@ export default async function RootLayout({
             <Navbar 
               logo={
                 <div className="flex items-center gap-2">
-                  <img src="/favicon.svg" alt="Happy" className="w-6 h-6" />
+                  <img src="/favicon.svg" alt="Happy Coder homepage" className="w-6 h-6" />
                   <b className={bricolageGrotesque.className}>Happy</b>
                 </div>
               }
