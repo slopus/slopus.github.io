@@ -39,6 +39,7 @@ export const SEARCH_CONFIG: IFuseOptions<DevResource> = {
 export interface SearchQuery {
   text: string
   kindFilter: ToolKind[]
+  categoryFilter: string[]
   limit?: number
 }
 
@@ -53,15 +54,15 @@ export interface SearchResult {
  * Build logical search expression combining text and facet filters
  * Uses Fuse.js Expression objects for precise field control:
  * - Text fields (name, description, content) get fuzzy search
- * - Type field gets exact matching with extended search operators
+ * - Type and category fields get exact matching with extended search operators
  * 
  * Examples:
- * - buildSearchExpression("auth", ["mcp"]) → 
- *   { $and: [{ $or: [{ name: "auth" }, { description: "auth" }, { content: "auth" }] }, { type: "=mcp" }] }
- * - buildSearchExpression("database", ["mcp", "agent"]) →
+ * - buildSearchExpression("auth", ["mcp"], ["api"]) → 
+ *   { $and: [{ $or: [{ name: "auth" }, ...] }, { type: "=mcp" }, { category: "=api" }] }
+ * - buildSearchExpression("database", ["mcp", "agent"], []) →
  *   { $and: [{ $or: [{ name: "database" }, ...] }, { type: "=mcp | =agent" }] }
  */
-export function buildSearchExpression(text: string, kindFilter: string[]): Expression | null {
+export function buildSearchExpression(text: string, kindFilter: string[], categoryFilter: string[]): Expression | null {
   text = text.trim()
   
   // Build text search part - search across content fields with fuzzy matching
@@ -89,17 +90,30 @@ export function buildSearchExpression(text: string, kindFilter: string[]): Expre
     }
   }
   
-  // Combine expressions
-  if (textExpression && typeExpression) {
-    return {
-      $and: [textExpression, typeExpression]
+  // Build category filter using exact matching with extended search operators
+  let categoryExpression: Expression | null = null
+  if (categoryFilter && categoryFilter.length > 0) {
+    if (categoryFilter.length === 1) {
+      categoryExpression = { category: `=${categoryFilter[0]}` }
+    } else {
+      // Multiple categories: =api | =web
+      const categoryQuery = categoryFilter.map(cat => `=${cat}`).join(' | ')
+      categoryExpression = { category: categoryQuery }
     }
-  } else if (typeExpression) {
-    return typeExpression
-  } else if (textExpression) {
-    return textExpression
-  } else {
+  }
+  
+  // Combine expressions
+  const expressions: Expression[] = []
+  if (textExpression) expressions.push(textExpression)
+  if (typeExpression) expressions.push(typeExpression)
+  if (categoryExpression) expressions.push(categoryExpression)
+  
+  if (expressions.length === 0) {
     return null
+  } else if (expressions.length === 1) {
+    return expressions[0]
+  } else {
+    return { $and: expressions }
   }
 }
 
@@ -112,10 +126,10 @@ export function performSearch(
   query: SearchQuery
 ): SearchResult[] {
   console.log("original limit", query.limit)
-  const { text, kindFilter, limit = allResources.length } = query
+  const { text, kindFilter, categoryFilter, limit = allResources.length } = query
 
   // Build logical search expression that combines text and facets
-  const searchExpression = buildSearchExpression(text, kindFilter)
+  const searchExpression = buildSearchExpression(text, kindFilter, categoryFilter)
   console.log("searchExpression", searchExpression)
   
   // If no query at all, return all resources
@@ -149,8 +163,8 @@ export function createFuseInstance(
 /**
  * Debug function to see the generated search expression
  */
-export function debugSearchExpression(text: string, kindFilter: string[]): Expression | null {
-  return buildSearchExpression(text, kindFilter)
+export function debugSearchExpression(text: string, kindFilter: string[], categoryFilter: string[]): Expression | null {
+  return buildSearchExpression(text, kindFilter, categoryFilter)
 }
 
 /**
@@ -188,4 +202,26 @@ export class FacetedSearchEngine {
   getTotalCount(): number {
     return this.resources.length
   }
+}
+
+/**
+ * Extract unique categories for a given kind from resources
+ */
+export function getAvailableCategories(
+  resources: DevResource[], 
+  kindFilter: ToolKind[]
+): string[] {
+  // If no kind filter specified, don't show categories
+  // Categories should be specific to selected kinds
+  if (kindFilter.length === 0) {
+    return []
+  }
+  
+  // Filter resources by kind and extract unique categories
+  const filteredResources = resources.filter(resource => 
+    kindFilter.includes(resource.type as ToolKind)
+  )
+  
+  const categories = new Set(filteredResources.map(r => r.category))
+  return Array.from(categories).sort()
 }

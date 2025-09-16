@@ -15,6 +15,7 @@ interface SearchResultsProps {
   error: string | null
   searchQuery: string
   kindFilter: ToolKind[]
+  categoryFilter: string[]
 }
 
 export function SearchResults({ 
@@ -23,6 +24,7 @@ export function SearchResults({
   error, 
   searchQuery, 
   kindFilter,
+  categoryFilter,
 }: SearchResultsProps) {
   const pageSize = useResponsivePageSize()
   const {
@@ -42,6 +44,7 @@ export function SearchResults({
     error, 
     searchQuery, 
     kindFilter,
+    categoryFilter,
     searchQueryTrimmed: searchQuery.trim(),
     currentPage,
     totalPages,
@@ -83,17 +86,28 @@ export function SearchResults({
 
   if (results.length === 0) {
     const hasKindFilter = kindFilter.length > 0
+    const hasCategoryFilter = categoryFilter.length > 0
     const kindText = hasKindFilter 
       ? kindFilter.length === 1 
         ? kindFilter[0] 
         : kindFilter.join(', ')
       : ''
+    const categoryText = hasCategoryFilter 
+      ? categoryFilter.length === 1 
+        ? categoryFilter[0] 
+        : categoryFilter.join(', ')
+      : ''
+    
+    const filterText = [
+      hasKindFilter ? `kinds: ${kindText}` : '',
+      hasCategoryFilter ? `categories: ${categoryText}` : ''
+    ].filter(Boolean).join(', ')
     
     return (
       <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-8 text-center">
         <h2 className="text-xl font-semibold mb-4">No results found</h2>
         <p className="text-gray-600 dark:text-gray-400 mb-4">
-          No resources found for "{searchQuery}"{hasKindFilter ? ` in ${kindText}` : ''}.
+          No resources found for "{searchQuery}"{filterText ? ` in ${filterText}` : ''}.
         </p>
         <p className="text-sm text-gray-500 dark:text-gray-500">
           Try adjusting your search terms or browse all resources.
@@ -103,11 +117,22 @@ export function SearchResults({
   }
 
   const hasKindFilter = kindFilter.length > 0
+  const hasCategoryFilter = categoryFilter.length > 0
   const kindText = hasKindFilter 
     ? kindFilter.length === 1 
       ? kindFilter[0] 
       : kindFilter.join(', ')
     : ''
+  const categoryText = hasCategoryFilter 
+    ? categoryFilter.length === 1 
+      ? categoryFilter[0] 
+      : categoryFilter.join(', ')
+    : ''
+
+  const filterText = [
+    hasKindFilter ? kindText : '',
+    hasCategoryFilter ? categoryText : ''
+  ].filter(Boolean).join(' > ')
 
   return (
     <div className="space-y-4">
@@ -117,12 +142,12 @@ export function SearchResults({
             // When there's a search query, show "X results for 'query'"
             <>
               {results.length} result{results.length !== 1 ? 's' : ''} for "{searchQuery}"
-              {hasKindFilter && ` in ${kindText}`}
+              {filterText && ` in ${filterText}`}
             </>
           ) : (
-            // When there's no search query but category filters, show "X CategoryName Resources"
+            // When there's no search query but filters, show "X FilterName Resources"
             <>
-              {results.length} {kindText} Resource{results.length !== 1 ? 's' : ''}
+              {results.length} {filterText || 'All'} Resource{results.length !== 1 ? 's' : ''}
             </>
           )}
         </h2>

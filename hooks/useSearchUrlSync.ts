@@ -30,6 +30,10 @@ export function searchQueryToUrl(query: SearchQuery, basePath = '/tools'): strin
     params.set('kind', query.kindFilter.join(','))
   }
   
+  if (query.categoryFilter.length > 0) {
+    params.set('category', query.categoryFilter.join(','))
+  }
+  
   if (query.text.trim()) {
     params.set('q', query.text.trim())
   }
@@ -59,9 +63,13 @@ export function urlToSearchQuery(url: string): SearchQuery {
     }
   }
   
+  // Parse category filter - no validation needed since categories are dynamic
+  const categoryFilter: string[] = params.get('category')?.split(',').filter(Boolean) || []
+  
   return {
     text: params.get('q') || '',
     kindFilter,
+    categoryFilter,
     limit: undefined
   }
 }
@@ -89,7 +97,7 @@ export function useSearchQuery(initialQuery: SearchQuery): [SearchQuery, (query:
     
     // Only become URL controlled if URL has meaningful search params
     // This preserves SEO-friendly URLs like /tools/agents
-    if (urlQuery.text || urlQuery.kindFilter.length > 0) {
+    if (urlQuery.text || urlQuery.kindFilter.length > 0 || urlQuery.categoryFilter.length > 0) {
       setQueryState(urlQuery)
       setIsUrlControlled(true)
     }

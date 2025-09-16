@@ -6,6 +6,7 @@ import {
   createFuseInstance,
   SearchResult,
   performSearch,
+  getAvailableCategories,
   type ToolKind,
 } from "@/utils/search-core";
 
@@ -101,16 +102,22 @@ export default async function ToolsPage({ params }: ToolsPageProps) {
   const searchResults = performSearch(data, fuse, {
     text: "",
     kindFilter,
+    categoryFilter: [],
     limit: 20,
   });
 
+  // Get available categories for the current kind filter
+  const availableCategories = getAvailableCategories(data, kindFilter);
+
   console.log("got these params", resolvedParams);
   console.log("loaded", data.length, "tools, showing", searchResults.length, "results");
+  console.log("available categories for", kindFilter, ":", availableCategories);
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <ToolsClient
         initialKindFilter={kindFilter}
+        availableCategories={availableCategories}
         searchResults={searchResults}
         totalCount={data.length}
       />
