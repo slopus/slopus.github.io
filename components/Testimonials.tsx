@@ -100,7 +100,7 @@ const TestimonialAuthor: React.FC<{ author: Testimonial['author']; sourceUrl: st
     </div>
     <div className="sj-spacer"></div>
     <div className="sj-integration-fixed-icon flex-none">
-      <a href={sourceUrl} target="_blank" rel="nofollow">
+      <a href={sourceUrl} target="_blank" rel="nofollow" aria-label="View on X (Twitter)">
         <img
           alt="twitter"
           width="20"
@@ -152,7 +152,7 @@ const TestimonialContent: React.FC<{ content: React.ReactNode; media?: Testimoni
 // Testimonial Footer Component
 const TestimonialFooter: React.FC<{ testimonial: Testimonial }> = ({ testimonial }) => (
   <div className="sj-card-details sj-sub mt-4 flex items-center gap-2 text-sm text-gray-500">
-    <a href={testimonial.sourceUrl} target="_blank" rel="nofollow" className="opacity-70 hover:opacity-100">
+    <a href={testimonial.sourceUrl} target="_blank" rel="nofollow" className="opacity-70 hover:opacity-100" aria-label="Like this post">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"

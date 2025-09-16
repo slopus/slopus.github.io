@@ -11,6 +11,7 @@ const AppStoreButton: React.FC<AppStoreButtonProps> = ({ href }) => (
     href={href} 
     target="_blank" 
     rel="noopener noreferrer"
+    aria-label="Download Happy Coder on the App Store"
   >
     <svg
       className="w-full h-full"

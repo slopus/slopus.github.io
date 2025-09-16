@@ -57,6 +57,7 @@ const Terminal: React.FC<TerminalProps> = ({ command, className = "", variant = 
     <div className={`relative rounded-lg transition-all duration-200 p-4 shadow-lg ${containerClasses} ${className}`}>
       <button 
         onClick={handleCopy}
+        aria-label={isCopied ? "Command copied to clipboard" : "Copy command to clipboard"}
         className={`float-right -mr-2 -mt-2 p-1.5 rounded-md transition-all duration-200 group ${copyButtonClasses} ${
           isClicked ? 'scale-95' : 'scale-100'
         }`}

@@ -33,6 +33,7 @@ const AdaptiveTerminal: React.FC<AdaptiveTerminalProps> = ({ command, className 
       ${className}`}>
       <button 
         onClick={handleCopy}
+        aria-label={isCopied ? "Command copied to clipboard" : "Copy command to clipboard"}
         className={`float-right -mr-2 -mt-2 p-1.5 rounded-md transition-all duration-200 group
           hover:bg-gray-200 dark:hover:bg-white/10 ${
           isClicked ? 'scale-95' : 'scale-100'

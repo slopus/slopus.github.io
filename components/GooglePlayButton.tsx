@@ -11,6 +11,7 @@ const GooglePlayButton: React.FC<GooglePlayButtonProps> = ({ href }) => (
     href={href} 
     target="_blank" 
     rel="noopener noreferrer"
+    aria-label="Download Happy Coder on Google Play"
   >
     <svg
       className="w-full h-full"
@@ -58,6 +59,7 @@ export function OtherGooglePlayButton({ href }: { href: string }) {
     href={href} 
     target="_blank" 
     rel="noopener noreferrer"
+    aria-label="Download Happy Coder on Google Play"
     >
     <img
       alt="Get it on Google Play"
