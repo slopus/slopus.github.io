@@ -70,7 +70,7 @@ const TestimonialContent: React.FC<{ content: React.ReactNode; media?: Testimoni
     {media && (
       <div className="sj-attachment-container overflow-hidden rounded-lg">
         {media.type === 'video' ? (
-          <video controls className="sj-media w-full h-auto">
+          <video controls className="sj-media w-full h-auto" preload="none">
             <source src={media.url} type="video/mp4" />
           </video>
         ) : (
