@@ -60,6 +60,9 @@ export const metadata: Metadata = {
   verification: {
     google: 'YBRFhTOzLKIGqYceYX-zfdC5esIATrKfbmPtkCuuHm0',
   },
+  other: {
+    "ahrefs-site-verification": "c10841acf679e12639e9de32d46e895d3ea99add070516933c6c377a715c6bc2",
+  }
 }
 
 import { Footer, Layout, Navbar } from 'nextra-theme-docs'
