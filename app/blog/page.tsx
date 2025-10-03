@@ -1,19 +1,19 @@
 import Link from 'next/link'
 import { PostCard } from 'nextra-theme-blog'
 import { getPosts, getTags } from './get-posts'
+import type { BlogMetadata, TagCount, PostCardData } from '../../types/blog'
 
-export const metadata = {
+export const metadata: BlogMetadata = {
   title: 'Blog'
 }
 
 export default async function BlogIndexPage() {
   const tags = await getTags()
   const posts = await getPosts()
-  const allTags = Object.create(null)
+  const allTags: TagCount = {}
 
   for (const tag of tags) {
-    allTags[tag] ??= 0
-    allTags[tag] += 1
+    allTags[tag] = (allTags[tag] ?? 0) + 1
   }
 
   return (
@@ -35,9 +35,24 @@ export default async function BlogIndexPage() {
           ))}
         </div>
       )}
-      {posts.map(post => (
-        <PostCard key={post.route} post={post} />
-      ))}
+      {posts.map(post => {
+        // Transform blog post data to match PostCard component expectations
+        // PostCard from nextra-theme-blog expects frontMatter to be BlogMetadata
+        // (only title and description), not our extended frontMatter with date, tags, etc.
+        const postCardData: PostCardData = {
+          ...post,
+          frontMatter: {
+            title: post.frontMatter.title || post.name,
+            description: post.frontMatter.description
+          }
+        }
+        return (
+          <PostCard 
+            key={post.route} 
+            post={postCardData} 
+          />
+        )
+      })}
     </div>
   )
 }
