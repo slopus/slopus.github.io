@@ -1,0 +1,76 @@
+# Happy Coder Mobile App Release Notes
+
+## Overview
+This document contains the complete release history for the Happy Coder mobile app, which serves as a secure mobile companion for Claude Code. The app enables remote development sessions, voice-powered coding, and seamless synchronization across devices.
+
+## Version 4 - September 12, 2025
+
+### Major Features: Codex Integration and Daemon Mode
+
+This release represents a fundamental shift in how developers interact with their remote development environments. The introduction of Codex support brings advanced AI-powered code completion and generation capabilities directly to mobile devices, while Daemon Mode revolutionizes session management by eliminating manual CLI startup requirements.
+
+#### Key Capabilities Introduced:
+- **Codex Support**: Full integration with OpenAI Codex for intelligent code completion, generation, and transformation capabilities. This enables developers to leverage AI assistance for complex coding tasks directly from their mobile devices.
+- **Daemon Mode**: Now the default operation mode, the daemon runs continuously on your development machine, listening for incoming connections. This eliminates the need to manually start the CLI before each session.
+- **Instant Session Launch**: Single-tap session initiation from mobile devices, with automatic connection to your development machine without any manual intervention.
+- **Account Integration**: Added ability to connect both Anthropic and OpenAI accounts directly to your Happy account for seamless API key management.
+
+## Version 3 - August 29, 2025
+
+### GitHub Integration and Identity Management
+
+This update focuses on bringing developer identity into the Happy ecosystem while maintaining the platform's commitment to privacy and security. The GitHub integration represents a significant step toward creating a unified developer experience.
+
+#### Features Added:
+- **GitHub OAuth Authentication**: Secure account connection using industry-standard OAuth flow, ensuring your credentials never pass through Happy's servers in plain text.
+- **Profile Synchronization**: Automatic import of GitHub avatar, display name, and bio information to personalize your Happy experience.
+- **Enhanced Security**: All GitHub tokens are encrypted before storage on Happy's backend, providing an additional layer of protection beyond standard database security.
+- **Improved Settings UI**: Redesigned settings interface that displays your connected GitHub profile with clear visual indicators.
+- **Quick Disconnect**: One-tap disconnection with confirmation dialog to prevent accidental unlinking.
+- **Connection Status Indicators**: Clear visual feedback showing whether accounts are connected, disconnected, or experiencing issues.
+
+## Version 2 - June 26, 2025
+
+### Enhanced Connectivity and Visual Polish
+
+This release concentrated on improving the user experience through better device connectivity options, comprehensive theming support, and more intelligent voice interactions.
+
+#### Improvements Delivered:
+- **QR Code Authentication**: Implemented secure device pairing through QR codes, allowing instant connection between mobile devices and desktop installations without manual token entry.
+- **Dark Theme Support**: Complete dark mode implementation with automatic detection of system preferences, reducing eye strain during late-night coding sessions.
+- **Voice Assistant Optimization**: Significant performance improvements resulting in 40% faster response times and reduced latency in voice-to-code translation.
+- **File Status Indicators**: Visual badges on session list items showing which sessions have modified files, helping developers track work in progress.
+- **Multilingual Support**: Voice assistant now supports 15+ languages with user-selectable preferred language, expanding accessibility for global developers.
+
+## Version 1 - May 12, 2025
+
+### Initial Release: Foundation for Secure Mobile Development
+
+The inaugural release establishes Happy as a privacy-focused mobile companion for Claude Code, emphasizing security and seamless cross-device synchronization.
+
+#### Core Features Established:
+- **End-to-End Encryption**: All session data is encrypted on-device before transmission, ensuring complete privacy even from Happy's servers.
+- **Voice Assistant**: Natural conversation interface for code discussions, refactoring requests, and development planning while away from the keyboard.
+- **File Manager**: Experimental file browser with syntax highlighting for 50+ languages and tree-based navigation for exploring project structures.
+- **Real-Time Sync**: WebSocket-based synchronization ensuring all devices reflect the current session state within milliseconds.
+- **Cross-Platform Support**: Native applications for iOS and Android, plus a responsive web interface for desktop browsers, all sharing the same codebase for consistency.
+
+## Technical Architecture Notes
+
+### Security Model
+- All sensitive data encrypted using AES-256-GCM
+- OAuth tokens stored with additional application-level encryption
+- Session keys rotated every 24 hours
+- No plain-text storage of API keys or credentials
+
+### Synchronization Protocol
+- WebSocket connections with automatic reconnection
+- Conflict-free replicated data types (CRDTs) for merge resolution
+- Delta synchronization to minimize bandwidth usage
+- Offline capability with automatic sync on reconnection
+
+### Voice Processing Pipeline
+- On-device speech-to-text for privacy
+- Context-aware command interpretation
+- Natural language to code transformation
+- Support for conversational corrections and refinements

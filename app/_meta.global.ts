@@ -24,9 +24,14 @@ const meta = {
             'use-cases': {
                 //collapsed: true,
                 //type: 'page',
-                
+
             },
         }
+    },
+    blog: {
+        type: 'page',
+        title: 'Blog',
+        href: '/blog/'
     },
     tools: {
         type: 'page',
