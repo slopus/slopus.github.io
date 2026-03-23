@@ -38,12 +38,19 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const params = await props.params;
   const kind = params.kind?.[0];
+  const canonicalPath = kind ? `/tools/${kind}/` : '/tools/';
 
   if (!kind) {
     return {
       title: "Claude Code Tools & Resources",
       description:
         "Discover tools, agents, MCP servers, and resources for Claude Code",
+      alternates: {
+        canonical: canonicalPath,
+      },
+      openGraph: {
+        url: canonicalPath,
+      },
     };
   }
 
@@ -61,6 +68,12 @@ export async function generateMetadata(props: {
   return {
     title: `${title} | Claude Code Tools`,
     description: `Browse ${title.toLowerCase()} for Claude Code`,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    openGraph: {
+      url: canonicalPath,
+    },
   };
 }
 

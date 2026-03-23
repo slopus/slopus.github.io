@@ -1,10 +1,20 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PostCard } from 'nextra-theme-blog'
 import { getPosts, getTags } from './get-posts'
-import type { BlogMetadata, TagCount, PostCardData } from '../../types/blog'
+import type { TagCount, PostCardData } from '../../types/blog'
 
-export const metadata: BlogMetadata = {
-  title: 'Blog'
+const BLOG_TITLE = 'Blog'
+
+export const metadata: Metadata = {
+  title: BLOG_TITLE,
+  description: 'Articles about Happy, Claude Code workflows, distribution, and practical engineering.',
+  alternates: {
+    canonical: '/blog/',
+  },
+  openGraph: {
+    url: '/blog/',
+  },
 }
 
 export default async function BlogIndexPage() {
@@ -18,7 +28,7 @@ export default async function BlogIndexPage() {
 
   return (
     <div data-pagefind-ignore="all">
-      <h1>{metadata.title}</h1>
+      <h1>{BLOG_TITLE}</h1>
       {Object.keys(allTags).length > 0 && (
         <div
           className="not-prose"

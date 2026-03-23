@@ -9,7 +9,21 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const params = await props.params
   const { metadata } = await importPage(params.mdxPath)
-  return metadata
+  const canonicalPath = params.mdxPath.length > 0
+    ? `/docs/${params.mdxPath.join('/')}/`
+    : '/docs/'
+
+  return {
+    ...metadata,
+    alternates: {
+      ...metadata?.alternates,
+      canonical: canonicalPath,
+    },
+    openGraph: {
+      ...metadata?.openGraph,
+      url: canonicalPath,
+    },
+  }
 }
 
 const Wrapper = getMDXComponents().wrapper

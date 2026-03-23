@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { Bricolage_Grotesque } from 'next/font/google'
 import Link from 'next/link'
 
@@ -5,6 +6,17 @@ const bricolageGrotesque = Bricolage_Grotesque({
   weight: ['400', '700'],
   subsets: ['latin'],
 })
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: 'Privacy policy for Happy.',
+  alternates: {
+    canonical: '/privacy/',
+  },
+  openGraph: {
+    url: '/privacy/',
+  },
+}
 
 export default function PrivacyPolicy() {
   return (
