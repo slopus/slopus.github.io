@@ -1,4 +1,3 @@
-import { Layout } from 'nextra-theme-blog'
 import 'nextra-theme-blog/style.css'
 
 export default function BlogLayout({
@@ -6,9 +5,5 @@ export default function BlogLayout({
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <Layout>
-      {children}
-    </Layout>
-  )
+  return children
 }
