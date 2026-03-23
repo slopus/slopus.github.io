@@ -5,12 +5,13 @@ import { Metadata } from 'next'
 export const generateStaticParams = generateStaticParamsFor('mdxPath')
 
 export async function generateMetadata(props: {
-  params: Promise<{ mdxPath: string[] }>
+  params: Promise<{ mdxPath?: string[] }>
 }): Promise<Metadata> {
   const params = await props.params
-  const { metadata } = await importPage(params.mdxPath)
-  const canonicalPath = params.mdxPath.length > 0
-    ? `/docs/${params.mdxPath.join('/')}/`
+  const mdxPath = params.mdxPath ?? []
+  const { metadata } = await importPage(mdxPath)
+  const canonicalPath = mdxPath.length > 0
+    ? `/docs/${mdxPath.join('/')}/`
     : '/docs/'
 
   return {
@@ -29,10 +30,11 @@ export async function generateMetadata(props: {
 const Wrapper = getMDXComponents().wrapper
 
 export default async function Page(props: {
-  params: Promise<{ mdxPath: string[] }>
+  params: Promise<{ mdxPath?: string[] }>
 }) {
   const params = await props.params
-  const result = await importPage(params.mdxPath)
+  const mdxPath = params.mdxPath ?? []
+  const result = await importPage(mdxPath)
   const { default: MDXContent, toc, metadata } = result
   return (
     <Wrapper toc={toc} metadata={metadata}>
