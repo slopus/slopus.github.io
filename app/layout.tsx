@@ -58,7 +58,7 @@ export const metadata: Metadata = {
   },
   manifest: '/site.webmanifest',
   verification: {
-    google: 'YBRFhTOzLKIGqYceYX-zfdC5esIATrKfbmPtkCuuHm0',
+    google: '9Au-WkYSdiWxHBA55Ens-wdTm3oWNm7T0baPLFbpZQE',
   },
   other: {
     "ahrefs-site-verification": "c10841acf679e12639e9de32d46e895d3ea99add070516933c6c377a715c6bc2",
