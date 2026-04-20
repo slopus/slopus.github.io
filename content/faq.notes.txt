@@ -19,7 +19,7 @@ These are the questions from SEO research that people commonly search for:
 ### Does Claude Code have an app?
 Yes! Claude Code has a mobile companion app called "Happy Coder" that allows developers to control Claude Code remotely from their mobile devices. The setup involves:
 1. Installing the Happy Coder mobile app from App Store/Google Play
-2. Installing the `happy-coder` NPM package on your computer
+2. Installing the `happy` NPM package on your computer
 3. Running `happy` command on your computer to start the relay
 4. Scanning a QR code to connect your phone to your computer's Claude Code session
 
@@ -50,7 +50,7 @@ Claude Code: Yes, the Happy Coder app is available on the App Store for iPhone a
 ### How do I install the Claude app?
 For Happy Coder (mobile Claude Code client):
 1. Download Happy Coder app from App Store (iOS) or Google Play (Android)
-2. Install happy-coder package on computer: `npm install -g happy-coder`
+2. Install happy package on computer: `npm install -g happy`
 3. Run `happy` command on computer
 4. Scan QR code with mobile app to establish encrypted connection
 

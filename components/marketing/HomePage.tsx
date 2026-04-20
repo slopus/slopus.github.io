@@ -85,7 +85,7 @@ function DesktopHeroSection() {
               <div className="flex items-start mb-4">
                 <span>Multiple active sessions across multiple machines</span>
               </div>
-                <AdaptiveTerminal command="npm i -g happy-coder && happy"  />
+                <AdaptiveTerminal command="npm i -g happy && happy"  />
             </div>
             
             <div className="grid grid-cols-2 gap-4 sm:flex sm:gap-4 sm:flex-wrap">
@@ -122,7 +122,7 @@ export default function HomePage() {
       
       <section className="max-w-[72ch] mx-auto px-2.5 md:px-0">
             <div className="mb-6">
-              <AdaptiveTerminal command="npm i -g happy-coder && happy"  />
+              <AdaptiveTerminal command="npm i -g happy && happy"  />
             </div>
             
             <div className="grid grid-cols-2 gap-4 sm:flex sm:gap-4 sm:flex-wrap">

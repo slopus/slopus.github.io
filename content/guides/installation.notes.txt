@@ -7,10 +7,10 @@ Get Happy Coder running in 2 minutes. Control Claude Code from your phone.
 ### 1. Install on Your Computer
 
 ```bash
-npm install -g happy-coder
+npm install -g happy
 ```
 
-happy-coder requires Node.js 18 or later (released  April 19, 2022)
+happy requires Node.js 18 or later (released  April 19, 2022)
 Happy uses these features:
 - Top-level await (Node.js 14.8+)
 - Better ES module support (Node.js 16+)
@@ -42,7 +42,7 @@ Scan the QR code with your phone. You're connected!
 
 **Install Happy CLI:**
 ```bash
-npm install -g happy-coder
+npm install -g happy
 ```
 
 **First Run:**
@@ -56,7 +56,7 @@ happy --dir ~/projects/my-app
 ```
 
 **Troubleshooting macOS:**
-- **Permission denied**: Use `sudo npm install -g happy-coder`
+- **Permission denied**: Use `sudo npm install -g happy`
 - **Command not found**: Add npm global bin to PATH: `export PATH=$PATH:$(npm bin -g)`
 - **Port already in use**: Happy uses port 8765 by default. Kill existing process: `lsof -ti:8765 | xargs kill`
 
@@ -70,7 +70,7 @@ happy --dir ~/projects/my-app
 **Install Happy CLI:**
 ```powershell
 # Open PowerShell as Administrator
-npm install -g happy-coder
+npm install -g happy
 ```
 
 **First Run:**
@@ -111,7 +111,7 @@ sudo pacman -S nodejs npm
 
 **Install Happy CLI:**
 ```bash
-npm install -g happy-coder
+npm install -g happy
 ```
 
 **First Run:**
@@ -177,7 +177,7 @@ happy
 
 ```bash
 # Install specific version
-npm install -g happy-coder@1.2.3
+npm install -g happy@1.2.3
 
 # Install from GitHub
 npm install -g github:slopus/happy-cli
@@ -294,10 +294,10 @@ happy -- --model opus-4.1 --max-tokens 8000
 happy --version
 
 # Update to latest
-npm update -g happy-coder
+npm update -g happy
 
 # Force reinstall
-npm install -g happy-coder --force
+npm install -g happy --force
 ```
 
 ### Update Mobile App
@@ -312,7 +312,7 @@ Apps auto-update by default. To manually update:
 
 ```bash
 # Uninstall global package
-npm uninstall -g happy-coder
+npm uninstall -g happy
 
 # Remove config files
 rm -rf ~/.config/happy
