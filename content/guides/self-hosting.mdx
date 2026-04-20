@@ -2,241 +2,232 @@ import { Steps } from 'nextra/components'
 
 # Self-Host Your Own Happy Server
 
-Run your own relay server in minutes. Keep complete control over your Claude Code mobile setup.
+Run your own relay server in about 3 minutes. Keep complete control over your Claude Code mobile setup.
 
-## Why Run Your Own Server?
+## Why Self-Host?
 
-When you self-host the Happy Server, you get:
-- **Total privacy** - Your encrypted data stays on your hardware
-- **No limits** - Set your own rate limits and storage
-- **Team control** - Run one server for your whole team
-- **Zero dependencies** - Never worry about a service shutting down
+### Complete Control
 
-The entire server is only 1,293 lines of typescript. You can read it yourself to
-verify it just forwards encrypted messages.
+- Your server, your rules
+- No dependency on other companies' infrastructure
+- Customize rate limits and storage as needed
 
-## Quick Start
+### Better Privacy
 
-<Steps>
-### Clone and Build
+- Keep all encrypted data on your own hardware
+- Full record of all connections
+- No third-party company has any record of your usage
+
+### Team Deployments
+
+- Run one server for your entire development team
+- Keep all team communications within your network
+- Connect with your existing infrastructure
+
+## What You Need
+
+**Before you start, make sure you have:**
+
+- Docker installed on your server
+- A server with a public IP address (or accessible within your network)
+- About 1GB of disk space for the server and logs
+- Network access from both your computer and mobile device
+- **A publicly accessible domain name (strongly recommended)** - This is critical for mobile app WebSocket connections to work properly
+
+## Step 1: Clone the Repository
 
 ```bash
-# Get the code
 git clone https://github.com/slopus/happy-server
 cd happy-server
+```
 
-# Build with Docker
+The entire server is only about 900 lines of code. You can read through it in a few minutes to verify it just forwards encrypted messages.
+
+## Step 2: Build the Docker Image
+
+```bash
 docker build -t happy-server:latest .
 ```
 
-### Run the Server
+This creates a Docker image with the Happy Server. The build takes about 30 seconds.
+
+## Step 3: Push to Your Container Registry (Optional)
+
+If you're deploying to a cloud provider or using Kubernetes:
 
 ```bash
-docker run -d \
-  --name happy-server \
-  -p 3000:3000 \
-  -e NODE_ENV=production \
-  -e DATABASE_URL="postgresql://postgres:postgres@localhost:5432/happy-server" \
-  -e REDIS_URL="redis://localhost:6379" \
-  -e SEED="your-seed-for-token-generation" \
-  -e PORT=3005 \
-  --restart unless-stopped \
-  happy-server:latest
+# Tag for your registry
+docker tag happy-server:latest your-registry.com/happy-server:latest
+
+# Push to registry
+docker push your-registry.com/happy-server:latest
 ```
 
-**Important**: Replace the environment variable values with your actual configuration:
-- `DATABASE_URL`: Your PostgreSQL connection string
-- `REDIS_URL`: Your Redis connection string  
-- `SEED`: A secure random seed for token generation
-- `PORT`: The port the application listens on (3005)
+## Step 4: Run the Server
 
-### Configure Your Devices
+### Docker Compose Setup
 
-**On your phone:**
-1. Open Happy app
-2. Go to Settings
-3. Set "Relay Server URL" to `http://your-server:3000`
-4. Save
+Happy Server needs several services to work properly. Here's a complete setup with everything you need:
 
-**On your computer:**
-```bash
-export HAPPY_SERVER_URL="http://your-server:3000"
-# Configure your CLI to use your server
-```
+**Important**: The `HAPPY_SERVER_URL` environment variable MUST be a publicly accessible URL that both your CLI and mobile client can reach. This is critical for WebSocket and real-time communication to work.
 
-</Steps>
-
-That's it! Your Happy setup now runs through your own server.
-
-## Production Setup with HTTPS
-
-For real use, you want HTTPS. Here's the easiest way with Caddy:
-
-```bash
-# Install Caddy (auto-manages SSL certificates)
-sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
-curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
-sudo apt update
-sudo apt install caddy
-
-# Configure reverse proxy
-sudo tee /etc/caddy/Caddyfile <<EOF
-your-domain.com {
-    reverse_proxy localhost:3000
-}
-EOF
-
-# Start Caddy
-sudo systemctl restart caddy
-```
-
-Now use `https://your-domain.com` in your Happy Coder settings.
-
-## Docker Compose Setup
-
-For easier management, use Docker Compose:
+Create `docker-compose.yml`:
 
 ```yaml
-# docker-compose.yml
 version: '3.8'
+
 services:
   happy-server:
     image: happy-server:latest
-    ports:
-      - "3000:3000"
+    build:
+      context: ./happy-server
+      dockerfile: Dockerfile
     restart: unless-stopped
+    ports:
+      - "3005:3005"
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/happy-server
-      - REDIS_URL=redis://localhost:6379
-      - SEED=your-seed-for-token-generation
       - PORT=3005
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=redis://redis:6379
+      - HANDY_MASTER_SECRET=${HANDY_MASTER_SECRET}
+      - HAPPY_SERVER_URL=${HAPPY_SERVER_URL}
+      - S3_HOST=happy-minio
+      - S3_PORT=9000
+      - S3_USE_SSL=false
+      - S3_ACCESS_KEY=${MINIO_ROOT_USER}
+      - S3_SECRET_KEY=${MINIO_ROOT_PASSWORD}
+      - S3_BUCKET=${S3_BUCKET}
+      - S3_PUBLIC_URL=${S3_PUBLIC_URL}
     depends_on:
       - postgres
       - redis
+      - happy-minio
+      - migrate
+      - minio-setup
+
+  # Database migration service - runs once on startup
+  migrate:
+    image: happy-server:latest
+    command: npx prisma db push --schema=/app/node_modules/.prisma/client/schema.prisma
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      - postgres
+    restart: "no"
 
   postgres:
-    image: postgres:15
+    image: postgres:15.4
     environment:
-      - POSTGRES_DB=happy-server
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
 
+  happy-minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address :9001
+
+  # Initialize MinIO bucket - runs once on startup
+  minio-setup:
+    image: minio/mc:latest
+    depends_on:
+      - happy-minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      /usr/bin/mc alias set local http://happy-minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
+      /usr/bin/mc mb local/${S3_BUCKET} --ignore-existing;
+      /usr/bin/mc anonymous set download local/${S3_BUCKET};
+      exit 0;
+      "
+    restart: "no"
+
 volumes:
   postgres_data:
   redis_data:
+  minio_data:
 ```
 
-Run with: `docker-compose up -d`
+Create `.env` file with your configuration:
 
-This setup includes PostgreSQL and Redis containers that the Happy Server depends on.
-
-## Where to Host
-
-### Option 1: Home Server (Free)
-Run on any computer at home:
-- Raspberry Pi ($35 one-time)
-- Old laptop
-- Mac Mini
-- Desktop that's always on
-
-### Option 2: Cloud VPS ($5-10/month)
-- **DigitalOcean**: $6/month droplet works great
-- **Linode**: $5/month shared CPU
-- **Vultr**: $6/month regular performance
-- **Hetzner**: €4/month (best value in Europe)
-
-### Option 3: Corporate Network
-Run inside your company network for team use. The server works behind firewalls and proxies.
-
-## System Requirements
-
-Happy Server is lightweight:
-
-**For 1-10 developers:**
-- 512MB RAM
-- 1 CPU core
-- 10GB storage
-- 100Mbps network
-
-**For 10-100 developers:**
-- 2GB RAM
-- 2 CPU cores
-- 100GB storage
-- 1Gbps network
-
-## Monitor Your Server
-
-Check server health:
 ```bash
+# Database connection
+DATABASE_URL=postgresql://postgres:yourpassword@postgres:5432/happy
+POSTGRES_DB=happy
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=yourpassword
+
+# Server authentication
+HANDY_MASTER_SECRET=your-secret-here
+
+# IMPORTANT: This MUST be a publicly accessible URL
+# Use your domain name with HTTPS, or your public IP with port
+HAPPY_SERVER_URL=https://your-domain.com
+# For local testing without SSL:
+# HAPPY_SERVER_URL=http://your-public-ip:3005
+
+# S3/MinIO storage
+S3_BUCKET=happy
+S3_PUBLIC_URL=https://your-domain.com
+
+# MinIO credentials
+# SECURITY: Generate strong random credentials, don't use "minioadmin"
+MINIO_ROOT_USER=your-minio-user
+MINIO_ROOT_PASSWORD=your-minio-password
+```
+
+**Generate secure credentials:**
+
+```bash
+# Generate secure random credentials
+openssl rand -base64 16  # for MINIO_ROOT_USER
+openssl rand -base64 32  # for MINIO_ROOT_PASSWORD
+openssl rand -base64 32  # for HANDY_MASTER_SECRET
+```
+
+**Deploy the services:**
+
+```bash
+# Start all services (database, redis, minio, and happy-server)
+docker-compose up -d
+
+# Check all services are running
+docker-compose ps
+
 # View logs
-docker logs -f happy-server
-
-# Check health endpoint
-curl http://your-server:3000/health
-
-# See connection count  
-curl http://your-server:3000/stats
+docker-compose logs -f happy-server
 ```
 
-## Backup Your Data
+The services start in this order:
+1. PostgreSQL, Redis, and MinIO (data storage)
+2. migrate (sets up database schema)
+3. minio-setup (creates S3 bucket)
+4. happy-server (starts after all dependencies ready)
 
-The server stores encrypted blobs in `/data`. To backup:
-
-```bash
-# Simple backup
-tar -czf backup-$(date +%Y%m%d).tar.gz ./data
-
-# Or sync to another location
-rsync -av ./data/ backup-location/
-```
-
-Remember: These backups are encrypted. No one can read them without your device keys.
-
-
-## Security Notes
-
-The Happy Server design keeps your data safe:
-
-1. **Server can't read your data** - Everything is encrypted before sending
-2. **No account needed** - Authentication uses cryptographic proofs
-3. **No logs of your code** - Server only logs connection metadata
-4. **Open source** - Audit the code yourself
-
-For extra security:
-- Use HTTPS in production
-- Run behind a VPN for team deployments
-- Set up fail2ban for brute force protection
-
-## Cost Comparison
-
-**Self-hosted Happy Server:**
-- Home: Free (use existing hardware)
-- VPS: $5-10/month for unlimited use
-
-**Commercial alternatives:**
-- Omnara: $9/month per user
-- Cursor Mobile: Runs on their VMs
-- Terragon/Siteboon: Usage-based pricing
-- Conductor: $29/month after free tier
-
-Self-hosting saves money and gives you control.
-
-## Advanced: Kubernetes Deployment
-
-For teams using Kubernetes, here's the production configuration:
+### Kubernetes Deployment
 
 ```yaml
 apiVersion: apps/v1
@@ -244,11 +235,6 @@ kind: Deployment
 metadata:
   name: happy-server
 spec:
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
   replicas: 1
   selector:
     matchLabels:
@@ -260,23 +246,16 @@ spec:
     spec:
       containers:
       - name: happy-server
-        image: happy-server:latest  # Use your actual image registry
+        image: your-registry.com/happy-server:latest
         ports:
-        - containerPort: 3005
-        envFrom:
-        - secretRef:
-            name: happy-secrets
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: happy-server-pdb
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: happy-server
-
+        - containerPort: 8080
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: happy-server-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -286,51 +265,295 @@ spec:
   selector:
     app: happy-server
   ports:
-  - port: 3005
-    targetPort: 3005
-  type: ClusterIP
+  - port: 80
+    targetPort: 8080
+  type: LoadBalancer
 ```
 
-**Configuration Notes**:
-- All ports now consistently use 3005 (the application's actual listening port)
-- Uses the `happy-secrets` secret created in the previous section
-- Update the image name to match your actual container registry
+## Step 5: Set Up SSL/TLS (Recommended)
 
-## Kubernetes Secrets
+For production use, you should use HTTPS with Caddy as a reverse proxy. Caddy automatically handles SSL certificates from Let's Encrypt.
 
-Create a secret file for your environment variables:
-
-```yaml
-# happy-secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: happy-secrets
-type: Opaque
-stringData:
-  DATABASE_URL: "postgresql://postgres:postgres@postgres-service:5432/happy-server"
-  REDIS_URL: "redis://redis-service:6379"
-  SEED: "your-secure-seed-for-token-generation"
-  PORT: "3005"
-  NODE_ENV: "production"
-```
-
-Apply the secret:
 ```bash
-kubectl apply -f happy-secrets.yaml
+# Install Caddy
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo tee /etc/apt/trusted.gpg.d/caddy-stable.asc
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+sudo apt update
+sudo apt install caddy
+
+# Configure Caddy to proxy to Happy Server
+sudo tee /etc/caddy/Caddyfile <<EOF
+your-domain.com {
+    reverse_proxy localhost:3005
+}
+
+# Optional: Also proxy MinIO if you need public access
+minio.your-domain.com {
+    reverse_proxy localhost:9000
+}
+EOF
+
+# Restart Caddy
+sudo systemctl restart caddy
 ```
 
-**Security Note**: Replace the values with your actual configuration. For production:
-- Use a strong, random SEED value
-- Use proper database credentials
-- Consider using external secret management tools like external-secrets-operator with Vault
+**Important**: Make sure your `HAPPY_SERVER_URL` environment variable matches your domain name:
+```bash
+HAPPY_SERVER_URL=https://your-domain.com
+```
 
-## Next Steps
+## Step 6: Configure Happy Mobile App
 
-After setting up your server:
+<Steps>
 
-1. [Configure team access](/guides/team-setup)
-2. [Set up monitoring](/guides/monitoring)
-3. [Enable voice coding](/docs/features/voice-coding-with-claude-code)
+### Open Settings
 
-Running your own Happy Server takes 3 minutes and gives you permanent control over your Claude Code mobile access. No subscriptions, no lock-in, no surprises.
+1. Open the Happy app on your phone
+2. Go to Settings
+3. Find "Relay Server URL"
+
+### Enter Your Server URL
+
+Enter your server URL:
+- With SSL: `https://your-domain.com`
+- Without SSL: `http://your-server-ip:3005`
+
+### Save Settings
+
+Tap Save to apply the settings.
+
+</Steps>
+
+**Critical**: The URL you enter here must exactly match `HAPPY_SERVER_URL` in your server's environment. This is essential for WebSocket connections to work properly.
+
+## Step 7: Configure Happy CLI
+
+On your computer, configure the CLI to use your server:
+
+```bash
+# Set the server URL in your environment
+export HAPPY_SERVER_URL="https://your-domain.com"
+
+# Or add to your shell profile (.bashrc, .zshrc, etc.)
+echo 'export HAPPY_SERVER_URL="https://your-domain.com"' >> ~/.bashrc
+
+# Alternatively, use a config file
+happy config set server-url https://your-domain.com
+```
+
+## Step 8: Test the Connection
+
+1. Run `happy` on your computer
+2. Scan the QR code with your mobile app
+3. Verify the connection works
+
+You should see "Connected to relay server" in both the CLI and mobile app.
+
+## Monitor Your Server
+
+### View Server Logs
+
+```bash
+docker logs -f happy-server
+```
+
+### Check Server Health
+
+The server has a health endpoint:
+
+```bash
+curl http://your-server:3005/health
+```
+
+### Backup Encrypted Data
+
+The server stores encrypted data in the `/data` directory. To backup:
+
+```bash
+# Create backup
+tar -czf happy-backup-$(date +%Y%m%d).tar.gz ./data
+
+# Or use rsync for incremental backups
+rsync -av ./data/ backup-server:/backups/happy-server/
+```
+
+Remember: These backups are encrypted. Even if someone gets your backup files, they can't read your code without the encryption keys from your devices.
+
+## Performance Tuning
+
+### For Small Teams (1-10 developers)
+
+The default configuration works fine:
+- 1 CPU core
+- 512MB RAM
+- 10GB disk space
+
+### For Larger Teams (10-100 developers)
+
+Increase resources:
+- 2-4 CPU cores
+- 2GB RAM
+- 100GB disk space
+- Consider running multiple instances behind a load balancer
+
+### Rate Limiting
+
+The default rate limit is 1,000 messages per second, which is more than enough for most teams. To adjust:
+
+```bash
+docker run -d \
+  -e RATE_LIMIT=5000 \
+  # ... other options
+  happy-server:latest
+```
+
+## Troubleshooting
+
+### Connection Refused
+
+Check that:
+1. The server is running: `docker ps`
+2. The port is open: `netstat -tlnp | grep 3005`
+3. Firewall allows connections: `sudo ufw allow 3005`
+
+### Mobile Shows "Connected" but CLI Waits Forever
+
+This is a common issue. The problem is almost always related to WebSocket and real-time communication.
+
+**Solutions:**
+
+1. **Check `HAPPY_SERVER_URL`** - This MUST be a publicly accessible URL that both devices can reach:
+   ```bash
+   # In your .env file or docker-compose.yml
+   HAPPY_SERVER_URL=https://your-public-domain.com
+   # NOT: http://localhost:3005
+   ```
+
+2. **Verify SSL/TLS setup** - Mobile devices often reject self-signed certificates. Use Caddy or Let's Encrypt for proper SSL.
+
+3. **Check firewall rules** - Ensure both port 3005 and WebSocket connections are allowed:
+   ```bash
+   sudo ufw allow 3005
+   sudo ufw allow 3005/tcp
+   ```
+
+4. **Test WebSocket connection** - Use a WebSocket testing tool or browser console:
+   ```javascript
+   const ws = new WebSocket('wss://your-domain.com');
+   ws.onopen = () => console.log('WebSocket connected');
+   ws.onerror = (error) => console.log('WebSocket error:', error);
+   ```
+
+5. **Check server logs** - Look for WebSocket-related errors:
+   ```bash
+   docker-compose logs -f happy-server
+   ```
+
+### Certificate Issues
+
+If using self-signed certificates:
+1. Export your certificate
+2. Install it on your mobile device
+3. Trust the certificate in your device settings
+
+### High Memory Usage
+
+Encrypted data is stored indefinitely by default. To clean old data:
+
+```bash
+# Remove data older than 30 days
+find ./data -type f -mtime +30 -delete
+```
+
+Or configure automatic cleanup in the server environment:
+
+```bash
+docker run -d \
+  -e BLOB_RETENTION_DAYS=30 \
+  # ... other options
+  happy-server:latest
+```
+
+## Security Considerations
+
+### Network Security
+
+1. **Use HTTPS in production** - Prevents man-in-the-middle attacks
+2. **Firewall rules** - Only allow connections from your network if possible
+3. **VPN access** - Consider requiring VPN for team deployments
+
+### Server Security
+
+1. **Regular updates** - Keep Docker and your OS updated
+2. **Limited access** - Don't run the server as root
+3. **Monitoring** - Set up alerts for unusual activity
+
+### Data Security
+
+Remember that the server never sees unencrypted data:
+- All data is encrypted on your devices before sending
+- The server only stores and forwards encrypted data
+- Only devices with the shared secret can decrypt messages
+
+## Advanced Configurations
+
+### Running Behind Corporate Proxy
+
+If your company uses a proxy:
+
+```bash
+docker run -d \
+  -e HTTP_PROXY=http://proxy.company.com:8080 \
+  -e HTTPS_PROXY=http://proxy.company.com:8080 \
+  # ... other options
+  happy-server:latest
+```
+
+### High Availability Setup
+
+For mission-critical deployments, run multiple servers:
+
+1. Deploy 3+ instances
+2. Use a load balancer (HAProxy, nginx, or cloud LB)
+3. Share storage between instances (NFS, S3, etc.)
+4. Configure health checks
+
+### Integration with Existing Infrastructure
+
+The Happy Server can integrate with:
+- **Prometheus** - Metrics endpoint at `/metrics`
+- **Grafana** - Pre-built dashboards available
+- **ELK Stack** - JSON structured logs
+- **Kubernetes** - Helm chart available
+
+## Cost Comparison
+
+### Self-Hosted
+- **Small VPS**: $5-10/month (DigitalOcean, Linode)
+- **Home server**: Free (Raspberry Pi, old laptop)
+- **Cloud (AWS/GCP)**: $20-50/month depending on usage
+
+### Managed Alternatives
+- **Omnara**: $9/month per user + Claude Code costs
+- **Terragon**: Free tier limited, then usage-based
+- **Siteboon**: Usage-based pricing
+- **Conductor**: Free tier, then $29/month
+
+Self-hosting Happy Server gives you unlimited usage for just the cost of a small server.
+
+## Summary
+
+Setting up your own Happy Server takes about 3 minutes and gives you:
+- Complete control over your infrastructure
+- Enhanced privacy with no third-party involvement
+- Unlimited usage for your entire team
+- No vendor lock-in or surprise pricing changes
+
+The server is simple, auditable, and designed to do one thing well: relay encrypted messages between your devices.
+
+## Credits
+
+This guide incorporates improvements from the community, especially:
+- **@geekdada** - Provided the complete Docker Compose configuration with automated database migrations and MinIO setup
+
+The Docker Compose setup in this guide directly addresses the WebSocket connection issues by ensuring all services are properly configured and the `HAPPY_SERVER_URL` is set to a publicly accessible URL.
