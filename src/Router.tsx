@@ -1,9 +1,64 @@
 import { useEffect, useState } from 'react'
 import App from './App'
 import { DocsPage, LegalPage, NotFoundPage } from './DocumentPages'
+import { getDocument, normalizeDocumentPath } from './documents'
+import {
+  applyPageMetadata,
+  docsMetadata,
+  homepageMetadata,
+  type PageMetadata,
+} from './siteMetadata'
 
 function normalizedPathname(pathname: string) {
   return pathname.replace(/\/+$/, '') || '/'
+}
+
+function metadataForPath(pathname: string): PageMetadata {
+  const normalizedPath = normalizedPathname(pathname)
+
+  if (normalizedPath === '/') {
+    return homepageMetadata
+  }
+
+  if (normalizedPath === '/docs' || normalizedPath.startsWith('/docs/')) {
+    const documentPath = normalizeDocumentPath(normalizedPath.slice('/docs'.length))
+    const document = getDocument(documentPath)
+
+    if (document?.path === '') {
+      return docsMetadata
+    }
+
+    if (document) {
+      return {
+        title: `${document.title} — Happy Docs`,
+        description: document.description,
+        canonicalPath: `/docs/${document.path}/`,
+      }
+    }
+  }
+
+  if (normalizedPath === '/privacy') {
+    return {
+      title: 'Privacy Policy — Happy',
+      description: 'Privacy policy for Happy.',
+      canonicalPath: '/privacy/',
+    }
+  }
+
+  if (normalizedPath === '/terms' || normalizedPath === '/tos') {
+    return {
+      title: 'Terms of Use — Happy',
+      description: 'Terms of use for Happy.',
+      canonicalPath: '/terms/',
+    }
+  }
+
+  return {
+    title: 'Page not found — Happy',
+    description: 'The requested Happy page could not be found.',
+    canonicalPath: pathname,
+    robots: 'noindex, follow',
+  }
 }
 
 export function Router({ pathname }: { pathname?: string }) {
@@ -28,6 +83,7 @@ export function Router({ pathname }: { pathname?: string }) {
       window.history[replace ? 'replaceState' : 'pushState']({}, '', nextLocation)
 
       if (nextPath !== currentPath) {
+        applyPageMetadata(metadataForPath(url.pathname))
         setCurrentPathname(url.pathname)
         window.scrollTo({ top: 0 })
       } else if (url.hash) {
@@ -60,6 +116,7 @@ export function Router({ pathname }: { pathname?: string }) {
     }
 
     function handlePopState() {
+      applyPageMetadata(metadataForPath(window.location.pathname))
       setCurrentPathname(window.location.pathname)
     }
 

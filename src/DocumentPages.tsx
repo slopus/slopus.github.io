@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { MarkdownDocument } from './MarkdownDocument'
 import {
   documentGroups,
@@ -11,14 +10,6 @@ import {
   type DocumentEntry,
 } from './documents'
 import { SiteFooter, SiteHeader } from './SiteChrome'
-
-function useDocumentMetadata(title: string, description: string) {
-  useEffect(() => {
-    document.title = `${title} — Happy`
-    const descriptionElement = document.querySelector<HTMLMetaElement>('meta[name="description"]')
-    descriptionElement?.setAttribute('content', description)
-  }, [description, title])
-}
 
 function DocsNavigation({ activeDocument }: { activeDocument: DocumentEntry }) {
   return (
@@ -51,11 +42,6 @@ function DocsNavigation({ activeDocument }: { activeDocument: DocumentEntry }) {
 export function DocsPage({ path }: { path: string }) {
   const normalizedPath = normalizeDocumentPath(path)
   const activeDocument = getDocument(normalizedPath)
-
-  useDocumentMetadata(
-    activeDocument?.title ?? 'Page not found',
-    activeDocument?.description ?? 'The requested Happy documentation page could not be found.',
-  )
 
   if (!activeDocument) {
     return <NotFoundPage />
@@ -109,22 +95,8 @@ export function DocsPage({ path }: { path: string }) {
   )
 }
 
-const legalDocuments = {
-  privacy: {
-    title: 'Privacy Policy',
-    description: 'Privacy policy for Happy.',
-  },
-  terms: {
-    title: 'Terms of Use',
-    description: 'Terms of use for Happy.',
-  },
-} as const
-
-export function LegalPage({ name }: { name: keyof typeof legalDocuments }) {
-  const legalDocument = legalDocuments[name]
+export function LegalPage({ name }: { name: 'privacy' | 'terms' }) {
   const markdown = prepareMarkdown(getLegalSource(name))
-
-  useDocumentMetadata(legalDocument.title, legalDocument.description)
 
   return (
     <div className="site-shell document-site-shell">
@@ -143,8 +115,6 @@ export function LegalPage({ name }: { name: keyof typeof legalDocuments }) {
 }
 
 export function NotFoundPage() {
-  useDocumentMetadata('Page not found', 'The requested Happy page could not be found.')
-
   return (
     <div className="site-shell document-site-shell">
       <SiteHeader />
