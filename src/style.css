@@ -4,6 +4,8 @@
   color: #183f38;
   background: #f5f0e7;
   font-family: 'DM Sans', Arial, sans-serif;
+  scrollbar-color: #929292 transparent;
+  scrollbar-width: thin;
   font-synthesis: none;
   font-optical-sizing: auto;
   text-rendering: optimizeLegibility;
@@ -14,6 +16,13 @@
   --section-y: 7rem;   /* 112px — standard section padding */
   --section-gap: 6rem; /* 96px — gap between same-background sections */
 }
+
+/* Use a quiet, trackless native scrollbar. */
+::-webkit-scrollbar { height: 12px; width: 12px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #929292; background-clip: padding-box; border: 3px solid transparent; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background-color: #707070; }
+::-webkit-scrollbar-corner { background: transparent; }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
