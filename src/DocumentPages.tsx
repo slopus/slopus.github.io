@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { MarkdownDocument } from './MarkdownDocument'
 import {
   documentGroups,
@@ -40,6 +41,8 @@ function DocsNavigation({ activeDocument }: { activeDocument: DocumentEntry }) {
 }
 
 export function DocsPage({ path }: { path: string }) {
+  const [isSidebarScrollbarVisible, setIsSidebarScrollbarVisible] = useState(false)
+  const sidebarScrollbarTimer = useRef<number | null>(null)
   const normalizedPath = normalizeDocumentPath(path)
   const activeDocument = getDocument(normalizedPath)
 
@@ -52,6 +55,19 @@ export function DocsPage({ path }: { path: string }) {
   const previousDocument = documents[activeIndex - 1]
   const nextDocument = documents[activeIndex + 1]
 
+  const revealSidebarScrollbar = () => {
+    setIsSidebarScrollbarVisible(true)
+    if (sidebarScrollbarTimer.current !== null) window.clearTimeout(sidebarScrollbarTimer.current)
+    sidebarScrollbarTimer.current = window.setTimeout(() => {
+      setIsSidebarScrollbarVisible(false)
+      sidebarScrollbarTimer.current = null
+    }, 1200)
+  }
+
+  useEffect(() => () => {
+    if (sidebarScrollbarTimer.current !== null) window.clearTimeout(sidebarScrollbarTimer.current)
+  }, [])
+
   return (
     <div className="site-shell document-site-shell">
       <SiteHeader />
@@ -60,7 +76,11 @@ export function DocsPage({ path }: { path: string }) {
         <DocsNavigation activeDocument={activeDocument} />
       </details>
       <main className="docs-layout page-width">
-        <aside className="docs-sidebar">
+        <aside
+          className={`docs-sidebar${isSidebarScrollbarVisible ? ' is-scrollbar-active' : ''}`}
+          onMouseMove={revealSidebarScrollbar}
+          onScroll={revealSidebarScrollbar}
+        >
           <p className="docs-sidebar-label">Documentation</p>
           <DocsNavigation activeDocument={activeDocument} />
         </aside>

@@ -17,8 +17,7 @@
   --section-gap: 6rem; /* 96px — gap between same-background sections */
 }
 
-/* Style the page scrollbar only. Nested scroll areas retain the browser's
-   native overlay scrollbar, which stays hidden until it is needed. */
+/* Page scrollbar */
 html::-webkit-scrollbar { height: 12px; width: 12px; }
 html::-webkit-scrollbar-track { background: transparent; }
 html::-webkit-scrollbar-thumb { background: #929292; background-clip: padding-box; border: 3px solid transparent; border-radius: 999px; }
@@ -181,7 +180,13 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-site-shell { min-height: 100vh; }
 .document-site-shell .site-header { border-bottom: 1px solid #d9d3c5; }
 .docs-layout { display: grid; gap: 4rem; grid-template-columns: 210px minmax(0, 760px); min-height: calc(100vh - 88px); padding-bottom: 7rem; padding-top: 3.5rem; }
-.docs-sidebar { align-self: start; max-height: calc(100vh - 3rem); overflow-y: auto; position: sticky; scrollbar-color: auto; scrollbar-width: auto; top: 1.5rem; }
+.docs-sidebar { align-self: start; max-height: calc(100vh - 3rem); overflow-y: auto; position: sticky; scrollbar-color: transparent transparent; scrollbar-width: thin; top: 1.5rem; }
+.docs-sidebar::-webkit-scrollbar { height: 12px; width: 12px; }
+.docs-sidebar::-webkit-scrollbar-track { background: transparent; }
+.docs-sidebar::-webkit-scrollbar-thumb { background: transparent; background-clip: padding-box; border: 3px solid transparent; border-radius: 999px; }
+.docs-sidebar.is-scrollbar-active { scrollbar-color: #929292 transparent; }
+.docs-sidebar.is-scrollbar-active::-webkit-scrollbar-thumb { background-color: #929292; }
+.docs-sidebar.is-scrollbar-active::-webkit-scrollbar-thumb:hover { background-color: #707070; }
 .docs-sidebar-label { color: #e6522c; font-family: 'DM Mono', monospace; font-size: .65rem; font-weight: 500; letter-spacing: .08em; margin: 0 0 1.3rem; text-transform: uppercase; }
 .docs-navigation { display: grid; gap: 1.5rem; }
 .docs-nav-group h2 { color: #183f38; font-family: 'DM Sans', sans-serif; font-size: .77rem; font-weight: 700; letter-spacing: 0; margin: 0 0 .5rem; }
