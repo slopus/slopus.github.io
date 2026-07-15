@@ -1,6 +1,6 @@
 # Terms of Use
 
-Last updated: January 2025
+Last updated: July 15, 2026
 
 ## Acceptance of Terms
 
@@ -8,7 +8,7 @@ By downloading, installing, or using Happy, you agree to be bound by these Terms
 
 ## About Happy
 
-Happy is a free, open-source mobile client for AI code assistance, released under the MIT License. The software is provided as-is by the open-source community without any warranties or guarantees.
+Happy is a free, open-source mobile and web client for Claude Code and Codex, released under the MIT License. The software is provided as-is by the open-source community without any warranties or guarantees.
 
 ## License
 
@@ -59,7 +59,7 @@ Happy may connect to third-party AI services (such as Claude, OpenAI, etc.). You
 
 ## Data and Privacy
 
-Happy does not collect, store, or transmit any personal data or usage information. All data remains on your local devices and in your direct communications with AI services. See our [Privacy Policy](/privacy/) for details.
+Happy collects limited, pseudonymous product analytics to measure core action success and identify bugs. We do not collect message content, code, or other encrypted session content. See our [Privacy Policy](/privacy/) for details.
 
 ## Intellectual Property
 
@@ -88,6 +88,6 @@ For questions about these Terms of Use, please visit our [GitHub repository](htt
 
 ---
 
-Happy — Free & Open Source Mobile Client for AI Code Assistance
+Happy — Free & Open Source Mobile and Web Client for Coding Agents
 
 MIT Licensed · Community Driven · Use at Your Own Risk

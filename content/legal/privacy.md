@@ -1,32 +1,33 @@
 # Privacy Policy
 
-Last updated: January 2025
+Last updated: July 15, 2026
 
 ## About Happy
 
-Happy is a free, open-source project released under the MIT License. The source code is publicly available, and anyone can inspect, modify, and distribute it according to the terms of the MIT License.
+Happy is a free, open-source mobile and web client for Claude Code and Codex, released under the MIT License. The source code is publicly available, and anyone can inspect, modify, and distribute it according to the terms of the MIT License.
 
 ## Data Collection
 
-**We do not collect any data, telemetry, or personal information.** Happy operates with complete privacy:
+Happy collects limited, pseudonymous product analytics through PostHog. We use them to understand whether core actions succeed and to find bugs earlier. Analytics never include your message content, code, or other encrypted session content.
 
-- No user accounts or registration required
-- No analytics or tracking
-- No usage statistics or telemetry
-- No cookies or local storage for tracking purposes
-- No server-side data storage
+- We record simple product actions and outcomes, such as connecting, sending a message, starting or ending a voice session, and app updates.
+- Events may include basic technical context such as app, operating-system, and device details so we can diagnose reliability issues.
+- Analytics use a pseudonymous app identifier, not your code or conversation content.
+- You can turn off analytics in the app settings.
 
-## End-to-End Encryption
+## Encrypted Session Data
 
-All communications between your mobile device and computer are protected by end-to-end encryption. This means that your conversations and code remain private and secure, with no third parties able to intercept or read your data.
+Your messages, code, and session data are encrypted on your device before they are sent. Happy's relay stores encrypted blobs only to synchronize your devices; it cannot read their contents.
+
+To operate sync and notifications, Happy processes limited service metadata, including device, session, and message identifiers, timestamps, and push-notification tokens. This metadata is not your code or conversation content.
 
 ## Third-Party Services
 
-Happy may connect to external AI services (such as Claude) based on your configuration. When using such services:
+Happy may connect to external AI services, such as Claude Code and Codex, based on your configuration. When using those services:
 
 - You are subject to their respective privacy policies and terms of service
-- Happy does not store or log your interactions with these services
-- Your API keys and credentials are stored locally on your device
+- Happy does not send your code or conversation content to PostHog
+- Push-notification delivery uses Expo's push-notification service; push tokens are used only to deliver notifications
 
 ## Disclaimers
 
@@ -54,7 +55,7 @@ As an open-source project under the MIT License:
 
 ## Changes to Privacy Policy
 
-Since Happy is open source and collects no data, changes to this privacy policy will be reflected in the source code repository. We recommend checking the repository periodically for updates.
+Since Happy is open source, changes to this privacy policy will be reflected in the source code repository. We recommend checking the repository periodically for updates.
 
 ## Contact
 
@@ -62,6 +63,6 @@ For questions about this privacy policy or Happy in general, please visit our [G
 
 ---
 
-Happy — Free & Open Source Mobile Client for AI Code Assistance
+Happy — Free & Open Source Mobile and Web Client for Coding Agents
 
 MIT Licensed · Community Driven · Privacy First

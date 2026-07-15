@@ -43,7 +43,7 @@ We built Happy Coder after suffering through overly complicated platforms that p
 
 Three reasons:
 
-**Privacy**: Your code is your business. With end-to-end encryption and open source code, you can verify that we can't see your work. No tracking, no data mining.
+**Privacy**: Your code is your business. With end-to-end encryption and open source code, you can verify that we can't see your work. Limited, pseudonymous product analytics help us measure core action success and find bugs earlier; they never include code or conversation content.
 
 **Control**: You own your tools. Run your own relay server. Modify the code. Add features. Remove features. It's yours to shape as you need.
 
@@ -265,18 +265,17 @@ Yes, Happy Coder is designed for enterprise use:
 - Self-host the relay server on your infrastructure
 - No data ever touches our servers if self-hosted
 - Open source code you can audit
-- No analytics or telemetry
+- Limited, pseudonymous product analytics that help us measure core action success and find bugs earlier
 
 ### What data does Happy Coder collect?
 
-None. Zero. Nothing.
-- No user accounts or emails
-- No usage analytics
-- No error reporting
-- No telemetry
-- No cookies or tracking
+Happy collects limited, pseudonymous product analytics to measure core action success and identify bugs earlier. We do not collect message content, code, or other encrypted session content.
 
-The only data that exists is encrypted blobs on the relay server, which we can't read.
+- Analytics record simple actions and outcomes, such as connecting, sending a message, and app updates.
+- Events may include basic app, operating-system, and device context to diagnose reliability issues.
+- You can turn off analytics in the app settings.
+
+The relay server stores encrypted blobs for sync, which we cannot read.
 
 ## Troubleshooting
 
