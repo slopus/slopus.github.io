@@ -1,0 +1,144 @@
+# Why Happy Coder Has Real-Time Synchronization
+
+When I tell people I built a mobile app for Claude Code, the first question is
+always: "Are you actually trying to write code on your phone?" 
+
+No. Absolutely not. That would be miserable to spend all day on my phone.
+
+What Happy Coder does is fundamentally different: it extends your reach to your
+development machine. It's built on one core principle - you should be able to
+work with Claude Code from anywhere, using the same session, with zero handoff
+friction.
+
+## Two Approaches: Full Workflow vs. Lightweight Extension
+
+Most mobile AI coding tools offer what I call the "background agent" approach.
+These are comprehensive workflow solutions - you send requests from your phone,
+they run in cloud sandboxes, generate code, create pull requests, and integrate
+with your development pipeline. There's nothing wrong with this approach. It's
+powerful and works well for teams that want an end-to-end mobile coding
+workflow.
+
+But it's also a commitment. These are commercial products with hosting costs,
+separate AI usage billing, and their own workflows for planning, executing, and
+reviewing code. You're not just adding a capability - you're adopting an entire
+system.
+
+Happy Coder is deliberately different. It's a lightweight, open-source tool that
+doesn't change anything about your existing setup. You keep using your own
+Claude Code subscription, your own IDE, your own workflow. All we do is extend
+your reach.
+
+## Real-Time Synchronization: Just Enough Connection
+
+When you run `happy` on your laptop, it wraps Claude Code and establishes a
+real-time connection to your phone. You're not connecting to a sandbox or a
+separate service - you're connecting directly to your actual Claude Code
+session, running on your actual machine, working with your actual codebase.
+
+Type a message on your phone, and it appears instantly in the terminal on your
+laptop. Claude Code's response shows up on both devices simultaneously. Put your
+phone down, and continue the exact same conversation on your laptop. No export,
+no handoff, no rebuilding context.
+
+This is the Unix philosophy applied to mobile development: do one thing well.
+That one thing is extending your reach.
+
+## Why This Matters in Practice
+
+Consider a typical development scenario: you're reviewing a complex refactor at
+your desk, using your full IDE setup to navigate between files and understand
+the changes. You need to step away - maybe you're getting coffee, maybe you're
+heading to a meeting.
+
+With Happy Coder, you grab your phone and continue describing the next set of
+changes to Claude Code while you walk. When you return to your desk, those
+changes are already being executed in your terminal. The session never stopped.
+The context never reset. You just changed the device you were using to interact
+with it.
+
+## The Moments You Actually Need This
+
+You know that feeling when you're stuck somewhere without your laptop? Maybe you
+agreed to a social commitment and didn't bring your computer because "it won't
+be that long." Now it's been two hours, and you're sitting there with an idea
+burning in your head. You could write yourself a note, but what you really want
+is to just try something quick - see if Claude Code can implement that approach
+you're thinking about.
+
+Or you're waiting at the doctor's office, and that bug you've been pondering
+suddenly makes sense. You don't need to do a full code review on your phone -
+you just want to tell Claude Code "I think the race condition is in the event
+handler, not the state update" and see what it finds.
+
+These aren't planned coding sessions. You're not trying to replace your desktop
+workflow. You just want to be a little more nimble, to capture those moments of
+clarity when they happen. Sometimes the best debugging happens when you're away
+from your desk, when your brain has had time to process in the background. Happy
+Coder lets you act on those insights immediately.
+
+I've lost count of the times I've been somewhere - a coffee shop, a family
+dinner, a friend's house - and felt that particular frustration of having a
+coding insight but no way to act on it. My codebase feels impossibly far away.
+Sure, I could look at it on GitHub mobile, maybe write myself a detailed note.
+But what I really want is to just fire off a quick experiment, give Claude Code
+a course correction, or test whether an idea even makes sense.
+
+## The Technical Implementation
+
+The synchronization itself is straightforward: WebSocket connections provide
+real-time bidirectional communication between the CLI and mobile app. The CLI
+maintains the source of truth - it's running Claude Code, managing the file
+system, executing commands. The mobile app is a synchronized interface to that
+session.
+
+Both devices can initiate messages and receive responses. Command history,
+context, and state are preserved across the connection. There's no
+primary/secondary relationship - just two windows into the same session.
+
+This simplicity is intentional. By keeping the architecture focused on
+synchronization rather than replication, we avoid complex state management and
+ensure consistency.
+
+## When Mobile Makes Sense (And When It Doesn't)
+
+Let's be clear about what this enables and what it doesn't.
+
+Mobile excels at:
+- Describing changes and features in natural language
+- Reviewing Claude Code's approach and providing feedback
+- Maintaining momentum when away from your desk
+- Capturing ideas when they strike
+- Planning and architectural discussions
+
+Desktop remains essential for:
+- Detailed code review across multiple files
+- Debugging and testing
+- Complex Git operations
+- Any task requiring multiple windows or precise editing
+
+The power comes from using both in the same continuous session. You're not
+choosing between mobile and desktop - you're choosing the right interface for
+the current moment.
+
+## A Tool That Respects How We Actually Work
+
+Programming involves a lot of thinking, and thinking doesn't always happen at a
+desk. Sometimes your best insights come during a walk, over lunch, or in those
+quiet moments before sleep. 
+
+Happy Coder acknowledges this reality. It doesn't try to recreate your desktop
+environment on a phone (that never works). Instead, it gives you a lightweight
+way to maintain your conversation with Claude Code wherever you are, knowing
+that everything will be exactly where you need it when you return to your desk.
+
+The goal isn't to change how you code. It's to remove the artificial constraint
+that you can only work with AI coding agents while sitting at your computer. By
+extending your reach through real-time synchronization, Happy Coder lets you
+work with Claude Code on your terms, wherever your best thinking happens to
+occur.
+
+---
+
+*Happy Coder is available now. It requires the Claude Code CLI on your
+development machine and the Happy Coder mobile app.*

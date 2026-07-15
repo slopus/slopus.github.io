@@ -1,0 +1,330 @@
+# General FAQ 
+
+## What does Happy Coder do?
+
+Happy Coder is a mobile app that lets you control coding agents on many different computers from your phone.
+
+## Is Happy Coder free?
+
+Yes, completely free. No catches.
+
+- **No usage limits** - Run as many sessions as you want
+- **No user limits** - Install on all your devices
+- **Open source (MIT)** - Fork it, modify it, learn from it
+
+## Am I locked in?
+
+No lock-in whatsoever. Here's why:
+
+- **Open source** - The entire codebase is on GitHub
+- **Self-hostable** - Run your own relay server
+- **No account required** - No data to export or migrate
+- **Works with vanilla Claude Code** - Not a proprietary wrapper
+
+You can stop using Happy Coder instantly with zero changes to your workflow. Your Claude Code setup remains unchanged.
+
+## What justifies your claim that Happy Coder is simple?
+
+Happy Coder removes all the friction from mobile Claude Code access:
+
+1. **No signup process** - Just download and run. No email verification, no account creation, no credit card. This is a real developer tool, not a SaaS product.
+
+2. **Cross-platform by default** - Works on any computer (Mac, Windows, Linux) with any phone (iOS, Android). Control Claude Code on a Mac Mini from your Android phone. Run Claude Code on a Raspberry Pi and control it from your iPad.
+
+3. **It just works** - Handles network issues gracefully. Reconnects automatically. Queues messages when offline. No broken SSH sessions or tmux corruption.
+
+4. **Smart error handling** - Detects common problems and tells you exactly how to fix them. Port already in use? It tells you which process. Claude Code not found? It shows you where to install it.
+
+5. **Unix philosophy** - Does one thing well: extends Claude Code to mobile. Doesn't try to be an IDE, a project manager, or a cloud platform.
+
+We built Happy Coder after suffering through overly complicated platforms that promise everything but fail at basics. Simple tools that work beat complex tools that don't.
+
+## Why is Happy Coder free and Open Source?
+
+Three reasons:
+
+**Privacy**: Your code is your business. With end-to-end encryption and open source code, you can verify that we can't see your work. No tracking, no data mining.
+
+**Control**: You own your tools. Run your own relay server. Modify the code. Add features. Remove features. It's yours to shape as you need.
+
+**Sustainability**: Open source projects can't rugpull you. When a VC-funded startup radically pivots or shuts down, you're stuck. Happy Coder will work as long as you want it to.
+
+
+
+### Does Claude Code have an app?
+
+Yes! Claude Code has a mobile app called **Happy Coder** that lets you control Claude Code from your phone. Here's how it works:
+
+1. Download the Happy Coder app from the App Store (iOS) or Google Play (Android)
+2. Install the companion software on your computer: `npm install -g happy`
+3. Run `happy` on your computer to start the connection
+4. Scan the QR code with your phone to connect
+
+Your phone and computer sync in real-time with end-to-end encryption, so you can start coding on one device and continue on the other seamlessly.
+
+### How do I install the Claude app?
+
+**For Happy Coder (mobile Claude Code client):**
+1. Download the Happy Coder app from your phone's app store
+2. On your computer, install: `npm install -g happy`
+3. Run `happy` command on your computer
+4. Scan the QR code with your phone to connect securely
+
+**For Claude Code (desktop CLI):**
+- Install with npm: `npm install -g claude-code`
+- Set up your API key
+- Works on Mac, Windows, and Linux
+
+**For regular Claude (AI chat):** Just visit claude.ai in your web browser.
+
+## Platform Availability
+
+### Can you use Claude on mobile?
+
+There are two different products to understand:
+
+**Claude** (AI chat): Yes, go to claude.ai on any mobile browser.
+
+**Claude Code** (developer tool): Yes, through the Happy Coder mobile app! This lets you control Claude Code running on your computer from your phone. You can:
+- Start coding conversations on your phone
+- Continue the same conversation on your laptop/desktop computer in your
+terminal as if you had launched Claude Code from there yourself.
+- Get push notifications when Claude Code needs your input or code is ready to review.
+
+### Does Claude have an Apple app?
+
+**Claude** (AI chat): Anthropic has an official iOS app, or you can use claude.ai in your browser.
+
+**Claude Code**: Yes! The Happy Coder app is available on the App Store for iPhone and iPad. It's free, 100% open source, and the best way to use Claude Code on mobile.
+
+### Can I do coding in a mobile app?
+
+Absolutely! The Happy Coder app is designed for mobile coding, but it's smart about what works well on mobile vs. desktop:
+
+**Great mobile tasks:**
+- Planning new features during your commute
+- Brainstorming solutions while away from your desk
+- Voice conversations with Claude Code for rubber duck debugging
+- Setting up coding tasks before bed (Claude Code works while you sleep!)
+- Getting push notifications when code changes are ready
+
+**Great desktop tasks:**
+- Reviewing generated code with multiple windows
+- Making precise edits with your full IDE
+- Testing and debugging with all your tools
+
+The magic is seamlessly switching between both in the same conversation.
+
+## Usage and Features
+
+### How to launch Happy daemon?
+```bash
+
+```
+
+### How to use the Claude app?
+
+**For Happy Coder mobile app:**
+1. Download and install the app
+2. Set up the desktop connection (see installation above)
+3. Scan the QR code to connect
+4. Start chatting with Claude Code from anywhere!
+5. Use voice features for hands-free coding discussions
+
+**For regular Claude:** Visit claude.ai and start chatting.
+
+**For desktop Claude Code:** Use terminal commands like `claude-code "help me fix this bug"`
+
+### Which Claude is best for coding?
+
+Claude-4.1 Opus is currently the best model for coding. It offers:
+
+- Great understanding of your code
+- Smart problem-solving
+- Ability to work with large projects
+- Fast and accurate responses
+
+Claude-4 Sonnet is also a great model for coding.
+
+Claude Code and Happy Coder automatically use the best model for your tasks.
+
+GPT-5 is slower.
+
+## Pricing and Plans
+
+### How much does Claude code cost?
+
+Claude Code uses a subscription with pay-as-you-go pricing for overages:
+
+- **Typical cost**: $20, $100, $200 per month plans.
+- **No free tier**: Claude Code does not offer free usage when you start
+- **Apps are free**: The Happy Coder app and Claude Code CLI cost nothing
+- **Enterprise options**: Special plans for teams
+
+The exact cost depends on:
+- How complex your coding tasks are
+- How long your conversations are
+- Which AI model you're using
+
+## App Features
+
+The Happy Coder mobile app includes:
+
+- **Open source**: MIT License (check out the code at [github.com/slopus/happy](https://github.com/slopus/happy))
+- **Native mobile design**: Built specifically for phones and tablets
+- **Seamless workflow**: Perfect sync with your computer
+- **End-to-end encryption**: Your code stays private
+- **Voice interaction**: Talk to Claude Code hands-free
+- **Push notifications**: Know when your code is ready
+- **Offline-friendly**: Queue up tasks even with poor connection
+
+## Comparison with Alternatives
+
+### Is Claude better than ChatGPT for coding?
+
+Both are good, but Claude Code offers unique advantages:
+
+- **Better project understanding**: Knows your entire codebase
+- **Mobile coding**: Work from anywhere with Happy Coder
+- **Direct file editing**: Makes changes to your actual code files
+- **IDE integration**: Works with VS Code, Cursor, and other editors
+- **Large project handling**: Better with complex, multi-file projects
+
+ChatGPT is also excellent for explaining code and generating examples.
+
+The best choice depends on your workflow and what you need.
+
+---
+
+## Technical Questions
+
+### What's the latency between phone and desktop?
+
+Typically around 300ms. This includes:
+- Encryption/decryption time (~10ms)
+- Network round trip (~200ms on average)
+- Processing overhead (~90ms)
+
+For comparison, SSH over mobile usually has 100-200ms latency but with terrible mobile UX.
+
+### Can I use Happy Coder with multiple Claude Code sessions?
+
+Yes! You can run multiple sessions simultaneously:
+- Different sessions on different machines
+- Multiple sessions on the same machine (different ports)
+- Switch between sessions instantly on your phone
+- Each session maintains its own context and history
+
+### Does Happy Coder work with MCP tools?
+
+Full support for all MCP (Model Context Protocol) tools:
+- Your existing MCP configurations work unchanged
+- All MCP tools available on desktop work through mobile
+- Permission prompts appear on your phone for approval
+- Custom MCP tools are fully supported
+
+### Can I use custom Claude Code agents?
+
+Yes, all your custom agents work perfectly:
+- Agents in `~/.claude/agents/` sync automatically
+- Custom slash commands work from mobile
+- Agent switching preserves conversation context
+- Create new agents from your phone
+
+### What happens if my connection drops?
+
+Happy Coder handles disconnections gracefully:
+- Messages queue on your device until connection returns
+- Claude Code keeps working on your computer
+- Automatic reconnection when network returns
+- No lost messages or broken sessions
+- Pick up exactly where you left off
+
+### Can I review code changes before Claude Code applies them?
+
+Yes, Happy Coder shows you:
+- File diffs for all changes
+- Permission prompts for file operations
+- Ability to rollback to checkpoints
+- Full visibility into what Claude Code is doing
+
+## Security & Privacy Questions
+
+### Can Happy Coder or the relay server see my code?
+
+No. Everything is end-to-end encrypted:
+- Encryption happens on your device before sending
+- Relay server only sees encrypted blobs
+- Only devices with the shared key can decrypt
+- We literally cannot read your code even if we wanted to
+
+### Is my company's proprietary code safe?
+
+Yes, Happy Coder is designed for enterprise use:
+- End-to-end encryption protects your IP
+- Self-host the relay server on your infrastructure
+- No data ever touches our servers if self-hosted
+- Open source code you can audit
+- No analytics or telemetry
+
+### What data does Happy Coder collect?
+
+None. Zero. Nothing.
+- No user accounts or emails
+- No usage analytics
+- No error reporting
+- No telemetry
+- No cookies or tracking
+
+The only data that exists is encrypted blobs on the relay server, which we can't read.
+
+## Troubleshooting
+
+### "Claude Code not found" error
+
+Happy Coder needs Claude Code installed first:
+```bash
+npm install -g claude-code
+claude-code --version  # Verify installation
+happy  # Now this should work
+```
+
+### QR code won't scan
+
+Common fixes:
+1. Increase screen brightness
+2. Clean your camera lens
+3. Make QR code bigger: `happy --qr-size large`
+4. Use manual code: `happy --no-qr` (shows text code to type)
+
+### "Port already in use" error
+
+Another process is using port 8765:
+```bash
+# Find what's using the port
+lsof -i :8765
+
+# Kill it
+kill -9 [PID]
+
+# Or use a different port
+happy --port 8766
+```
+
+### Can't connect to relay server
+
+Check if you're behind a corporate firewall:
+1. Try using cellular data instead of WiFi
+2. Ask IT to whitelist `relay.happy.engineering`
+3. Or [self-host your relay server](/guides/self-hosting)
+
+## Need More Help?
+
+For more information about Claude Code and Happy Coder:
+
+- Read our [Quick Start Guide](/guides/quick-start)
+- Learn [How It Works](/how-it-works)
+- Check the [CLI Reference](/cli-reference)
+- Visit [GitHub Issues](https://github.com/slopus/happy/issues)
+
+Have specific questions? The developer community is here to help!

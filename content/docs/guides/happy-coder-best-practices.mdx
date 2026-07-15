@@ -1,0 +1,128 @@
+# Tips and Tricks for Happy Coder
+
+Happy Coder gives you control over AI coding agents from anywhere. This guide covers patterns and workflows that help you get the most out of mobile coding sessions.
+
+## 1. Set up for success
+
+
+### a. Connect everything, everywhere
+
+The biggest workflow improvement you can make is connecting all your devices and browsers to the same account.
+Don't just connect your main laptop. Connect every computer that can run code.
+
+
+Connect your:
+- **Development machines**: Laptop, desktop, Mac mini in the closet
+- **Cloud resources**: VPS, dedicated servers, cloud instances.
+- **Edge devices**: Raspberry Pi, router running OpenWRT, home server
+- **Your browsers**: Happy Coder isn't just a mobile app, you can use the web version designed for larger screens. You're never more than a browser tab away from checking on your AI agents.
+
+Once everything is connected, all your sessions sync everywhere. You can start a session from anywhere and pick it up from anywhere else. Start coding on your desktop, check progress from your phone at lunch, then review the PR from your tablet on the couch.
+Every device shows the same sessions, the same progress, the same capability.
+
+> **Diagram needed**: Network diagram showing multiple devices (laptop, phone, tablet, VPS, Pi) all connected to the same Happy Coder account, with arrows showing session handoff between devices.
+
+### b. Turn on experimental features
+
+The experimental features flag in Settings is where all the active development happens. Turn it on immediately to access the latest capabilities. New features ship here first before graduating to stable.
+
+> **Screenshot needed**: Settings screen showing the experimental features toggle enabled, with a callout highlighting this as the first thing new users should enable.
+
+### c. Switch agents freely
+
+You're not locked into just using one of Claude Code or Codex. Try different agents for different tasks:
+- Keep working with projects already set up with Claude Code
+- Try using Codex on the same project to see how it compares
+- Try other agents as they become available
+
+The input field lets you switch between agents on the fly. Experiment to find what works best for each type of task.
+
+> **Screenshot needed**: Input field showing the agent selector dropdown or toggle, demonstrating how to switch between different AI coding agents mid-session.
+
+## 2. Remember: Your terminal still works
+Think of mobile as optional control, not replacement
+
+Happy Coder enhances your existing workflow - it doesn't replace it. You can still start Claude Code sessions with `happy` and Codex sessions with `happy codex` directly in your terminal on your computer. The mobile app gives you optionality, not obligation.
+
+Think of it as seamless handoff: Work in your terminal when you're at your desk, switch to your phone when you step away. The session continues exactly where you left off. Zero workflow disruption.
+
+Happy Coder extends your existing workflow—it doesn't replace it. You can still use `claude` or `codex` directly in your terminal. The mobile app gives you optionality: check on long-running tasks, approve changes, or start new work when inspiration strikes.
+
+The seamless handoff is the key feature. There's zero impact on your existing workflow. Work normally at your desk, then continue from anywhere when needed.
+
+### b. Start multiple parallel sessions
+
+Run several AI agents simultaneously on different machines or even the same machine. Have one session refactoring your frontend while another writes tests for your backend. Switch between them instantly from your phone.
+
+This works especially well when you have different types of compute available:
+- Use your desktop's GPU for ML tasks
+- Use your VPS for deployment and testing
+- Use your laptop for local development
+
+> **Screenshot needed**: Mobile app showing multiple active sessions in a list or tab view, with clear labels showing which machine and which project each session is working on.
+
+## 3. Set up git worktrees ahead of time
+
+Happy Coder doesn't manage git worktrees for you (yet), but with a little setup, you can make experimentation seamless:
+
+```bash
+# Create a few worktrees for experiments
+git worktree add ../project-experiment-1 -b experiment-1
+git worktree add ../project-experiment-2 -b experiment-2
+git worktree add ../project-experiment-3 -b experiment-3
+```
+
+Now from your phone, you can start new sessions in these directories whenever you want to try something. Each worktree is isolated, so you can run multiple experiments in parallel without conflicts.
+
+> **Screenshot needed**: Mobile interface showing a file browser with multiple git worktree directories, demonstrating how to start a new session in a specific worktree from your phone.
+
+## 4. Build new habits
+
+### a. Practice the "instant idea" muscle
+
+The ability to tell AI to make a change from anywhere is genuinely new. Build this muscle memory by practicing, even with small changes. Walking the dog and think of a better variable name? Pull out your phone and make it happen.
+
+Start small:
+- Fix that typo you just remembered
+- Add a comment you've been meaning to write  
+- Try that refactoring idea you had in the shower
+
+The goal is making "have idea → implement idea" as frictionless as checking your messages.
+
+### b. Do a personal inventory
+
+Ask yourself: "What's holding me back from just trying ideas?"
+
+Common blockers and solutions:
+- **Fear of breaking things**: Set up better git workflows, use branches liberally
+- **Unclear how to revert**: Learn git reset/revert commands, make more commits
+- **Worried about wasted time**: Remember that exploring ideas quickly is valuable
+- **Perfectionism**: Ship experimental branches, iterate in public
+
+Until Happy Coder handles more of these automatically, identify your personal blockers and address them directly.
+
+> **Diagram needed**: Simple flowchart showing the ideal "idea → implement → test → ship/revert" cycle, with Happy Coder removing friction at each step.
+
+## 5. Quick workflow patterns
+
+### a. The commute pattern
+1. Start a big refactoring task before leaving work
+2. Check progress on your commute
+3. Approve or redirect from your phone
+4. Arrive home to completed work
+
+### b. The inspiration pattern  
+1. Have an idea while away from computer
+2. Open Happy Coder on your phone
+3. Describe what you want in natural language
+4. Let the agent work while you continue your day
+
+### c. The parallel exploration pattern
+1. Start 3-4 different approaches to a problem
+2. Let them run on different machines/sessions
+3. Check results on your phone
+4. Pick the best approach, discard the rest
+
+## Key takeaway
+
+Happy Coder's power is to extend your desktop workflow and tools everywhere. Connect all your compute, build the muscle memory of describing problems and reviewing implementation, and use the freedom to explore more ideas faster. The best code often comes from trying things you wouldn't have bothered with before.

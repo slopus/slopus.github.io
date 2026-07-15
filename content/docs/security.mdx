@@ -1,0 +1,383 @@
+# Security & Encryption
+
+Happy Coder uses end-to-end encryption. Your code stays private, even from us.
+
+## The Short Version
+
+1. **Your code is encrypted** before leaving your device
+2. **Only you have the keys** - master secret never leaves your phone
+3. **The relay server can't read anything** - it only sees encrypted blobs
+4. **Open source** - audit the code yourself
+
+## Encryption Architecture
+
+The following diagrams explain how Happy Coder's encryption works in detail.
+
+### Legend and Key Types
+
+```txt
+══════════════════════════════════════════════════════════════════════════════
+                         HAPPY CODER ENCRYPTION MODEL
+══════════════════════════════════════════════════════════════════════════════
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                                  LEGEND                                      │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  KEY TYPES                                                                   │
+│  ─────────                                                                   │
+│  ╔════════╗  Secret key     - Must be protected, enables decryption          │
+│  ╚════════╝                                                                  │
+│                                                                              │
+│  ┌────────┐  Public key     - Safe to share, only enables encryption         │
+│  └────────┘                                                                  │
+│                                                                              │
+│  ┌┄┄┄┄┄┄┄┄┐  Ephemeral key  - Temporary, discarded after use                 │
+│  └┄┄┄┄┄┄┄┄┘                                                                  │
+│                                                                              │
+│  «────────»  Data Encryption Key (DEK) - Symmetric, encrypts actual content  │
+│                                                                              │
+│  ARROWS                                                                      │
+│  ──────                                                                      │
+│  ───────>  Key/data movement                                                 │
+│  ┄┄┄┄┄┄┄>  Encrypted data                                                    │
+│                                                                              │
+│  LIFECYCLE                                                                   │
+│  ─────────                                                                   │
+│  [ONCE/ACCOUNT]   Created once per account, lives forever                    │
+│  [ONCE/MACHINE]   Created once per CLI machine                               │
+│  [ONCE/SESSION]   Created once per coding session                            │
+│  [ONCE/AUTH]      Created for each QR auth, discarded immediately            │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Key Hierarchy
+
+```txt
+══════════════════════════════════════════════════════════════════════════════
+                              KEY HIERARCHY
+══════════════════════════════════════════════════════════════════════════════
+
+
+                              LAYER 1: ROOT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ╔═══════════════════════════════════════════════════════════════════════════╗
+  ║  MASTER SECRET  (32 bytes)                                    [MOBILE]    ║
+  ╠═══════════════════════════════════════════════════════════════════════════╣
+  ║                                                                           ║
+  ║  Lifecycle:    [ONCE/ACCOUNT] - created at signup                         ║
+  ║  Stored:       Mobile secure storage only                                 ║
+  ║  Backup:       XXXXX-XXXXX-XXXXX-... (base32)                             ║
+  ║                                                                           ║
+  ║  ❌ Never leaves device   ❌ Never sent anywhere                           ║
+  ║                                                                           ║
+  ╚═══════════════════════════════════════════════════════════════════════════╝
+                                      │
+                                      │ HKDF derive
+                                      ▼
+
+                         LAYER 2: CONTENT KEY PAIR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ╔══════════════════════════════════════╗    ┌────────────────────────────────┐
+  ║  CONTENT SECRET KEY                  ║    │  CONTENT PUBLIC KEY            │
+  ║  (32 bytes)                [MOBILE]  ║    │  (32 bytes)        [MOBILE+CLI]│
+  ╠══════════════════════════════════════╣    ├────────────────────────────────┤
+  ║                                      ║    │                                │
+  ║  Lifecycle: [ONCE/ACCOUNT]           ║    │  Lifecycle: [ONCE/ACCOUNT]     │
+  ║             derived from master      ║    │             derived from secret│
+  ║                                      ║    │                                │
+  ║  Purpose:                            ║    │  Purpose:                      │
+  ║  • Decrypt DEKs from server          ║    │  • Encrypt DEKs for storage    │
+  ║  • Sign messages to CLI              ║    │  • Sent to CLI during auth     │
+  ║                                      ║    │                                │
+  ║  ❌ Never leaves mobile               ║    │  ✓ Shared with all CLIs        │
+  ║                                      ║    │                                │
+  ╚══════════════════════════════════════╝    └────────────────────────────────┘
+            │                                               │
+            │ decrypts                                      │ encrypts
+            ▼                                               ▼
+
+                    LAYER 3: DATA ENCRYPTION KEYS (DEKs)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  «═══════════════════════════════»  «═══════════════════════════════»
+  ║  SESSION DEK                  ║  ║  MACHINE DEK                  ║
+  ║  (32 bytes, random AES-256)   ║  ║  (32 bytes, random AES-256)   ║
+  ╠═══════════════════════════════╣  ╠═══════════════════════════════╣
+  ║                               ║  ║                               ║
+  ║  Lifecycle: [ONCE/SESSION]    ║  ║  Lifecycle: [ONCE/MACHINE]    ║
+  ║             random per session║  ║             random per CLI    ║
+  ║                               ║  ║                               ║
+  ║  Stored: Server (encrypted    ║  ║  Stored: Server (encrypted    ║
+  ║          with content pubkey) ║  ║          with content pubkey) ║
+  ║                               ║  ║                               ║
+  ║  Purpose:                     ║  ║  Purpose:                     ║
+  ║  • Encrypt session messages   ║  ║  • Encrypt machine metadata   ║
+  ║  • Encrypt session metadata   ║  ║  • Encrypt machine state      ║
+  ║                               ║  ║                               ║
+  ║  🔑 Enables future sharing:   ║  ║                               ║
+  ║     Re-encrypt DEK for        ║  ║                               ║
+  ║     friend's public key       ║  ║                               ║
+  ║                               ║  ║                               ║
+  «═══════════════════════════════»  «═══════════════════════════════»
+            │                                    │
+            │ encrypts                           │ encrypts
+            ▼                                    ▼
+
+                         LAYER 4: ACTUAL CONTENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ┌┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┐  ┌┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┐
+  ┆  Session Content (encrypted)  ┆  ┆  Machine Data (encrypted)     ┆
+  ┆  ─────────────────────────    ┆  ┆  ───────────────────────      ┆
+  ┆  • Claude messages            ┆  ┆  • Machine name, status       ┆
+  ┆  • Tool calls & results       ┆  ┆  • Active session info        ┆
+  ┆  • File contents              ┆  ┆  • Machine preferences        ┆
+  ┆  • Terminal output            ┆  ┆                               ┆
+  ┆  • Session metadata           ┆  ┆                               ┆
+  ┆                               ┆  ┆                               ┆
+  ┆  Stored on server, encrypted  ┆  ┆  Stored on server, encrypted  ┆
+  ┆  with session DEK             ┆  ┆  with machine DEK             ┆
+  └┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┘  └┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┘
+```
+
+### Key State After Authentication
+
+```txt
+══════════════════════════════════════════════════════════════════════════════
+                      KEY STATE AFTER AUTHENTICATION
+══════════════════════════════════════════════════════════════════════════════
+
+     MOBILE                            SERVER                         CLI
+        │                                 │                             │
+        │                                 │                             │
+┌───────┴───────────────────────┐  ┌──────┴──────────────┐  ┌───────────┴───────────────────┐
+│                               │  │                     │  │                               │
+│  ╔═════════════════════════╗  │  │  Encrypted storage  │  │  ┌───────────────────────┐    │
+│  ║  master_secret          ║  │  │  only:              │  │  │  content_public_key   │    │
+│  ╚═════════════════════════╝  │  │                     │  │  └───────────────────────┘    │
+│             │                 │  │  • Session DEKs     │  │                               │
+│       derives                 │  │    (encrypted)      │  │  ╔═════════════════════════╗  │
+│             ▼                 │  │                     │  │  ║  machine_key (local)    ║  │
+│  ╔═════════════════════════╗  │  │  • Machine DEKs     │  │  ╚═════════════════════════╝  │
+│  ║  content_secret_key     ║  │  │    (encrypted)      │  │                               │
+│  ╚═════════════════════════╝  │  │                     │  │  «═════════════════════════»  │
+│             │                 │  │  • Session content  │  │  ║  session DEKs           ║  │
+│       decrypts                │  │    (encrypted)      │  │  ║  (decrypted in memory)  ║  │
+│             ▼                 │  │                     │  │  «═════════════════════════»  │
+│  «═════════════════════════»  │  │  • Machine data     │  │                               │
+│  ║  All DEKs (decrypted)   ║  │  │    (encrypted)      │  │  ❌ No master_secret          │
+│  «═════════════════════════»  │  │                     │  │  ❌ No content_secret_key     │
+│                               │  │  Cannot decrypt     │  │  ❌ Cannot decrypt other      │
+│  ┌─────────────────────────┐  │  │  anything           │  │     sessions' DEKs           │
+│  │  content_public_key     │  │  │                     │  │                               │
+│  └─────────────────────────┘  │  │                     │  │                               │
+│                               │  │                     │  │                               │
+└───────────────────────────────┘  └─────────────────────┘  └───────────────────────────────┘
+```
+
+### Session Sync Flow
+
+```txt
+══════════════════════════════════════════════════════════════════════════════
+                           SESSION SYNC FLOW
+══════════════════════════════════════════════════════════════════════════════
+
+     MOBILE                            SERVER                         CLI
+        │                                 │                             │
+        │                                 │      New session created    │
+        │                                 │              │              │
+        │                                 │              ▼              │
+        │                                 │  «═══════════════════════════════»
+        │                                 │  ║ Generate random SESSION DEK   ║
+        │                                 │  ║ (AES-256, 32 bytes)           ║
+        │                                 │  «═══════════════════════════════»
+        │                                 │              │              │
+        │                                 │              ▼              │
+        │                                 │  ┌─────────────────────────────────┐
+        │                                 │  │ Encrypt DEK with               │
+        │                                 │  │ content_public_key             │
+        │                                 │  └─────────────────────────────────┘
+        │                                 │              │              │
+        │                                 │              ▼              │
+        │                                 │  ┌─────────────────────────────────┐
+        │                                 │  │ Encrypt session content with   │
+        │                                 │  │ SESSION DEK (AES-256)          │
+        │                                 │  └─────────────────────────────────┘
+        │                                 │              │              │
+        │                                 │◄┄┄┄┄┄┄┄┄┄┄┄┄┄┼┄┄┄┄┄┄┄┄┄┄┄┄┄┄│
+        │                                 │  encrypted   │              │
+        │                                 │  DEK +       │              │
+        │                                 │  encrypted   │              │
+        │                                 │  content     │              │
+        │                                 │              │              │
+        │◄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄│              │              │
+        │                                 │              │              │
+        ▼                                 │              │              │
+  ╔════════════════════════════════╗      │              │              │
+  ║ 1. Decrypt DEK with            ║      │              │              │
+  ║    content_secret_key          ║      │              │              │
+  ║                                ║      │              │              │
+  ║ 2. Decrypt content with DEK    ║      │              │              │
+  ╚════════════════════════════════╝      │              │              │
+        │                                 │              │              │
+        ▼                                 │              │              │
+  ┌──────────────────┐                    │              │              │
+  │ Display session  │                    │              │              │
+  │ in mobile app    │                    │              │              │
+  └──────────────────┘                    │              │              │
+        │                                 │              │              │
+        │   User sends command            │              │              │
+        │              │                  │              │              │
+        ▼              │                  │              │              │
+  ┌─────────────────────────────────┐     │              │              │
+  │ Encrypt with SESSION DEK        │     │              │              │
+  └─────────────────────────────────┘     │              │              │
+        │                                 │              │              │
+        │┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄>│              │              │
+        │                                 │┄┄┄┄┄┄┄┄┄┄┄┄┄>│              │
+        │                                 │              ▼              │
+        │                                 │  ┌─────────────────────────────────┐
+        │                                 │  │ Decrypt with SESSION DEK       │
+        │                                 │  │ (CLI has DEK in memory)        │
+        │                                 │  └─────────────────────────────────┘
+        │                                 │              │              │
+        ▼                                 ▼              ▼              ▼
+```
+
+### Future: Sharing With Friends
+
+```txt
+══════════════════════════════════════════════════════════════════════════════
+                    FUTURE: SHARING WITH FRIENDS
+══════════════════════════════════════════════════════════════════════════════
+
+To share a session with a friend:
+
+  YOUR MOBILE                         SERVER                    FRIEND'S MOBILE
+       │                                 │                             │
+       │                                 │                             │
+  ╔════════════════════════════╗         │                             │
+  ║ 1. Get friend's            ║         │                             │
+  ║    content_public_key      ║◄────────│─────────────────────────────│
+  ║                            ║         │  (friend's public key       │
+  ║ 2. Decrypt session DEK     ║         │   is on their profile)      │
+  ║    with YOUR secret key    ║         │                             │
+  ║                            ║         │                             │
+  ║ 3. Re-encrypt session DEK  ║         │                             │
+  ║    with FRIEND's pub key   ║         │                             │
+  ╚════════════════════════════╝         │                             │
+       │                                 │                             │
+       │┄┄┄┄ share record ┄┄┄┄┄┄┄┄┄┄┄┄┄┄>│                             │
+       │     (DEK encrypted for friend)  │                             │
+       │                                 │                             │
+       │                                 │┄┄┄┄ share notification ┄┄┄┄>│
+       │                                 │                             │
+       │                                 │    ╔════════════════════════════════╗
+       │                                 │    ║ Friend decrypts DEK with      ║
+       │                                 │    ║ THEIR content_secret_key      ║
+       │                                 │    ║                               ║
+       │                                 │    ║ Friend can now decrypt        ║
+       │                                 │    ║ session content with DEK      ║
+       │                                 │    ╚════════════════════════════════╝
+       │                                 │                             │
+       ▼                                 ▼                             ▼
+
+  KEY INSIGHT: Session content never re-encrypted!
+  Only the small DEK (32 bytes) is re-encrypted for friend.
+  Original encrypted content stays exactly the same on server.
+```
+
+### Key Purpose Summary
+
+```txt
+══════════════════════════════════════════════════════════════════════════════
+                            KEY PURPOSE SUMMARY
+══════════════════════════════════════════════════════════════════════════════
+
+┌──────────────────────┬───────────────┬───────────────────────────────────────┐
+│  KEY                 │  LIFECYCLE    │  PURPOSE                              │
+├──────────────────────┼───────────────┼───────────────────────────────────────┤
+│                      │               │                                       │
+│  MASTER SECRET       │ ONCE/ACCOUNT  │  Root key, derives everything         │
+│                      │               │  Backup code = this in base32         │
+│                      │               │                                       │
+├──────────────────────┼───────────────┼───────────────────────────────────────┤
+│                      │               │                                       │
+│  CONTENT KEY PAIR    │ ONCE/ACCOUNT  │  Encrypt/decrypt DEKs                 │
+│  (public + secret)   │               │  Enable sharing without re-encrypting │
+│                      │               │  content                              │
+│                      │               │                                       │
+├──────────────────────┼───────────────┼───────────────────────────────────────┤
+│                      │               │                                       │
+│  SESSION DEK         │ ONCE/SESSION  │  Encrypt session messages & metadata  │
+│  (AES-256)           │               │  Shareable: re-encrypt for friends    │
+│                      │               │                                       │
+├──────────────────────┼───────────────┼───────────────────────────────────────┤
+│                      │               │                                       │
+│  MACHINE DEK         │ ONCE/MACHINE  │  Encrypt machine-specific data        │
+│  (AES-256)           │               │  Revocable per-machine                │
+│                      │               │                                       │
+├──────────────────────┼───────────────┼───────────────────────────────────────┤
+│                      │               │                                       │
+│  MACHINE KEY (local) │ ONCE/MACHINE  │  Local CLI cache encryption           │
+│                      │               │  Never sent anywhere                  │
+│                      │               │                                       │
+├──────────────────────┼───────────────┼───────────────────────────────────────┤
+│                      │               │                                       │
+│  EPHEMERAL KEYPAIR   │ ONCE/AUTH     │  Secure key exchange during QR auth   │
+│                      │               │  Discarded immediately after          │
+│                      │               │                                       │
+└──────────────────────┴───────────────┴───────────────────────────────────────┘
+```
+
+### Security Properties
+
+```txt
+══════════════════════════════════════════════════════════════════════════════
+                            SECURITY PROPERTIES
+══════════════════════════════════════════════════════════════════════════════
+
+  COMPROMISE SCENARIO             ATTACKER GAINS              CANNOT ACCESS
+  ─────────────────────────────────────────────────────────────────────────────
+
+  CLI machine compromised         • content_public_key        • master_secret
+                                  • machine_key (local)       • content_secret_key
+                                  • session DEKs (in memory)  • OTHER sessions' DEKs
+                                  • THIS machine's sessions   • friends' sessions
+
+  Server compromised              • encrypted DEKs            • decrypted DEKs
+                                  • encrypted content         • any content
+                                  • metadata                  • keys
+
+  Network eavesdropping           • encrypted traffic         • anything useful
+
+  ─────────────────────────────────────────────────────────────────────────────
+
+  RECOVERY SCENARIO               SOLUTION
+  ─────────────────────────────────────────────────────────────────────────────
+
+  CLI machine lost/stolen         Remove from account - session DEKs were only
+                                  in memory, machine DEK is revoked
+
+  Mobile lost + have backup       Restore master_secret → re-derive content keys
+                                  → can decrypt all DEKs again
+
+  Mobile lost + no backup         Account unrecoverable (by design)
+```
+
+## Why This Design?
+
+**Your master secret never leaves your mobile device.** Each CLI machine receives only a derived public key for encryption. This means:
+
+- If a CLI machine is compromised, the attacker cannot access your backup code or other machines
+- The server only stores encrypted blobs it cannot read
+- Sharing sessions with friends is efficient - only re-encrypt a 32-byte key, not all the content
+
+## Self-Hosting
+
+Don't trust our relay server? Run your own. See our [Self-Hosting Guide](/docs/guides/self-hosting) for details.

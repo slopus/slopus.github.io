@@ -1,0 +1,155 @@
+---
+asIndexPage: true
+theme:
+  typesetting: 'article'
+---
+import { Cards } from 'nextra/components'
+import { BoxIcon } from 'lucide-react'
+
+# All Features of Happy Coder: Mobile Claude Code Client
+
+Happy Coder provides a native mobile experience for Claude Code, including file mentions, slash commands, and custom agents. Happy Coder also provides many extra quality of life features, including voice coding, push notifications.
+ 
+## Core Architecture Features
+
+### 1. Real-Time CLI Synchronization
+
+**Engineering Description**: Bidirectional real-time synchronization between the desktop CLI (`happy`) and mobile app through encrypted relay server. The CLI wraps Claude Code execution and streams terminal state, while mobile app provides input that flows back to the CLI seamlessly. Both devices can initiate conversations, send messages, and receive responses in the same shared session - there's no distinction between "primary" and "secondary" devices.
+
+> **User Story 1**: As a developer, I want to start a Claude Code session on my laptop, see my typed message appear instantly on my phone, then pick up my phone and continue the same conversation while doing laundry, so I can maintain continuous progress without being tied to my desk.
+
+> **User Story 2**: As a developer, I want to start planning a new feature on my phone during my commute, then seamlessly sit down at my laptop and review the generated code using my normal desktop tools (IDE, terminal, git) in the exact same Claude Code session, so I can transition from planning to implementation without any handoff friction.
+
+> **User Story 3**: As a developer, I want to keep my coding momentum going even when I leave my desk, so I can use my phone to think through problems, describe changes to Claude Code, and explore possibilities, then return to my laptop to do the precise editing and review work without having to restart or re-explain my context.
+
+> **User Story 4**: As a developer, I want to use my phone as a "playground" for experimenting with ideas and having Claude Code generate prototypes while I'm away from my computer, so when I sit back down at my laptop I have concrete code to review, test, and refine using my full desktop tooling (multiple monitors, IDE, hot reloading) in the same continuous session.
+
+> **User Story 5**: As a developer, I want to request complex code changes from my phone that might affect multiple files, then review those changes on my laptop where I can see code side-by-side and navigate between files easily, and then continue making follow-up requests and refinements in the same Claude Code session with all my context preserved, rather than trying to do detailed code review and iterative development on a narrow mobile screen where I can't see enough context at once.
+
+
+**Technical Implementation**:
+- WebSocket connections for real-time bidirectional communication
+- Terminal state serialization and synchronization
+- Command history and context preservation
+- Cross-device cursor position and selection state sync
+
+### 2. Multi-Session Management
+
+**Engineering Description**: Support for multiple concurrent Claude Code sessions with independent state management. Each session maintains its own project context, conversation history, and terminal state. Sessions can be paused, resumed, and switched between seamlessly.
+
+> **User Story**: As a developer working on multiple projects, I want to maintain separate Claude Code sessions for each project simultaneously, so I can context-switch between different codebases without losing progress or mixing conversations.
+
+**Technical Implementation**:
+- Session isolation with unique identifiers
+- Project-specific context management
+- Session persistence across app restarts
+- Background session state preservation
+
+### 3. End-to-End Encryption with Zero-Trust Architecture
+
+**Engineering Description**: All communication between CLI and mobile app encrypted using shared secrets (scan a QR code). Relay server handles only encrypted blobs without access to plaintext data. Public key authentication with challenge-response protocol.
+
+> **User Story**: As a security-conscious developer, I want my code and conversations to remain private even from the service provider, so I can use the tool with proprietary or sensitive codebases without compromising confidentiality.
+
+**Technical Implementation**:
+- AES encryption for all data in transit
+- Key exchange via QR code scanning
+- Zero round-trip authentication protocol
+- Public key hashing for channel identification
+- Open-source relay server for self-hosting
+
+### 4. Offline-First Architecture with Encrypted Pub/Sub
+
+**Engineering Description**: Asynchronous communication through encrypted relay server that acts as a message queue between desktop CLI and mobile app. Desktop CLI logs Claude Code activity, encrypts it, and uploads encrypted blobs to object storage. Mobile app fetches and decrypts these blobs to display progress. Commands flow in reverse - mobile encrypts instructions, uploads to relay, desktop downloads and decrypts to execute.
+
+> **User Story 1**: As a developer, I want to queue up tasks for Claude Code and then go on a hike or ride through train tunnels, knowing that Claude will continue working and I can catch up on progress later without the session dying due to connectivity issues.
+
+> **User Story 2**: As a developer using SSH apps on mobile, I'm frustrated when I type out a long, carefully formatted command but my connection drops before it's sent, and when I reconnect to tmux/screen the terminal clears or breaks formatting, forcing me to retype or paste mangled text that gives poor results. I want a solution where my messages are reliably delivered even if my connection drops during transmission.
+
+**Technical Implementation**:
+- Encrypted blob storage on relay server (server cannot read contents)
+- Desktop CLI writes encrypted activity logs to object storage
+- Mobile app polls for encrypted updates and decrypts locally
+- Bidirectional encrypted pub/sub messaging system
+- Session persistence independent of network connectivity
+- Simple relay server with no access to plaintext data
+
+### 5. Permission Prompts for MCP Tools and Edit Operations
+
+**Engineering Description**: Real-time permission system that intercepts MCP tool calls and file edit operations initiated by Claude Code, presenting mobile developers with contextual Allow/Deny prompts before execution. When Claude Code attempts to use MCP tools (Model Context Protocol integrations like JIRA, Linear, GitHub APIs) or perform sensitive file operations, the mobile app displays the exact operation details and waits for explicit user approval before proceeding.
+
+> **User Story 1**: As a developer using Claude Code with JIRA integration while commuting, I want to see exactly what tickets Claude Code wants to create or modify before it makes those API calls, so I can approve legitimate automation while preventing accidental changes to production systems.
+
+> **User Story 2**: As a developer, I want to review and approve file modifications that Claude Code proposes to make while I'm away from my desk, so I can maintain control over my codebase even when using AI agents remotely through my phone.
+
+> **User Story 3**: As a security-conscious developer, I want to explicitly authorize each MCP tool operation (database queries, API calls, external integrations) that Claude Code attempts, so I can ensure no unauthorized actions occur in my development environment even when I'm not actively monitoring the desktop session.
+
+**Technical Implementation**:
+- Interceptor middleware in CLI that pauses execution for permission-required operations
+- Real-time permission request serialization and transmission to mobile app
+- Mobile UI components for displaying operation context with Allow/Deny buttons
+- Encrypted request/response flow through relay server maintaining zero-trust architecture
+- Operation queuing system that preserves Claude Code session state during permission waits
+- Granular permission categories (file operations, API calls, system commands, external integrations)
+- Per-session permission memory with option to "Remember for this session"
+
+### 6. File Mentions
+
+### 7. Custom Slash Commands and Agent Library
+
+**Engineering Description**: Complete Claude Code slash command and custom agent ecosystem accessible from mobile. All user-defined agents from `~/.claude/agents/` directory are synchronized and available through the mobile interface. The system provides intelligent autocomplete, command history, and seamless agent switching without requiring separate mobile-specific agent definitions.
+
+> **User Story 1**: As a developer, I want to access my custom bedtime planning agent (`/bedtime`) from my phone while lying in bed, so I can set up tomorrow's coding tasks using the same specialized prompts and workflows I've refined on desktop.
+
+> **User Story 2**: As a developer, I want to use my custom code review agent (`/review`) from my phone to analyze pull requests during my commute, so I can provide feedback and catch issues even when I'm away from my multi-monitor setup.
+
+> **User Story 3**: As a developer, I want access to my complete library of specialized agents (database migration helper, API documentation generator, security audit bot) from mobile, so I can run the same high-quality automated workflows regardless of which device I'm using.
+
+**Technical Implementation**:
+- Real-time synchronization of `~/.claude/agents/` directory contents to mobile app
+- Command autocomplete with fuzzy search across all available agents
+- Agent metadata parsing (name, description, tools, model preferences)
+- Session-aware agent switching that preserves context and conversation history
+- Command history persistence across devices with intelligent suggestions
+- Mobile-optimized agent selection UI with categorization and favorites
+- Background agent definition updates without requiring app restart
+
+## Mobile-Optimized User Experience Features
+
+### 8. Push Notification System
+
+**Engineering Description**: Push notifications triggered by Claude Code state changes. Notifications 
+include session status updates, completion alerts, error notifications, and input requests. Unlike social media apps where notification fatigue is a concern, work-focused notifications prioritize immediate awareness over filtering - when you're actively developing, you need to know when each async operation completes to make the next work mode decision.
+
+> **User Story**: As a developer, I want to be notified when Claude Code finishes a task or needs my input, so I can provide guidance without constantly checking my phone or wondering if progress has stalled.
+
+**Technical Implementation**:
+- Comprehensive state change notifications (completion, error, input needed)
+- Immediate delivery without smart filtering or bundling delays
+- Deep linking to specific sessions and exact completion points
+- Rich notification content with operation details
+
+### 9. Voice Agent Integration
+
+**Engineering Description**: AI-powered voice interface that acts as an intermediary between the user and Claude Code. The voice agent processes natural language input, maintains conversational context, and generates structured prompts for Claude Code execution.
+
+**User Stories**:
+
+> As a developer, I want to brainstorm and iterate on coding ideas through voice conversation before committing to a Claude Code execution, so I can think through problems conversationally without immediately locking in a time-consuming code generation process.
+
+> As a developer, I want to work through my ideas in a low-pressure conversational format where I can think out loud and refine my approach before sending Claude Code off to make actual changes, so I can avoid costly mistakes and poorly-defined requirements.
+
+<Cards.Card
+  icon={<BoxIcon />}
+  title="Voice Coding"
+  href="/docs/features/voice-coding"
+  arrow
+  className="max-w-sm my-4"
+/>
+
+
+**Technical Implementation**:
+- Speech-to-text (STT) with Eleven Labs
+- Text-to-speech (TTS) with Eleven Labs
+- Conversation state management with its own context independent of claude code session.
+- Agentic assistant (Claude Sonnet 4) that can send messages to claude code and has some special prompts to get better results in turning rubber duck style stream of conciousness planning into a concrete request for claude code to execute.
