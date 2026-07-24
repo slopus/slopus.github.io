@@ -13,6 +13,7 @@ export function Wordmark() {
 
 export function SiteHeader() {
   return (
+    <div className="site-header-wrap">
     <header className="site-header page-width" id="top">
       <Wordmark />
       <nav aria-label="Primary navigation">
@@ -30,6 +31,7 @@ export function SiteHeader() {
         </a>
       </nav>
     </header>
+    </div>
   )
 }
 

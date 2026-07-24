@@ -33,6 +33,7 @@ a { color: inherit; text-decoration: none; }
 .page-width { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
 
 /* Header */
+.site-header-wrap { background: #f5f0e7; position: sticky; top: 0; z-index: 40; }
 .site-header { align-items: center; display: flex; justify-content: space-between; min-height: 88px; }
 .wordmark { color: #183f38; font-size: 1.05rem; font-weight: 700; letter-spacing: -.04em; }
 .wordmark span { color: #e6522c; margin-left: .28em; }
@@ -178,7 +179,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 
 /* Documentation and legal pages */
 .document-site-shell { min-height: 100vh; }
-.document-site-shell .site-header { border-bottom: 1px solid #d9d3c5; }
+.document-site-shell .site-header-wrap { border-bottom: 1px solid #d9d3c5; }
 .docs-layout { display: grid; gap: 4rem; grid-template-columns: 210px minmax(0, 760px); min-height: calc(100vh - 88px); padding-bottom: 7rem; padding-top: 3.5rem; }
 .docs-sidebar { align-self: start; max-height: calc(100vh - 3rem); overflow-y: auto; position: sticky; scrollbar-color: transparent transparent; scrollbar-width: thin; top: 1.5rem; }
 .docs-sidebar::-webkit-scrollbar { height: 12px; width: 12px; }
@@ -190,12 +191,19 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 
 @media (min-width: 761px) {
   .docs-shell { display: flex; flex-direction: column; height: 100vh; height: 100dvh; overflow: hidden; }
-  .docs-shell .site-header { flex: 0 0 auto; }
-  .docs-shell .docs-layout { flex: 1 1 auto; min-height: 0; overflow: hidden; padding-bottom: 0; padding-top: 0; }
+  .docs-shell .site-header-wrap { flex: 0 0 auto; }
+  .docs-shell .docs-layout { flex: 1 1 auto; margin: 0; max-width: none; min-height: 0; overflow: hidden; padding: 0 0 0 max(32px, calc((100% - 1180px) / 2)); width: 100%; grid-template-columns: 210px minmax(0, 1fr); }
   .docs-shell .docs-sidebar { align-self: stretch; height: 100%; max-height: none; min-height: 0; overflow-y: auto; padding: 3.5rem 2px 3rem; position: static; }
-  .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; padding-top: 3.5rem; }
-  .docs-shell .site-footer { background: transparent; border-top: 1px solid #d9d3c5; margin-top: 4.5rem; padding: 2.5rem 0 3rem; }
-  .docs-shell .footer-inner { gap: 2rem; grid-template-columns: 1fr; width: 100%; }
+  .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; padding: 3.5rem 0 0; }
+  .docs-shell .document-article > .document-breadcrumb,
+  .docs-shell .document-article > .document-content,
+  .docs-shell .document-article > .document-pagination { max-width: 760px; padding-right: 2rem; }
+  .docs-shell .site-footer { margin-top: 4.5rem; }
+  .docs-shell .site-footer .footer-inner { margin-left: 0; }
+}
+
+@media (min-width: 761px) and (max-width: 900px) {
+  .docs-shell .docs-layout { grid-template-columns: 190px minmax(0, 1fr); }
 }
 .docs-sidebar-label { color: #e6522c; font-family: 'DM Mono', monospace; font-size: .65rem; font-weight: 500; letter-spacing: .08em; margin: 0 0 1.3rem; text-transform: uppercase; }
 .docs-navigation { display: grid; gap: 1.5rem; }
