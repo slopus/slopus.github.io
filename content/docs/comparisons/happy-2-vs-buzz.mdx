@@ -1,0 +1,28 @@
+# Happy (2) vs Buzz
+
+We are building Happy (2) - an open source multiplayer AI stack. A self-hosted, Slack-like workspace where people and coding agents build together, from the authors of [Happy](https://happy.engineering). The code is public: [github.com/slopus/happy2](https://github.com/slopus/happy2).
+
+![Happy (2) soft-launch demo](/video/happy2-soft-launch.mp4)
+
+This would have been more novel a day earlier. Block launched [Buzz](https://block.xyz/inside/introducing-buzz-where-humans-and-agents-work-together) ([source](https://github.com/block/buzz), [engineering deep-dive](https://engineering.block.xyz/blog/buzz), [HN discussion](https://news.ycombinator.com/item?id=48995213)) and it made quite a splash — so grounding this post in what the twitter hive mind already knows :D
+
+We share a lot with Buzz: open source, self-hosted, agents as first-class participants. Even the topology is the same — one server owns the truth. And we agree on the core permission principle: don't let agents assume human credentials.
+
+We read the Buzz codebase. Here is where the designs split:
+
+| area | happy (2) | buzz |
+| --- | --- | --- |
+| agent identities | identity == context where you run: channel history + agent state + sandbox | named keypair personas (fizz, honey, bumble) you drag between channels — times everyone on the team |
+| running agents | the server owns execution via Rig, our shared runtime; every channel gets its own docker sandbox with checkpoint/resume, background terminals, subagents. (fair: some things you want local — macOS, your fastest hardware. unsolved) | the relay stores agent profiles but runs nothing; the model runs wherever someone runs a harness |
+| sync | telegram-style: server sequence + getDifference, revoked state gets removed, realtime is just a hint to come sync | replay the signed event log — capped replay, timestamp cursor; once delivered, it's yours forever |
+| permissions | the grant IS the tool surface — you can't attempt what you weren't given | agent carries full buzz-cli + a private key; allowed = discovered by attempting |
+| secrets | attached, not pasted: bound to an agent or channel, injected into the sandbox at run time, never prompt text | `BUZZ_PRIVATE_KEY` straight in the agent's env; per-call approval bypassed by default |
+| documents | collaborative: incremental updates, presence, agents propose / humans approve | single-author notes, last-write-wins — a concurrent write just loses (exit code 5) |
+| plugins | containers behind a capability-only API: MCP tools for agents, app surfaces for the UI, permissions per install | no installable surface — extend via MCP servers, workflows, or new event kinds baked into relay + clients |
+| app previews | port sharing (itself a plugin): the agent exposes a sandbox port at a URL under your domain, audience of your choice | — |
+| UI | worse, for now :D the hard part is the overall UX of supervising agents — not solved by anyone | pretty nice. mostly copied slack, but copied it well; the onboarding is unique |
+| self-hosting | `npx happy2` — one process orchestrates everything (docker only for the sandboxes) | docker compose: rust relay + postgres + redis + minio |
+
+Not offering cloud deploy yet — still early. But yes, self-hosting the whole thing really is one command.
+
+— [@Ex3NDR](https://x.com/Ex3NDR) & [@bra1n_dump](https://x.com/bra1n_dump), looking for a GTM partner with a track record. DMs open.

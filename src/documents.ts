@@ -134,6 +134,13 @@ export const documents: DocumentEntry[] = [
     group: 'Comparisons',
   },
   {
+    path: 'comparisons/happy-2-vs-buzz',
+    sourcePath: '/content/docs/comparisons/happy-2-vs-buzz.mdx',
+    title: 'Happy (2) vs Buzz',
+    description: 'Announcing Happy (2), and how its architecture compares to Block\'s Buzz.',
+    group: 'Comparisons',
+  },
+  {
     path: 'versions/release-notes',
     sourcePath: '/content/docs/versions/release-notes.mdx',
     title: 'Release Notes',

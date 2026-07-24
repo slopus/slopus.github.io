@@ -90,7 +90,14 @@ export function MarkdownDocument({ markdown }: { markdown: string }) {
         <table {...props}>{children}</table>
       </div>
     ),
-    img: ({ alt, ...props }) => <img {...props} alt={alt ?? ''} loading="lazy" />,
+    img: ({ alt, src, ...props }) => {
+      if (typeof src === 'string' && /\.(mp4|webm)$/.test(src)) {
+        return (
+          <video src={src} controls muted autoPlay loop playsInline aria-label={alt ?? ''} />
+        )
+      }
+      return <img {...props} src={src} alt={alt ?? ''} loading="lazy" />
+    },
   }
 
   return (

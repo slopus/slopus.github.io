@@ -9,7 +9,7 @@ describe('static document pages', () => {
   })
 
   it('makes every copied documentation source renderable', () => {
-    expect(documents).toHaveLength(18)
+    expect(documents).toHaveLength(19)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
