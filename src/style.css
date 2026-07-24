@@ -199,7 +199,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .document-article > .document-content,
   .docs-shell .document-article > .document-pagination { max-width: 760px; padding-right: 2rem; }
   .docs-shell .site-footer { margin-top: 4.5rem; }
-  .docs-shell .site-footer .footer-inner { margin-left: 0; }
+  .docs-shell .site-footer .footer-inner { margin: 0; max-width: none; padding: 0 3rem 0 2.5rem; width: auto; }
 }
 
 @media (min-width: 761px) and (max-width: 900px) {
