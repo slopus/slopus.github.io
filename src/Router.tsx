@@ -86,6 +86,7 @@ export function Router({ pathname }: { pathname?: string }) {
         applyPageMetadata(metadataForPath(url.pathname))
         setCurrentPathname(url.pathname)
         window.scrollTo({ top: 0 })
+        document.querySelector('.document-article')?.scrollTo({ top: 0 })
       } else if (url.hash) {
         document.querySelector(url.hash)?.scrollIntoView()
       }

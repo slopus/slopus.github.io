@@ -187,6 +187,16 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .docs-sidebar.is-scrollbar-active { scrollbar-color: #929292 transparent; }
 .docs-sidebar.is-scrollbar-active::-webkit-scrollbar-thumb { background-color: #929292; }
 .docs-sidebar.is-scrollbar-active::-webkit-scrollbar-thumb:hover { background-color: #707070; }
+
+@media (min-width: 761px) {
+  .docs-shell { display: flex; flex-direction: column; height: 100vh; height: 100dvh; overflow: hidden; }
+  .docs-shell .site-header { flex: 0 0 auto; }
+  .docs-shell .docs-layout { flex: 1 1 auto; min-height: 0; overflow: hidden; padding-bottom: 0; padding-top: 0; }
+  .docs-shell .docs-sidebar { align-self: stretch; height: 100%; max-height: none; min-height: 0; overflow-y: auto; padding: 3.5rem 2px 3rem; position: static; }
+  .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; padding-top: 3.5rem; }
+  .docs-shell .site-footer { background: transparent; border-top: 1px solid #d9d3c5; margin-top: 4.5rem; padding: 2.5rem 0 3rem; }
+  .docs-shell .footer-inner { gap: 2rem; grid-template-columns: 1fr; width: 100%; }
+}
 .docs-sidebar-label { color: #e6522c; font-family: 'DM Mono', monospace; font-size: .65rem; font-weight: 500; letter-spacing: .08em; margin: 0 0 1.3rem; text-transform: uppercase; }
 .docs-navigation { display: grid; gap: 1.5rem; }
 .docs-nav-group h2 { color: #183f38; font-family: 'DM Sans', sans-serif; font-size: .77rem; font-weight: 700; letter-spacing: 0; margin: 0 0 .5rem; }
@@ -222,6 +232,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content pre code { background: none; color: inherit; font: inherit; padding: 0; }
 .document-content :not(pre) > code { background: #e5dfd2; border-radius: 5px; color: #c84425; font-family: 'DM Mono', monospace; font-size: .82em; padding: .15em .38em; }
 .document-content img { border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); height: auto; margin: 1.2rem 0; max-width: 100%; }
+.document-content video { border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); height: auto; margin: 1.2rem 0; max-width: 100%; width: 100%; }
 .document-content hr { border: 0; border-top: 1px solid #d9d3c5; margin: 3rem 0; }
 .document-table-wrap { border: 1px solid #d5cebf; border-radius: 10px; margin: 1.6rem 0; overflow-x: auto; }
 .document-content table { border-collapse: collapse; font-size: .82rem; line-height: 1.45; min-width: 620px; width: 100%; }

@@ -69,7 +69,7 @@ export function DocsPage({ path }: { path: string }) {
   }, [])
 
   return (
-    <div className="site-shell document-site-shell">
+    <div className="site-shell document-site-shell docs-shell">
       <SiteHeader />
       <details className="docs-mobile-navigation page-width">
         <summary>Browse documentation</summary>
@@ -107,10 +107,11 @@ export function DocsPage({ path }: { path: string }) {
               </a>
             ) : <span />}
           </nav>
+
+          <SiteFooter />
         </article>
 
       </main>
-      <SiteFooter />
     </div>
   )
 }
