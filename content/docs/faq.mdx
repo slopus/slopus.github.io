@@ -279,6 +279,16 @@ The relay server stores encrypted blobs for sync, which we cannot read.
 
 ## Troubleshooting
 
+### Why does my session stop when I close my MacBook?
+
+Happy controls an agent running on your computer. If that computer sleeps, local execution pauses even if your phone can still display the conversation. Reconnection cannot make work progress during sleep.
+
+First send a request with the lid open. If that also fails, check pending permissions, the agent terminal, and network connectivity before changing sleep settings.
+
+For a MacBook, use a supported external-display setup, leave the lid open with an appropriate idle-sleep configuration, or choose a closed-lid solution compatible with your hardware. Keep an active laptop ventilated and powered. Verify fresh task output from your phone after closing the lid before relying on a long run.
+
+A [step-by-step Apple Silicon MacBook guide](https://clamshell.dev/guides/keep-claude-code-running-lid-closed#phone-setup) includes a timestamp check and Clamshell setup. Clamshell is a separate paid app with a trial; it is optional and is not required to use Happy.
+
 ### "Claude Code not found" error
 
 Happy Coder needs Claude Code installed first:
