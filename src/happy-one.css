@@ -17,25 +17,19 @@
 .one-benefit-number, .one-benefit-title { color: #183f38; font-size: 1.18rem; font-weight: 500; line-height: 1.55; }
 .one-benefit-heading { grid-column: 2; display: flex; align-items: center; gap: .45rem; }
 .one-benefit-body { grid-column: 2; min-height: 3.2em; margin: .3rem 0 0; color: #47645e; font-size: .98rem; line-height: 1.6; text-wrap: pretty; }
-.one-feature-trigger { position: relative; flex: 0 0 24px; width: 24px; height: 24px; padding: 0; border: 0; background: none; color: #47645e; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-.one-feature-trigger::before { content: ''; position: absolute; inset: -10px; }
-.one-feature-trigger:focus-visible { outline: 2px solid #e6522c; outline-offset: 4px; border-radius: 3px; }
-.one-feature-trigger picture, .one-feature-trigger picture img { display: block; width: 26px; height: 26px; }
-.one-teammate-icon { display: block; width: 26px; height: 26px; }
-.one-recycle { display: block; font-size: 22px; line-height: 24px; transform-origin: center; }
-[data-active] .one-recycle { animation: one-recycle-pulse 420ms ease-in-out 1; }
-@keyframes one-recycle-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+.one-benefits li[data-effect] { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.one-benefit-title[role='button']:focus-visible { outline: 2px solid #e6522c; outline-offset: 4px; border-radius: 3px; }
+.one-security-sticker, .one-security-sticker img { display: block; flex: 0 0 26px; width: 26px; height: 26px; }
 .one-mit { display: inline-grid; text-transform: none; }
 .one-mit > span { grid-area: 1 / 1; transition: opacity 180ms ease, transform 180ms ease; }
-.one-mit-upper { opacity: 0; transform: translateY(2px); }
+.one-mit-upper { opacity: 0; transform: translateY(2px); user-select: none; }
 [data-active] .one-mit-lower { opacity: 0; transform: translateY(-2px); }
 [data-active] .one-mit-upper { opacity: 1; transform: translateY(0); }
-.one-provider-stack { display: block; position: relative; width: 24px; height: 22px; }
-.one-provider-stack img { position: absolute; top: 2px; left: 0; padding: 2px; box-sizing: content-box; transition: opacity 180ms ease, transform 220ms ease; }
-.one-provider-stack img:not(:first-child) { opacity: 0; visibility: hidden; transform: translateX(0); }
-[data-active] .one-provider-stack img:not(:first-child) { opacity: 1; visibility: visible; }
-[data-active] .one-provider-stack img:nth-child(2) { transform: translateX(27px); }
-[data-active] .one-provider-stack img:nth-child(3) { transform: translateX(54px); }
+.one-benefit-heading:has(.one-provider-header) { gap: .3rem; }
+.one-provider-header { position: relative; flex: 0 0 20px; width: 20px; height: 20px; }
+.one-provider-header img { display: block; width: 20px; height: 20px; }
+.one-provider-extra { position: absolute; z-index: 2; top: 0; left: 28px; display: flex; gap: 8px; opacity: 0; visibility: hidden; transform: translateX(-8px); transition: opacity 160ms ease, transform 220ms ease; }
+[data-active] .one-provider-extra { opacity: 1; visibility: visible; transform: translateX(0); }
 /* A small teammate at the band edge. The speech bubble stays above the art. */
 .one-teammate { position: absolute; z-index: 50; top: -8px; right: calc((min(100vw - 40px, 34rem) - 100vw) / 2); width: 88px; height: 88px; pointer-events: none; }
 .one-teammate > img { position: absolute; inset: 0; z-index: 1; opacity: 0; transform: translateX(60px); transition: opacity 160ms ease, transform 220ms ease; }
@@ -96,6 +90,7 @@
   .one-benefit-body { font-size: .92rem; }
   .one-benefits { gap: 1.2rem; }
   .one-benefits li[data-effect='multiplayer'] { position: static; }
+  .one-provider-extra { top: -28px; right: 0; left: auto; }
   .one-teammate { top: -24px; right: 0; width: 64px; height: 64px; }
   .one-teammate > img { width: 64px; height: 64px; }
   .one-teammate-message { right: 48px; top: 0; }
@@ -116,8 +111,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .one-provider-stack img, .one-teammate > img, .one-teammate-message, .one-mit > span { transition: none; }
-  [data-active] .one-recycle { animation: none; }
+  .one-provider-extra, .one-teammate > img, .one-teammate-message, .one-mit > span { transition: none; }
   .happy-one .button, .happy-one .store-button { transition: none; }
   .happy-one .button:hover, .happy-one .store-button:hover { transform: none; }
 }

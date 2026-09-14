@@ -24,7 +24,7 @@ function DownloadButtons() {
 
 const features = [
   {
-    title: 'Multi-provider',
+    title: 'Multi-provider within a session',
     body: 'Astra, Fable, and Grok in the same session. Switch models in the middle of a task or delegate to subagents.',
     effect: 'providers',
   },
@@ -36,7 +36,7 @@ const features = [
   {
     title: 'Reuse current subscriptions',
     body: 'Sign in with the Claude, Codex, and Grok plans you already pay for. Happy adds a harness, not another bill.',
-    effect: 'subscriptions',
+    effect: null,
   },
   {
     title: 'Open source MIT',
@@ -59,8 +59,10 @@ function Features() {
           {features.map((feature, index) => (
             <li
               key={feature.title}
-              data-effect={feature.effect}
-              data-active={surprise.active === feature.effect ? '' : undefined}
+              data-effect={feature.effect ?? undefined}
+              data-active={feature.effect && surprise.active === feature.effect ? '' : undefined}
+              onPointerDown={event => surprise.pointerDown(event.pointerType)}
+              onClick={event => surprise.activate(feature.effect, event.detail)}
               onPointerEnter={event => {
                 if (event.pointerType === 'mouse') surprise.enter(feature.effect)
               }}
@@ -70,7 +72,23 @@ function Features() {
             >
               <span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>
               <div className="one-benefit-heading">
-                <span className="one-benefit-title">
+                <span
+                  className="one-benefit-title"
+                  role={feature.effect ? 'button' : undefined}
+                  tabIndex={feature.effect ? 0 : undefined}
+                  aria-expanded={feature.effect === 'providers' || feature.effect === 'multiplayer' ? surprise.active === feature.effect : undefined}
+                  aria-controls={feature.effect === 'providers' || feature.effect === 'multiplayer' ? `one-${feature.effect}-surprise` : undefined}
+                  onFocus={event => {
+                    if (feature.effect && event.currentTarget.matches(':focus-visible')) surprise.focus(feature.effect)
+                  }}
+                  onBlur={() => surprise.blur(feature.effect)}
+                  onKeyDown={event => {
+                    if (feature.effect && (event.key === 'Enter' || event.key === ' ')) {
+                      event.preventDefault()
+                      surprise.focus(feature.effect)
+                    }
+                  }}
+                >
                   {feature.effect === 'opensource' ? <>
                     Open source <span className="one-mit"><span className="one-mit-lower">mit</span><span className="one-mit-upper" aria-hidden="true">MIT</span></span>
                   </> : feature.title}
