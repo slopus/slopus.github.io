@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 
-type Effect = 'providers' | 'multiplayer' | 'opensource' | 'security'
+type Effect = 'providers' | 'multiplayer' | 'security'
 
 export function useFeatureSurprise() {
   const listRef = useRef<HTMLOListElement>(null)
-  const [progress, setProgress] = useState<Record<Effect, number>>({ providers: 0, multiplayer: 0, opensource: 0, security: 0 })
+  const [progress, setProgress] = useState<Record<Effect, number>>({ providers: 0, multiplayer: 0, security: 0 })
 
   useEffect(() => {
     if (!listRef.current) return
@@ -77,7 +77,7 @@ export function FeatureSurprise({ effect, surprise }: {
   surprise: ReturnType<typeof useFeatureSurprise>
 }) {
   const active = surprise.isActive(effect)
-  if (effect === null || effect === 'opensource') return null
+  if (effect === null) return null
   return (
     <>
       {effect === 'providers' && (

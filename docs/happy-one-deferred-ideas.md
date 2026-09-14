@@ -9,8 +9,8 @@ keeps its copy short and reveals its small details through scroll progress.
   removed. Future dialogue would need a specific, believable work context.
 - Skills tooltip (`your skills can choose which model does what`): removed.
   Skills-based model choice belongs in a concrete demo or documentation.
-- Four-second expiry and collapse-on-leave: removed. Provider logos, the teammate,
-  and MIT reveal once and stay for the rest of the page visit. Scrolling back up
+- Four-second expiry and collapse-on-leave: removed. Provider logos and the
+  teammate reveal once and stay for the rest of the page visit. Scrolling back up
   does not reverse discoveries. Cursor, tap, and focus no longer trigger them.
 - Overlapping provider-logo stack and page-edge provider reveal: removed.
   A provider mark in the first heading balances the lock in the last heading;
@@ -18,14 +18,15 @@ keeps its copy short and reveals its small details through scroll progress.
 - Hand-drawn Macintosh mark and CSS-text download badge: replaced by SVG artwork
   based on the existing App Store badge's geometry and outlined lettering.
 
-The recycling pulse, graduation cap, inline teammate thumbnail, and standalone
-key have also been retired. Keep subscriptions plain. MIT uses a 700ms glyph
-outline morph (not a crossfade) without the hat; reduced motion skips directly to
-the capitals. Mobile encryption uses the earlier Desktop lock-and-key
+The recycling pulse, graduation cap, inline teammate thumbnail, standalone key,
+and MIT glyph morph have also been retired. Keep subscriptions plain and MIT
+always uppercase as ordinary selectable text. The removed glyph implementation
+is retained in Git history. Mobile encryption uses the earlier Desktop lock-and-key
 sticker again. The unused artwork remains available for reference.
 
 Keep title/body text selectable and feature rows equal-height. Provider and
 teammate reveals track heading travel from 65% of the visible viewport to its
-center, on desktop and mobile. MIT starts its existing 700ms glyph morph on entry
-to that band; its playback speed is independent of scrolling. Reduced motion
-reveals immediately. The teammate's original placement and size stay unchanged.
+center, on desktop and mobile. Reduced motion reveals immediately. Mobile now
+reserves one horizontal strip for all three provider logos. The 64px teammate is
+anchored to the multiplayer row, with space for the speech bubble beside its
+heading and above the body copy, rather than at the top of the feature band.

@@ -3,7 +3,6 @@ import { AppStoreButton, GooglePlayButton } from './StoreButtons'
 import { GITHUB_HAPPY2, GithubMark, SiteFooter, Wordmark } from './SiteChrome'
 import { PageScrollbar } from './PageScrollbar'
 import { FeatureSurprise, useFeatureSurprise } from './FeatureSurprise'
-import { MitGlyphMorph } from './MitGlyphMorph'
 import { HAPPY } from './products'
 import { KIRILL, STEVE } from './Team'
 import { HappyOneDemo } from './HappyOneDemo'
@@ -44,7 +43,7 @@ const features = [
   {
     title: 'Open source MIT',
     body: 'It runs on your own hardware and your projects stay ordinary folders. Read the code, fork it, ship your own build.',
-    effect: 'opensource',
+    effect: null,
   },
   {
     title: 'End-to-end encrypted mobile app',
@@ -69,8 +68,8 @@ function Features() {
               <span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>
               <div className="one-benefit-heading">
                 <span className="one-benefit-title">
-                  {feature.effect === 'opensource' ? <>
-                    Open source <MitGlyphMorph active={surprise.isActive('opensource')} />
+                  {feature.title === 'Open source MIT' ? <>
+                    Open source <span className="one-mit">MIT</span>
                   </> : feature.title}
                 </span>
                 <FeatureSurprise effect={feature.effect} surprise={surprise} />

@@ -18,10 +18,7 @@
 .one-benefit-heading { grid-column: 2; display: flex; align-items: center; gap: .45rem; }
 .one-benefit-body { grid-column: 2; min-height: 3.2em; margin: .3rem 0 0; color: #47645e; font-size: .98rem; line-height: 1.6; text-wrap: pretty; }
 .one-security-sticker, .one-security-sticker img { display: block; flex: 0 0 26px; width: 26px; height: 26px; }
-.one-mit { position: relative; display: inline-block; width: 1.674em; text-transform: none; }
-.one-mit-text { position: absolute; inset: 0; color: transparent; }
-.one-mit-text::selection { color: #183f38; background: #b5c9a5; }
-.one-mit svg { width: 1.674em; height: 1em; vertical-align: -.2em; fill: currentColor; overflow: visible; }
+.one-mit { text-transform: uppercase; }
 .one-benefit-heading:has(.one-provider-header) { gap: .3rem; }
 .one-provider-header { position: relative; flex: 0 0 20px; width: 20px; height: 20px; }
 .one-provider-header img { display: block; width: 20px; height: 20px; }
@@ -79,11 +76,14 @@
   .one-benefit-number, .one-benefit-title { font-size: 1.06rem; }
   .one-benefit-body { font-size: .92rem; }
   .one-benefits { gap: 1.2rem; }
-  .one-benefits li[data-effect='multiplayer'] { position: static; }
-  .one-provider-extra { top: -28px; right: 0; left: auto; }
-  .one-teammate { top: -24px; right: 0; width: 64px; height: 64px; }
+  /* Reserve the whole logo row so it never stacks or covers the heading. */
+  .one-provider-header { flex-basis: 76px; width: 76px; }
+  .one-benefit-heading:has(.one-provider-header) .one-benefit-title { min-width: 0; text-wrap: balance; }
+  /* Keep the teammate attached to its own row, with room for its bubble. */
+  .one-benefits li[data-effect='multiplayer'] .one-benefit-heading { min-height: 48px; padding-right: 96px; align-items: flex-start; }
+  .one-teammate { top: -16px; right: -20px; width: 64px; height: 64px; }
   .one-teammate > img { width: 64px; height: 64px; }
-  .one-teammate-message { right: 48px; top: 0; }
+  .one-teammate-message { right: 48px; top: 16px; }
   .one-download-actions { margin-top: 2.5rem; }
   .one-download-actions .one-desktop-button { flex-basis: 100%; margin-inline: max(0px, calc((100% - 325px) / 2)); }
   .one-download-actions .store-button { width: 155px; height: 47px; }
