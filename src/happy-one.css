@@ -1,6 +1,5 @@
 /* Unlisted harness landing page. Existing public pages keep their own styles. */
-.happy-one { --one-border: #d5cebf; }
-.happy-one section[id], .happy-one aside[id] { scroll-margin-top: 110px; }
+.happy-one [id] { scroll-margin-top: 110px; }
 .happy-one .site-header { gap: 2rem; align-items: center; }
 .happy-one .site-header .wordmark { display: block; }
 .happy-one .site-header nav { gap: 1.6rem; }
@@ -12,41 +11,22 @@
 .one-link:hover { text-decoration-thickness: 2px; }
 .one-hero { padding-top: 4.5rem; text-align: center; }
 .one-hero h1 { font-size: clamp(3rem, 6.2vw, 5.7rem); margin-bottom: 1.6rem; }
-.one-copy-wrap { max-width: 820px; margin: 0 auto 2rem; }
-.one-examples { color: #47645e; font-size: clamp(1.06rem, 1.8vw, 1.35rem); line-height: 1.7; margin-bottom: .85rem; }
-.one-example { margin: 0 0 .35rem; text-wrap: pretty; }
-.one-example-model { display: inline-flex; align-items: baseline; gap: .3em; white-space: nowrap; }
-.one-model { display: inline-flex; align-items: center; gap: .3em; color: #183f38; font-weight: 600; }
-.one-model img { width: 1em; height: 1em; align-self: center; }
-/* All copy occupies its final space from the start. Reveal once, never rotate. */
-.one-reveal { animation: one-reveal .7s ease-out both; }
-.one-reveal-build { animation-delay: 2s; }
-.one-reveal-astra { animation-delay: 4s; }
-.one-reveal-review { animation-delay: 6s; }
-.one-reveal-research { animation-delay: 8s; }
-@keyframes one-reveal { from { opacity: 0; } to { opacity: 1; } }
-.one-copy-ask { margin: 0 0 1rem; color: #183f38; font-size: 1.2rem; font-weight: 600; }
-.one-copy-team, .one-copy-mobile { color: #47645e; font-size: 1rem; line-height: 1.65; text-wrap: pretty; margin: .5rem 0 0; }
-/* Optional unlisted comparison; the default reads like ordinary sentences. */
-@media (min-width: 701px) {
-  .one-examples-aligned { width: max-content; max-width: 100%; margin-inline: auto; }
-  .one-examples-aligned .one-example { display: flex; align-items: baseline; gap: .4em; }
-  .one-examples-aligned .one-example-action { flex: 1; text-align: right; }
-  .one-examples-aligned .one-example-model { flex: 0 0 6.5em; text-align: left; }
-}
-.one-download-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .85rem; }
+.one-benefits { width: min(100%, 490px); margin: 2rem auto 0; padding-left: 1.25rem; text-align: left; list-style: disc; }
+.one-benefits li { padding-left: .25rem; }
+.one-benefits li::marker { color: #e6522c; font-size: .85em; }
+.one-benefits summary { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; min-height: 44px; padding: .45rem 0; color: #183f38; font-size: 1.18rem; font-weight: 500; line-height: 1.55; cursor: pointer; list-style: none; }
+.one-benefits summary::-webkit-details-marker { display: none; }
+.one-benefits summary::after { content: '+'; flex: none; color: #637970; font-size: 1.1rem; font-weight: 400; }
+.one-benefits details[open] summary::after { content: '−'; }
+.one-benefits summary:hover { color: #e6522c; }
+.one-benefits p { margin: .2rem 1.75rem 1rem 0; color: #47645e; font-size: 1rem; line-height: 1.65; text-wrap: pretty; }
+.one-download-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .85rem; margin-top: 3.25rem; }
 .one-download-actions .button { min-height: 54px; }
+.one-mobile-note { margin: 1.25rem auto 0; color: #47645e; font-size: 1rem; line-height: 1.65; text-wrap: pretty; }
 .one-product-shot { position: relative; margin: 3.5rem 0 0; padding-right: 115px; }
 .one-desktop-frame { border: 1px solid #30473d; border-radius: 12px; overflow: hidden; background: #1e1e1e; box-shadow: 0 30px 70px -40px #183f386b; }
 .one-desktop-frame img { display: block; width: 100%; height: auto; }
 .one-hero-phone { position: absolute; right: 0; bottom: -15px; width: 19%; height: auto; border-radius: 30px; box-shadow: 0 25px 50px -25px #183f3866; }
-.one-features { padding-bottom: 3.5rem; }
-.one-feature { display: flex; align-items: center; gap: 3.5rem; padding-block: 3rem; border-bottom: 1px solid var(--one-border); }
-.one-feature-title { display: flex; align-items: center; gap: 1.4rem; flex: 1; min-width: 0; }
-.one-feature h2 { font-size: clamp(1.7rem, 2.5vw, 2.25rem); margin: 0; max-width: 350px; }
-.one-feature > p { flex: 1; color: #47645e; font-size: 1.02rem; line-height: 1.75; margin: 0; }
-.one-sticker { display: block; width: 96px; height: 96px; flex: none; }
-.one-sticker img { display: block; width: 100%; height: 100%; }
 .one-terminal-section { display: flex; align-items: center; gap: 5rem; padding-block: 6.5rem 2.5rem; }
 .one-terminal-section > div { flex: 1; min-width: 0; }
 .one-terminal-section h2 { margin-bottom: 1.5rem; }
@@ -68,13 +48,11 @@
 .one-download .one-platform-note { font-size: .88rem; }
 .one-download-stores { justify-content: center; margin-top: 1.75rem; gap: .85rem; }
 .one-download-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem 1.5rem; margin-top: 2rem; }
-.happy-one a:focus-visible { outline: 3px solid #e6522c; outline-offset: 5px; }
+.happy-one a:focus-visible, .one-benefits summary:focus-visible { outline: 3px solid #e6522c; outline-offset: 5px; }
 
 @media (max-width: 960px) {
   .one-returning-link { display: none; }
-  .one-feature, .one-terminal-section { gap: 2.5rem; }
-  .one-feature-title { gap: 1rem; }
-  .one-sticker { width: 72px; height: 72px; }
+  .one-terminal-section { gap: 2.5rem; }
   .one-product-shot { padding-right: 75px; }
 }
 
@@ -85,20 +63,15 @@
   .happy-one .site-header nav > a[href*="github.com"] { display: none; }
   .one-hero { padding-top: 2.5rem; }
   .one-hero h1 { font-size: clamp(2.55rem, 9.2vw, 4rem); }
-  .one-examples { max-width: 400px; margin-inline: auto; line-height: 1.6; }
-  .one-example { margin-bottom: .65rem; }
-  .one-copy-team, .one-copy-mobile { font-size: .94rem; }
-  .one-copy-wrap { margin-bottom: 1.7rem; }
+  .one-benefits { margin-top: 1.5rem; }
+  .one-benefits summary { font-size: 1.06rem; }
+  .one-benefits p, .one-mobile-note { font-size: .94rem; }
+  .one-download-actions { margin-top: 2.5rem; }
   .one-download-actions .button { flex-basis: 100%; margin-inline: max(0px, calc((100% - 325px) / 2)); }
   .one-download-actions .store-button, .one-download-stores .store-button { width: 155px; height: 47px; }
   .one-product-shot { margin-top: 2.5rem; padding-right: 35px; }
   .one-desktop-frame { border-radius: 6px; }
   .one-hero-phone { width: 24%; bottom: -12px; border-radius: 14px; }
-  .one-features { padding-bottom: 2rem; }
-  .one-feature { flex-direction: column; align-items: stretch; gap: 1.25rem; padding-block: 2rem; }
-  .one-feature h2 { font-size: 1.7rem; }
-  .one-feature > p { font-size: .96rem; }
-  .one-sticker { width: 68px; height: 68px; }
   .one-terminal-section { flex-direction: column; align-items: stretch; gap: 1.25rem; padding-block: 4rem 1rem; }
   .one-terminal-section .terminal-body { padding: 1.2rem; font-size: clamp(.82rem, 3.6vw, 1rem); }
   .one-existing { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
@@ -108,5 +81,4 @@
 @media (prefers-reduced-motion: reduce) {
   .happy-one .button, .happy-one .store-button { transition: none; }
   .happy-one .button:hover, .happy-one .store-button:hover { transform: none; }
-  .one-reveal { animation: none; }
 }

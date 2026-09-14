@@ -1,8 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
 import { AppStoreButton, GooglePlayButton } from './StoreButtons'
 import { GITHUB_HAPPY, GITHUB_HAPPY2, SiteFooter, WEB_APP, Wordmark } from './SiteChrome'
 import { HAPPY } from './products'
-import { HappyOneCopy } from './HappyOneCopy'
 import './happy-one.css'
 
 const PAGE = '/tmp/happy-one/'
@@ -20,71 +18,41 @@ function desktopPlatform() {
   return 'other'
 }
 
-function Sticker({ name }: { name: 'robot' | 'closed-lock' }) {
-  const element = useRef<HTMLPictureElement>(null)
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    if (!element.current || typeof IntersectionObserver === 'undefined') return
-    const observer = new IntersectionObserver(entries => {
-      if (entries.some(entry => entry.isIntersecting)) {
-        setVisible(true)
-        observer.disconnect()
-      }
-    }, { threshold: 0.5 })
-    observer.observe(element.current)
-    return () => observer.disconnect()
-  }, [])
-
-  return (
-    <picture ref={element} className="one-sticker" aria-hidden="true">
-      <source media="(prefers-reduced-motion: reduce)" srcSet={`/img/happy-one/stickers/${name}-still.webp`} />
-      <img src={`/img/happy-one/stickers/${name}${visible ? '' : '-still'}.webp`} width="112" height="112" alt="" loading="lazy" />
-    </picture>
-  )
-}
-
 const features = [
   {
     title: 'Combine models natively.',
     body: 'Use Astra, Fable, and Grok together. Each keeps its native prompts and tools, with shared context across the work.',
-    sticker: null,
   },
   {
     title: 'Use your current subscriptions.',
     body: 'Connect your existing Claude, Codex, and Grok accounts. Use the subscriptions you already pay for.',
-    sticker: null,
   },
   {
     title: 'Work with your team.',
     body: 'Invite a colleague or friend into the same sessions. Share context, steer the work, and review changes together.',
-    sticker: null,
   },
   {
     title: 'Open source. MIT.',
     body: 'Run Happy on your own hardware. Read the code, change it, and make it part of how you work.',
-    sticker: null,
   },
   {
     title: 'Create bots, too.',
-    body: 'Give recurring work a persistent bot—with the same models, subscriptions, and team, in the same open-source harness.',
-    sticker: 'robot',
+    body: 'Give recurring work a persistent bot. Keep the same models, subscriptions, and team, in the same open-source harness.',
   },
 ] as const
 
 function Features() {
   return (
-    <section className="one-features page-width" id="product" aria-label="Happy features">
+    <ul className="one-benefits" id="product" aria-label="What you get with Happy">
       {features.map(feature => (
-        <article className="one-feature" key={feature.title}>
-          <div className="one-feature-title">
-            {feature.sticker && <Sticker name={feature.sticker} />}
-            <h2>{feature.title}</h2>
-          </div>
-          <p>{feature.body}</p>
-        </article>
+        <li key={feature.title}>
+          <details>
+            <summary>{feature.title}</summary>
+            <p>{feature.body}</p>
+          </details>
+        </li>
       ))}
-    </section>
+    </ul>
   )
 }
 
@@ -111,9 +79,9 @@ function Terminal() {
         <h2 id="terminal-heading">Love your terminal?<br /><em>Keep it.</em></h2>
         <p>The original Happy experience: Claude Code and Codex in your terminal,
           with remote control from your phone.</p>
-        <p>Start, steer, approve, and review—then continue the same session at your keyboard.
+        <p>Start, steer, approve, and review. Then continue the same session at your keyboard.
           Your tools, your setup. No Desktop app required.</p>
-        <p className="one-terminal-note">Using Desktop? <strong>Mobile Access</strong> handles CLI setup for you.</p>
+        <p className="one-terminal-note">Using Desktop? Onboarding handles this setup for you.</p>
       </div>
       <div className="one-terminal-example">
         <div className="terminal">
@@ -168,13 +136,7 @@ export default function HappyOneApp() {
       <main>
         <section className="one-hero page-width" aria-labelledby="one-heading">
           <h1 id="one-heading">Any model. Your team.<br /><em>Happy Harness.</em></h1>
-          <HappyOneCopy />
-          <div className="one-download-actions">
-            <a className="button button-primary one-desktop-button" href={`${PAGE}#download`}>
-              {platform === 'mac' ? 'Download for macOS' : 'Desktop · macOS preview'}
-            </a>
-            <AppStoreButton /><GooglePlayButton />
-          </div>
+          <Features />
           <figure className="one-product-shot">
             <div className="one-desktop-frame">
               <img src="/img/happy-one/desktop-demo.webp" width="1836" height="996"
@@ -184,9 +146,15 @@ export default function HappyOneApp() {
             <img className="one-hero-phone" src="/happy-app.png" width="736" height="1490"
               alt="Happy Coder on iPhone, reviewing a Claude Code session and code changes." />
           </figure>
+          <div className="one-download-actions">
+            <a className="button button-primary one-desktop-button" href={`${PAGE}#download`}>
+              {platform === 'mac' ? 'Download for macOS' : 'Desktop · macOS preview'}
+            </a>
+            <AppStoreButton /><GooglePlayButton />
+          </div>
+          <p className="one-mobile-note">Left your desk? Use the end-to-end encrypted mobile client.</p>
         </section>
         <Terminal />
-        <Features />
         <ExistingUsers />
         <Downloads />
       </main>
