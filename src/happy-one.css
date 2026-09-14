@@ -88,10 +88,11 @@
   .one-benefit-number, .one-benefit-title { font-size: 1.06rem; }
   .one-benefit-body { font-size: .92rem; }
   .one-benefits { gap: 1.2rem; }
+  .one-benefits li[data-effect='multiplayer'] { position: static; }
   .one-provider-extra { top: -28px; right: 0; left: auto; }
-  .one-teammate { top: -20px; right: -20px; width: 48px; height: 48px; }
-  .one-teammate > img { width: 48px; height: 48px; }
-  .one-teammate-message { right: 32px; top: 16px; padding: .3rem .4rem; font-size: .65rem; }
+  .one-teammate { top: -24px; right: 0; width: 64px; height: 64px; }
+  .one-teammate > img { width: 64px; height: 64px; }
+  .one-teammate-message { right: 48px; top: 0; }
   .one-download-actions { margin-top: 2.5rem; }
   .one-download-actions .one-desktop-button { flex-basis: 100%; margin-inline: max(0px, calc((100% - 325px) / 2)); }
   .one-download-actions .store-button { width: 155px; height: 47px; }
