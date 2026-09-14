@@ -9,8 +9,9 @@ keeps its copy short and its interactions tied to hover, keyboard focus, or tap.
   removed. Future dialogue would need a specific, believable work context.
 - Skills tooltip (`your skills can choose which model does what`): removed.
   Skills-based model choice belongs in a concrete demo or documentation.
-- Four-second expiry: removed. Visible interaction state does not expire while
-  the person is still hovering, focusing, or engaging with it on touch.
+- Four-second expiry and collapse-on-leave: removed. Provider logos, the teammate,
+  and MIT reveal once and stay for the rest of the page visit. Pointer leave,
+  tap-away, focus changes, and Escape do not reset these three discoveries.
 - Overlapping provider-logo stack and page-edge provider reveal: removed.
   A provider mark in the first heading balances the lock in the last heading;
   the extra logos reveal cleanly on interaction without peeking through at rest.
@@ -18,8 +19,9 @@ keeps its copy short and its interactions tied to hover, keyboard focus, or tap.
   based on the existing App Store badge's geometry and outlined lettering.
 
 The recycling pulse, graduation cap, inline teammate thumbnail, and standalone
-key have also been retired. Keep subscriptions plain. MIT retains its case morph
-without the hat, and mobile encryption uses the earlier Desktop lock-and-key
+key have also been retired. Keep subscriptions plain. MIT uses a 700ms glyph
+outline morph (not a crossfade) without the hat; reduced motion skips directly to
+the capitals. Mobile encryption uses the earlier Desktop lock-and-key
 sticker again. The unused artwork remains available for reference.
 
 Keep title/body text selectable and feature rows equal-height. The plain-text

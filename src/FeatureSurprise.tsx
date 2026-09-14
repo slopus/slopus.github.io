@@ -6,8 +6,14 @@ export function useFeatureSurprise() {
   const [hovered, setHovered] = useState<Effect | null>(null)
   const [focused, setFocused] = useState<Effect | null>(null)
   const [tapped, setTapped] = useState<Effect | null>(null)
+  const [revealed, setRevealed] = useState<Effect[]>([])
   const pointerType = useRef('mouse')
   const active = hovered ?? focused ?? tapped
+  const reveal = (effect: Effect | null) => {
+    if (effect && effect !== 'security') {
+      setRevealed(current => current.includes(effect) ? current : [...current, effect])
+    }
+  }
 
   useEffect(() => {
     const clear = () => {
@@ -33,14 +39,15 @@ export function useFeatureSurprise() {
   }, [])
 
   return {
-    active,
-    enter: setHovered,
+    isActive: (effect: Effect | null) => effect !== null && (revealed.includes(effect) || active === effect),
+    enter: (effect: Effect | null) => { setHovered(effect); reveal(effect) },
     leave: (effect: Effect | null) => setHovered(current => current === effect ? null : current),
-    focus: setFocused,
+    focus: (effect: Effect | null) => { setFocused(effect); reveal(effect) },
     blur: (effect: Effect | null) => setFocused(current => current === effect ? null : current),
     pointerDown: (type: string) => { pointerType.current = type },
     activate: (effect: Effect | null, detail: number) => {
       if (!effect || window.getSelection()?.isCollapsed === false) return
+      reveal(effect)
       if (detail === 0) setFocused(effect)
       else if (pointerType.current !== 'mouse') setTapped(current => current === effect ? null : effect)
     },
@@ -51,7 +58,7 @@ export function FeatureSurprise({ effect, surprise }: {
   effect: Effect | null
   surprise: ReturnType<typeof useFeatureSurprise>
 }) {
-  const active = effect !== null && surprise.active === effect
+  const active = surprise.isActive(effect)
   if (effect === null || effect === 'opensource') return null
   return (
     <>

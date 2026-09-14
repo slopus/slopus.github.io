@@ -2,6 +2,7 @@ import { AppStoreButton, GooglePlayButton } from './StoreButtons'
 import { GITHUB_HAPPY2, GithubMark, SiteFooter, Wordmark } from './SiteChrome'
 import { PageScrollbar } from './PageScrollbar'
 import { FeatureSurprise, useFeatureSurprise } from './FeatureSurprise'
+import { MitGlyphMorph } from './MitGlyphMorph'
 import { HAPPY } from './products'
 import { KIRILL, STEVE } from './Team'
 import './happy-one.css'
@@ -60,7 +61,7 @@ function Features() {
             <li
               key={feature.title}
               data-effect={feature.effect ?? undefined}
-              data-active={feature.effect && surprise.active === feature.effect ? '' : undefined}
+              data-active={surprise.isActive(feature.effect) ? '' : undefined}
               onPointerDown={event => surprise.pointerDown(event.pointerType)}
               onClick={event => surprise.activate(feature.effect, event.detail)}
               onPointerEnter={event => {
@@ -76,7 +77,7 @@ function Features() {
                   className="one-benefit-title"
                   role={feature.effect ? 'button' : undefined}
                   tabIndex={feature.effect ? 0 : undefined}
-                  aria-expanded={feature.effect === 'providers' || feature.effect === 'multiplayer' ? surprise.active === feature.effect : undefined}
+                  aria-expanded={feature.effect === 'providers' || feature.effect === 'multiplayer' ? surprise.isActive(feature.effect) : undefined}
                   aria-controls={feature.effect === 'providers' || feature.effect === 'multiplayer' ? `one-${feature.effect}-surprise` : undefined}
                   onFocus={event => {
                     if (feature.effect && event.currentTarget.matches(':focus-visible')) surprise.focus(feature.effect)
@@ -90,7 +91,7 @@ function Features() {
                   }}
                 >
                   {feature.effect === 'opensource' ? <>
-                    Open source <span className="one-mit"><span className="one-mit-lower">mit</span><span className="one-mit-upper" aria-hidden="true">MIT</span></span>
+                    Open source <MitGlyphMorph active={surprise.isActive('opensource')} />
                   </> : feature.title}
                 </span>
                 <FeatureSurprise effect={feature.effect} surprise={surprise} />

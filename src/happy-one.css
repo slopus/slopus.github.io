@@ -20,11 +20,10 @@
 .one-benefits li[data-effect] { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .one-benefit-title[role='button']:focus-visible { outline: 2px solid #e6522c; outline-offset: 4px; border-radius: 3px; }
 .one-security-sticker, .one-security-sticker img { display: block; flex: 0 0 26px; width: 26px; height: 26px; }
-.one-mit { display: inline-grid; text-transform: none; }
-.one-mit > span { grid-area: 1 / 1; transition: opacity 180ms ease, transform 180ms ease; }
-.one-mit-upper { opacity: 0; transform: translateY(2px); user-select: none; }
-[data-active] .one-mit-lower { opacity: 0; transform: translateY(-2px); }
-[data-active] .one-mit-upper { opacity: 1; transform: translateY(0); }
+.one-mit { position: relative; display: inline-block; width: 1.674em; text-transform: none; }
+.one-mit-text { position: absolute; inset: 0; color: transparent; }
+.one-mit-text::selection { color: #183f38; background: #b5c9a5; }
+.one-mit svg { width: 1.674em; height: 1em; vertical-align: -.2em; fill: currentColor; overflow: visible; }
 .one-benefit-heading:has(.one-provider-header) { gap: .3rem; }
 .one-provider-header { position: relative; flex: 0 0 20px; width: 20px; height: 20px; }
 .one-provider-header img { display: block; width: 20px; height: 20px; }
@@ -89,11 +88,10 @@
   .one-benefit-number, .one-benefit-title { font-size: 1.06rem; }
   .one-benefit-body { font-size: .92rem; }
   .one-benefits { gap: 1.2rem; }
-  .one-benefits li[data-effect='multiplayer'] { position: static; }
   .one-provider-extra { top: -28px; right: 0; left: auto; }
-  .one-teammate { top: -24px; right: 0; width: 64px; height: 64px; }
-  .one-teammate > img { width: 64px; height: 64px; }
-  .one-teammate-message { right: 48px; top: 0; }
+  .one-teammate { top: -20px; right: -20px; width: 48px; height: 48px; }
+  .one-teammate > img { width: 48px; height: 48px; }
+  .one-teammate-message { right: 32px; top: 16px; padding: .3rem .4rem; font-size: .65rem; }
   .one-download-actions { margin-top: 2.5rem; }
   .one-download-actions .one-desktop-button { flex-basis: 100%; margin-inline: max(0px, calc((100% - 325px) / 2)); }
   .one-download-actions .store-button { width: 155px; height: 47px; }
@@ -111,7 +109,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .one-provider-extra, .one-teammate > img, .one-teammate-message, .one-mit > span { transition: none; }
+  .one-provider-extra, .one-teammate > img, .one-teammate-message { transition: none; }
   .happy-one .button, .happy-one .store-button { transition: none; }
   .happy-one .button:hover, .happy-one .store-button:hover { transform: none; }
 }
