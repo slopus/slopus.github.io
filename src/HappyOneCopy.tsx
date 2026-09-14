@@ -1,62 +1,35 @@
-import { useEffect, useState } from 'react'
-
-const tasks = ['a bug fix', 'a release', 'a Stripe integration', 'a sign-in flow']
-
-function TaskSlot() {
-  const [index, setIndex] = useState(0)
-
-  useEffect(() => {
-    const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
-    let timer: number | undefined
-    const update = () => {
-      window.clearInterval(timer)
-      if (!motion.matches && !document.hidden) {
-        timer = window.setInterval(() => setIndex(value => (value + 1) % tasks.length), 4000)
-      }
-    }
-    update()
-    motion.addEventListener('change', update)
-    document.addEventListener('visibilitychange', update)
-    return () => {
-      window.clearInterval(timer)
-      motion.removeEventListener('change', update)
-      document.removeEventListener('visibilitychange', update)
-    }
-  }, [])
-
+function Model({ name, provider }: { name: string; provider: string }) {
   return (
-    <>
-      <span className="one-task-slot" aria-hidden="true"><span key={index}>{tasks[index]}</span></span>
-      <span className="one-sr-only">a release</span>
-    </>
+    <span className="one-model">
+      <img src={`/img/happy-one/providers/${provider}.svg`} width="22" height="22" alt="" />
+      {name}
+    </span>
   )
 }
 
-/** Review-only: replace with the chosen plain copy before promoting this page. */
 export function HappyOneCopy() {
-  const [variant, setVariant] = useState(0)
+  // Review-only comparison: no visible selector or automatic layout switching.
+  const aligned = new URLSearchParams(window.location.search).get('layout') === 'aligned'
 
   return (
     <div className="one-copy-wrap">
-      <button
-        type="button"
-        className="one-copy-switch"
-        aria-describedby="one-copy-help"
-        onClick={() => setVariant(value => (value + 1) % 3)}
-      >
-        <span className="one-copy-lead">
-          {variant === 0 && <>Build fast with Astra. Review the UI with Fable. <strong>Just ask.</strong></>}
-          {variant === 1 && <>Prefer Astra for speed and Fable for UI review? <strong>Just ask.</strong></>}
-          {variant === 2 && <>Plan <TaskSlot /> with Astra. Review the changes with Fable. <strong>Just ask.</strong></>}
-        </span>
-        <span className="one-copy-team">
-          {variant === 0 && 'Want a second opinion? Invite a colleague or friend to your Happy server.'}
-          {variant === 1 && 'Bring a colleague or friend into the work. Invite them to your Happy server.'}
-          {variant === 2 && 'Need another perspective? Invite a colleague or friend to your Happy server.'}
-        </span>
-        <span className="one-copy-mobile">Left your desk? Use the end-to-end encrypted mobile client.</span>
-      </button>
-      <span id="one-copy-help" className="one-sr-only">Preview copy {variant + 1} of 3. Activate to read the next version.</span>
+      <div className={`one-examples${aligned ? ' one-examples-aligned' : ''}`}>
+        <p className="one-example">
+          <span className="one-example-action one-reveal one-reveal-build">Build a Stripe integration</span>{' '}
+          <span className="one-example-model one-reveal one-reveal-astra">with <Model name="Astra" provider="openai" /></span>
+        </p>
+        <p className="one-example one-reveal one-reveal-review">
+          <span className="one-example-action">Review the UI</span>{' '}
+          <span className="one-example-model">with <Model name="Fable" provider="claude" /></span>
+        </p>
+        <p className="one-example one-reveal one-reveal-research">
+          <span className="one-example-action">Research trendy alternatives on Twitter</span>{' '}
+          <span className="one-example-model">with <Model name="Grok" provider="grok" /></span>
+        </p>
+      </div>
+      <p className="one-copy-ask">Just ask.</p>
+      <p className="one-copy-team">Want a second opinion? Invite a colleague or friend to your Happy server.</p>
+      <p className="one-copy-mobile">Left your desk? Use the end-to-end encrypted mobile client.</p>
     </div>
   )
 }

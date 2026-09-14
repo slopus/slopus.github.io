@@ -46,14 +46,29 @@ function Sticker({ name }: { name: 'robot' | 'closed-lock' }) {
 
 const features = [
   {
-    sticker: 'robot',
-    title: 'Run several tasks at once.',
-    body: 'Give agents separate workspaces, then review their files, diffs, terminals, and previews in one app. Your sessions are saved, so closing a window doesn’t erase the work.',
+    title: 'Combine models natively.',
+    body: 'Use Astra, Fable, and Grok together. Each keeps its native prompts and tools, with shared context across the work.',
+    sticker: null,
   },
   {
-    sticker: 'closed-lock',
-    title: 'Run it on your own hardware.',
-    body: 'Work locally or on a shared server. Your projects stay ordinary folders, and the harness is open source. Remote access is end-to-end encrypted; your chosen AI provider processes the requests you send it.',
+    title: 'Use your current subscriptions.',
+    body: 'Connect your existing Claude, Codex, and Grok accounts. Use the subscriptions you already pay for.',
+    sticker: null,
+  },
+  {
+    title: 'Work with your team.',
+    body: 'Invite a colleague or friend into the same sessions. Share context, steer the work, and review changes together.',
+    sticker: null,
+  },
+  {
+    title: 'Open source. MIT.',
+    body: 'Run Happy on your own hardware. Read the code, change it, and make it part of how you work.',
+    sticker: null,
+  },
+  {
+    title: 'Create bots, too.',
+    body: 'Give recurring work a persistent bot—with the same models, subscriptions, and team, in the same open-source harness.',
+    sticker: 'robot',
   },
 ] as const
 
@@ -61,9 +76,9 @@ function Features() {
   return (
     <section className="one-features page-width" id="product" aria-label="Happy features">
       {features.map(feature => (
-        <article className="one-feature" key={feature.sticker}>
+        <article className="one-feature" key={feature.title}>
           <div className="one-feature-title">
-            <Sticker name={feature.sticker} />
+            {feature.sticker && <Sticker name={feature.sticker} />}
             <h2>{feature.title}</h2>
           </div>
           <p>{feature.body}</p>
@@ -94,15 +109,16 @@ function Terminal() {
     <section className="one-terminal-section page-width" aria-labelledby="terminal-heading">
       <div>
         <h2 id="terminal-heading">Love your terminal?<br /><em>Keep it.</em></h2>
-        <p>Mobile remote control for the Claude Code and Codex you already use.
-          Install the CLI, start a session, and scan its QR code with Happy Coder.</p>
-        <p>Read the conversation, approve requests, and send instructions from your phone.
-          Your computer runs the session; your phone controls it. No Desktop app required.</p>
+        <p>The original Happy experience: Claude Code and Codex in your terminal,
+          with remote control from your phone.</p>
+        <p>Start, steer, approve, and review—then continue the same session at your keyboard.
+          Your tools, your setup. No Desktop app required.</p>
+        <p className="one-terminal-note">Using Desktop? <strong>Mobile Access</strong> handles CLI setup for you.</p>
       </div>
       <div className="one-terminal-example">
         <div className="terminal">
           <div className="terminal-bar"><span /><span /><span /><em>Terminal</em></div>
-          <pre className="terminal-body"><code><span className="code-comment"># Install the CLI</span>{'\n'}<span className="terminal-prompt">$</span> npm install -g happy{'\n\n'}<span className="code-comment"># Start Claude Code</span>{'\n'}<span className="terminal-prompt">$</span> happy claude{'\n\n'}<span className="code-comment"># Or start Codex</span>{'\n'}<span className="terminal-prompt">$</span> happy codex</code></pre>
+          <pre className="terminal-body"><code><span className="code-comment"># Not using Happy Desktop?{'\n'}# Install the CLI here:</span>{'\n'}<span className="terminal-prompt">$</span> npm install -g happy{'\n\n'}<span className="code-comment"># Start Claude Code</span>{'\n'}<span className="terminal-prompt">$</span> happy claude{'\n\n'}<span className="code-comment"># Or start Codex</span>{'\n'}<span className="terminal-prompt">$</span> happy codex</code></pre>
         </div>
       </div>
     </section>

@@ -13,14 +13,27 @@
 .one-hero { padding-top: 4.5rem; text-align: center; }
 .one-hero h1 { font-size: clamp(3rem, 6.2vw, 5.7rem); margin-bottom: 1.6rem; }
 .one-copy-wrap { max-width: 820px; margin: 0 auto 2rem; }
-.one-copy-switch { display: flex; flex-direction: column; align-items: center; gap: .75rem; width: 100%; border: 0; padding: 0; background: none; color: #47645e; font: inherit; line-height: 1.65; text-align: center; cursor: pointer; }
-.one-copy-lead { font-size: 1.23rem; min-height: 1.65em; text-wrap: pretty; }
-.one-copy-lead strong { color: #183f38; white-space: nowrap; font-weight: 600; }
-.one-copy-team, .one-copy-mobile { font-size: 1rem; text-wrap: pretty; }
-.one-task-slot { display: inline-flex; height: 1.65em; overflow: hidden; vertical-align: bottom; color: #e6522c; }
-.one-task-slot > span { animation: one-slot-in .25s ease-out; white-space: nowrap; }
-@keyframes one-slot-in { from { opacity: 0; transform: translateY(.6em); } to { opacity: 1; transform: translateY(0); } }
-.one-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.one-examples { color: #47645e; font-size: clamp(1.06rem, 1.8vw, 1.35rem); line-height: 1.7; margin-bottom: .85rem; }
+.one-example { margin: 0 0 .35rem; text-wrap: pretty; }
+.one-example-model { display: inline-flex; align-items: baseline; gap: .3em; white-space: nowrap; }
+.one-model { display: inline-flex; align-items: center; gap: .3em; color: #183f38; font-weight: 600; }
+.one-model img { width: 1em; height: 1em; align-self: center; }
+/* All copy occupies its final space from the start. Reveal once, never rotate. */
+.one-reveal { animation: one-reveal .7s ease-out both; }
+.one-reveal-build { animation-delay: 2s; }
+.one-reveal-astra { animation-delay: 4s; }
+.one-reveal-review { animation-delay: 6s; }
+.one-reveal-research { animation-delay: 8s; }
+@keyframes one-reveal { from { opacity: 0; } to { opacity: 1; } }
+.one-copy-ask { margin: 0 0 1rem; color: #183f38; font-size: 1.2rem; font-weight: 600; }
+.one-copy-team, .one-copy-mobile { color: #47645e; font-size: 1rem; line-height: 1.65; text-wrap: pretty; margin: .5rem 0 0; }
+/* Optional unlisted comparison; the default reads like ordinary sentences. */
+@media (min-width: 701px) {
+  .one-examples-aligned { width: max-content; max-width: 100%; margin-inline: auto; }
+  .one-examples-aligned .one-example { display: flex; align-items: baseline; gap: .4em; }
+  .one-examples-aligned .one-example-action { flex: 1; text-align: right; }
+  .one-examples-aligned .one-example-model { flex: 0 0 6.5em; text-align: left; }
+}
 .one-download-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .85rem; }
 .one-download-actions .button { min-height: 54px; }
 .one-product-shot { position: relative; margin: 3.5rem 0 0; padding-right: 115px; }
@@ -38,6 +51,7 @@
 .one-terminal-section > div { flex: 1; min-width: 0; }
 .one-terminal-section h2 { margin-bottom: 1.5rem; }
 .one-terminal-section p { color: #47645e; font-size: 1.02rem; line-height: 1.75; }
+.one-terminal-section .one-terminal-note { font-size: .9rem; }
 .one-terminal-section code { font-family: 'DM Mono', monospace; font-size: .88em; }
 .one-terminal-section .terminal { margin-bottom: 1rem; border-radius: 10px; }
 .one-terminal-section .terminal-body { padding: 1.7rem; font-size: 1.07rem; line-height: 1.8; }
@@ -54,7 +68,7 @@
 .one-download .one-platform-note { font-size: .88rem; }
 .one-download-stores { justify-content: center; margin-top: 1.75rem; gap: .85rem; }
 .one-download-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem 1.5rem; margin-top: 2rem; }
-.happy-one a:focus-visible, .one-copy-switch:focus-visible { outline: 3px solid #e6522c; outline-offset: 5px; }
+.happy-one a:focus-visible { outline: 3px solid #e6522c; outline-offset: 5px; }
 
 @media (max-width: 960px) {
   .one-returning-link { display: none; }
@@ -71,9 +85,9 @@
   .happy-one .site-header nav > a[href*="github.com"] { display: none; }
   .one-hero { padding-top: 2.5rem; }
   .one-hero h1 { font-size: clamp(2.55rem, 9.2vw, 4rem); }
-  .one-copy-lead { font-size: 1.06rem; min-height: 4.95em; }
+  .one-examples { max-width: 400px; margin-inline: auto; line-height: 1.6; }
+  .one-example { margin-bottom: .65rem; }
   .one-copy-team, .one-copy-mobile { font-size: .94rem; }
-  .one-copy-team { min-height: 3.3em; }
   .one-copy-wrap { margin-bottom: 1.7rem; }
   .one-download-actions .button { flex-basis: 100%; margin-inline: max(0px, calc((100% - 325px) / 2)); }
   .one-download-actions .store-button, .one-download-stores .store-button { width: 155px; height: 47px; }
@@ -86,6 +100,7 @@
   .one-feature > p { font-size: .96rem; }
   .one-sticker { width: 68px; height: 68px; }
   .one-terminal-section { flex-direction: column; align-items: stretch; gap: 1.25rem; padding-block: 4rem 1rem; }
+  .one-terminal-section .terminal-body { padding: 1.2rem; font-size: clamp(.82rem, 3.6vw, 1rem); }
   .one-existing { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
   .one-download { padding-block: 3.5rem; }
 }
@@ -93,5 +108,5 @@
 @media (prefers-reduced-motion: reduce) {
   .happy-one .button, .happy-one .store-button { transition: none; }
   .happy-one .button:hover, .happy-one .store-button:hover { transform: none; }
-  .one-task-slot > span { animation: none; }
+  .one-reveal { animation: none; }
 }
