@@ -1,6 +1,7 @@
 import { AppStoreButton, GooglePlayButton } from './StoreButtons'
 import { GITHUB_HAPPY2, SiteFooter, Wordmark } from './SiteChrome'
 import { HAPPY } from './products'
+import { KIRILL, STEVE } from './Team'
 import './happy-one.css'
 
 const PAGE = '/tmp/happy-one/'
@@ -11,8 +12,9 @@ function DownloadButtons() {
   const windows = typeof navigator !== 'undefined' && /Windows/i.test(navigator.userAgent)
   return (
     <div className="one-download-actions">
-      <a className="button button-primary one-desktop-button" href={DOWNLOAD}>
-        Download for {windows ? 'Windows' : 'macOS'}
+      <a className="store-button one-desktop-button" href={DOWNLOAD} aria-label={`Download Happy for ${windows ? 'Windows' : 'macOS'}`}>
+        <span>Download for</span>
+        <strong>{windows ? 'Windows' : 'macOS'}</strong>
       </a>
       <AppStoreButton /><GooglePlayButton />
     </div>
@@ -44,19 +46,23 @@ const features = [
 
 function Features() {
   return (
-    <ol className="one-benefits" id="product" aria-label="What you get with Happy" role="list">
-      {features.map((feature, index) => (
-        <li key={feature.title}>
-          <details>
-            <summary>
-              <span><span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>{' '}{feature.title}</span>
-              <span className="one-benefit-chevron" aria-hidden="true" />
-            </summary>
-            <p>{feature.body}</p>
-          </details>
-        </li>
-      ))}
-    </ol>
+    <section className="one-benefits-section" id="product" aria-label="What you get with Happy">
+      <div className="page-width">
+        <ol className="one-benefits" role="list">
+          {features.map((feature, index) => (
+            <li key={feature.title}>
+              <details>
+                <summary>
+                  <span><span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>{' '}{feature.title}</span>
+                  <span className="one-benefit-chevron" aria-hidden="true" />
+                </summary>
+                <p>{feature.body}</p>
+              </details>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
   )
 }
 
@@ -133,13 +139,22 @@ export default function HappyOneApp() {
               alt="Happy Coder on iPhone, reviewing a Claude Code session and code changes." />
           </figure>
           <DownloadButtons />
-          <Features />
         </section>
+        <Features />
         <Terminal />
         <ExistingUsers />
         <Downloads />
       </main>
-      <SiteFooter product={product} />
+      <SiteFooter product={product} statement={
+        <>
+          We build interfaces around agents{' '}
+          <span className="one-footer-people">
+            <a href={STEVE.href} target="_blank" rel="noopener noreferrer">{STEVE.label}</a>
+            {' and '}
+            <a href={KIRILL.href} target="_blank" rel="noopener noreferrer">{KIRILL.label}</a>
+          </span>
+        </>
+      } />
     </div>
   )
 }

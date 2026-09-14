@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { APP_STORE_LINK, GOOGLE_PLAY_LINK } from './StoreButtons'
 import { HAPPY, HAPPY2, products, type Product } from './products'
 
@@ -94,15 +95,15 @@ export function SiteHeader({
   )
 }
 
-export function SiteFooter({ product = HAPPY }: { product?: Product }) {
+export function SiteFooter({ product = HAPPY, statement }: { product?: Product; statement?: ReactNode }) {
   const currentYear = new Date().getFullYear()
 
   return (
     <footer className="site-footer">
       <div className="page-width footer-inner">
         <p className="footer-statement">
-          Happy Engineering builds the interfaces around agents: how you control them, how they run,
-          and how teams share context with them.
+          {statement ?? <>Happy Engineering builds the interfaces around agents: how you control them, how they run,
+            and how teams share context with them.</>}
         </p>
         <div className="footer-meta">
           <div className="footer-links" aria-label="Footer navigation">

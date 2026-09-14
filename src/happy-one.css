@@ -9,7 +9,8 @@
 .happy-one h3 { font: 600 1.15rem/1.3 'Space Grotesk', 'DM Sans', sans-serif; letter-spacing: -.02em; }
 .one-hero { padding-top: 4.5rem; text-align: center; }
 .one-hero h1 { font-size: clamp(3rem, 6.2vw, 5.7rem); margin-bottom: 1.6rem; }
-.one-benefits { width: max-content; max-width: 100%; margin: 3.25rem auto 0; padding: 0; text-align: left; list-style: none; }
+.one-benefits-section { margin-top: 3.25rem; }
+.one-benefits { width: max-content; max-width: 100%; margin: 0 auto; padding: 0; text-align: left; list-style: none; }
 .one-benefits summary { display: flex; align-items: baseline; gap: .3em; min-height: 44px; padding: .45rem 0; color: #183f38; font-size: 1.18rem; font-weight: 500; line-height: 1.55; cursor: pointer; list-style: none; -webkit-user-select: none; user-select: none; }
 .one-benefits summary::-webkit-details-marker { display: none; }
 .one-benefit-number { font-variant-numeric: tabular-nums; }
@@ -19,7 +20,9 @@
 /* Expanded copy wraps to the headings' width without shifting the centered list. */
 .one-benefits p { contain: inline-size; margin: .2rem 0 1rem; color: #47645e; font-size: 1rem; line-height: 1.65; text-wrap: pretty; }
 .one-download-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .85rem; margin-top: 3.25rem; }
-.one-download-actions .button { min-height: 54px; }
+.one-desktop-button { flex-direction: column; color: #fff; line-height: 1.1; }
+.one-desktop-button span { font-size: 11px; }
+.one-desktop-button strong { font-size: 25px; font-weight: 500; }
 .one-product-shot { position: relative; margin: 3.5rem 0 0; padding-right: 115px; }
 .one-desktop-frame { border: 1px solid #30473d; border-radius: 12px; overflow: hidden; background: #1e1e1e; box-shadow: 0 30px 70px -40px #183f386b; }
 .one-desktop-frame img { display: block; width: 100%; height: auto; }
@@ -32,7 +35,7 @@
 .one-terminal-section code { font-family: 'DM Mono', monospace; font-size: .88em; }
 .one-terminal-section .terminal { margin-bottom: 1rem; border-radius: 10px; }
 .one-terminal-section .terminal-body { padding: 1.7rem; font-size: 1.07rem; line-height: 1.8; }
-.one-existing-section { background: #dbe2cd; padding-block: 2.5rem; }
+.one-benefits-section, .one-existing-section { background: #dbe2cd; padding-block: 2.5rem; }
 .one-existing { display: flex; align-items: center; gap: 2rem; }
 .one-existing > div { flex: 1; }
 .one-existing h3 { margin-bottom: .5rem; }
@@ -40,6 +43,8 @@
 .one-download { padding-block: 5rem; text-align: center; }
 .one-download h2 { margin-bottom: 1.25rem; }
 .one-download > p { color: #47645e; font-size: 1rem; }
+.one-footer-people { display: block; margin-top: .85rem; font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 400; }
+.one-footer-people a { text-decoration: underline; text-underline-offset: 3px; }
 .happy-one a:focus-visible, .one-benefits summary:focus-visible { outline: 3px solid #e6522c; outline-offset: 5px; }
 
 @media (max-width: 960px) {
@@ -55,12 +60,13 @@
   .happy-one .site-header nav > a[href*="github.com"] { display: none; }
   .one-hero { padding-top: 2.5rem; }
   .one-hero h1 { font-size: clamp(2.55rem, 9.2vw, 4rem); }
-  .one-benefits { margin-top: 2.5rem; }
+  .one-benefits-section { margin-top: 2.5rem; }
   .one-benefits summary { font-size: 1.06rem; }
   .one-benefits p { font-size: .94rem; }
   .one-download-actions { margin-top: 2.5rem; }
-  .one-download-actions .button { flex-basis: 100%; margin-inline: max(0px, calc((100% - 325px) / 2)); }
+  .one-download-actions .one-desktop-button { flex-basis: 100%; margin-inline: max(0px, calc((100% - 325px) / 2)); }
   .one-download-actions .store-button { width: 155px; height: 47px; }
+  .one-desktop-button strong { font-size: 22px; }
   .one-product-shot { margin-top: 2.5rem; padding-right: 35px; }
   .one-desktop-frame { border-radius: 6px; }
   .one-hero-phone { width: 24%; bottom: -12px; border-radius: 14px; }
