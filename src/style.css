@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
+  color-scheme: light;
   color: #183f38;
   background: #f5f0e7;
   font-family: 'DM Sans', Arial, sans-serif;
@@ -15,9 +16,12 @@
   --section-gap: 6rem; /* 96px — gap between same-background sections */
 }
 
-/* Page scrollbar. The harness page is excluded: a custom scrollbar is always a
-   classic one that reserves a gutter, so its full-bleed bands would stop short
-   of the window edge. Left native, an overlay scrollbar draws over them. */
+/* Page scrollbar. The harness page hides the native one and paints its own in
+   PageScrollbar.tsx: a native scrollbar reserves a gutter, so the full-bleed
+   bands would stop short of the window edge. */
+html:has(.happy-one) { scrollbar-width: none; }
+html:has(.happy-one)::-webkit-scrollbar { width: 0; height: 0; }
+html[data-scrollbar-dragging] { scroll-behavior: auto; }
 html:not(:has(.happy-one)) { scrollbar-color: #929292 transparent; scrollbar-width: thin; }
 html:not(:has(.happy-one))::-webkit-scrollbar { height: 12px; width: 12px; }
 html:not(:has(.happy-one))::-webkit-scrollbar-track { background: transparent; }

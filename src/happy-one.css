@@ -10,9 +10,14 @@
 .one-hero { padding-top: 4.5rem; text-align: center; }
 .one-hero h1 { font-size: clamp(3rem, 6.2vw, 5.7rem); margin-bottom: 1.6rem; text-transform: lowercase; }
 .one-benefits-section { margin-top: 3.25rem; }
-.one-benefits { width: max-content; max-width: 100%; margin: 0 auto; padding: 0; text-align: left; list-style: none; text-transform: lowercase; }
-.one-benefits li { min-height: 44px; padding: .45rem 0; color: #183f38; font-size: 1.18rem; font-weight: 500; line-height: 1.55; -webkit-user-select: none; user-select: none; }
-.one-benefit-number { font-variant-numeric: tabular-nums; }
+/* Numbered like a thread: the number hangs, the note keeps a uniform two lines. */
+.one-benefits { width: min(100%, 34rem); margin: 0 auto; padding: 0; text-align: left; list-style: none; text-transform: lowercase; }
+.one-benefits li { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: .35em; }
+.one-benefits li + li { margin-top: 1.4rem; }
+.one-benefit-number { grid-column: 1; font-variant-numeric: tabular-nums; }
+.one-benefit-number, .one-benefit-title { color: #183f38; font-size: 1.18rem; font-weight: 500; line-height: 1.55; }
+.one-benefit-title { grid-column: 2; }
+.one-benefit-body { grid-column: 2; min-height: 3.2em; margin: .3rem 0 0; color: #47645e; font-size: .98rem; line-height: 1.6; text-wrap: pretty; }
 .one-download-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .85rem; margin-top: 3.25rem; }
 .one-desktop-button { flex-direction: column; color: #fff; line-height: 1.1; }
 .one-desktop-button span { font-size: 11px; }
@@ -41,8 +46,17 @@
 .one-footer-people a { text-decoration: underline; text-underline-offset: 3px; }
 .happy-one a:focus-visible { outline: 3px solid #e6522c; outline-offset: 5px; }
 
+/* Custom-painted page scrollbar; the native one is hidden in style.css. */
+.one-scrollbar { position: fixed; top: 0; right: 0; bottom: 0; z-index: 60; display: none; width: 10px; touch-action: none; }
+.one-scrollbar[data-overflow] { display: block; }
+.one-scrollbar-thumb { position: absolute; top: 0; right: 2px; width: 6px; border-radius: 999px; background: #183f3800; transition: background-color 480ms linear; }
+.one-scrollbar[data-active] .one-scrollbar-thumb { background: #183f3845; transition: none; }
+.one-scrollbar:hover .one-scrollbar-thumb { background: #183f3870; transition: none; }
+/* A pointer that cannot hover has nothing to grab, so it never covers content. */
+@media (hover: none) { .one-scrollbar { pointer-events: none; } }
+@media (prefers-reduced-motion: reduce) { .one-scrollbar-thumb { transition: none; } }
+
 @media (max-width: 960px) {
-  .one-returning-link { display: none; }
   .one-terminal-section { gap: 2.5rem; }
   .one-product-shot { padding-right: 75px; }
 }
@@ -55,7 +69,9 @@
   .one-hero { padding-top: 2.5rem; }
   .one-hero h1 { font-size: clamp(2.55rem, 9.2vw, 4rem); }
   .one-benefits-section { margin-top: 2.5rem; }
-  .one-benefits li { font-size: 1.06rem; }
+  .one-benefit-number, .one-benefit-title { font-size: 1.06rem; }
+  .one-benefit-body { font-size: .92rem; }
+  .one-benefits li + li { margin-top: 1.2rem; }
   .one-download-actions { margin-top: 2.5rem; }
   .one-download-actions .one-desktop-button { flex-basis: 100%; margin-inline: max(0px, calc((100% - 325px) / 2)); }
   .one-download-actions .store-button { width: 155px; height: 47px; }

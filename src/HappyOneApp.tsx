@@ -1,5 +1,6 @@
 import { AppStoreButton, GooglePlayButton } from './StoreButtons'
-import { GITHUB_HAPPY2, SiteFooter, Wordmark } from './SiteChrome'
+import { GITHUB_HAPPY2, GithubMark, SiteFooter, Wordmark } from './SiteChrome'
+import { PageScrollbar } from './PageScrollbar'
 import { HAPPY } from './products'
 import { KIRILL, STEVE } from './Team'
 import './happy-one.css'
@@ -22,11 +23,26 @@ function DownloadButtons() {
 }
 
 const features = [
-  'Multi-provider',
-  'Natively multiplayer',
-  'Reuse current subscriptions',
-  'Open source MIT',
-  'E2E encrypted mobile app',
+  {
+    title: 'Multi-provider',
+    body: 'Astra, Fable, and Grok in the same session. Switch models in the middle of a task and the context comes with you.',
+  },
+  {
+    title: 'Natively multiplayer',
+    body: 'Invite a colleague or a friend into the session. You both watch the same agent work, and either of you can steer it.',
+  },
+  {
+    title: 'Reuse current subscriptions',
+    body: 'Sign in with the Claude, Codex, and Grok plans you already pay for. Happy adds a harness, not another bill.',
+  },
+  {
+    title: 'Open source MIT',
+    body: 'It runs on your own hardware and your projects stay ordinary folders. Read the code, fork it, ship your own build.',
+  },
+  {
+    title: 'E2E encrypted mobile app',
+    body: 'Left your desk? The same sessions are already on your phone, and what moves between your devices is encrypted.',
+  },
 ] as const
 
 function Features() {
@@ -34,9 +50,11 @@ function Features() {
     <section className="one-benefits-section" id="product" aria-label="What you get with Happy">
       <div className="page-width">
         <ol className="one-benefits" role="list">
-          {features.map((title, index) => (
-            <li key={title}>
-              <span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>{' '}{title}
+          {features.map((feature, index) => (
+            <li key={feature.title}>
+              <span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>
+              <span className="one-benefit-title">{feature.title}</span>
+              <p className="one-benefit-body">{feature.body}</p>
             </li>
           ))}
         </ol>
@@ -94,14 +112,21 @@ function Downloads() {
 export default function HappyOneApp() {
   return (
     <div className="site-shell happy-one">
+      <PageScrollbar />
       <div className="site-header-wrap">
         <header className="site-header page-width">
           <Wordmark product={product} />
           <nav aria-label="Primary navigation">
-            <a href={`${PAGE}#product`}>Product</a>
-            <a className="one-returning-link" href={`${PAGE}#already-happy`}>Already using Happy?</a>
-            <a href={GITHUB_HAPPY2} target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a className="nav-cta" href={`${PAGE}#download`}>Download</a>
+            <a
+              className="nav-github"
+              href={GITHUB_HAPPY2}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Happy on GitHub"
+            >
+              <GithubMark />
+              <span>GitHub</span>
+            </a>
           </nav>
         </header>
       </div>
