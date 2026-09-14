@@ -14,28 +14,18 @@ The native masters and transparent bezel WebM remain in the desktop demo workspa
 
 ## Playback and phone treatment
 
-- The default frame is Apple's iPhone 16 Pro Black Titanium artwork, sourced from
+- The player uses Apple's flat iPhone 16 Pro Black Titanium artwork, sourced from
   James Jingyi's Device Mockups collection. No invented CSS chassis remains. Its
-  exact screen opening is x=102, y=100, 1206×2622 in the 1406×2822 image.
-- Capable desktops lazily enhance to tranminhluan's CC-BY iPhone 16 Pro model,
-  also used by Niranjan Kumar's public Three.js site. Original hardware geometry
-  is unchanged; the atlas is adapted to neutral black and the sample wallpaper
-  removed. Screen placement matches the measured flat frame. Full author,
-  license, source, and modification credits are linked below the player.
-- The 3D bundle/model are not requested below 1000px, without a fine hovering
-  pointer, with fewer than eight logical processors, with under 8 GB of reported
-  device memory, or with reduced motion/save-data. Missing memory reporting alone
-  does not disqualify an otherwise capable Mac. WebGL2 must accept
-  `failIfMajorPerformanceCaveat`; context loss or repeatedly expensive draws falls
-  back to the real frame without replacing either video element.
-- Video-frame callbacks drive the texture. Animation frames run only while a
-  rotation is settling or a new video frame needs drawing. Pixel ratio is capped
-  at 1.5; off-screen/hidden rendering is suspended and all GPU resources cleaned up.
-- Zoom animates only the phone's CSS transform. Its layout box and canvas stay
-  at expanded size, so zoom never reallocates or clears the drawing buffer. Real
-  viewport resizes use the untransformed content box and update canvas dimensions
-  in the same animation frame as rendering. The first 3D frame waits for its
-  initial size. Mobile retains its separate portrait reveal without WebGL.
+  exact screen opening is x=102, y=100, 1206×2622 in the 1406×2822 image. The phone
+  stays upright, including its initial parked pose, and scales forward at the
+  existing cue. There is no active 3D renderer or model download on any device.
+- `HappyOnePhone3D.tsx`, `happyOnePhoneScene.ts`, the model, and its dependencies
+  are retained as an unused alternative. Its original capability gates and
+  stable-canvas zoom fix remain intact, but the landing page does not import it.
+- Zoom animates the phone's CSS transform, keeping its desktop layout at expanded
+  size. Mobile retains its separate portrait reveal. Author, license, source,
+  and modification credits are linked beside Docs, Privacy, and Terms in this
+  page's footer, not beneath the player.
 - Desktop is the clock. Play/pause, seeks, buffering, and replay coordinate both
   elements; ordinary `timeupdate` events correct drift greater than 120 ms.
 - Videos load when the figure first intersects the viewport. Playback pauses when
@@ -43,7 +33,7 @@ The native masters and transparent bezel WebM remain in the desktop demo workspa
   when playback was wanted; an explicit Pause stays paused.
 - Reduced-motion and save-data visitors start paused. Keyboard-accessible controls
   provide play/pause, sound, scrubbing, and persistent phone inspection. Hover gives
-  a small enlargement or real-model tilt. Reduced motion suppresses animation.
+  a small upright enlargement. Reduced motion suppresses animation.
 - Website captions use the exact original narration cues in a responsive text
   layer: a capsule over desktop, 16px text beneath the visual on small screens.
   The video derivative removes only its burned-in caption layer; timing, camera,

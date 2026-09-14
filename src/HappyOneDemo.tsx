@@ -139,7 +139,7 @@ export function HappyOneDemo() {
           <video ref={desktop} poster="/video/happy-one/v14/desktop-poster.webp" width="1920" height="1080"
             muted={muted} playsInline preload="none" aria-label="Happy Desktop demo with subtitles" />
         </div>
-        <HappyOnePhone video={phone} focused={phoneFocused} inspecting={inspecting} inspect={() => setInspecting(value => !value)} />
+        <HappyOnePhone video={phone} inspecting={inspecting} inspect={() => setInspecting(value => !value)} />
         <p className="one-demo-caption" aria-label="Demo subtitle">{caption && <span>{caption}</span>}</p>
       </div>
       <figcaption className="one-demo-controls">
@@ -150,7 +150,6 @@ export function HappyOneDemo() {
         <span className="one-demo-time">{timestamp(time)} / {timestamp(duration)}</span>
         <button type="button" aria-label={muted ? 'Unmute demo' : 'Mute demo'} onClick={() => setMuted(value => !value)}>{muted ? 'Sound off' : 'Sound on'}</button>
       </figcaption>
-      <p className="one-demo-credits"><a href="/video/happy-one/device/CREDITS.txt" target="_blank" rel="noopener noreferrer">Device artwork credits</a></p>
       {error && <p className="one-demo-error" role="status">The demo couldn’t load. <a href={`${MEDIA}/desktop.mp4`}>Open the video</a>.</p>}
     </figure>
   )

@@ -95,7 +95,7 @@ export function SiteHeader({
   )
 }
 
-export function SiteFooter({ product = HAPPY, statement }: { product?: Product; statement?: ReactNode }) {
+export function SiteFooter({ product = HAPPY, statement, additionalLinks }: { product?: Product; statement?: ReactNode; additionalLinks?: ReactNode }) {
   const currentYear = new Date().getFullYear()
 
   return (
@@ -110,6 +110,7 @@ export function SiteFooter({ product = HAPPY, statement }: { product?: Product; 
             <a href={`${product.docsBase}/`}>Docs</a>
             <a href="/privacy/">Privacy</a>
             <a href="/terms/">Terms</a>
+            {additionalLinks}
           </div>
           <Wordmark product={product} />
           <p>© {currentYear} Happy Engineering</p>

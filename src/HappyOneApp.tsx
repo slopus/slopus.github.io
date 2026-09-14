@@ -160,7 +160,9 @@ export default function HappyOneApp() {
         <ExistingUsers />
         <Downloads />
       </main>
-      <SiteFooter product={product} statement={
+      <SiteFooter product={product} additionalLinks={
+        <a href="/video/happy-one/device/CREDITS.txt" target="_blank" rel="noopener noreferrer">Credits</a>
+      } statement={
         <>
           We build interfaces around agents: how you control them, how they run,
           and how teams share context with them.

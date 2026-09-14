@@ -5,15 +5,16 @@
 /* Keep the full-size drawing surface stable. Resizing a WebGL canvas clears it;
    zoom must be a compositor transform, not an animated layout width. */
 .one-demo-phone { position: absolute; z-index: 2; right: -1%; bottom: 10%; width: 24.5%; aspect-ratio: 1406 / 2822; padding: 0; border: 0; background: transparent; cursor: zoom-in; transform-origin: bottom right; transform: translate3d(0, 12.5%, 0) scale(.7346938776); will-change: transform; transition: transform 850ms cubic-bezier(.22,.8,.24,1); -webkit-tap-highlight-color: transparent; }
-.one-phone-flat { position: absolute; display: block; inset: 0; transform: rotate(3deg); filter: drop-shadow(0 18px 18px #183f3830); transition: transform 650ms cubic-bezier(.22,.8,.24,1); }
+.one-phone-flat { position: absolute; display: block; inset: 0; filter: drop-shadow(0 18px 18px #183f3830); transition: transform 650ms cubic-bezier(.22,.8,.24,1); }
+.one-demo-phone-3d .one-phone-flat { transform: rotate(3deg); }
 .one-phone-flat > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
 /* Exact screen opening in Apple's 1406×2822 frame: 102,100,1206,2622. */
 .one-phone-flat > video { position: absolute; left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; object-fit: fill; background: #000; mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
 .one-phone-canvas { position: absolute; display: block; inset: 0; width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 18px 18px #183f3830); }
 .one-demo-phone[data-renderer='webgl'] .one-phone-flat { opacity: 0; }
 .one-demo-stage[data-phone-focus] .one-demo-phone { transform: translate3d(0, 0, 0) scale(1); }
-.one-demo-stage[data-phone-focus] .one-phone-flat { transform: rotate(0deg); }
-.one-demo-phone:hover .one-phone-flat, .one-demo-phone:focus-visible .one-phone-flat { transform: rotate(0deg) scale(1.025); }
+.one-demo-stage[data-phone-focus] .one-phone-flat { transform: none; }
+.one-demo-phone:hover .one-phone-flat, .one-demo-phone:focus-visible .one-phone-flat { transform: scale(1.025); }
 .one-demo-phone[aria-pressed='true'] { cursor: zoom-out; }
 .one-demo-caption { position: absolute; z-index: 3; left: 0; bottom: 3.5%; display: flex; justify-content: center; align-items: center; width: 91%; margin: 0; pointer-events: none; font-family: Arial, Helvetica, sans-serif; font-size: clamp(14px, 1.45vw, 22px); line-height: 1.3; letter-spacing: -.025em; text-align: center; }
 .one-demo-caption > span { display: block; max-width: 90%; padding: .45em 1.5em; color: #fff; background: #05060ded; border: 1px solid #ffffff18; border-radius: 999px; }
@@ -24,8 +25,6 @@
 .one-demo-time { flex: none; font-variant-numeric: tabular-nums; }
 .one-demo button:focus-visible, .one-demo input:focus-visible { outline: 2px solid #e6522c; outline-offset: 5px; }
 .one-demo-error { font-size: .85rem; color: #8c3926; }
-.one-demo-credits { margin: .1rem 9% 0 0; text-align: right; font-size: 10px; line-height: 1.4; color: #63786d; }
-.one-demo-credits a { color: inherit; text-underline-offset: 2px; }
 @media (max-width: 700px) {
   .one-demo { margin-top: 2.5rem; }
   .one-demo-stage { height: calc((100vw - 40px) * .5625 + 64px); padding: 0; overflow: hidden; transition: height 750ms cubic-bezier(.22,.8,.24,1); }
@@ -39,7 +38,6 @@
   .one-demo-caption > span { max-width: 100%; padding: 0; border: 0; border-radius: 0; background: none; color: inherit; }
   .one-demo-controls { gap: .7rem; margin: 0; font-size: 12px; }
   .one-demo-controls button { min-width: 36px; }
-  .one-demo-credits { margin-right: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .one-demo-stage, .one-demo-desktop, .one-demo-phone, .one-phone-flat { transition: none; }
