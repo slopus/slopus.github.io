@@ -26,7 +26,7 @@ function DownloadButtons() {
 
 const features = [
   {
-    title: 'Multi-provider within a session',
+    title: 'Multi-provider within one session',
     body: 'Astra, Fable, and Grok in the same session. Switch models in the middle of a task or delegate to subagents.',
     effect: 'providers',
   },
@@ -46,7 +46,7 @@ const features = [
     effect: 'opensource',
   },
   {
-    title: 'E2E encrypted mobile app',
+    title: 'End-to-end encrypted mobile app',
     body: 'Left your desk? The same sessions are already on your phone, and what moves between your devices is encrypted.',
     effect: 'security',
   },
