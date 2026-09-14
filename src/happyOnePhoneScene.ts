@@ -37,6 +37,8 @@ export async function phoneSceneCreate(host: HTMLElement, video: HTMLVideoElemen
   let videoFrame = 0
   let warmFrames = 0
   let slowFrames = 0
+  let sizeReady = false
+  let pendingSize: { width: number; height: number } | undefined
   let model: THREE.Group | undefined
   let environment: THREE.WebGLRenderTarget | undefined
   let display: THREE.Mesh | undefined
@@ -76,13 +78,27 @@ export async function phoneSceneCreate(host: HTMLElement, video: HTMLVideoElemen
   }
   function draw() {
     animation = 0
-    if (disposed || !shown || document.hidden || !model || !display) return
+    if (disposed || !shown || document.hidden || !model || !display || (!sizeReady && !pendingSize)) return
     const x = focused ? target.y * .06 : target.y * .08
     const y = (focused ? 0 : -.18) + target.x * .18
     group.rotation.x += (x - group.rotation.x) * .22
     group.rotation.y += (y - group.rotation.y) * .22
     group.rotation.z += ((focused ? 0 : -.025) - group.rotation.z) * .22
     const start = performance.now()
+    if (pendingSize) {
+      const { width, height } = pendingSize
+      pendingSize = undefined
+      // Apply real layout resizes in the same frame as the redraw. Assigning
+      // canvas dimensions in ResizeObserver would clear an already drawn frame.
+      const vertical = .1495369 / (2710 / 2822)
+      camera.left = -vertical * width / height / 2
+      camera.right = -camera.left
+      camera.top = vertical / 2
+      camera.bottom = -camera.top
+      camera.updateProjectionMatrix()
+      renderer.setSize(width, height, false)
+      sizeReady = true
+    }
     renderer.render(scene, camera)
     if (host.dataset.renderer !== 'webgl') host.dataset.renderer = 'webgl'
     // Shader warm-up is excluded. Repeated expensive draws abandon enhancement.
@@ -110,17 +126,12 @@ export async function phoneSceneCreate(host: HTMLElement, video: HTMLVideoElemen
       videoFrame = 0
     } else { invalidate(); trackVideo() }
   }
-  const resize = new ResizeObserver(() => {
-    const { width, height } = host.getBoundingClientRect()
+  const resize = new ResizeObserver(([entry]) => {
+    // Layout size excludes the animated CSS transform. Allocate once at the
+    // expanded size so zooming never reallocates or undersamples the canvas.
+    const { width, height } = entry.contentRect
     if (!width || !height || disposed) return
-    // The sourced frame's 2710px body occupies 96.03% of its 2822px canvas.
-    const vertical = .1495369 / (2710 / 2822)
-    camera.left = -vertical * width / height / 2
-    camera.right = -camera.left
-    camera.top = vertical / 2
-    camera.bottom = -camera.top
-    camera.updateProjectionMatrix()
-    renderer.setSize(width, height, false)
+    pendingSize = { width, height }
     invalidate()
   })
   canvas.addEventListener('webglcontextlost', contextLost)

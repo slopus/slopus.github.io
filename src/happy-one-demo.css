@@ -2,14 +2,16 @@
 .one-demo-stage { position: relative; padding-right: 9%; }
 .one-demo-desktop { overflow: hidden; border: 1px solid #30473d; border-radius: 12px; background: #1e1e1e; box-shadow: 0 30px 70px -40px #183f386b; }
 .one-demo-desktop video { display: block; width: 100%; height: auto; }
-.one-demo-phone { position: absolute; z-index: 2; right: -1%; bottom: -2%; width: 18%; aspect-ratio: 1406 / 2822; padding: 0; border: 0; background: transparent; cursor: zoom-in; transition: width 850ms cubic-bezier(.22,.8,.24,1), bottom 850ms cubic-bezier(.22,.8,.24,1); -webkit-tap-highlight-color: transparent; }
+/* Keep the full-size drawing surface stable. Resizing a WebGL canvas clears it;
+   zoom must be a compositor transform, not an animated layout width. */
+.one-demo-phone { position: absolute; z-index: 2; right: -1%; bottom: 10%; width: 24.5%; aspect-ratio: 1406 / 2822; padding: 0; border: 0; background: transparent; cursor: zoom-in; transform-origin: bottom right; transform: translate3d(0, 12.5%, 0) scale(.7346938776); will-change: transform; transition: transform 850ms cubic-bezier(.22,.8,.24,1); -webkit-tap-highlight-color: transparent; }
 .one-phone-flat { position: absolute; display: block; inset: 0; transform: rotate(3deg); filter: drop-shadow(0 18px 18px #183f3830); transition: transform 650ms cubic-bezier(.22,.8,.24,1); }
 .one-phone-flat > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
 /* Exact screen opening in Apple's 1406×2822 frame: 102,100,1206,2622. */
 .one-phone-flat > video { position: absolute; left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; object-fit: fill; background: #000; mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
 .one-phone-canvas { position: absolute; display: block; inset: 0; width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 18px 18px #183f3830); }
 .one-demo-phone[data-renderer='webgl'] .one-phone-flat { opacity: 0; }
-.one-demo-stage[data-phone-focus] .one-demo-phone { width: 24.5%; bottom: 10%; }
+.one-demo-stage[data-phone-focus] .one-demo-phone { transform: translate3d(0, 0, 0) scale(1); }
 .one-demo-stage[data-phone-focus] .one-phone-flat { transform: rotate(0deg); }
 .one-demo-phone:hover .one-phone-flat, .one-demo-phone:focus-visible .one-phone-flat { transform: rotate(0deg) scale(1.025); }
 .one-demo-phone[aria-pressed='true'] { cursor: zoom-out; }
@@ -30,8 +32,8 @@
   .one-demo-desktop { position: absolute; top: 0; left: 0; width: 100%; border-radius: 8px; transition: opacity 450ms ease, transform 750ms cubic-bezier(.22,.8,.24,1); }
   .one-demo-stage[data-phone-focus] { height: calc(min(54svh, 480px) + 64px); }
   .one-demo-stage[data-phone-focus] .one-demo-desktop { opacity: .12; transform: scale(.95); }
-  .one-demo-phone, .one-demo-stage[data-phone-focus] .one-demo-phone { right: auto; left: 50%; bottom: 64px; width: auto; height: calc(100% - 72px); opacity: 0; visibility: hidden; pointer-events: none; transform: translate(-50%, 22px) scale(.93); transition: transform 750ms cubic-bezier(.22,.8,.24,1), opacity 400ms ease, visibility 400ms; }
-  .one-demo-stage[data-phone-focus] .one-demo-phone { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, 0) scale(1); }
+  .one-demo-phone, .one-demo-stage[data-phone-focus] .one-demo-phone { right: auto; left: 50%; bottom: 64px; width: auto; height: calc(100% - 72px); opacity: 0; visibility: hidden; pointer-events: none; transform-origin: center; transform: translate3d(-50%, 22px, 0) scale(.93); transition: transform 750ms cubic-bezier(.22,.8,.24,1), opacity 400ms ease, visibility 400ms; }
+  .one-demo-stage[data-phone-focus] .one-demo-phone { opacity: 1; visibility: visible; pointer-events: auto; transform: translate3d(-50%, 0, 0) scale(1); }
   .one-demo-phone .one-phone-flat, .one-demo-phone:hover .one-phone-flat { transform: none; }
   .one-demo-caption { bottom: 0; width: 100%; height: 64px; padding: 8px 4px; color: #183f38; font-family: inherit; font-size: 16px; line-height: 1.35; letter-spacing: -.015em; }
   .one-demo-caption > span { max-width: 100%; padding: 0; border: 0; border-radius: 0; background: none; color: inherit; }

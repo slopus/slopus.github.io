@@ -31,6 +31,11 @@ The native masters and transparent bezel WebM remain in the desktop demo workspa
 - Video-frame callbacks drive the texture. Animation frames run only while a
   rotation is settling or a new video frame needs drawing. Pixel ratio is capped
   at 1.5; off-screen/hidden rendering is suspended and all GPU resources cleaned up.
+- Zoom animates only the phone's CSS transform. Its layout box and canvas stay
+  at expanded size, so zoom never reallocates or clears the drawing buffer. Real
+  viewport resizes use the untransformed content box and update canvas dimensions
+  in the same animation frame as rendering. The first 3D frame waits for its
+  initial size. Mobile retains its separate portrait reveal without WebGL.
 - Desktop is the clock. Play/pause, seeks, buffering, and replay coordinate both
   elements; ordinary `timeupdate` events correct drift greater than 120 ms.
 - Videos load when the figure first intersects the viewport. Playback pauses when
