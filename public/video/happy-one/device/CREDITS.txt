@@ -1,0 +1,33 @@
+Happy One device artwork
+
+3D model: "Iphone 16 Pro" by tranminhluan
+https://sketchfab.com/tranminhluan
+https://sketchfab.com/3d-models/iphone-16-pro-96be8c7e49fa4f949855db3e7f2e64e0
+Licensed under Creative Commons Attribution 4.0 International:
+https://creativecommons.org/licenses/by/4.0/
+
+Obtained from the model used on Niranjan Kumar's public Three.js website:
+https://github.com/NiranjanKumar001/iPhone-16-Pro-Clone
+Upstream asset commit: b4faae36f435ff0c7dcc5da7ce7f6bd110548746
+public/models/scene.glb
+
+Happy Engineering modifications: neutral Black Titanium texture adaptation;
+removed the sample wallpaper; added an independently synchronized video display.
+Original body, buttons, cameras, and antenna geometry are unchanged. The model's
+embedded author, source, and license metadata are retained.
+
+2D frame: iPhone 16 Pro — Black Titanium, Apple Developer Design Resources,
+distributed by James Jingyi's Device Mockups collection:
+https://developer.apple.com/design/resources/
+https://github.com/jamesjingyi/mockup-device-frames
+Exports/iOS/16 Pro/16 Pro - Black Titanium.png
+Upstream Git blob: aac753fd235a3efbaa8c6a382659c1701862fa95
+Frame artwork is unchanged. Its actual transparent screen opening is
+x=102, y=100, width=1206, height=2622 in the 1406×2822 image.
+
+The app footage was recorded in a dedicated iPhone 17 Pro Simulator. The 16 Pro
+Black Titanium presentation has the same 1206×2622 screen dimensions. iPhone 17
+Pro is not offered in black; this is deliberately identified as iPhone 16 Pro.
+
+iPhone is a trademark of Apple Inc. This presentation is not affiliated with or
+endorsed by Apple. The 3D model is a third-party visualization, not an Apple model.

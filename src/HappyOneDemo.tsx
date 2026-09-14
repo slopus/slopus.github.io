@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
+import { HappyOnePhone } from './HappyOnePhone'
+import { happyOneDemoCaptions } from './happyOneDemoCaptions'
 import './happy-one-demo.css'
 
 const MEDIA = '/video/happy-one/v13'
@@ -37,7 +39,7 @@ export function HappyOneDemo() {
     const load = () => {
       if (loaded) return
       loaded = true
-      main.src = `${MEDIA}/desktop.mp4`
+      main.src = '/video/happy-one/v14/desktop.mp4'
       companion.src = `${MEDIA}/phone.mp4`
       main.load()
       companion.load()
@@ -127,30 +129,18 @@ export function HappyOneDemo() {
     }
   }, [])
 
+  const phoneFocused = (time >= PHONE_ENTER && time < PHONE_EXIT) || inspecting
+  const caption = happyOneDemoCaptions.find(cue => time >= cue.start && time < cue.end)?.text
+
   return (
     <figure ref={stage} className="one-demo" aria-label="Happy Desktop and iPhone, one synchronized session">
-      <div className="one-demo-stage" data-phone-focus={(time >= PHONE_ENTER && time < PHONE_EXIT) || inspecting ? '' : undefined}>
+      <div className="one-demo-stage" data-phone-focus={phoneFocused ? '' : undefined}>
         <div className="one-demo-desktop">
-          <video ref={desktop} poster={`${MEDIA}/desktop-poster.webp`} width="1920" height="1080"
+          <video ref={desktop} poster="/video/happy-one/v14/desktop-poster.webp" width="1920" height="1080"
             muted={muted} playsInline preload="none" aria-label="Happy Desktop demo with subtitles" />
         </div>
-        <button type="button" className="one-demo-phone" aria-label="Take a closer look at the iPhone"
-          aria-pressed={inspecting} onClick={() => setInspecting(value => !value)}
-          onPointerMove={event => {
-            if (event.pointerType !== 'mouse') return
-            const box = event.currentTarget.getBoundingClientRect()
-            event.currentTarget.style.setProperty('--phone-tilt', `${((event.clientX - box.left) / box.width - 0.5) * 12}deg`)
-          }} onPointerLeave={event => event.currentTarget.style.removeProperty('--phone-tilt')}>
-          <span className="one-demo-phone-body">
-            <span className="one-demo-phone-back" />
-            <span className="one-demo-phone-edge" />
-            <span className="one-demo-phone-front">
-              <video ref={phone} poster={`${MEDIA}/phone-poster.webp`} width="804" height="1748"
-                muted playsInline preload="none" aria-label="The same live session on iPhone" />
-              <img src={`${MEDIA}/phone-frame.png`} width="1368" height="2730" alt="" />
-            </span>
-          </span>
-        </button>
+        <HappyOnePhone video={phone} focused={phoneFocused} inspecting={inspecting} inspect={() => setInspecting(value => !value)} />
+        <p className="one-demo-caption" aria-label="Demo subtitle">{caption && <span>{caption}</span>}</p>
       </div>
       <figcaption className="one-demo-controls">
         <button type="button" onClick={() => controls.current.toggle()}>{playing ? 'Pause' : time >= duration && duration > 0 ? 'Replay' : 'Play'}</button>
@@ -160,6 +150,7 @@ export function HappyOneDemo() {
         <span className="one-demo-time">{timestamp(time)} / {timestamp(duration)}</span>
         <button type="button" aria-label={muted ? 'Unmute demo' : 'Mute demo'} onClick={() => setMuted(value => !value)}>{muted ? 'Sound off' : 'Sound on'}</button>
       </figcaption>
+      <p className="one-demo-credits"><a href="/video/happy-one/device/CREDITS.txt" target="_blank" rel="noopener noreferrer">Device artwork credits</a></p>
       {error && <p className="one-demo-error" role="status">The demo couldn’t load. <a href={`${MEDIA}/desktop.mp4`}>Open the video</a>.</p>}
     </figure>
   )

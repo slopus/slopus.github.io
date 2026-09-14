@@ -1,19 +1,36 @@
 # Happy One synchronized demo
 
 Only `/tmp/happy-one/` uses `HappyOneDemo`. Other page routes and their copy are
-unchanged. Versioned assets live in `public/video/happy-one/v13/`.
+unchanged. The original phone footage lives in `public/video/happy-one/v13/`;
+the caption-free desktop derivative is in `v14/`, and sourced device artwork
+is in `device/` alongside public attribution.
 
 The desktop and iPhone are one continuous 77.900-second take. The native masters
 are 60 fps (1920×1080 desktop, 1206×2622 phone). The website uses matching 30 fps
 H.264 copies, with the phone reduced to 804×1748. This keeps both timelines intact
-while halving frame decoding work; two 60 fps streams dropped frames in WebKit.
+while halving frame decoding work. WebKit also reported comparable frame drops
+with a single plain video, so its counters did not isolate a compositing problem.
 The native masters and transparent bezel WebM remain in the desktop demo workspace.
 
 ## Playback and phone treatment
 
-- CSS perspective, front/back surfaces, and a shallow metallic side form the phone.
-  The front is Apple's installed Simulator bezel with the real phone video over
-  its native screen mask. No WebGL, rendering library, or animation-frame loop.
+- The default frame is Apple's iPhone 16 Pro Black Titanium artwork, sourced from
+  James Jingyi's Device Mockups collection. No invented CSS chassis remains. Its
+  exact screen opening is x=102, y=100, 1206×2622 in the 1406×2822 image.
+- Capable desktops lazily enhance to tranminhluan's CC-BY iPhone 16 Pro model,
+  also used by Niranjan Kumar's public Three.js site. Original hardware geometry
+  is unchanged; the atlas is adapted to neutral black and the sample wallpaper
+  removed. Screen placement matches the measured flat frame. Full author,
+  license, source, and modification credits are linked below the player.
+- The 3D bundle/model are not requested below 1000px, without a fine hovering
+  pointer, with fewer than eight logical processors, with under 8 GB of reported
+  device memory, or with reduced motion/save-data. Missing memory reporting alone
+  does not disqualify an otherwise capable Mac. WebGL2 must accept
+  `failIfMajorPerformanceCaveat`; context loss or repeatedly expensive draws falls
+  back to the real frame without replacing either video element.
+- Video-frame callbacks drive the texture. Animation frames run only while a
+  rotation is settling or a new video frame needs drawing. Pixel ratio is capped
+  at 1.5; off-screen/hidden rendering is suspended and all GPU resources cleaned up.
 - Desktop is the clock. Play/pause, seeks, buffering, and replay coordinate both
   elements; ordinary `timeupdate` events correct drift greater than 120 ms.
 - Videos load when the figure first intersects the viewport. Playback pauses when
@@ -21,9 +38,18 @@ The native masters and transparent bezel WebM remain in the desktop demo workspa
   when playback was wanted; an explicit Pause stays paused.
 - Reduced-motion and save-data visitors start paused. Keyboard-accessible controls
   provide play/pause, sound, scrubbing, and persistent phone inspection. Hover gives
-  a small enlargement and pointer-driven tilt; reduced motion removes transforms.
-- Subtitles are burned into desktop only. Audio is interaction sounds, not generated
-  speech. `subtitles.srt` is the script for later human voiceover.
+  a small enlargement or real-model tilt. Reduced motion suppresses animation.
+- Website captions use the exact original narration cues in a responsive text
+  layer: a capsule over desktop, 16px text beneath the visual on small screens.
+  The video derivative removes only its burned-in caption layer; timing, camera,
+  interactions, and audio are unchanged. The downloadable native master still
+  has burned-in subtitles. Audio is interaction sounds, not generated speech.
+- Below 700px the phone slides into a centered portrait moment, with the desktop
+  dimmed behind it. At the exit cue it disappears completely, leaving the desktop
+  review unobstructed. Controls retain 44px touch targets; no mobile WebGL loads.
+
+iPhone 17 Pro has no black finish. The presentation is explicitly iPhone 16 Pro
+Black Titanium, whose 1206×2622 display matches the recorded 17 Pro Simulator.
 
 ## Recorded focus cues
 
