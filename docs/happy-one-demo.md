@@ -1,16 +1,28 @@
 # Happy One synchronized demo
 
 Only `/tmp/happy-one/` uses `HappyOneDemo`. Other page routes and their copy are
-unchanged. The original phone footage lives in `public/video/happy-one/v13/`;
-the caption-free desktop derivative is in `v14/`, and sourced device artwork
-is in `device/` alongside public attribution.
+unchanged. The original web phone derivative lives in `public/video/happy-one/v13/`;
+the 1080p30 caption-free desktop derivative is in `v14/`, the full-detail 60 fps
+pair is in `v15/`, and sourced device artwork is in `device/` alongside attribution.
 
-The desktop and iPhone are one continuous 77.900-second take. The native masters
-are 60 fps (1920×1080 desktop, 1206×2622 phone). The website uses matching 30 fps
-H.264 copies, with the phone reduced to 804×1748. This keeps both timelines intact
-while halving frame decoding work. WebKit also reported comparable frame drops
-with a single plain video, so its counters did not isolate a compositing problem.
-The native masters and transparent bezel WebM remain in the desktop demo workspace.
+The desktop and iPhone are one continuous 77.900-second take. The preferred web
+pair is 2560×1440 desktop and 1206×2622 phone, both H.264 High Level 5.1 with
+4,674 frames at 60 fps. Before either video loads, Media Capabilities must report
+supported, smooth, power-efficient decoding for both streams. Otherwise, or in
+save-data mode, the player uses the existing 1920×1080 / 804×1748 30 fps pair.
+Selection happens once per player lifetime; there is no mid-playback source swap.
+
+The 1440p export is recomposed from the original 3060×1660 desktop capture in
+its 3200×1800 scene, not enlarged from the 1080p video. The closest 347 frames
+have slightly wider crops (minimum 2560×1440) to avoid inventing detail. All
+interactions, cues, narration, duration, and soundtrack retain the same clock.
+The native full-resolution phone export is used unchanged. No re-record was needed.
+
+The new desktop encode reads the numbered source images directly at 60 Hz.
+The older concat-based encoder read JPEGs on its default 25 Hz time base before
+output conversion, rounding timestamps and duplicating/dropping intermediate
+frames. The direct image-sequence export removes that cadence loss. Native
+masters and the transparent bezel WebM remain intact in the desktop workspace.
 
 ## Playback and phone treatment
 
@@ -49,7 +61,7 @@ Black Titanium, whose 1206×2622 display matches the recorded 17 Pro Simulator.
 ## Recorded focus cues
 
 `phone-timing.json` retains original 60 fps frame numbers. CSS focus uses the same
-seconds even though the website copies are 30 fps.
+seconds for the 60 fps pair and the 30 fps fallback.
 
 | Time | Event |
 | --- | --- |

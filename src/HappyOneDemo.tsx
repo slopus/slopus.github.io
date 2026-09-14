@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { HappyOnePhone } from './HappyOnePhone'
 import { happyOneDemoCaptions } from './happyOneDemoCaptions'
+import { happyOneDemoMediaSelect } from './happyOneDemoMedia'
 import './happy-one-demo.css'
 
 const MEDIA = '/video/happy-one/v13'
@@ -36,11 +37,13 @@ export function HappyOneDemo() {
     let starting = false
 
     const pause = () => { main.pause(); companion.pause() }
-    const load = () => {
+    const load = async () => {
       if (loaded) return
       loaded = true
-      main.src = '/video/happy-one/v14/desktop.mp4'
-      companion.src = `${MEDIA}/phone.mp4`
+      const media = await happyOneDemoMediaSelect()
+      if (disposed) return
+      main.src = media.desktop
+      companion.src = media.phone
       main.load()
       companion.load()
     }
@@ -89,7 +92,7 @@ export function HappyOneDemo() {
     reducedMotion.addEventListener('change', onMotion)
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting && entry.intersectionRatio >= 0.25
-      if (entry.isIntersecting) load()
+      if (entry.isIntersecting) void load()
       if (visible) void resume()
       else pause()
     }, { threshold: [0, 0.25] })
@@ -98,11 +101,11 @@ export function HappyOneDemo() {
       toggle: () => {
         wanted = main.paused
         if (!wanted) { pause(); return }
-        load()
+        void load()
         if (main.ended) { main.currentTime = 0; align(true) }
         void resume()
       },
-      seek: value => { load(); if (main.readyState >= 1) main.currentTime = value },
+      seek: value => { void load(); if (main.readyState >= 1) main.currentTime = value },
     }
     return () => {
       disposed = true
@@ -136,7 +139,7 @@ export function HappyOneDemo() {
     <figure ref={stage} className="one-demo" aria-label="Happy Desktop and iPhone, one synchronized session">
       <div className="one-demo-stage" data-phone-focus={phoneFocused ? '' : undefined}>
         <div className="one-demo-desktop">
-          <video ref={desktop} poster="/video/happy-one/v14/desktop-poster.webp" width="1920" height="1080"
+          <video ref={desktop} poster="/video/happy-one/v15/desktop-poster.webp" width="2560" height="1440"
             muted={muted} playsInline preload="none" aria-label="Happy Desktop demo with subtitles" />
         </div>
         <HappyOnePhone video={phone} inspecting={inspecting} inspect={() => setInspecting(value => !value)} />
