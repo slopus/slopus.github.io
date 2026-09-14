@@ -10,30 +10,12 @@ const PAGE = '/tmp/happy-one/'
 const DOWNLOAD = 'https://github.com/slopus/happy-desktop/releases/latest'
 const product = { ...HAPPY, home: PAGE }
 
-function PlatformMark({ windows }: { windows: boolean }) {
-  return windows ? (
-    <svg className="one-platform-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M2 2h9v9H2zm11 0h9v9h-9zM2 13h9v9H2zm11 0h9v9h-9z" />
-    </svg>
-  ) : (
-    <svg className="one-platform-mark" viewBox="0 0 24 28" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <rect x="3" y="1.5" width="18" height="22" rx="2" />
-      <rect x="6" y="4.5" width="12" height="10" rx="1" />
-      <path d="M9 8v1m6-1v1m-6 2c1.5 1.5 4.5 1.5 6 0m-1 7h4m-11 0h.1M6 23.5v3h12v-3" />
-    </svg>
-  )
-}
-
 function DownloadButtons() {
   const windows = typeof navigator !== 'undefined' && /Windows/i.test(navigator.userAgent)
   return (
     <div className="one-download-actions">
       <a className="store-button one-desktop-button" href={DOWNLOAD} aria-label={`Download Happy for ${windows ? 'Windows' : 'macOS'}`}>
-        <PlatformMark windows={windows} />
-        <span className="one-desktop-copy">
-          <span>Download for</span>
-          <strong>{windows ? 'Windows' : 'macOS'}</strong>
-        </span>
+        <img src={`/img/happy-one/badges/${windows ? 'windows' : 'macos'}.svg`} alt="" width="242" height="76" />
       </a>
       <AppStoreButton /><GooglePlayButton />
     </div>
@@ -54,12 +36,12 @@ const features = [
   {
     title: 'Reuse current subscriptions',
     body: 'Sign in with the Claude, Codex, and Grok plans you already pay for. Happy adds a harness, not another bill.',
-    effect: null,
+    effect: 'subscriptions',
   },
   {
     title: 'Open source MIT',
     body: 'It runs on your own hardware and your projects stay ordinary folders. Read the code, fork it, ship your own build.',
-    effect: null,
+    effect: 'opensource',
   },
   {
     title: 'E2E encrypted mobile app',
@@ -77,19 +59,23 @@ function Features() {
           {features.map((feature, index) => (
             <li
               key={feature.title}
-              data-effect={feature.effect ?? undefined}
-              data-active={feature.effect && surprise.active === feature.effect ? '' : undefined}
+              data-effect={feature.effect}
+              data-active={surprise.active === feature.effect ? '' : undefined}
               onPointerEnter={event => {
-                if (event.pointerType === 'mouse') surprise.reveal(feature.effect)
+                if (event.pointerType === 'mouse') surprise.enter(feature.effect)
               }}
               onPointerLeave={event => {
-                if (event.pointerType === 'mouse') surprise.dismiss(feature.effect)
+                if (event.pointerType === 'mouse') surprise.leave(feature.effect)
               }}
             >
               <span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>
               <div className="one-benefit-heading">
-                <span className="one-benefit-title">{feature.title}</span>
-                {feature.effect && <FeatureSurprise effect={feature.effect} surprise={surprise} />}
+                <span className="one-benefit-title">
+                  {feature.effect === 'opensource' ? <>
+                    Open source <span className="one-mit"><span className="one-mit-lower">mit</span><span className="one-mit-upper" aria-hidden="true">MIT</span></span>
+                  </> : feature.title}
+                </span>
+                <FeatureSurprise effect={feature.effect} surprise={surprise} />
               </div>
               <p className="one-benefit-body">{feature.body}</p>
             </li>

@@ -1,5 +1,27 @@
 # Desktop sticker artwork
 
+## Website key and graduation cap
+
+`key.webp` and `graduation-cap.webp` were downloaded directly from the source
+credited by the requested Telegram Animated Emojis directory:
+
+- https://emojipedia.org/telegram/telemoji-november-2023/key
+- https://em-content.zobj.net/source/telegram/386/key_1f511.webp
+- https://emojipedia.org/telegram/telemoji-november-2023/graduation-cap
+- https://em-content.zobj.net/source/telegram/386/graduation-cap_1f393.webp
+- Directory: https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis
+
+Original SHA-256: key `b30716472730b885d1e19db332a0f8f56c3fa7099365c00e85c121061d652ecf`;
+graduation cap `ab86138a6176126b84bf1d83e9ad9b9529569e022693f908f8fe2a9a6dda62be`.
+
+Frames, timing, colors and compressed image data are unchanged. Only the WebP
+loop count is set to one. The corresponding `-still.png` files are lossless
+first-frame exports for idle and reduced-motion states. Telegram owns this
+artwork; the directory credits Telegram and does not grant an MIT artwork
+license. These two files are not covered by the Happy Coder license below.
+
+## Earlier Desktop artwork
+
 These WebP animations and reduced-motion stills are rendered from the existing
 Happy Desktop onboarding artwork, reused at the project owner's request:
 `packages/happy-desktop-ui/src/assets/animations/` in
