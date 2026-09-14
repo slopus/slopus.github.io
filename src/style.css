@@ -4,8 +4,6 @@
   color: #183f38;
   background: #f5f0e7;
   font-family: 'DM Sans', Arial, sans-serif;
-  scrollbar-color: #929292 transparent;
-  scrollbar-width: thin;
   font-synthesis: none;
   font-optical-sizing: auto;
   text-rendering: optimizeLegibility;
@@ -17,12 +15,15 @@
   --section-gap: 6rem; /* 96px — gap between same-background sections */
 }
 
-/* Page scrollbar */
-html::-webkit-scrollbar { height: 12px; width: 12px; }
-html::-webkit-scrollbar-track { background: transparent; }
-html::-webkit-scrollbar-thumb { background: #929292; background-clip: padding-box; border: 3px solid transparent; border-radius: 999px; }
-html::-webkit-scrollbar-thumb:hover { background-color: #707070; }
-html::-webkit-scrollbar-corner { background: transparent; }
+/* Page scrollbar. The harness page is excluded: a custom scrollbar is always a
+   classic one that reserves a gutter, so its full-bleed bands would stop short
+   of the window edge. Left native, an overlay scrollbar draws over them. */
+html:not(:has(.happy-one)) { scrollbar-color: #929292 transparent; scrollbar-width: thin; }
+html:not(:has(.happy-one))::-webkit-scrollbar { height: 12px; width: 12px; }
+html:not(:has(.happy-one))::-webkit-scrollbar-track { background: transparent; }
+html:not(:has(.happy-one))::-webkit-scrollbar-thumb { background: #929292; background-clip: padding-box; border: 3px solid transparent; border-radius: 999px; }
+html:not(:has(.happy-one))::-webkit-scrollbar-thumb:hover { background-color: #707070; }
+html:not(:has(.happy-one))::-webkit-scrollbar-corner { background: transparent; }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }

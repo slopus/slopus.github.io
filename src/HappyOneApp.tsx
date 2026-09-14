@@ -22,26 +22,11 @@ function DownloadButtons() {
 }
 
 const features = [
-  {
-    title: 'Multi-provider',
-    body: 'Mix and match models from different providers. Use Astra, Fable, and Grok together, each with its native prompts and tools and shared context across the work.',
-  },
-  {
-    title: 'Natively multiplayer',
-    body: 'Invite a colleague or friend into the same sessions. Share context, steer the work, and review changes together.',
-  },
-  {
-    title: 'Reuse current subscriptions',
-    body: 'Connect your existing Claude, Codex, and Grok accounts. Use the subscriptions you already pay for.',
-  },
-  {
-    title: 'Open source MIT',
-    body: 'Run Happy on your own hardware. Read the code, change it, and make it part of how you work.',
-  },
-  {
-    title: 'E2E encrypted mobile app',
-    body: 'Control Happy Desktop and your terminal sessions from your phone. Messages between your devices are end-to-end encrypted.',
-  },
+  'Multi-provider',
+  'Natively multiplayer',
+  'Reuse current subscriptions',
+  'Open source MIT',
+  'E2E encrypted mobile app',
 ] as const
 
 function Features() {
@@ -49,15 +34,9 @@ function Features() {
     <section className="one-benefits-section" id="product" aria-label="What you get with Happy">
       <div className="page-width">
         <ol className="one-benefits" role="list">
-          {features.map((feature, index) => (
-            <li key={feature.title}>
-              <details>
-                <summary>
-                  <span><span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>{' '}{feature.title}</span>
-                  <span className="one-benefit-chevron" aria-hidden="true" />
-                </summary>
-                <p>{feature.body}</p>
-              </details>
+          {features.map((title, index) => (
+            <li key={title}>
+              <span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>{' '}{title}
             </li>
           ))}
         </ol>
