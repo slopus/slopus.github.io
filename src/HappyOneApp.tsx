@@ -1,21 +1,22 @@
 import { AppStoreButton, GooglePlayButton } from './StoreButtons'
-import { GITHUB_HAPPY, GITHUB_HAPPY2, SiteFooter, WEB_APP, Wordmark } from './SiteChrome'
+import { GITHUB_HAPPY2, SiteFooter, Wordmark } from './SiteChrome'
 import { HAPPY } from './products'
 import './happy-one.css'
 
 const PAGE = '/tmp/happy-one/'
-const PREVIEW = 'https://github.com/slopus/happy-desktop/releases/tag/v0.0.84-preview.2'
-const DOWNLOAD = 'https://github.com/slopus/happy-desktop/releases/download/v0.0.84-preview.2'
+const DOWNLOAD = 'https://github.com/slopus/happy-desktop/releases/latest'
 const product = { ...HAPPY, home: PAGE }
 
-function desktopPlatform() {
-  if (typeof navigator === 'undefined') return 'other'
-  const agent = navigator.userAgent
-  if (/Android|iPhone|iPad|iPod/i.test(agent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'mobile'
-  if (/Windows/i.test(agent)) return 'windows'
-  if (/Macintosh|Mac OS X/i.test(agent)) return 'mac'
-  if (/Linux/i.test(agent)) return 'linux'
-  return 'other'
+function DownloadButtons() {
+  const windows = typeof navigator !== 'undefined' && /Windows/i.test(navigator.userAgent)
+  return (
+    <div className="one-download-actions">
+      <a className="button button-primary one-desktop-button" href={DOWNLOAD}>
+        Download for {windows ? 'Windows' : 'macOS'}
+      </a>
+      <AppStoreButton /><GooglePlayButton />
+    </div>
+  )
 }
 
 const features = [
@@ -69,7 +70,6 @@ function ExistingUsers() {
             <h3 id="existing-heading">Already using Happy?</h3>
             <p>Your existing account and sessions still work. Connect Desktop from <strong>Settings → Mobile Access</strong>.</p>
           </div>
-          <a className="one-link" href={`${PAGE}#download`}>Download Desktop</a>
         </aside>
       </div>
     </section>
@@ -98,32 +98,16 @@ function Terminal() {
 }
 
 function Downloads() {
-  const platform = desktopPlatform()
   return (
     <section className="one-download page-width" id="download" aria-labelledby="download-heading">
       <h2 id="download-heading">Download Happy.</h2>
-      <p>Free and open source. macOS nightly preview.</p>
-      {(platform === 'windows' || platform === 'linux') && (
-        <p className="one-platform-note">The {platform === 'windows' ? 'Windows' : 'Linux'} build isn’t available in this preview yet.</p>
-      )}
-      <div className="one-platform-actions">
-        <a className="button button-primary" href={`${DOWNLOAD}/Happy-Nightly-0.0.84-preview.2-arm64.dmg`}>Mac · Apple Silicon</a>
-        <a className="button button-ghost" href={`${DOWNLOAD}/Happy-Nightly-0.0.84-preview.2-x64.dmg`}>Mac · Intel</a>
-      </div>
-      <div className="store-actions one-download-stores"><AppStoreButton /><GooglePlayButton /></div>
-      <div className="one-download-links">
-        <a className="one-link" href={PREVIEW} target="_blank" rel="noopener noreferrer">Release notes</a>
-        <a className="one-link" href="/desktop/docs/quick-start/">Documentation</a>
-        <a className="one-link" href="/docs/security/">Security</a>
-        <a className="one-link" href={WEB_APP} target="_blank" rel="noopener noreferrer">Web app</a>
-        <a className="one-link" href={GITHUB_HAPPY} target="_blank" rel="noopener noreferrer">Mobile &amp; CLI source</a>
-      </div>
+      <p>Free and open source</p>
+      <DownloadButtons />
     </section>
   )
 }
 
 export default function HappyOneApp() {
-  const platform = desktopPlatform()
   return (
     <div className="site-shell happy-one">
       <div className="site-header-wrap">
@@ -149,12 +133,7 @@ export default function HappyOneApp() {
             <img className="one-hero-phone" src="/happy-app.png" width="736" height="1490"
               alt="Happy Coder on iPhone, reviewing a Claude Code session and code changes." />
           </figure>
-          <div className="one-download-actions">
-            <a className="button button-primary one-desktop-button" href={`${PAGE}#download`}>
-              {platform === 'mac' ? 'Download for macOS' : 'Desktop · macOS preview'}
-            </a>
-            <AppStoreButton /><GooglePlayButton />
-          </div>
+          <DownloadButtons />
           <Features />
         </section>
         <Terminal />
