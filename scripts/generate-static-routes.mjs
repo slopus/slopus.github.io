@@ -144,6 +144,14 @@ const desktopHtml = htmlForPage({
 await writeRoute('desktop', desktopHtml)
 await writeRoute('happy2', desktopHtml)
 
+// Unlisted review page: never linked from the public homepage or documentation.
+await writeRoute('tmp/happy-one', htmlForPage({
+  title: 'Happy — At your desk. In your pocket. (Preview)',
+  description: 'Preview the shared Happy setup: Desktop, Happy Coder, and one phone link for your coding agents.',
+  canonicalPath: '/tmp/happy-one/',
+  robots: 'noindex, nofollow',
+}))
+
 // The Buzz comparison moved into the Happy Desktop section; keep the announced URL resolving.
 await writeRoute('docs/comparisons/happy-2-vs-buzz', htmlForPage({
   title: 'Happy Desktop vs Buzz — Happy Desktop Docs',
@@ -176,4 +184,4 @@ await writeFile(
   }),
 )
 
-console.log(`Generated ${documentRoutes + 6} static routes.`)
+console.log(`Generated ${documentRoutes + 7} static routes.`)

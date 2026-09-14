@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import App from './App'
 import Happy2App from './Happy2App'
+import HappyOneApp from './HappyOneApp'
 import { DocsPage, LegalPage, NotFoundPage } from './DocumentPages'
 import { getDocument, normalizeDocumentPath } from './documents'
 import { HAPPY2, productForPath } from './products'
@@ -8,6 +9,7 @@ import {
   applyPageMetadata,
   docsMetadataForProduct,
   happy2Metadata,
+  happyOneMetadata,
   homepageMetadata,
   type PageMetadata,
 } from './siteMetadata'
@@ -46,6 +48,10 @@ function metadataForPath(pathname: string): PageMetadata {
 
   if (normalizedPath === '/') {
     return homepageMetadata
+  }
+
+  if (normalizedPath === '/tmp/happy-one') {
+    return happyOneMetadata
   }
 
   if (normalizedPath === HAPPY2.home.replace(/\/$/, '')) {
@@ -100,6 +106,12 @@ export function Router({ pathname }: { pathname?: string }) {
   const controlled = pathname !== undefined
   const [currentPathname, setCurrentPathname] = useState(pathname ?? window.location.pathname)
   const normalizedPath = normalizedPathname(pathname ?? currentPathname)
+
+  useEffect(() => {
+    if (normalizedPath === '/tmp/happy-one') {
+      applyPageMetadata(happyOneMetadata)
+    }
+  }, [normalizedPath])
 
   useEffect(() => {
     if (controlled) {
@@ -176,6 +188,10 @@ export function Router({ pathname }: { pathname?: string }) {
 
   if (normalizedPath === '/') {
     return <App />
+  }
+
+  if (normalizedPath === '/tmp/happy-one') {
+    return <HappyOneApp />
   }
 
   if (normalizedPath === '/desktop') {

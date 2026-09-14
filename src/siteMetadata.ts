@@ -22,6 +22,13 @@ export const homepageMetadata: PageMetadata = {
     'Control Claude Code, Codex, and other coding agents running on your computers from anywhere.',
 }
 
+export const happyOneMetadata: PageMetadata = {
+  title: 'Happy — At your desk. In your pocket. (Preview)',
+  description: 'Preview the shared Happy setup: Desktop, Happy Coder, and one phone link for your coding agents.',
+  canonicalPath: '/tmp/happy-one/',
+  robots: 'noindex, nofollow',
+}
+
 export const happy2Metadata: PageMetadata = {
   title: 'Happy Desktop — Any Team. Any Model. One Harness.',
   description:
