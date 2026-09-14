@@ -1,0 +1,59 @@
+1
+00:00:00,000 --> 00:00:02,017
+This is Happy.
+
+2
+00:00:02,017 --> 00:00:09,083
+I’m switching from Astra to Fable for this UI task.
+
+3
+00:00:09,083 --> 00:00:12,567
+Add a waveform that animates when speaking.
+
+4
+00:00:12,567 --> 00:00:15,717
+Review control flow with Astra.
+
+5
+00:00:19,150 --> 00:00:22,200
+Steve jumps in while Fable is working.
+
+6
+00:00:22,200 --> 00:00:28,000
+He asks for a Grok sub-agent to research X.
+
+7
+00:00:28,000 --> 00:00:30,717
+Fable starts the Grok sub-agent.
+
+8
+00:00:30,717 --> 00:00:34,300
+Take the same session with you.
+
+9
+00:00:34,300 --> 00:00:43,317
+Fable makes the change…
+
+10
+00:00:43,317 --> 00:00:48,200
+The diff arrives here, too.
+
+11
+00:00:48,200 --> 00:00:56,533
+…then brings in Astra to review it.
+
+12
+00:00:56,533 --> 00:01:00,550
+Grok found OpenAI’s live voice demo.
+
+13
+00:01:00,550 --> 00:01:04,900
+Done. Let’s look at the changes.
+
+14
+00:01:04,900 --> 00:01:11,450
+Here’s the diff.
+
+15
+00:01:11,450 --> 00:01:16,883
+That’s a wrap.

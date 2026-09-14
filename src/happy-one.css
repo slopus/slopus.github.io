@@ -33,10 +33,6 @@
 .one-teammate-message { position: absolute; z-index: 2; right: 62px; top: 8px; width: max-content; padding: .5rem .7rem; border: 1px solid #bac7ae; border-radius: 12px 12px 0 12px; background: #f5f0e7; color: #47645e; text-transform: none; font-size: .78rem; line-height: 1.4; opacity: var(--feature-progress, 0); }
 .one-download-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .85rem; margin-top: 3.25rem; }
 .one-desktop-button > img { display: block; width: 100%; height: 100%; }
-.one-product-shot { position: relative; margin: 3.5rem 0 0; padding-right: 115px; }
-.one-desktop-frame { border: 1px solid #30473d; border-radius: 12px; overflow: hidden; background: #1e1e1e; box-shadow: 0 30px 70px -40px #183f386b; }
-.one-desktop-frame img { display: block; width: 100%; height: auto; }
-.one-hero-phone { position: absolute; right: 0; bottom: -15px; width: 19%; height: auto; border-radius: 30px; box-shadow: 0 25px 50px -25px #183f3866; }
 .one-terminal-section { display: flex; align-items: center; gap: 5rem; padding-block: 6.5rem 2.5rem; }
 .one-terminal-section > div { flex: 1; min-width: 0; }
 .one-terminal-section h2 { margin-bottom: 1.5rem; }
@@ -70,7 +66,6 @@
 
 @media (max-width: 960px) {
   .one-terminal-section { gap: 2.5rem; }
-  .one-product-shot { padding-right: 75px; }
 }
 
 @media (max-width: 700px) {
@@ -92,9 +87,6 @@
   .one-download-actions { margin-top: 2.5rem; }
   .one-download-actions .one-desktop-button { flex-basis: 100%; margin-inline: max(0px, calc((100% - 325px) / 2)); }
   .one-download-actions .store-button { width: 155px; height: 47px; }
-  .one-product-shot { margin-top: 2.5rem; padding-right: 35px; }
-  .one-desktop-frame { border-radius: 6px; }
-  .one-hero-phone { width: 24%; bottom: -12px; border-radius: 14px; }
   .one-terminal-section { flex-direction: column; align-items: stretch; gap: 1.25rem; padding-block: 4rem 1rem; }
   .one-terminal-section .terminal-body { padding: 1.2rem; font-size: clamp(.82rem, 3.6vw, 1rem); }
   .one-existing { flex-direction: column; align-items: flex-start; gap: 1.25rem; }

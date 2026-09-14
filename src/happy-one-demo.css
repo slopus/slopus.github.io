@@ -1,0 +1,34 @@
+.one-demo { margin: 3.5rem 0 0; text-align: left; }
+.one-demo-stage { position: relative; padding-right: 9%; perspective: 1400px; }
+.one-demo-desktop { overflow: hidden; border: 1px solid #30473d; border-radius: 12px; background: #1e1e1e; box-shadow: 0 30px 70px -40px #183f386b; }
+.one-demo-desktop video { display: block; width: 100%; height: auto; }
+.one-demo-phone { position: absolute; z-index: 2; right: 0; bottom: -2%; width: 18%; aspect-ratio: 1368 / 2730; padding: 0; border: 0; background: transparent; cursor: zoom-in; perspective: 1100px; transition: width 900ms cubic-bezier(.22,.8,.24,1), bottom 900ms cubic-bezier(.22,.8,.24,1); -webkit-tap-highlight-color: transparent; }
+.one-demo-phone-body { display: block; position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateY(calc(-20deg + var(--phone-tilt, 0deg))) rotateZ(5deg); transition: transform 700ms cubic-bezier(.22,.8,.24,1); }
+.one-demo-phone-front, .one-demo-phone-back { position: absolute; inset: 0; border-radius: 16% / 8%; }
+.one-demo-phone-front { transform: translateZ(5px); backface-visibility: hidden; }
+.one-demo-phone-front > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+.one-demo-phone-front > video { position: absolute; z-index: 1; left: 5.9210526%; top: 1.978022%; width: 88.157895%; height: 96.043956%; object-fit: fill; background: #000; mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
+.one-demo-phone-back { transform: translateZ(-6px); background: linear-gradient(105deg, #72706d, #d4d0ca 35%, #aaa7a2 70%, #555452); box-shadow: 0 24px 42px -15px #183f3870; border: 1px solid #7e7c78; }
+.one-demo-phone-edge { position: absolute; top: 8%; bottom: 8%; left: 1.2%; width: 11px; background: linear-gradient(90deg, #777571, #d6d1c9, #85817c); transform: rotateY(90deg); transform-origin: left; }
+.one-demo-stage[data-phone-focus] .one-demo-phone { width: 24%; bottom: 12%; }
+.one-demo-stage[data-phone-focus] .one-demo-phone-body { transform: rotateY(var(--phone-tilt, 0deg)) rotateZ(-2deg); }
+.one-demo-phone:hover .one-demo-phone-body, .one-demo-phone:focus-visible .one-demo-phone-body { transform: rotateY(var(--phone-tilt, 0deg)) rotateZ(0deg) scale(1.06); }
+.one-demo-phone[aria-pressed='true'] { cursor: zoom-out; }
+.one-demo-controls { display: flex; align-items: center; gap: 1rem; margin: 1.2rem 9% 0 0; color: #47645e; font-size: .78rem; }
+.one-demo-controls button { flex: none; padding: .45rem 0; min-width: 3.3rem; border: 0; color: #183f38; background: transparent; font: inherit; cursor: pointer; text-align: left; }
+.one-demo-controls button:last-child { text-align: right; }
+.one-demo-controls input { flex: 1; min-width: 20px; accent-color: #183f38; cursor: pointer; }
+.one-demo-time { flex: none; font-variant-numeric: tabular-nums; }
+.one-demo button:focus-visible, .one-demo input:focus-visible { outline: 2px solid #e6522c; outline-offset: 5px; }
+.one-demo-error { font-size: .85rem; color: #8c3926; }
+@media (max-width: 700px) {
+  .one-demo { margin-top: 2.5rem; }
+  .one-demo-desktop { border-radius: 6px; }
+  .one-demo-controls { gap: .55rem; margin-right: 0; font-size: .7rem; }
+  .one-demo-phone { width: 21%; }
+  .one-demo-stage[data-phone-focus] .one-demo-phone { width: 27%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .one-demo-phone, .one-demo-phone-body { transition: none; }
+  .one-demo-phone .one-demo-phone-body, .one-demo-stage[data-phone-focus] .one-demo-phone-body { transform: none; }
+}

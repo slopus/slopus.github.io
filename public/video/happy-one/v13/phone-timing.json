@@ -1,0 +1,48 @@
+{
+  "fps": 60,
+  "frames": 4674,
+  "duration": 77.9,
+  "startTogetherAt": 0,
+  "cues": [
+    {
+      "name": "phone-enter",
+      "frame": 1843,
+      "seconds": 30.716666666666665
+    },
+    {
+      "name": "phone-session-open",
+      "frame": 2058,
+      "seconds": 34.3
+    },
+    {
+      "name": "phone-diff-visible",
+      "frame": 2599,
+      "seconds": 43.31666666666667
+    },
+    {
+      "name": "phone-exit",
+      "frame": 2892,
+      "seconds": 48.2
+    },
+    {
+      "name": "desktop-review",
+      "frame": 3633,
+      "seconds": 60.55
+    }
+  ],
+  "screen": {
+    "width": 1206,
+    "height": 2622
+  },
+  "bezel": {
+    "x": 81,
+    "y": 54,
+    "width": 1206,
+    "height": 2622
+  },
+  "bezelCanvas": {
+    "width": 1368,
+    "height": 2730
+  },
+  "framing": "Apple Simulator phone11 device chrome, 3× rasterization, original corners and hardware buttons"
+}

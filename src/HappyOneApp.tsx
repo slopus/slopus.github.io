@@ -6,6 +6,7 @@ import { FeatureSurprise, useFeatureSurprise } from './FeatureSurprise'
 import { MitGlyphMorph } from './MitGlyphMorph'
 import { HAPPY } from './products'
 import { KIRILL, STEVE } from './Team'
+import { HappyOneDemo } from './HappyOneDemo'
 import './happy-one.css'
 
 const PAGE = '/tmp/happy-one/'
@@ -152,15 +153,7 @@ export default function HappyOneApp() {
       <main>
         <section className="one-hero page-width" aria-labelledby="one-heading">
           <h1 id="one-heading">Any model. Your team.<br /><em>Happy Harness.</em></h1>
-          <figure className="one-product-shot">
-            <div className="one-desktop-frame">
-              <img src="/img/happy-one/desktop-demo.webp" width="1836" height="996"
-                alt="Happy Desktop with projects, parallel agent sessions, and an agent’s completed rocket-dinosaur design."
-                fetchPriority="high" />
-            </div>
-            <img className="one-hero-phone" src="/happy-app.png" width="736" height="1490"
-              alt="Happy Coder on iPhone, reviewing a Claude Code session and code changes." />
-          </figure>
+          <HappyOneDemo />
           <DownloadButtons />
         </section>
         <Features />
