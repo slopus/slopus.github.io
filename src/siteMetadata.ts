@@ -24,7 +24,7 @@ export const homepageMetadata: PageMetadata = {
 
 export const happyOneMetadata: PageMetadata = {
   title: 'Any model. Your team. Happy Harness.',
-  description: 'Combine models, use your current subscriptions, work with your team, and create bots. Open source under MIT, with an end-to-end encrypted mobile client.',
+  description: 'Multi-provider and natively multiplayer. Use your current subscriptions. Open source under MIT, with an end-to-end encrypted mobile app.',
   canonicalPath: '/tmp/happy-one/',
   robots: 'noindex, nofollow',
 }

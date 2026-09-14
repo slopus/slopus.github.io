@@ -11,18 +11,16 @@
 .one-link:hover { text-decoration-thickness: 2px; }
 .one-hero { padding-top: 4.5rem; text-align: center; }
 .one-hero h1 { font-size: clamp(3rem, 6.2vw, 5.7rem); margin-bottom: 1.6rem; }
-.one-benefits { width: min(100%, 490px); margin: 2rem auto 0; padding-left: 1.25rem; text-align: left; list-style: disc; }
-.one-benefits li { padding-left: .25rem; }
-.one-benefits li::marker { color: #e6522c; font-size: .85em; }
-.one-benefits summary { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; min-height: 44px; padding: .45rem 0; color: #183f38; font-size: 1.18rem; font-weight: 500; line-height: 1.55; cursor: pointer; list-style: none; }
+.one-benefits { width: min(100%, 490px); margin: 3.25rem auto 0; padding: 0; text-align: left; list-style: none; }
+.one-benefits summary { display: flex; align-items: baseline; gap: .6rem; min-height: 44px; padding: .45rem 0; color: #183f38; font-size: 1.18rem; font-weight: 500; line-height: 1.55; cursor: pointer; list-style: none; }
 .one-benefits summary::-webkit-details-marker { display: none; }
-.one-benefits summary::after { content: '+'; flex: none; color: #637970; font-size: 1.1rem; font-weight: 400; }
-.one-benefits details[open] summary::after { content: '−'; }
+.one-benefit-number { flex: 0 0 1.5rem; color: #e6522c; font-variant-numeric: tabular-nums; }
+.one-benefit-chevron { flex: 0 0 6px; height: 6px; margin-block: auto; border-right: 1px solid #637970; border-bottom: 1px solid #637970; transform: translateY(-2px) rotate(45deg); }
+.one-benefits details[open] .one-benefit-chevron { transform: translateY(2px) rotate(225deg); }
 .one-benefits summary:hover { color: #e6522c; }
-.one-benefits p { margin: .2rem 1.75rem 1rem 0; color: #47645e; font-size: 1rem; line-height: 1.65; text-wrap: pretty; }
+.one-benefits p { margin: .2rem 0 1rem 2.1rem; color: #47645e; font-size: 1rem; line-height: 1.65; text-wrap: pretty; }
 .one-download-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .85rem; margin-top: 3.25rem; }
 .one-download-actions .button { min-height: 54px; }
-.one-mobile-note { margin: 1.25rem auto 0; color: #47645e; font-size: 1rem; line-height: 1.65; text-wrap: pretty; }
 .one-product-shot { position: relative; margin: 3.5rem 0 0; padding-right: 115px; }
 .one-desktop-frame { border: 1px solid #30473d; border-radius: 12px; overflow: hidden; background: #1e1e1e; box-shadow: 0 30px 70px -40px #183f386b; }
 .one-desktop-frame img { display: block; width: 100%; height: auto; }
@@ -63,9 +61,9 @@
   .happy-one .site-header nav > a[href*="github.com"] { display: none; }
   .one-hero { padding-top: 2.5rem; }
   .one-hero h1 { font-size: clamp(2.55rem, 9.2vw, 4rem); }
-  .one-benefits { margin-top: 1.5rem; }
+  .one-benefits { margin-top: 2.5rem; }
   .one-benefits summary { font-size: 1.06rem; }
-  .one-benefits p, .one-mobile-note { font-size: .94rem; }
+  .one-benefits p { font-size: .94rem; }
   .one-download-actions { margin-top: 2.5rem; }
   .one-download-actions .button { flex-basis: 100%; margin-inline: max(0px, calc((100% - 325px) / 2)); }
   .one-download-actions .store-button, .one-download-stores .store-button { width: 155px; height: 47px; }

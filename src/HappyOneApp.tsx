@@ -20,39 +20,43 @@ function desktopPlatform() {
 
 const features = [
   {
-    title: 'Combine models natively.',
-    body: 'Use Astra, Fable, and Grok together. Each keeps its native prompts and tools, with shared context across the work.',
+    title: 'Multi-provider',
+    body: 'Mix and match models from different providers. Use Astra, Fable, and Grok together, each with its native prompts and tools and shared context across the work.',
   },
   {
-    title: 'Use your current subscriptions.',
-    body: 'Connect your existing Claude, Codex, and Grok accounts. Use the subscriptions you already pay for.',
-  },
-  {
-    title: 'Work with your team.',
+    title: 'Natively multiplayer',
     body: 'Invite a colleague or friend into the same sessions. Share context, steer the work, and review changes together.',
   },
   {
-    title: 'Open source. MIT.',
+    title: 'Use your current subscriptions',
+    body: 'Connect your existing Claude, Codex, and Grok accounts. Use the subscriptions you already pay for.',
+  },
+  {
+    title: 'Open source MIT',
     body: 'Run Happy on your own hardware. Read the code, change it, and make it part of how you work.',
   },
   {
-    title: 'Create bots, too.',
-    body: 'Give recurring work a persistent bot. Keep the same models, subscriptions, and team, in the same open-source harness.',
+    title: 'End-to-end encrypted mobile app',
+    body: 'Control Happy Desktop and your terminal sessions from your phone. Messages between your devices are end-to-end encrypted.',
   },
 ] as const
 
 function Features() {
   return (
-    <ul className="one-benefits" id="product" aria-label="What you get with Happy">
-      {features.map(feature => (
+    <ol className="one-benefits" id="product" aria-label="What you get with Happy" role="list">
+      {features.map((feature, index) => (
         <li key={feature.title}>
           <details>
-            <summary>{feature.title}</summary>
+            <summary>
+              <span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>
+              <span>{feature.title}</span>
+              <span className="one-benefit-chevron" aria-hidden="true" />
+            </summary>
             <p>{feature.body}</p>
           </details>
         </li>
       ))}
-    </ul>
+    </ol>
   )
 }
 
@@ -136,7 +140,6 @@ export default function HappyOneApp() {
       <main>
         <section className="one-hero page-width" aria-labelledby="one-heading">
           <h1 id="one-heading">Any model. Your team.<br /><em>Happy Harness.</em></h1>
-          <Features />
           <figure className="one-product-shot">
             <div className="one-desktop-frame">
               <img src="/img/happy-one/desktop-demo.webp" width="1836" height="996"
@@ -152,7 +155,7 @@ export default function HappyOneApp() {
             </a>
             <AppStoreButton /><GooglePlayButton />
           </div>
-          <p className="one-mobile-note">Left your desk? Use the end-to-end encrypted mobile client.</p>
+          <Features />
         </section>
         <Terminal />
         <ExistingUsers />
