@@ -1,28 +1,15 @@
-import type { CSSProperties } from 'react'
-import { AppStoreButton, GooglePlayButton } from './StoreButtons'
+import { useState, type CSSProperties } from 'react'
 import { GITHUB_HAPPY2, GithubMark, SiteFooter, Wordmark } from './SiteChrome'
 import { PageScrollbar } from './PageScrollbar'
 import { FeatureSurprise, useFeatureSurprise } from './FeatureSurprise'
 import { HAPPY } from './products'
 import { KIRILL, STEVE } from './Team'
 import { HappyOneDemo } from './HappyOneDemo'
+import { DownloadOptions, type DownloadOptionsProps } from './DownloadOptions'
 import './happy-one.css'
 
 const PAGE = '/tmp/happy-one/'
-const DOWNLOAD = 'https://github.com/slopus/happy-desktop/releases/latest'
 const product = { ...HAPPY, home: PAGE }
-
-function DownloadButtons() {
-  const windows = typeof navigator !== 'undefined' && /Windows/i.test(navigator.userAgent)
-  return (
-    <div className="one-download-actions">
-      <a className="store-button one-desktop-button" href={DOWNLOAD} aria-label={`Download Happy for ${windows ? 'Windows' : 'macOS'}`}>
-        <img src={`/img/happy-one/badges/${windows ? 'windows' : 'macos'}.svg`} alt="" width="242" height="76" />
-      </a>
-      <AppStoreButton /><GooglePlayButton />
-    </div>
-  )
-}
 
 const features = [
   {
@@ -118,17 +105,19 @@ function Terminal() {
   )
 }
 
-function Downloads() {
+function Downloads(props: DownloadOptionsProps) {
   return (
     <section className="one-download page-width" id="download" aria-labelledby="download-heading">
       <h2 id="download-heading">Download Happy.</h2>
       <p>Free and open source</p>
-      <DownloadButtons />
+      <DownloadOptions {...props} />
     </section>
   )
 }
 
 export default function HappyOneApp() {
+  const [downloadVariant, setDownloadVariant] = useState(0)
+  const cycleDownloadVariant = (direction: number) => setDownloadVariant(current => (current + direction + 3) % 3)
   return (
     <div className="site-shell happy-one">
       <PageScrollbar />
@@ -153,12 +142,12 @@ export default function HappyOneApp() {
         <section className="one-hero page-width" aria-labelledby="one-heading">
           <h1 id="one-heading">Any model. Your team.<br /><em>Happy Harness.</em></h1>
           <HappyOneDemo />
-          <DownloadButtons />
+          <DownloadOptions variant={downloadVariant} onCycle={cycleDownloadVariant} />
         </section>
         <Features />
         <Terminal />
         <ExistingUsers />
-        <Downloads />
+        <Downloads variant={downloadVariant} onCycle={cycleDownloadVariant} />
       </main>
       <SiteFooter product={product} additionalLinks={
         <a href="/video/happy-one/device/CREDITS.txt" target="_blank" rel="noopener noreferrer">Credits</a>
