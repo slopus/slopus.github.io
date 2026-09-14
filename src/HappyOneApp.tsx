@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { AppStoreButton, GooglePlayButton } from './StoreButtons'
 import { GITHUB_HAPPY2, GithubMark, SiteFooter, Wordmark } from './SiteChrome'
 import { PageScrollbar } from './PageScrollbar'
@@ -56,40 +57,17 @@ function Features() {
   return (
     <section className="one-benefits-section" id="product" aria-label="What you get with Happy">
       <div className="page-width">
-        <ol className="one-benefits" role="list">
+        <ol ref={surprise.listRef} className="one-benefits" role="list">
           {features.map((feature, index) => (
             <li
               key={feature.title}
               data-effect={feature.effect ?? undefined}
               data-active={surprise.isActive(feature.effect) ? '' : undefined}
-              onPointerDown={event => surprise.pointerDown(event.pointerType)}
-              onClick={event => surprise.activate(feature.effect, event.detail)}
-              onPointerEnter={event => {
-                if (event.pointerType === 'mouse') surprise.enter(feature.effect)
-              }}
-              onPointerLeave={event => {
-                if (event.pointerType === 'mouse') surprise.leave(feature.effect)
-              }}
+              style={{ '--feature-progress': surprise.progress(feature.effect) ** 2 * (3 - 2 * surprise.progress(feature.effect)) } as CSSProperties}
             >
               <span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>
               <div className="one-benefit-heading">
-                <span
-                  className="one-benefit-title"
-                  role={feature.effect ? 'button' : undefined}
-                  tabIndex={feature.effect ? 0 : undefined}
-                  aria-expanded={feature.effect === 'providers' || feature.effect === 'multiplayer' ? surprise.isActive(feature.effect) : undefined}
-                  aria-controls={feature.effect === 'providers' || feature.effect === 'multiplayer' ? `one-${feature.effect}-surprise` : undefined}
-                  onFocus={event => {
-                    if (feature.effect && event.currentTarget.matches(':focus-visible')) surprise.focus(feature.effect)
-                  }}
-                  onBlur={() => surprise.blur(feature.effect)}
-                  onKeyDown={event => {
-                    if (feature.effect && (event.key === 'Enter' || event.key === ' ')) {
-                      event.preventDefault()
-                      surprise.focus(feature.effect)
-                    }
-                  }}
-                >
+                <span className="one-benefit-title">
                   {feature.effect === 'opensource' ? <>
                     Open source <MitGlyphMorph active={surprise.isActive('opensource')} />
                   </> : feature.title}
@@ -192,7 +170,8 @@ export default function HappyOneApp() {
       </main>
       <SiteFooter product={product} statement={
         <>
-          We build interfaces around agents{' '}
+          We build interfaces around agents: how you control them, how they run,
+          and how teams share context with them.
           <span className="one-footer-people">
             <a href={STEVE.href} target="_blank" rel="noopener noreferrer">{STEVE.label}</a>
             {' and '}

@@ -3,54 +3,72 @@ import { useEffect, useRef, useState } from 'react'
 type Effect = 'providers' | 'multiplayer' | 'opensource' | 'security'
 
 export function useFeatureSurprise() {
-  const [hovered, setHovered] = useState<Effect | null>(null)
-  const [focused, setFocused] = useState<Effect | null>(null)
-  const [tapped, setTapped] = useState<Effect | null>(null)
-  const [revealed, setRevealed] = useState<Effect[]>([])
-  const pointerType = useRef('mouse')
-  const active = hovered ?? focused ?? tapped
-  const reveal = (effect: Effect | null) => {
-    if (effect && effect !== 'security') {
-      setRevealed(current => current.includes(effect) ? current : [...current, effect])
-    }
-  }
+  const listRef = useRef<HTMLOListElement>(null)
+  const [progress, setProgress] = useState<Record<Effect, number>>({ providers: 0, multiplayer: 0, opensource: 0, security: 0 })
 
   useEffect(() => {
-    const clear = () => {
-      setHovered(null)
-      setFocused(null)
-      setTapped(null)
+    if (!listRef.current) return
+    const rows = [...listRef.current.querySelectorAll<HTMLElement>('[data-effect]')].map(row => ({
+      effect: row.dataset.effect as Effect,
+      heading: row.querySelector<HTMLElement>('.one-benefit-heading')!,
+    }))
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const viewport = window.visualViewport
+    let frame = 0
+    let disposed = false
+    const update = () => {
+      frame = 0
+      const height = viewport?.height ?? window.innerHeight
+      const offset = viewport?.offsetTop ?? 0
+      const measured = rows.map(({ effect, heading }) => {
+        const bounds = heading.getBoundingClientRect()
+        // Reveal over the last 15% of viewport travel toward its center.
+        const center = bounds.top + bounds.height / 2 - offset
+        const value = Math.max(0, Math.min(1, (height * .65 - center) / (height * .15)))
+        return { effect, value: Math.round(value * 1000) / 1000 }
+      })
+      setProgress(current => {
+        let next = current
+        for (const { effect, value } of measured) {
+          // Discoveries only advance, including when scrolling back up.
+          const target = motion.matches && (value > 0 || current[effect] > 0) ? 1 : value
+          if (target > current[effect]) {
+            if (next === current) next = { ...current }
+            next[effect] = target
+          }
+        }
+        return next
+      })
     }
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') clear()
+    const schedule = () => {
+      if (!disposed && !frame) frame = requestAnimationFrame(update)
     }
-    const onPointerDown = (event: PointerEvent) => {
-      const row = event.target instanceof Element ? event.target.closest('[data-effect]') : null
-      setTapped(current => row?.getAttribute('data-effect') === current ? current : null)
-    }
-    window.addEventListener('keydown', onKeyDown)
-    window.addEventListener('pointerdown', onPointerDown)
-    window.addEventListener('blur', clear)
+    const resize = new ResizeObserver(schedule)
+    resize.observe(document.body)
+    resize.observe(listRef.current)
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    viewport?.addEventListener('resize', schedule)
+    viewport?.addEventListener('scroll', schedule)
+    motion.addEventListener('change', schedule)
+    document.fonts?.ready.then(schedule)
+    schedule()
     return () => {
-      window.removeEventListener('keydown', onKeyDown)
-      window.removeEventListener('pointerdown', onPointerDown)
-      window.removeEventListener('blur', clear)
+      disposed = true
+      cancelAnimationFrame(frame)
+      resize.disconnect()
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+      viewport?.removeEventListener('resize', schedule)
+      viewport?.removeEventListener('scroll', schedule)
+      motion.removeEventListener('change', schedule)
     }
   }, [])
 
   return {
-    isActive: (effect: Effect | null) => effect !== null && (revealed.includes(effect) || active === effect),
-    enter: (effect: Effect | null) => { setHovered(effect); reveal(effect) },
-    leave: (effect: Effect | null) => setHovered(current => current === effect ? null : current),
-    focus: (effect: Effect | null) => { setFocused(effect); reveal(effect) },
-    blur: (effect: Effect | null) => setFocused(current => current === effect ? null : current),
-    pointerDown: (type: string) => { pointerType.current = type },
-    activate: (effect: Effect | null, detail: number) => {
-      if (!effect || window.getSelection()?.isCollapsed === false) return
-      reveal(effect)
-      if (detail === 0) setFocused(effect)
-      else if (pointerType.current !== 'mouse') setTapped(current => current === effect ? null : effect)
-    },
+    listRef,
+    progress: (effect: Effect | null) => effect === null ? 0 : progress[effect],
+    isActive: (effect: Effect | null) => effect !== null && progress[effect] > 0,
   }
 }
 

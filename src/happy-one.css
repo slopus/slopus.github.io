@@ -17,8 +17,6 @@
 .one-benefit-number, .one-benefit-title { color: #183f38; font-size: 1.18rem; font-weight: 500; line-height: 1.55; }
 .one-benefit-heading { grid-column: 2; display: flex; align-items: center; gap: .45rem; }
 .one-benefit-body { grid-column: 2; min-height: 3.2em; margin: .3rem 0 0; color: #47645e; font-size: .98rem; line-height: 1.6; text-wrap: pretty; }
-.one-benefits li[data-effect] { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-.one-benefit-title[role='button']:focus-visible { outline: 2px solid #e6522c; outline-offset: 4px; border-radius: 3px; }
 .one-security-sticker, .one-security-sticker img { display: block; flex: 0 0 26px; width: 26px; height: 26px; }
 .one-mit { position: relative; display: inline-block; width: 1.674em; text-transform: none; }
 .one-mit-text { position: absolute; inset: 0; color: transparent; }
@@ -27,14 +25,12 @@
 .one-benefit-heading:has(.one-provider-header) { gap: .3rem; }
 .one-provider-header { position: relative; flex: 0 0 20px; width: 20px; height: 20px; }
 .one-provider-header img { display: block; width: 20px; height: 20px; }
-.one-provider-extra { position: absolute; z-index: 2; top: 0; left: 28px; display: flex; gap: 8px; opacity: 0; visibility: hidden; transform: translateX(-8px); transition: opacity 160ms ease, transform 220ms ease; }
-[data-active] .one-provider-extra { opacity: 1; visibility: visible; transform: translateX(0); }
+.one-provider-extra { position: absolute; z-index: 2; top: 0; left: 28px; display: flex; gap: 8px; opacity: var(--feature-progress, 0); visibility: hidden; transform: translateX(calc(-8px + 8px * var(--feature-progress, 0))); }
+[data-active] .one-provider-extra { visibility: visible; }
 /* A small teammate at the band edge. The speech bubble stays above the art. */
 .one-teammate { position: absolute; z-index: 50; top: -8px; right: calc((min(100vw - 40px, 34rem) - 100vw) / 2); width: 88px; height: 88px; pointer-events: none; }
-.one-teammate > img { position: absolute; inset: 0; z-index: 1; opacity: 0; transform: translateX(60px); transition: opacity 160ms ease, transform 220ms ease; }
-.one-teammate-message { position: absolute; z-index: 2; right: 62px; top: 8px; width: max-content; padding: .5rem .7rem; border: 1px solid #bac7ae; border-radius: 12px 12px 0 12px; background: #f5f0e7; color: #47645e; text-transform: none; font-size: .78rem; line-height: 1.4; opacity: 0; transition: opacity 160ms ease; }
-[data-active] .one-teammate > img { opacity: 1; transform: translateX(0); }
-[data-active] .one-teammate-message { opacity: 1; }
+.one-teammate > img { position: absolute; inset: 0; z-index: 1; opacity: var(--feature-progress, 0); transform: translateX(calc(60px - 60px * var(--feature-progress, 0))); }
+.one-teammate-message { position: absolute; z-index: 2; right: 62px; top: 8px; width: max-content; padding: .5rem .7rem; border: 1px solid #bac7ae; border-radius: 12px 12px 0 12px; background: #f5f0e7; color: #47645e; text-transform: none; font-size: .78rem; line-height: 1.4; opacity: var(--feature-progress, 0); }
 .one-download-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .85rem; margin-top: 3.25rem; }
 .one-desktop-button > img { display: block; width: 100%; height: 100%; }
 .one-product-shot { position: relative; margin: 3.5rem 0 0; padding-right: 115px; }
@@ -110,7 +106,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .one-provider-extra, .one-teammate > img, .one-teammate-message { transition: none; }
   .happy-one .button, .happy-one .store-button { transition: none; }
   .happy-one .button:hover, .happy-one .store-button:hover { transform: none; }
 }
