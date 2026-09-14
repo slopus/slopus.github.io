@@ -146,8 +146,8 @@ await writeRoute('happy2', desktopHtml)
 
 // Unlisted review page: never linked from the public homepage or documentation.
 await writeRoute('tmp/happy-one', htmlForPage({
-  title: 'Happy — Any agent. Any team. One harness.',
-  description: 'Work with Claude, Codex, and Grok in one open-source workspace. Switch models, run tasks in parallel, and bring your team into the same session.',
+  title: 'Any model. Your team. Happy Harness.',
+  description: 'Build with Astra, review with Fable, and invite your team. At your desk or on the end-to-end encrypted mobile client.',
   canonicalPath: '/tmp/happy-one/',
   robots: 'noindex, nofollow',
 }))
