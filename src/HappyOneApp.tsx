@@ -29,7 +29,7 @@ const features = [
     body: 'Invite a colleague or friend into the same sessions. Share context, steer the work, and review changes together.',
   },
   {
-    title: 'Use your current subscriptions',
+    title: 'Reuse current subscriptions',
     body: 'Connect your existing Claude, Codex, and Grok accounts. Use the subscriptions you already pay for.',
   },
   {
@@ -37,7 +37,7 @@ const features = [
     body: 'Run Happy on your own hardware. Read the code, change it, and make it part of how you work.',
   },
   {
-    title: 'End-to-end encrypted mobile app',
+    title: 'E2E encrypted mobile app',
     body: 'Control Happy Desktop and your terminal sessions from your phone. Messages between your devices are end-to-end encrypted.',
   },
 ] as const
@@ -49,8 +49,7 @@ function Features() {
         <li key={feature.title}>
           <details>
             <summary>
-              <span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>
-              <span>{feature.title}</span>
+              <span><span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>{' '}{feature.title}</span>
               <span className="one-benefit-chevron" aria-hidden="true" />
             </summary>
             <p>{feature.body}</p>
