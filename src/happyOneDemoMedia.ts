@@ -1,11 +1,13 @@
 const standard = {
-  desktop: '/video/happy-one/v14/desktop.mp4',
-  phone: '/video/happy-one/v13/phone.mp4',
+  framerate: 30,
+  desktop: { src: '/video/happy-one/v16/desktop-30.mp4', width: 1560, height: 960 },
+  phone: { src: '/video/happy-one/v16/phone-30.mp4', width: 804, height: 1748 },
 } as const
 
 const highQuality = {
-  desktop: '/video/happy-one/v15/desktop.mp4',
-  phone: '/video/happy-one/v15/phone.mp4',
+  framerate: 60,
+  desktop: { src: '/video/happy-one/v16/desktop.mp4', width: 2340, height: 1440 },
+  phone: { src: '/video/happy-one/v16/phone.mp4', width: 1206, height: 2622 },
 } as const
 
 export async function happyOneDemoMediaSelect() {
@@ -15,11 +17,11 @@ export async function happyOneDemoMediaSelect() {
     // Select the pair once, before loading either video. Browser-reported smooth
     // hardware decoding avoids guessing capability from CPU count or screen size.
     const results = await Promise.all([
-      { width: 2560, height: 1440, bitrate: 5_000_000 },
-      { width: 1206, height: 2622, bitrate: 3_000_000 },
+      { width: highQuality.desktop.width, height: highQuality.desktop.height, bitrate: 5_000_000 },
+      { width: highQuality.phone.width, height: highQuality.phone.height, bitrate: 3_000_000 },
     ].map(video => navigator.mediaCapabilities.decodingInfo({
       type: 'file',
-      video: { ...video, contentType: 'video/mp4; codecs="avc1.640033"', framerate: 60 },
+      video: { ...video, contentType: 'video/mp4; codecs="avc1.640033"', framerate: highQuality.framerate },
     })))
     return results.every(result => result.supported && result.smooth && result.powerEfficient) ? highQuality : standard
   } catch {

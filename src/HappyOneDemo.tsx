@@ -4,10 +4,10 @@ import { happyOneDemoCaptions } from './happyOneDemoCaptions'
 import { happyOneDemoMediaSelect } from './happyOneDemoMedia'
 import './happy-one-demo.css'
 
-const MEDIA = '/video/happy-one/v13'
-// Recording cues, measured against the common desktop/phone timeline.
-const PHONE_ENTER = 1843 / 60
-const PHONE_EXIT = 2892 / 60
+const MEDIA = '/video/happy-one/v16'
+// v16-r14 recording cues on the common 60fps desktop/phone master clock.
+const PHONE_ENTER = 2498 / 60
+const PHONE_EXIT = 3650 / 60
 
 function timestamp(seconds: number) {
   return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`
@@ -31,7 +31,9 @@ function HappyOneStill() {
     <a className="one-still-composition" href="/video/happy-one/v16/mobile-desktop.webp"
       target="_blank" rel="noopener noreferrer" aria-label="Open the Happy interface screenshot at full size in a new tab"
       aria-describedby="one-still-description">
-      <img className="one-still-desktop" src="/video/happy-one/v16/mobile-desktop.webp"
+      <img className="one-still-desktop" src="/video/happy-one/v16/mobile-desktop-840.webp"
+        srcSet="/video/happy-one/v16/mobile-desktop-420.webp 420w, /video/happy-one/v16/mobile-desktop-840.webp 840w, /video/happy-one/v16/mobile-desktop.webp 2100w"
+        sizes="calc(115vw - 46px)"
         width="2100" height="1660" alt="Happy’s project sidebar, a completed code edit, and model picker with Fable 5.1 above Opus." />
       <span className="one-still-phone" aria-hidden="true">
         <img className="one-still-phone-screen" src="/video/happy-one/v16/phone-home.webp" width="1206" height="2622" alt="" />
@@ -78,8 +80,12 @@ function HappyOnePlayback() {
       // resume waits for both members of the synchronized pair.
       main.preload = 'auto'
       companion.preload = 'auto'
-      main.src = media.desktop
-      companion.src = media.phone
+      main.width = media.desktop.width
+      main.height = media.desktop.height
+      companion.width = media.phone.width
+      companion.height = media.phone.height
+      main.src = media.desktop.src
+      companion.src = media.phone.src
       main.load()
       companion.load()
     }
@@ -184,7 +190,7 @@ function HappyOnePlayback() {
     <figure ref={stage} className="one-demo" aria-label="Happy Desktop and iPhone, one synchronized session">
       <div className="one-demo-stage" data-phone-focus={phoneFocused ? '' : undefined}>
         <div className="one-demo-desktop">
-          <video ref={desktop} poster="/video/happy-one/v15/desktop-poster.webp" width="2560" height="1440"
+          <video ref={desktop} poster="/video/happy-one/v16/desktop-poster.webp" width="2340" height="1440"
             muted={muted} playsInline preload="none" aria-label="Switch from Astra to Fable, collaborate with Steve, delegate to Grok, then continue on iPhone" />
         </div>
         <HappyOnePhone video={phone} />
@@ -192,7 +198,7 @@ function HappyOnePlayback() {
       <p className="one-demo-caption">{caption && <span>{caption}</span>}</p>
       <figcaption className="one-demo-controls">
         <button type="button" onClick={() => controls.current.toggle()}>{playing ? 'Pause' : time >= duration && duration > 0 ? 'Replay' : 'Play'}</button>
-        <input type="range" min="0" max={duration || 1} step="0.05" value={time} disabled={!duration}
+        <input type="range" min="0" max={duration || 1} step="any" value={time} disabled={!duration}
           aria-label="Demo playback position" aria-valuetext={`${timestamp(time)} of ${timestamp(duration)}`}
           onChange={event => controls.current.seek(Number(event.currentTarget.value))} />
         <span className="one-demo-time">{timestamp(time)} / {timestamp(duration)}</span>

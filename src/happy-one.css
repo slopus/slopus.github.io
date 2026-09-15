@@ -93,7 +93,7 @@
 
 @media (max-width: 700px) {
   .happy-one .page-width { width: calc(100% - 40px); }
-  .happy-one .site-header { flex-wrap: nowrap; gap: 1rem; padding-block: 1rem; min-height: 70px; }
+  .happy-one .site-header { flex-wrap: wrap; gap: 1rem; padding-block: 1rem; min-height: 70px; }
   .happy-one .site-header nav { flex: none; gap: .9rem; font-size: .8rem; }
   .one-hero { padding-top: 2.5rem; }
   .one-hero h1 { font-size: clamp(2.55rem, 9.2vw, 4rem); }
