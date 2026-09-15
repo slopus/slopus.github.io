@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { HappyOnePhone } from './HappyOnePhone'
 import { happyOneDemoCaptions } from './happyOneDemoCaptions'
 import { happyOneDemoMediaSelect } from './happyOneDemoMedia'
@@ -13,7 +13,40 @@ function timestamp(seconds: number) {
   return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`
 }
 
+const mobileQuery = '(max-width: 700px)'
+function subscribeLayout(notify: () => void) {
+  const query = matchMedia(mobileQuery)
+  query.addEventListener('change', notify)
+  return () => query.removeEventListener('change', notify)
+}
+
 export function HappyOneDemo() {
+  const mobile = useSyncExternalStore(subscribeLayout, () => matchMedia(mobileQuery).matches, () => true)
+  // A separate lifetime, not hidden videos: mobile never requests movie sources.
+  return mobile ? <HappyOneStill /> : <HappyOnePlayback />
+}
+
+function HappyOneStill() {
+  return <figure className="one-demo one-demo-still">
+    <a className="one-still-composition" href="/video/happy-one/v16/mobile-desktop.webp"
+      target="_blank" rel="noopener noreferrer" aria-label="Open the Happy interface screenshot at full size in a new tab"
+      aria-describedby="one-still-description">
+      <img className="one-still-desktop" src="/video/happy-one/v16/mobile-desktop.webp"
+        width="2100" height="1660" alt="Happy’s project sidebar, a completed code edit, and model picker with Fable 5.1 above Opus." />
+      <span className="one-still-phone" aria-hidden="true">
+        <img className="one-still-phone-screen" src="/video/happy-one/v16/phone-home.webp" width="1206" height="2622" alt="" />
+        <img src="/video/happy-one/device/iphone-16-pro-black.png" width="1406" height="2822" alt="" />
+      </span>
+    </a>
+    <figcaption id="one-still-description" className="one-still-description">
+      Fable builds the waveform. Astra reviews. Grok researches X.<br />
+      Pick up the same session on your end-to-end encrypted mobile app.
+      <span className="one-still-hint">Tap the screenshot for a closer look.</span>
+    </figcaption>
+  </figure>
+}
+
+function HappyOnePlayback() {
   const stage = useRef<HTMLElement>(null)
   const desktop = useRef<HTMLVideoElement>(null)
   const phone = useRef<HTMLVideoElement>(null)
@@ -22,7 +55,6 @@ export function HappyOneDemo() {
   const [muted, setMuted] = useState(true)
   const [time, setTime] = useState(0)
   const [duration, setDuration] = useState(0)
-  const [inspecting, setInspecting] = useState(false)
   const [error, setError] = useState(false)
 
   useEffect(() => {
@@ -42,6 +74,10 @@ export function HappyOneDemo() {
       loaded = true
       const media = await happyOneDemoMediaSelect()
       if (disposed) return
+      // Fetch only at this lazy boundary, but allow canplay to arrive before
+      // resume waits for both members of the synchronized pair.
+      main.preload = 'auto'
+      companion.preload = 'auto'
       main.src = media.desktop
       companion.src = media.phone
       main.load()
@@ -102,10 +138,19 @@ export function HappyOneDemo() {
         wanted = main.paused
         if (!wanted) { pause(); return }
         void load()
-        if (main.ended) { main.currentTime = 0; align(true) }
+        // Seeking to the end while paused need not set the browser's ended flag.
+        if (main.ended || main.currentTime >= main.duration) { main.currentTime = 0; align(true) }
         void resume()
       },
-      seek: value => { void load(); if (main.readyState >= 1) main.currentTime = value },
+      seek: value => {
+        void load()
+        if (main.readyState < 1) return
+        // A controlled range must accept its value in the input event itself.
+        // Waiting for timeupdate restores the old value between native input
+        // and change events, which can undo keyboard End/Home seeking.
+        setTime(value)
+        main.currentTime = value
+      },
     }
     return () => {
       disposed = true
@@ -132,7 +177,7 @@ export function HappyOneDemo() {
     }
   }, [])
 
-  const phoneFocused = (time >= PHONE_ENTER && time < PHONE_EXIT) || inspecting
+  const phoneFocused = time >= PHONE_ENTER && time < PHONE_EXIT
   const caption = happyOneDemoCaptions.find(cue => time >= cue.start && time < cue.end)?.text
 
   return (
@@ -140,11 +185,11 @@ export function HappyOneDemo() {
       <div className="one-demo-stage" data-phone-focus={phoneFocused ? '' : undefined}>
         <div className="one-demo-desktop">
           <video ref={desktop} poster="/video/happy-one/v15/desktop-poster.webp" width="2560" height="1440"
-            muted={muted} playsInline preload="none" aria-label="Happy Desktop demo with subtitles" />
+            muted={muted} playsInline preload="none" aria-label="Switch from Astra to Fable, collaborate with Steve, delegate to Grok, then continue on iPhone" />
         </div>
-        <HappyOnePhone video={phone} inspecting={inspecting} inspect={() => setInspecting(value => !value)} />
-        <p className="one-demo-caption" aria-label="Demo subtitle">{caption && <span>{caption}</span>}</p>
+        <HappyOnePhone video={phone} />
       </div>
+      <p className="one-demo-caption">{caption && <span>{caption}</span>}</p>
       <figcaption className="one-demo-controls">
         <button type="button" onClick={() => controls.current.toggle()}>{playing ? 'Pause' : time >= duration && duration > 0 ? 'Replay' : 'Play'}</button>
         <input type="range" min="0" max={duration || 1} step="0.05" value={time} disabled={!duration}
