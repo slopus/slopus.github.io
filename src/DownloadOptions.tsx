@@ -1,9 +1,9 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AppStoreButton, GooglePlayButton } from './StoreButtons'
+import { MOBILE_STORE_RATINGS } from './storeRatings'
 
 const DOWNLOAD = 'https://github.com/slopus/happy-desktop/releases/latest'
 const BREW = 'brew install --cask slopus/tap/happy'
-const PLATFORMS = 'macOS · Windows · Linux'
 const DESKTOP_PLATFORMS = ['macos', 'windows', 'linux'] as const
 const LABELS = { macos: 'macOS', windows: 'Windows', linux: 'Linux', desktop: 'Desktop' }
 
@@ -21,14 +21,11 @@ function desktopPlatform(): DesktopPlatform {
   return 'desktop'
 }
 
-function DownloadBadge({ platform }: { platform: DesktopPlatform }) {
+function DownloadBadge({ platform, variant }: { platform: Exclude<DesktopPlatform, 'desktop'>; variant: number }) {
+  const artwork = platform === 'macos' && variant === 0 ? 'macos-rainbow' : platform
   return (
-    <img src={`/img/happy-one/badges/${platform}.svg`} alt="" width="242" height="76" />
+    <img src={`/img/happy-one/badges/${artwork}.svg`} alt="" width="242" height="76" />
   )
-}
-
-function DesktopLink({ platform }: { platform: DesktopPlatform }) {
-  return <a className="store-button one-desktop-button" href={DOWNLOAD} aria-label={`Download Happy for ${LABELS[platform]}`}><DownloadBadge platform={platform} /></a>
 }
 
 function PlatformLinks({ current }: { current: DesktopPlatform }) {
@@ -39,56 +36,14 @@ function PlatformLinks({ current }: { current: DesktopPlatform }) {
   )
 }
 
-function PlatformPicker({ platform }: { platform: DesktopPlatform }) {
-  const [open, setOpen] = useState(false)
-  const id = useId()
-  const root = useRef<HTMLDivElement>(null)
-  const trigger = useRef<HTMLButtonElement>(null)
-  const firstLink = useRef<HTMLAnchorElement>(null)
-  const generic = platform === 'desktop'
-  const chevron = <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={open ? 'm6 15 6-6 6 6' : 'm6 9 6 6 6-6'} /></svg>
-
-  useEffect(() => {
-    if (!open) return
-    firstLink.current?.focus({ preventScroll: true })
-    const outside = (event: PointerEvent) => {
-      if (event.target instanceof Node && !root.current?.contains(event.target)) setOpen(false)
-    }
-    const escape = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return
-      event.preventDefault()
-      setOpen(false)
-      trigger.current?.focus({ preventScroll: true })
-    }
-    document.addEventListener('pointerdown', outside)
-    document.addEventListener('keydown', escape)
-    return () => {
-      document.removeEventListener('pointerdown', outside)
-      document.removeEventListener('keydown', escape)
-    }
-  }, [open])
-
+function StoreRating({ store }: { store: keyof typeof MOBILE_STORE_RATINGS }) {
+  const rating = MOBILE_STORE_RATINGS[store]
   return (
-    <div ref={root} className="one-platform-picker" onBlur={event => {
-      if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false)
-    }}>
-      <div className="one-platform-primary">
-        {generic ? (
-          <button ref={trigger} className="one-generic-platform" type="button" aria-label="Choose a desktop platform" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>
-            <span className="store-button one-desktop-button"><DownloadBadge platform="desktop" /></span>
-            <span className="one-platform-toggle" aria-hidden="true">{chevron}</span>
-          </button>
-        ) : <>
-          <DesktopLink platform={platform} />
-          <button ref={trigger} className="one-platform-toggle" type="button" aria-label="More desktop downloads" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>{chevron}</button>
-        </>}
-      </div>
-      {open && (
-        <div className="one-platform-popover" id={id} role="group" aria-label="Choose a desktop download" data-download-popover>
-          {DESKTOP_PLATFORMS.map((os, index) => <a key={os} ref={index === 0 ? firstLink : undefined} href={DOWNLOAD}>Download for {LABELS[os]}</a>)}
-        </div>
-      )}
-    </div>
+    <p className="store-rating" aria-label={`${rating.score} stars from ${rating.count.toLocaleString('en-US')} ${rating.store} ${rating.noun} in the US`}>
+      <span className="store-stars" aria-hidden="true">★★★★★</span>
+      <strong>{rating.score}</strong>
+      <span className="store-count">{rating.countLabel} {rating.noun}</span>
+    </p>
   )
 }
 
@@ -122,7 +77,10 @@ function HomebrewCommand() {
 
   return (
     <div className="one-brew-command">
-      <code ref={code}>{BREW}</code>
+      <div className="one-brew-line">
+        <span className="one-brew-prompt" aria-hidden="true">$</span>
+        <code ref={code}>{BREW}</code>
+      </div>
       <button type="button" onClick={copy} aria-label={copied ? 'Homebrew command copied' : 'Copy Homebrew command'} title={copied ? 'Copied' : 'Copy command'}>
         <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           {copied ? <path d="m5 12 4 4L19 6" /> : <><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M15 9V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h4" /></>}
@@ -135,18 +93,22 @@ function HomebrewCommand() {
 
 export function DownloadOptions({ variant, onCycle }: DownloadOptionsProps) {
   const platform = desktopPlatform()
-  const showBrew = platform !== 'windows'
+  // Phones have no desktop OS to detect. Keep all three platforms explicit
+  // below the macOS badge, including while comparing the two Apple treatments.
+  const primaryPlatform = platform === 'desktop' ? 'macos' : platform
+  const showBrew = primaryPlatform === 'macos'
 
   return (
     <div
       className="one-download-actions"
       data-variant={variant}
       data-platform={platform}
+      data-primary-platform={primaryPlatform}
       role="group"
-      aria-label={`Desktop and mobile downloads. Preview layout ${variant + 1} of 3. Use left or right arrow keys to change layout.`}
+      aria-label={`Desktop and mobile downloads. Apple badge ${variant === 0 ? 'rainbow' : 'white'}, ${variant + 1} of 2. Use left or right arrow keys to compare.`}
       tabIndex={0}
       onClick={event => {
-        if (event.target instanceof Element && event.target.closest('a, button, code, [data-download-popover]')) return
+        if (event.target instanceof Element && event.target.closest('a, button, .one-brew-command')) return
         if (window.getSelection()?.toString()) return
         onCycle(1)
       }}
@@ -159,19 +121,15 @@ export function DownloadOptions({ variant, onCycle }: DownloadOptionsProps) {
       }}
     >
       <div className="one-desktop-downloads">
-        {variant === 0 ? (
-          <><DesktopLink platform={platform} /><PlatformLinks current={platform} /></>
-        ) : variant === 1 ? (
-          <><PlatformPicker key={variant} platform={platform} /><span className="one-desktop-platforms">{PLATFORMS}</span></>
-        ) : (
-          <div className="one-os-downloads">
-            {DESKTOP_PLATFORMS.map(os => <DesktopLink key={os} platform={os} />)}
-          </div>
-        )}
+        <a className="store-button one-desktop-button" href={DOWNLOAD} aria-label={`Download Happy for ${LABELS[primaryPlatform]}`}>
+          <DownloadBadge platform={primaryPlatform} variant={variant} />
+        </a>
+        <PlatformLinks current={platform} />
         {showBrew && <HomebrewCommand />}
       </div>
       <div className="one-mobile-downloads">
-        <AppStoreButton /><GooglePlayButton />
+        <div className="one-store-download"><AppStoreButton /><StoreRating store="appStore" /></div>
+        <div className="one-store-download"><GooglePlayButton /><StoreRating store="googlePlay" /></div>
       </div>
     </div>
   )

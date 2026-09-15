@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { DownloadOptions } from './DownloadOptions'
@@ -16,7 +18,7 @@ afterEach(() => {
 })
 
 describe('hidden preview downloads', () => {
-  it.each([0, 1, 2])('never shows Homebrew on Windows in variant %i', variant => {
+  it.each([0, 1])('never shows Homebrew on Windows in variant %i', variant => {
     device('Mozilla/5.0 (Windows NT 10.0; Win64; x64)')
     const { container } = render(<DownloadOptions variant={variant} onCycle={vi.fn()} />)
     expect(container.querySelector('[data-platform="windows"]')).toBeTruthy()
@@ -28,12 +30,12 @@ describe('hidden preview downloads', () => {
     ['iPhone', 'iPhone', '', 5],
     ['Android', 'Linux; Android 15', '', 5],
     ['iPad desktop mode', 'Macintosh; Intel Mac OS X 10_15_7', 'MacIntel', 5],
-  ])('keeps Homebrew and generic desktop availability on %s', (_name, ua, platform, touch) => {
+  ])('keeps Homebrew and all desktop platforms visible on %s', (_name, ua, platform, touch) => {
     device(ua as string, platform as string, touch as number)
     const { container } = render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
     expect(container.querySelector('[data-platform="desktop"]')).toBeTruthy()
     expect(screen.getByText(BREW)).toBeTruthy()
-    expect(screen.getByRole('link', { name: 'Download Happy for Desktop' })).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Download Happy for macOS' })).toBeTruthy()
     for (const os of ['macOS', 'Windows', 'Linux']) expect(screen.getByText(os)).toBeTruthy()
   })
 
@@ -41,13 +43,14 @@ describe('hidden preview downloads', () => {
     device(ua)
     render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
     expect(screen.getByRole('link', { name: `Download Happy for ${label}` }).getAttribute('href')).toBe(RELEASES)
-    expect(screen.getByText(BREW)).toBeTruthy()
+    expect(Boolean(screen.queryByText(BREW))).toBe(label === 'macOS')
   })
 
   it('cycles only on background or group arrow keys, not links or selected command text', () => {
+    device('Macintosh')
     const cycle = vi.fn()
     render(<DownloadOptions variant={0} onCycle={cycle} />)
-    const group = screen.getByRole('group', { name: /Preview layout/ })
+    const group = screen.getByRole('group', { name: /Apple badge/ })
     fireEvent.click(group)
     fireEvent.keyDown(group, { key: 'ArrowLeft' })
     expect(cycle.mock.calls).toEqual([[1], [-1]])
@@ -69,35 +72,52 @@ describe('hidden preview downloads', () => {
     expect(cycle).not.toHaveBeenCalled()
   })
 
-  it('opens the phone desktop chooser, then closes on Escape and restores focus', () => {
+  it('uses the homepage rating treatment with verified US store snapshots', () => {
+    const { container } = render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
+    expect(container.querySelectorAll('.one-store-download .store-rating')).toHaveLength(2)
+    expect(container.querySelectorAll('.store-stars[aria-hidden="true"]')).toHaveLength(2)
+    expect(screen.getByLabelText('4.9 stars from 1,006 App Store ratings in the US')).toBeTruthy()
+    expect(screen.getByLabelText('5.0 stars from 3,128 Google Play reviews in the US')).toBeTruthy()
+    expect(screen.getByText('1,000+ ratings')).toBeTruthy()
+    expect(screen.getByText('3.1k+ reviews')).toBeTruthy()
+  })
+
+  it('compares rainbow and white Apple artwork without adding a dropdown', () => {
     device('iPhone')
     const cycle = vi.fn()
-    render(<DownloadOptions variant={1} onCycle={cycle} />)
-    const trigger = screen.getByRole('button', { name: 'Choose a desktop platform' })
-    fireEvent.click(trigger)
-    expect(trigger.getAttribute('aria-expanded')).toBe('true')
-    expect(screen.getByRole('link', { name: 'Download for macOS' })).toBe(document.activeElement)
-    fireEvent.keyDown(document, { key: 'Escape' })
-    expect(screen.queryByRole('group', { name: 'Choose a desktop download' })).toBeNull()
-    expect(document.activeElement).toBe(trigger)
-    expect(cycle).not.toHaveBeenCalled()
+    const { container, rerender } = render(<DownloadOptions variant={0} onCycle={cycle} />)
+    expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/macos-rainbow.svg')
+    fireEvent.click(screen.getByRole('group', { name: /Apple badge/ }))
+    expect(cycle).toHaveBeenCalledWith(1)
+    rerender(<DownloadOptions variant={1} onCycle={cycle} />)
+    expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/macos.svg')
+    expect(container.querySelector('[aria-expanded], .one-platform-popover')).toBeNull()
+    expect(screen.getAllByRole('button')).toHaveLength(1)
   })
 
-  it('keeps the direct detected-platform link beside its chooser on desktop', () => {
+  it('keeps the Windows mark and direct download in both Apple variants', () => {
     device('Windows NT 10.0')
-    render(<DownloadOptions variant={1} onCycle={vi.fn()} />)
+    const { container, rerender } = render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
     expect(screen.getByRole('link', { name: 'Download Happy for Windows' }).getAttribute('href')).toBe(RELEASES)
-    fireEvent.click(screen.getByRole('button', { name: 'More desktop downloads' }))
-    expect(screen.getByRole('group', { name: 'Choose a desktop download' })).toBeTruthy()
-    fireEvent.pointerDown(document.body)
-    expect(screen.queryByRole('group', { name: 'Choose a desktop download' })).toBeNull()
+    expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/windows.svg')
+    rerender(<DownloadOptions variant={1} onCycle={vi.fn()} />)
+    expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/windows.svg')
+    expect(screen.queryByRole('button')).toBeNull()
   })
 
-  it('offers all three desktop platforms directly in the explicit variant', () => {
-    render(<DownloadOptions variant={2} onCycle={vi.fn()} />)
-    for (const os of ['macOS', 'Windows', 'Linux']) {
-      expect(screen.getByRole('link', { name: `Download Happy for ${os}` }).getAttribute('href')).toBe(RELEASES)
+  it('uses the exact App Store Apple silhouette and Download lettering in both macOS badges', () => {
+    const read = (file: string) => readFileSync(resolve(process.cwd(), file), 'utf8')
+    const reference = read('src/StoreButtons.tsx').split('export function GooglePlayButton')[0]
+    const paths = [...reference.matchAll(/d="([^"]+)"/g)].map(match => match[1]).filter(value => value.startsWith('M'))
+    const foreground = paths[2]
+    const apple = foreground.slice(0, foreground.indexOf('M84.135'))
+    const download = foreground.slice(foreground.indexOf('M75.233'), foreground.indexOf('M157.581'))
+    for (const file of ['macos', 'macos-rainbow']) {
+      const svg = new DOMParser().parseFromString(read(`public/img/happy-one/badges/${file}.svg`), 'image/svg+xml')
+      expect(svg.documentElement.getAttribute('viewBox')).toBe('-2 2 242 76')
+      expect(svg.querySelector('[data-part="platform-icon"]')?.getAttribute('d')).toBe(apple)
+      expect(svg.querySelector('[data-part="platform-icon"]')?.hasAttribute('transform')).toBe(false)
+      expect(svg.querySelector('[data-part="download"]')?.getAttribute('d')).toBe(download)
     }
-    expect(screen.queryByRole('button', { name: 'More desktop downloads' })).toBeNull()
   })
 })

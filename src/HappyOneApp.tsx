@@ -117,7 +117,7 @@ function Downloads(props: DownloadOptionsProps) {
 
 export default function HappyOneApp() {
   const [downloadVariant, setDownloadVariant] = useState(0)
-  const cycleDownloadVariant = (direction: number) => setDownloadVariant(current => (current + direction + 3) % 3)
+  const cycleDownloadVariant = (direction: number) => setDownloadVariant(current => (current + direction + 2) % 2)
   return (
     <div className="site-shell happy-one">
       <PageScrollbar />

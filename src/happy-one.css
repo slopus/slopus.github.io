@@ -33,28 +33,22 @@
 .one-download-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: clamp(2rem, 5vw, 4rem); width: min(100%, 48rem); margin: 3.25rem auto 0; padding-block: .5rem; }
 .one-download-actions:focus-visible { outline: 2px solid #e6522c; outline-offset: 10px; border-radius: 8px; }
 .one-desktop-downloads, .one-mobile-downloads { display: flex; flex-direction: column; align-items: center; gap: .75rem; min-width: 0; }
+.one-store-download { display: flex; flex-direction: column; align-items: center; gap: .55rem; }
+.one-store-download .store-rating { justify-content: center; padding-left: 0; }
 .one-download-actions .store-button { flex: none; width: 180px; height: 56px; }
 .one-download-actions .one-desktop-button { display: block; padding: 0; border: 0; background: #000; cursor: pointer; }
 .one-desktop-button > img { display: block; width: 100%; height: 100%; }
-.one-desktop-platforms, .one-platform-links { display: flex; align-items: center; justify-content: center; color: #47645e; font-size: .82rem; line-height: 20px; white-space: nowrap; }
+.one-platform-links { display: flex; align-items: center; justify-content: center; color: #47645e; font-size: .82rem; line-height: 20px; white-space: nowrap; }
 .one-platform-links { gap: .9rem; }
 .one-platform-links a { display: inline-flex; align-items: center; min-height: 44px; margin-block: -12px; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: transparent; }
 .one-platform-links a:hover { color: #183f38; text-decoration-color: currentColor; }
-.one-os-downloads { display: flex; flex-direction: column; align-items: center; gap: .75rem; }
-.one-platform-picker { position: relative; width: 180px; }
-.one-platform-primary { position: relative; display: flex; justify-content: center; }
-.one-generic-platform { position: relative; flex: none; width: 228px; height: 56px; margin-right: -48px; padding: 0; border: 0; border-radius: 8px; background: transparent; cursor: pointer; }
-.one-generic-platform > .one-platform-toggle { left: 184px; }
-.one-platform-toggle { position: absolute; left: calc(100% + 4px); top: 6px; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: #183f38; cursor: pointer; }
-.one-platform-toggle:hover { background: #183f380c; }
-.one-platform-toggle:focus-visible, .one-desktop-button:focus-visible, .one-generic-platform:focus-visible { outline: 2px solid #e6522c; outline-offset: 3px; }
-.one-platform-popover { position: absolute; top: calc(100% + 8px); left: 50%; z-index: 65; width: 244px; padding: 6px; border: 1px solid #bac7ae; border-radius: 10px; background: #f5f0e7; box-shadow: 0 8px 24px #183f3820; transform: translateX(-50%); }
-.one-platform-popover a { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: .5rem .75rem; border-radius: 5px; color: #183f38; font-size: .9rem; text-align: left; }
-.one-platform-popover a:hover, .one-platform-popover a:focus-visible { outline: none; background: #dbe2cd; }
-.one-brew-command { position: relative; display: flex; align-items: center; justify-content: center; gap: .25rem; max-width: 100%; min-height: 40px; color: #47645e; }
-.one-brew-command code { font-family: 'DM Mono', monospace; font-size: .75rem; white-space: nowrap; }
-.one-brew-command button { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 4px; color: #7b8e83; background: none; cursor: pointer; }
-.one-brew-command button:hover, .one-brew-command button:focus-visible { color: #183f38; }
+.one-desktop-button:focus-visible { outline: 2px solid #e6522c; outline-offset: 3px; }
+.one-brew-command { position: relative; display: grid; grid-template-columns: 36px minmax(0, 1fr) 36px; align-items: center; width: 100%; max-width: 22rem; min-height: 46px; margin-top: .3rem; padding: 0 4px; border: 1px solid #344139; border-radius: 8px; background: #000; color: #e1e9d5; }
+.one-brew-line { grid-column: 2; display: flex; align-items: baseline; justify-self: center; gap: 4px; width: max-content; max-width: 100%; font: .73rem/1.65 'DM Mono', monospace; }
+.one-brew-command code { min-width: 0; font: inherit; text-align: left; white-space: normal; }
+.one-brew-prompt { flex: none; color: #9dbb88; }
+.one-brew-command button { grid-column: 3; display: grid; place-items: center; width: 44px; height: 44px; margin-left: -4px; padding: 0; border: 0; border-radius: 4px; color: #a7bba2; background: none; cursor: pointer; }
+.one-brew-command button:hover, .one-brew-command button:focus-visible { color: #fff; background: #ffffff0a; }
 .one-brew-command button:focus-visible { outline: 2px solid #e6522c; outline-offset: 1px; }
 .one-download-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .one-terminal-section { display: flex; align-items: center; gap: 5rem; padding-block: 6.5rem 2.5rem; }
@@ -127,7 +121,6 @@
   .one-teammate > img { width: 64px; height: 64px; }
   .one-teammate-message { right: 48px; top: 16px; }
   .one-download-actions { grid-template-columns: minmax(0, 1fr); gap: 2.25rem; width: min(100%, 24rem); margin-top: 2.5rem; }
-  .one-brew-command code { font-size: clamp(.65rem, 3.2vw, .75rem); }
   .one-terminal-section { flex-direction: column; align-items: stretch; gap: 1.25rem; padding-block: 4rem 1rem; }
   .one-terminal-section .terminal-body { padding: 1.2rem; font-size: clamp(.82rem, 3.6vw, 1rem); }
   .one-existing { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
