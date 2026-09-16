@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { DownloadOptions } from './DownloadOptions'
 
@@ -13,6 +13,9 @@ function device(userAgent: string, platform = '', maxTouchPoints = 0) {
 
 afterEach(() => {
   cleanup()
+  window.getSelection()?.removeAllRanges()
+  Reflect.deleteProperty(document, 'execCommand')
+  vi.useRealTimers()
   vi.restoreAllMocks()
   vi.unstubAllGlobals()
 })
@@ -70,6 +73,93 @@ describe('hidden preview downloads', () => {
     await waitFor(() => expect(screen.getByRole('status').textContent).toBe('Copied.'))
     expect(writeText).toHaveBeenCalledWith(BREW)
     expect(cycle).not.toHaveBeenCalled()
+  })
+
+  it('briefly swaps the copy icon for a checkmark, then resets without selecting text', async () => {
+    vi.useFakeTimers()
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    vi.stubGlobal('navigator', { userAgent: 'Macintosh', clipboard: { writeText } })
+    render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
+    const button = screen.getByRole('button', { name: 'Copy Homebrew command' })
+    expect(button.querySelector('rect')).toBeTruthy()
+    await act(async () => { fireEvent.click(button) })
+    expect(button.querySelector('path')?.getAttribute('d')).toBe('m5 12 4 4L19 6')
+    expect(button.querySelector('rect')).toBeNull()
+    expect(button.hasAttribute('title')).toBe(false)
+    expect(window.getSelection()?.toString()).toBe('')
+    act(() => { vi.advanceTimersByTime(1399) })
+    expect(screen.getByRole('status').textContent).toBe('Copied.')
+    act(() => { vi.advanceTimersByTime(1) })
+    expect(button.getAttribute('aria-label')).toBe('Copy Homebrew command')
+    expect(button.querySelector('rect')).toBeTruthy()
+    expect(screen.getByRole('status').textContent).toBe('')
+  })
+
+  it.each(['missing', 'denied'])('copies without visible selection when the clipboard API is %s', async mode => {
+    vi.stubGlobal('navigator', {
+      userAgent: 'iPhone',
+      clipboard: mode === 'denied' ? { writeText: vi.fn().mockRejectedValue(new Error('Not allowed')) } : undefined,
+    })
+    const execCommand = vi.fn(() => {
+      const input = document.activeElement as HTMLTextAreaElement
+      expect(input.tagName).toBe('TEXTAREA')
+      expect(input.value).toBe(BREW)
+      expect(input.readOnly).toBe(true)
+      expect(input.style.opacity).toBe('0')
+      return true
+    })
+    Object.defineProperty(document, 'execCommand', { configurable: true, value: execCommand })
+    render(<><p>Existing selection</p><DownloadOptions variant={0} onCycle={vi.fn()} /></>)
+    const button = screen.getByRole('button', { name: 'Copy Homebrew command' })
+    button.focus()
+    const range = document.createRange()
+    range.selectNodeContents(screen.getByText('Existing selection'))
+    window.getSelection()?.removeAllRanges()
+    window.getSelection()?.addRange(range)
+    expect(window.getSelection()?.toString()).toBe('Existing selection')
+    fireEvent.click(button)
+    await waitFor(() => expect(screen.getByRole('status').textContent).toBe('Copied.'))
+    expect(execCommand).toHaveBeenCalledWith('copy')
+    expect(document.activeElement).toBe(button)
+    expect(window.getSelection()?.toString()).toBe('Existing selection')
+    expect(document.querySelector('textarea')).toBeNull()
+  })
+
+  it.each(['false', 'throws', 'missing'])('reports a blocked clipboard honestly when native copy %s, without selecting the command', async mode => {
+    device('iPhone')
+    if (mode !== 'missing') {
+      Object.defineProperty(document, 'execCommand', {
+        configurable: true,
+        value: vi.fn(() => {
+          if (mode === 'throws') throw new Error('Not allowed')
+          return false
+        }),
+      })
+    }
+    render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
+    const button = screen.getByRole('button', { name: 'Copy Homebrew command' })
+    button.focus()
+    fireEvent.click(button)
+    await waitFor(() => expect(screen.getByRole('status').textContent).toBe('Clipboard unavailable. You can copy the command manually.'))
+    expect(button.getAttribute('aria-label')).toBe('Copy Homebrew command')
+    expect(document.activeElement).toBe(button)
+    expect(button.querySelector('rect')).toBeTruthy()
+    expect(window.getSelection()?.toString()).toBe('')
+    expect(document.querySelector('textarea')).toBeNull()
+  })
+
+  it('restarts the brief confirmation when copied again', async () => {
+    vi.useFakeTimers()
+    vi.stubGlobal('navigator', { userAgent: 'Macintosh', clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } })
+    render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
+    const button = screen.getByRole('button', { name: 'Copy Homebrew command' })
+    await act(async () => { fireEvent.click(button) })
+    act(() => { vi.advanceTimersByTime(1000) })
+    await act(async () => { fireEvent.click(button) })
+    act(() => { vi.advanceTimersByTime(400) })
+    expect(screen.getByRole('status').textContent).toBe('Copied.')
+    act(() => { vi.advanceTimersByTime(1000) })
+    expect(screen.getByRole('status').textContent).toBe('')
   })
 
   it('uses the homepage rating treatment with verified US store snapshots', () => {

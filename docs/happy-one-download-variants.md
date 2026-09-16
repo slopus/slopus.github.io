@@ -39,12 +39,17 @@ Awesome Tux artwork, rather than implying Ubuntu-only support. Phones have no de
 OS to detect, so they show the macOS badge for the comparison with all three
 macOS / Windows / Linux links explicitly visible below it.
 
-Homebrew is a centered black 46px terminal strip with a prompt, monospace command,
-and 44px copy target. The prompt/command group has balanced side tracks and stays
-centered; its text is left-aligned, with the prompt on the first baseline when a
-narrow screen soft-wraps the command. Only the command is copied, without the
-decorative `$`. The strip belongs to the macOS option: phones keep it, while
-Windows and Linux use their direct-download badges without a cask command.
+Homebrew is a centered, content-sized black 46px terminal strip with a left-pinned
+prompt, monospace command, and 44px copy target. The command never wraps or shrinks
+to fit: at narrow widths or enlarged text sizes, only the command scrolls
+horizontally (including with keyboard focus), leaving `$` and Copy in place.
+Copy briefly swaps the icon for a checkmark, reverting after 1.4 seconds with no
+tooltip, toast, or visible text selection. Browsers that deny the async clipboard
+API get a native-copy fallback that restores focus and any previous selection;
+if both fail, an accessible status reports the failure without claiming success.
+Only the command is copied, without the decorative `$`. The strip belongs to the
+macOS option: phones keep it, while Windows and Linux use their direct-download
+badges without a cask command.
 
 ## Store ratings
 

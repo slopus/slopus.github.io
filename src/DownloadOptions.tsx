@@ -47,31 +47,52 @@ function StoreRating({ store }: { store: keyof typeof MOBILE_STORE_RATINGS }) {
   )
 }
 
+async function copyHomebrewCommand() {
+  try {
+    await navigator.clipboard.writeText(BREW)
+    return
+  } catch {
+    // Some browsers/previews deny the async API. Use their native copy action
+    // without highlighting the visible command or leaving focus elsewhere.
+    const focused = document.activeElement
+    const selection = window.getSelection()
+    const ranges = selection ? Array.from({ length: selection.rangeCount }, (_, index) => selection.getRangeAt(index).cloneRange()) : []
+    const input = document.createElement('textarea')
+    input.value = BREW
+    input.readOnly = true
+    input.tabIndex = -1
+    input.setAttribute('aria-hidden', 'true')
+    input.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0;font-size:16px'
+    document.body.append(input)
+    try {
+      input.focus({ preventScroll: true })
+      input.select()
+      if (!document.execCommand('copy')) throw new Error('Clipboard unavailable')
+    } finally {
+      input.remove()
+      if (focused instanceof HTMLElement) focused.focus({ preventScroll: true })
+      selection?.removeAllRanges()
+      for (const range of ranges) selection?.addRange(range)
+    }
+  }
+}
+
 function HomebrewCommand() {
   const [copied, setCopied] = useState(false)
   const [failed, setFailed] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-  const code = useRef<HTMLElement>(null)
   useEffect(() => () => clearTimeout(timer.current), [])
 
   const copy = async () => {
     clearTimeout(timer.current)
     try {
-      await navigator.clipboard.writeText(BREW)
+      await copyHomebrewCommand()
       setCopied(true)
       setFailed(false)
-      timer.current = setTimeout(() => setCopied(false), 1800)
+      timer.current = setTimeout(() => setCopied(false), 1400)
     } catch {
       setCopied(false)
       setFailed(true)
-      // Leave a native text selection ready for the platform's Copy command.
-      if (code.current) {
-        const range = document.createRange()
-        range.selectNodeContents(code.current)
-        const selection = window.getSelection()
-        selection?.removeAllRanges()
-        selection?.addRange(range)
-      }
     }
   }
 
@@ -79,14 +100,14 @@ function HomebrewCommand() {
     <div className="one-brew-command">
       <div className="one-brew-line">
         <span className="one-brew-prompt" aria-hidden="true">$</span>
-        <code ref={code}>{BREW}</code>
+        <code tabIndex={0} aria-label="Homebrew installation command">{BREW}</code>
       </div>
-      <button type="button" onClick={copy} aria-label={copied ? 'Homebrew command copied' : 'Copy Homebrew command'} title={copied ? 'Copied' : 'Copy command'}>
+      <button type="button" onClick={copy} aria-label={copied ? 'Homebrew command copied' : 'Copy Homebrew command'}>
         <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           {copied ? <path d="m5 12 4 4L19 6" /> : <><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M15 9V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h4" /></>}
         </svg>
       </button>
-      <span className="one-download-sr" role="status">{copied ? 'Copied.' : failed ? 'Select and copy the command manually.' : ''}</span>
+      <span className="one-download-sr" role="status">{copied ? 'Copied.' : failed ? 'Clipboard unavailable. You can copy the command manually.' : ''}</span>
     </div>
   )
 }
