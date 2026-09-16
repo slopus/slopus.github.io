@@ -1,77 +1,38 @@
 .one-demo { margin: 3.5rem 0 0; text-align: left; }
-/* The stage is the container the phone measures itself against (100cqw = stage width). */
-.one-demo-stage { position: relative; display: block; padding: 0 0 32px; overflow: visible; container-type: inline-size; }
+/* The stage is the container the phone measures itself against (100cqw = stage width).
+   One layout at every width: the window on the left, the phone standing to its right. */
+.one-demo-stage { position: relative; display: block; padding: 0 0 28px; overflow: visible; container-type: inline-size; }
 /*
- * The movie is the Mac window. Its frame is 2340×1440 with the recorded window
- * letterboxed inside at rest; the camera replay writes --bar-top/--bar-bottom
- * (movie pixels), --window (1 at rest → 0 zoomed in) and the --cam-* transform
- * of the resting window under the current crop. --opx is one movie pixel and
- * --apx one CSS pixel of the recorded app, so the chrome scales with the app.
+ * The movie is the recorded Mac window itself: 1950×1660 movie pixels, 780 CSS
+ * pixels of the recorded app, no letterbox and no camera. --apx is one CSS pixel
+ * of the recorded app, so the window chrome scales with the app.
  */
-.one-demo-desktop { position: relative; width: 90%; aspect-ratio: 2340 / 1440; container-type: inline-size; --opx: calc(100cqw / 2340); --apx: calc(100cqw / 1224); --bar-top: 85; --bar-bottom: 86; --window: 1; --cam-s: 1; --cam-tx: 0; --cam-ty: 0; }
+.one-demo-desktop { position: relative; width: 70%; aspect-ratio: 1950 / 1660; container-type: inline-size; --apx: calc(100cqw / 780); }
 /* macOS window: the recorded content's edge is the window edge, so the corner radius,
-   hairline and shadow sit on it and shrink away with the letterbox as the camera goes in. */
-.one-demo-window { position: absolute; left: 0; right: 0; top: calc(var(--bar-top) * var(--opx)); bottom: calc(var(--bar-bottom) * var(--opx)); overflow: hidden; border-radius: calc(var(--window) * 14 * var(--apx)); background: #212121; box-shadow: 0 26px 60px -26px #183f388c, 0 0 0 calc(var(--window) * max(.5px, .5 * var(--apx))) #0000003d; }
-.one-demo-window > video { position: absolute; left: 0; top: calc(-1 * var(--bar-top) * var(--opx)); display: block; width: 100%; height: calc(100cqw * 1440 / 2340); object-fit: fill; }
-.one-demo-window::after { content: ''; position: absolute; inset: 0; z-index: 2; border-radius: inherit; box-shadow: inset 0 0 0 max(1px, var(--apx)) #ffffff2e; opacity: var(--window); pointer-events: none; }
-/* Traffic lights on the recorded sidebar header, over the browser-mode logo: 12px at 20/40/60, centred on the header. */
-.one-demo-lights { position: absolute; left: 0; top: 0; z-index: 1; width: calc(120 * var(--apx)); height: calc(56 * var(--apx)); background: #1e1e1e; transform-origin: 0 0; transform: translate(calc(var(--cam-tx) * var(--opx)), calc(var(--cam-ty) * var(--opx))) scale(var(--cam-s)); }
+   hairline and shadow sit on it. */
+.one-demo-window { position: absolute; inset: 0; overflow: hidden; border-radius: calc(14 * var(--apx)); background: #212121; box-shadow: 0 26px 60px -26px #183f388c, 0 0 0 max(.5px, .5 * var(--apx)) #0000003d; }
+.one-demo-window > video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
+.one-demo-window::after { content: ''; position: absolute; inset: 0; z-index: 2; border-radius: inherit; box-shadow: inset 0 0 0 max(1px, var(--apx)) #ffffff2e; pointer-events: none; }
+/* Traffic lights on the recorded sidebar header, over the browser-mode logo: 12px at 20/40/60, centred on the header.
+   Transparent to the pointer: the video's own controls stay reachable. */
+.one-demo-lights { position: absolute; left: 0; top: 0; z-index: 1; width: calc(120 * var(--apx)); height: calc(56 * var(--apx)); background: #1e1e1e; pointer-events: none; }
 .one-demo-lights > span { position: absolute; top: calc(21.6 * var(--apx)); left: calc(14 * var(--apx)); width: calc(12 * var(--apx)); height: calc(12 * var(--apx)); border-radius: 50%; background: #ff5f57; box-shadow: inset 0 0 0 max(.5px, .5 * var(--apx)) #00000029; }
 .one-demo-lights > span:nth-child(2) { left: calc(34 * var(--apx)); background: #febc2e; }
 .one-demo-lights > span:nth-child(3) { left: calc(54 * var(--apx)); background: #28c840; }
-/* Keep the upright frame at a fixed drawing size; the ending handoff moves it once.
-   Docked, it hangs past the stage's right edge so its left bezel clears the
-   window and composer; on a narrow desktop it peeks past the viewport edge
-   instead (the site shell clips without a scrollbar). Focused, it comes fully
-   into the column. */
-.one-demo-phone { position: absolute; z-index: 2; right: 0; bottom: 0; width: 30%; aspect-ratio: 1406 / 2822; padding: 0; border: 0; background: transparent; transform-origin: bottom right; transform: translateX(8.5cqw) scale(.6); will-change: transform; transition: transform 850ms cubic-bezier(.22,.8,.24,1); }
-.one-phone-flat { position: absolute; display: block; inset: 0; filter: drop-shadow(0 18px 18px #183f3830); transition: transform 650ms cubic-bezier(.22,.8,.24,1); }
-.one-demo-phone-3d .one-phone-flat { transform: rotate(3deg); }
+/* The phone stands to the right of the window at full drawing size, hanging
+   past the stage's right edge so its left bezel clears the window. While the
+   recording is on the phone it comes into the column and grows toward the
+   window, then returns. */
+.one-demo-phone { position: absolute; z-index: 2; right: 0; bottom: 0; width: 28%; aspect-ratio: 1406 / 2822; padding: 0; border: 0; background: transparent; transform-origin: bottom right; transform: translateX(8cqw); will-change: transform; transition: transform 850ms cubic-bezier(.22,.8,.24,1); }
+.one-phone-flat { position: absolute; display: block; inset: 0; filter: drop-shadow(0 18px 18px #183f3830); }
 .one-phone-flat > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
 /* Exact screen opening in Apple's 1406×2822 frame: 102,100,1206,2622. */
 .one-phone-flat > video { position: absolute; left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; object-fit: fill; background: #000; mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
-.one-phone-canvas { position: absolute; display: block; inset: 0; width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 18px 18px #183f3830); }
-.one-demo-phone[data-renderer='webgl'] .one-phone-flat { opacity: 0; }
-.one-demo-stage[data-phone-focus] .one-demo-phone { transform: translateX(0) scale(1); }
-.one-demo-stage[data-phone-focus] .one-phone-flat { transform: none; }
-.one-demo-caption { display: flex; align-items: center; min-height: 2.8em; margin: .6rem 10% 0 0; color: #183f38; font-size: clamp(14px, 1.35vw, 18px); line-height: 1.4; }
-.one-demo-caption > span { display: block; }
-.one-demo-controls { display: flex; align-items: center; gap: 1rem; margin: .8rem 10% 0 0; color: #47645e; font-size: .78rem; }
-.one-demo-controls button { flex: none; padding: .45rem 0; min-width: 3.3rem; min-height: 44px; border: 0; color: #183f38; background: transparent; font: inherit; cursor: pointer; text-align: left; }
-.one-demo-controls button:last-child { text-align: right; }
-.one-demo-controls input { flex: 1; min-width: 20px; height: 44px; margin: 0; accent-color: #183f38; cursor: pointer; }
-.one-demo-time { flex: none; font-variant-numeric: tabular-nums; }
-.one-demo button:focus-visible, .one-demo input:focus-visible { outline: 2px solid #e6522c; outline-offset: 5px; }
-.one-demo-error { font-size: .85rem; color: #8c3926; }
-.one-still-composition { border-radius: 12px; }
-.one-still-composition:focus-visible { outline: 3px solid #e6522c; outline-offset: 5px; }
-/* The still is the recorded window itself (2100×1660, 840 app px wide), shown 1.15:1 from its left edge: 1909 image px, 763.6 app px, and no letterbox. */
-.one-still-window { aspect-ratio: 1.15; --apx: calc(100cqw / 763.6); --bar-top: 0; --bar-bottom: 0; }
-.one-still-desktop { position: absolute; inset: 0; display: block; width: 100%; max-width: none; height: 100%; object-fit: cover; object-position: left center; }
-.one-still-phone .one-phone-flat > .one-still-phone-screen { left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
-.one-still-description { margin-top: 1rem; color: #183f38; font-size: 1rem; line-height: 1.5; }
-.one-still-hint { display: block; margin-top: .5rem; color: #47645e; font-size: .85rem; }
-.one-demo-opt-in { display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 1rem; padding: .5rem 1rem; border: 1px solid #183f38; border-radius: 8px; background: transparent; color: #183f38; font: inherit; cursor: pointer; }
-.one-demo-mobile-description { display: none; }
+.one-demo-stage[data-phone-focus] .one-demo-phone { transform: translateX(0) scale(1.18); }
+.one-demo-error { margin-top: 1rem; font-size: .85rem; color: #8c3926; }
 @media (max-width: 700px) {
   .one-demo { margin-top: 2.5rem; }
-  .one-demo-stage { width: min(100%, 420px); margin-inline: auto; }
-  .one-demo-desktop { width: calc(100% - 16px); }
-  /* Explicit mobile playback retains the entire frame: a portrait crop kept
-     the model list but cut off the beginning and end of real messages. */
-  .one-still-composition { overflow: clip; }
-  /* The still clips its own overflow, so its window shadow must end inside the 32px reserve. */
-  .one-still-window .one-demo-window { box-shadow: 0 12px 24px -18px #183f3880, 0 0 0 max(.5px, .5 * var(--apx)) #0000003d; }
-  /* The still hints at mobile with half a phone beyond the window edge. */
-  .one-still-phone { width: min(82%, 260px); transform: translateX(25%) scale(.5); }
-  .one-demo-caption { margin: 1rem 0 0; min-height: 3em; font-size: 1rem; line-height: 1.5; }
-  .one-demo-controls { flex-wrap: wrap; margin-right: 0; column-gap: 1rem; row-gap: .25rem; }
-  .one-demo-controls input { order: 3; flex-basis: 100%; }
-  .one-demo-controls button:last-child { margin-left: auto; }
-  .one-demo-mobile-description { display: block; margin-top: 1rem; color: #47645e; font-size: 1rem; line-height: 1.5; }
-  .one-demo-mobile-description a { text-decoration: underline; text-underline-offset: 3px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .one-demo-stage, .one-demo-phone, .one-phone-flat { transition: none; }
-  .one-demo-phone .one-phone-flat, .one-demo-phone:hover .one-phone-flat, .one-demo-phone:focus-visible .one-phone-flat { transform: none; }
+  .one-demo-phone { transition: none; }
 }
