@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { HappyOnePhone } from './HappyOnePhone'
+import { happyOneDemoCameraApply, happyOneDemoCameraAt } from './happyOneDemoCamera'
 import { happyOneDemoCaptions } from './happyOneDemoCaptions'
 import { happyOneDemoMediaSelect } from './happyOneDemoMedia'
 import './happy-one-demo.css'
@@ -25,9 +26,18 @@ function dataConnection() {
   return (navigator as Navigator & { connection?: DataConnection }).connection
 }
 
-function DemoWindowChrome() {
-  // Decorative website framing, not interactive controls from the recorded app.
-  return <div className="one-demo-window-chrome" aria-hidden="true"><span /><span /><span /></div>
+type VideoFrameVideo = HTMLVideoElement & {
+  requestVideoFrameCallback?: (callback: (now: number, metadata: { mediaTime: number }) => void) => number
+  cancelVideoFrameCallback?: (handle: number) => void
+}
+
+/**
+ * macOS traffic lights where the recorded header shows the browser-mode logo,
+ * on a patch of the header's own colour. Positioned in the app's CSS pixels so
+ * they ride the recorded window under the camera. Decorative, not controls.
+ */
+function MacWindowLights() {
+  return <div className="one-demo-lights" aria-hidden="true"><span /><span /><span /></div>
 }
 
 export function HappyOneDemo() {
@@ -46,12 +56,12 @@ function HappyOneStill({ onPlay }: { onPlay: () => void }) {
       target="_blank" rel="noopener noreferrer" aria-label="Open the Happy interface screenshot at full size in a new tab"
       aria-describedby="one-still-description">
       <div className="one-demo-desktop one-still-window">
-        <DemoWindowChrome />
-        <div className="one-demo-media one-still-media">
+        <div className="one-demo-window">
           <img className="one-still-desktop" src={`${MEDIA}/mobile-desktop-840.webp`}
             srcSet={`${MEDIA}/mobile-desktop-420.webp 420w, ${MEDIA}/mobile-desktop-840.webp 840w, ${MEDIA}/mobile-desktop.webp 2100w`}
             sizes="(max-width: 460px) calc(100vw - 56px), 404px"
             width="2100" height="1660" alt="Happy’s project sidebar, a completed code edit, and model picker with Fable 5.1 above Opus." />
+          <MacWindowLights />
         </div>
       </div>
       <span className="one-demo-phone one-still-phone" aria-hidden="true">
@@ -74,7 +84,8 @@ function HappyOnePlayback({ preferStandard, startRequested }: { preferStandard: 
   // Source quality is selected once for this player's lifetime, not on resize.
   const initialPlayback = useRef({ preferStandard, startRequested })
   const stage = useRef<HTMLElement>(null)
-  const desktop = useRef<HTMLVideoElement>(null)
+  const desktopWindow = useRef<HTMLDivElement>(null)
+  const desktop = useRef<VideoFrameVideo>(null)
   const phone = useRef<HTMLVideoElement>(null)
   const controls = useRef({ toggle: () => {}, seek: (_time: number) => {} })
   const [playing, setPlaying] = useState(false)
@@ -86,6 +97,7 @@ function HappyOnePlayback({ preferStandard, startRequested }: { preferStandard: 
   useEffect(() => {
     const main = desktop.current!
     const companion = phone.current!
+    const frame = desktopWindow.current!
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
     const connection = dataConnection()
     let wanted = initialPlayback.current.startRequested || (!reducedMotion.matches && !connection?.saveData)
@@ -93,6 +105,27 @@ function HappyOnePlayback({ preferStandard, startRequested }: { preferStandard: 
     let loaded = false
     let disposed = false
     let starting = false
+
+    // The window edge and traffic lights follow the recording's camera frame by
+    // frame, written straight to the element: no React render per video frame.
+    let cameraFrame = -1
+    const camera = (seconds: number) => {
+      const state = happyOneDemoCameraAt(seconds)
+      if (state.frame === cameraFrame) return
+      cameraFrame = state.frame
+      happyOneDemoCameraApply(frame, state)
+    }
+    let animation = 0
+    let videoFrame = 0
+    const onAnimationFrame = () => {
+      camera(main.currentTime)
+      animation = main.paused || main.ended ? 0 : requestAnimationFrame(onAnimationFrame)
+    }
+    const onVideoFrame = (_now: number, metadata: { mediaTime: number }) => {
+      camera(metadata.mediaTime)
+      videoFrame = main.requestVideoFrameCallback!(onVideoFrame)
+    }
+    if (main.requestVideoFrameCallback) videoFrame = main.requestVideoFrameCallback(onVideoFrame)
 
     const pause = () => { main.pause(); companion.pause() }
     const load = async () => {
@@ -133,9 +166,12 @@ function HappyOnePlayback({ preferStandard, startRequested }: { preferStandard: 
         if (disposed || !wanted || !visible || document.hidden) pause()
       }
     }
-    const update = () => { setTime(main.currentTime); align() }
+    const update = () => { setTime(main.currentTime); camera(main.currentTime); align() }
     const metadata = () => setDuration(Number.isFinite(main.duration) ? main.duration : 0)
-    const onPlay = () => setPlaying(true)
+    const onPlay = () => {
+      setPlaying(true)
+      if (!main.requestVideoFrameCallback && !animation) animation = requestAnimationFrame(onAnimationFrame)
+    }
     const onPause = () => setPlaying(false)
     const onSeeking = () => { pause(); align(true); update() }
     const onEnded = () => { wanted = false; pause(); update() }
@@ -180,11 +216,14 @@ function HappyOnePlayback({ preferStandard, startRequested }: { preferStandard: 
         // Waiting for timeupdate restores the old value between native input
         // and change events, which can undo keyboard End/Home seeking.
         setTime(value)
+        camera(value)
         main.currentTime = value
       },
     }
     return () => {
       disposed = true
+      if (animation) cancelAnimationFrame(animation)
+      if (videoFrame) main.cancelVideoFrameCallback?.(videoFrame)
       observer.disconnect()
       document.removeEventListener('visibilitychange', onVisibility)
       reducedMotion.removeEventListener('change', onMotion)
@@ -215,11 +254,11 @@ function HappyOnePlayback({ preferStandard, startRequested }: { preferStandard: 
   return (
     <figure ref={stage} className="one-demo" aria-label="Happy Desktop and iPhone, one synchronized session">
       <div className="one-demo-stage" data-phone-focus={phoneFocused ? '' : undefined}>
-        <div className="one-demo-desktop">
-          <DemoWindowChrome />
-          <div className="one-demo-media">
+        <div ref={desktopWindow} className="one-demo-desktop">
+          <div className="one-demo-window">
             <video ref={desktop} poster={`${MEDIA}/desktop-poster.webp`} width="2340" height="1440"
               muted={muted} playsInline preload="none" aria-label="Switch from Astra to Fable, collaborate with Steve, delegate to Grok, then continue on iPhone" />
+            <MacWindowLights />
           </div>
         </div>
         <HappyOnePhone video={phone} />

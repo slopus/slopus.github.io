@@ -21,15 +21,23 @@ retain the master clock, without speed changes or rewritten cues.
 | `desktop-30.mp4` | 1560×960 | 30fps | 2,039 | 67.966667s |
 | `phone-30.mp4` | 804×1748 | 30fps | 2,039 | 67.966667s |
 
-These values are measured by ffprobe; all ten copied assets match their export
-SHA-256 checksums. The even master frame count divides exactly into 2,039 frames at
-30fps, so both quality pairs retain the same endpoint without quantization
-padding, retiming, or cue shifts. Audio/container durations are reported
-separately in the export report.
+These values are measured by ffprobe. The even master frame count divides
+exactly into 2,039 frames at 30fps, so both quality pairs retain the same
+endpoint without quantization padding, retiming, or cue shifts. Audio/container
+durations are reported separately in the export report.
 
-HQ files are copied from the native exports. Smaller H.264 derivatives use
-CRF 18 for desktop, CRF 17 for phone, and MP4 fast-start metadata. Posters come
-from the corresponding HQ frame at time zero. WebP stills use quality 94.
+The phone files, posters, and stills are copied from the native exports and
+match their export SHA-256 checksums. The two desktop MP4s are re-encoded from
+the export's `core.mp4`: the export is full-range `yuvj420p` (JPEG-sourced,
+BT.601 matrix), which browsers decode as limited range, about 14 levels darker
+than the poster and stills, so playback used to start with a visible brightness
+step. Both desktop files are now limited-range BT.709 with sRGB transfer tags
+(`scale=in_range=pc:in_color_matrix=bt601:out_range=tv:out_color_matrix=bt709`),
+CRF 17 for the 60fps file and CRF 18 for the 1560×960 30fps derivative, same
+frame counts and durations. Chromium, Firefox, and WebKit now decode the
+recorded sidebar as #1e1e1e, the value in the poster. Phone derivatives use
+CRF 17. Every MP4 carries fast-start metadata. Posters come from the
+corresponding HQ frame at time zero. WebP stills use quality 94.
 
 For desktop playback, before either movie loads, Media Capabilities checks the actual HQ dimensions
 at 60fps for supported, smooth, power-efficient decoding of both streams.
@@ -37,10 +45,23 @@ Otherwise, or with save-data enabled, the player selects the matched 30fps pair.
 Selection happens once per player lifetime; there is no mid-playback source swap.
 Explicit mobile playback always uses the matched 30fps pair.
 
-The website owns one decorative window frame and traffic-light title bar.
 The movie contains raw application content, without baked-in wallpaper, rounded
-outer chrome, or a second title bar. Its resting 3060×1660 view fits inside the
-2340×1440 output on the application background; the center crop is pixel-exact.
+outer chrome, or a title bar. Its resting 3060×1660 view fits inside the
+2340×1440 output on the application background, letterboxed 85 rows above and
+86 below; the center crop is pixel-exact.
+
+The website treats that recorded window as the Mac window. There is no second
+frame or title bar: `happyOneDemoCamera.ts` replays the director's own camera
+(the `center-enter` and `center-exit` crops, 66 frames of easeInOutQuint on each
+crop edge, with the measured 0.7-frame phase) and writes the letterbox, corner
+radius, hairline, and a transform of the resting window per presented frame
+through `requestVideoFrameCallback` (or an animation frame loop). The corner
+radius, hairline, and shadow sit on the recorded content edge and shrink away
+with the letterbox, so the zoom goes into the window instead of into a framed
+movie. macOS traffic lights (12 app px at x = 20/40/60, centred on the header)
+are drawn on a header-coloured patch over the browser-mode logo, in the app's
+own CSS pixels (`--apx`), and slide out of frame with the header under the
+camera. The static mobile still receives the same chrome at rest.
 
 ## Playback and supporting captions
 
@@ -90,6 +111,13 @@ credits remain linked beside Docs, Privacy, and Terms in the page footer.
 
 The phone stays upright, moves forward only during the recorded focus interval,
 then returns to its parked position. Reduced motion disables those transitions.
+Parked, it is drawn at 0.6 scale with its right edge 8.5% of the stage width
+past the stage, so its left bezel sits just beyond the window's right edge and
+clear of the composer, send button, and right-aligned messages in both the
+resting and zoomed framing. The window itself takes 90% of the stage width. On
+a wide viewport the phone hangs into the page margin; on a narrow desktop it
+peeks past the viewport's right edge, which the site shell clips without a
+horizontal scrollbar. Focused, it comes fully into the column at full scale.
 `HappyOnePhone3D.tsx`, `happyOnePhoneScene.ts`, the model, and their dependencies
 remain an unused alternative; the active landing page imports none of them.
 
@@ -158,8 +186,20 @@ visible keyboard focus, and full-size screenshot navigation. At 200% text size,
 header/footer content and player controls reflow without page overflow or
 unreachable text. Terminal code keeps intentional internal horizontal scroll.
 The 720px desktop reflow check also passes. Actual rendered key-frame images
-show one website-owned title bar, readable Fable selection, Thinking before
-the first answer, the native inline diff, and cleared workspace counters.
+show readable Fable selection, Thinking before the first answer, the native
+inline diff, and cleared workspace counters.
+
+The Mac window treatment was checked in Chromium, Firefox, and WebKit at
+1440px: at rest the traffic lights sit on the recorded header over the logo
+with the patch indistinguishable from the decoded sidebar (#1e1e1e in all
+three), the letterbox reads 85/86 rows, and the corner radius and hairline sit
+on the content edge. Seeks to 2.05s, 2.2s, and 2.4s and a live-playback sample
+from 1.3s to 3.1s show the letterbox easing 85 → 0 across the recorded
+`center-enter` move in every engine, all of which provide
+`requestVideoFrameCallback`. At 10s the frame is a plain full-bleed rectangle;
+at 44.4s and 44.7s the window returns through the `center-exit` move. Docked
+phone placement was checked at 1440, 1280, and 1024px, and the mobile still at
+390px with no video elements mounted and no horizontal overflow.
 
 Normal-speed continuous inspection covered the entire HQ take in Chromium and
 the 43s-to-end 30fps phone handoff in Firefox and WebKit. All reached Replay
