@@ -1,44 +1,46 @@
 # Happy One synchronized demo
 
-Only `/tmp/happy-one/` uses `HappyOneDemo`. The final recording is `v16-r14`
-from the desktop workspace's `scripts/demo/demos/core/artifacts/v16-r14/`.
+Only `/tmp/happy-one/` uses `HappyOneDemo`. The final recording is `v17-r6`
+from the desktop workspace's `scripts/demo/demos/core/artifacts/v17-r6/`.
 Its `cues.json`, `core.evidence.json`, `phone-capture.json`, `framing.json`, and
 `native-key-taps.json` retain the recording clock, interactions, and fixture
-disclosures. Current website assets live in `public/video/happy-one/v16/`;
+disclosures. Current website assets live in `public/video/happy-one/v17/`;
 older takes and shared `device/` artwork remain separate.
 
 ## Recording and verified exports
 
-The final take contains 3,801 frames on a 60fps master clock: 63.350000 seconds.
+The final take contains 4,078 frames on a 60fps master clock: 67.966667 seconds.
 The desktop crop and output are both 2340×1440: captured detail, not an upscale
 of a smaller movie. The concurrent native phone screen is 1206×2622. HQ files
 retain the master clock, without speed changes or rewritten cues.
 
 | Website asset | Dimensions | Frame rate | Frames | Video duration |
 | --- | --- | --- | --- | --- |
-| `desktop.mp4` | 2340×1440 | 60fps | 3,801 | 63.350000s |
-| `phone.mp4` | 1206×2622 | 60fps | 3,801 | 63.350000s |
-| `desktop-30.mp4` | 1560×960 | 30fps | 1,901 | 63.366667s |
-| `phone-30.mp4` | 804×1748 | 30fps | 1,901 | 63.366667s |
+| `desktop.mp4` | 2340×1440 | 60fps | 4,078 | 67.966667s |
+| `phone.mp4` | 1206×2622 | 60fps | 4,078 | 67.966667s |
+| `desktop-30.mp4` | 1560×960 | 30fps | 2,039 | 67.966667s |
+| `phone-30.mp4` | 804×1748 | 30fps | 2,039 | 67.966667s |
 
-These are measured ffprobe values from the completed export. Both pairs start
-at zero; each pair has matching decoded frame counts and video durations. The
-export report preserves raw probes, audio/container durations, and SHA-256
-checksums, and copied website assets passed checksum verification.
-
-The odd native frame count cannot have exactly the same duration at constant
-30fps. The fallback pair rounds up to 1,901 frames: only its final frame interval
-extends the endpoint by 1/60 second. There is no retiming, cue shift, or change
-to the native masters. Audio/container durations are reported separately.
+These values are measured by ffprobe; all ten copied assets match their export
+SHA-256 checksums. The even master frame count divides exactly into 2,039 frames at
+30fps, so both quality pairs retain the same endpoint without quantization
+padding, retiming, or cue shifts. Audio/container durations are reported
+separately in the export report.
 
 HQ files are copied from the native exports. Smaller H.264 derivatives use
 CRF 18 for desktop, CRF 17 for phone, and MP4 fast-start metadata. Posters come
 from the corresponding HQ frame at time zero. WebP stills use quality 94.
 
-Before either movie loads, Media Capabilities checks the actual HQ dimensions
+For desktop playback, before either movie loads, Media Capabilities checks the actual HQ dimensions
 at 60fps for supported, smooth, power-efficient decoding of both streams.
 Otherwise, or with save-data enabled, the player selects the matched 30fps pair.
 Selection happens once per player lifetime; there is no mid-playback source swap.
+Explicit mobile playback always uses the matched 30fps pair.
+
+The website owns one decorative window frame and traffic-light title bar.
+The movie contains raw application content, without baked-in wallpaper, rounded
+outer chrome, or a second title bar. Its resting 3060×1660 view fits inside the
+2340×1440 output on the application background; the center crop is pixel-exact.
 
 ## Playback and supporting captions
 
@@ -54,23 +56,30 @@ two-line caption area, never covering the recorded interface:
 
 | Master interval | Caption |
 | --- | --- |
-| 164/60–2412/60 (2.733333–40.200000s) | 1/ Multi-provider within one session |
-| 2498/60–3801/60 (41.633333–63.350000s) | 5/ End-to-end encrypted mobile app |
+| 164/60–2642/60 (2.733333–44.033333s) | 1/ Multi-provider within one session |
+| 2729/60–4078/60 (45.483333–67.966667s) | 5/ End-to-end encrypted mobile app |
 
 The first follows `center-locked` through `center-exit`; the second follows
-`phone-enter` through the native master end. The extra 1/60 second in the 30fps
-fallback does not extend a caption or move a focus cue.
+`phone-enter` through the native master end. Both quality pairs share these cues.
 
 ## Mobile still and device treatment
 
 At widths of 700 CSS pixels or less, a separate static component mounts instead
-of playback: zero video elements, movie requests, or playback controls. It shows
+of playback: zero video elements or movie requests before an explicit Play. It shows
 the actual 2100×1660 desktop still with the sidebar, real Edit row and +3/−1
 counts, and Fable-above-Opus model picker, with part of the actual phone home
 screen alongside it. The desktop image offers 420px, 840px, and full 2100px
 responsive sources. Its keyboard-focusable link opens the full image in a new
-tab; visible text explains the workflow and closer-look action. There is no
-miniature playing movie or mobile 3D renderer.
+tab; visible text explains the workflow and closer-look action. Half the phone
+peeks beyond the window's right edge, with its bottom below the window. Only the
+static composition clips decorative overflow; it does not obscure the Fable
+picker label or widen the page. The actual device frame geometry is unchanged.
+
+The visible Play demo button explicitly replaces the still with an uncropped
+30fps movie. Cropping the wide movie to portrait cut off real messages, so the
+default stays readable and static. Keyboard activation moves focus to the
+visible player control, including under reduced motion and save-data. Text
+below playback retains a full-size screenshot link. No mobile 3D renderer loads.
 
 Playback uses Apple's flat iPhone 16 Pro Black Titanium artwork, sourced from
 James Jingyi's Device Mockups collection. Its screen opening is x=102, y=100,
@@ -91,35 +100,41 @@ Frame numbers refer to the 60fps master and apply unchanged to both web pairs.
 | Frame | Time | Event |
 | --- | --- | --- |
 | 164 | 2.733333s | Desktop center framing locked; first caption begins |
-| 319 | 5.316667s | Model picker opens |
+| 320 | 5.333333s | Model picker opens |
 | 600 | 10.000000s | Fable selected |
 | 1007 | 16.783333s | Work starts |
-| 1172 | 19.533333s | Steve's steering message arrives |
-| 1432 | 23.866667s | Grok subagent spawned |
-| 1671 | 27.850000s | Real waveform predicate edited |
-| 2222 | 37.033333s | Desktop response settled |
-| 2412 | 40.200000s | Center framing exits; first caption ends |
-| 2498 | 41.633333s | Phone moves forward; second caption begins |
-| 2690 | 44.833333s | Phone session open |
-| 2821 | 47.016667s | Native inline diff visible |
-| 3173 | 52.883333s | Native keyboard typing sequence begins |
-| 3526 | 58.766667s | Phone message sent |
-| 3650 | 60.833333s | Phone moves back |
-| 3801 | 63.350000s | Master ends; second caption ends |
+| 1007 | 16.783333s | Thinking becomes visible |
+| 1264 | 21.066667s | First answer becomes visible |
+| 1407 | 23.450000s | First tool work becomes visible |
+| 1470 | 24.500000s | Steve's steering message arrives |
+| 1759 | 29.316667s | Grok subagent spawned |
+| 1967 | 32.783333s | Real waveform predicate edited |
+| 2461 | 41.016667s | Desktop response settled |
+| 2642 | 44.033333s | Center framing exits; first caption ends |
+| 2729 | 45.483333s | Phone moves forward; second caption begins |
+| 2953 | 49.216667s | Phone session open |
+| 2981 | 49.683333s | Native inline diff visible |
+| 3333 | 55.550000s | Native keyboard typing sequence begins |
+| 3482 | 58.033333s | Phone message sent |
+| 3658 | 60.966667s | Staged shipping response; real counters reconcile to zero |
+| 3927 | 65.450000s | Phone moves back |
+| 4078 | 67.966667s | Master ends; second caption ends |
 
 ## What is real and what is staged
 
 The recording uses isolated local Happy Agent build
-`0.4.69-local.archive.6b16118e` (protocol 25), including the archive relay-echo
-convergence fix. This identifies the local recording build, not a published
+`0.4.69-local.core.c88cebdf` (protocol 25), including the archive relay-echo
+and Git dirty-to-clean synchronization fixes. This identifies the local recording build, not a published
 release or an installed host update.
 
 Native tool execution, the file edit, actual `create_agent` delegation, steering,
 durable messages, and encrypted desktop/phone synchronization are real. The
 phone's software keyboard receives actual native taps to type `ship it`; Send
 delivers that exact message to the linked session and the recorded evidence
-contains its acknowledgement. This demo message does not perform a Git push or
-release.
+contains its acknowledgement. The subsequent push/deploy response is screenplay:
+the owned fixture edit is restored to baseline, and the real Git watcher and
+encrypted native counters reconcile to zero. No actual push, deployment, or
+fabricated permission approval occurs.
 
 Inference prose and timing are a screenplay. Steve is one explicitly fictional
 protocol-fixture identity, not proof of real multiplayer authentication or
@@ -131,23 +146,31 @@ subagent presentation follows real creation, not a fabricated tool row.
 
 ## Verification status
 
-Typecheck and the production build pass. Chromium, Firefox, and WebKit were
-inspected against the final assets: pointer seeking, paired pause, reduced
-motion, and keyboard End → Replay work. Both quality pairs reach their exact
-browser-reported duration; the range uses `step="any"` so a fixed increment
-cannot make the fractional final frame unreachable.
+Typecheck and the production build pass with the v17 references and cues.
+Chromium, Firefox, and WebKit were checked against the final copied assets at
+320/390/430/1440px. Paired seeking and pause, keyboard End → Replay, desktop-only
+audio, and explicit mobile Play work. Reduced-motion and save-data visitors
+start with no movies and retain visible keyboard focus after opting in.
 
-All three engines at 320/390/430px request no movies on mobile, load the stills,
-and open the full-size image through the keyboard-accessible link. At 200%
-text size, header/footer content reflows without document overflow or clipped
-text. Terminal code keeps its intentional internal horizontal scroll.
+The final static partial-phone composition was checked at 320/390/430px in all
+three engines: no movie requests, no horizontal overflow or clipped text,
+visible keyboard focus, and full-size screenshot navigation. At 200% text size,
+header/footer content and player controls reflow without page overflow or
+unreachable text. Terminal code keeps intentional internal horizontal scroll.
+The 720px desktop reflow check also passes. Actual rendered key-frame images
+show one website-owned title bar, readable Fable selection, Thinking before
+the first answer, the native inline diff, and cleared workspace counters.
 
-Encoded key frames and actual browser screenshots were visually inspected.
-Chromium's sampled playback added no dropped frames. WebKit's reported drops
-were also present with a single plain video (81 in five seconds versus 85 on
-the page); plain paired 60fps playback reported similar counts. These counters
-do not establish added page overhead. Plain 30fps playback delivered 149 frame
-callbacks in five seconds. No claim of universally flawless 60fps playback is
+Normal-speed continuous inspection covered the entire HQ take in Chromium and
+the 43s-to-end 30fps phone handoff in Firefox and WebKit. All reached Replay
+without buffering or media-error events. Maximum sampled pair drift was 10ms,
+5.1ms, and 0.3ms respectively. Captured transition sequences show one upright
+phone move forward and back. Off-screen pause/resume, explicit Pause across
+visibility changes, and enabling reduced motion during playback all pass.
+These are local functional observations, not a universal frame-delivery claim.
+
+The range uses `step="any"` so a fixed increment cannot make the fractional
+final frame unreachable. No claim of universally flawless 60fps playback is
 made; the lower-power pair remains available through Media Capabilities.
 
 Publication is a separate step. In particular, the local archive fix identified

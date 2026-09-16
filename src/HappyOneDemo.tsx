@@ -4,10 +4,10 @@ import { happyOneDemoCaptions } from './happyOneDemoCaptions'
 import { happyOneDemoMediaSelect } from './happyOneDemoMedia'
 import './happy-one-demo.css'
 
-const MEDIA = '/video/happy-one/v16'
-// v16-r14 recording cues on the common 60fps desktop/phone master clock.
-const PHONE_ENTER = 2498 / 60
-const PHONE_EXIT = 3650 / 60
+const MEDIA = '/video/happy-one/v17'
+// v17-r6 recording cues on the common 60fps desktop/phone master clock.
+const PHONE_ENTER = 2729 / 60
+const PHONE_EXIT = 3927 / 60
 
 function timestamp(seconds: number) {
   return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`
@@ -20,35 +20,59 @@ function subscribeLayout(notify: () => void) {
   return () => query.removeEventListener('change', notify)
 }
 
-export function HappyOneDemo() {
-  const mobile = useSyncExternalStore(subscribeLayout, () => matchMedia(mobileQuery).matches, () => true)
-  // A separate lifetime, not hidden videos: mobile never requests movie sources.
-  return mobile ? <HappyOneStill /> : <HappyOnePlayback />
+type DataConnection = EventTarget & { saveData?: boolean }
+function dataConnection() {
+  return (navigator as Navigator & { connection?: DataConnection }).connection
 }
 
-function HappyOneStill() {
+function DemoWindowChrome() {
+  // Decorative website framing, not interactive controls from the recorded app.
+  return <div className="one-demo-window-chrome" aria-hidden="true"><span /><span /><span /></div>
+}
+
+export function HappyOneDemo() {
+  const mobile = useSyncExternalStore(subscribeLayout, () => matchMedia(mobileQuery).matches, () => true)
+  const [playbackRequested, setPlaybackRequested] = useState(false)
+  // Cropping the wide recording cuts off real messages. Keep mobile readable by
+  // default, with no movie requests until the visitor opts into the whole frame.
+  return mobile && !playbackRequested
+    ? <HappyOneStill onPlay={() => setPlaybackRequested(true)} />
+    : <HappyOnePlayback preferStandard={mobile} startRequested={playbackRequested} />
+}
+
+function HappyOneStill({ onPlay }: { onPlay: () => void }) {
   return <figure className="one-demo one-demo-still">
-    <a className="one-still-composition" href="/video/happy-one/v16/mobile-desktop.webp"
+    <a className="one-demo-stage one-still-composition" href={`${MEDIA}/mobile-desktop.webp`}
       target="_blank" rel="noopener noreferrer" aria-label="Open the Happy interface screenshot at full size in a new tab"
       aria-describedby="one-still-description">
-      <img className="one-still-desktop" src="/video/happy-one/v16/mobile-desktop-840.webp"
-        srcSet="/video/happy-one/v16/mobile-desktop-420.webp 420w, /video/happy-one/v16/mobile-desktop-840.webp 840w, /video/happy-one/v16/mobile-desktop.webp 2100w"
-        sizes="calc(115vw - 46px)"
-        width="2100" height="1660" alt="Happy’s project sidebar, a completed code edit, and model picker with Fable 5.1 above Opus." />
-      <span className="one-still-phone" aria-hidden="true">
-        <img className="one-still-phone-screen" src="/video/happy-one/v16/phone-home.webp" width="1206" height="2622" alt="" />
-        <img src="/video/happy-one/device/iphone-16-pro-black.png" width="1406" height="2822" alt="" />
+      <div className="one-demo-desktop one-still-window">
+        <DemoWindowChrome />
+        <div className="one-demo-media one-still-media">
+          <img className="one-still-desktop" src={`${MEDIA}/mobile-desktop-840.webp`}
+            srcSet={`${MEDIA}/mobile-desktop-420.webp 420w, ${MEDIA}/mobile-desktop-840.webp 840w, ${MEDIA}/mobile-desktop.webp 2100w`}
+            sizes="(max-width: 460px) calc(100vw - 56px), 404px"
+            width="2100" height="1660" alt="Happy’s project sidebar, a completed code edit, and model picker with Fable 5.1 above Opus." />
+        </div>
+      </div>
+      <span className="one-demo-phone one-still-phone" aria-hidden="true">
+        <span className="one-phone-flat">
+          <img className="one-still-phone-screen" src={`${MEDIA}/phone-home.webp`} width="1206" height="2622" alt="" />
+          <img src="/video/happy-one/device/iphone-16-pro-black.png" width="1406" height="2822" alt="" />
+        </span>
       </span>
     </a>
     <figcaption id="one-still-description" className="one-still-description">
       Fable builds the waveform. Astra reviews. Grok researches X.<br />
       Pick up the same session on your end-to-end encrypted mobile app.
       <span className="one-still-hint">Tap the screenshot for a closer look.</span>
+      <button className="one-demo-opt-in" type="button" onClick={onPlay}>Play demo</button>
     </figcaption>
   </figure>
 }
 
-function HappyOnePlayback() {
+function HappyOnePlayback({ preferStandard, startRequested }: { preferStandard: boolean; startRequested: boolean }) {
+  // Source quality is selected once for this player's lifetime, not on resize.
+  const initialPlayback = useRef({ preferStandard, startRequested })
   const stage = useRef<HTMLElement>(null)
   const desktop = useRef<HTMLVideoElement>(null)
   const phone = useRef<HTMLVideoElement>(null)
@@ -63,8 +87,8 @@ function HappyOnePlayback() {
     const main = desktop.current!
     const companion = phone.current!
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
-    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
-    let wanted = !reducedMotion.matches && !connection?.saveData
+    const connection = dataConnection()
+    let wanted = initialPlayback.current.startRequested || (!reducedMotion.matches && !connection?.saveData)
     let visible = false
     let loaded = false
     let disposed = false
@@ -74,7 +98,7 @@ function HappyOnePlayback() {
     const load = async () => {
       if (loaded) return
       loaded = true
-      const media = await happyOneDemoMediaSelect()
+      const media = await happyOneDemoMediaSelect(initialPlayback.current.preferStandard)
       if (disposed) return
       // Fetch only at this lazy boundary, but allow canplay to arrive before
       // resume waits for both members of the synchronized pair.
@@ -117,7 +141,7 @@ function HappyOnePlayback() {
     const onEnded = () => { wanted = false; pause(); update() }
     const onError = () => { wanted = false; pause(); setError(true) }
     const onVisibility = () => { if (document.hidden) pause(); else void resume() }
-    const onMotion = () => { if (reducedMotion.matches) { wanted = false; pause() } }
+    const onMotion = () => { if (reducedMotion.matches || connection?.saveData) { wanted = false; pause() } }
     main.addEventListener('timeupdate', update)
     main.addEventListener('loadedmetadata', metadata)
     main.addEventListener('play', onPlay)
@@ -132,6 +156,7 @@ function HappyOnePlayback() {
     }
     document.addEventListener('visibilitychange', onVisibility)
     reducedMotion.addEventListener('change', onMotion)
+    connection?.addEventListener('change', onMotion)
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting && entry.intersectionRatio >= 0.25
       if (entry.isIntersecting) void load()
@@ -163,6 +188,7 @@ function HappyOnePlayback() {
       observer.disconnect()
       document.removeEventListener('visibilitychange', onVisibility)
       reducedMotion.removeEventListener('change', onMotion)
+      connection?.removeEventListener('change', onMotion)
       main.removeEventListener('timeupdate', update)
       main.removeEventListener('loadedmetadata', metadata)
       main.removeEventListener('play', onPlay)
@@ -190,20 +216,24 @@ function HappyOnePlayback() {
     <figure ref={stage} className="one-demo" aria-label="Happy Desktop and iPhone, one synchronized session">
       <div className="one-demo-stage" data-phone-focus={phoneFocused ? '' : undefined}>
         <div className="one-demo-desktop">
-          <video ref={desktop} poster="/video/happy-one/v16/desktop-poster.webp" width="2340" height="1440"
-            muted={muted} playsInline preload="none" aria-label="Switch from Astra to Fable, collaborate with Steve, delegate to Grok, then continue on iPhone" />
+          <DemoWindowChrome />
+          <div className="one-demo-media">
+            <video ref={desktop} poster={`${MEDIA}/desktop-poster.webp`} width="2340" height="1440"
+              muted={muted} playsInline preload="none" aria-label="Switch from Astra to Fable, collaborate with Steve, delegate to Grok, then continue on iPhone" />
+          </div>
         </div>
         <HappyOnePhone video={phone} />
       </div>
       <p className="one-demo-caption">{caption && <span>{caption}</span>}</p>
       <figcaption className="one-demo-controls">
-        <button type="button" onClick={() => controls.current.toggle()}>{playing ? 'Pause' : time >= duration && duration > 0 ? 'Replay' : 'Play'}</button>
+        <button type="button" autoFocus={initialPlayback.current.startRequested} onClick={() => controls.current.toggle()}>{playing ? 'Pause' : time >= duration && duration > 0 ? 'Replay' : 'Play'}</button>
         <input type="range" min="0" max={duration || 1} step="any" value={time} disabled={!duration}
           aria-label="Demo playback position" aria-valuetext={`${timestamp(time)} of ${timestamp(duration)}`}
           onChange={event => controls.current.seek(Number(event.currentTarget.value))} />
         <span className="one-demo-time">{timestamp(time)} / {timestamp(duration)}</span>
         <button type="button" aria-label={muted ? 'Unmute demo' : 'Mute demo'} onClick={() => setMuted(value => !value)}>{muted ? 'Sound off' : 'Sound on'}</button>
       </figcaption>
+      <p className="one-demo-mobile-description">Fable builds the waveform. Astra reviews. Grok researches X. The same encrypted session continues on iPhone. <a href={`${MEDIA}/mobile-desktop.webp`} target="_blank" rel="noopener noreferrer">Open the full-size screenshot.</a></p>
       {error && <p className="one-demo-error" role="status">The demo couldn’t load. <a href={`${MEDIA}/desktop.mp4`}>Open the video</a>.</p>}
     </figure>
   )

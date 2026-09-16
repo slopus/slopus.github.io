@@ -1,9 +1,14 @@
 .one-demo { margin: 3.5rem 0 0; text-align: left; }
-.one-demo-stage { position: relative; padding-right: 9%; }
-.one-demo-desktop { overflow: hidden; border: 1px solid #30473d; border-radius: 12px; background: #1e1e1e; box-shadow: 0 30px 70px -40px #183f386b; }
-.one-demo-desktop video { display: block; width: 100%; height: auto; }
+.one-demo-stage { position: relative; display: block; padding: 0 8% 32px 0; overflow: visible; }
+.one-demo-desktop { overflow: hidden; border: 1px solid #30473d; border-radius: 12px; background: #212121; box-shadow: 0 30px 70px -40px #183f386b; }
+.one-demo-window-chrome { display: flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px; background: #282828; border-bottom: 1px solid #353535; }
+.one-demo-window-chrome > span { display: block; width: 9px; height: 9px; flex: none; border-radius: 50%; background: #ff6058; }
+.one-demo-window-chrome > span:nth-child(2) { background: #ffbd2e; }
+.one-demo-window-chrome > span:nth-child(3) { background: #28c840; }
+.one-demo-media { display: block; aspect-ratio: 2340 / 1440; overflow: hidden; background: #212121; }
+.one-demo-media > video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 /* Keep the upright frame at a fixed drawing size; the ending handoff moves it once. */
-.one-demo-phone { position: absolute; z-index: 2; right: -1%; bottom: 10%; width: 24.5%; aspect-ratio: 1406 / 2822; padding: 0; border: 0; background: transparent; transform-origin: bottom right; transform: translate3d(0, 12.5%, 0) scale(.7346938776); will-change: transform; transition: transform 850ms cubic-bezier(.22,.8,.24,1); }
+.one-demo-phone { position: absolute; z-index: 2; right: 0; bottom: 0; width: 30%; aspect-ratio: 1406 / 2822; padding: 0; border: 0; background: transparent; transform-origin: bottom right; transform: scale(.62); will-change: transform; transition: transform 850ms cubic-bezier(.22,.8,.24,1); }
 .one-phone-flat { position: absolute; display: block; inset: 0; filter: drop-shadow(0 18px 18px #183f3830); transition: transform 650ms cubic-bezier(.22,.8,.24,1); }
 .one-demo-phone-3d .one-phone-flat { transform: rotate(3deg); }
 .one-phone-flat > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
@@ -11,7 +16,7 @@
 .one-phone-flat > video { position: absolute; left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; object-fit: fill; background: #000; mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
 .one-phone-canvas { position: absolute; display: block; inset: 0; width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 18px 18px #183f3830); }
 .one-demo-phone[data-renderer='webgl'] .one-phone-flat { opacity: 0; }
-.one-demo-stage[data-phone-focus] .one-demo-phone { transform: translate3d(-90%, 0, 0) scale(1); }
+.one-demo-stage[data-phone-focus] .one-demo-phone { transform: scale(1); }
 .one-demo-stage[data-phone-focus] .one-phone-flat { transform: none; }
 .one-demo-caption { display: flex; align-items: center; min-height: 2.8em; margin: .6rem 9% 0 0; color: #183f38; font-size: clamp(14px, 1.35vw, 18px); line-height: 1.4; }
 .one-demo-caption > span { display: block; }
@@ -22,16 +27,30 @@
 .one-demo-time { flex: none; font-variant-numeric: tabular-nums; }
 .one-demo button:focus-visible, .one-demo input:focus-visible { outline: 2px solid #e6522c; outline-offset: 5px; }
 .one-demo-error { font-size: .85rem; color: #8c3926; }
-.one-still-composition { position: relative; display: block; overflow: hidden; aspect-ratio: 1.15; border: 1px solid #30473d; border-radius: 10px; background: #202020; }
+.one-still-composition { border-radius: 12px; }
 .one-still-composition:focus-visible { outline: 3px solid #e6522c; outline-offset: 5px; }
-.one-still-desktop { display: block; width: 115%; max-width: none; height: 100%; object-fit: cover; object-position: left center; }
-.one-still-phone { position: absolute; width: 40%; right: -22%; bottom: -3%; aspect-ratio: 1406 / 2822; filter: drop-shadow(-8px 6px 12px #0006); }
-.one-still-phone > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
-.one-still-phone > .one-still-phone-screen { left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
+.one-still-media { aspect-ratio: 1.15; }
+.one-still-desktop { display: block; width: 100%; max-width: none; height: 100%; object-fit: cover; object-position: left center; }
+.one-still-phone .one-phone-flat > .one-still-phone-screen { left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
 .one-still-description { margin-top: 1rem; color: #183f38; font-size: 1rem; line-height: 1.5; }
 .one-still-hint { display: block; margin-top: .5rem; color: #47645e; font-size: .85rem; }
+.one-demo-opt-in { display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 1rem; padding: .5rem 1rem; border: 1px solid #183f38; border-radius: 8px; background: transparent; color: #183f38; font: inherit; cursor: pointer; }
+.one-demo-mobile-description { display: none; }
 @media (max-width: 700px) {
   .one-demo { margin-top: 2.5rem; }
+  .one-demo-stage { width: min(100%, 420px); margin-inline: auto; padding-right: 16px; }
+  /* Explicit mobile playback retains the entire frame: a portrait crop kept
+     the model list but cut off the beginning and end of real messages. */
+  .one-still-media { aspect-ratio: 1.15; }
+  .one-still-composition { overflow: clip; }
+  /* The still hints at mobile with half a phone beyond the window edge. */
+  .one-still-phone { width: min(82%, 260px); transform: translateX(25%) scale(.5); }
+  .one-demo-caption { margin: 1rem 0 0; min-height: 3em; font-size: 1rem; line-height: 1.5; }
+  .one-demo-controls { flex-wrap: wrap; margin-right: 0; column-gap: 1rem; row-gap: .25rem; }
+  .one-demo-controls input { order: 3; flex-basis: 100%; }
+  .one-demo-controls button:last-child { margin-left: auto; }
+  .one-demo-mobile-description { display: block; margin-top: 1rem; color: #47645e; font-size: 1rem; line-height: 1.5; }
+  .one-demo-mobile-description a { text-decoration: underline; text-underline-offset: 3px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .one-demo-stage, .one-demo-desktop, .one-demo-phone, .one-phone-flat { transition: none; }
