@@ -141,6 +141,7 @@ export default function HappyOneApp() {
       <main>
         <section className="one-hero page-width" aria-labelledby="one-heading">
           <h1 id="one-heading">Any model. Your team.<br /><em>Happy Harness.</em></h1>
+          <p className="one-hero-note">Free and open source</p>
           <HappyOneDemo />
           <DownloadOptions variant={downloadVariant} onCycle={cycleDownloadVariant} />
         </section>

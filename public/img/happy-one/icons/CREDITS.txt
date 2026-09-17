@@ -1,0 +1,37 @@
+Copy icon: OpenAI Apps SDK UI, Copy.tsx
+Source: https://github.com/openai/apps-sdk-ui/blob/main/src/components/Icon/svg/Copy.tsx
+License: https://github.com/openai/apps-sdk-ui/blob/main/LICENSE
+The source glyph is unchanged; its React wrapper sets a 17px size and hides
+the decorative SVG from accessibility APIs. This published web design-system
+asset is not claimed to be the exact icon used by ChatGPT's native mobile apps.
+
+Windows and Linux secondary-link marks are unchanged path extractions from
+this site's existing badges/windows.svg and badges/linux.svg. Only their
+presentation changes: current text color, with height matched to the font cap.
+Windows geometry: Bootstrap Icons Microsoft mark
+https://icons.getbootstrap.com/icons/microsoft/
+Linux: Font Awesome Free 6.7.2 Tux, Copyright Fonticons, Inc., CC BY 4.0
+https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/brands/linux.svg
+https://creativecommons.org/licenses/by/4.0/
+Tux was originally created by Larry Ewing using GIMP.
+Original badge attribution: /img/happy-one/badges/NOTICE.md
+
+Copyright 2025 OpenAI
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the “Software”), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

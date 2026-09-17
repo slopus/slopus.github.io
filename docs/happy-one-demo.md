@@ -1,16 +1,84 @@
 # Happy One synchronized demo
 
-Only `/tmp/happy-one/` uses `HappyOneDemo`. The final recording is `v18-r3`
-from the desktop workspace's `scripts/demo/demos/core/artifacts/v18-r3/`.
+## Current take: v21-r2
+
+Only `/tmp/happy-one/` uses this player. Active assets are in
+`public/video/happy-one/v21/`, from the desktop workspace's
+`scripts/demo/demos/core/artifacts/v21-r2/`. The master contains 3,867 frames at
+60fps, lasting 64.450000 seconds. All six copied exports have verified checksums.
+The 30fps pair contains 1,934 frames (64.466667s): the
+odd master frame count adds only a final 1/60-second quantization interval,
+with no cue shift or retiming. The previous v20 assets remain available.
+Dimensions, encoding, native controls, source selection, device artwork, screen
+bleed, and the unchanged brew command retain the v19 treatment documented below.
+
+The desktop and macOS download remain centered independently of the phone.
+The parked phone is unchanged: width 28% of the stage, beyond the desktop's
+right edge by a 6–12px gap. Focus still enlarges it to 1.18×, but now translates
+left only by the amount needed to keep its right viewport margin at least that
+same gap. On wide screens where it already fits, translation is zero. Focused
+overlap with the desktop is intentional; the desktop itself never moves.
+App Store and Google Play form one centered row below macOS installation
+controls, remaining a vertical stack at widths of 480px or less.
+
+The authoritative focus interval is 2087/60–2974/60 seconds
+(34.783333–49.566667). Astra's real child completes at 3126/60 (52.100000s),
+during the shipping Bash call and before Deployed at 3557/60 (59.283333s).
+The recording asserts the child is idle and “Working in subagents” is absent;
+the website does not hide that status. The concise child report arrives through
+the normal message flow. Auto remains selected; offline Git/gh shipping and
+the real baseline restore/counter reconciliation retain the disclosed fixture
+boundary, with no real commit, push, deployment, or fabricated approval.
+
+The desktop sidebar and actual phone home include both Chief of Staff and
+Release Coordinator; the latter uses the user's exact Celia avatar through
+the upstream encrypted bot-avatar sync. Both messages use Auto permission
+mode. The final native UI has no “Working in subagents” status.
+
+The v21 production build passed (41 static routes). Clean actual-playback
+screenshots at 390px and 1440px show the focused phone's native bot list at
+36.5–37 seconds, including Release Coordinator's chosen avatar on both devices.
+Both streams were playing and decode-ready, with approximately 34ms clock
+separation; the phone remained entirely inside the viewport, without overflow.
+Personal visual inspection found no transient loading spinner. Native controls
+were untouched and faded normally during playback. The unchanged layout was
+also verified on v20: offline Chromium at 390px, 1440px, and 1920px
+verified the focused phone's full visibility, minimum right margin, exact 1.18×
+scale, minimum required translation, and unchanged desktop/download center.
+The 1920px playback check crossed both actual focus cues; wide-screen focus
+requires no translation. Mobile badges remain a row above 480px and a stack
+below. These checks used public build files only, without a local HTTP server.
+
+“Free and open source” now sits 8px below the hero heading, sharing the footer
+subtitle's typography and color. It consumes the existing heading/movie gap:
+the movie's top is unchanged at both 390px and 1440px. Windows and Linux links
+sit below the exact Homebrew command and use unchanged badge glyph paths at
+one font cap height, with provenance in `public/img/happy-one/icons/CREDITS.txt`.
+
+Both download groups share one cached public GitHub latest-release lookup per
+page. The boundary accepts only non-draft, non-prerelease stable version tags
+and exact production asset names/URLs; macOS uses ARM64 DMG, Windows x64 EXE,
+and Linux x64 AppImage. Verified v0.0.85 direct installers remain the fallback
+when lookup fails. Detected Windows/Linux use their primary badge without
+Homebrew; macOS, mobile, and unknown clients default to macOS plus Homebrew.
+Offline Chromium verified all platform choices, a mocked future production
+release, one request shared by hero/footer, API failure, preview rejection,
+and untrusted asset URL rejection. All links remain direct installers.
+
+## Previous verified take: v19-r3
+
+The following is the preserved v19 record, not the current focused-phone
+overlap or Astra-completion contract. The previous recording was `v19-r3`
+from the desktop workspace's `scripts/demo/demos/core/artifacts/v19-r3/`.
 Its `cues.json`, `core.evidence.json`, `shipping-verified.json`,
 `phone-capture.json`, `framing.json`, and `native-key-taps.json` retain the
 recording clock, interactions, and fixture disclosures. Current website assets
-live in `public/video/happy-one/v18/`; older takes and the shared `device/`
+live in `public/video/happy-one/v19/`; older takes and the shared `device/`
 artwork remain separate.
 
-## Recording and verified exports
+### Recording and verified exports
 
-The take contains 4,194 frames on a 60fps master clock: 69.9 seconds. The
+The take contains 3,830 frames on a 60fps master clock: 63.833333 seconds. The
 desktop movie is the recorded application window itself, 1950×1660 movie
 pixels for a 780×664 CSS-pixel window at 2.5×: no camera moves, no letterbox,
 no zoom. The sidebar sits at the product's own minimum width (220 CSS pixels)
@@ -20,13 +88,14 @@ cues.
 
 | Website asset | Dimensions | Frame rate | Frames | Video duration |
 | --- | --- | --- | --- | --- |
-| `desktop.mp4` | 1950×1660 | 60fps | 4,194 | 69.9s |
-| `phone.mp4` | 1206×2622 | 60fps | 4,194 | 69.9s |
-| `desktop-30.mp4` | 1560×1328 | 30fps | 2,097 | 69.9s |
-| `phone-30.mp4` | 804×1748 | 30fps | 2,097 | 69.9s |
+| `desktop.mp4` | 1950×1660 | 60fps | 3,830 | 63.833333s |
+| `phone.mp4` | 1206×2622 | 60fps | 3,830 | 63.833333s |
+| `desktop-30.mp4` | 1560×1328 | 30fps | 1,915 | 63.833333s |
+| `phone-30.mp4` | 804×1748 | 30fps | 1,915 | 63.833333s |
 
-These values are measured by ffprobe. The even master frame count divides
-exactly into 2,097 frames at 30fps, so both quality pairs share the same
+All six exports are verified by ffprobe and their copied SHA-256 checksums.
+The even master frame count divides
+exactly into 1,915 frames at 30fps, so both quality pairs share the same
 endpoint without padding, retiming, or cue shifts.
 
 The desktop and phone HQ files are the recorder's own exports, byte for byte.
@@ -42,7 +111,7 @@ for supported, smooth, power-efficient decoding of both streams; otherwise, or
 with save-data enabled, the player selects the matched 30fps pair. Selection
 happens once per player lifetime; there is no mid-playback source swap.
 
-## Playback
+### Playback
 
 The desktop video carries the browser's own controls (`controls`, muted by
 default, no download or remote-playback items). There are no custom controls,
@@ -58,23 +127,26 @@ leaves the viewport or the tab is hidden and resumes when it returns, but only
 if the pair was playing at that moment: a visitor's pause on the native controls
 stays paused. Movies load when the figure first intersects the viewport.
 
-## Layout
+### Layout
 
 One layout at every width. The recorded window is the Mac window: the corner
 radius, hairline, and shadow sit on the recorded content's edge, and macOS
 traffic lights (12 app px at x = 20/40/60, centred on the header) are drawn on
 a header-coloured patch over the browser-mode logo in the app's own CSS pixels
 (`--apx`), transparent to the pointer so the video controls stay reachable.
-The window takes 70% of the stage width.
+The window takes 70% of the stage width and is centered on the page independently
+of the phone. The desktop download badge shares that exact center axis.
 
 The phone stands upright to the right of the window at full drawing size (28%
-of the stage width) with its right edge 8% of the stage width past the stage,
-so its left bezel clears the window and the composer. On a wide viewport it
-hangs into the page margin; on a narrow one it peeks past the viewport edge,
-which the site shell clips without a horizontal scrollbar. During the recorded
-phone interval (`phone-enter` 2097/60s to `phone-exit` 3307/60s) it comes into
-the column and grows to 1.18×, then returns. Reduced motion disables the move.
-The download options sit directly below the figure in the hero.
+of the stage width), with a 6–12 CSS-pixel gap. Its bottom-left transform origin
+keeps the left bezel beyond the composer throughout its animation. On a wide
+viewport it hangs into the page margin; on a narrow one it peeks past the viewport
+edge, which the site shell clips without a horizontal scrollbar. During the
+recorded phone interval (`phone-enter` 2089/60s to `phone-exit` 2946/60s) it
+grows outward to 1.18×, then returns. Reduced motion disables the move. The
+download options sit directly below the figure; App Store and Google Play
+badges form one centered row below the desktop installation controls, stacking
+vertically only at widths of 480 CSS pixels or less.
 
 Playback uses Apple's flat iPhone 16 Pro Black Titanium artwork, sourced from
 James Jingyi's Device Mockups collection. Its screen opening is x=102, y=100,
@@ -86,7 +158,19 @@ credits remain linked beside Docs, Privacy, and Terms in the page footer.
 dependencies remain an unused alternative; the active landing page imports none
 of them.
 
-## Final recorded cues
+The video and its mask bleed 0.4% underneath each bezel edge (`scale(1.008)`),
+preventing independent anti-aliased frame and mask edges from exposing a seam
+during fractional scaling. The actual device frame and its aspect ratio are
+unchanged.
+
+The Homebrew copy glyph is the unchanged Copy path from OpenAI's published
+[Apps SDK UI](https://github.com/openai/apps-sdk-ui/blob/main/src/components/Icon/svg/Copy.tsx),
+with its MIT attribution shipped in `/img/happy-one/icons/CREDITS.txt`. This is
+a verified OpenAI web design-system source, not a claim that ChatGPT's native
+mobile apps use this exact asset. The command remains
+`brew install --cask slopus/tap/happy`.
+
+### Final recorded cues
 
 Frame numbers refer to the 60fps master and apply unchanged to both web pairs.
 
@@ -94,43 +178,40 @@ Frame numbers refer to the 60fps master and apply unchanged to both web pairs.
 | --- | --- | --- |
 | 244 | 4.067s | Model picker opens |
 | 524 | 8.733s | Fable selected |
-| 932 | 15.533s | Work starts; Thinking visible |
-| 1218 | 20.300s | First file read visible |
-| 1412 | 23.533s | Real waveform predicate edited; sidebar shows +3 −1 |
-| 1584 | 26.400s | Astra sub-agent spawned |
-| 1893 | 31.550s | First turn settled |
-| 2097 | 34.950s | Phone moves forward; session unread |
-| 2322 | 38.700s | Phone session open |
-| 2352 | 39.200s | Native inline diff visible |
-| 2716 | 45.267s | Permission menu opened on the phone |
-| 2896 | 48.267s | Full access chosen |
-| 3043 | 50.717s | Native keyboard typing begins |
-| 3196 | 53.267s | Phone message sent |
-| 3307 | 55.117s | Phone moves back; Steve's message on the desktop |
-| 3355 | 55.917s | Greeting and wave |
-| 3432 | 57.200s | Bash ship command running |
-| 3580 | 59.667s | Real Git counters reconcile to zero |
-| 3898 | 64.967s | Deployed; confetti |
-| 4194 | 69.900s | Master ends |
+| 932 | 15.533s | Work starts; Thinking visible; workspace named voice-waveform |
+| 1217 | 20.283s | First file read visible |
+| 1411 | 23.517s | Real waveform predicate edited; sidebar shows +3 −1 |
+| 1580 | 26.333s | Astra sub-agent spawned |
+| 1888 | 31.467s | First turn settled |
+| 2089 | 34.817s | Phone grows; session unread |
+| 2311 | 38.517s | Phone session open |
+| 2340 | 39.000s | Native inline diff visible |
+| 2686 | 44.767s | Native keyboard typing begins; Auto remains selected |
+| 2837 | 47.283s | Phone message sent |
+| 2946 | 49.100s | Phone returns; Steve's message on the desktop |
+| 2994 | 49.900s | Static inline “Hi, Steve 👋” greeting |
+| 3072 | 51.200s | Bash screenplay ship command running |
+| 3215 | 53.583s | Real Git counters reconcile to zero |
+| 3534 | 58.900s | Staged deploy response; confetti |
+| 3830 | 63.833s | Master ends |
 
-## What is real and what is staged
+### What is real and what is staged
 
 The recording uses an isolated local Happy Agent build, not a published release
 or an installed host update. Native tool execution, the file edit, the actual
 `create_agent` delegation, durable messages, and encrypted desktop/phone
 synchronization are real. The phone's software keyboard receives actual native
-taps to type `ship it`; the Full access setting is chosen on camera through the
-phone's own permission menu, and Send delivers that exact message to the linked
-session with that setting.
+taps to type `ship it`; Auto stays selected throughout, and Send delivers that
+exact message to the linked session. The workspace is automatically named
+`voice-waveform`. The greeting uses static inline text and emoji, not a hand sticker.
 
-The ship command is real and runs with that Full access setting: one Bash call
-commits, pushes `HEAD:main`, and watches the deploy run. The push lands in a
-bare repository owned by the private demo gym, and `gh` is an offline fixture on
-the gym's PATH that reports one deploy run. `shipping-verified.json` records
-the pushed commit, the origin's `main`, and the daemon's own Git read model
-reconciling to zero changes. No real remote, deployment, or permission-review
-verdict is involved; the screenplay never answers a review, and it only claims a
-deploy when the daemon reports the command succeeded.
+The Bash process runs under Auto with an explicit private fixture PATH. Its
+`git` and `gh` commands are offline screenplay fixtures: no real commit, push,
+or deployment occurs. The simulated push restores only the prepared waveform
+file to baseline. `shipping-verified.json` records the staging disclosure and
+the daemon's actual Git read model reconciling to zero changes. No permission
+approval or review verdict is fabricated. The returned deploy response is
+staged; the native edit, message delivery, and counter reconciliation are real.
 
 Inference prose and timing are a screenplay. Steve is one explicitly fictional
 protocol-fixture identity, not proof of real multiplayer authentication. The
@@ -139,13 +220,33 @@ narrow, readable phone diff; the edit itself is real. Astra's review runs as a
 real sub-agent and is released after the take so no collaborator row is filmed.
 The fixture does not claim live vendor inference.
 
-## Verification status
+### Verification status
 
-Typecheck and the production build pass with the v18 references and cues.
-Chromium, Firefox, and WebKit were checked against the copied assets at
-1440/1024/700/390px: paused seeks to 1, 18, 28, 44, 60, and 66 seconds put both
-movies at the same time in every engine, the phone focus state follows the cue
-interval, and there is no horizontal overflow at any width. Live playback in
-all three engines: the pair autoplays in view, holds within one frame of drift,
-a visitor pause stays paused across scrolling, scrolling away pauses and
-returning resumes both, both end together, and replay restarts both.
+The final v19 public build typechecks and builds. Chromium, Firefox, and WebKit
+were inspected at device-pixel-ratio 2 and eleven viewport widths from 320 to
+1920 CSS pixels. Both parked and focused geometry pass: maximum center rounding
+error is 0.007813 CSS pixels for the desktop and 0.015625 for its download badge.
+The phone clears the window by at least 6 CSS pixels throughout the transition;
+at most 48.46% of it is viewport-clipped, below the permitted 70%. No page
+overflow or JavaScript errors were observed. Narrow store badges stay vertical.
+Copy actions at 390px and 1440px in all three engines pass the unchanged brew
+command to the clipboard API and display the existing copied feedback.
+
+Actual 1× playback crosses both recorded phone cues in all three engines,
+including the HQ pair in Chromium and the 30fps pair in Firefox and WebKit.
+Maximum sampled pair drift is 41.3ms, below the existing 120ms correction
+threshold; pausing the desktop pauses the phone. Rendered transition sequences
+and full-resolution phone crops were visually inspected: no exposed light seam
+or phone/composer overlap was visible, and the device frame remains unchanged.
+Immediate paused-seek screenshots can show native loading overlays. Follow-up
+screenshots after 3.5 seconds of normal playback show no loading spinner; native
+controls were not removed or masked. Firefox's HQ companion reported waiting
+at seek/startup (within the first 0.255 seconds), with no later waiting events
+in that sample; the other clean-playback samples reported none. These local
+observations do not claim universally flawless decoding.
+
+Dedicated preview services are unavailable on this macOS compute; no replacement
+HTTP listener is started. Browser inspection uses offline request interception
+limited to the public build, with no external requests or public preview
+endpoint. External Google Fonts are consequently unavailable in these captures;
+layout checks use the page's fallback fonts.

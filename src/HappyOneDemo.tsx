@@ -3,10 +3,10 @@ import { HappyOnePhone } from './HappyOnePhone'
 import { happyOneDemoMediaSelect } from './happyOneDemoMedia'
 import './happy-one-demo.css'
 
-const MEDIA = '/video/happy-one/v18'
-// v18-r3 recording cues on the common 60fps desktop/phone master clock.
-const PHONE_ENTER = 2097 / 60
-const PHONE_EXIT = 3307 / 60
+const MEDIA = '/video/happy-one/v21'
+// v21-r2 recording cues on the common 60fps desktop/phone master clock.
+const PHONE_ENTER = 2087 / 60
+const PHONE_EXIT = 2974 / 60
 
 type DataConnection = EventTarget & { saveData?: boolean }
 function dataConnection() {

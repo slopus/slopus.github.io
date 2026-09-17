@@ -1,13 +1,13 @@
 .one-demo { margin: 3.5rem 0 0; text-align: left; }
 /* The stage is the container the phone measures itself against (100cqw = stage width).
-   One layout at every width: the window on the left, the phone standing to its right. */
+   The window owns the page's center axis; the phone stands outside its right edge. */
 .one-demo-stage { position: relative; display: block; padding: 0 0 28px; overflow: visible; container-type: inline-size; }
 /*
  * The movie is the recorded Mac window itself: 1950×1660 movie pixels, 780 CSS
  * pixels of the recorded app, no letterbox and no camera. --apx is one CSS pixel
  * of the recorded app, so the window chrome scales with the app.
  */
-.one-demo-desktop { position: relative; width: 70%; aspect-ratio: 1950 / 1660; container-type: inline-size; --apx: calc(100cqw / 780); }
+.one-demo-desktop { position: relative; width: 70%; margin-inline: auto; aspect-ratio: 1950 / 1660; container-type: inline-size; --apx: calc(100cqw / 780); }
 /* macOS window: the recorded content's edge is the window edge, so the corner radius,
    hairline and shadow sit on it. */
 .one-demo-window { position: absolute; inset: 0; overflow: hidden; border-radius: calc(14 * var(--apx)); background: #212121; box-shadow: 0 26px 60px -26px #183f388c, 0 0 0 max(.5px, .5 * var(--apx)) #0000003d; }
@@ -19,16 +19,18 @@
 .one-demo-lights > span { position: absolute; top: calc(21.6 * var(--apx)); left: calc(14 * var(--apx)); width: calc(12 * var(--apx)); height: calc(12 * var(--apx)); border-radius: 50%; background: #ff5f57; box-shadow: inset 0 0 0 max(.5px, .5 * var(--apx)) #00000029; }
 .one-demo-lights > span:nth-child(2) { left: calc(34 * var(--apx)); background: #febc2e; }
 .one-demo-lights > span:nth-child(3) { left: calc(54 * var(--apx)); background: #28c840; }
-/* The phone stands to the right of the window at full drawing size, hanging
-   past the stage's right edge so its left bezel clears the window. While the
-   recording is on the phone it comes into the column and grows toward the
-   window, then returns. */
-.one-demo-phone { position: absolute; z-index: 2; right: 0; bottom: 0; width: 28%; aspect-ratio: 1406 / 2822; padding: 0; border: 0; background: transparent; transform-origin: bottom right; transform: translateX(8cqw); will-change: transform; transition: transform 850ms cubic-bezier(.22,.8,.24,1); }
+/* Park beside the window; the page shell clips decorative viewport overflow.
+   Focus may overlap the desktop, which keeps its exact page-center position. */
+.one-demo-phone { position: absolute; z-index: 2; left: calc(85% + clamp(6px, 1cqw, 12px)); bottom: 0; width: 28%; aspect-ratio: 1406 / 2822; padding: 0; border: 0; background: transparent; transform-origin: bottom left; transform: scale(1); will-change: transform; transition: transform 850ms cubic-bezier(.22,.8,.24,1); }
 .one-phone-flat { position: absolute; display: block; inset: 0; filter: drop-shadow(0 18px 18px #183f3830); }
 .one-phone-flat > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
-/* Exact screen opening in Apple's 1406×2822 frame: 102,100,1206,2622. */
-.one-phone-flat > video { position: absolute; left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; object-fit: fill; background: #000; mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
-.one-demo-stage[data-phone-focus] .one-demo-phone { transform: translateX(0) scale(1.18); }
+/* Exact aperture: 102,100,1206,2622 in the 1406×2822 frame. The masked screen
+   bleeds 0.4% beneath each bezel edge to avoid two anti-aliased edges exposing
+   a hairline during fractional scaling. The frame itself remains untouched. */
+.one-phone-flat > video { position: absolute; left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; transform: scale(1.008); object-fit: fill; background: #000; mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
+/* Enlarged right edge = 50vw + 68.04cqw + gap. Translate only the excess
+   past (100vw - gap), leaving wide screens' existing growth untouched. */
+.one-demo-stage[data-phone-focus] .one-demo-phone { transform: translateX(min(0px, calc(50vw - 68.04cqw - 2 * clamp(6px, 1cqw, 12px)))) scale(1.18); }
 .one-demo-error { margin-top: 1rem; font-size: .85rem; color: #8c3926; }
 @media (max-width: 700px) {
   .one-demo { margin-top: 2.5rem; }

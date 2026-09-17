@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { AppStoreButton, GooglePlayButton } from './StoreButtons'
 import { MOBILE_STORE_RATINGS } from './storeRatings'
+import { CopyIcon } from './CopyIcon'
+import { latestDesktopDownloads, verifiedDesktopDownloads, type DesktopDownloads } from './desktopDownloads'
 
-const DOWNLOAD = 'https://github.com/slopus/happy-desktop/releases/latest'
 const BREW = 'brew install --cask slopus/tap/happy'
 const DESKTOP_PLATFORMS = ['macos', 'windows', 'linux'] as const
 const LABELS = { macos: 'macOS', windows: 'Windows', linux: 'Linux', desktop: 'Desktop' }
@@ -28,10 +29,14 @@ function DownloadBadge({ platform, variant }: { platform: Exclude<DesktopPlatfor
   )
 }
 
-function PlatformLinks({ current }: { current: DesktopPlatform }) {
+function PlatformLinks({ current, downloads }: { current: Exclude<DesktopPlatform, 'desktop'>; downloads: DesktopDownloads }) {
   return (
     <div className="one-platform-links" aria-label="Desktop platforms">
-      {DESKTOP_PLATFORMS.filter(platform => platform !== current).map(platform => <a key={platform} href={DOWNLOAD} aria-label={`Happy ${LABELS[platform]} releases`}>{LABELS[platform]}</a>)}
+      {DESKTOP_PLATFORMS.filter(platform => platform !== current).map(platform => <a key={platform} href={downloads[platform]} aria-label={`Download Happy for ${LABELS[platform]}`}>
+        {platform !== 'macos' && <span className="one-platform-icon" data-platform={platform} aria-hidden="true"
+          style={{ '--platform-icon': `url('/img/happy-one/icons/${platform}.svg')` } as CSSProperties} />}
+        {LABELS[platform]}
+      </a>)}
     </div>
   )
 }
@@ -103,9 +108,9 @@ function HomebrewCommand() {
         <code tabIndex={0} aria-label="Homebrew installation command">{BREW}</code>
       </div>
       <button type="button" onClick={copy} aria-label={copied ? 'Homebrew command copied' : 'Copy Homebrew command'}>
-        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          {copied ? <path d="m5 12 4 4L19 6" /> : <><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M15 9V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h4" /></>}
-        </svg>
+        {copied ? <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="m5 12 4 4L19 6" />
+        </svg> : <CopyIcon />}
       </button>
       <span className="one-download-sr" role="status">{copied ? 'Copied.' : failed ? 'Clipboard unavailable. You can copy the command manually.' : ''}</span>
     </div>
@@ -113,9 +118,15 @@ function HomebrewCommand() {
 }
 
 export function DownloadOptions({ variant, onCycle }: DownloadOptionsProps) {
+  const [downloads, setDownloads] = useState(verifiedDesktopDownloads)
+  useEffect(() => {
+    let active = true
+    void latestDesktopDownloads().then(value => { if (active) setDownloads(value) })
+    return () => { active = false }
+  }, [])
   const platform = desktopPlatform()
-  // Phones have no desktop OS to detect. Keep all three platforms explicit
-  // below the macOS badge, including while comparing the two Apple treatments.
+  // Phones and unknown platforms default to macOS, with the other installers
+  // linked below its Homebrew command.
   const primaryPlatform = platform === 'desktop' ? 'macos' : platform
   const showBrew = primaryPlatform === 'macos'
 
@@ -142,11 +153,11 @@ export function DownloadOptions({ variant, onCycle }: DownloadOptionsProps) {
       }}
     >
       <div className="one-desktop-downloads">
-        <a className="store-button one-desktop-button" href={DOWNLOAD} aria-label={`Download Happy for ${LABELS[primaryPlatform]}`}>
+        <a className="store-button one-desktop-button" href={downloads[primaryPlatform]} aria-label={`Download Happy for ${LABELS[primaryPlatform]}`}>
           <DownloadBadge platform={primaryPlatform} variant={variant} />
         </a>
-        <PlatformLinks current={platform} />
         {showBrew && <HomebrewCommand />}
+        <PlatformLinks current={primaryPlatform} downloads={downloads} />
       </div>
       <div className="one-mobile-downloads">
         <div className="one-store-download"><AppStoreButton /><StoreRating store="appStore" /></div>

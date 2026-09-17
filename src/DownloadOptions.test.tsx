@@ -1,11 +1,16 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DownloadOptions } from './DownloadOptions'
 
 const BREW = 'brew install --cask slopus/tap/happy'
-const RELEASES = 'https://github.com/slopus/happy-desktop/releases/latest'
+const RELEASES = 'https://github.com/slopus/happy-desktop/releases/download/v0.0.85'
+
+beforeEach(() => {
+  // Exercise the verified direct-download fallback without making live requests.
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }))
+})
 
 function device(userAgent: string, platform = '', maxTouchPoints = 0) {
   vi.stubGlobal('navigator', { userAgent, platform, maxTouchPoints })
@@ -39,13 +44,13 @@ describe('hidden preview downloads', () => {
     expect(container.querySelector('[data-platform="desktop"]')).toBeTruthy()
     expect(screen.getByText(BREW)).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Download Happy for macOS' })).toBeTruthy()
-    for (const os of ['macOS', 'Windows', 'Linux']) expect(screen.getByText(os)).toBeTruthy()
+    for (const os of ['macOS', 'Windows', 'Linux']) expect(screen.getByRole('link', { name: `Download Happy for ${os}` })).toBeTruthy()
   })
 
-  it.each([['Macintosh', 'macOS'], ['X11; Linux x86_64', 'Linux']])('uses the right desktop badge for %s', (ua, label) => {
+  it.each([['Macintosh', 'macOS', 'Happy-0.0.85-arm64.dmg'], ['X11; Linux x86_64', 'Linux', 'Happy-0.0.85-x64.AppImage']])('uses the right desktop badge for %s', (ua, label, asset) => {
     device(ua)
     render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
-    expect(screen.getByRole('link', { name: `Download Happy for ${label}` }).getAttribute('href')).toBe(RELEASES)
+    expect(screen.getByRole('link', { name: `Download Happy for ${label}` }).getAttribute('href')).toBe(`${RELEASES}/${asset}`)
     expect(Boolean(screen.queryByText(BREW))).toBe(label === 'macOS')
   })
 
@@ -57,7 +62,7 @@ describe('hidden preview downloads', () => {
     fireEvent.click(group)
     fireEvent.keyDown(group, { key: 'ArrowLeft' })
     expect(cycle.mock.calls).toEqual([[1], [-1]])
-    const link = screen.getByRole('link', { name: /Download Happy for/ })
+    const link = screen.getByRole('link', { name: 'Download Happy for macOS' })
     link.addEventListener('click', event => event.preventDefault(), { once: true })
     fireEvent.click(link)
     fireEvent.click(screen.getByText(BREW))
@@ -81,17 +86,18 @@ describe('hidden preview downloads', () => {
     vi.stubGlobal('navigator', { userAgent: 'Macintosh', clipboard: { writeText } })
     render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
     const button = screen.getByRole('button', { name: 'Copy Homebrew command' })
-    expect(button.querySelector('rect')).toBeTruthy()
+    const copyPath = button.querySelector('svg[fill="currentColor"] path')?.getAttribute('d')
+    expect(copyPath).toBeTruthy()
     await act(async () => { fireEvent.click(button) })
     expect(button.querySelector('path')?.getAttribute('d')).toBe('m5 12 4 4L19 6')
-    expect(button.querySelector('rect')).toBeNull()
+    expect(button.querySelector('svg[fill="currentColor"]')).toBeNull()
     expect(button.hasAttribute('title')).toBe(false)
     expect(window.getSelection()?.toString()).toBe('')
     act(() => { vi.advanceTimersByTime(1399) })
     expect(screen.getByRole('status').textContent).toBe('Copied.')
     act(() => { vi.advanceTimersByTime(1) })
     expect(button.getAttribute('aria-label')).toBe('Copy Homebrew command')
-    expect(button.querySelector('rect')).toBeTruthy()
+    expect(button.querySelector('svg[fill="currentColor"] path')?.getAttribute('d')).toBe(copyPath)
     expect(screen.getByRole('status').textContent).toBe('')
   })
 
@@ -143,7 +149,7 @@ describe('hidden preview downloads', () => {
     await waitFor(() => expect(screen.getByRole('status').textContent).toBe('Clipboard unavailable. You can copy the command manually.'))
     expect(button.getAttribute('aria-label')).toBe('Copy Homebrew command')
     expect(document.activeElement).toBe(button)
-    expect(button.querySelector('rect')).toBeTruthy()
+    expect(button.querySelector('svg[fill="currentColor"] path')).toBeTruthy()
     expect(window.getSelection()?.toString()).toBe('')
     expect(document.querySelector('textarea')).toBeNull()
   })
@@ -188,7 +194,7 @@ describe('hidden preview downloads', () => {
   it('keeps the Windows mark and direct download in both Apple variants', () => {
     device('Windows NT 10.0')
     const { container, rerender } = render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
-    expect(screen.getByRole('link', { name: 'Download Happy for Windows' }).getAttribute('href')).toBe(RELEASES)
+    expect(screen.getByRole('link', { name: 'Download Happy for Windows' }).getAttribute('href')).toBe(`${RELEASES}/Happy-0.0.85-x64.exe`)
     expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/windows.svg')
     rerender(<DownloadOptions variant={1} onCycle={vi.fn()} />)
     expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/windows.svg')

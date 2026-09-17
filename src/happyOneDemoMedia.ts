@@ -1,13 +1,13 @@
 const standard = {
   framerate: 30,
-  desktop: { src: '/video/happy-one/v18/desktop-30.mp4', width: 1560, height: 1328 },
-  phone: { src: '/video/happy-one/v18/phone-30.mp4', width: 804, height: 1748 },
+  desktop: { src: '/video/happy-one/v21/desktop-30.mp4', width: 1560, height: 1328 },
+  phone: { src: '/video/happy-one/v21/phone-30.mp4', width: 804, height: 1748 },
 } as const
 
 const highQuality = {
   framerate: 60,
-  desktop: { src: '/video/happy-one/v18/desktop.mp4', width: 1950, height: 1660 },
-  phone: { src: '/video/happy-one/v18/phone.mp4', width: 1206, height: 2622 },
+  desktop: { src: '/video/happy-one/v21/desktop.mp4', width: 1950, height: 1660 },
+  phone: { src: '/video/happy-one/v21/phone.mp4', width: 1206, height: 2622 },
 } as const
 
 export async function happyOneDemoMediaSelect() {
