@@ -1,0 +1,17 @@
+/* Explicit screenshot composition only; the ordinary page is unchanged.
+   Regeneration instructions live in docs/happy-one-demo.md. */
+.happy-one[data-social-preview] { width: 1200px; height: 630px; }
+.happy-one[data-social-preview] .site-header-wrap,
+.happy-one[data-social-preview] .site-footer,
+.happy-one[data-social-preview] main > :not(.one-hero),
+.happy-one[data-social-preview] .one-download-actions,
+.happy-one[data-social-preview] .page-scrollbar { display: none; }
+.happy-one[data-social-preview] .one-hero { width: 1100px; padding-top: 18px; }
+.happy-one[data-social-preview] .one-hero h1 { font-size: 54px; line-height: 1.04; margin-bottom: 8px; }
+.happy-one[data-social-preview] .one-hero-note { font-size: 22px; line-height: 26px; }
+.happy-one[data-social-preview] .one-social-stars { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 6px 0 0; font-size: 17px; line-height: 20px; }
+.happy-one[data-social-preview] .one-social-stars svg { width: 17px; height: 17px; }
+.happy-one[data-social-preview] .one-demo { width: 652px; margin: 16px auto 0; }
+.happy-one[data-social-preview] .one-demo-stage { --desktop-width: 456px; --phone-left: calc(50cqw + 228px + 12px); }
+.happy-one[data-social-preview] .one-demo-phone { width: 160px; transition: none; }
+.happy-one[data-social-preview] .one-demo video { pointer-events: none; }

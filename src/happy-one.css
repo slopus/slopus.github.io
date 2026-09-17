@@ -4,6 +4,7 @@
 .happy-one .site-header .wordmark { display: block; }
 .happy-one .site-header .wordmark span { display: inline; }
 .happy-one .site-header .nav-github { min-height: 44px; }
+.happy-one .site-header .nav-github-count { display: inline; }
 .happy-one .site-header nav { gap: 1.6rem; }
 .happy-one .button, .happy-one .nav-cta { border-radius: 8px; }
 .happy-one .button { min-height: 48px; justify-content: center; }
@@ -38,6 +39,9 @@
 .one-download-actions:focus-visible { outline: 2px solid #e6522c; outline-offset: 10px; border-radius: 8px; }
 .one-desktop-downloads, .one-mobile-downloads { display: flex; flex-direction: column; align-items: center; gap: .75rem; min-width: 0; }
 .one-desktop-downloads { max-width: 100%; }
+.one-primary-download { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.one-mac-architecture { height: 20px; padding: 0; border: 0; border-radius: 0; background: transparent; color: #47645e; font: inherit; font-size: .82rem; line-height: 20px; cursor: pointer; }
+.one-mac-architecture:focus-visible { outline: 2px solid #183f38; outline-offset: 3px; border-radius: 2px; }
 .one-desktop-downloads a { cursor: pointer; }
 .one-desktop-downloads a[aria-busy='true'] { cursor: progress; opacity: .7; }
 /* One centered mobile-badge row below the centered desktop installation controls. */
@@ -55,6 +59,7 @@
 .one-platform-links a { display: inline-flex; align-items: center; gap: .35em; min-height: 44px; margin-block: -12px; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: transparent; }
 .one-platform-icon { display: block; flex: none; width: .72em; height: .72em; width: 1cap; height: 1cap; background: currentColor; mask: var(--platform-icon) center / contain no-repeat; }
 .one-platform-icon[data-platform='linux'] { width: .63em; width: .875cap; }
+.one-platform-links a > svg { display: block; flex: none; width: .72em; height: .72em; width: 1cap; height: 1cap; }
 .one-platform-links a:hover { color: #183f38; text-decoration-color: currentColor; }
 .one-desktop-button:focus-visible { outline: 2px solid #e6522c; outline-offset: 3px; }
 .one-brew-command { position: relative; display: flex; align-items: center; width: max-content; max-width: 100%; min-height: 46px; margin-top: .3rem; padding: 0 0 0 12px; border: 1px solid #344139; border-radius: 8px; background: #000; color: #e1e9d5; }

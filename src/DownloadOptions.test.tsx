@@ -28,7 +28,7 @@ afterEach(() => {
 describe('hidden preview downloads', () => {
   it.each([0, 1])('never shows Homebrew on Windows in variant %i', variant => {
     device('Mozilla/5.0 (Windows NT 10.0; Win64; x64)')
-    const { container } = render(<DownloadOptions variant={variant} onCycle={vi.fn()} />)
+    const { container } = render(<DownloadOptions variant={variant} onCycle={vi.fn()} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     expect(container.querySelector('[data-platform="windows"]')).toBeTruthy()
     expect(screen.queryByText(BREW)).toBeNull()
     expect(screen.queryByRole('button', { name: /Homebrew/ })).toBeNull()
@@ -40,7 +40,7 @@ describe('hidden preview downloads', () => {
     ['iPad desktop mode', 'Macintosh; Intel Mac OS X 10_15_7', 'MacIntel', 5],
   ])('keeps Homebrew and all desktop platforms visible on %s', (_name, ua, platform, touch) => {
     device(ua as string, platform as string, touch as number)
-    const { container } = render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
+    const { container } = render(<DownloadOptions variant={0} onCycle={vi.fn()} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     expect(container.querySelector('[data-platform="desktop"]')).toBeTruthy()
     expect(screen.getByText(BREW)).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Download Happy for macOS' })).toBeTruthy()
@@ -49,7 +49,7 @@ describe('hidden preview downloads', () => {
 
   it.each([['Macintosh', 'macOS', 'Happy-0.0.85-arm64.dmg'], ['X11; Linux x86_64', 'Linux', 'Happy-0.0.85-x64.AppImage']])('uses the right desktop badge for %s', async (ua, label, asset) => {
     device(ua)
-    render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
+    render(<DownloadOptions variant={0} onCycle={vi.fn()} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     await waitFor(() => expect(screen.getByRole('link', { name: `Download Happy for ${label}` }).getAttribute('href')).toBe(`${RELEASES}/${asset}`))
     expect(Boolean(screen.queryByText(BREW))).toBe(label === 'macOS')
   })
@@ -57,7 +57,7 @@ describe('hidden preview downloads', () => {
   it('cycles only on background or group arrow keys, not links or selected command text', () => {
     device('Macintosh')
     const cycle = vi.fn()
-    render(<DownloadOptions variant={0} onCycle={cycle} />)
+    render(<DownloadOptions variant={0} onCycle={cycle} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     const group = screen.getByRole('group', { name: /Apple badge/ })
     fireEvent.click(group)
     fireEvent.keyDown(group, { key: 'ArrowLeft' })
@@ -73,7 +73,7 @@ describe('hidden preview downloads', () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     vi.stubGlobal('navigator', { userAgent: 'iPhone', platform: '', maxTouchPoints: 5, clipboard: { writeText } })
     const cycle = vi.fn()
-    render(<DownloadOptions variant={0} onCycle={cycle} />)
+    render(<DownloadOptions variant={0} onCycle={cycle} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     fireEvent.click(screen.getByRole('button', { name: 'Copy Homebrew command' }))
     await waitFor(() => expect(screen.getByRole('status').textContent).toBe('Copied.'))
     expect(writeText).toHaveBeenCalledWith(BREW)
@@ -84,7 +84,7 @@ describe('hidden preview downloads', () => {
     vi.useFakeTimers()
     const writeText = vi.fn().mockResolvedValue(undefined)
     vi.stubGlobal('navigator', { userAgent: 'Macintosh', clipboard: { writeText } })
-    render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
+    render(<DownloadOptions variant={0} onCycle={vi.fn()} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     const button = screen.getByRole('button', { name: 'Copy Homebrew command' })
     const copyPath = button.querySelector('svg[fill="currentColor"] path')?.getAttribute('d')
     expect(copyPath).toBeTruthy()
@@ -115,7 +115,7 @@ describe('hidden preview downloads', () => {
       return true
     })
     Object.defineProperty(document, 'execCommand', { configurable: true, value: execCommand })
-    render(<><p>Existing selection</p><DownloadOptions variant={0} onCycle={vi.fn()} /></>)
+    render(<><p>Existing selection</p><DownloadOptions variant={0} onCycle={vi.fn()} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} /></>)
     const button = screen.getByRole('button', { name: 'Copy Homebrew command' })
     button.focus()
     const range = document.createRange()
@@ -142,7 +142,7 @@ describe('hidden preview downloads', () => {
         }),
       })
     }
-    render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
+    render(<DownloadOptions variant={0} onCycle={vi.fn()} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     const button = screen.getByRole('button', { name: 'Copy Homebrew command' })
     button.focus()
     fireEvent.click(button)
@@ -157,7 +157,7 @@ describe('hidden preview downloads', () => {
   it('restarts the brief confirmation when copied again', async () => {
     vi.useFakeTimers()
     vi.stubGlobal('navigator', { userAgent: 'Macintosh', clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } })
-    render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
+    render(<DownloadOptions variant={0} onCycle={vi.fn()} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     const button = screen.getByRole('button', { name: 'Copy Homebrew command' })
     await act(async () => { fireEvent.click(button) })
     act(() => { vi.advanceTimersByTime(1000) })
@@ -169,7 +169,7 @@ describe('hidden preview downloads', () => {
   })
 
   it('uses the homepage rating treatment with verified US store snapshots', () => {
-    const { container } = render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
+    const { container } = render(<DownloadOptions variant={0} onCycle={vi.fn()} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     expect(container.querySelectorAll('.one-store-download .store-rating')).toHaveLength(2)
     expect(container.querySelectorAll('.store-stars[aria-hidden="true"]')).toHaveLength(2)
     expect(screen.getByLabelText('4.9 stars from 1,006 App Store ratings in the US')).toBeTruthy()
@@ -178,14 +178,14 @@ describe('hidden preview downloads', () => {
     expect(screen.getByText('3.1k+ reviews')).toBeTruthy()
   })
 
-  it('compares rainbow and white Apple artwork without adding a dropdown', () => {
+  it('compares rainbow and white Apple artwork without adding a badge picker', () => {
     device('iPhone')
     const cycle = vi.fn()
-    const { container, rerender } = render(<DownloadOptions variant={0} onCycle={cycle} />)
+    const { container, rerender } = render(<DownloadOptions variant={0} onCycle={cycle} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/macos-rainbow.svg')
     fireEvent.click(screen.getByRole('group', { name: /Apple badge/ }))
     expect(cycle).toHaveBeenCalledWith(1)
-    rerender(<DownloadOptions variant={1} onCycle={cycle} />)
+    rerender(<DownloadOptions variant={1} onCycle={cycle} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/macos.svg')
     expect(container.querySelector('[aria-expanded], .one-platform-popover')).toBeNull()
     expect(screen.getAllByRole('button')).toHaveLength(1)
@@ -193,10 +193,10 @@ describe('hidden preview downloads', () => {
 
   it('keeps the Windows mark and direct download in both Apple variants', async () => {
     device('Windows NT 10.0')
-    const { container, rerender } = render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
+    const { container, rerender } = render(<DownloadOptions variant={0} onCycle={vi.fn()} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     await waitFor(() => expect(screen.getByRole('link', { name: 'Download Happy for Windows' }).getAttribute('href')).toBe(`${RELEASES}/Happy-0.0.85-x64.exe`))
     expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/windows.svg')
-    rerender(<DownloadOptions variant={1} onCycle={vi.fn()} />)
+    rerender(<DownloadOptions variant={1} onCycle={vi.fn()} macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/windows.svg')
     expect(screen.queryByRole('button')).toBeNull()
   })

@@ -1,9 +1,17 @@
-export type DesktopDownloads = Readonly<{ macos: string; windows: string; linux: string }>
+export type MacArchitecture = 'arm64' | 'x64'
+export type DesktopDownloads = Readonly<{
+  macos: Readonly<{ arm64: string; x64: string }>
+  windows: string
+  linux: string
+}>
 
 // Verified production assets remain usable if GitHub is unavailable/rate-limited.
 const VERIFIED_RELEASE = 'https://github.com/slopus/happy-desktop/releases/download/v0.0.85'
 export const verifiedDesktopDownloads: DesktopDownloads = {
-  macos: `${VERIFIED_RELEASE}/Happy-0.0.85-arm64.dmg`,
+  macos: {
+    arm64: `${VERIFIED_RELEASE}/Happy-0.0.85-arm64.dmg`,
+    x64: `${VERIFIED_RELEASE}/Happy-0.0.85-x64.dmg`,
+  },
   windows: `${VERIFIED_RELEASE}/Happy-0.0.85-x64.exe`,
   linux: `${VERIFIED_RELEASE}/Happy-0.0.85-x64.AppImage`,
 }
@@ -25,10 +33,11 @@ function productionDownloads(value: unknown): DesktopDownloads | null {
     || typeof release.tag_name !== 'string' || !/^v\d+\.\d+\.\d+$/.test(release.tag_name)
     || !Array.isArray(release.assets)) return null
   const version = release.tag_name.slice(1)
-  const macos = assetUrl(release.assets, release.tag_name, `Happy-${version}-arm64.dmg`)
+  const arm64 = assetUrl(release.assets, release.tag_name, `Happy-${version}-arm64.dmg`)
+  const x64 = assetUrl(release.assets, release.tag_name, `Happy-${version}-x64.dmg`)
   const windows = assetUrl(release.assets, release.tag_name, `Happy-${version}-x64.exe`)
   const linux = assetUrl(release.assets, release.tag_name, `Happy-${version}-x64.AppImage`)
-  return macos && windows && linux ? { macos, windows, linux } : null
+  return arm64 && x64 && windows && linux ? { macos: { arm64, x64 }, windows, linux } : null
 }
 
 let request: Promise<DesktopDownloads> | undefined

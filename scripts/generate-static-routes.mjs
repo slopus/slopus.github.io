@@ -70,6 +70,7 @@ function htmlForPage({
   socialDescription = description,
   twitterDescription = socialDescription,
   robots = 'index, follow',
+  socialImage,
 }) {
   const canonicalUrl = new URL(canonicalPath, siteUrl).toString()
   let html = baseHtml
@@ -87,6 +88,15 @@ function htmlForPage({
   html = replaceMeta(html, 'property', 'og:description', socialDescription)
   html = replaceMeta(html, 'name', 'twitter:title', socialTitle)
   html = replaceMeta(html, 'name', 'twitter:description', twitterDescription)
+  if (socialImage) {
+    const imageUrl = new URL(socialImage.path, siteUrl).toString()
+    html = replaceMeta(html, 'property', 'og:image', imageUrl)
+    html = replaceMeta(html, 'property', 'og:image:width', String(socialImage.width))
+    html = replaceMeta(html, 'property', 'og:image:height', String(socialImage.height))
+    html = replaceMeta(html, 'property', 'og:image:alt', socialImage.alt)
+    html = replaceMeta(html, 'name', 'twitter:image', imageUrl)
+    html = replaceMeta(html, 'name', 'twitter:image:alt', socialImage.alt)
+  }
   return html
 }
 
@@ -150,6 +160,10 @@ await writeRoute('tmp/happy-one', htmlForPage({
   description: 'Multi-provider and natively multiplayer. Use your current subscriptions. Open source under MIT, with an end-to-end encrypted mobile app.',
   canonicalPath: '/tmp/happy-one/',
   robots: 'noindex, nofollow',
+  socialImage: {
+    path: '/og/happy-harness-v22.png', width: 1200, height: 630,
+    alt: 'Happy Harness model picker and paired phone, with Free and open source and 23.8k GitHub stars.',
+  },
 }))
 
 // The Buzz comparison moved into the Happy Desktop section; keep the announced URL resolving.

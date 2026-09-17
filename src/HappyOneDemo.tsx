@@ -3,7 +3,7 @@ import { HappyOnePhone } from './HappyOnePhone'
 import { happyOneDemoMediaSelect } from './happyOneDemoMedia'
 import './happy-one-demo.css'
 
-const MEDIA = '/video/happy-one/v21'
+const MEDIA = '/video/happy-one/v22'
 // v21-r2 recording cues on the common 60fps desktop/phone master clock.
 const PHONE_ENTER = 2087 / 60
 const PHONE_EXIT = 2974 / 60
@@ -14,20 +14,12 @@ function dataConnection() {
 }
 
 /**
- * macOS traffic lights where the recorded header shows the browser-mode logo,
- * on a patch of the header's own colour, in the app's CSS pixels. Decorative,
- * not controls, and transparent to the pointer so the video's own controls work.
- */
-function MacWindowLights() {
-  return <div className="one-demo-lights" aria-hidden="true"><span /><span /><span /></div>
-}
-
-/**
  * The recorded Mac window with the browser's own video controls, and the phone
  * that follows it. The desktop movie is the clock: its play, pause, seek, and
- * rate drive the phone movie, so scrubbing keeps the pair on one clock. The
- * player itself only starts the movie once it is in view and pauses it while
- * it is not; every other decision is the visitor's, through the controls.
+ * rate drive the phone movie, so scrubbing keeps the pair on one clock.
+ * Autoplay starts without browser chrome covering the opening. Deliberate
+ * pointer/keyboard interaction reveals the ordinary native controls; reduced
+ * motion, blocked autoplay, and the ending also make them available.
  */
 export function HappyOneDemo() {
   const stage = useRef<HTMLElement>(null)
@@ -35,6 +27,7 @@ export function HappyOneDemo() {
   const phone = useRef<HTMLVideoElement>(null)
   const [phoneFocused, setPhoneFocused] = useState(false)
   const [error, setError] = useState(false)
+  const [controlsEnabled, setControlsEnabled] = useState(false)
 
   useEffect(() => {
     const main = desktop.current!
@@ -42,6 +35,7 @@ export function HappyOneDemo() {
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
     const connection = dataConnection()
     let autoplay = !reducedMotion.matches && !connection?.saveData
+    if (!autoplay) setControlsEnabled(true)
     let visible = false
     let loaded = false
     let disposed = false
@@ -80,10 +74,11 @@ export function HappyOneDemo() {
     const start = () => {
       if (!autoplay || !visible || document.hidden || main.readyState < 3 || companion.readyState < 3) return
       autoplay = false
-      void main.play().catch(() => undefined)
+      void main.play().catch(() => { if (!disposed) setControlsEnabled(true) })
     }
     const onPlay = () => { align(true); companion.playbackRate = main.playbackRate; follow() }
     const onPause = () => companion.pause()
+    const onEnded = () => { companion.pause(); setControlsEnabled(true) }
     const onSeeking = () => { companion.pause(); align(true); focus() }
     const onRate = () => { companion.playbackRate = main.playbackRate }
     const onTime = () => { focus(); align() }
@@ -96,7 +91,7 @@ export function HappyOneDemo() {
         if (visible) void main.play().catch(() => undefined)
       } else start()
     }
-    const onMotion = () => { if (reducedMotion.matches || connection?.saveData) { autoplay = false; main.pause() } }
+    const onMotion = () => { if (reducedMotion.matches || connection?.saveData) { autoplay = false; main.pause(); setControlsEnabled(true) } }
     main.addEventListener('play', onPlay)
     main.addEventListener('playing', follow)
     main.addEventListener('pause', onPause)
@@ -104,7 +99,7 @@ export function HappyOneDemo() {
     main.addEventListener('seeking', onSeeking)
     main.addEventListener('seeked', follow)
     main.addEventListener('ratechange', onRate)
-    main.addEventListener('ended', onPause)
+    main.addEventListener('ended', onEnded)
     main.addEventListener('timeupdate', onTime)
     main.addEventListener('canplay', start)
     companion.addEventListener('canplay', start)
@@ -139,7 +134,7 @@ export function HappyOneDemo() {
       main.removeEventListener('seeking', onSeeking)
       main.removeEventListener('seeked', follow)
       main.removeEventListener('ratechange', onRate)
-      main.removeEventListener('ended', onPause)
+      main.removeEventListener('ended', onEnded)
       main.removeEventListener('timeupdate', onTime)
       main.removeEventListener('canplay', start)
       companion.removeEventListener('canplay', start)
@@ -161,10 +156,11 @@ export function HappyOneDemo() {
         <div className="one-demo-desktop">
           <div className="one-demo-window">
             <video ref={desktop} poster={`${MEDIA}/desktop-poster.webp`} width="1950" height="1660"
-              controls muted playsInline preload="none" disablePictureInPicture
+              controls={controlsEnabled} muted playsInline preload="none" disablePictureInPicture tabIndex={0}
+              onPointerMove={event => { if (event.pointerType === 'mouse') setControlsEnabled(true) }}
+              onPointerDown={() => setControlsEnabled(true)} onFocus={() => setControlsEnabled(true)}
               controlsList="nodownload noremoteplayback"
               aria-label="Switch from Astra to Fable, edit the waveform, spawn Astra, then Steve ships it from iPhone" />
-            <MacWindowLights />
           </div>
         </div>
         <HappyOnePhone video={phone} />

@@ -2,13 +2,19 @@ import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type 
 import { AppStoreButton, GooglePlayButton } from './StoreButtons'
 import { MOBILE_STORE_RATINGS } from './storeRatings'
 import { CopyIcon } from './CopyIcon'
-import { latestDesktopDownloads, type DesktopDownloads } from './desktopDownloads'
+import { GithubMark } from './SiteChrome'
+import { latestDesktopDownloads, type DesktopDownloads, type MacArchitecture } from './desktopDownloads'
 
 const BREW = 'brew install --cask slopus/tap/happy'
 const DESKTOP_PLATFORMS = ['macos', 'windows', 'linux'] as const
 const LABELS = { macos: 'macOS', windows: 'Windows', linux: 'Linux', desktop: 'Desktop' }
 
-export type DownloadOptionsProps = { variant: number; onCycle: (direction: number) => void }
+export type DownloadOptionsProps = {
+  variant: number
+  onCycle: (direction: number) => void
+  macArchitecture: MacArchitecture
+  onMacArchitectureChange: (architecture: MacArchitecture) => void
+}
 type DesktopPlatform = 'desktop' | 'macos' | 'windows' | 'linux'
 
 function desktopPlatform(): DesktopPlatform {
@@ -29,8 +35,12 @@ function DownloadBadge({ platform, variant }: { platform: Exclude<DesktopPlatfor
   )
 }
 
-function DesktopDownloadLink({ platform, downloads, className, children }: {
-  platform: Exclude<DesktopPlatform, 'desktop'>; downloads: DesktopDownloads | null; className?: string; children: ReactNode
+function desktopDownloadUrl(downloads: DesktopDownloads, platform: Exclude<DesktopPlatform, 'desktop'>, architecture: MacArchitecture) {
+  return platform === 'macos' ? downloads.macos[architecture] : downloads[platform]
+}
+
+function DesktopDownloadLink({ platform, macArchitecture, downloads, className, children }: {
+  platform: Exclude<DesktopPlatform, 'desktop'>; macArchitecture: MacArchitecture; downloads: DesktopDownloads | null; className?: string; children: ReactNode
 }) {
   const [checking, setChecking] = useState(false)
   const [message, setMessage] = useState('')
@@ -49,15 +59,18 @@ function DesktopDownloadLink({ platform, downloads, className, children }: {
     if (destination) destination.opener = null
     setChecking(true)
     setMessage('Checking the latest download…')
+    // Capture this click's choice even if the shared selector changes while waiting.
+    const requestedArchitecture = macArchitecture
     void latestDesktopDownloads().then(value => {
+      const url = desktopDownloadUrl(value, platform, requestedArchitecture)
       if (destination) {
-        if (!destination.closed) destination.location.replace(value[platform])
-      } else if (link.isConnected) window.location.assign(value[platform])
+        if (!destination.closed) destination.location.replace(url)
+      } else if (link.isConnected) window.location.assign(url)
       setChecking(false)
       setMessage('')
     })
   }
-  return <a className={className} href={downloads?.[platform]} role="link" tabIndex={0}
+  return <a className={className} href={downloads ? desktopDownloadUrl(downloads, platform, macArchitecture) : undefined} role="link" tabIndex={0}
     aria-label={`Download Happy for ${LABELS[platform]}`} aria-busy={checking || undefined}
     onClick={start} onAuxClick={start}
     onKeyDown={event => {
@@ -68,14 +81,15 @@ function DesktopDownloadLink({ platform, downloads, className, children }: {
   </a>
 }
 
-function PlatformLinks({ current, downloads }: { current: Exclude<DesktopPlatform, 'desktop'>; downloads: DesktopDownloads | null }) {
+function PlatformLinks({ current, downloads, macArchitecture }: { current: Exclude<DesktopPlatform, 'desktop'>; downloads: DesktopDownloads | null; macArchitecture: MacArchitecture }) {
   return (
     <div className="one-platform-links" aria-label="Desktop platforms">
-      {DESKTOP_PLATFORMS.filter(platform => platform !== current).map(platform => <DesktopDownloadLink key={platform} platform={platform} downloads={downloads}>
+      {DESKTOP_PLATFORMS.filter(platform => platform !== current).map(platform => <DesktopDownloadLink key={platform} platform={platform} downloads={downloads} macArchitecture={macArchitecture}>
         {platform !== 'macos' && <span className="one-platform-icon" data-platform={platform} aria-hidden="true"
           style={{ '--platform-icon': `url('/img/happy-one/icons/${platform}.svg')` } as CSSProperties} />}
         {LABELS[platform]}
       </DesktopDownloadLink>)}
+      <a href="https://github.com/slopus/happy-desktop/releases"><GithubMark />All Releases</a>
     </div>
   )
 }
@@ -156,7 +170,7 @@ function HomebrewCommand() {
   )
 }
 
-export function DownloadOptions({ variant, onCycle }: DownloadOptionsProps) {
+export function DownloadOptions({ variant, onCycle, macArchitecture, onMacArchitectureChange }: DownloadOptionsProps) {
   const [downloads, setDownloads] = useState<DesktopDownloads | null>(null)
   useEffect(() => {
     let active = true
@@ -179,7 +193,7 @@ export function DownloadOptions({ variant, onCycle }: DownloadOptionsProps) {
       aria-label={`Desktop and mobile downloads. Apple badge ${variant === 0 ? 'rainbow' : 'white'}, ${variant + 1} of 2. Use left or right arrow keys to compare.`}
       tabIndex={0}
       onClick={event => {
-        if (event.target instanceof Element && event.target.closest('a, button, .one-brew-command')) return
+        if (event.target instanceof Element && event.target.closest('a, button, select, .one-brew-command')) return
         if (window.getSelection()?.toString()) return
         onCycle(1)
       }}
@@ -192,11 +206,18 @@ export function DownloadOptions({ variant, onCycle }: DownloadOptionsProps) {
       }}
     >
       <div className="one-desktop-downloads">
-        <DesktopDownloadLink className="store-button one-desktop-button" platform={primaryPlatform} downloads={downloads}>
-          <DownloadBadge platform={primaryPlatform} variant={variant} />
-        </DesktopDownloadLink>
+        <div className="one-primary-download">
+          <DesktopDownloadLink className="store-button one-desktop-button" platform={primaryPlatform} downloads={downloads} macArchitecture={macArchitecture}>
+            <DownloadBadge platform={primaryPlatform} variant={variant} />
+          </DesktopDownloadLink>
+          {primaryPlatform === 'macos' && <select className="one-mac-architecture" aria-label="Mac architecture" value={macArchitecture}
+            onChange={event => { if (event.target.value === 'arm64' || event.target.value === 'x64') onMacArchitectureChange(event.target.value) }}>
+            <option value="arm64">Apple Silicon</option>
+            <option value="x64">Intel</option>
+          </select>}
+        </div>
         {showBrew && <HomebrewCommand />}
-        <PlatformLinks current={primaryPlatform} downloads={downloads} />
+        <PlatformLinks current={primaryPlatform} downloads={downloads} macArchitecture={macArchitecture} />
       </div>
       <div className="one-mobile-downloads">
         <div className="one-store-download"><AppStoreButton /><StoreRating store="appStore" /></div>

@@ -1,12 +1,15 @@
 import { useState, type CSSProperties } from 'react'
-import { GITHUB_HAPPY2, GithubMark, SiteFooter, Wordmark } from './SiteChrome'
+import { GITHUB_HAPPY, GithubMark, SiteFooter, Wordmark } from './SiteChrome'
 import { PageScrollbar } from './PageScrollbar'
 import { FeatureSurprise, useFeatureSurprise } from './FeatureSurprise'
 import { HAPPY } from './products'
 import { KIRILL, STEVE } from './Team'
 import { HappyOneDemo } from './HappyOneDemo'
 import { DownloadOptions, type DownloadOptionsProps } from './DownloadOptions'
+import type { MacArchitecture } from './desktopDownloads'
+import { HAPPY_ONE_GITHUB_STARS } from './happyOneGithubStars'
 import './happy-one.css'
+import './happy-one-preview.css'
 
 const PAGE = '/tmp/happy-one/'
 const product = { ...HAPPY, home: PAGE }
@@ -116,10 +119,12 @@ function Downloads(props: DownloadOptionsProps) {
 }
 
 export default function HappyOneApp() {
+  const ogPreview = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('preview') === 'og'
   const [downloadVariant, setDownloadVariant] = useState(0)
+  const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   const cycleDownloadVariant = (direction: number) => setDownloadVariant(current => (current + direction + 2) % 2)
   return (
-    <div className="site-shell happy-one">
+    <div className="site-shell happy-one" data-social-preview={ogPreview ? '' : undefined}>
       <PageScrollbar />
       <div className="site-header-wrap">
         <header className="site-header page-width">
@@ -127,13 +132,13 @@ export default function HappyOneApp() {
           <nav aria-label="Primary navigation">
             <a
               className="nav-github"
-              href={GITHUB_HAPPY2}
+              href={GITHUB_HAPPY}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Happy on GitHub"
+              aria-label={`Happy on GitHub, ${HAPPY_ONE_GITHUB_STARS.count.toLocaleString('en-US')} stars`}
             >
               <GithubMark />
-              <span>GitHub</span>
+              <span className="nav-github-count">{HAPPY_ONE_GITHUB_STARS.compact}</span>
             </a>
           </nav>
         </header>
@@ -142,13 +147,16 @@ export default function HappyOneApp() {
         <section className="one-hero page-width" aria-labelledby="one-heading">
           <h1 id="one-heading">Any model. Your team.<br /><em>Happy Harness.</em></h1>
           <p className="one-hero-note">Free and open source</p>
+          {ogPreview && <a className="one-social-stars" href={GITHUB_HAPPY}>
+            <GithubMark /><span>GitHub · {HAPPY_ONE_GITHUB_STARS.compact} stars</span>
+          </a>}
           <HappyOneDemo />
-          <DownloadOptions variant={downloadVariant} onCycle={cycleDownloadVariant} />
+          <DownloadOptions variant={downloadVariant} onCycle={cycleDownloadVariant} macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
         </section>
         <Features />
         <Terminal />
         <ExistingUsers />
-        <Downloads variant={downloadVariant} onCycle={cycleDownloadVariant} />
+        <Downloads variant={downloadVariant} onCycle={cycleDownloadVariant} macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
       </main>
       <SiteFooter product={product} additionalLinks={
         <a href="/video/happy-one/device/CREDITS.txt" target="_blank" rel="noopener noreferrer">Credits</a>

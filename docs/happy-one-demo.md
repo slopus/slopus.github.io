@@ -1,25 +1,58 @@
 # Happy One synchronized demo
 
-## Current take: v21-r2
+## Current export: v22, from take v21-r2
 
 Only `/tmp/happy-one/` uses this player. Active assets are in
-`public/video/happy-one/v21/`, from the desktop workspace's
+`public/video/happy-one/v22/`, from the desktop workspace's
 `scripts/demo/demos/core/artifacts/v21-r2/`. The master contains 3,867 frames at
 60fps, lasting 64.450000 seconds. All six copied exports have verified checksums.
 The 30fps pair contains 1,934 frames (64.466667s): the
 odd master frame count adds only a final 1/60-second quantization interval,
-with no cue shift or retiming. The previous v20 assets remain available.
-Dimensions, encoding, native controls, source selection, device artwork, screen
+with no cue shift or retiming. The previous v21 and v20 assets remain available.
+Dimensions, encoding, source selection, device artwork, screen
 bleed, and the unchanged brew command retain the v19 treatment documented below.
 
+The macOS traffic lights are now pixels in both desktop movies and the poster,
+not a webpage overlay. The retained 1950×1660 composed JPEG frames were encoded
+directly (no extra compressed-video generation), replacing only the logo area
+of the sidebar header: a 300×140px #1e1e1e patch at (0,0), with 30px circles
+centered at (50,70), (100,70), and (150,70). Their fills are #ff5f57, #febc2e,
+and #28c840 with a subtle inset dark edge. Encoding retains CRF18, limited-range
+BT.709, sRGB transfer, fast-start, the original audio, and all 3,867 frames.
+The phone master is unchanged. No Electron host or production app code changed.
+
 The desktop and macOS download remain centered independently of the phone.
-The parked phone is unchanged: width 28% of the stage, beyond the desktop's
-right edge by a 6–12px gap. Focus still enlarges it to 1.18×, but now translates
+The desktop width changes in deliberate steps: 80% of the viewport at 700px
+and below, 80% of the stage at 701–1024px, and the original 70% of the stage
+above 1024px. At 390px, the recorded app is now 312px wide instead of 245px.
+The phone retains its 28%-of-stage size. On small screens its parked position
+keeps at least 40% visible, enough for the full avatars and roughly the first
+title word. This can overlap the desktop bezel by a few pixels. Above 700px,
+it parks beyond the desktop's right edge by a 6–12px gap.
+Focus still enlarges it to 1.18×, but now translates
 left only by the amount needed to keep its right viewport margin at least that
 same gap. On wide screens where it already fits, translation is zero. Focused
 overlap with the desktop is intentional; the desktop itself never moves.
 App Store and Google Play form one centered row below macOS installation
 controls, remaining a vertical stack at widths of 480px or less.
+
+Autoplay begins with native controls disabled so Safari's opening playback
+panel cannot obscure the recording. Mouse movement, touch/pointer-down, or
+keyboard focus enables the ordinary browser controls without remounting the
+video. Reduced motion, save-data, rejected autoplay, and the ending also expose
+controls. No browser sniffing, custom transport bar, or shadow-DOM styling is
+used. The v21 recording content and focus cues are unchanged apart from the
+baked desktop window buttons.
+
+This player follow-up was inspected offline in Chromium, Firefox, and WebKit:
+actual autoplay at 390px and 1440px had both videos playing with controls absent;
+touch/hover and keyboard focus revealed native controls. Reduced-motion loads
+stayed paused with controls available. Geometry at 320, 390, 700, 701, 1024,
+1025, 1440, and 1920px retained the desktop/download center and no horizontal
+overflow. Mobile parked-phone visibility was 40%; the focused phone remained
+fully visible with its minimum right margin. Existing 47 tests and the
+production build pass. These are WebKit-engine checks, not a physical iPhone
+Safari run. Earlier v21/v19 observations below describe their recorded revisions.
 
 The authoritative focus interval is 2087/60–2974/60 seconds
 (34.783333–49.566667). Astra's real child completes at 3126/60 (52.100000s),
@@ -57,13 +90,20 @@ one font cap height, with provenance in `public/img/happy-one/icons/CREDITS.txt`
 
 Both download groups share one cached public GitHub latest-release lookup per
 page. The boundary accepts only non-draft, non-prerelease stable version tags
-and exact production asset names/URLs; macOS uses ARM64 DMG, Windows x64 EXE,
+and exact production asset names/URLs; macOS offers ARM64 or x64 DMG, Windows x64 EXE,
 and Linux x64 AppImage. Verified v0.0.85 direct installers remain the fallback
 when lookup fails. Detected Windows/Linux use their primary badge without
 Homebrew; macOS, mobile, and unknown clients default to macOS plus Homebrew.
 Offline Chromium verified all platform choices, a mocked future production
 release, one request shared by hero/footer, API failure, preview rejection,
 and untrusted asset URL rejection. All links remain direct installers.
+
+A compact native Apple Silicon / Intel text selector sits 4px below the macOS
+badge, matching the secondary download font. It defaults to Apple Silicon;
+browser architecture inference is not used. Hero and footer share the choice,
+and an early click retains its selected architecture while awaiting lookup.
+The badge keeps its size and center. The secondary row ends with the existing
+GitHub mark and “All Releases”, linking to the desktop repository's releases.
 
 An early click waits for that shared lookup and starts the download once it
 settles; repeated clicks on that link while waiting do not queue duplicate downloads.
@@ -74,6 +114,51 @@ Offline Chromium inspection confirmed no installer request before resolution,
 one download after repeated early clicks, primary and secondary links, keyboard
 activation, middle/modifier new-tab activation, API failure, and timeout. The
 existing 47 tests and production build pass.
+
+## Regenerating the social preview
+
+This is an agent-run screenshot recipe, not a production script. The ordinary
+page keeps its existing title and description. Only `/tmp/happy-one/` uses
+`/og/happy-harness-v22.png`; all other routes retain their previous images.
+
+1. Read the current public `https://api.github.com/repos/slopus/happy` response.
+   Update the dated snapshot in `src/happyOneGithubStars.ts` using
+   `stargazers_count` (23,810 / 23.8k on 2026-09-17). The header and screenshot
+   both link to the **original** `https://github.com/slopus/happy` repository.
+   Download “All Releases” deliberately still links to `happy-desktop`.
+2. Build the website. Open `/tmp/happy-one/?preview=og` in Chromium at
+   **1200×630 CSS pixels**, device scale factor **2**, with reduced motion
+   enabled. Use the registered workspace preview service; if that environment
+   cannot start one, fulfill browser requests directly from the built `dist/`
+   files without opening a listener. Do not change or restart the product app.
+3. The explicit `preview=og` flag mounts the GitHub/stars line and selects the
+   fixed social-card composition in `src/happy-one-preview.css`. Without the
+   flag, the extra hero line is not mounted and the normal layout is unchanged.
+   Wait for **Space Grotesk** and **DM Sans** to load from the existing Google
+   Fonts stylesheet, plus the phone artwork and both videos. Do not capture
+   fallback fonts, posters, loading indicators, or browser playback controls.
+4. Freeze both `.one-demo video` elements at **7.5 seconds** of the v22 assets:
+   pause them, set `controls = false`, and set `currentTime = 7.5`. The desktop
+   model list is open with Fable hovered; the phone shows its real bot list.
+   Remove `data-phone-focus` from `.one-demo-stage`. Wait until both videos are
+   paused, not seeking, decode-ready, and within 0.01 seconds of the target;
+   then wait two animation frames. Keep the pointer away from the video.
+5. Capture the full 1200×630 viewport at 2× (2400×1260 bitmap), then downsample
+   once to **1200×630 PNG**. Save a new versioned filename under `public/og/`
+   rather than overwriting a cached social image. Inspect it personally: full
+   headline, “Free and open source”, GitHub count, model list, both bots,
+   baked-in Mac buttons, and phone must be visible, with no playback chrome.
+6. Point both `src/siteMetadata.ts` and `scripts/generate-static-routes.mjs` at
+   the new image, keeping the existing title/description and `noindex, nofollow`.
+   Set matching width/height and descriptive alt text. Rebuild and inspect the
+   generated `dist/tmp/happy-one/index.html`: crawlers must get correct Open
+   Graph and Twitter image tags without running JavaScript. Check that normal
+   navigation restores other routes' image metadata.
+7. Verify the ordinary page still has no `.one-social-stars`, and the header
+   repository/count, centered downloads, phone layout, and playback still work.
+   Publish only when requested. After deployment, verify the live HTML and the
+   image URL; messaging apps may keep a previously cached preview until they
+   re-fetch the page.
 
 ## Previous verified take: v19-r3
 
