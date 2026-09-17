@@ -33,12 +33,23 @@ function productionDownloads(value: unknown): DesktopDownloads | null {
 
 let request: Promise<DesktopDownloads> | undefined
 
+async function resolveDesktopDownloads(): Promise<DesktopDownloads> {
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 5000)
+  try {
+    const response = await fetch('https://api.github.com/repos/slopus/happy-desktop/releases/latest', {
+      credentials: 'omit', headers: { Accept: 'application/vnd.github+json' }, signal: controller.signal,
+    })
+    return (response.ok ? productionDownloads(await response.json()) : null) ?? verifiedDesktopDownloads
+  } catch {
+    return verifiedDesktopDownloads
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
 // The hero and footer share one public, unauthenticated lookup per page lifetime.
 export function latestDesktopDownloads(): Promise<DesktopDownloads> {
-  request ??= fetch('https://api.github.com/repos/slopus/happy-desktop/releases/latest', {
-    credentials: 'omit', headers: { Accept: 'application/vnd.github+json' },
-  }).then(async response => response.ok ? productionDownloads(await response.json()) : null)
-    .then(downloads => downloads ?? verifiedDesktopDownloads)
-    .catch(() => verifiedDesktopDownloads)
+  request ??= resolveDesktopDownloads()
   return request
 }

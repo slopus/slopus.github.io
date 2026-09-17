@@ -65,6 +65,16 @@ Offline Chromium verified all platform choices, a mocked future production
 release, one request shared by hero/footer, API failure, preview rejection,
 and untrusted asset URL rejection. All links remain direct installers.
 
+An early click waits for that shared lookup and starts the download once it
+settles; repeated clicks on that link while waiting do not queue duplicate downloads.
+Pending links have no stale installer href. Keyboard activation and middle/
+modifier clicks wait as well; a separate tab is reserved during the user
+gesture. A five-second timeout resolves to the verified fallback.
+Offline Chromium inspection confirmed no installer request before resolution,
+one download after repeated early clicks, primary and secondary links, keyboard
+activation, middle/modifier new-tab activation, API failure, and timeout. The
+existing 47 tests and production build pass.
+
 ## Previous verified take: v19-r3
 
 The following is the preserved v19 record, not the current focused-phone

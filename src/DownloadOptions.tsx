@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react'
 import { AppStoreButton, GooglePlayButton } from './StoreButtons'
 import { MOBILE_STORE_RATINGS } from './storeRatings'
 import { CopyIcon } from './CopyIcon'
-import { latestDesktopDownloads, verifiedDesktopDownloads, type DesktopDownloads } from './desktopDownloads'
+import { latestDesktopDownloads, type DesktopDownloads } from './desktopDownloads'
 
 const BREW = 'brew install --cask slopus/tap/happy'
 const DESKTOP_PLATFORMS = ['macos', 'windows', 'linux'] as const
@@ -29,14 +29,53 @@ function DownloadBadge({ platform, variant }: { platform: Exclude<DesktopPlatfor
   )
 }
 
-function PlatformLinks({ current, downloads }: { current: Exclude<DesktopPlatform, 'desktop'>; downloads: DesktopDownloads }) {
+function DesktopDownloadLink({ platform, downloads, className, children }: {
+  platform: Exclude<DesktopPlatform, 'desktop'>; downloads: DesktopDownloads | null; className?: string; children: ReactNode
+}) {
+  const [checking, setChecking] = useState(false)
+  const [message, setMessage] = useState('')
+  const start = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (event.defaultPrevented || downloads || event.button > 1) return
+    event.preventDefault()
+    if (checking) return
+    const link = event.currentTarget
+    const separateWindow = event.button === 1 || event.metaKey || event.ctrlKey || event.shiftKey
+    // Reserve the tab during the user gesture; opening it after await can be blocked.
+    const destination = separateWindow ? window.open('about:blank', '_blank') : null
+    if (separateWindow && !destination) {
+      setMessage('Allow pop-ups, or use a normal click to download.')
+      return
+    }
+    if (destination) destination.opener = null
+    setChecking(true)
+    setMessage('Checking the latest download…')
+    void latestDesktopDownloads().then(value => {
+      if (destination) {
+        if (!destination.closed) destination.location.replace(value[platform])
+      } else if (link.isConnected) window.location.assign(value[platform])
+      setChecking(false)
+      setMessage('')
+    })
+  }
+  return <a className={className} href={downloads?.[platform]} role="link" tabIndex={0}
+    aria-label={`Download Happy for ${LABELS[platform]}`} aria-busy={checking || undefined}
+    onClick={start} onAuxClick={start}
+    onKeyDown={event => {
+      if (!downloads && event.key === 'Enter') { event.preventDefault(); event.currentTarget.click() }
+    }}>
+    {children}
+    {message && <span className="one-download-sr" role="status">{message}</span>}
+  </a>
+}
+
+function PlatformLinks({ current, downloads }: { current: Exclude<DesktopPlatform, 'desktop'>; downloads: DesktopDownloads | null }) {
   return (
     <div className="one-platform-links" aria-label="Desktop platforms">
-      {DESKTOP_PLATFORMS.filter(platform => platform !== current).map(platform => <a key={platform} href={downloads[platform]} aria-label={`Download Happy for ${LABELS[platform]}`}>
+      {DESKTOP_PLATFORMS.filter(platform => platform !== current).map(platform => <DesktopDownloadLink key={platform} platform={platform} downloads={downloads}>
         {platform !== 'macos' && <span className="one-platform-icon" data-platform={platform} aria-hidden="true"
           style={{ '--platform-icon': `url('/img/happy-one/icons/${platform}.svg')` } as CSSProperties} />}
         {LABELS[platform]}
-      </a>)}
+      </DesktopDownloadLink>)}
     </div>
   )
 }
@@ -118,7 +157,7 @@ function HomebrewCommand() {
 }
 
 export function DownloadOptions({ variant, onCycle }: DownloadOptionsProps) {
-  const [downloads, setDownloads] = useState(verifiedDesktopDownloads)
+  const [downloads, setDownloads] = useState<DesktopDownloads | null>(null)
   useEffect(() => {
     let active = true
     void latestDesktopDownloads().then(value => { if (active) setDownloads(value) })
@@ -153,9 +192,9 @@ export function DownloadOptions({ variant, onCycle }: DownloadOptionsProps) {
       }}
     >
       <div className="one-desktop-downloads">
-        <a className="store-button one-desktop-button" href={downloads[primaryPlatform]} aria-label={`Download Happy for ${LABELS[primaryPlatform]}`}>
+        <DesktopDownloadLink className="store-button one-desktop-button" platform={primaryPlatform} downloads={downloads}>
           <DownloadBadge platform={primaryPlatform} variant={variant} />
-        </a>
+        </DesktopDownloadLink>
         {showBrew && <HomebrewCommand />}
         <PlatformLinks current={primaryPlatform} downloads={downloads} />
       </div>

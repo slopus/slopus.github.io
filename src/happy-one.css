@@ -38,6 +38,8 @@
 .one-download-actions:focus-visible { outline: 2px solid #e6522c; outline-offset: 10px; border-radius: 8px; }
 .one-desktop-downloads, .one-mobile-downloads { display: flex; flex-direction: column; align-items: center; gap: .75rem; min-width: 0; }
 .one-desktop-downloads { max-width: 100%; }
+.one-desktop-downloads a { cursor: pointer; }
+.one-desktop-downloads a[aria-busy='true'] { cursor: progress; opacity: .7; }
 /* One centered mobile-badge row below the centered desktop installation controls. */
 .one-mobile-downloads { flex-direction: row; justify-content: center; align-items: flex-start; }
 @media (max-width: 480px) {

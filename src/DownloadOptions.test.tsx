@@ -47,10 +47,10 @@ describe('hidden preview downloads', () => {
     for (const os of ['macOS', 'Windows', 'Linux']) expect(screen.getByRole('link', { name: `Download Happy for ${os}` })).toBeTruthy()
   })
 
-  it.each([['Macintosh', 'macOS', 'Happy-0.0.85-arm64.dmg'], ['X11; Linux x86_64', 'Linux', 'Happy-0.0.85-x64.AppImage']])('uses the right desktop badge for %s', (ua, label, asset) => {
+  it.each([['Macintosh', 'macOS', 'Happy-0.0.85-arm64.dmg'], ['X11; Linux x86_64', 'Linux', 'Happy-0.0.85-x64.AppImage']])('uses the right desktop badge for %s', async (ua, label, asset) => {
     device(ua)
     render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
-    expect(screen.getByRole('link', { name: `Download Happy for ${label}` }).getAttribute('href')).toBe(`${RELEASES}/${asset}`)
+    await waitFor(() => expect(screen.getByRole('link', { name: `Download Happy for ${label}` }).getAttribute('href')).toBe(`${RELEASES}/${asset}`))
     expect(Boolean(screen.queryByText(BREW))).toBe(label === 'macOS')
   })
 
@@ -191,10 +191,10 @@ describe('hidden preview downloads', () => {
     expect(screen.getAllByRole('button')).toHaveLength(1)
   })
 
-  it('keeps the Windows mark and direct download in both Apple variants', () => {
+  it('keeps the Windows mark and direct download in both Apple variants', async () => {
     device('Windows NT 10.0')
     const { container, rerender } = render(<DownloadOptions variant={0} onCycle={vi.fn()} />)
-    expect(screen.getByRole('link', { name: 'Download Happy for Windows' }).getAttribute('href')).toBe(`${RELEASES}/Happy-0.0.85-x64.exe`)
+    await waitFor(() => expect(screen.getByRole('link', { name: 'Download Happy for Windows' }).getAttribute('href')).toBe(`${RELEASES}/Happy-0.0.85-x64.exe`))
     expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/windows.svg')
     rerender(<DownloadOptions variant={1} onCycle={vi.fn()} />)
     expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/windows.svg')
