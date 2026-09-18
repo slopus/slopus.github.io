@@ -24,12 +24,12 @@ export const homepageMetadata: PageMetadata = {
 }
 
 export const happyOneMetadata: PageMetadata = {
-  title: 'Any model. Your team. Happy Harness.',
+  title: 'Any Model. Your Team. Happy Harness.',
   description: 'Multi-provider and natively multiplayer. Use your current subscriptions. Open source under MIT, with an end-to-end encrypted mobile app.',
   canonicalPath: '/tmp/happy-one/',
   robots: 'noindex, nofollow',
   socialImage: {
-    path: '/og/happy-harness-v22.png', width: 1200, height: 630,
+    path: '/og/happy-harness-v23.png', width: 1200, height: 630,
     alt: 'Happy Harness model picker and paired phone, with Free and open source and 23.8k GitHub stars.',
   },
 }

@@ -118,8 +118,19 @@ existing 47 tests and production build pass.
 ## Regenerating the social preview
 
 This is an agent-run screenshot recipe, not a production script. The ordinary
-page keeps its existing title and description. Only `/tmp/happy-one/` uses
-`/og/happy-harness-v22.png`; all other routes retain their previous images.
+page uses the requested capitalization, “Any Model. Your Team. Happy Harness.”,
+and keeps its existing description. Only `/tmp/happy-one/` uses
+`/og/happy-harness-v23.png`; all other routes retain their previous images.
+
+The v23 card is a horizontal composition: the three-line headline, “Free and
+open source”, and GitHub stars on the left; the full desktop on the right;
+and only 40% of the parked phone peeking in from the right edge. At 1200×630,
+the desktop's visible layout box is 596×507.34375px at (512, 47.328125):
+49.666667% of image width and 39.997470% of image area. The phone's visible
+box is 80×401.421875px at (1120, 181.25): 6.666667% of image width and
+4.247851% of image area. These Chromium measurements exclude shadows and use
+layout rectangles, not alpha-weighted painted pixels. Firefox and WebKit
+match the widths exactly, with less than 0.03px height variation.
 
 1. Read the current public `https://api.github.com/repos/slopus/happy` response.
    Update the dated snapshot in `src/happyOneGithubStars.ts` using
@@ -134,6 +145,10 @@ page keeps its existing title and description. Only `/tmp/happy-one/` uses
 3. The explicit `preview=og` flag mounts the GitHub/stars line and selects the
    fixed social-card composition in `src/happy-one-preview.css`. Without the
    flag, the extra hero line is not mounted and the normal layout is unchanged.
+   Keep the headline on three lines: “Any Model.” / “Your Team.” / “Happy Harness”.
+   The copy starts at x=48px in a 440px column; a 24px gap separates it from
+   the 596px desktop. The 200px phone starts 12px after the desktop, leaving
+   80px visible. Do not stack the desktop below the headline in this mode.
    Wait for **Space Grotesk** and **DM Sans** to load from the existing Google
    Fonts stylesheet, plus the phone artwork and both videos. Do not capture
    fallback fonts, posters, loading indicators, or browser playback controls.
@@ -149,7 +164,8 @@ page keeps its existing title and description. Only `/tmp/happy-one/` uses
    headline, “Free and open source”, GitHub count, model list, both bots,
    baked-in Mac buttons, and phone must be visible, with no playback chrome.
 6. Point both `src/siteMetadata.ts` and `scripts/generate-static-routes.mjs` at
-   the new image, keeping the existing title/description and `noindex, nofollow`.
+   the new image, keeping the title capitalization above, the existing
+   description, and `noindex, nofollow`.
    Set matching width/height and descriptive alt text. Rebuild and inspect the
    generated `dist/tmp/happy-one/index.html`: crawlers must get correct Open
    Graph and Twitter image tags without running JavaScript. Check that normal

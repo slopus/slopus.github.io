@@ -145,11 +145,13 @@ export default function HappyOneApp() {
       </div>
       <main>
         <section className="one-hero page-width" aria-labelledby="one-heading">
-          <h1 id="one-heading">Any model. Your team.<br /><em>Happy Harness.</em></h1>
-          <p className="one-hero-note">Free and open source</p>
-          {ogPreview && <a className="one-social-stars" href={GITHUB_HAPPY}>
-            <GithubMark /><span>GitHub · {HAPPY_ONE_GITHUB_STARS.compact} stars</span>
-          </a>}
+          <div className="one-hero-copy">
+            <h1 id="one-heading"><span>Any Model.</span>{' '}<span>Your Team.</span><br /><em>Happy Harness{ogPreview ? '' : '.'}</em></h1>
+            <p className="one-hero-note">Free and open source</p>
+            {ogPreview && <a className="one-social-stars" href={GITHUB_HAPPY}>
+              <GithubMark /><span>GitHub · {HAPPY_ONE_GITHUB_STARS.compact} stars</span>
+            </a>}
+          </div>
           <HappyOneDemo />
           <DownloadOptions variant={downloadVariant} onCycle={cycleDownloadVariant} macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
         </section>
