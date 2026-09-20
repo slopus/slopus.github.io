@@ -1,0 +1,90 @@
+# Plugins, Skills & MCP
+
+| Surface | What it adds | Written as |
+| --- | --- | --- |
+| **Plugins** | MCP tools for every model, plus small local apps | A TypeScript process |
+| **Skills** | Instructions a model loads on demand | A `SKILL.md` file |
+| **MCP servers** | Tools from an external process or HTTP service | A `mcp.toml` entry |
+
+An agent inside Happy can write all three when asked.
+
+## Plugins
+
+Three files, no `package.json`, no build step:
+
+```text
+project-counter/
+├── happy.plugin.json
+├── icon.png
+└── index.ts
+```
+
+```json
+{
+    "name": "Project Counter",
+    "author": "Acme Tools",
+    "category": "developer-tools",
+    "description": "Reports how many projects Happy knows about.",
+    "main": "index.ts",
+    "icon": "icon.png"
+}
+```
+
+```ts
+import { defineMcpTool, happy, Type } from "happy-plugins";
+
+await happy.mcp.startServer({
+    name: "Catalog",
+    tools: [
+        defineMcpTool({
+            name: "list_projects",
+            description: "List every local Happy project.",
+            inputSchema: Type.Object({}, { additionalProperties: false }),
+            async execute() {
+                const projects = await happy.projects.list();
+                return { content: [{ type: "text", text: JSON.stringify(projects) }] };
+            },
+        }),
+    ],
+});
+await happy.ready("Ready.");
+await new Promise<void>(() => {});
+```
+
+Happy runs the entry point as a sandboxed process with the Node that runs Happy, connected back over a private socket it is handed at startup. The SDK covers projects, workspaces, sessions, messaging agents by ID, provider usage, MCP tools, and one or more local UI applications. Bundle any third-party dependency; only `happy-plugins` is provided.
+
+Runtime state goes to `~/Happy/Plugins/<name>` (macOS) or `~/happy/plugins/<name>` (Linux), and the process is confined to that folder. There is no per-capability permission model for plugins; what is enforced is the sandbox, the folder, the authenticated socket, and MCP review: plugin tools need Auto or Full access and every Auto call is reviewed.
+
+Installing validates and starts the plugin. An invalid plugin never replaces a working one. The installed set updates live.
+
+## Skills
+
+```markdown
+---
+name: release-notes
+description: Use when asked to draft release notes from merged pull requests.
+---
+
+# Release notes
+
+1. Collect merged PRs since the last tag.
+2. Group them by area.
+```
+
+Discovered in `~/.agents/skills`, `~/.codex/skills`, and `.agents/skills` from the project root down to the working directory; a project skill overrides a user skill of the same name. Names and descriptions go into the system prompt; the model reads the whole file when a task matches. Frontmatter asking for hooks, shell execution, or permission changes is ignored.
+
+## MCP servers
+
+`mcp.toml` in `~/Happy/Config` (macOS) or `~/happy/config` (Linux), or at a workspace root:
+
+```toml
+[mcp_servers.docs]
+command = "docs-mcp-server"
+args = ["--stdio"]
+
+[mcp_servers.remote_docs]
+url = "https://mcp.example.com/mcp"
+bearer_token_env_var = "MCP_BEARER_TOKEN"
+```
+
+Stdio for local processes, Streamable HTTP for remote services. Every model shares one catalog. MCP tools need Auto or Full access and every Auto call is reviewed. Servers listed in Codex or Claude Code configuration are not imported.

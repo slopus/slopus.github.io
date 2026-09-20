@@ -15,7 +15,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('happy2')).toHaveLength(8)
+    expect(documentsForProduct('desktop')).toHaveLength(15)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -37,7 +37,7 @@ describe('static document pages', () => {
     render(<Router pathname="/desktop/docs/how-it-works/" />)
 
     expect(screen.getByRole('heading', { level: 1, name: /how it works/i })).toBeTruthy()
-    expect(screen.getAllByRole('link', { name: 'Agents & Permissions' }).length).toBeGreaterThan(0)
+    expect(screen.getAllByRole('link', { name: 'Permissions & Sandbox' }).length).toBeGreaterThan(0)
   })
 
   it('keeps Happy and Happy Desktop documentation separate', () => {
@@ -54,6 +54,21 @@ describe('static document pages', () => {
     render(<Router pathname="/docs/comparisons/happy-2-vs-buzz" />)
 
     expect(screen.getByRole('heading', { level: 1, name: /happy desktop vs buzz/i })).toBeTruthy()
+  })
+
+  it('leaves the Buzz comparison out of navigation and the reading order', () => {
+    const { unmount } = render(<Router pathname="/desktop/docs/comparisons/buzz/" />)
+
+    expect(screen.getByRole('heading', { level: 1, name: /happy desktop vs buzz/i })).toBeTruthy()
+    expect(screen.queryByRole('link', { name: 'Happy Desktop vs Buzz' })).toBeNull()
+    expect(screen.queryByText('Comparisons', { selector: 'h2' })).toBeNull()
+    expect(screen.queryByRole('link', { name: /^previous/i })).toBeNull()
+    expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
+    unmount()
+
+    render(<Router pathname="/desktop/docs/guides/remote-agents/" />)
+    expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/configuration/i)
   })
 
   it('renders privacy and terms as site pages', () => {

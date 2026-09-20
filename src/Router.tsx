@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react'
 import App from './App'
-import Happy2App from './Happy2App'
-import HappyOneApp from './HappyOneApp'
+import DesktopApp from './DesktopApp'
 import { DocsPage, LegalPage, NotFoundPage } from './DocumentPages'
 import { getDocument, normalizeDocumentPath } from './documents'
-import { HAPPY2, productForPath } from './products'
+import { HAPPY_DESKTOP, productForPath } from './products'
 import {
   applyPageMetadata,
+  desktopMetadata,
   docsMetadataForProduct,
-  happy2Metadata,
-  happyOneMetadata,
   homepageMetadata,
   type PageMetadata,
 } from './siteMetadata'
 
-/** Pages that moved when Happy Desktop got its own section. Keep the old URLs working. */
+/** Pages that moved. Keep the old URLs working. */
 const movedPaths: Record<string, string> = {
   '/docs/comparisons/happy-2-vs-buzz': '/desktop/docs/comparisons/buzz',
+  // The harness page was reviewed unlisted before it became the Happy Desktop page.
+  '/tmp/happy-one': '/desktop',
 }
 
 /** Sections that moved wholesale. The old prefix keeps resolving, path and all. */
@@ -50,12 +50,8 @@ function metadataForPath(pathname: string): PageMetadata {
     return homepageMetadata
   }
 
-  if (normalizedPath === '/tmp/happy-one') {
-    return happyOneMetadata
-  }
-
-  if (normalizedPath === HAPPY2.home.replace(/\/$/, '')) {
-    return happy2Metadata
+  if (normalizedPath === HAPPY_DESKTOP.home.replace(/\/$/, '')) {
+    return desktopMetadata
   }
 
   const product = productForPath(normalizedPath)
@@ -108,15 +104,13 @@ export function Router({ pathname }: { pathname?: string }) {
   const normalizedPath = normalizedPathname(pathname ?? currentPathname)
 
   useEffect(() => {
-    if (normalizedPath === '/tmp/happy-one') {
-      applyPageMetadata(happyOneMetadata)
-    }
-  }, [normalizedPath])
-
-  useEffect(() => {
     if (controlled) {
       return
     }
+
+    // The served HTML carries the route's metadata in production; the dev server
+    // always serves the homepage document, so bring the head in line on mount.
+    applyPageMetadata(metadataForPath(window.location.pathname))
 
     // A moved URL should not linger in the address bar once we know where it went.
     const landed = window.location.pathname
@@ -190,12 +184,8 @@ export function Router({ pathname }: { pathname?: string }) {
     return <App />
   }
 
-  if (normalizedPath === '/tmp/happy-one') {
-    return <HappyOneApp />
-  }
-
   if (normalizedPath === '/desktop') {
-    return <Happy2App />
+    return <DesktopApp />
   }
 
   const product = productForPath(normalizedPath)

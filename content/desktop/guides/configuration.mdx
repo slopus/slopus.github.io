@@ -1,0 +1,82 @@
+# Configuration
+
+Two TOML files. Neither is required.
+
+| Scope | File |
+| --- | --- |
+| Machine | `~/Happy/Config/happy.toml` (macOS), `~/happy/config/happy.toml` (Linux) |
+| Repository | `happy.toml` at the repository root |
+
+The machine file is written with comments on first start and never overwritten. Your global `AGENTS.md` sits beside it. The repository file wins where it is allowed to; providers, Docker, and anything that exposes the machine are machine-only. Agents see the repository file read-only.
+
+MCP servers go in `mcp.toml` in the same two places. See [Plugins, Skills & MCP](/desktop/docs/extending/).
+
+## Defaults
+
+```toml
+[defaults]
+permission_mode = "workspace_write"   # read_only | workspace_write | auto | full_access
+```
+
+## Network
+
+Sandboxed commands have no network unless listed here. An agent cannot add domains for itself.
+
+```toml
+[network]
+allowed_domains = ["api.github.com", "*.npmjs.org", "npmjs.org"]
+allowed_ports = [443]
+denied_domains = ["uploads.example.com"]
+```
+
+`*.` does not include the root domain. Read only ignores this and stays offline; Full access ignores it and is unrestricted.
+
+## Protected paths
+
+Read-only without Full access, even inside the workspace. Machine and repository lists merge.
+
+```toml
+[permissions]
+protected_paths = ["master-plans", ".env.production"]
+```
+
+## Workspaces
+
+```toml
+[workspace]
+setup_commands = ["pnpm install --frozen-lockfile", "pnpm build"]
+sync = [".env"]
+protected_sync = [".env.production"]
+```
+
+Setup commands run with full access as trusted project code. A failure leaves the workspace unusable.
+
+## Providers
+
+```toml
+[providers.grok]
+enabled = false
+
+[providers.work_codex]
+type = "codex"
+enabled = true
+auth_file = "/Users/me/.codex-work/auth.json"
+include_models = ["openai/gpt-5.6-sol"]
+```
+
+Built-in providers are on when credentials exist. `include_models` and `exclude_models` trim the picker. `hidden = true` keeps an account usable by a routing provider but removes it from direct selection.
+
+## Docker
+
+```toml
+[docker]
+image = "my-project-dev:local"
+workdir = "/workspace"
+mounts = [{ source = ".", target = "/workspace" }]
+```
+
+Same permission model inside the container. Images need `bubblewrap` and `socat` for restricted modes. Happy never pulls an image on its own.
+
+## The rest
+
+The generated `happy.toml` documents everything else inline: presence states, Tailcat, team mode, provider transports, Bedrock, terminal theme, crash diagnostics, feature toggles.

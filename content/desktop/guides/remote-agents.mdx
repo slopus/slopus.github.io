@@ -1,0 +1,44 @@
+# Remote Agents
+
+A remote agent is a personal Happy Agent on another machine: a build box, a GPU host, a VM you leave running. It has its own projects, sessions, profile, and credentials, and it is not a team.
+
+## Transports
+
+- **Tailcat**, embedded in every release. A stable, unguessable address that works through NAT with no tunnel account or firewall rules. Reaching the address is not passing authentication; the runtime's own credential is still required.
+- **SSH**. Desktop asks a machine you already SSH to for its daemon socket, forwards it locally, and speaks the ordinary protocol over it.
+
+## Let the Chief of Staff do it
+
+Tell the [Chief of Staff](/desktop/docs/chief-of-staff/) which machine and SSH account to use. It confirms the host and architecture, asks which provider accounts the remote may use (copying credentials gives that machine access to those accounts and their limits), offers to set up `gh` and your Git identity, installs the binary and service, registers the connection in Desktop, and verifies a real session. It pauses for SSH, browser, and Keychain approvals. An existing installation on the machine is inspected and preserved, not replaced.
+
+## By hand
+
+```sh
+sudo useradd --system --create-home --home-dir /var/lib/happy-agent \
+  --shell /bin/bash happy-agent
+# install the release binary as /usr/local/bin/happy-agent
+# sign in to Claude Code, Codex, or the Grok CLI as happy-agent
+```
+
+```toml
+# /var/lib/happy-agent/happy/config/happy.toml
+[profile]
+name = "Ada Lovelace"
+email = "ada@example.com"
+
+[feature.tailcat]
+enabled = true
+port = 24779
+```
+
+Run `happy-agent run` under systemd as that user. `[profile]` satisfies the first-start profile requirement without an interactive step. Once Tailcat reports its address, add the remote in Desktop.
+
+On Ubuntu 24.04, AppArmor may block the sandbox's namespaces. The fix is an administrator profile for the exact daemon executable, not disabling AppArmor and not Full access.
+
+## Phones
+
+A remote has its own Mobile Access path in its settings. Linking your phone locally installs nothing on the remote.
+
+## Status
+
+Tailcat and SSH work today. Adding a remote by naming a machine, with its projects beside local ones and connect/disconnect on demand, is in progress.

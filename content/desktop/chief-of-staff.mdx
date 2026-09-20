@@ -1,0 +1,24 @@
+# Chief of Staff
+
+The Chief of Staff is a built-in agent with administrative tools. It is the conversational way to configure Happy: say what you want, and it runs the recipe, asking only for the choices and approvals that are genuinely yours.
+
+## What it does today
+
+| Ask it to | What happens |
+| --- | --- |
+| Set up my first project | Finds recent Claude Code and Codex folders (paths only), imports the one you pick or creates a new project, agrees one small first change |
+| Pair my phone, or fix mobile access | Runs the Mobile Access flow, reuses an existing link, diagnoses without resetting `~/.happy` |
+| Put an agent on my server | Installs Happy Agent as a service on a machine you SSH to, with the provider credentials and Git identity you approve, and registers the connection |
+| Create a team | Happy Social sign-in, team creation, team-mode deployment, a verified connection, then email invitations |
+| Expose this machine | Turns Tailcat on or off; reviewed in Auto because it is an internet-exposure action |
+| Upgrade Happy Agent | Release check, graceful shutdown, private backup, binary replacement, verification |
+
+It reuses choices you already made and does not turn setup into a questionnaire. It pauses for browser, device-login, SSH, and Keychain approvals, then continues.
+
+## Boundaries
+
+- It runs under the same permission modes and sandbox as any session. A denied review is final.
+- Opening onboarding is not consent. It inspects nothing until you send a request.
+- Project discovery reads folder metadata only. It never imports conversation text or credentials.
+- It never deletes or resets `~/.happy`, and never transfers an account's credentials you did not name.
+- It does not commit, push, publish, deploy, or release unless you ask.

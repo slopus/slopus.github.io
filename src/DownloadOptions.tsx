@@ -10,8 +10,6 @@ const DESKTOP_PLATFORMS = ['macos', 'windows', 'linux'] as const
 const LABELS = { macos: 'macOS', windows: 'Windows', linux: 'Linux', desktop: 'Desktop' }
 
 export type DownloadOptionsProps = {
-  variant: number
-  onCycle: (direction: number) => void
   macArchitecture: MacArchitecture
   onMacArchitectureChange: (architecture: MacArchitecture) => void
 }
@@ -28,10 +26,9 @@ function desktopPlatform(): DesktopPlatform {
   return 'desktop'
 }
 
-function DownloadBadge({ platform, variant }: { platform: Exclude<DesktopPlatform, 'desktop'>; variant: number }) {
-  const artwork = platform === 'macos' && variant === 0 ? 'macos-rainbow' : platform
+function DownloadBadge({ platform }: { platform: Exclude<DesktopPlatform, 'desktop'> }) {
   return (
-    <img src={`/img/happy-one/badges/${artwork}.svg`} alt="" width="242" height="76" />
+    <img src={`/img/happy-one/badges/${platform}.svg`} alt="" width="242" height="76" />
   )
 }
 
@@ -170,7 +167,7 @@ function HomebrewCommand() {
   )
 }
 
-export function DownloadOptions({ variant, onCycle, macArchitecture, onMacArchitectureChange }: DownloadOptionsProps) {
+export function DownloadOptions({ macArchitecture, onMacArchitectureChange }: DownloadOptionsProps) {
   const [downloads, setDownloads] = useState<DesktopDownloads | null>(null)
   useEffect(() => {
     let active = true
@@ -186,29 +183,15 @@ export function DownloadOptions({ variant, onCycle, macArchitecture, onMacArchit
   return (
     <div
       className="one-download-actions"
-      data-variant={variant}
       data-platform={platform}
       data-primary-platform={primaryPlatform}
       role="group"
-      aria-label={`Desktop and mobile downloads. Apple badge ${variant === 0 ? 'rainbow' : 'white'}, ${variant + 1} of 2. Use left or right arrow keys to compare.`}
-      tabIndex={0}
-      onClick={event => {
-        if (event.target instanceof Element && event.target.closest('a, button, select, .one-brew-command')) return
-        if (window.getSelection()?.toString()) return
-        onCycle(1)
-      }}
-      onKeyDown={event => {
-        if (event.target !== event.currentTarget) return
-        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
-          event.preventDefault()
-          onCycle(event.key === 'ArrowRight' ? 1 : -1)
-        }
-      }}
+      aria-label="Desktop and mobile downloads"
     >
       <div className="one-desktop-downloads">
         <div className="one-primary-download">
           <DesktopDownloadLink className="store-button one-desktop-button" platform={primaryPlatform} downloads={downloads} macArchitecture={macArchitecture}>
-            <DownloadBadge platform={primaryPlatform} variant={variant} />
+            <DownloadBadge platform={primaryPlatform} />
           </DesktopDownloadLink>
           {primaryPlatform === 'macos' && <select className="one-mac-architecture" aria-label="Mac architecture" value={macArchitecture}
             onChange={event => { if (event.target.value === 'arm64' || event.target.value === 'x64') onMacArchitectureChange(event.target.value) }}>

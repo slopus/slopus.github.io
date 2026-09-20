@@ -1,0 +1,39 @@
+# How It Works
+
+## The runtime
+
+**Happy Agent** is a headless daemon on your machine. Desktop starts it and talks to it over a private local socket. The daemon holds the agent loop, the tools, the sandbox, and a SQLite database of every session. Quit Desktop and sessions keep running; restart the daemon and they resume from disk.
+
+The daemon authenticates to providers the way Claude Code, Codex, and the Grok CLI do: by reading the credentials those tools keep on the machine. The model catalog is built in. A provider without credentials shows as unavailable, with a reason.
+
+## Native per model, shared around it
+
+Each provider gets its vendor's prompts and tools verbatim, close enough to the native request that prompt caching and native compaction keep working. Everything around inference is shared:
+
+- One permission model. Claude's `Bash`, Codex's `exec_command`, and Grok's `run_terminal_command` run the same sandboxed shell.
+- One session. Switching models keeps the transcript.
+- One set of Happy tools: subagents, waits, scheduling, messaging other agents, plugins, MCP.
+
+## Durable
+
+Every change is written to the database before it is applied in memory. Subagents are sessions too. Waits and scheduled messages survive a restart.
+
+## Clients
+
+| Client | What it is |
+| --- | --- |
+| **Happy Desktop** | Projects, workspaces, sessions, changed files, terminals, the Inbox, settings |
+| **Happy Terminal** | The same client as a TUI, shipped with Desktop |
+| **Happy mobile** | iOS and Android, attached to the same sessions through an encrypted relay |
+
+A message from any client enters the same session, queue, and permission boundary. There is no remote mode.
+
+## What leaves the machine
+
+- Model requests, to the provider you chose, with your credentials.
+- Session sync to your phone, through Happy's relay, as ciphertext. Your devices hold the keys.
+- Nothing else by default. No telemetry, no hosted account for the app, no copy of your project.
+
+## Not yet
+
+Automatic routing across several accounts of one provider: you configure them and choose explicitly. Forking a running provider session. The "add a remote machine by name" experience; the SSH transport exists, see [Remote Agents](/desktop/docs/guides/remote-agents/).

@@ -1,0 +1,35 @@
+# Mobile Access
+
+Pair your phone once and every session on the computer is on it. The agent stays on your machine, with your files and your permission boundary.
+
+## Pairing
+
+**Settings → Mobile Access**, or during onboarding:
+
+1. Install **Happy Coder** from the App Store or Google Play. Desktop shows a QR code for the listing.
+2. Scan the **device QR** Desktop shows next and approve the computer on the phone. One scan.
+3. Desktop installs the `happy` CLI so `happy claude` and `happy codex` sessions reach the phone too. Needs Node.js and npm.
+
+An already-linked computer is reused without another scan.
+
+**Already using Happy?** Your account and sessions keep working. Connect Desktop from **Settings → Mobile Access**; the terminal CLI and Desktop's runtime appear on the phone as two machines on the same account.
+
+## Encryption
+
+The phone holds the account's primary key. Content is encrypted on one device and decrypted on another. The relay stores and forwards opaque blobs; it sees that machines and sessions exist and when they were active, not what is in them. Full write-up: [Security & Encryption](/docs/security/).
+
+## From the phone
+
+- Send messages, with encrypted images.
+- Answer permission requests and questions. A phone reply is a trusted answer.
+- Stop the turn.
+- Switch model and effort. Change the permission mode.
+- Start a session in a directory. A directory that does not exist becomes a request to create it, never a silent `mkdir`.
+- Read and search files through the same boundary the agent has.
+
+## Troubleshooting
+
+- Never delete or reset `~/.happy`. It is shared with the terminal CLI and holds history, configuration, and account state.
+- A saved link can be offline; Desktop says "connected" only on live status.
+- If the CLI daemon stopped after a reboot or crash, run Mobile Access setup again. Ordinary Desktop startup does not restart it.
+- A lost phone or a conflicting saved account is a recovery conversation. Keep both sides until you choose.

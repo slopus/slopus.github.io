@@ -1,8 +1,13 @@
-# Hidden preview: Apple badge comparison
+# Desktop download badges
 
-Current comparison (2026-09-15): rainbow Apple / white Apple only. Click the
-download area's background to switch; actual download links and the terminal
-copy button keep their normal behavior. Keyboard left/right arrows also switch
+Decided 2026-09-20: the macOS badge is the white Apple, with no toggle. The
+rainbow comparison below is design history; `macos-rainbow.svg` was removed
+and the download area no longer cycles on click or arrow keys.
+
+## Archived comparison: rainbow vs white Apple
+
+Comparison as of 2026-09-15: rainbow Apple / white Apple only. Clicking the
+download area's background switched; keyboard left/right arrows also switched
 the two synchronized instances. No dropdown or extra platform-badge stack.
 
 Both Apple variants use the exact path, leaf, viewBox, and placement from the

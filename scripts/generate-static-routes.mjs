@@ -17,14 +17,14 @@ const docsSections = [
       'Install, configure, self-host, and use Happy with Claude Code, Codex, and other coding agents across desktop, mobile, and web.',
   },
   {
-    contentRoot: path.join(projectRoot, 'content', 'happy2'),
+    contentRoot: path.join(projectRoot, 'content', 'desktop'),
     routeRoot: path.posix.join('desktop', 'docs'),
     legacyRouteRoot: path.posix.join('happy2', 'docs'),
     canonicalRoot: '/desktop/docs',
-    indexTitle: 'Happy Desktop Docs — Self-Hosted Workspace for People and Agents',
+    indexTitle: 'Happy Desktop Docs — The Open Source Harness for Coding Agents',
     titleSuffix: 'Happy Desktop Docs',
     description:
-      'Install, self-host, and understand Happy Desktop: channels, sandboxed agents, collaborative documents, and plugins in one app you run yourself.',
+      'Install Happy Desktop, run Claude, Codex, and Grok in one harness, pair your phone, and understand permissions, workspaces, teams, and plugins.',
   },
 ]
 
@@ -139,32 +139,26 @@ for (const section of docsSections) {
   }
 }
 
-const desktopHtml = htmlForPage({
-  title: 'Happy Desktop — Any Team. Any Model. One Harness.',
-  description:
-    'Happy Desktop is the open source harness for coding agents. Run Claude, Codex, and Grok in one place, keep every session durable and shareable with your team, and keep your work on your own machine. Free for macOS.',
-  canonicalPath: '/desktop/',
-  socialTitle: 'Happy Desktop — any team, any model, one harness',
-  socialDescription:
-    'One open source harness for every coding agent you already pay for. Multiplayer, durable sessions beside the files, diffs, terminals, and previews the work touches.',
-  twitterDescription:
-    'Run every coding agent in one open source harness. Multiplayer sessions, end-to-end encrypted, yours to run. Download for macOS.',
-})
-
-await writeRoute('desktop', desktopHtml)
-await writeRoute('happy2', desktopHtml)
-
-// Unlisted review page: never linked from the public homepage or documentation.
-await writeRoute('tmp/happy-one', htmlForPage({
+// Mirrors desktopMetadata in src/siteMetadata.ts. The social image is the
+// screenshot described in docs/happy-one-demo.md.
+const desktopPage = {
   title: 'Any Model. Your Team. Happy Harness.',
   description: 'Multi-provider and natively multiplayer. Use your current subscriptions. Open source under MIT, with an end-to-end encrypted mobile app.',
-  canonicalPath: '/tmp/happy-one/',
-  robots: 'noindex, nofollow',
+  canonicalPath: '/desktop/',
   socialImage: {
     path: '/og/happy-harness-v23.png', width: 1200, height: 630,
     alt: 'Happy Harness model picker and paired phone, with Free and open source and 23.8k GitHub stars.',
   },
-}))
+}
+
+const desktopHtml = htmlForPage(desktopPage)
+
+await writeRoute('desktop', desktopHtml)
+await writeRoute('happy2', desktopHtml)
+
+// The page was reviewed unlisted at this URL before it became /desktop/.
+// Keep shared links working; the app rewrites the path on load.
+await writeRoute('tmp/happy-one', htmlForPage({ ...desktopPage, robots: 'noindex, nofollow' }))
 
 // The Buzz comparison moved into the Happy Desktop section; keep the announced URL resolving.
 await writeRoute('docs/comparisons/happy-2-vs-buzz', htmlForPage({

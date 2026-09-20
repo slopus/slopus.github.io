@@ -1,0 +1,23 @@
+# Happy Desktop vs Buzz
+
+Block launched [Buzz](https://block.xyz/inside/introducing-buzz-where-humans-and-agents-work-together) ([source](https://github.com/block/buzz), [engineering deep-dive](https://engineering.block.xyz/blog/buzz), [HN discussion](https://news.ycombinator.com/item?id=48995213)) the day before we first announced Happy Desktop. We read the codebase then, and this page has been updated for what Happy Desktop is now.
+
+We agree on more than we disagree on: open source, nothing hosted for you, agents as first-class participants, and the principle that an agent should never assume a human's credentials. The shapes are different. Buzz is a chat workspace with agents in it. Happy Desktop is a harness around the agents, with people and phones attached to the sessions.
+
+| area | happy desktop | buzz |
+| --- | --- | --- |
+| what runs the agent | a runtime on your machine (or a machine you choose), with each vendor's native prompts and tools; sessions survive the window and the restart | the relay stores agent profiles but runs nothing; the model runs wherever someone runs a harness |
+| agent identity | a session with an unguessable ID; no directory, no personas; its context is its transcript, its workspace, and its permission mode | named keypair personas (fizz, honey, bumble) you drag between channels, times everyone on the team |
+| models | Claude, Codex, and Grok on the subscriptions you already have, switchable mid-session; subagents each pick their own | one harness per person, whatever they run |
+| permissions | four modes enforced by the OS sandbox; Auto reviews the exact action against what you actually asked for, and a refusal is final | agent carries the full CLI and a private key; allowed = discovered by attempting |
+| secrets | attached to a session and injected only when a command names the bundle; never prompt text; the keychain is unreachable from the sandbox | `BUZZ_PRIVATE_KEY` straight in the agent's env; per-call approval bypassed by default |
+| phone | first-class: same sessions, end-to-end encrypted, relay sees ciphertext only | none |
+| sharing | invite someone into a session, or run one Happy Agent for a team behind Happy Social sign-in | channels on a shared relay |
+| plugins | sandboxed TypeScript processes: MCP tools for every model, small local apps for the UI, written from inside by an agent | no installable surface; extend via MCP servers, workflows, or new event kinds baked into relay and clients |
+| install | download and open; nothing to host unless you want a team server | docker compose: rust relay + postgres + redis + minio |
+
+Where Buzz is ahead: the team surface. If you want Slack with agents as members, Buzz built that well, and the onboarding is nice. Happy Desktop's team setup is multi-step today.
+
+Where Happy Desktop is ahead: the agent itself. Native prompts per vendor, sessions that outlive the window, a sandbox the agent cannot talk its way out of, and the same session on your phone, encrypted end to end.
+
+By [@Ex3NDR](https://x.com/Ex3NDR) & [@bra1n_dump](https://x.com/bra1n_dump)

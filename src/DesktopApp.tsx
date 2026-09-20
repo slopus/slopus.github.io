@@ -1,18 +1,14 @@
 import { useState, type CSSProperties } from 'react'
-import { GITHUB_HAPPY, GithubMark, SiteFooter, Wordmark } from './SiteChrome'
+import { GITHUB_HAPPY, GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
 import { PageScrollbar } from './PageScrollbar'
 import { FeatureSurprise, useFeatureSurprise } from './FeatureSurprise'
-import { HAPPY } from './products'
-import { KIRILL, STEVE } from './Team'
+import { HAPPY_DESKTOP } from './products'
 import { HappyOneDemo } from './HappyOneDemo'
 import { DownloadOptions, type DownloadOptionsProps } from './DownloadOptions'
 import type { MacArchitecture } from './desktopDownloads'
 import { HAPPY_ONE_GITHUB_STARS } from './happyOneGithubStars'
 import './happy-one.css'
 import './happy-one-preview.css'
-
-const PAGE = '/tmp/happy-one/'
-const product = { ...HAPPY, home: PAGE }
 
 const features = [
   {
@@ -118,31 +114,15 @@ function Downloads(props: DownloadOptionsProps) {
   )
 }
 
-export default function HappyOneApp() {
+/** The public Happy Desktop page: the recorded harness demo, the pitch, and every download. */
+export default function DesktopApp() {
   const ogPreview = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('preview') === 'og'
-  const [downloadVariant, setDownloadVariant] = useState(0)
+  // The hero and footer downloads share one architecture choice.
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
-  const cycleDownloadVariant = (direction: number) => setDownloadVariant(current => (current + direction + 2) % 2)
   return (
     <div className="site-shell happy-one" data-social-preview={ogPreview ? '' : undefined}>
       <PageScrollbar />
-      <div className="site-header-wrap">
-        <header className="site-header page-width">
-          <Wordmark product={product} />
-          <nav aria-label="Primary navigation">
-            <a
-              className="nav-github"
-              href={GITHUB_HAPPY}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Happy on GitHub, ${HAPPY_ONE_GITHUB_STARS.count.toLocaleString('en-US')} stars`}
-            >
-              <GithubMark />
-              <span className="nav-github-count">{HAPPY_ONE_GITHUB_STARS.compact}</span>
-            </a>
-          </nav>
-        </header>
-      </div>
+      <SiteHeader product={HAPPY_DESKTOP} />
       <main>
         <section className="one-hero page-width" aria-labelledby="one-heading">
           <div className="one-hero-copy">
@@ -153,25 +133,15 @@ export default function HappyOneApp() {
             </a>}
           </div>
           <HappyOneDemo />
-          <DownloadOptions variant={downloadVariant} onCycle={cycleDownloadVariant} macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
+          <DownloadOptions macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
         </section>
         <Features />
         <Terminal />
         <ExistingUsers />
-        <Downloads variant={downloadVariant} onCycle={cycleDownloadVariant} macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
+        <Downloads macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
       </main>
-      <SiteFooter product={product} additionalLinks={
+      <SiteFooter product={HAPPY_DESKTOP} additionalLinks={
         <a href="/video/happy-one/device/CREDITS.txt" target="_blank" rel="noopener noreferrer">Credits</a>
-      } statement={
-        <>
-          We build interfaces around agents: how you control them, how they run,
-          and how teams share context with them.
-          <span className="one-footer-people">
-            <a href={STEVE.href} target="_blank" rel="noopener noreferrer">{STEVE.label}</a>
-            {' and '}
-            <a href={KIRILL.href} target="_blank" rel="noopener noreferrer">{KIRILL.label}</a>
-          </span>
-        </>
       } />
     </div>
   )

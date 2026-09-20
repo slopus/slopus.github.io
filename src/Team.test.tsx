@@ -1,7 +1,6 @@
 import { cleanup, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
-import Happy2App from './Happy2App'
 import { Router } from './Router'
 
 function teamNames() {
@@ -26,12 +25,6 @@ describe('team section', () => {
     expect(teamNames()).toEqual(['Steve Korshakov', 'Karl Marx', 'Kirill Dubovitskiy'])
   })
 
-  it('lists Steve and Kirill on Happy Desktop', () => {
-    render(<Happy2App />)
-
-    expect(teamNames()).toEqual(['Steve Korshakov', 'Kirill Dubovitskiy'])
-  })
-
   it('links each person to their own place on the internet', () => {
     render(<App />)
 
@@ -47,7 +40,7 @@ describe('header docs link', () => {
   })
 
   it('is marked current on a documentation route', () => {
-    render(<Router pathname="/desktop/docs/plugins/" />)
+    render(<Router pathname="/desktop/docs/extending/" />)
 
     const navigation = screen.getByRole('navigation', { name: 'Primary navigation' })
 

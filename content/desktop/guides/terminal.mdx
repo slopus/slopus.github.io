@@ -1,0 +1,30 @@
+# Using the Terminal
+
+Desktop is optional. Two terminal paths exist.
+
+## The `happy` CLI
+
+```sh
+npm install -g happy
+
+happy claude
+happy codex
+```
+
+`happy` wraps the real `claude` or `codex` with your normal sign-in and arguments, encrypts the session before it leaves the machine, and keeps a background daemon so the phone can start and resume sessions with no terminal attached. Plain `claude` or `codex` is not under Happy's control. First run pairs the machine by QR code. State lives in `~/.happy`.
+
+With Desktop, Mobile Access setup installs this CLI for you and links it to the same account.
+
+## Happy Terminal
+
+The same harness as Desktop, as a TUI: every provider, every permission mode, workspaces, subagents, the Inbox. It talks to the Happy Agent that Desktop runs, so a session opened here is the one Desktop shows. It ships with Desktop.
+
+Its command line covers the interactive app, headless `exec` for scripted runs, resuming and forking stored sessions, and `happy-terminal daemon start|stop|status`. Sessions are held by the daemon; if the terminal dies, the session keeps running.
+
+## Which one
+
+| You want | Use |
+| --- | --- |
+| Claude Code or Codex as the vendor ships it, plus a phone | `happy claude`, `happy codex` |
+| One harness across providers, in a terminal | Happy Terminal |
+| The same, with files, diffs, terminals, and the Inbox in a window | Happy Desktop |

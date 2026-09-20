@@ -1,0 +1,37 @@
+# Quick Start
+
+You need macOS, Windows, or Linux, and at least one of Claude Code, Codex, or the Grok CLI signed in on the machine.
+
+## Install
+
+Download from the [Happy Desktop page](/desktop/#download), or on macOS:
+
+```sh
+brew install --cask slopus/tap/happy
+```
+
+Open the app. It starts its own agent runtime and finds the provider sign-ins. There is no key to paste.
+
+## First project
+
+Onboarding opens a conversation with the [Chief of Staff](/desktop/docs/chief-of-staff/). Ask it to set you up. With your go-ahead it lists recent Claude Code and Codex project folders (paths only, no conversation text), imports the one you pick or creates a new project, and agrees one small first change with you. It does not commit, push, or deploy on its own.
+
+## First session
+
+Open the project and start a session with any model you are signed in to. New sessions run in **Auto**: reads and workspace edits are free, everything else is sandboxed, and actions that cross the boundary are reviewed automatically. The session belongs to the runtime; closing the app does not stop it.
+
+## Pair your phone
+
+**Settings → Mobile Access**, or accept the offer during onboarding. Install Happy Coder from the App Store or Google Play, scan the device QR, approve on the phone. Desktop then installs the `happy` CLI so terminal sessions reach the phone too. This step needs Node.js and npm.
+
+## Where things live
+
+| Path | Contents |
+| --- | --- |
+| `~/Happy/Config/happy.toml` (macOS), `~/happy/config/happy.toml` (Linux) | Configuration, written with comments on first start |
+| `AGENTS.md` beside it | Instructions every agent reads on every project |
+| `~/Happy/Workspaces` (macOS), `~/happy/workspaces` (Linux) | Managed workspaces, one worktree each |
+| `~/.happy/agent` | Runtime state: sessions, logs, socket, token |
+| `~/Happy/Plugins` (macOS), `~/happy/plugins` (Linux) | Folders plugins write to |
+
+Do not delete `~/.happy` to fix a problem. It holds sessions, configuration, and account state, shared with the terminal CLI.

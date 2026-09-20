@@ -1,4 +1,4 @@
-export type ProductKey = 'happy' | 'happy2'
+export type ProductKey = 'happy' | 'desktop'
 
 export interface Product {
   key: ProductKey
@@ -14,26 +14,27 @@ export interface Product {
 export const HAPPY: Product = {
   key: 'happy',
   label: 'Happy',
-  switchLabel: 'Happy Mobile',
+  switchLabel: 'Terminal + Mobile',
   home: '/',
   docsBase: '/docs',
   docsLabel: 'Documentation',
   repository: 'https://github.com/slopus/happy',
 }
 
-export const HAPPY2: Product = {
-  key: 'happy2',
+export const HAPPY_DESKTOP: Product = {
+  key: 'desktop',
   label: 'Happy Desktop',
+  switchLabel: 'Desktop + Mobile',
   home: '/desktop/',
   docsBase: '/desktop/docs',
   docsLabel: 'Happy Desktop Docs',
   repository: 'https://github.com/slopus/happy-desktop',
 }
 
-export const products: Product[] = [HAPPY, HAPPY2]
+export const products: Product[] = [HAPPY, HAPPY_DESKTOP]
 
 export function productForPath(pathname: string): Product {
-  return pathname === '/desktop' || pathname.startsWith('/desktop/') ? HAPPY2 : HAPPY
+  return pathname === '/desktop' || pathname.startsWith('/desktop/') ? HAPPY_DESKTOP : HAPPY
 }
 
 export function documentHref(product: Product, path: string) {

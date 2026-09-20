@@ -23,27 +23,15 @@ export const homepageMetadata: PageMetadata = {
     'Control Claude Code, Codex, and other coding agents running on your computers from anywhere.',
 }
 
-export const happyOneMetadata: PageMetadata = {
+/** Shared with scripts/generate-static-routes.mjs, which writes the same values into dist/desktop/index.html. */
+export const desktopMetadata: PageMetadata = {
   title: 'Any Model. Your Team. Happy Harness.',
   description: 'Multi-provider and natively multiplayer. Use your current subscriptions. Open source under MIT, with an end-to-end encrypted mobile app.',
-  canonicalPath: '/tmp/happy-one/',
-  robots: 'noindex, nofollow',
+  canonicalPath: '/desktop/',
   socialImage: {
     path: '/og/happy-harness-v23.png', width: 1200, height: 630,
     alt: 'Happy Harness model picker and paired phone, with Free and open source and 23.8k GitHub stars.',
   },
-}
-
-export const happy2Metadata: PageMetadata = {
-  title: 'Happy Desktop — Any Team. Any Model. One Harness.',
-  description:
-    'Happy Desktop is the open source harness for coding agents. Run Claude, Codex, and Grok in one place, keep every session durable and shareable with your team, and keep your work on your own machine. Free for macOS.',
-  canonicalPath: '/desktop/',
-  socialTitle: 'Happy Desktop — any team, any model, one harness',
-  socialDescription:
-    'One open source harness for every coding agent you already pay for. Multiplayer, durable sessions beside the files, diffs, terminals, and previews the work touches.',
-  twitterDescription:
-    'Run every coding agent in one open source harness. Multiplayer sessions, end-to-end encrypted, yours to run. Download for macOS.',
 }
 
 export const docsMetadata: PageMetadata = {
@@ -53,15 +41,15 @@ export const docsMetadata: PageMetadata = {
   canonicalPath: '/docs/',
 }
 
-export const happy2DocsMetadata: PageMetadata = {
-  title: 'Happy Desktop Docs — Self-Hosted Workspace for People and Agents',
+export const desktopDocsMetadata: PageMetadata = {
+  title: 'Happy Desktop Docs — The Open Source Harness for Coding Agents',
   description:
-    'Install, self-host, and understand Happy Desktop: channels, sandboxed agents, collaborative documents, and plugins in one app you run yourself.',
+    'Install Happy Desktop, run Claude, Codex, and Grok in one harness, pair your phone, and understand permissions, workspaces, teams, and plugins.',
   canonicalPath: '/desktop/docs/',
 }
 
 export function docsMetadataForProduct(product: ProductKey): PageMetadata {
-  return product === 'happy2' ? happy2DocsMetadata : docsMetadata
+  return product === 'desktop' ? desktopDocsMetadata : docsMetadata
 }
 
 function setMetaContent(selector: string, content: string) {

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { MarkdownDocument } from './MarkdownDocument'
 import {
   documentGroupsForProduct,
-  documentsForProduct,
+  listedDocumentsForProduct,
   getDocument,
   getDocumentSource,
   getLegalSource,
@@ -20,12 +20,17 @@ function DocsNavigation({
   product: Product
   activeDocument: DocumentEntry
 }) {
-  const productDocuments = documentsForProduct(product.key)
+  const productDocuments = listedDocumentsForProduct(product.key)
 
   return (
     <nav className="docs-navigation" aria-label="Documentation navigation">
       {documentGroupsForProduct(product.key).map((group) => {
         const groupDocuments = productDocuments.filter((document) => document.group === group)
+
+        // A group whose only pages are unlisted has no heading to show.
+        if (groupDocuments.length === 0) {
+          return null
+        }
 
         return (
           <section className="docs-nav-group" key={group}>
@@ -72,11 +77,12 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
     return <NotFoundPage />
   }
 
-  const productDocuments = documentsForProduct(product.key)
+  const productDocuments = listedDocumentsForProduct(product.key)
   const markdown = prepareMarkdown(getDocumentSource(activeDocument))
+  // An unlisted page sits outside the reading order, so it gets no previous or next.
   const activeIndex = productDocuments.indexOf(activeDocument)
-  const previousDocument = productDocuments[activeIndex - 1]
-  const nextDocument = productDocuments[activeIndex + 1]
+  const previousDocument = activeIndex === -1 ? undefined : productDocuments[activeIndex - 1]
+  const nextDocument = activeIndex === -1 ? undefined : productDocuments[activeIndex + 1]
 
   return (
     <div className="site-shell document-site-shell docs-shell">

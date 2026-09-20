@@ -5,17 +5,9 @@ Store listings. They must not imply that the desktop app is sold in either store
 
 The frame, Apple silhouette (including its leaf), and `Download` lettering are
 taken verbatim from this website's existing App Store SVG
-(`src/StoreButtons.tsx`). Both Apple treatments have its exact viewBox and
+(`src/StoreButtons.tsx`). The macOS badge has its exact viewBox and
 untransformed icon coordinates. The macOS name's ink starts at x=70.946, exactly
 under the `D`, instead of the previous x=68.472. Its baseline remains y=60.992.
-
-The rainbow variant changes only the Apple path's fill. Its six colors and
-stripe proportions were read from the downloaded original SVG at:
-https://commons.wikimedia.org/wiki/File:Apple_Computer_Logo_rainbow.svg
-https://commons.wikimedia.org/wiki/Special:Redirect/file/Apple_Computer_Logo_rainbow.svg
-The historical Apple logo was designed by Rob Janoff. This is a rainbow color
-treatment of the existing App Store silhouette, not a claim that the historical
-and modern silhouettes are identical.
 
 Remaining text is converted to SVG outlines from Apple's SF Pro Display Medium
 and SF Pro Text Regular. Font binaries are not distributed with the website.

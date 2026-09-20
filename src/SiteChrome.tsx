@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react'
 import { APP_STORE_LINK, GOOGLE_PLAY_LINK } from './StoreButtons'
-import { HAPPY, HAPPY2, products, type Product } from './products'
+import { HAPPY, HAPPY_DESKTOP, products, type Product } from './products'
+import { HAPPY_ONE_GITHUB_STARS } from './happyOneGithubStars'
+import { KIRILL, STEVE } from './Team'
 
 export const GITHUB_HAPPY = HAPPY.repository
-export const GITHUB_HAPPY2 = HAPPY2.repository
+export const GITHUB_HAPPY_DESKTOP = HAPPY_DESKTOP.repository
 export const WEB_APP = 'https://app.happy.engineering'
 
 export function GithubMark() {
@@ -22,21 +24,43 @@ export function Wordmark({ product = HAPPY }: { product?: Product }) {
   )
 }
 
+/** The two ways to run Happy, named by the surfaces you use rather than by version. */
 function ProductSwitch({ product }: { product: Product }) {
   return (
     <div className="product-switch" role="group" aria-label="Choose a product">
-      {products.map((entry) => (
-        <a
-          className="product-switch-option"
-          key={entry.key}
-          href={entry.home}
-          aria-current={entry.key === product.key ? 'page' : undefined}
-        >
-          {entry.switchLabel ?? entry.label}
-          {entry.key === 'happy2' ? <span className="product-switch-new">New</span> : null}
-        </a>
-      ))}
+      {products.map((entry) => {
+        const [primary, ...rest] = (entry.switchLabel ?? entry.label).split(' + ')
+        return (
+          <a
+            className="product-switch-option"
+            key={entry.key}
+            href={entry.home}
+            aria-current={entry.key === product.key ? 'page' : undefined}
+          >
+            <span className="product-switch-label">
+              {primary}
+              {rest.length > 0 ? <span className="product-switch-suffix"> + {rest.join(' + ')}</span> : null}
+            </span>
+            {entry.key === 'desktop' ? <span className="product-switch-new">New</span> : null}
+          </a>
+        )
+      })}
     </div>
+  )
+}
+
+function GithubLink() {
+  return (
+    <a
+      className="nav-github"
+      href={GITHUB_HAPPY}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Happy on GitHub, ${HAPPY_ONE_GITHUB_STARS.count.toLocaleString('en-US')} stars`}
+    >
+      <GithubMark />
+      <span className="nav-github-count">{HAPPY_ONE_GITHUB_STARS.compact}</span>
+    </a>
   )
 }
 
@@ -55,35 +79,17 @@ export function SiteHeader({
           <ProductSwitch product={product} />
         </div>
         <nav aria-label="Primary navigation">
-          {product.key === 'happy2' ? (
+          {product.key === 'desktop' ? (
             <>
-              <a href={`${HAPPY2.docsBase}/`} aria-current={docsActive ? 'page' : undefined}>Docs</a>
-              <a
-                className="nav-github"
-                href={GITHUB_HAPPY2}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Happy Desktop on GitHub"
-              >
-                <GithubMark />
-                <span className="nav-github-count">GitHub</span>
-              </a>
+              <a href={`${HAPPY_DESKTOP.docsBase}/`} aria-current={docsActive ? 'page' : undefined}>Docs</a>
+              <GithubLink />
             </>
           ) : (
             <>
               <a className="nav-store-link" href={APP_STORE_LINK} target="_blank" rel="noopener noreferrer">iOS App</a>
               <a className="nav-store-link" href={GOOGLE_PLAY_LINK} target="_blank" rel="noopener noreferrer">Android App</a>
               <a href="/docs/" aria-current={docsActive ? 'page' : undefined}>Docs</a>
-              <a
-                className="nav-github"
-                href={GITHUB_HAPPY}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Happy on GitHub, 22,000+ stars"
-              >
-                <GithubMark />
-                <span className="nav-github-count">22k</span>
-              </a>
+              <GithubLink />
               <a className="nav-cta" href={WEB_APP} target="_blank" rel="noopener noreferrer">
                 <span className="nav-cta-prefix">Happy </span>Web
               </a>
@@ -95,15 +101,20 @@ export function SiteHeader({
   )
 }
 
-export function SiteFooter({ product = HAPPY, statement, additionalLinks }: { product?: Product; statement?: ReactNode; additionalLinks?: ReactNode }) {
+export function SiteFooter({ product = HAPPY, additionalLinks }: { product?: Product; additionalLinks?: ReactNode }) {
   const currentYear = new Date().getFullYear()
 
   return (
     <footer className="site-footer">
       <div className="page-width footer-inner">
         <p className="footer-statement">
-          {statement ?? <>Happy Engineering builds the interfaces around agents: how you control them, how they run,
-            and how teams share context with them.</>}
+          We build interfaces around agents: how you control them, how they run,
+          and how teams share context with them.
+          <span className="footer-people">
+            <a href={STEVE.href} target="_blank" rel="noopener noreferrer">{STEVE.label}</a>
+            {' and '}
+            <a href={KIRILL.href} target="_blank" rel="noopener noreferrer">{KIRILL.label}</a>
+          </span>
         </p>
         <div className="footer-meta">
           <div className="footer-links" aria-label="Footer navigation">

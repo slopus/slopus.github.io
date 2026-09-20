@@ -1,0 +1,39 @@
+# Models & Subscriptions
+
+No Happy plan for model access, no key to paste. Sign in to Claude Code, Codex, or the Grok CLI on the machine and Happy uses those credentials.
+
+| Provider | Models | Credentials from |
+| --- | --- | --- |
+| Claude | Anthropic's Claude family | Claude Code |
+| Codex | OpenAI's GPT family | Codex |
+| Grok | xAI's Grok family | The Grok CLI |
+| Bedrock | Claude and GPT models through Amazon Bedrock | A bearer token in the environment |
+
+Availability is machine-wide, because the daemon owns the catalog. Requests go to the vendor with your credentials; Happy never pools or proxies them.
+
+## Switching mid-session
+
+Change a session's model or reasoning effort at any time, from the app or the phone. The transcript stays. Each provider's opaque data (reasoning, response items) is stored verbatim and handed back unchanged, so a switch does not corrupt history. The new model gets its own vendor's prompts and tools; permission mode, sandbox, and workspace do not change.
+
+## Several models in one task
+
+Subagents each pick their own model and effort; nothing is inherited. One session can plan on one provider, implement on another, review on a third. See [Agents That Never Die](/desktop/docs/agents/).
+
+## Compaction
+
+Happy decides when; the provider decides how, using its native compaction or its own compaction prompt. The result is a visible message in the transcript naming what it replaced.
+
+## Multiple accounts
+
+```toml
+[providers.work_codex]
+type = "codex"
+enabled = true
+auth_file = "/Users/me/.codex-work/auth.json"
+```
+
+Named instances appear in the picker as separate providers. Automatic routing between them is not implemented. See [Configuration](/desktop/docs/guides/configuration/).
+
+## Usage
+
+Provider quotas are polled about every fifteen minutes and shown in the app. They are observations, not billing records.

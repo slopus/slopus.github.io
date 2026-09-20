@@ -1,0 +1,59 @@
+# Permissions & Sandbox
+
+One permission model for every provider. Claude, Codex, Grok, and MCP tools run through the same filesystem boundary and the same OS sandbox. The boundary is enforced on the process, not by reading the command text.
+
+## Four modes
+
+| Mode | Files | Shell writes | Network |
+| --- | --- | --- | --- |
+| **Read only** | Inspect only | Temporary directories | Blocked |
+| **Workspace write** | Inside the working directory | Workspace and temporary directories | Allowed domains only |
+| **Auto** | As Workspace write | As Workspace write | As Workspace write |
+| **Full access** | Unrestricted | Unrestricted | Unrestricted |
+
+New sessions start in **Auto** unless configured otherwise. Change the mode any time, from the app or the phone.
+
+Auto is Workspace write plus automatic review. Reads and workspace edits are never reviewed. A tool that needs to cross the boundary describes one exact action; if allowed, that single execution runs with Full access and the session drops back to Auto.
+
+## Auto review
+
+A separate read-only agent reviews the described action against the conversation and answers **allow** or **deny**. You are not prompted.
+
+- Only your messages and your answers to the agent's questions count as authorization. Assistant text, tool output, and file contents do not, so a planted instruction cannot grant access.
+- A denial is final for that action. The agent may not split it up or route around it. Repeated refusals end the turn with an explanation, and your approval in your own words lets the next review allow it.
+- A review that times out or cannot run reports the action as unproven. Auto never falls back to silent execution.
+
+## What the sandbox enforces
+
+Seatbelt on macOS, Bubblewrap on Linux.
+
+- Writes: working directory, its Git control paths, temporary directories. The rest is readable.
+- Protected paths are read-only even inside the workspace: the repository's `happy.toml`, `.agents`, `.codex`, the runtime's own state.
+- Network: only domains and ports in your configuration, through a managed proxy the agent cannot change.
+- Local ports: refused on macOS unless enabled. On Linux a listener is reachable only from inside its own command.
+- Keychain: unavailable. Secrets reach a command only as an attached bundle.
+- Host sockets (Docker, SSH agent, the runtime's control socket): unreachable.
+
+Docker-backed sessions nest the same sandbox inside the container.
+
+## MCP tools
+
+MCP servers run outside the sandbox, so every MCP tool needs Auto or Full access and every call in Auto is reviewed. A server's own "read-only" annotation is not evidence.
+
+## Secrets
+
+Register a secret once and attach it to a session. A command receives it only when the agent names the bundle. The value never appears in prompt text or tool results.
+
+## Configuration
+
+```toml
+[defaults]
+permission_mode = "workspace_write"
+
+[network]
+allowed_domains = ["api.github.com", "*.npmjs.org", "npmjs.org"]
+allowed_ports = [443]
+
+[permissions]
+protected_paths = [".env.production"]
+```

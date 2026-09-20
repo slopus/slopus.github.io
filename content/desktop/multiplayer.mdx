@@ -1,0 +1,32 @@
+# Multiplayer & Teams
+
+## Share a session
+
+Invite a colleague or a friend into a session. They see the same transcript, tool calls, and changed files as they happen, from Desktop or their phone, and their messages enter the same queue as yours. The agent still runs on your machine under your permission mode.
+
+## Run one Happy Agent for a team
+
+A team is a **Happy Social** organization with a registered Happy Agent endpoint. Members connect from their own Desktop and phone with their own identity; projects, workspaces, and sessions on that server belong to the team.
+
+The [Chief of Staff](/desktop/docs/chief-of-staff/) runs the setup, in this order:
+
+1. **Sign in to Happy Social** on your own installation (**Settings → Account → Join Happy Social**) and bind an email. Any address works. This is separate from provider credentials.
+2. **Deploy the server**: a Linux or macOS machine with outbound internet, a dedicated service account, and that account's own provider sign-ins. Happy Agent is one self-contained binary under systemd or similar. Its embedded **Tailcat** transport gives it a stable, unguessable address through NAT, with no tunnel account.
+3. **Create the team** with a name and that endpoint. You become administrator.
+4. **Switch the server to team mode** with the organization ID. It then authenticates members by Happy Social identity and keeps no local socket or token.
+5. **Verify** a real connection from your Desktop.
+6. **Invite members by email.**
+
+Tailcat encrypts the transport. Happy Social sign-in is the authentication boundary.
+
+## What a team server is not
+
+- Not a credential vault. The service account signs in to providers like a person would.
+- Not unsandboxed. Every command runs under the same OS sandbox and Auto review. On Ubuntu 24.04 the administrator grants the daemon executable an AppArmor namespace allowance first.
+- Not hosted. You run it.
+
+## Status
+
+Team setup is deliberate and multi-step today. Adding a teammate from the sidebar is not built yet.
+
+For one person and one extra machine, see [Remote Agents](/desktop/docs/guides/remote-agents/).

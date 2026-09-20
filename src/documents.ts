@@ -16,10 +16,12 @@ export interface DocumentEntry {
   title: string
   description: string
   group: DocumentGroup
+  /** Reachable by URL, but left out of navigation and previous/next links. */
+  hidden?: boolean
 }
 
 const documentSources = import.meta.glob(
-  ['/content/docs/**/*.mdx', '/content/happy2/**/*.mdx'],
+  ['/content/docs/**/*.mdx', '/content/desktop/**/*.mdx'],
   {
     eager: true,
     import: 'default',
@@ -164,77 +166,132 @@ const happyDocuments: DocumentDefinition[] = [
   },
 ]
 
-const happy2Documents: DocumentDefinition[] = [
+const desktopDocuments: DocumentDefinition[] = [
   {
     path: '',
-    sourcePath: '/content/happy2/index.mdx',
+    sourcePath: '/content/desktop/index.mdx',
     title: 'Welcome',
-    description: 'What Happy Desktop is, who it is for, and how a workspace fits together.',
+    description: 'What Happy Desktop is, what you get, and where to start.',
     group: 'Start here',
   },
   {
     path: 'quick-start',
-    sourcePath: '/content/happy2/quick-start.mdx',
+    sourcePath: '/content/desktop/quick-start.mdx',
     title: 'Quick Start',
-    description: 'Run the whole stack with one command and create your first channel.',
+    description: 'Download Happy Desktop, open a project, make one change, and pair your phone.',
+    group: 'Start here',
+  },
+  {
+    path: 'chief-of-staff',
+    sourcePath: '/content/desktop/chief-of-staff.mdx',
+    title: 'Chief of Staff',
+    description: 'The built-in agent that configures your setup in conversation, and what it will not do.',
     group: 'Start here',
   },
   {
     path: 'how-it-works',
-    sourcePath: '/content/happy2/how-it-works.mdx',
+    sourcePath: '/content/desktop/how-it-works.mdx',
     title: 'How It Works',
-    description: 'The server that owns the truth, sandboxed agents, sync, and plugins.',
+    description: 'The agent runtime on your machine, the app in front of it, and the phone beside it.',
     group: 'Start here',
   },
   {
+    path: 'models',
+    sourcePath: '/content/desktop/models.mdx',
+    title: 'Models & Subscriptions',
+    description: 'Claude, Codex, and Grok in one session, on the plans you already pay for.',
+    group: 'Features',
+  },
+  {
+    path: 'permissions',
+    sourcePath: '/content/desktop/permissions.mdx',
+    title: 'Permissions & Sandbox',
+    description: 'The four permission modes, automatic review in Auto, and what the sandbox enforces.',
+    group: 'Features',
+  },
+  {
+    path: 'workspaces',
+    sourcePath: '/content/desktop/workspaces.mdx',
+    title: 'Projects & Workspaces',
+    description: 'Projects are folders, workspaces are Git worktrees, and parallel work stays apart.',
+    group: 'Features',
+  },
+  {
     path: 'agents',
-    sourcePath: '/content/happy2/agents.mdx',
-    title: 'Agents & Permissions',
-    description: 'How agents get an identity, a sandbox, and only the tools you grant them.',
+    sourcePath: '/content/desktop/agents.mdx',
+    title: 'Agents That Never Die',
+    description: 'Durable sessions, subagents, scheduling, the Inbox, and presence.',
     group: 'Features',
   },
   {
-    path: 'plugins',
-    sourcePath: '/content/happy2/plugins.mdx',
-    title: 'Plugins',
-    description: 'Containers behind a capability-only API that add tools and app surfaces.',
+    path: 'mobile',
+    sourcePath: '/content/desktop/mobile.mdx',
+    title: 'Mobile Access',
+    description: 'Pair your phone once, then watch and steer every session with end-to-end encryption.',
     group: 'Features',
   },
   {
-    path: 'guides/self-hosting',
-    sourcePath: '/content/happy2/guides/self-hosting.mdx',
-    title: 'Self-Hosting',
-    description: 'Run Happy Desktop on your own machine or server, and configure authentication.',
+    path: 'multiplayer',
+    sourcePath: '/content/desktop/multiplayer.mdx',
+    title: 'Multiplayer & Teams',
+    description: 'Share a session with a colleague, and run one Happy Agent for a whole team.',
+    group: 'Features',
+  },
+  {
+    path: 'extending',
+    sourcePath: '/content/desktop/extending.mdx',
+    title: 'Plugins, Skills & MCP',
+    description: 'Add tools and small apps with plugins, instructions with skills, and services over MCP.',
+    group: 'Features',
+  },
+  {
+    path: 'guides/terminal',
+    sourcePath: '/content/desktop/guides/terminal.mdx',
+    title: 'Using the Terminal',
+    description: 'Keep Claude Code and Codex in your terminal and reach them from your phone.',
+    group: 'Guides',
+  },
+  {
+    path: 'guides/configuration',
+    sourcePath: '/content/desktop/guides/configuration.mdx',
+    title: 'Configuration',
+    description: 'Where happy.toml lives and the settings worth knowing about.',
+    group: 'Guides',
+  },
+  {
+    path: 'guides/remote-agents',
+    sourcePath: '/content/desktop/guides/remote-agents.mdx',
+    title: 'Remote Agents',
+    description: 'Run Happy Agent on another machine and work with it from Desktop and your phone.',
     group: 'Guides',
   },
   {
     path: 'comparisons/buzz',
-    sourcePath: '/content/happy2/comparisons/buzz.mdx',
+    sourcePath: '/content/desktop/comparisons/buzz.mdx',
     title: 'Happy Desktop vs Buzz',
     description: 'Where Happy Desktop and Block\'s Buzz agree, and where the designs split.',
     group: 'Comparisons',
-  },
-  {
-    path: 'announcement',
-    sourcePath: '/content/happy2/announcement.mdx',
-    title: 'Announcing Happy Desktop',
-    description: 'The soft launch: what we built, why, and what is still missing.',
-    group: 'Releases',
+    hidden: true,
   },
 ]
 
 export const documents: DocumentEntry[] = [
   ...happyDocuments.map((document) => ({ ...document, product: 'happy' as const })),
-  ...happy2Documents.map((document) => ({ ...document, product: 'happy2' as const })),
+  ...desktopDocuments.map((document) => ({ ...document, product: 'desktop' as const })),
 ]
 
 const productDocumentGroups: Record<ProductKey, DocumentGroup[]> = {
   happy: ['Start here', 'Guides', 'Features', 'Use cases', 'Comparisons', 'Releases', 'Resources'],
-  happy2: ['Start here', 'Features', 'Guides', 'Comparisons', 'Releases'],
+  desktop: ['Start here', 'Features', 'Guides', 'Comparisons'],
 }
 
 export function documentsForProduct(product: ProductKey) {
   return documents.filter((document) => document.product === product)
+}
+
+/** The documents a reader is shown: everything except pages kept reachable but unlisted. */
+export function listedDocumentsForProduct(product: ProductKey) {
+  return documentsForProduct(product).filter((document) => !document.hidden)
 }
 
 export function documentGroupsForProduct(product: ProductKey) {
