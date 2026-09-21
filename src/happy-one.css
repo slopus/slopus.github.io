@@ -6,11 +6,17 @@
 .happy-one h2 { font-size: clamp(2.3rem, 4vw, 3.5rem); }
 .happy-one h1, .happy-one h2 { overflow-wrap: anywhere; }
 .happy-one h3 { font: 600 1.15rem/1.3 'Space Grotesk', 'DM Sans', sans-serif; letter-spacing: -.02em; }
-.one-hero { padding-top: 4.5rem; text-align: center; }
-.one-hero h1 { font-size: clamp(3rem, 6.2vw, 5.7rem); margin-bottom: .5rem; }
+.happy-one { --one-h1: clamp(1.5rem, 3.1vw, 2.85rem); }
+/* The first screen holds the heading, the note, the whole recording, and the primary
+   download. Everything but the recording is a known height, so the stage
+   (happy-one-demo.css) sizes the recording from what is left of the viewport:
+   header 88px, hero top 12px, two heading lines at 1.04, heading margin 8px, note 24px,
+   movie gap 12px, stage padding 20px, download margin and padding 16px, badge with its
+   architecture selector 70px. */
+.one-hero { --one-hero-reserved: calc(250px + 2.08 * var(--one-h1)); padding-top: .75rem; text-align: center; }
+.one-hero h1 { font-size: var(--one-h1); margin-bottom: .5rem; }
 .one-hero-note { margin: 0; }
-/* Fit the note into the existing heading-to-movie gap. */
-.one-hero .one-demo { margin-top: calc(3rem - 1lh); }
+.one-hero .one-demo { margin-top: .75rem; }
 .one-benefits-section { margin-top: 3.25rem; }
 /* Numbered like a thread: the number hangs, the note keeps a uniform two lines. */
 .one-benefits { display: grid; grid-auto-rows: 1fr; gap: 1.4rem; width: min(100%, 34rem); margin: 0 auto; padding: 0; text-align: left; list-style: none; text-transform: lowercase; }
@@ -30,7 +36,7 @@
 .one-teammate { position: absolute; z-index: 50; top: -8px; right: calc((min(100vw - 40px, 34rem) - 100vw) / 2); width: 88px; height: 88px; pointer-events: none; }
 .one-teammate > img { position: absolute; inset: 0; z-index: 1; opacity: var(--feature-progress, 0); transform: translateX(calc(60px - 60px * var(--feature-progress, 0))); }
 .one-teammate-message { position: absolute; z-index: 2; right: 62px; top: 8px; width: max-content; padding: .5rem .7rem; border: 1px solid #bac7ae; border-radius: 12px 12px 0 12px; background: #f5f0e7; color: #47645e; text-transform: none; font-size: .78rem; line-height: 1.4; opacity: var(--feature-progress, 0); }
-.one-download-actions { position: relative; display: flex; flex-direction: column; align-items: center; gap: 1.75rem; width: 100%; min-height: calc(112px + 5.5rem); margin: 2rem auto 0; padding-block: .5rem; }
+.one-download-actions { position: relative; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%; margin: .5rem auto 0; padding-block: .5rem; }
 .one-desktop-downloads, .one-mobile-downloads { display: flex; flex-direction: column; align-items: center; gap: .75rem; min-width: 0; }
 .one-desktop-downloads { max-width: 100%; }
 .one-primary-download { display: flex; flex-direction: column; align-items: center; gap: 4px; }
@@ -45,7 +51,8 @@
 }
 .one-store-download { display: flex; flex-direction: column; align-items: center; gap: .55rem; }
 .one-store-download .store-rating { justify-content: center; padding-left: 0; }
-.one-download-actions .store-button { flex: none; width: 180px; height: 56px; }
+/* Same height as the Homebrew strip beside them. */
+.one-download-actions .store-button { flex: none; width: 148px; height: 46px; }
 .one-download-actions .one-desktop-button { display: block; padding: 0; border: 0; background: #000; cursor: pointer; }
 .one-desktop-button > img { display: block; width: 100%; height: 100%; }
 .one-platform-links { display: flex; align-items: center; justify-content: center; color: #47645e; font-size: .82rem; line-height: 20px; white-space: nowrap; }
@@ -107,9 +114,9 @@
 
 @media (max-width: 700px) {
   .happy-one .page-width { width: calc(100% - 40px); }
-  .one-hero { padding-top: 2.5rem; }
-  .one-hero h1 { font-size: clamp(2.55rem, 9.2vw, 4rem); }
-  .one-hero .one-demo { margin-top: calc(2rem - 1lh); }
+  .happy-one { --one-h1: clamp(1.6rem, 5.2vw, 2.2rem); }
+  .one-hero { padding-top: 1rem; }
+  .one-hero .one-demo { margin-top: .75rem; }
   .one-benefits-section { position: relative; margin-top: 2.5rem; }
   .one-benefit-number, .one-benefit-title { font-size: 1.06rem; }
   .one-benefit-body { font-size: .92rem; min-height: 0; }
@@ -138,7 +145,7 @@
   .one-teammate { top: -16px; right: -20px; width: 64px; height: 64px; }
   .one-teammate > img { width: 64px; height: 64px; }
   .one-teammate-message { right: 48px; top: 16px; }
-  .one-download-actions { min-height: 0; width: min(100%, 24rem); margin-top: 1.5rem; }
+  .one-download-actions { width: min(100%, 24rem); margin-top: .5rem; }
   .one-terminal-section { flex-direction: column; align-items: stretch; gap: 1.25rem; padding-block: 4rem 1rem; }
   .one-terminal-section .terminal-body { padding: 1.2rem; font-size: clamp(.82rem, 3.6vw, 1rem); }
   .one-existing { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
