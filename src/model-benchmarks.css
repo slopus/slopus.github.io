@@ -1,0 +1,71 @@
+.benchmark-page { min-height: 100vh; }
+.benchmark-main { max-width: 1080px; padding-top: 2rem; padding-bottom: 4rem; }
+.benchmark-heading { margin-bottom: 1.6rem; }
+.benchmark-heading h1 { font-size: clamp(2rem, 4vw, 3.2rem); margin-bottom: .9rem; }
+.benchmark-meta { display: flex; justify-content: space-between; gap: 1rem; color: #557068; font: .68rem 'DM Mono', monospace; }
+.benchmark-meta a:hover { color: #e6522c; }
+.benchmark-table { border-collapse: separate; border-spacing: 0; width: 100%; text-align: left; border: 1px solid #c9cabe; border-radius: 8px; }
+.benchmark-table tbody th { width: 95px; font-family: 'Space Grotesk', sans-serif; font-size: 1.45rem; padding: .65rem 1rem; border-right: 1px solid #c9cabe; }
+.benchmark-table td { padding: .6rem .8rem; height: 58px; }
+.benchmark-tier[data-empty='true'] td { height: 34px; padding-block: .2rem; }
+.benchmark-tier[data-empty='true'] th { padding-block: .15rem; }
+.benchmark-table tbody tr:not(:last-child) > * { border-bottom: 1px solid #c9cabe; }
+.benchmark-tier-s th { background: #f1d5c4; border-radius: 7px 0 0 0; }
+.benchmark-tier-a th { background: #efe0b3; }
+.benchmark-tier-b th { background: #e2e3bd; }
+.benchmark-tier-c th { background: #d8e0ce; }
+.benchmark-tier-d th { background: #d8e2dc; }
+.benchmark-tier-unranked th { background: #e8e5dd; font-size: .72rem !important; border-radius: 0 0 0 7px; }
+.benchmark-models { display: flex; flex-wrap: wrap; gap: .45rem; }
+.benchmark-model-wrap { position: relative; }
+.benchmark-model { display: flex; align-items: center; gap: .65rem; background: #fcfaf5; color: #183f38; border: 1px solid #c9cabe; border-radius: 5px; padding: .52rem .7rem; font: 500 .83rem 'DM Sans', sans-serif; cursor: pointer; }
+.benchmark-model > span { color: #73857d; }
+.benchmark-model:hover { border-color: #557068; }
+.benchmark-model:focus-visible, .benchmark-text-button:focus-visible, .benchmark-meta a:focus-visible { outline: 2px solid #e6522c; outline-offset: 3px; }
+.benchmark-model[aria-pressed='true'] { background: #183f38; color: #fcfaf5; border-color: #183f38; }
+.benchmark-model[aria-pressed='true'] > span { color: #d9d9b9; }
+.benchmark-tooltip { visibility: hidden; opacity: 0; position: absolute; z-index: 45; bottom: calc(100% + 8px); left: 0; width: 250px; max-width: calc(100vw - 150px); border: 1px solid #31564f; border-radius: 7px; padding: .85rem; background: #183f38; color: #fcfaf5; box-shadow: 0 9px 24px #183f3826; font-size: .77rem; line-height: 1.5; pointer-events: none; }
+.benchmark-model-wrap:hover .benchmark-tooltip, .benchmark-model:focus-visible + .benchmark-tooltip { visibility: visible; opacity: 1; }
+.benchmark-model-wrap[data-notes-hidden='true'] .benchmark-tooltip { visibility: hidden; opacity: 0; }
+.benchmark-model-wrap:nth-child(n+4) .benchmark-tooltip { left: auto; right: 0; }
+.benchmark-tooltip ul { margin: .55rem 0 0; padding-left: 1rem; }
+.benchmark-tooltip li + li { margin-top: .35rem; }
+.benchmark-tooltip .benchmark-note-caveat { color: #e9d8a9; }
+.benchmark-empty-tier { color: #718077; font-size: .8rem; }
+.benchmark-evidence { margin-top: 1.25rem; scroll-margin-top: 105px; }
+.benchmark-filters { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.2rem; min-height: 30px; }
+.benchmark-filters > p { margin: 0 auto 0 0; color: #557068; font: .72rem 'DM Mono', monospace; }
+.benchmark-filters label { display: inline-flex; align-items: center; gap: .45rem; font-size: .8rem; cursor: pointer; }
+.benchmark-filters input { width: 15px; height: 15px; accent-color: #183f38; }
+.benchmark-text-button { border: 0; border-bottom: 1px solid #557068; padding: 0; font: inherit; font-size: .76rem; color: #183f38; background: none; cursor: pointer; }
+.benchmark-no-evidence { padding: 2rem 0; color: #557068; font-size: .85rem; }
+.benchmark-source-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 1.8rem 1rem; }
+.benchmark-source { min-width: 0; width: 100%; max-width: 350px; justify-self: center; }
+.benchmark-source-kind { display: block; color: #856a50; font: .6rem 'DM Mono', monospace; margin: 0 .15rem .45rem; }
+.benchmark-source-models { display: flex; flex-wrap: wrap; gap: .3rem; }
+.benchmark-source-models > span { color: #557068; font-size: .62rem; border: 1px solid #d2d5c8; border-radius: 4px; padding: .15rem .35rem; }
+.benchmark-source-models > .is-selected { border-color: #557068; color: #183f38; }
+.benchmark-source footer { padding: .4rem .2rem 0; }
+.benchmark-source time { display: block; margin-top: .5rem; color: #7b887e; font-size: .67rem; }
+.benchmark-embed > div { min-width: 0; display: flow-root; }
+.benchmark-embed iframe { max-width: 100%; float: none !important; }
+.benchmark-loading { display: grid; place-items: center; min-height: 320px; border: 1px solid #deded4; border-radius: 12px; color: #7b887e; font-size: .75rem; }
+.benchmark-fallback { padding: 1rem; background: #fcfaf5; border: 1px solid #d7d8ce; border-radius: 12px; font-size: .85rem; line-height: 1.6; }
+.benchmark-fallback > a:first-child span { display: block; font-size: .72rem; color: #557068; }
+.benchmark-fallback p { margin: 1rem 0; }
+.benchmark-fallback-link { color: #557068; font-size: .75rem; text-decoration: underline; text-underline-offset: 3px; }
+.benchmark-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (min-width: 641px) and (max-width: 1000px) {
+  .benchmark-source-list { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 720px; margin-inline: auto; }
+}
+@media (max-width: 640px) {
+  .benchmark-main { width: calc(100% - 32px); padding-top: 1.4rem; }
+  .benchmark-heading h1 { max-width: 330px; }
+  .benchmark-meta { font-size: .6rem; }
+  .benchmark-table tbody th { width: 75px; padding: .5rem .6rem; }
+  .benchmark-table td { padding: .5rem; }
+  .benchmark-model { font-size: .75rem; padding: .5rem; gap: .5rem; }
+  .benchmark-model-wrap:nth-child(n) .benchmark-tooltip { position: fixed; bottom: 16px; left: 16px; right: 16px; width: auto; max-width: none; }
+  .benchmark-source-list { grid-template-columns: 1fr; }
+  .benchmark-filters { gap: .7rem; }
+}

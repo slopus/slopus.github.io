@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "revision": "2026-09-23.1",
+  "updatedAt": "2026-09-23T11:15:00Z",
+  "evidenceCutoff": "2026-09-23T11:06:00Z",
+  "reviewNote": "Our current take for everyday agentic coding. Same-tier order is editorial, not a measured quality gap. Luna coverage is still too narrow to rank; empty tiers are intentional.",
+  "models": [
+    {
+      "id": "anthropic/opus-5-5", "name": "Opus 5.5", "tier": "S",
+      "points": ["Strong coding and knowledge-work results.", "97% on Rauch’s Next.js eval.", "New release; effort and fallbacks matter."],
+      "sourceIds": ["2102435517165912464", "2102438210798514391", "2102519097770885231"],
+      "rationale": "S for converging provider, independent benchmark, and framework-specific coding evidence. Placed first provisionally for breadth, not a universal win over Astra; rollout evidence is still fresh."
+    },
+    {
+      "id": "openai/gpt-6-astra", "name": "GPT-6 Astra", "tier": "S",
+      "points": ["Frontier terminal and scientific-task results.", "AA: terminal parity with Opus 5.5.", "Theo: impressive but inconsistent."],
+      "sourceIds": ["2102435517165912464", "2102438210798514391", "2095595752815030713", "2097192907023458473"],
+      "rationale": "S for strong exact-version terminal and scientific-task evidence, tempered by Theo’s reliability warning. No family-name claims or prices establish this placement."
+    },
+    {
+      "id": "anthropic/fable-5-1", "name": "Fable 5.1", "tier": "S",
+      "points": ["Theo’s pick for consistent instruction following.", "97% on Rauch’s Next.js eval.", "Behind Opus 5.5 in Anthropic’s newer chart."],
+      "sourceIds": ["2102435517165912464", "2097192907023458473", "2102519097770885231", "2094851231487541376"],
+      "rationale": "S for the combination of strong scoped coding results and a credible evaluator’s everyday-use preference. Its placement is not inferred from Fable 5 or a vendor chart alone."
+    },
+    {
+      "id": "anthropic/opus-5", "name": "Opus 5", "tier": "A",
+      "points": ["Strong software-engineering results from Epoch.", "Capable predecessor to Opus 5.5.", "Newer Claude models lead provider terminal evals."],
+      "sourceIds": ["2102435517165912464", "2094851231487541376", "2080862538712199206"],
+      "rationale": "A for supported software-engineering capability with clearer evidence of newer Anthropic models improving on it. Older Epoch evidence is retained as scoped context rather than treated as current leadership."
+    },
+    {
+      "id": "openai/gpt-6-sol", "name": "GPT-6 Sol", "tier": "A",
+      "points": ["AA coding index: 57, up from 55.", "97% on Rauch’s Next.js eval.", "Some knowledge-work regressions in AA’s tests."],
+      "sourceIds": ["2102462962758033624", "2102519097770885231", "2102461464279912495"],
+      "rationale": "A for modest independent coding gains and a strong scoped Next.js result. The new release is not promoted to S on lower prices or a nearly saturated framework eval alone."
+    },
+    {
+      "id": "openai/gpt-5.6-sol", "name": "GPT-5.6 Sol", "tier": "A",
+      "points": ["AA coding index: 55 at max effort.", "Close to GPT-6 Sol on that index.", "Behind frontier models in provider terminal tests."],
+      "sourceIds": ["2102435517165912464", "2102462962758033624"],
+      "rationale": "A for a competitive exact-version coding baseline in AA’s current same-harness comparison. Retained close to its successor; obsolete July index figures are not pooled with September results."
+    },
+    {
+      "id": "xai/grok-4.7", "name": "Grok 4.7", "tier": "B",
+      "points": ["AA coding index: 56, up from 47.", "94% on Rauch’s Next.js eval.", "Theo reports weak frontend work and loops."],
+      "sourceIds": ["2102069815225586149", "2102074909623271513", "2102259624313549130", "2102519097770885231"],
+      "rationale": "B is a cautious everyday-coding recommendation despite strong measured gains: scoped Next.js results and Theo’s detailed reliability complaints limit confidence. AA’s improved score is not concealed or averaged into the anecdote."
+    },
+    {
+      "id": "xai/grok-4.6", "name": "Grok 4.6", "tier": "B",
+      "points": ["AA coding index: 47 at xhigh.", "Grok 4.7 improves all three coding components.", "Theo also flags 4.6’s speed and usability."],
+      "sourceIds": ["2102069815225586149", "2102074909623271513", "2102259624313549130"],
+      "rationale": "B below Grok 4.7 within this tier because the matched-effort coding evidence favors 4.7, while Theo’s complaints do not establish 4.6 as universally preferable."
+    },
+    {
+      "id": "openai/gpt-6-luna", "name": "GPT-6 Luna", "tier": "Unranked",
+      "points": ["AA coding index: 41, down from 43.", "Promising provider-reported DeepSWE comparison.", "Too little independent coverage to rank."],
+      "sourceIds": ["2102462962758033624", "2102461464279912495"],
+      "rationale": "Unranked: one independent evaluation family plus a provider-reported scoped comparison is too narrow to make a broad everyday-coding recommendation. Lower cost is not evidence of quality."
+    },
+    {
+      "id": "openai/gpt-5.6-luna", "name": "GPT-5.6 Luna", "tier": "Unranked",
+      "points": ["AA coding index: 43 at max effort.", "Ahead of GPT-6 Luna on that index.", "One independent source is too thin to rank."],
+      "sourceIds": ["2102462962758033624"],
+      "rationale": "Unranked: exact-version evidence currently comes from a single predecessor comparison. This is insufficient coverage, not a D-tier judgment."
+    }
+  ],
+  "sources": [
+    {
+      "id": "2102435517165912464", "url": "https://x.com/claudeai/status/2102435517165912464", "author": "Claude", "handle": "claudeai",
+      "publishedAt": "2026-09-22T16:31:03Z", "verifiedAt": "2026-09-23T11:06:08Z", "kind": "provider-reported",
+      "summary": "Anthropic’s attached chart reports Terminal-Bench 4.0: Opus 5.5 66.4%, Fable 5.1 55.8%, Opus 5 52.3%, GPT-6 Astra 57.9%, and GPT-5.6 Sol 37.3%. Astra leads its scientific-task comparison, while Opus 5.5 leads several coding rows.",
+      "caveat": "Provider comparison, not a matched-harness replication. Terminal results use Opus 5.5 at xhigh and Astra at high; other Opus 5.5 results generally use max. Safeguard fallbacks and differing evaluation setups matter. Do not pool these values with AA’s separate runs.",
+      "modelIds": ["anthropic/opus-5-5", "anthropic/fable-5-1", "anthropic/opus-5", "openai/gpt-6-astra", "openai/gpt-5.6-sol"],
+      "comparisonModelIds": ["anthropic/opus-5-5", "anthropic/fable-5-1", "anthropic/opus-5", "openai/gpt-6-astra", "openai/gpt-5.6-sol"],
+      "scope": { "task": "Terminal-Bench 4.0 and the attached coding/science comparison", "harness": "Anthropic evaluation; OpenAI figures attributed to OpenAI; see chart footnotes", "effort": "Opus 5.5 xhigh on Terminal-Bench, generally max elsewhere; Astra high on Terminal-Bench" },
+      "verification": { "method": "X oEmbed, original post, and direct visual review of the attached chart", "text": "Exact labels, percentages, effort notes, error bars and safeguard footnotes inspected in media HS1ZEbkXAAABmav. Publication timestamp verified on the original X page." }
+    },
+    {
+      "id": "2102438210798514391", "url": "https://x.com/ArtificialAnlys/status/2102438210798514391", "author": "Artificial Analysis", "handle": "ArtificialAnlys",
+      "publishedAt": "2026-09-22T16:41:45Z", "verifiedAt": "2026-09-23T11:06:05Z", "kind": "independent",
+      "summary": "AA reports Opus 5.5 at 58 on its Intelligence Index, with 59.6% on Terminal-Bench 4.0—level with GPT-6 Astra (xhigh). Its report highlights broad knowledge-work gains and substantially higher output-token use than Astra.",
+      "caveat": "Intelligence Index is not the Coding Agent Index. Effort differs across the comparisons; AA reports Anthropic’s default fallback enabled. These results do not establish identical behavior in every coding harness.",
+      "modelIds": ["anthropic/opus-5-5", "openai/gpt-6-astra"], "comparisonModelIds": ["anthropic/opus-5-5", "openai/gpt-6-astra"],
+      "scope": { "task": "AA Intelligence Index, Terminal-Bench 4.0, and knowledge-work evaluations", "harness": "AA evaluation suite; Stirrup explicitly named for AA-Briefcase", "effort": "Opus 5.5 max; Astra xhigh for terminal comparison, max for token-use comparison" },
+      "verification": { "method": "X oEmbed and full original X post", "text": "Read beyond the truncated embed. The 58 index score, 59.6% terminal score, exact Astra effort, and default-fallback qualification appear in the full post." }
+    },
+    {
+      "id": "2095595752815030713", "url": "https://x.com/OpenAI/status/2095595752815030713", "author": "OpenAI", "handle": "OpenAI",
+      "publishedAt": "2026-09-03T19:32:16Z", "verifiedAt": "2026-09-23T11:06:08Z", "kind": "provider-reported",
+      "summary": "OpenAI’s Astra release thread claims state-of-the-art results on TerminalBench-4.0, FrontierMath Tier 4, ARC-AGI 3, Terminal-Bench Science 0.1, and HealthBench Pro.",
+      "caveat": "A dated provider claim. No numeric scores, effort setting, or complete harness description in the post text; it is not proof of current leadership on every task.",
+      "modelIds": ["openai/gpt-6-astra"], "comparisonModelIds": [],
+      "scope": { "task": "Named terminal, mathematics, reasoning, science and health evaluations", "harness": "Not specified in the post text", "effort": "Not specified" },
+      "verification": { "method": "X oEmbed and original X post", "text": "Author, exact model name, named benchmark claims, and publication timestamp verified. No image-only scores inferred." }
+    },
+    {
+      "id": "2097192907023458473", "url": "https://x.com/theo/status/2097192907023458473", "author": "Theo — t3.gg", "handle": "theo",
+      "publishedAt": "2026-09-08T05:18:47Z", "verifiedAt": "2026-09-23T11:06:05Z", "kind": "independent",
+      "summary": "Theo describes extraordinary successes and basic failures with GPT-6 Astra, while saying Fable 5.1 generally does what he asks. This is a useful reliability contrast alongside headline benchmark results.",
+      "caveat": "Firsthand qualitative judgment, not a controlled benchmark. No task set, effort, or reproducible harness is specified. It does not mean Fable wins every task.",
+      "modelIds": ["openai/gpt-6-astra", "anthropic/fable-5-1"], "comparisonModelIds": ["openai/gpt-6-astra", "anthropic/fable-5-1"],
+      "scope": { "task": "Everyday model use and instruction following", "harness": "Not specified", "effort": "Not specified" },
+      "verification": { "method": "X oEmbed and original X post", "text": "Full text explicitly names GPT-6 Astra and Fable 5.1. Theo’s current handle is @theo. No image-chart inference used." }
+    },
+    {
+      "id": "2102519097770885231", "url": "https://x.com/rauchg/status/2102519097770885231", "author": "Guillermo Rauch", "handle": "rauchg",
+      "publishedAt": "2026-09-22T21:52:02Z", "verifiedAt": "2026-09-23T11:06:05Z", "kind": "independent",
+      "summary": "Rauch reports fresh Next.js evals: Opus 5.5, GPT-6 Sol, and Fable 5.1 each reach 97%; Grok 4.7 reaches 94%.",
+      "caveat": "Framework-specific evaluation reported by Vercel’s CEO, not a general coding ranking. Effort is unspecified and the leading scores are close to the ceiling. His cost observation is separate from task quality.",
+      "modelIds": ["anthropic/opus-5-5", "openai/gpt-6-sol", "anthropic/fable-5-1", "xai/grok-4.7"],
+      "comparisonModelIds": ["anthropic/opus-5-5", "openai/gpt-6-sol", "anthropic/fable-5-1", "xai/grok-4.7"],
+      "scope": { "task": "Next.js evals", "harness": "Next.js evaluation suite linked by the author", "effort": "Not specified in the post" },
+      "verification": { "method": "X oEmbed and original X post", "text": "All four exact model names and the 97/97/97/94 percentages are present in the verified post text." }
+    },
+    {
+      "id": "2102462962758033624", "url": "https://x.com/ArtificialAnlys/status/2102462962758033624", "author": "Artificial Analysis", "handle": "ArtificialAnlys",
+      "publishedAt": "2026-09-22T18:20:06Z", "verifiedAt": "2026-09-23T11:06:05Z", "kind": "independent",
+      "summary": "In Codex at max effort, AA reports a Coding Agent Index of 57 for GPT-6 Sol versus 55 for GPT-5.6 Sol, and 41 for GPT-6 Luna versus 43 for GPT-5.6 Luna. Sol gains on coding tasks, while Luna regresses on two coding components.",
+      "caveat": "The same post reports some knowledge-work regressions and reduced hallucination rates. Its separate Intelligence Index and coding-harness terminal results are not interchangeable. Lower prices do not determine our tiers.",
+      "modelIds": ["openai/gpt-6-sol", "openai/gpt-5.6-sol", "openai/gpt-6-luna", "openai/gpt-5.6-luna"],
+      "comparisonModelIds": ["openai/gpt-6-sol", "openai/gpt-5.6-sol", "openai/gpt-6-luna", "openai/gpt-5.6-luna"],
+      "scope": { "task": "AA Coding Agent Index: Terminal-Bench 4.0, SWE-Atlas-QnA and DeepSWE v1.1", "harness": "OpenAI Codex for coding results; separate AA harnesses for other evaluations", "effort": "max for all four coding-index results" },
+      "verification": { "method": "X oEmbed and full original X post", "text": "Read the full post beyond oEmbed truncation. Exact index values, predecessor deltas, Codex harness, effort, and regression qualifications verified in text." }
+    },
+    {
+      "id": "2102461464279912495", "url": "https://x.com/OpenAIDevs/status/2102461464279912495", "author": "OpenAI Developers", "handle": "OpenAIDevs",
+      "publishedAt": "2026-09-22T18:14:09Z", "verifiedAt": "2026-09-23T11:06:08Z", "kind": "provider-reported",
+      "summary": "OpenAI says GPT-6 Sol (max) nearly matches Fable 5 (xhigh) on DeepSWE v1.1, while GPT-6 Luna (max) is comparable to Fable 5 (medium).",
+      "caveat": "The comparator is Fable 5, not Fable 5.1. Different effort levels and no absolute solve rates in the text. These are two scoped comparisons against an older model, not a direct Sol-versus-Luna result.",
+      "modelIds": ["openai/gpt-6-sol", "openai/gpt-6-luna"], "comparisonModelIds": [],
+      "scope": { "task": "DeepSWE v1.1 long-horizon engineering tasks", "harness": "Not specified in the post text", "effort": "Sol and Luna max; Fable 5 xhigh and medium respectively" },
+      "verification": { "method": "X oEmbed and original X post", "text": "Exact models, effort qualifiers and comparison wording verified; cost claims are not used as quality evidence." }
+    },
+    {
+      "id": "2094851231487541376", "url": "https://x.com/ClaudeDevs/status/2094851231487541376", "author": "Claude Developers", "handle": "ClaudeDevs",
+      "publishedAt": "2026-09-01T18:13:48Z", "verifiedAt": "2026-09-23T11:06:07Z", "kind": "provider-reported",
+      "summary": "Anthropic’s developer account reports Fable 5.1 at 55.8% on Terminal-Bench 4.0 in Claude Code, versus Opus 5 at 52.3% on the same setup.",
+      "caveat": "Provider-run evaluation; effort is not stated in this post. It predates Opus 5.5 and cannot establish a comparison with that release.",
+      "modelIds": ["anthropic/fable-5-1", "anthropic/opus-5"], "comparisonModelIds": ["anthropic/fable-5-1", "anthropic/opus-5"],
+      "scope": { "task": "Terminal-Bench 4.0", "harness": "Claude Code, same setup according to the provider", "effort": "Not specified in the post" },
+      "verification": { "method": "X oEmbed and original X post", "text": "55.8%, 52.3%, exact versions and the same-setup claim appear in the verified text. Fable 5’s separate 42% result is not assigned to Fable 5.1." }
+    },
+    {
+      "id": "2080862538712199206", "url": "https://x.com/EpochAIResearch/status/2080862538712199206", "author": "Epoch AI", "handle": "EpochAIResearch",
+      "publishedAt": "2026-07-25T03:47:44Z", "verifiedAt": "2026-09-23T11:06:07Z", "kind": "independent",
+      "summary": "Epoch reports Opus 5 at 159 on its Capabilities Index and 161 on the software-engineering subset, matching Fable 5 on that subset.",
+      "caveat": "An older capability-index result, not a fresh hands-on comparison. The comparator is Fable 5, not Fable 5.1. Its index scale cannot be compared numerically with AA’s index.",
+      "modelIds": ["anthropic/opus-5"], "comparisonModelIds": [],
+      "scope": { "task": "Epoch Capabilities Index and software-engineering subset SWE-ECI", "harness": "Epoch’s benchmark aggregation; individual harnesses not specified here", "effort": "Not specified" },
+      "verification": { "method": "X oEmbed and original X post", "text": "ECI 159 and SWE-ECI 161, exact Opus 5 name, comparator version, and publication timestamp verified." }
+    },
+    {
+      "id": "2102069815225586149", "url": "https://x.com/SpaceXAI/status/2102069815225586149", "author": "SpaceXAI", "handle": "SpaceXAI",
+      "publishedAt": "2026-09-21T16:17:53Z", "verifiedAt": "2026-09-23T11:06:09Z", "kind": "provider-reported",
+      "summary": "The Grok 4.7 launch chart reports CursorBench 4.0 at 46.3% versus Grok 4.6’s 40.4%, and Terminal-Bench 4.0 at 38.0% versus 20.3%.",
+      "caveat": "Important mismatch: the chart compares Grok 4.7 xhigh with Grok 4.6 high. Its DeepSWE 4.7 result has a separate high-effort footnote. Prefer AA’s matched-xhigh coding comparison when assessing the generation change.",
+      "modelIds": ["xai/grok-4.7", "xai/grok-4.6"], "comparisonModelIds": ["xai/grok-4.7", "xai/grok-4.6"],
+      "scope": { "task": "CursorBench 4.0 and Terminal-Bench 4.0", "harness": "Provider chart; full harness setup not specified in the image", "effort": "Grok 4.7 xhigh versus Grok 4.6 high; DeepSWE exception marked high" },
+      "verification": { "method": "X oEmbed, original post, and direct visual review of the attached chart", "text": "Model/effort headers, exact coding percentages and DeepSWE footnote inspected in media HSwLcNqXIAAwNtz. Other models in the chart are not selected as additional evidence for those models." }
+    },
+    {
+      "id": "2102074909623271513", "url": "https://x.com/ArtificialAnlys/status/2102074909623271513", "author": "Artificial Analysis", "handle": "ArtificialAnlys",
+      "publishedAt": "2026-09-21T16:38:07Z", "verifiedAt": "2026-09-23T11:06:07Z", "kind": "independent",
+      "summary": "In Grok Build at xhigh, AA reports Grok 4.7 at 56 on its Coding Agent Index versus Grok 4.6 at 47. All three components improve: DeepSWE 65%→73%, Terminal-Bench 18%→33%, SWE-Atlas-QnA 58%→63%.",
+      "caveat": "Matched effort in a specific coding harness. This is separate from AA’s Intelligence Index and does not settle frontend quality or everyday reliability. Theo reports a materially worse experience below.",
+      "modelIds": ["xai/grok-4.7", "xai/grok-4.6"], "comparisonModelIds": ["xai/grok-4.7", "xai/grok-4.6"],
+      "scope": { "task": "AA Coding Agent Index: DeepSWE v1.1, Terminal-Bench 4.0 and SWE-Atlas-QnA", "harness": "Grok Build", "effort": "xhigh for both models" },
+      "verification": { "method": "X oEmbed and original X post", "text": "Both model names, matched xhigh effort, index values, all three component deltas, and publication timestamp verified." }
+    },
+    {
+      "id": "2102259624313549130", "url": "https://x.com/theo/status/2102259624313549130", "author": "Theo — t3.gg", "handle": "theo",
+      "publishedAt": "2026-09-22T04:52:07Z", "verifiedAt": "2026-09-23T11:06:07Z", "kind": "independent",
+      "summary": "Theo calls Grok 4.7 a disappointing release: poor frontend and 3D results, repeated loops, and worse usability than he expected. He also describes Grok 4.6 as slower and less pleasant than 4.5, while allowing that 4.7 can be pleasant on some engineering tasks.",
+      "caveat": "Firsthand qualitative evaluation without a named harness, task set, or effort setting. His complaints conflict with AA’s measured coding gains. Cost/token assertions are context, not independently reproduced measurements or tier weights.",
+      "modelIds": ["xai/grok-4.7", "xai/grok-4.6"], "comparisonModelIds": ["xai/grok-4.7", "xai/grok-4.6"],
+      "scope": { "task": "Real-world engineering, frontend and 3D generation", "harness": "Not specified", "effort": "Not specified" },
+      "verification": { "method": "X oEmbed and full original X post", "text": "Read the full original beyond the truncated embed; exact versions, frontend/3D complaints, looping behavior, and positive engineering qualification verified." }
+    }
+  ]
+}

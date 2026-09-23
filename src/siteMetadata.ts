@@ -48,6 +48,13 @@ export const desktopDocsMetadata: PageMetadata = {
   canonicalPath: '/desktop/docs/',
 }
 
+/** Keep the static Pages route in scripts/generate-static-routes.mjs in sync. */
+export const modelBenchmarksMetadata: PageMetadata = {
+  title: 'The Trust Me Bro Model Tier List — Happy',
+  description: 'A curated AI model tier list, with exact-version evidence from X, strengths, caveats, and head-to-head comparisons. Subjective synthesis, not a lab benchmark.',
+  canonicalPath: '/model-benchmarks',
+}
+
 export function docsMetadataForProduct(product: ProductKey): PageMetadata {
   return product === 'desktop' ? desktopDocsMetadata : docsMetadata
 }

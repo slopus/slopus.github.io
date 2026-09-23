@@ -156,6 +156,13 @@ const desktopHtml = htmlForPage(desktopPage)
 await writeRoute('desktop', desktopHtml)
 await writeRoute('happy2', desktopHtml)
 
+// Mirrors modelBenchmarksMetadata. No trailing slash in the picker’s public URL.
+await writeRoute('model-benchmarks', htmlForPage({
+  title: 'The Trust Me Bro Model Tier List — Happy',
+  description: 'A curated AI model tier list, with exact-version evidence from X, strengths, caveats, and head-to-head comparisons. Subjective synthesis, not a lab benchmark.',
+  canonicalPath: '/model-benchmarks',
+}))
+
 // The page was reviewed unlisted at this URL before it became /desktop/.
 // Keep shared links working; the app rewrites the path on load.
 await writeRoute('tmp/happy-one', htmlForPage({ ...desktopPage, robots: 'noindex, nofollow' }))
@@ -192,4 +199,4 @@ await writeFile(
   }),
 )
 
-console.log(`Generated ${documentRoutes + 7} static routes.`)
+console.log(`Generated ${documentRoutes + 8} static routes.`)

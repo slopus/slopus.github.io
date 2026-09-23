@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import App from './App'
 import DesktopApp from './DesktopApp'
+import ModelBenchmarksPage from './ModelBenchmarksPage'
 import { DocsPage, LegalPage, NotFoundPage } from './DocumentPages'
 import { getDocument, normalizeDocumentPath } from './documents'
 import { HAPPY_DESKTOP, productForPath } from './products'
@@ -9,6 +10,7 @@ import {
   desktopMetadata,
   docsMetadataForProduct,
   homepageMetadata,
+  modelBenchmarksMetadata,
   type PageMetadata,
 } from './siteMetadata'
 
@@ -52,6 +54,10 @@ function metadataForPath(pathname: string): PageMetadata {
 
   if (normalizedPath === HAPPY_DESKTOP.home.replace(/\/$/, '')) {
     return desktopMetadata
+  }
+
+  if (normalizedPath === '/model-benchmarks') {
+    return modelBenchmarksMetadata
   }
 
   const product = productForPath(normalizedPath)
@@ -186,6 +192,10 @@ export function Router({ pathname }: { pathname?: string }) {
 
   if (normalizedPath === '/desktop') {
     return <DesktopApp />
+  }
+
+  if (normalizedPath === '/model-benchmarks') {
+    return <ModelBenchmarksPage />
   }
 
   const product = productForPath(normalizedPath)
