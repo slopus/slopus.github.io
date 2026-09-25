@@ -29,6 +29,7 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
           <h1>The <em>trust me bro</em> tier list.</h1>
           <div className="benchmark-meta">
             <span>Updated <time dateTime={catalog.updatedAt} title={absoluteDate(catalog.updatedAt)}>{new Date(catalog.updatedAt).toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time></span>
+            <span aria-hidden="true">·</span>
             <a href="https://github.com/slopus/slopus.github.io/tree/main/.agents/skills/model-benchmarks-refresh" target="_blank" rel="noopener noreferrer">pipeline <span aria-hidden="true">↗</span></a>
           </div>
         </header>
@@ -54,7 +55,7 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
 
         <section className="benchmark-evidence" aria-label="Source posts" id="benchmark-evidence">
           <div className="benchmark-filters">
-            <p role="status">{sources.length} {sources.length === 1 ? 'post' : 'posts'}</p>
+            <p role="status" className="benchmark-sr-only">{sources.length} {sources.length === 1 ? 'post' : 'posts'}</p>
             {selected.size ? <button type="button" className="benchmark-text-button" onClick={() => setSelected(new Set())}>Clear selection</button> : null}
           </div>
           {sources.length ? <div className="benchmark-source-list">{sources.map(source => <article className="benchmark-source" key={source.id} aria-label={`Post by ${source.author}`}>

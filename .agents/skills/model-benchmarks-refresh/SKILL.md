@@ -66,7 +66,7 @@ The user explicitly chose automatic official X embeds. Load the shared widget au
 
 ## Keep the page minimal
 
-The visible page is a title, tiny updated date and GitHub **pipeline ↗** link, simple tier table, a post count with **Clear selection**, and original embedded posts. Clicking models is the only filter. No head-to-head toggle, provider-reported label, consent gate, “How we curate” section, curator essays, “Happy’s read”, source-scope panels, or ceremonial preamble. Empty tiers show an em dash. Hover/focus notes are two or three terse bullets.
+The visible page is a centered title with the tiny updated date and GitHub **pipeline ↗** link side by side beneath it, a compact centered tier table, **Clear selection** only while models are selected, and original embedded posts. Clicking models is the only filter. The post count is screen-reader only. No head-to-head toggle, provider-reported label, consent gate, “How we curate” section, curator essays, “Happy’s read”, source-scope panels, or ceremonial preamble. Empty tiers show an em dash. Hover/focus notes are two or three terse bullets.
 
 Use a responsive two/three-column desktop grid of approximately 300–350px embeds and one column on mobile. Under each embed show only its supported-model chips and subtle publication age. Source `kind`, `comparisonModelIds`, caveats, scope and editorial rationales stay as provenance in the JSON linked from this pipeline; the page does not render them.
 
