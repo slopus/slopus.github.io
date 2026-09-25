@@ -7,10 +7,9 @@ import './model-benchmarks.css'
 
 export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { catalog?: BenchmarkCatalog }) {
   const [selected, setSelected] = useState<Set<string>>(new Set())
-  const [comparisonsOnly, setComparisonsOnly] = useState(false)
   const [dismissedNotes, setDismissedNotes] = useState<string>()
   const [now] = useState(() => Date.now())
-  const sources = selectSources(catalog, selected, comparisonsOnly)
+  const sources = selectSources(catalog, selected)
   const modelNames = new Map(catalog.models.map(model => [model.id, model.name]))
 
   function toggleModel(id: string) {
@@ -56,11 +55,9 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
         <section className="benchmark-evidence" aria-label="Source posts" id="benchmark-evidence">
           <div className="benchmark-filters">
             <p role="status">{sources.length} {sources.length === 1 ? 'post' : 'posts'}</p>
-            <label><input type="checkbox" checked={comparisonsOnly} onChange={event => setComparisonsOnly(event.target.checked)} /> Head-to-head only</label>
             {selected.size ? <button type="button" className="benchmark-text-button" onClick={() => setSelected(new Set())}>Clear selection</button> : null}
           </div>
           {sources.length ? <div className="benchmark-source-list">{sources.map(source => <article className="benchmark-source" key={source.id} aria-label={`Post by ${source.author}`}>
-            {source.kind === 'provider-reported' ? <span className="benchmark-source-kind">Provider-reported</span> : null}
             <XPostEmbed postId={source.id} fallback={<div className="benchmark-fallback">
               <a href={source.url} target="_blank" rel="noopener noreferrer"><strong>{source.author}</strong><span>@{source.handle}</span></a>
               <p>{source.summary}</p>

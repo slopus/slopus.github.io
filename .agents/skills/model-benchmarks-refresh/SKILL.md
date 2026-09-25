@@ -26,7 +26,7 @@ The checked-in [source data and model ordering](../../../src/model-benchmarks.js
 
 Prioritize, in order:
 
-1. Official provider release threads with substantive benchmark detail. Always label these **provider-reported**, including developer accounts.
+1. Official provider release threads with substantive benchmark detail. Always record these as `kind: "provider-reported"` in the JSON, including developer accounts.
 2. Established evaluators with a meaningful audience and substantive firsthand evaluation, including Theo when relevant.
 3. Serious original benchmark/comparison researchers, even with a smaller audience, when their methodology is credible.
 
@@ -66,9 +66,9 @@ The user explicitly chose automatic official X embeds. Load the shared widget au
 
 ## Keep the page minimal
 
-The visible page is a title, tiny updated date and GitHub **pipeline ↗** link, simple tier table, compact filters, and original embedded posts. No consent gate, “How we curate” section, curator essays, “Happy’s read”, source-scope panels, or ceremonial preamble. Empty tiers show an em dash. Hover/focus notes are two or three terse bullets.
+The visible page is a title, tiny updated date and GitHub **pipeline ↗** link, simple tier table, a post count with **Clear selection**, and original embedded posts. Clicking models is the only filter. No head-to-head toggle, provider-reported label, consent gate, “How we curate” section, curator essays, “Happy’s read”, source-scope panels, or ceremonial preamble. Empty tiers show an em dash. Hover/focus notes are two or three terse bullets.
 
-Use a responsive two/three-column desktop grid of approximately 300–350px embeds and one column on mobile. Under each embed show only its supported-model chips and subtle publication age. Preserve a small provider-reported label for official claims. Full source caveats and editorial rationales stay in the JSON linked from this pipeline.
+Use a responsive two/three-column desktop grid of approximately 300–350px embeds and one column on mobile. Under each embed show only its supported-model chips and subtle publication age. Source `kind`, `comparisonModelIds`, caveats, scope and editorial rationales stay as provenance in the JSON linked from this pipeline; the page does not render them.
 
 The executable provider catalog remains separate. Future runtime consumption should bundle a pinned, reviewed exact-model recommendation policy, not fetch it at startup. Do not change model IDs, capabilities, provider availability, user ordering, selected models, active sessions, or hide low-tier models as a side effect of an editorial refresh. Coordinate any runtime policy update separately and preserve local overrides.
 
@@ -76,6 +76,6 @@ The executable provider catalog remains separate. Future runtime consumption sho
 
 Run `pnpm test` and `pnpm build`. Tests must enforce unique IDs, valid X URLs, reciprocal model/source references, no more than four posts per model, exact comparison membership, supported notes, stable filtering, automatic widget loading, and useful blocked-widget fallback. Check `/model-benchmarks` and `/model-benchmarks/`, static canonical/social metadata, and existing redirects.
 
-Visually inspect screenshots in `.context/blueprints/`: default with real loaded embeds, hover/keyboard notes, one model, two models, head-to-head filter, blocked-widget fallback, and mobile. Remove stale captures when the design changes. The current site is light-only; do not invent a dark theme. Clearly distinguish real embed screenshots from mocked failure/success test fixtures.
+Visually inspect screenshots in `.context/blueprints/`: default with real loaded embeds, hover/keyboard notes, one model, two models, blocked-widget fallback, and mobile. Remove stale captures when the design changes. The current site is light-only; do not invent a dark theme. Clearly distinguish real embed screenshots from mocked failure/success test fixtures.
 
 Hand off the tier table, every selected post with author/date/support/category, rejected or replaced candidates and reasons, exact verification results, screenshots, and remaining uncertainty. Do not push or publish without explicit approval; a push to `main` deploys the public site.

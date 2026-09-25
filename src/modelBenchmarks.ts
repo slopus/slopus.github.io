@@ -23,7 +23,7 @@ export interface BenchmarkSource {
   summary: string
   caveat: string
   modelIds: string[]
-  /** Only actual, reviewed head-to-head claims; mere co-mentions do not qualify. */
+  /** Provenance only, not rendered: actual reviewed head-to-head claims; mere co-mentions do not qualify. */
   comparisonModelIds: string[]
   scope: { task: string; harness: string; effort: string }
   verification: { method: string; text: string }
@@ -42,19 +42,12 @@ export interface BenchmarkCatalog {
 export const benchmarkCatalog = rawCatalog as BenchmarkCatalog
 
 /** Preserve editorial order. Filtering never scores, reorders, or fetches sources. */
-export function selectSources(catalog: BenchmarkCatalog, selected: ReadonlySet<string>, comparisonsOnly: boolean) {
+export function selectSources(catalog: BenchmarkCatalog, selected: ReadonlySet<string>) {
   const selectedSourceIds = new Set(catalog.models
     .filter(model => selected.size === 0 || selected.has(model.id))
     .flatMap(model => model.sourceIds))
 
-  return catalog.sources.filter(source => {
-    if (!selectedSourceIds.has(source.id)) return false
-    if (!comparisonsOnly) return true
-    if (source.comparisonModelIds.length < 2) return false
-    if (selected.size === 0) return true
-    const selectedComparisons = source.comparisonModelIds.filter(id => selected.has(id)).length
-    return selectedComparisons >= Math.min(2, selected.size)
-  })
+  return catalog.sources.filter(source => selectedSourceIds.has(source.id))
 }
 
 export function publicationAge(publishedAt: string, now = Date.now()) {

@@ -55,7 +55,7 @@
     },
     {
       "id": "openai/gpt-6-luna", "name": "GPT-6 Luna", "tier": "Unranked",
-      "points": ["AA coding index: 41, down from 43.", "Promising provider-reported DeepSWE comparison.", "Too little independent coverage to rank."],
+      "points": ["AA coding index: 41, down from 43.", "OpenAI's own DeepSWE comparison looks promising.", "Too little independent coverage to rank."],
       "sourceIds": ["2102462962758033624", "2102461464279912495"],
       "rationale": "Unranked: one independent evaluation family plus a provider-reported scoped comparison is too narrow to make a broad everyday-coding recommendation. Lower cost is not evidence of quality."
     },

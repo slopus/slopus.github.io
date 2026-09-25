@@ -18,7 +18,7 @@ const fixture: BenchmarkCatalog = {
     { id: 'test/beta', name: 'Beta', tier: 'A', points: ['Useful for small tasks.', 'Effort matters.'], sourceIds: ['100', '300'], rationale: 'Fixture.' },
     { id: 'test/gamma', name: 'Gamma', tier: 'Unranked', points: ['No reviewed source.', 'Not a negative judgment.'], sourceIds: [], rationale: 'Insufficient evidence.' },
   ],
-  sources: [source('300', ['test/beta']), source('100', ['test/alpha', 'test/beta'], ['test/alpha', 'test/beta']), source('200', ['test/alpha'])],
+  sources: [source('300', ['test/beta']), source('100', ['test/alpha', 'test/beta'], ['test/alpha', 'test/beta']), { ...source('200', ['test/alpha']), kind: 'provider-reported' }],
 }
 beforeEach(() => { window.twttr = { widgets: { createTweet: vi.fn().mockResolvedValue(undefined) } } })
 afterEach(() => { cleanup(); delete window.twttr; vi.restoreAllMocks() })
@@ -61,19 +61,14 @@ describe('reviewed catalog integrity', () => {
 
 describe('stable filtering', () => {
   it('shows all sources in editorial order without a selection', () => {
-    expect(selectSources(fixture, new Set(), false).map(entry => entry.id)).toEqual(['300', '100', '200'])
+    expect(selectSources(fixture, new Set()).map(entry => entry.id)).toEqual(['300', '100', '200'])
   })
   it('returns a deduplicated union independent of click order', () => {
-    expect(selectSources(fixture, new Set(['test/alpha']), false).map(entry => entry.id)).toEqual(['100', '200'])
-    expect(selectSources(fixture, new Set(['test/beta', 'test/alpha']), false).map(entry => entry.id)).toEqual(['300', '100', '200'])
-  })
-  it('does not mistake separate mentions for head-to-heads', () => {
-    const separate = { ...fixture, sources: fixture.sources.map(entry => ({ ...entry, comparisonModelIds: [] })) }
-    expect(selectSources(separate, new Set(['test/alpha', 'test/beta']), true)).toEqual([])
-    expect(selectSources(fixture, new Set(['test/alpha', 'test/beta']), true).map(entry => entry.id)).toEqual(['100'])
+    expect(selectSources(fixture, new Set(['test/alpha'])).map(entry => entry.id)).toEqual(['100', '200'])
+    expect(selectSources(fixture, new Set(['test/beta', 'test/alpha'])).map(entry => entry.id)).toEqual(['300', '100', '200'])
   })
   it('does not show unrelated evidence for an uncovered model', () => {
-    expect(selectSources(fixture, new Set(['test/gamma']), false)).toEqual([])
+    expect(selectSources(fixture, new Set(['test/gamma']))).toEqual([])
   })
 })
 
@@ -97,7 +92,7 @@ describe('model benchmarks page', () => {
     expect(screen.getByRole('table')).toBeTruthy()
     expect(modelBenchmarksMetadata.canonicalPath).toBe('/model-benchmarks')
   })
-  it('supports accessible notes, multi-selection, clearing and comparisons', () => {
+  it('supports accessible notes, multi-selection and clearing', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
     const alpha = screen.getByRole('button', { name: 'Alpha' })
     expect(document.getElementById(alpha.getAttribute('aria-describedby')!)?.textContent).toContain('Strong on coding.')
@@ -111,10 +106,11 @@ describe('model benchmarks page', () => {
     expect(screen.getAllByRole('article')).toHaveLength(2)
     fireEvent.click(screen.getByRole('button', { name: 'Beta' }))
     expect(screen.getAllByRole('article')).toHaveLength(3)
-    fireEvent.click(screen.getByLabelText('Head-to-head only'))
-    expect(screen.getAllByRole('article')).toHaveLength(1)
+    fireEvent.click(screen.getByRole('button', { name: 'Alpha' }))
+    expect(screen.getByRole('status').textContent).toBe('2 posts')
     fireEvent.click(screen.getByRole('button', { name: 'Clear selection' }))
-    expect(screen.getByRole('status').textContent).toBe('1 post')
+    expect(screen.getByRole('status').textContent).toBe('3 posts')
+    expect(screen.queryByRole('button', { name: 'Clear selection' })).toBeNull()
   })
   it('keeps first-party fallback and accessible publication times when embeds fail', async () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
@@ -138,6 +134,8 @@ describe('model benchmarks page', () => {
     expect(screen.queryByText('Reviewed finding 100')).toBeNull()
     expect(screen.queryByText('Happy’s read')).toBeNull()
     expect(screen.queryByText('How we curate this')).toBeNull()
+    expect(screen.queryByText(/provider-reported/i)).toBeNull()
+    expect(screen.queryByRole('checkbox')).toBeNull()
     expect(screen.getByRole('link', { name: /pipeline/ }).getAttribute('href')).toContain('model-benchmarks-refresh')
   })
   it('explains no matches without adding filler sources', () => {
