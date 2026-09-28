@@ -10,7 +10,6 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
   const [dismissedNotes, setDismissedNotes] = useState<string>()
   const [now] = useState(() => Date.now())
   const sources = selectSources(catalog, selected)
-  const modelNames = new Map(catalog.models.map(model => [model.id, model.name]))
 
   function toggleModel(id: string) {
     setSelected(previous => {
@@ -65,7 +64,6 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
               <a href={source.url} target="_blank" rel="noopener noreferrer" className="benchmark-fallback-link">Read post on X ↗</a>
             </div>} />
             <footer>
-              <div className="benchmark-source-models">{source.modelIds.map(id => <span className={selected.has(id) ? 'is-selected' : undefined} key={id}>{modelNames.get(id)}</span>)}</div>
               <time dateTime={source.publishedAt} title={absoluteDate(source.publishedAt)} aria-label={`Published ${absoluteDate(source.publishedAt)}`}>{publicationAge(source.publishedAt, now)}</time>
             </footer>
           </article>)}</div> : <p className="benchmark-no-evidence">No reviewed posts match this selection.</p>}

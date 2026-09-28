@@ -137,6 +137,7 @@ describe('model benchmarks page', () => {
     expect(screen.queryByText(/provider-reported/i)).toBeNull()
     expect(screen.queryByRole('checkbox')).toBeNull()
     expect(screen.getByRole('status').className).toBe('benchmark-sr-only')
+    expect(screen.queryByText('Alpha', { selector: 'article *' })).toBeNull()
     expect(screen.getByRole('link', { name: /pipeline/ }).getAttribute('href')).toContain('model-benchmarks-refresh')
   })
   it('explains no matches without adding filler sources', () => {
