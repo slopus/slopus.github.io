@@ -55,6 +55,34 @@ export const modelBenchmarksMetadata: PageMetadata = {
   canonicalPath: '/model-benchmarks',
 }
 
+/**
+ * The plugin pages are the public listing URLs in OpenAI's plugin directory, so
+ * keep these paths stable. Keep scripts/generate-static-routes.mjs in sync.
+ */
+export const pluginsMetadata: PageMetadata = {
+  title: 'Plugins — Happy',
+  description: 'Plugins by Happy for ChatGPT and Codex.',
+  canonicalPath: '/plugins/',
+}
+
+export const memesPluginMetadata: PageMetadata = {
+  title: 'Happy Memes — Turn any moment into a meme',
+  description: 'Make funny, postable image memes about news, launches, trends, and everyday moments. A skills-only plugin for ChatGPT and Codex.',
+  canonicalPath: '/plugins/memes/',
+}
+
+export const pluginPrivacyMetadata: PageMetadata = {
+  title: 'Plugin Privacy Policy — Happy',
+  description: 'Privacy policy for Happy plugins for ChatGPT and Codex, including Happy Memes.',
+  canonicalPath: '/plugins/privacy/',
+}
+
+export const pluginTermsMetadata: PageMetadata = {
+  title: 'Plugin Terms of Use — Happy',
+  description: 'Terms of use for Happy plugins for ChatGPT and Codex, including Happy Memes.',
+  canonicalPath: '/plugins/terms/',
+}
+
 export function docsMetadataForProduct(product: ProductKey): PageMetadata {
   return product === 'desktop' ? desktopDocsMetadata : docsMetadata
 }

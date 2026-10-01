@@ -189,6 +189,36 @@ await writeRoute('tos', htmlForPage({
   description: 'Terms of use for Happy.',
   canonicalPath: '/terms/',
 }))
+
+// Mirrors the plugin metadata in src/siteMetadata.ts. These are the plugin
+// directory's listing URLs (website, terms, privacy); keep them resolving.
+const pluginPages = [
+  {
+    route: 'plugins',
+    title: 'Plugins — Happy',
+    description: 'Plugins by Happy for ChatGPT and Codex.',
+  },
+  {
+    route: 'plugins/memes',
+    title: 'Happy Memes — Turn any moment into a meme',
+    description: 'Make funny, postable image memes about news, launches, trends, and everyday moments. A skills-only plugin for ChatGPT and Codex.',
+  },
+  {
+    route: 'plugins/privacy',
+    title: 'Plugin Privacy Policy — Happy',
+    description: 'Privacy policy for Happy plugins for ChatGPT and Codex, including Happy Memes.',
+  },
+  {
+    route: 'plugins/terms',
+    title: 'Plugin Terms of Use — Happy',
+    description: 'Terms of use for Happy plugins for ChatGPT and Codex, including Happy Memes.',
+  },
+]
+
+for (const { route, title, description } of pluginPages) {
+  await writeRoute(route, htmlForPage({ title, description, canonicalPath: `/${route}/` }))
+}
+
 await writeFile(
   path.join(distRoot, '404.html'),
   htmlForPage({
@@ -199,4 +229,4 @@ await writeFile(
   }),
 )
 
-console.log(`Generated ${documentRoutes + 8} static routes.`)
+console.log(`Generated ${documentRoutes + 8 + pluginPages.length} static routes.`)

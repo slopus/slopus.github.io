@@ -3,6 +3,7 @@ import App from './App'
 import DesktopApp from './DesktopApp'
 import ModelBenchmarksPage from './ModelBenchmarksPage'
 import { DocsPage, LegalPage, NotFoundPage } from './DocumentPages'
+import { MemesPluginPage, PluginsPage } from './PluginPages'
 import { getDocument, normalizeDocumentPath } from './documents'
 import { HAPPY_DESKTOP, productForPath } from './products'
 import {
@@ -10,9 +11,23 @@ import {
   desktopMetadata,
   docsMetadataForProduct,
   homepageMetadata,
+  memesPluginMetadata,
   modelBenchmarksMetadata,
+  pluginPrivacyMetadata,
+  pluginsMetadata,
+  pluginTermsMetadata,
   type PageMetadata,
 } from './siteMetadata'
+
+/** Plugin directory listing URLs. They must keep resolving once submitted. */
+const pluginPageMetadata: Record<string, PageMetadata> = {
+  '/plugins': pluginsMetadata,
+  '/plugins/memes': memesPluginMetadata,
+  '/plugins/privacy': pluginPrivacyMetadata,
+  '/plugins/terms': pluginTermsMetadata,
+}
+
+const pluginsBack = { href: '/plugins/', label: 'Back to plugins' }
 
 /** Pages that moved. Keep the old URLs working. */
 const movedPaths: Record<string, string> = {
@@ -58,6 +73,10 @@ function metadataForPath(pathname: string): PageMetadata {
 
   if (normalizedPath === '/model-benchmarks') {
     return modelBenchmarksMetadata
+  }
+
+  if (pluginPageMetadata[normalizedPath]) {
+    return pluginPageMetadata[normalizedPath]
   }
 
   const product = productForPath(normalizedPath)
@@ -196,6 +215,22 @@ export function Router({ pathname }: { pathname?: string }) {
 
   if (normalizedPath === '/model-benchmarks') {
     return <ModelBenchmarksPage />
+  }
+
+  if (normalizedPath === '/plugins') {
+    return <PluginsPage />
+  }
+
+  if (normalizedPath === '/plugins/memes') {
+    return <MemesPluginPage />
+  }
+
+  if (normalizedPath === '/plugins/privacy') {
+    return <LegalPage name="plugins/privacy" back={pluginsBack} />
+  }
+
+  if (normalizedPath === '/plugins/terms') {
+    return <LegalPage name="plugins/terms" back={pluginsBack} />
   }
 
   const product = productForPath(normalizedPath)

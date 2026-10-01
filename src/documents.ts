@@ -29,7 +29,7 @@ const documentSources = import.meta.glob(
   },
 ) as Record<string, string>
 
-const legalSources = import.meta.glob('/content/legal/*.md', {
+const legalSources = import.meta.glob('/content/legal/**/*.md', {
   eager: true,
   import: 'default',
   query: '?raw',
@@ -319,7 +319,10 @@ export function getDocumentSource(document: DocumentEntry) {
   return `# ${document.title}\n\nDocumentation for this feature is coming soon.`
 }
 
-export function getLegalSource(name: 'privacy' | 'terms') {
+/** The Happy app's policies, and the separate ones for Happy plugins. */
+export type LegalName = 'privacy' | 'terms' | 'plugins/privacy' | 'plugins/terms'
+
+export function getLegalSource(name: LegalName) {
   return legalSources[`/content/legal/${name}.md`] ?? ''
 }
 

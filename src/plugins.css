@@ -1,0 +1,73 @@
+/* Plugin pages: /plugins/ and one page per plugin. These are the plugin
+   directory's listing URLs, so they stay plain and quick to read. */
+.plugin-main { padding: 3.5rem 0 6rem; }
+.plugin-main .eyebrow { color: #557068; margin-bottom: 1rem; }
+.plugin-main .eyebrow a:hover { color: #e6522c; }
+
+/* Hero */
+.plugin-hero { align-items: center; display: grid; gap: 2.4rem; grid-template-columns: auto minmax(0, 1fr); }
+.plugin-icon { border-radius: 30px; box-shadow: 0 26px 50px -30px rgba(24, 63, 56, .7); display: block; height: 128px; width: 128px; }
+.plugin-hero h1 { margin-bottom: .5rem; }
+.plugin-tagline { color: #e6522c; font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-size: clamp(1.3rem, 2.2vw, 1.65rem); font-weight: 600; letter-spacing: -.02em; margin-bottom: .9rem; }
+.plugin-summary { color: #47645e; font-size: 1.05rem; line-height: 1.6; margin: 0; max-width: 560px; text-wrap: pretty; }
+
+/* Sections */
+.plugin-section { border-top: 1px solid #d9d3c5; margin-top: 4rem; padding-top: 3rem; }
+.plugin-section h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); margin-bottom: 1.6rem; }
+.plugin-section h3 { font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-size: 1.12rem; letter-spacing: -.02em; line-height: 1.25; margin: 0 0 .55rem; }
+.plugin-section-intro { color: #47645e; font-size: .98rem; line-height: 1.6; margin: -.6rem 0 1.6rem; max-width: 60ch; }
+.plugin-note { color: #47645e; font-size: .92rem; line-height: 1.6; margin: 1.4rem 0 0; max-width: 72ch; text-wrap: pretty; }
+
+.plugin-points { counter-reset: plugin-point; display: grid; gap: 1.1rem; grid-template-columns: repeat(3, minmax(0, 1fr)); list-style: none; margin: 0; padding: 0; }
+.plugin-points li { border: 1px solid #d5cebf; border-radius: 16px; counter-increment: plugin-point; padding: 1.35rem 1.3rem; }
+.plugin-points li::before { color: #e6522c; content: '0' counter(plugin-point); display: block; font-family: 'DM Mono', monospace; font-size: .68rem; letter-spacing: .08em; margin-bottom: .9rem; }
+.plugin-points p { color: #47645e; font-size: .92rem; line-height: 1.6; margin: 0; text-wrap: pretty; }
+
+/* Examples: a three-column masonry, since the memes are square and 4:5. */
+.plugin-examples { columns: 3; column-gap: 1.1rem; list-style: none; margin: 0; padding: 0; }
+.plugin-examples li { break-inside: avoid; margin-bottom: 1.1rem; }
+.plugin-examples img { background: #ebe5d9; border: 1px solid #d5cebf; border-radius: 14px; display: block; height: auto; width: 100%; }
+
+/* Install */
+.plugin-install { align-items: start; display: grid; gap: 1.5rem 3rem; grid-template-columns: minmax(0, 1.35fr) minmax(0, .65fr); }
+.plugin-install .terminal { margin-bottom: 0; }
+.plugin-install .terminal-body { font-size: .84rem; line-height: 1.75; }
+.plugin-install > div:last-child { padding-top: .4rem; }
+.plugin-prompts { display: grid; gap: .6rem; list-style: none; margin: .9rem 0 0; padding: 0; }
+.plugin-prompts li { background: #ebe5d9; border-radius: 14px 14px 14px 4px; color: #294c45; font-size: .9rem; line-height: 1.45; padding: .7rem .9rem; }
+
+/* Credits */
+.plugin-credits { border-top: 1px solid #d9d3c5; color: #557068; font-size: .84rem; line-height: 1.6; margin-top: 4.5rem; padding-top: 1.6rem; }
+.plugin-credits p { margin: 0 0 .6rem; max-width: 80ch; }
+.plugin-credits a { text-decoration: underline; text-decoration-color: rgba(85, 112, 104, .4); text-underline-offset: 3px; }
+.plugin-credits a:hover { color: #e6522c; text-decoration-color: currentColor; }
+.plugin-policy-links { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; margin-top: 1rem !important; }
+.plugin-policy-links a { color: #183f38; font-weight: 600; }
+
+/* Index */
+.plugin-index-heading h1 { margin-bottom: 2.4rem; }
+.plugin-index-list { display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); list-style: none; margin: 0; padding: 0; }
+.plugin-index-card { align-items: center; border: 1px solid #d5cebf; border-radius: 18px; display: flex; gap: 1.1rem; padding: 1.1rem 1.25rem; transition: border-color .2s ease, transform .2s ease; }
+.plugin-index-card:hover { border-color: #183f38; transform: translateY(-2px); }
+.plugin-index-card img { border-radius: 18px; flex: none; }
+.plugin-index-card > span:not(.plugin-index-arrow) { color: #47645e; display: flex; flex: 1; flex-direction: column; font-size: .92rem; gap: .2rem; }
+.plugin-index-card strong { color: #183f38; font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-size: 1.2rem; letter-spacing: -.02em; }
+.plugin-index-arrow { color: #e6522c; font-size: 1.2rem; }
+
+@media (max-width: 900px) {
+  .plugin-points { grid-template-columns: 1fr; }
+  .plugin-examples { columns: 2; }
+  .plugin-install { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 760px) {
+  .plugin-main { padding: 2.2rem 0 4.5rem; }
+  .plugin-hero { align-items: start; gap: 1.4rem; grid-template-columns: minmax(0, 1fr); }
+  .plugin-icon { border-radius: 22px; height: 88px; width: 88px; }
+  .plugin-section { margin-top: 3rem; padding-top: 2.4rem; }
+  .plugin-install .terminal-body { font-size: .74rem; }
+}
+
+@media (max-width: 480px) {
+  .plugin-examples { columns: 1; }
+}

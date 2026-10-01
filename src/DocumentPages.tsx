@@ -9,6 +9,7 @@ import {
   normalizeDocumentPath,
   prepareMarkdown,
   type DocumentEntry,
+  type LegalName,
 } from './documents'
 import { documentHref, HAPPY, type Product } from './products'
 import { SiteFooter, SiteHeader } from './SiteChrome'
@@ -132,15 +133,21 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
   )
 }
 
-export function LegalPage({ name }: { name: 'privacy' | 'terms' }) {
+export function LegalPage({
+  name,
+  back = { href: '/', label: 'Back to home' },
+}: {
+  name: LegalName
+  back?: { href: string; label: string }
+}) {
   const markdown = prepareMarkdown(getLegalSource(name))
 
   return (
     <div className="site-shell document-site-shell">
       <SiteHeader />
       <main className="legal-layout page-width">
-        <a className="document-back-link" href="/">
-          <span aria-hidden="true">←</span> Back to home
+        <a className="document-back-link" href={back.href}>
+          <span aria-hidden="true">←</span> {back.label}
         </a>
         <article className="document-article legal-article">
           <MarkdownDocument markdown={markdown} />
