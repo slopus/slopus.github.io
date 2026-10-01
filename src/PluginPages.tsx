@@ -3,6 +3,7 @@ import { SiteFooter, SiteHeader } from './SiteChrome'
 import './plugins.css'
 
 const MEMES_ICON = '/img/plugins/memes/logo.png'
+const MEMES_SOURCE = 'https://github.com/slopus/happy-meme-plugin'
 
 // Copy follows plugins/happy-memes/.codex-plugin/plugin.json in slopus/happy-meme-plugin.
 // Describe only what skills/meme/SKILL.md actually does.
@@ -27,23 +28,24 @@ const memesPrompts = [
   'Give me 3 meme options about something trending today',
 ]
 
-// Picked from examples/ in the plugin repository; alt text is the run's own.
+// Made with the plugin during testing; alt text is the run's own. Leave out
+// memes that riff on OpenAI or its rivals: this page is the directory listing.
 const memesExamples = [
   {
     src: '12-name-your-agent-cups.jpg', width: 900, height: 900,
     alt: 'Five identical coffee cups on a café counter, labeled in marker Dottie, Dotty, Dotti, Dottie, Dotty. Caption: "Name your AI agent anything."',
   },
   {
-    src: '10-always-on-group-chat.jpg', width: 720, height: 900,
-    alt: 'A group chat titled "always-on agents." Muse, Dot and Grok Bot each say "I\'m always on." Below: "Seen by Claude."',
+    src: '21-agent-receipt.jpg', width: 720, height: 900,
+    alt: 'A thermal store receipt next to a laptop: AI AGENT. ORDER: fix 1 typo. Files changed 47. Tests added 0. Tip? 15% 20% 25%.',
   },
   {
     src: '14-sept30-oct1-lawn.jpg', width: 720, height: 900,
     alt: 'Three photos of the same front lawn. On Sept 30 it is empty. On Oct 1 a 12-foot skeleton stands there. On Nov 1 the same skeleton wears a Santa hat and holds Christmas lights.',
   },
   {
-    src: '02-increasingly-efficient-cereal.jpg', width: 900, height: 900,
-    alt: 'A big yellow $200 cereal box reading "NEW! increasingly efficient models" stands next to a tiny plastic bag holding three pieces of cereal.',
+    src: '22-agent-at-work-sign.jpg', width: 900, height: 900,
+    alt: 'An orange road-work sign standing in an empty open-plan office: AI AGENT AT WORK, with a plate below: DO NOT ASK WHAT IT CHANGED.',
   },
   {
     src: '08-argon-marquee.jpg', width: 900, height: 900,
@@ -149,7 +151,7 @@ export function MemesPluginPage() {
       <section className="plugin-section" aria-labelledby="memes-examples">
         <h2 id="memes-examples">Made with Happy Memes</h2>
         <p className="plugin-section-intro">
-          From the first test run on October 1, 2026, so the jokes are about that week.
+          Made while testing the plugin in October 2026, so some of the jokes are about that week’s news.
         </p>
         <ul className="plugin-examples">
           {memesExamples.map((example) => (
@@ -168,22 +170,17 @@ export function MemesPluginPage() {
 
       <section className="plugin-section plugin-install" aria-labelledby="memes-install">
         <div>
-          <h2 id="memes-install">Install</h2>
-          <p className="plugin-section-intro">
-            Add it to Codex from GitHub. Available in the ChatGPT plugin directory soon.
+          <h2 id="memes-install">Get it in ChatGPT</h2>
+          <p className="plugin-install-copy">
+            Happy Memes is coming to the ChatGPT plugin directory. Once it’s listed, find it under
+            Plugins in ChatGPT and ask for a meme.
           </p>
-          <div className="terminal">
-            <div className="terminal-bar"><span /><span /><span /><em>Codex</em></div>
-            <pre className="terminal-body">
-              <code>
-                <span className="terminal-prompt">$</span>codex plugin marketplace add slopus/happy-meme-plugin{'\n'}
-                <span className="terminal-prompt">$</span>codex plugin add happy-memes@happy-meme-plugin
-              </code>
-            </pre>
-          </div>
+          <a className="text-link" href={MEMES_SOURCE} target="_blank" rel="noopener noreferrer">
+            Source on GitHub <span aria-hidden="true">↗</span>
+          </a>
         </div>
         <div>
-          <h3>Then ask</h3>
+          <h3>Try asking</h3>
           <ul className="plugin-prompts">
             {memesPrompts.map((prompt) => <li key={prompt}>{prompt}</li>)}
           </ul>
@@ -201,7 +198,6 @@ export function MemesPluginPage() {
           licensed under{' '}
           <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.
         </p>
-        <Independence />
         <PolicyLinks />
       </footer>
     </PluginShell>

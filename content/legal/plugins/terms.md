@@ -10,7 +10,7 @@ By installing or using a Happy plugin, such as [Happy Memes](/plugins/memes/), y
 
 Happy plugins are free. Happy Memes is a skills-only plugin: written instructions that ChatGPT or Codex follows. ChatGPT or Codex does the work, including any web browsing and image generation, under [OpenAI's Terms of Use](https://openai.com/policies/terms-of-use/) and [Usage Policies](https://openai.com/policies/usage-policies/). You need your own access to those apps, and you must follow their terms.
 
-Happy Memes is released under the MIT License.
+Happy Memes is released under the [MIT License](https://github.com/slopus/happy-meme-plugin/blob/main/LICENSE).
 
 ## Your Responsibility
 

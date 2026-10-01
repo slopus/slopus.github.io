@@ -30,8 +30,7 @@
 
 /* Install */
 .plugin-install { align-items: start; display: grid; gap: 1.5rem 3rem; grid-template-columns: minmax(0, 1.35fr) minmax(0, .65fr); }
-.plugin-install .terminal { margin-bottom: 0; }
-.plugin-install .terminal-body { font-size: .84rem; line-height: 1.75; }
+.plugin-install-copy { color: #294c45; font-size: 1.05rem; line-height: 1.6; margin: 0 0 1.4rem; max-width: 48ch; text-wrap: pretty; }
 .plugin-install > div:last-child { padding-top: .4rem; }
 .plugin-prompts { display: grid; gap: .6rem; list-style: none; margin: .9rem 0 0; padding: 0; }
 .plugin-prompts li { background: #ebe5d9; border-radius: 14px 14px 14px 4px; color: #294c45; font-size: .9rem; line-height: 1.45; padding: .7rem .9rem; }
@@ -65,7 +64,6 @@
   .plugin-hero { align-items: start; gap: 1.4rem; grid-template-columns: minmax(0, 1fr); }
   .plugin-icon { border-radius: 22px; height: 88px; width: 88px; }
   .plugin-section { margin-top: 3rem; padding-top: 2.4rem; }
-  .plugin-install .terminal-body { font-size: .74rem; }
 }
 
 @media (max-width: 480px) {

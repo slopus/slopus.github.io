@@ -26,9 +26,12 @@ describe('plugin pages', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Happy Memes' })).toBeTruthy()
     expect(screen.getByText('Turn any moment into a meme.')).toBeTruthy()
     expect(screen.getByRole('heading', { level: 2, name: 'What it does' })).toBeTruthy()
-    expect(screen.getByText(/codex plugin marketplace add slopus\/happy-meme-plugin/)).toBeTruthy()
-    expect(screen.getByText(/ChatGPT plugin directory soon/)).toBeTruthy()
-    expect(screen.getAllByText(/not made, sponsored, or endorsed by OpenAI/)).toHaveLength(1)
+    expect(screen.getByText(/coming to the ChatGPT plugin directory/)).toBeTruthy()
+    expect(screen.getByRole('link', { name: /source on github/i }).getAttribute('href')).toBe('https://github.com/slopus/happy-meme-plugin')
+    expect(screen.getByText(/standup ran an hour/)).toBeTruthy()
+    // The listing page stays ChatGPT-first and leaves OpenAI out; the policies carry the disclaimer.
+    expect(screen.queryByText(/codex plugin/)).toBeNull()
+    expect(document.body.textContent).not.toMatch(/OpenAI/)
     expect(screen.getByRole('link', { name: 'Lisa Wischofsky' })).toBeTruthy()
     expect(screen.getByRole('link', { name: 'CC BY 4.0' }).getAttribute('href')).toBe('https://creativecommons.org/licenses/by/4.0/')
     expect(screen.getByRole('link', { name: 'Plugin Terms of Use' }).getAttribute('href')).toBe('/plugins/terms/')
@@ -46,6 +49,7 @@ describe('plugin pages', () => {
       expect(existsSync(path.join(projectRoot, 'public', image.getAttribute('src')!))).toBe(true)
     }
     expect(existsSync(path.join(projectRoot, 'public/img/plugins/memes/logo.png'))).toBe(true)
+    expect(examples.map((image) => image.getAttribute('src')).join()).not.toMatch(/cereal|group-chat/)
   })
 
   it('lists Happy Memes on the plugins index', () => {
@@ -63,6 +67,7 @@ describe('plugin pages', () => {
 
     rerender(<Router pathname="/plugins/terms/" />)
     expect(screen.getByRole('heading', { level: 1, name: /^plugin terms of use/i })).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'MIT License' }).getAttribute('href')).toBe('https://github.com/slopus/happy-meme-plugin/blob/main/LICENSE')
 
     rerender(<Router pathname="/privacy/" />)
     expect(screen.getByRole('heading', { level: 1, name: /^privacy policy/i })).toBeTruthy()
