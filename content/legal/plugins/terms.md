@@ -4,13 +4,13 @@ Last updated: October 1, 2026
 
 ## Acceptance of Terms
 
-By installing or using a Happy plugin, such as [Happy Memes](/plugins/memes/), you agree to these Terms of Use. If you do not agree, do not use the plugin. The Happy app has its own [Terms of Use](/terms/).
+By installing or using a Happy plugin, such as [Memes](/plugins/memes/), you agree to these Terms of Use. If you do not agree, do not use the plugin. The Happy app has its own [Terms of Use](/terms/).
 
 ## About Happy Plugins
 
-Happy plugins are free. Happy Memes is a skills-only plugin: written instructions that ChatGPT or Codex follows. ChatGPT or Codex does the work, including any web browsing and image generation, under [OpenAI's Terms of Use](https://openai.com/policies/terms-of-use/) and [Usage Policies](https://openai.com/policies/usage-policies/). You need your own access to those apps, and you must follow their terms.
+Happy plugins are free. Memes is a skills-only plugin: written instructions that ChatGPT or Codex follows. ChatGPT or Codex does the work, including any web browsing and image generation, under [OpenAI's Terms of Use](https://openai.com/policies/terms-of-use/) and [Usage Policies](https://openai.com/policies/usage-policies/). You need your own access to those apps, and you must follow their terms.
 
-Happy Memes is released under the [MIT License](https://github.com/slopus/happy-meme-plugin/blob/main/LICENSE).
+Memes is released under the [MIT License](https://github.com/slopus/happy-meme-plugin/blob/main/LICENSE).
 
 ## Your Responsibility
 
@@ -32,7 +32,7 @@ You must not use a Happy plugin to:
 
 ## Built-in Limits
 
-Happy Memes is designed to avoid real people's likenesses, fabricated quotes, copyrighted characters, and recognizable brand mascots, and to keep results suitable for a general audience. These limits reduce mistakes but do not prevent them. A meme that parodies a company or product does not mean that company is involved.
+The Memes plugin is designed to avoid real people's likenesses, fabricated quotes, copyrighted characters, and recognizable brand mascots, and to keep results suitable for a general audience. These limits reduce mistakes but do not prevent them. A meme that parodies a company or product does not mean that company is involved.
 
 ## Independence
 

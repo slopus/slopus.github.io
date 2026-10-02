@@ -20,10 +20,10 @@ describe('plugin pages', () => {
     document.head.querySelector('link[rel="canonical"]')?.remove()
   })
 
-  it('renders the Happy Memes listing page', () => {
+  it('renders the Memes listing page', () => {
     render(<Router pathname="/plugins/memes/" />)
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Happy Memes' })).toBeTruthy()
+    expect(screen.getByRole('heading', { level: 1, name: 'Memes' })).toBeTruthy()
     expect(screen.getByText('Turn any moment into a meme.')).toBeTruthy()
     expect(screen.getByRole('heading', { level: 2, name: 'What it does' })).toBeTruthy()
     expect(screen.getByText(/coming to the ChatGPT plugin directory/)).toBeTruthy()
@@ -32,6 +32,11 @@ describe('plugin pages', () => {
     // The listing page stays ChatGPT-first and leaves OpenAI out; the policies carry the disclaimer.
     expect(screen.queryByText(/codex plugin/)).toBeNull()
     expect(document.body.textContent).not.toMatch(/OpenAI/)
+    // The plugin is called just "Memes".
+    expect(document.body.textContent).not.toMatch(/Happy Memes/)
+    for (const name of ['plugins/privacy', 'plugins/terms'] as const) {
+      expect(getLegalSource(name)).not.toMatch(/Happy Memes/)
+    }
     expect(screen.getByRole('link', { name: 'Lisa Wischofsky' })).toBeTruthy()
     expect(screen.getByRole('link', { name: 'CC BY 4.0' }).getAttribute('href')).toBe('https://creativecommons.org/licenses/by/4.0/')
     expect(screen.getByRole('link', { name: 'Plugin Terms of Use' }).getAttribute('href')).toBe('/plugins/terms/')
@@ -41,7 +46,7 @@ describe('plugin pages', () => {
   it('shows six example memes with alt text, each shipped in public/', () => {
     render(<Router pathname="/plugins/memes/" />)
 
-    const examples = within(screen.getByRole('region', { name: 'Made with Happy Memes' })).getAllByRole('img')
+    const examples = within(screen.getByRole('region', { name: 'Examples' })).getAllByRole('img')
     expect(examples).toHaveLength(6)
 
     for (const image of examples) {
@@ -52,11 +57,11 @@ describe('plugin pages', () => {
     expect(examples.map((image) => image.getAttribute('src')).join()).not.toMatch(/cereal|group-chat/)
   })
 
-  it('lists Happy Memes on the plugins index', () => {
+  it('lists Memes on the plugins index', () => {
     render(<Router pathname="/plugins" />)
 
     expect(screen.getByRole('heading', { level: 1, name: 'Happy plugins' })).toBeTruthy()
-    expect(screen.getByRole('link', { name: /happy memes/i }).getAttribute('href')).toBe('/plugins/memes/')
+    expect(screen.getByRole('link', { name: /^memes/i }).getAttribute('href')).toBe('/plugins/memes/')
   })
 
   it('renders the plugin privacy policy and terms apart from the app policies', () => {

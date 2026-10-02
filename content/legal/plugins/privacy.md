@@ -4,15 +4,15 @@ Last updated: October 1, 2026
 
 ## Scope
 
-This policy covers the plugins Happy publishes for ChatGPT and Codex, starting with [Happy Memes](/plugins/memes/). The Happy app has its own [Privacy Policy](/privacy/).
+This policy covers the plugins Happy publishes for ChatGPT and Codex, starting with [Memes](/plugins/memes/). The Happy app has its own [Privacy Policy](/privacy/).
 
 ## Summary
 
-Happy Memes collects no personal data. Happy does not receive your prompts, files, chats, generated images, or account details when you use it.
+The Memes plugin collects no personal data. Happy does not receive your prompts, files, chats, generated images, or account details when you use it.
 
-## How Happy Memes Works
+## How Memes Works
 
-Happy Memes is a skills-only plugin: a set of written instructions that ChatGPT or Codex loads and follows. It has:
+Memes is a skills-only plugin: a set of written instructions that ChatGPT or Codex loads and follows. It has:
 
 - No server, MCP server, or other connected service
 - No account or sign-in
