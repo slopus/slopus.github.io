@@ -1,5 +1,6 @@
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 const projectRoot = process.cwd()
 const distRoot = path.join(projectRoot, 'dist')
@@ -200,23 +201,88 @@ const pluginPages = [
   },
   {
     route: 'plugins/memes',
-    title: 'Memes — Turn any moment into a meme',
+    title: 'Happy Memes — Turn any moment into a meme',
     description: 'Make funny, postable image memes about news, launches, trends, and everyday moments. A skills-only plugin for ChatGPT and Codex.',
   },
   {
     route: 'plugins/privacy',
     title: 'Plugin Privacy Policy — Happy',
-    description: 'Privacy policy for Happy plugins for ChatGPT and Codex, including Memes.',
+    description: 'Privacy policy for Happy plugins for ChatGPT and Codex, including Happy Memes.',
   },
   {
     route: 'plugins/terms',
     title: 'Plugin Terms of Use — Happy',
-    description: 'Terms of use for Happy plugins for ChatGPT and Codex, including Memes.',
+    description: 'Terms of use for Happy plugins for ChatGPT and Codex, including Happy Memes.',
   },
 ]
 
+// The plugin directory reads these pages without running JavaScript, so they
+// ship their rendered markup and the app hydrates it. Built by `vite build --ssr`.
+const { prerenderedPaths, renderPath } = await import(
+  pathToFileURL(path.join(projectRoot, 'dist-ssr', 'prerender.js')).href
+)
+
+function withAppMarkup(html, markup) {
+  const emptyRoot = '<div id="app"></div>'
+  if (!html.includes(emptyRoot)) {
+    throw new Error('dist/index.html no longer has an empty #app root to prerender into.')
+  }
+  return html.replace(emptyRoot, () => `<div id="app">${markup}</div>`)
+}
+
+function textOfHtml(html) {
+  return html
+    .replace(/<[^>]+>/g, '')
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ')
+}
+
+// Fail the build unless every line of the policy reaches the served HTML.
+async function assertPolicyServed(route, html, sourceFile) {
+  const markdown = await readFile(path.join(projectRoot, sourceFile), 'utf8')
+  const app = html.slice(html.indexOf('<div id="app">'))
+  const text = textOfHtml(app)
+
+  for (const line of markdown.split('\n')) {
+    const expected = line
+      .replace(/^#+\s+|^-\s+/, '')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/\*\*/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+    if (expected && expected !== '---' && !text.includes(expected)) {
+      throw new Error(`/${route}/ is missing policy text from ${sourceFile}: "${expected}"`)
+    }
+  }
+  for (const [, href] of markdown.matchAll(/\]\(([^)]+)\)/g)) {
+    if (!app.includes(`href="${href}`)) {
+      throw new Error(`/${route}/ is missing the link to ${href} from ${sourceFile}`)
+    }
+  }
+  if (app.match(/<h1[\s>]/g)?.length !== 1) {
+    throw new Error(`/${route}/ should render exactly one h1`)
+  }
+}
+
+const policySources = {
+  'plugins/privacy': 'content/legal/plugins/privacy.md',
+  'plugins/terms': 'content/legal/plugins/terms.md',
+}
+
 for (const { route, title, description } of pluginPages) {
-  await writeRoute(route, htmlForPage({ title, description, canonicalPath: `/${route}/` }))
+  const canonicalPath = `/${route}/`
+  if (!prerenderedPaths.includes(canonicalPath)) {
+    throw new Error(`${canonicalPath} is a plugin directory URL; add it to prerenderedPaths.`)
+  }
+  const html = withAppMarkup(htmlForPage({ title, description, canonicalPath }), renderPath(canonicalPath))
+  if (policySources[route]) {
+    await assertPolicyServed(route, html, policySources[route])
+  }
+  await writeRoute(route, html)
 }
 
 await writeFile(

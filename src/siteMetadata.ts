@@ -66,20 +66,20 @@ export const pluginsMetadata: PageMetadata = {
 }
 
 export const memesPluginMetadata: PageMetadata = {
-  title: 'Memes — Turn any moment into a meme',
+  title: 'Happy Memes — Turn any moment into a meme',
   description: 'Make funny, postable image memes about news, launches, trends, and everyday moments. A skills-only plugin for ChatGPT and Codex.',
   canonicalPath: '/plugins/memes/',
 }
 
 export const pluginPrivacyMetadata: PageMetadata = {
   title: 'Plugin Privacy Policy — Happy',
-  description: 'Privacy policy for Happy plugins for ChatGPT and Codex, including Memes.',
+  description: 'Privacy policy for Happy plugins for ChatGPT and Codex, including Happy Memes.',
   canonicalPath: '/plugins/privacy/',
 }
 
 export const pluginTermsMetadata: PageMetadata = {
   title: 'Plugin Terms of Use — Happy',
-  description: 'Terms of use for Happy plugins for ChatGPT and Codex, including Memes.',
+  description: 'Terms of use for Happy plugins for ChatGPT and Codex, including Happy Memes.',
   canonicalPath: '/plugins/terms/',
 }
 

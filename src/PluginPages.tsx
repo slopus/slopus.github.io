@@ -99,7 +99,7 @@ export function PluginsPage() {
           <a className="plugin-index-card" href="/plugins/memes/">
             <img src={MEMES_ICON} alt="" width="72" height="72" />
             <span>
-              <strong>Memes</strong>
+              <strong>Happy Memes</strong>
               Turn any moment into a meme.
             </span>
             <span className="plugin-index-arrow" aria-hidden="true">→</span>
@@ -119,13 +119,13 @@ export function MemesPluginPage() {
   return (
     <PluginShell>
       <header className="plugin-hero">
-        <img className="plugin-icon" src={MEMES_ICON} alt="Memes icon: a grinning cartoon face" width="128" height="128" />
+        <img className="plugin-icon" src={MEMES_ICON} alt="Happy Memes icon: a grinning cartoon face" width="128" height="128" />
         <div>
           <p className="eyebrow"><a href="/plugins/">Plugins</a><span aria-hidden="true">/</span>For ChatGPT and Codex</p>
-          <h1>Memes</h1>
+          <h1>Happy Memes</h1>
           <p className="plugin-tagline">Turn any moment into a meme.</p>
           <p className="plugin-summary">
-            Memes turns a news story, product launch, trend, or everyday situation into an
+            Happy Memes turns a news story, product launch, trend, or everyday situation into an
             image meme you can post.
           </p>
         </div>
@@ -172,7 +172,7 @@ export function MemesPluginPage() {
         <div>
           <h2 id="memes-install">Get it in ChatGPT</h2>
           <p className="plugin-install-copy">
-            Memes is coming to the ChatGPT plugin directory. Once it’s listed, find it under
+            Happy Memes is coming to the ChatGPT plugin directory. Once it’s listed, find it under
             Plugins in ChatGPT and ask for a meme.
           </p>
           <a className="text-link" href={MEMES_SOURCE} target="_blank" rel="noopener noreferrer">

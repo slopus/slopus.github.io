@@ -1,8 +1,11 @@
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
-import { cleanup, render, screen, within } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { StrictMode } from 'react'
+import { hydrateRoot } from 'react-dom/client'
+import { act, cleanup, render, screen, within } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Router } from './Router'
+import { prerenderedPaths, renderPath } from './prerender'
 import { getLegalSource } from './documents'
 import {
   memesPluginMetadata,
@@ -20,10 +23,10 @@ describe('plugin pages', () => {
     document.head.querySelector('link[rel="canonical"]')?.remove()
   })
 
-  it('renders the Memes listing page', () => {
+  it('renders the Happy Memes listing page', () => {
     render(<Router pathname="/plugins/memes/" />)
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Memes' })).toBeTruthy()
+    expect(screen.getByRole('heading', { level: 1, name: 'Happy Memes' })).toBeTruthy()
     expect(screen.getByText('Turn any moment into a meme.')).toBeTruthy()
     expect(screen.getByRole('heading', { level: 2, name: 'What it does' })).toBeTruthy()
     expect(screen.getByText(/coming to the ChatGPT plugin directory/)).toBeTruthy()
@@ -32,10 +35,10 @@ describe('plugin pages', () => {
     // The listing page stays ChatGPT-first and leaves OpenAI out; the policies carry the disclaimer.
     expect(screen.queryByText(/codex plugin/)).toBeNull()
     expect(document.body.textContent).not.toMatch(/OpenAI/)
-    // The plugin is called just "Memes".
-    expect(document.body.textContent).not.toMatch(/Happy Memes/)
+    // The plugin directory rejected the bare name "Memes" as too generic; it is always "Happy Memes".
+    expect(document.body.textContent).not.toMatch(/(?<!Happy )Memes/)
     for (const name of ['plugins/privacy', 'plugins/terms'] as const) {
-      expect(getLegalSource(name)).not.toMatch(/Happy Memes/)
+      expect(getLegalSource(name)).not.toMatch(/(?<!Happy )Memes/)
     }
     expect(screen.getByRole('link', { name: 'Lisa Wischofsky' })).toBeTruthy()
     expect(screen.getByRole('link', { name: 'CC BY 4.0' }).getAttribute('href')).toBe('https://creativecommons.org/licenses/by/4.0/')
@@ -57,11 +60,11 @@ describe('plugin pages', () => {
     expect(examples.map((image) => image.getAttribute('src')).join()).not.toMatch(/cereal|group-chat/)
   })
 
-  it('lists Memes on the plugins index', () => {
+  it('lists Happy Memes on the plugins index', () => {
     render(<Router pathname="/plugins" />)
 
     expect(screen.getByRole('heading', { level: 1, name: 'Happy plugins' })).toBeTruthy()
-    expect(screen.getByRole('link', { name: /^memes/i }).getAttribute('href')).toBe('/plugins/memes/')
+    expect(screen.getByRole('link', { name: /^happy memes/i }).getAttribute('href')).toBe('/plugins/memes/')
   })
 
   it('renders the plugin privacy policy and terms apart from the app policies', () => {
@@ -115,5 +118,50 @@ describe('plugin pages', () => {
       expect(script).toContain(`title: '${metadata.title}'`)
       expect(script).toContain(`description: '${metadata.description}'`)
     }
+  })
+
+  it('serves each policy in full before JavaScript runs', () => {
+    for (const [pathname, name] of [['/plugins/privacy/', 'plugins/privacy'], ['/plugins/terms/', 'plugins/terms']] as const) {
+      const container = document.createElement('div')
+      container.innerHTML = renderPath(pathname)
+      const text = container.textContent!.replace(/\s+/g, ' ')
+
+      for (const heading of getLegalSource(name).matchAll(/^#+ (.+)$/gm)) {
+        expect(text).toContain(heading[1])
+      }
+      expect(container.querySelectorAll('h1')).toHaveLength(1)
+      expect(text).toContain('not made, sponsored, or endorsed by OpenAI')
+    }
+    expect(renderPath('/plugins/privacy/')).toContain('collects no personal data')
+  })
+
+  it('hydrates the prerendered plugin pages without replacing or duplicating them', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    for (const pathname of prerenderedPaths) {
+      const container = document.createElement('div')
+      container.innerHTML = renderPath(pathname)
+      document.body.append(container)
+      const servedHeading = container.querySelector('h1')
+      const servedText = container.textContent
+      window.history.replaceState({}, '', pathname)
+      const recoverableErrors: unknown[] = []
+
+      const root = hydrateRoot(container, <StrictMode><Router /></StrictMode>, {
+        onRecoverableError: (error) => recoverableErrors.push(error),
+      })
+      await act(async () => {})
+
+      expect(recoverableErrors).toEqual([])
+      expect(container.querySelector('h1')).toBe(servedHeading)
+      expect(container.querySelectorAll('h1')).toHaveLength(1)
+      expect(container.textContent).toBe(servedText)
+      act(() => root.unmount())
+      container.remove()
+    }
+
+    expect(consoleError).not.toHaveBeenCalled()
+    consoleError.mockRestore()
+    window.history.replaceState({}, '', '/')
   })
 })

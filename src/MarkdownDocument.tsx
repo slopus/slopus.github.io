@@ -44,16 +44,30 @@ function normalizeHref(href?: string) {
 
 export function MarkdownDocument({ markdown }: { markdown: string }) {
   const usedHeadingIds = new Map<string, number>()
+  // Keyed by source offset so a repeat render of a heading (StrictMode, hydration) keeps its id.
+  const headingIdsByOffset = new Map<number, string>()
 
   function heading(depth: 1 | 2 | 3) {
     const Heading = `h${depth}` as const
 
-    return function DocumentHeading({ children }: { children?: ReactNode }) {
+    return function DocumentHeading({
+      children,
+      node,
+    }: {
+      children?: ReactNode
+      node?: { position?: { start: { offset?: number } } }
+    }) {
       const text = textFromNode(children)
-      const baseId = slugifyHeading(text)
-      const count = usedHeadingIds.get(baseId) ?? 0
-      const id = count === 0 ? baseId : `${baseId}-${count}`
-      usedHeadingIds.set(baseId, count + 1)
+      const offset = node?.position?.start.offset
+      let id = offset === undefined ? undefined : headingIdsByOffset.get(offset)
+
+      if (id === undefined) {
+        const baseId = slugifyHeading(text)
+        const count = usedHeadingIds.get(baseId) ?? 0
+        id = count === 0 ? baseId : `${baseId}-${count}`
+        usedHeadingIds.set(baseId, count + 1)
+        if (offset !== undefined) headingIdsByOffset.set(offset, id)
+      }
 
       return (
         <Heading id={id}>

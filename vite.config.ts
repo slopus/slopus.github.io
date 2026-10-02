@@ -1,15 +1,18 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
-export default defineConfig({
+export default defineConfig(({ isSsrBuild }) => ({
   plugins: [react()],
   build: {
     rollupOptions: {
-      output: {
-        manualChunks: {
-          markdown: ['react-markdown', 'remark-gfm'],
-        },
-      },
+      // The prerender build (src/prerender.tsx) leaves dependencies external, so it has nothing to split.
+      output: isSsrBuild
+        ? {}
+        : {
+            manualChunks: {
+              markdown: ['react-markdown', 'remark-gfm'],
+            },
+          },
     },
   },
   test: {
@@ -18,4 +21,4 @@ export default defineConfig({
       reporter: ['text', 'html'],
     },
   },
-})
+}))
