@@ -32,8 +32,6 @@ You talk to one agent, and it handles the rest.
 
 Nobody wants to jump between sessions all day and remember which one is doing what. Our own sidebar turns into a mess fast. So the next Happy is one agent on top. Sub-agents do the work underneath, including agents running on your own machines through Happy Desktop. You talk to one agent, and it talks to the rest.
 
-https://x.com/poteto/status/2107244768917172618
-
 There's a second reason it has to be one. Agents spread like a virus. Give one enough access and it will find your other sessions, get into your accounts through Chrome, and scroll through your whole digital life. Right now you probably have several of them spreading into your projects, accounts and teams. You want one you know and control.
 
 # Why not just use Muse

@@ -24,12 +24,6 @@ export const thesisPosts: Record<string, QuotedPost> = {
     date: 'October 4, 2026',
     text: "is this where we're going",
   },
-  'https://x.com/poteto/status/2107244768917172618': {
-    name: 'lauren',
-    handle: 'poteto',
-    date: 'October 5, 2026',
-    text: "love t3code! Projects in cursor are just too good though. you don't need to see threads cluttering up your sidebar if you have a smart coordinator managing them for you. it's entirely changed how i use agents. you'll find that threads and side chats just become busy work for you to manage - when an agent could do it for you",
-  },
   'https://x.com/nikitabier/status/2107157904168239416': {
     name: 'Nikita Bier',
     handle: 'nikitabier',

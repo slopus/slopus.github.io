@@ -102,7 +102,10 @@ describe('static document pages', () => {
       expect(quote.querySelectorAll('a')).toHaveLength(1)
     }
     expect(quotes[0].textContent).toContain('a non-SOTA model is good enough for Muse the agent')
-    expect(quotes[0].closest('figure')?.previousElementSibling?.textContent).toMatch(/enough for most people.*Jay Air put it well:$/)
+    const leadIns = quotes.map((quote) => quote.closest('figure')?.previousElementSibling?.textContent)
+    expect(leadIns[0]).toMatch(/enough for most people.*Jay Air put it well:$/)
+    expect(leadIns[1]).toBe("Everything is moving to one agent. Muse, OpenAI's dots and Grok Bot all went this way.")
+    expect(leadIns[2]).toMatch(/^Permissions and security\..*we'll get some of it wrong\.$/)
     expect(container.querySelector('.document-content')?.textContent).not.toContain('https://x.com/')
   })
 
