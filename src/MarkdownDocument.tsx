@@ -42,7 +42,14 @@ function normalizeHref(href?: string) {
   return aliasedHref
 }
 
-export function MarkdownDocument({ markdown }: { markdown: string }) {
+export function MarkdownDocument({
+  markdown,
+  components: overrides,
+}: {
+  markdown: string
+  /** Replaces the default renderer for these elements. */
+  components?: Components
+}) {
   const usedHeadingIds = new Map<string, number>()
   // Keyed by source offset so a repeat render of a heading (StrictMode, hydration) keeps its id.
   const headingIdsByOffset = new Map<number, string>()
@@ -116,7 +123,7 @@ export function MarkdownDocument({ markdown }: { markdown: string }) {
 
   return (
     <div className="document-content">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ ...components, ...overrides }}>
         {markdown}
       </ReactMarkdown>
     </div>

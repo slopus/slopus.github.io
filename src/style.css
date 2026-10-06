@@ -309,7 +309,21 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .legal-layout { min-height: calc(100vh - 88px); padding-bottom: 7rem; padding-top: 3rem; }
 .document-back-link { align-items: center; color: #557068; display: inline-flex; font-size: .82rem; gap: .45rem; margin-bottom: 3rem; }
 .document-back-link:hover { color: #e6522c; }
-.legal-article { margin: 0 auto; max-width: 760px; }
+.legal-article, .essay-article { margin: 0 auto; max-width: 760px; }
+/* An essay has no lede paragraph; its first paragraph sits under a section heading. */
+.essay-article .document-content > p:first-of-type { color: inherit; font-size: inherit; }
+
+/* X posts in an essay. The blockquote is X's embed markup: widgets.js replaces it with the
+   live post, and until then (or if it is blocked) it reads as a quote card. */
+.x-post { margin: 2.2rem auto; max-width: 550px; }
+.x-post .twitter-tweet-rendered { margin: 0 auto !important; }
+.x-post iframe { max-width: 100%; }
+.document-content .x-post blockquote.twitter-tweet { background: #fcfaf5; border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); margin: 0; padding: 1.2rem 1.35rem; }
+.x-post blockquote.twitter-tweet p { color: #183f38; margin: 0; white-space: pre-line; }
+.document-content .x-post .x-post-attribution { color: #557068; font-size: .82rem; margin-top: .9rem; white-space: normal; }
+.x-post-attribution strong { color: #183f38; font-weight: 600; }
+.x-post-handle { color: #6b7f78; font-family: 'DM Mono', monospace; font-size: .72rem; }
+.x-post-attribution a { color: #557068; text-decoration-color: rgba(85, 112, 104, .35); }
 .legal-article .document-content > p:nth-of-type(1) { color: #6b7f78; font-family: 'DM Mono', monospace; font-size: .72rem; letter-spacing: .03em; }
 .not-found { min-height: calc(100vh - 88px); padding-bottom: 8rem; padding-top: 8rem; }
 .not-found h1 { font-size: clamp(3rem, 7vw, 6rem); margin-bottom: 1.5rem; }

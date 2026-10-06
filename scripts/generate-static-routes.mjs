@@ -285,6 +285,23 @@ for (const { route, title, description } of pluginPages) {
   await writeRoute(route, html)
 }
 
+// Mirrors thesisMetadata in src/siteMetadata.ts. Unlisted: reachable here, linked from nowhere.
+const thesisHtml = withAppMarkup(htmlForPage({
+  title: 'Happy: Muse for agentmaxxers',
+  description: "Soon you'll talk to one agent, and it will run all your other agents.",
+  canonicalPath: '/thesis/',
+}), renderPath('/thesis/'))
+const thesisApp = thesisHtml.slice(thesisHtml.indexOf('<div id="app">'))
+const thesisPostUrls = (await readFile(path.join(projectRoot, 'content', 'thesis.md'), 'utf8'))
+  .match(/^https:\/\/x\.com\/\S+$/gm) ?? []
+if (thesisApp.match(/<h1[\s>]/g)?.length !== 1) {
+  throw new Error('/thesis/ should render exactly one h1')
+}
+if (thesisApp.match(/<blockquote class="twitter-tweet"/g)?.length !== thesisPostUrls.length) {
+  throw new Error('/thesis/ should render every X post in content/thesis.md as an embed')
+}
+await writeRoute('thesis', thesisHtml)
+
 await writeFile(
   path.join(distRoot, '404.html'),
   htmlForPage({
@@ -295,4 +312,4 @@ await writeFile(
   }),
 )
 
-console.log(`Generated ${documentRoutes + 8 + pluginPages.length} static routes.`)
+console.log(`Generated ${documentRoutes + 9 + pluginPages.length} static routes.`)

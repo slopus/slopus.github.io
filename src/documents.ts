@@ -35,6 +35,12 @@ const legalSources = import.meta.glob('/content/legal/**/*.md', {
   query: '?raw',
 }) as Record<string, string>
 
+const thesisSource = Object.values(import.meta.glob('/content/thesis.md', {
+  eager: true,
+  import: 'default',
+  query: '?raw',
+}) as Record<string, string>)[0] ?? ''
+
 type DocumentDefinition = Omit<DocumentEntry, 'product'>
 
 const happyDocuments: DocumentDefinition[] = [
@@ -324,6 +330,17 @@ export type LegalName = 'privacy' | 'terms' | 'plugins/privacy' | 'plugins/terms
 
 export function getLegalSource(name: LegalName) {
   return legalSources[`/content/legal/${name}.md`] ?? ''
+}
+
+/**
+ * The Happy thesis essay at /thesis. Reachable by URL and listed nowhere: not in
+ * `documents`, the header, the footer, or the docs sidebar.
+ */
+export function getThesisMarkdown() {
+  const title = thesisSource.match(/^title:\s*"(.+)"\s*$/m)?.[1] ?? ''
+  // The essay's sections are written as `#`; the frontmatter title is the page's only h1.
+  const body = prepareMarkdown(thesisSource).replace(/^# /gm, '## ')
+  return `# ${title}\n\n${body}`
 }
 
 function readAttribute(attributes: string, name: string) {

@@ -5,8 +5,12 @@ import {
   documents,
   documentsForProduct,
   getDocumentSource,
+  getThesisMarkdown,
   prepareMarkdown,
 } from './documents'
+import { renderPath } from './prerender'
+import { thesisMetadata } from './siteMetadata'
+import { thesisPosts } from './thesisPosts'
 
 describe('static document pages', () => {
   afterEach(() => {
@@ -69,6 +73,52 @@ describe('static document pages', () => {
     render(<Router pathname="/desktop/docs/guides/remote-agents/" />)
     expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/configuration/i)
+  })
+
+  it('renders the thesis with its title as the only h1 and every section as an h2', () => {
+    const { container } = render(<Router pathname="/thesis/" />)
+
+    expect(screen.getAllByRole('heading', { level: 1 }).map((heading) => heading.id)).toEqual(['happy-muse-for-agentmaxxers'])
+    expect(screen.getAllByRole('heading', { level: 2 }).map((heading) => heading.firstChild?.textContent)).toEqual([
+      'TL;DR',
+      "Who it's for",
+      'One agent to talk to your other agents',
+      'Why not just use Muse',
+      'Always on',
+      'Fewer buttons, not zero',
+      "What we haven't solved",
+      'How it spreads',
+    ])
+    expect(container.querySelector('h3')).toBeNull()
+  })
+
+  it('quotes each X post in the thesis as an official embed with its own text', () => {
+    const { container } = render(<Router pathname="/thesis/" />)
+    const quotes = [...container.querySelectorAll<HTMLElement>('blockquote.twitter-tweet')]
+
+    expect(quotes.map((quote) => quote.querySelector('a')?.getAttribute('href'))).toEqual(Object.keys(thesisPosts))
+    for (const quote of quotes) {
+      expect(quote.dataset).toMatchObject({ dnt: 'true', conversation: 'none', theme: 'light' })
+      expect(quote.querySelectorAll('a')).toHaveLength(1)
+    }
+    expect(quotes[0].textContent).toContain('a non-SOTA model is good enough for Muse the agent')
+    expect(quotes[0].closest('figure')?.previousElementSibling?.textContent).toMatch(/enough for most people.*Jay Air put it well:$/)
+    expect(container.querySelector('.document-content')?.textContent).not.toContain('https://x.com/')
+  })
+
+  it('describes the thesis with its frontmatter title and first TL;DR line', () => {
+    const markdown = getThesisMarkdown()
+
+    expect(markdown.startsWith(`# ${thesisMetadata.title}\n`)).toBe(true)
+    expect(markdown).toContain(`## TL;DR\n\n- ${thesisMetadata.description}\n`)
+  })
+
+  it('keeps the thesis out of navigation', () => {
+    // Server markup: the landing pages' effects need browser APIs jsdom lacks.
+    for (const pathname of ['/', '/docs/', '/desktop/', '/desktop/docs/', '/model-benchmarks', '/plugins/', '/thesis/', '/privacy/']) {
+      expect(renderPath(pathname)).not.toMatch(/href="[^"]*thesis/)
+    }
+    expect(documents.some((document) => document.path.includes('thesis'))).toBe(false)
   })
 
   it('renders privacy and terms as site pages', () => {

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import type { Components } from 'react-markdown'
 import { MarkdownDocument } from './MarkdownDocument'
 import {
   documentGroupsForProduct,
@@ -6,6 +7,7 @@ import {
   getDocument,
   getDocumentSource,
   getLegalSource,
+  getThesisMarkdown,
   normalizeDocumentPath,
   prepareMarkdown,
   type DocumentEntry,
@@ -13,6 +15,8 @@ import {
 } from './documents'
 import { documentHref, HAPPY, type Product } from './products'
 import { SiteFooter, SiteHeader } from './SiteChrome'
+import { thesisPosts, type QuotedPost } from './thesisPosts'
+import { loadWidgets } from './XPostEmbed'
 
 function DocsNavigation({
   product,
@@ -151,6 +155,70 @@ export function LegalPage({
         </a>
         <article className="document-article legal-article">
           <MarkdownDocument markdown={markdown} />
+        </article>
+      </main>
+      <SiteFooter />
+    </div>
+  )
+}
+
+/**
+ * X's official embed markup. widgets.js swaps it for the live post; until then,
+ * or if the script never loads, it reads as a quote with the post's own text.
+ */
+function QuotedXPost({ url, post }: { url: string; post: QuotedPost }) {
+  return (
+    <figure className="x-post">
+      <blockquote
+        className="twitter-tweet"
+        data-dnt="true"
+        data-conversation="none"
+        data-theme="light"
+        data-align="center"
+      >
+        <p lang="en" dir="ltr">{post.text}</p>
+        <p className="x-post-attribution">
+          <span aria-hidden="true">&mdash; </span>
+          <strong>{post.name}</strong> <span className="x-post-handle">@{post.handle}</span>
+          {' · '}
+          <a href={url}>{post.date}</a>
+        </p>
+      </blockquote>
+    </figure>
+  )
+}
+
+const thesisComponents: Components = {
+  // A post URL alone on its line in the essay stands for that post.
+  p: ({ node, children, ...props }) => {
+    const [only, ...rest] = node?.children ?? []
+    const href = only?.type === 'element' && only.tagName === 'a' ? String(only.properties.href) : ''
+    const post = rest.length === 0 ? thesisPosts[href] : undefined
+    return post ? <QuotedXPost url={href} post={post} /> : <p {...props}>{children}</p>
+  },
+}
+
+export function ThesisPage() {
+  const article = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    loadWidgets()
+      .then((twttr) => {
+        if (!cancelled && article.current) twttr.widgets.load?.(article.current)
+      })
+      .catch(() => {
+        // Blocked or offline: the quotes stay as they are.
+      })
+    return () => { cancelled = true }
+  }, [])
+
+  return (
+    <div className="site-shell document-site-shell">
+      <SiteHeader />
+      <main className="legal-layout page-width">
+        <article className="document-article essay-article" ref={article}>
+          <MarkdownDocument markdown={getThesisMarkdown()} components={thesisComponents} />
         </article>
       </main>
       <SiteFooter />

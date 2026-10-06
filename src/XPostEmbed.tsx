@@ -3,6 +3,8 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 interface XWidgets {
   widgets: {
     createTweet: (id: string, element: HTMLElement, options: Record<string, unknown>) => Promise<HTMLElement | undefined>
+    /** Upgrades the official `blockquote.twitter-tweet` markup inside `element`. */
+    load?: (element?: HTMLElement) => void
   }
 }
 
@@ -13,7 +15,7 @@ declare global {
 let widgetPromise: Promise<XWidgets> | undefined
 
 /** Shared official widget loader. Never accept third-party HTML. */
-function loadWidgets() {
+export function loadWidgets() {
   if (window.twttr?.widgets) return Promise.resolve(window.twttr)
   if (widgetPromise) return widgetPromise
   widgetPromise = new Promise<XWidgets>((resolve, reject) => {

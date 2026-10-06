@@ -56,6 +56,16 @@ export const modelBenchmarksMetadata: PageMetadata = {
 }
 
 /**
+ * The title from content/thesis.md's frontmatter, described by its first TL;DR
+ * line. Keep scripts/generate-static-routes.mjs in sync.
+ */
+export const thesisMetadata: PageMetadata = {
+  title: 'Happy: Muse for agentmaxxers',
+  description: "Soon you'll talk to one agent, and it will run all your other agents.",
+  canonicalPath: '/thesis/',
+}
+
+/**
  * The plugin pages are the public listing URLs in OpenAI's plugin directory, so
  * keep these paths stable. Keep scripts/generate-static-routes.mjs in sync.
  */
