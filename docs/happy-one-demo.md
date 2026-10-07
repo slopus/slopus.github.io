@@ -120,7 +120,8 @@ existing 47 tests and production build pass.
 This is an agent-run screenshot recipe, not a production script. The ordinary
 page uses the requested capitalization, “Any Model. Your Team. Happy Harness.”,
 and keeps its existing description. Every route uses
-`/og/happy-harness-v23.png` as its social image.
+`/og/happy-harness-v24.png` as its social image (a byte-identical copy of v23,
+renamed so link previews refetch; v23 stays for old shares).
 
 The v23 card is a horizontal composition: the three-line headline, “Free and
 open source”, and GitHub stars on the left; the full desktop on the right;

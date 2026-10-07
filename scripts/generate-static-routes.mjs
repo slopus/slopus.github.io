@@ -5,6 +5,14 @@ import { pathToFileURL } from 'node:url'
 const projectRoot = process.cwd()
 const distRoot = path.join(projectRoot, 'dist')
 const baseHtml = await readFile(path.join(distRoot, 'index.html'), 'utf8')
+// Link previews read these tags straight from the served HTML, so every page must carry them.
+for (const tag of ['name="description"', 'property="og:description"', 'property="og:image"', 'name="twitter:description"', 'name="twitter:image"']) {
+  if (!new RegExp(`<meta ${tag} content="[^"]+"`).test(baseHtml)) {
+    throw new Error(`dist/index.html is missing a one-line <meta ${tag} content="..."> tag.`)
+  }
+}
+// The homepage's head, reused by the redirect pages so shared old URLs still preview.
+const socialTags = baseHtml.match(/<meta (?:property="og:|name="twitter:)[^>]*\/>/g).join('\n    ')
 const siteUrl = 'https://happy.engineering'
 
 const docsSections = [
@@ -149,14 +157,20 @@ for (const section of docsSections) {
 // The desktop page is the homepage now (dist/index.html, built from index.html).
 // Its old URLs redirect there without JavaScript, so GitHub Pages serves a real
 // redirect: a refresh, a canonical to /, and a script that keeps ?query and #hash.
+const homepageTitle = baseHtml.match(/<title>(.*?)<\/title>/)[1]
+const homepageDescription = baseHtml.match(/<meta name="description" content="([^"]*)"/)[1]
+  .replace(/&amp;/g, '&').replace(/&quot;/g, '"')
+
 function redirectHtml(target) {
   const url = new URL(target, siteUrl).toString()
   return `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Happy</title>
+    <title>${homepageTitle}</title>
+    <meta name="description" content="${escapeHtml(homepageDescription)}" />
     <link rel="canonical" href="${escapeHtml(url)}" />
+    ${socialTags}
     <meta http-equiv="refresh" content="0; url=${escapeHtml(target)}" />
     <script>location.replace(${JSON.stringify(target)} + location.search + location.hash)</script>
   </head>

@@ -13,7 +13,7 @@ export interface PageMetadata {
 
 /** The desktop app's social card, the screenshot described in docs/happy-one-demo.md. Every page shares it. */
 export const defaultSocialImage = {
-  path: '/og/happy-harness-v23.png', width: 1200, height: 630,
+  path: '/og/happy-harness-v24.png', width: 1200, height: 630,
   alt: 'Happy Harness model picker and paired phone, with Free and open source and 23.8k GitHub stars.',
 } as const
 
@@ -27,8 +27,6 @@ export const homepageMetadata: PageMetadata = {
     'Happy is the open-source desktop app for Claude Code, Codex, and Grok, with an iOS and Android app to control your coding agents from anywhere.',
   canonicalPath: '/',
   socialTitle: 'Any Model. Your Team. Happy Harness.',
-  socialDescription:
-    'Multi-provider and natively multiplayer. Use your current subscriptions. Open source under MIT, with an end-to-end encrypted mobile app.',
 }
 
 /** The original Happy CLI docs. Kept at their URLs, in maintenance mode. */
