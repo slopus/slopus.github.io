@@ -35,4 +35,10 @@ export const thesisPosts: Record<string, QuotedPost> = {
       'However, this will only be a stopgap and it will not be the terminal state of the world.',
     ].join('\n\n'),
   },
+  'https://x.com/btaylor/status/2107535182119244176': {
+    name: 'Bret Taylor',
+    handle: 'btaylor',
+    date: 'October 6, 2026',
+    text: 'Today we’re announcing Personal Agent Protocol — an open standard @Meta and @SierraPlatform are developing along with industry partners at @Genesys, @instinct, @RocketOTD, @Shopify, @stripe, and @Walmart. It will help define how personal agents interact with businesses and is open for anyone to implement. You can read more here - and if anyone is interested in joining let me know! https://sierra.ai/blog/introducing-personal-agent-protocol',
+  },
 }

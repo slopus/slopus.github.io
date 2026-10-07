@@ -8,27 +8,23 @@ title: "Happy: Muse for agentmaxxers"
 - We're building that agent for early AI adopters: frontier models, no lock-in, open source.
 - It's always on, knows your priorities, and only pings you when it matters.
 - Agents spread into everything they can touch. You want one you trust, not five.
-- Permissions and security aren't solved yet. We're working on it in public.
+- Agent permissions need industry standards, and those are just starting to show up.
 
 # Who it's for
 
 People who want the best models, no lock-in, and open source. Early adopters.
 
-Muse, Grok and dots will be enough for most people, and Anthropic and Gemini will ship their own soon. OpenCode's Jay Air put it well:
-
 https://x.com/jayair/status/2105834279557341382
 
-We're not building for most people. We're building for the ones who want more.
+Muse, Grok and dots will be enough for most people, and Anthropic and Gemini will ship their own soon. We're not building for most people. We're building for the ones who want more.
 
 A lot of them are engineers. Engineers still read code, so we'll keep investing in code review.
 
 # One agent to talk to your other agents
 
-Everything is moving to one agent. Muse, OpenAI's dots and Grok Bot all went this way.
-
 https://x.com/maria_rcks/status/2106620125923393849
 
-You talk to one agent, and it handles the rest.
+Everything is moving to one agent. Muse, OpenAI's dots and Grok Bot all went this way. You talk to one agent, and it handles the rest.
 
 Nobody wants to jump between sessions all day and remember which one is doing what. Our own sidebar turns into a mess fast. So the next Happy is one agent on top. Sub-agents do the work underneath, including agents running on your own machines through Happy Desktop. You talk to one agent, and it talks to the rest.
 
@@ -62,11 +58,17 @@ We're keeping a sidebar, even though a lot of products are dropping theirs. You 
 
 We're building this as a new app, not on top of the old Happy code.
 
-# What we haven't solved
-
-Permissions and security. The agent logs into your computers and your accounts, and it has to hand access to its sub-agents to get anything done. We don't know yet how much access it should hold, how it should pass it down, or how you check what it did. We'll work on it in public, and we'll get some of it wrong.
+# The hard part: standards
 
 https://x.com/nikitabier/status/2107157904168239416
+
+The agent logs into your computers and your accounts. To get anything done, it has to hand some of that access to its sub-agents.
+
+How much access should it hold? How does it pass that access down? How does a service know an agent is acting for you? How do you check what it did? One company can't settle this. It needs standards the whole industry agrees on.
+
+https://x.com/btaylor/status/2107535182119244176
+
+That's starting to happen. Meta and Sierra just announced the Personal Agent Protocol, an open standard for personal agents to identify themselves and prove they act for a real user. We'll build on standards like this rather than invent our own.
 
 # How it spreads
 

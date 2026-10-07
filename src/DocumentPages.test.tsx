@@ -104,7 +104,7 @@ describe('static document pages', () => {
       'Why not just use Muse',
       'Always on',
       'Fewer buttons, not zero',
-      "What we haven't solved",
+      'The hard part: standards',
       'How it spreads',
     ])
     expect(container.querySelector('h3')).toBeNull()
@@ -116,14 +116,16 @@ describe('static document pages', () => {
 
     expect(quotes.map((quote) => quote.querySelector('a')?.getAttribute('href'))).toEqual(Object.keys(thesisPosts))
     for (const quote of quotes) {
-      expect(quote.dataset).toMatchObject({ dnt: 'true', conversation: 'none', theme: 'light' })
+      expect(quote.dataset).toMatchObject({ dnt: 'true', conversation: 'none', theme: 'light', width: '270' })
       expect(quote.querySelectorAll('a')).toHaveLength(1)
     }
     expect(quotes[0].textContent).toContain('a non-SOTA model is good enough for Muse the agent')
-    const leadIns = quotes.map((quote) => quote.closest('figure')?.previousElementSibling?.textContent)
-    expect(leadIns[0]).toMatch(/enough for most people.*Jay Air put it well:$/)
-    expect(leadIns[1]).toBe("Everything is moving to one agent. Muse, OpenAI's dots and Grok Bot all went this way.")
-    expect(leadIns[2]).toMatch(/^Permissions and security\..*we'll get some of it wrong\.$/)
+    // Each post floats beside the paragraph it backs up, so it comes just before it.
+    const supported = quotes.map((quote) => quote.closest('figure')?.nextElementSibling?.textContent)
+    expect(supported[0]).toMatch(/^Muse, Grok and dots will be enough for most people/)
+    expect(supported[1]).toMatch(/^Everything is moving to one agent\./)
+    expect(supported[2]).toMatch(/^The agent logs into your computers/)
+    expect(supported[3]).toMatch(/^That's starting to happen\. Meta and Sierra just announced the Personal Agent Protocol/)
     expect(container.querySelector('.document-content')?.textContent).not.toContain('https://x.com/')
   })
 

@@ -180,6 +180,8 @@ export function LegalPage({
 /**
  * X's official embed markup. widgets.js swaps it for the live post; until then,
  * or if the script never loads, it reads as a quote with the post's own text.
+ * The posts are side notes, so they ask X for a narrow card (it accepts
+ * 250–550); `.x-post` in style.css is the same width.
  */
 function QuotedXPost({ url, post }: { url: string; post: QuotedPost }) {
   return (
@@ -189,7 +191,7 @@ function QuotedXPost({ url, post }: { url: string; post: QuotedPost }) {
         data-dnt="true"
         data-conversation="none"
         data-theme="light"
-        data-align="center"
+        data-width="270"
       >
         <p lang="en" dir="ltr">{post.text}</p>
         <p className="x-post-attribution">
