@@ -45,12 +45,6 @@ a { color: inherit; text-decoration: none; }
 .wordmark span { color: #e6522c; margin-left: .28em; }
 
 /* Product switch: Terminal + Mobile / Desktop + Mobile */
-.product-switch { background: #ebe5d9; border-radius: 999px; display: flex; gap: .15rem; padding: .2rem; }
-.product-switch-option { align-items: center; border-radius: 999px; color: #557068; display: flex; font-size: .78rem; font-weight: 600; gap: .4rem; line-height: 1; padding: .5rem .8rem; white-space: nowrap; }
-.product-switch-option:hover { color: #183f38; }
-.product-switch-option[aria-current='page'] { background: #183f38; color: #f5f0e7; }
-.product-switch-new { color: #e6522c; font-family: 'DM Mono', monospace; font-size: .56rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; }
-.product-switch-option[aria-current='page'] .product-switch-new { color: #f3b849; }
 .site-header nav { align-items: center; display: flex; gap: 1.65rem; font-size: .86rem; font-weight: 500; }
 .site-header nav > a:not(.nav-cta) { opacity: .82; }
 .site-header nav > a:not(.nav-cta):hover { opacity: 1; }
@@ -225,6 +219,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .footer-links { display: flex; font-size: .8rem; gap: 1.25rem; justify-content: flex-end; margin-bottom: 1.1rem; }
 .footer-links a { border-bottom: 1px solid transparent; }
 .footer-links a:hover { border-color: currentColor; }
+.footer-links .footer-link-quiet { color: #6b7f78; }
 .footer-people { display: block; margin-top: .85rem; font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 400; }
 .footer-people a { text-decoration: underline; text-underline-offset: 3px; }
 
@@ -246,6 +241,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .docs-layout { flex: 1 1 auto; margin: 0; max-width: none; min-height: 0; overflow: hidden; padding: 0 0 0 max(32px, calc((100% - 1180px) / 2)); width: 100%; grid-template-columns: 210px minmax(0, 1fr); }
   .docs-shell .docs-sidebar { align-self: stretch; height: 100%; max-height: none; min-height: 0; overflow-y: auto; padding: 3.5rem 2px 3rem; position: static; }
   .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; padding: 3.5rem 0 0; }
+  .docs-shell .document-article > .legacy-notice { margin-right: 2rem; }
   .docs-shell .document-article > .document-breadcrumb,
   .docs-shell .document-article > .document-content,
   .docs-shell .document-article > .document-pagination { max-width: 760px; padding-right: 2rem; }
@@ -268,6 +264,10 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-article { min-width: 0; }
 .document-breadcrumb { align-items: center; color: #6b7f78; display: flex; font-family: 'DM Mono', monospace; font-size: .66rem; gap: .55rem; letter-spacing: .04em; margin: 0 0 1.5rem; text-transform: uppercase; }
 .document-breadcrumb a:hover { color: #e6522c; }
+.legacy-notice { max-width: 760px; margin: 0 0 2rem; padding: .9rem 1.1rem; border: 1px solid #d5cebf; border-left: 3px solid #e6522c; border-radius: 8px; background: #fbf8f2; color: #385950; font-size: .9rem; line-height: 1.6; }
+.legacy-notice p { margin: 0; }
+.legacy-notice code { font-family: 'DM Mono', monospace; font-size: .88em; }
+.legacy-notice a { color: #183f38; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .document-content { color: #294c45; font-size: 1rem; line-height: 1.75; }
 .document-content h1, .document-content h2, .document-content h3 { color: #183f38; font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-weight: 600; letter-spacing: -.025em; text-wrap: balance; }
 .document-content h1[id], .document-content h2[id], .document-content h3[id] { scroll-margin-top: 2rem; }
@@ -357,7 +357,6 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .site-header nav { gap: .85rem; font-size: .8rem; }
   .site-header-brand { gap: .6rem; }
   .site-header .wordmark span { display: none; }
-  .product-switch-option { font-size: .74rem; padding: .44rem .62rem; }
   .hero { padding: 2.5rem 0 5rem; }
   .hero-actions { gap: .8rem; }
   .how-heading { margin-bottom: 2.5rem; }
@@ -394,9 +393,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   h1 { font-size: 2.7rem; }
   .site-header nav { gap: .7rem; }
   .site-header-brand { gap: .55rem; }
-  .product-switch-option { font-size: .7rem; padding: .4rem .55rem; }
   /* "Terminal" and "Desktop" carry the choice; "+ Mobile" is true of both. */
-  .product-switch-suffix { display: none; }
   .nav-github-count, .nav-cta-prefix { display: none; }
   .nav-cta { padding: .52rem .78rem; }
   .store-button { width: 160px; height: 48px; }

@@ -54,6 +54,24 @@ describe('static document pages', () => {
     expect(screen.queryByRole('link', { name: 'Happy Desktop vs Buzz' })).toBeNull()
   })
 
+  it('opens every original Happy CLI docs page with the maintenance notice, and no desktop page', () => {
+    const { unmount } = render(<Router pathname="/docs/quick-start/" />)
+    const notice = screen.getByRole('complementary', { name: /maintenance mode/i })
+
+    expect(notice.textContent).toMatch(/^Happy is now a desktop app\. The original Happy CLI \(happy on npm, formerly happy-coder\) is in maintenance mode/)
+    expect(screen.getByRole('link', { name: 'Happy desktop app' }).getAttribute('href')).toBe('/')
+    unmount()
+
+    render(<Router pathname="/desktop/docs/quick-start/" />)
+    expect(screen.queryByRole('complementary', { name: /maintenance mode/i })).toBeNull()
+  })
+
+  it('does not claim automatic account routing is missing', () => {
+    for (const document of documentsForProduct('desktop')) {
+      expect(getDocumentSource(document)).not.toMatch(/routing[^.]*not (yet )?implemented|automatic routing across/i)
+    }
+  })
+
   it('keeps the announced Buzz comparison URL working', () => {
     render(<Router pathname="/docs/comparisons/happy-2-vs-buzz" />)
 

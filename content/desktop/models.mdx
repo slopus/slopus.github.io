@@ -9,7 +9,7 @@ No Happy plan for model access, no key to paste. Sign in to Claude Code, Codex, 
 | Grok | xAI's Grok family | The Grok CLI |
 | Bedrock | Claude and GPT models through Amazon Bedrock | A bearer token in the environment |
 
-Availability is machine-wide, because the daemon owns the catalog. Requests go to the vendor with your credentials; Happy never pools or proxies them.
+Availability is machine-wide, because the daemon owns the catalog. Requests go to the vendor with your credentials; Happy never proxies them.
 
 ## Switching mid-session
 
@@ -32,7 +32,26 @@ enabled = true
 auth_file = "/Users/me/.codex-work/auth.json"
 ```
 
-Named instances appear in the picker as separate providers. Automatic routing between them is not implemented. See [Configuration](/desktop/docs/guides/configuration/).
+Named instances appear in the picker as separate providers. To rotate between same-type accounts automatically, pool them behind a smart provider and hide the members:
+
+```toml
+[providers.codex]
+hidden = true
+
+[providers.work_codex]
+type = "codex"
+enabled = true
+hidden = true
+auth_file = "/Users/me/.codex-work/auth.json"
+
+[providers.codex_pool]
+type = "smart"
+strategy = "round_robin"
+providers = ["codex", "work_codex"]
+enabled = true
+```
+
+A new agent or subagent starts on a random member and stays there; an auth or quota-exhaustion error moves it to the next one. `hidden = true` only removes an account from the picker, and a pool still routes to it. See [Configuration](/desktop/docs/guides/configuration/).
 
 ## Usage
 

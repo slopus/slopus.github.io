@@ -4,11 +4,15 @@ You need macOS, Windows, or Linux, and at least one of Claude Code, Codex, or th
 
 ## Install
 
-Download from the [Happy Desktop page](/desktop/#download), or on macOS:
+Download from the [latest release](https://github.com/slopus/happy-desktop/releases/latest) (macOS, Windows, or Linux), or use Homebrew on macOS or Linux:
 
 ```sh
 brew install --cask slopus/tap/happy
 ```
+
+On macOS, open **Happy** from Applications or Spotlight. On Linux, launch it with `happy-desktop`; it needs a graphical session and FUSE. The `happy` command in your terminal is the original Happy CLI, not the desktop app.
+
+If Windows SmartScreen says "Windows protected your PC", click **More info → Run anyway**. The installer is signed; SmartScreen warns about new releases until they build up reputation.
 
 Open the app. It starts its own agent runtime and finds the provider sign-ins. There is no key to paste.
 
@@ -22,7 +26,7 @@ Open the project and start a session with any model you are signed in to. New se
 
 ## Pair your phone
 
-**Settings → Mobile Access**, or accept the offer during onboarding. Install Happy Coder from the App Store or Google Play, scan the device QR, approve on the phone. Desktop then installs the `happy` CLI so terminal sessions reach the phone too. This step needs Node.js and npm.
+**Settings → Mobile Access**, or accept the offer during onboarding. Install Happy from the App Store or Google Play, scan the device QR, approve on the phone. Desktop then installs the `happy` CLI so terminal sessions reach the phone too. This step needs Node.js and npm.
 
 ## Where things live
 

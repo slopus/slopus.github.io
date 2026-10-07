@@ -2,7 +2,7 @@
 
 ## Current export: v22, from take v21-r2
 
-Only `/desktop/` (reviewed earlier as `/tmp/happy-one/`) uses this player. Active assets are in
+Only the homepage `/` (formerly `/desktop/`, reviewed earlier as `/tmp/happy-one/`) uses this player. Active assets are in
 `public/video/happy-one/v22/`, from the desktop workspace's
 `scripts/demo/demos/core/artifacts/v21-r2/`. The master contains 3,867 frames at
 60fps, lasting 64.450000 seconds. All six copied exports have verified checksums.
@@ -119,8 +119,8 @@ existing 47 tests and production build pass.
 
 This is an agent-run screenshot recipe, not a production script. The ordinary
 page uses the requested capitalization, “Any Model. Your Team. Happy Harness.”,
-and keeps its existing description. Only `/desktop/` uses
-`/og/happy-harness-v23.png`; all other routes retain their previous images.
+and keeps its existing description. Every route uses
+`/og/happy-harness-v23.png` as its social image.
 
 The v23 card is a horizontal composition: the three-line headline, “Free and
 open source”, and GitHub stars on the left; the full desktop on the right;
@@ -137,7 +137,7 @@ match the widths exactly, with less than 0.03px height variation.
    `stargazers_count` (23,810 / 23.8k on 2026-09-17). The header and screenshot
    both link to the **original** `https://github.com/slopus/happy` repository.
    Download “All Releases” deliberately still links to `happy-desktop`.
-2. Build the website. Open `/desktop/?preview=og` in Chromium at
+2. Build the website. Open `/?preview=og` in Chromium at
    **1200×630 CSS pixels**, device scale factor **2**, with reduced motion
    enabled. Use the registered workspace preview service; if that environment
    cannot start one, fulfill browser requests directly from the built `dist/`
@@ -165,10 +165,10 @@ match the widths exactly, with less than 0.03px height variation.
    baked-in Mac buttons, and phone must be visible, with no playback chrome.
 6. Point both `src/siteMetadata.ts` and `scripts/generate-static-routes.mjs` at
    the new image, keeping the title capitalization above and the existing
-   description. `/desktop/` is the public page and stays indexable; only the
-   `/tmp/happy-one/` alias keeps `noindex, nofollow`.
+   description. `/` is the public page and stays indexable; the `/desktop/`,
+   `/happy2/`, and `/tmp/happy-one/` redirect pages are `noindex`.
    Set matching width/height and descriptive alt text. Rebuild and inspect the
-   generated `dist/desktop/index.html`: crawlers must get correct Open
+   generated `dist/index.html`: crawlers must get correct Open
    Graph and Twitter image tags without running JavaScript. Check that normal
    navigation restores other routes' image metadata.
 7. Verify the ordinary page still has no `.one-social-stars`, and the header

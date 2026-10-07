@@ -1,37 +1,19 @@
 import { cleanup, render, screen, within } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
-import App from './App'
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { Router } from './Router'
 
-function teamNames() {
-  // Anchored to the section's own label, so hero copy mentioning "team" cannot match instead.
-  const section = document.getElementById('team-heading')?.closest('section')
-  if (!section) {
-    throw new Error('team section not found')
-  }
-  return within(section as HTMLElement)
-    .getAllByRole('listitem')
-    .map((item) => item.querySelector('.team-name')?.textContent)
-}
+vi.mock('./HappyOneDemo', () => ({ HappyOneDemo: () => <figure data-testid="demo" /> }))
 
-describe('team section', () => {
-  afterEach(() => {
-    cleanup()
-  })
+beforeAll(() => {
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }))
+  vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} })
+  vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({
+    matches: false, addEventListener() {}, removeEventListener() {},
+  }))
+})
 
-  it('lists all three on the Happy homepage, in order', () => {
-    render(<App />)
-
-    expect(teamNames()).toEqual(['Steve Korshakov', 'Karl Marx', 'Kirill Dubovitskiy'])
-  })
-
-  it('links each person to their own place on the internet', () => {
-    render(<App />)
-
-    expect(screen.getByRole('link', { name: /Steve Korshakov/ }).getAttribute('href')).toBe('https://x.com/Ex3NDR')
-    expect(screen.getByRole('link', { name: /Kirill Dubovitskiy/ }).getAttribute('href')).toBe('https://x.com/bra1n_dump')
-    expect(screen.getByRole('link', { name: /Karl Marx/ }).getAttribute('href')).toBe('https://peoplesgrocers.com/en/projects')
-  })
+afterAll(() => {
+  vi.unstubAllGlobals()
 })
 
 describe('header docs link', () => {
@@ -47,11 +29,19 @@ describe('header docs link', () => {
     expect(within(navigation).getByRole('link', { name: 'Docs' }).getAttribute('aria-current')).toBe('page')
   })
 
-  it('is not marked current on a landing page', () => {
-    render(<App />)
+  it('is not marked current on the landing page', () => {
+    render(<Router pathname="/" />)
 
     const navigation = screen.getByRole('navigation', { name: 'Primary navigation' })
 
     expect(within(navigation).getByRole('link', { name: 'Docs' }).getAttribute('aria-current')).toBeNull()
+  })
+
+  it('points at the Happy docs from the homepage', () => {
+    render(<Router pathname="/" />)
+
+    const navigation = screen.getByRole('navigation', { name: 'Primary navigation' })
+
+    expect(within(navigation).getByRole('link', { name: 'Docs' }).getAttribute('href')).toBe('/desktop/docs/')
   })
 })

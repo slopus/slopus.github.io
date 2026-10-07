@@ -12,20 +12,20 @@ const docsSections = [
     contentRoot: path.join(projectRoot, 'content', 'docs'),
     routeRoot: 'docs',
     canonicalRoot: '/docs',
-    indexTitle: 'Happy Docs — Remote Control for Coding Agents',
-    titleSuffix: 'Happy Docs',
+    indexTitle: 'Happy Coder Docs — Claude Code & Codex Mobile App (Original CLI)',
+    titleSuffix: 'Happy Coder Docs',
     description:
-      'Install, configure, self-host, and use Happy with Claude Code, Codex, and other coding agents across desktop, mobile, and web.',
+      'Docs for the original Happy CLI (Happy Coder): use Claude Code and Codex from your iPhone, Android, or the web. Maintenance mode; new features ship in the Happy desktop app.',
   },
   {
     contentRoot: path.join(projectRoot, 'content', 'desktop'),
     routeRoot: path.posix.join('desktop', 'docs'),
     legacyRouteRoot: path.posix.join('happy2', 'docs'),
     canonicalRoot: '/desktop/docs',
-    indexTitle: 'Happy Desktop Docs — The Open Source Harness for Coding Agents',
+    indexTitle: 'Happy Docs — The Open Source Desktop App for Coding Agents',
     titleSuffix: 'Happy Desktop Docs',
     description:
-      'Install Happy Desktop, run Claude, Codex, and Grok in one harness, pair your phone, and understand permissions, workspaces, teams, and plugins.',
+      'Install Happy on macOS, Windows, or Linux, run Claude, Codex, and Grok in one harness, pair your phone, and understand permissions, workspaces, teams, and plugins.',
   },
 ]
 
@@ -108,6 +108,8 @@ async function writeRoute(route, html) {
 }
 
 let documentRoutes = 0
+// Indexable canonical URLs, written to sitemap.xml at the end.
+const sitemapPaths = ['/']
 
 for (const section of docsSections) {
   const files = await findMarkdownFiles(section.contentRoot)
@@ -131,6 +133,10 @@ for (const section of docsSections) {
 
     await writeRoute(path.posix.join(section.routeRoot, documentPath), html)
     documentRoutes += 1
+    // The Buzz comparison is unlisted (hidden: true in src/documents.ts).
+    if (documentPath !== 'comparisons/buzz') {
+      sitemapPaths.push(`${section.canonicalRoot}/${documentPath ? `${documentPath}/` : ''}`)
+    }
 
     // The old URLs keep serving; each one canonicals to its new home and the app rewrites the path.
     if (section.legacyRouteRoot) {
@@ -140,22 +146,31 @@ for (const section of docsSections) {
   }
 }
 
-// Mirrors desktopMetadata in src/siteMetadata.ts. The social image is the
-// screenshot described in docs/happy-one-demo.md.
-const desktopPage = {
-  title: 'Any Model. Your Team. Happy Harness.',
-  description: 'Multi-provider and natively multiplayer. Use your current subscriptions. Open source under MIT, with an end-to-end encrypted mobile app.',
-  canonicalPath: '/desktop/',
-  socialImage: {
-    path: '/og/happy-harness-v23.png', width: 1200, height: 630,
-    alt: 'Happy Harness model picker and paired phone, with Free and open source and 23.8k GitHub stars.',
-  },
+// The desktop page is the homepage now (dist/index.html, built from index.html).
+// Its old URLs redirect there without JavaScript, so GitHub Pages serves a real
+// redirect: a refresh, a canonical to /, and a script that keeps ?query and #hash.
+function redirectHtml(target) {
+  const url = new URL(target, siteUrl).toString()
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Happy</title>
+    <link rel="canonical" href="${escapeHtml(url)}" />
+    <meta http-equiv="refresh" content="0; url=${escapeHtml(target)}" />
+    <script>location.replace(${JSON.stringify(target)} + location.search + location.hash)</script>
+  </head>
+  <body>
+    <p>Happy moved to <a href="${escapeHtml(target)}">${escapeHtml(url)}</a>.</p>
+  </body>
+</html>
+`
 }
 
-const desktopHtml = htmlForPage(desktopPage)
-
-await writeRoute('desktop', desktopHtml)
-await writeRoute('happy2', desktopHtml)
+await writeRoute('desktop', redirectHtml('/'))
+await writeRoute('happy2', redirectHtml('/'))
+// The page was reviewed unlisted at this URL before it became the homepage.
+await writeRoute('tmp/happy-one', redirectHtml('/'))
 
 // Mirrors modelBenchmarksMetadata. No trailing slash in the picker’s public URL.
 await writeRoute('model-benchmarks', htmlForPage({
@@ -164,10 +179,6 @@ await writeRoute('model-benchmarks', htmlForPage({
   canonicalPath: '/model-benchmarks',
 }))
 
-// The page was reviewed unlisted at this URL before it became /desktop/.
-// Keep shared links working; the app rewrites the path on load.
-await writeRoute('tmp/happy-one', htmlForPage({ ...desktopPage, robots: 'noindex, nofollow' }))
-
 // The Buzz comparison moved into the Happy Desktop section; keep the announced URL resolving.
 await writeRoute('docs/comparisons/happy-2-vs-buzz', htmlForPage({
   title: 'Happy Desktop vs Buzz — Happy Desktop Docs',
@@ -175,6 +186,7 @@ await writeRoute('docs/comparisons/happy-2-vs-buzz', htmlForPage({
   canonicalPath: '/desktop/docs/comparisons/buzz/',
 }))
 
+sitemapPaths.push('/model-benchmarks', '/privacy/', '/terms/')
 await writeRoute('privacy', htmlForPage({
   title: 'Privacy Policy — Happy',
   description: 'Privacy policy for Happy.',
@@ -283,6 +295,7 @@ for (const { route, title, description } of pluginPages) {
     await assertPolicyServed(route, html, policySources[route])
   }
   await writeRoute(route, html)
+  sitemapPaths.push(canonicalPath)
 }
 
 // Mirrors thesisMetadata in src/siteMetadata.ts. Unlisted: reachable here, linked from nowhere.
@@ -290,6 +303,7 @@ const thesisHtml = withAppMarkup(htmlForPage({
   title: 'Happy: Muse for agentmaxxers',
   description: "Soon you'll talk to one agent, and it will run all your other agents.",
   canonicalPath: '/thesis/',
+  robots: 'noindex, follow',
 }), renderPath('/thesis/'))
 const thesisApp = thesisHtml.slice(thesisHtml.indexOf('<div id="app">'))
 const thesisPostUrls = (await readFile(path.join(projectRoot, 'content', 'thesis.md'), 'utf8'))
@@ -312,4 +326,13 @@ await writeFile(
   }),
 )
 
-console.log(`Generated ${documentRoutes + 9 + pluginPages.length} static routes.`)
+await writeFile(
+  path.join(distRoot, 'sitemap.xml'),
+  `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapPaths.map((route) => `  <url><loc>${escapeHtml(new URL(route, siteUrl).toString())}</loc></url>`).join('\n')}
+</urlset>
+`,
+)
+
+console.log(`Generated ${documentRoutes + 9 + pluginPages.length} static routes and a ${sitemapPaths.length}-URL sitemap.`)

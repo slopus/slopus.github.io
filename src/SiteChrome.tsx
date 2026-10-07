@@ -1,12 +1,10 @@
 import type { ReactNode } from 'react'
-import { APP_STORE_LINK, GOOGLE_PLAY_LINK } from './StoreButtons'
-import { HAPPY, HAPPY_DESKTOP, products, type Product } from './products'
+import { HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import { HAPPY_ONE_GITHUB_STARS } from './happyOneGithubStars'
 import { KIRILL, STEVE } from './Team'
 
 export const GITHUB_HAPPY = HAPPY.repository
 export const GITHUB_HAPPY_DESKTOP = HAPPY_DESKTOP.repository
-export const WEB_APP = 'https://app.happy.engineering'
 
 export function GithubMark() {
   return (
@@ -16,36 +14,11 @@ export function GithubMark() {
   )
 }
 
-export function Wordmark({ product = HAPPY }: { product?: Product }) {
+export function Wordmark() {
   return (
-    <a className="wordmark" href={product.home} aria-label="Happy Engineering home">
+    <a className="wordmark" href="/" aria-label="Happy Engineering home">
       Happy<span>Engineering</span>
     </a>
-  )
-}
-
-/** The two ways to run Happy, named by the surfaces you use rather than by version. */
-function ProductSwitch({ product }: { product: Product }) {
-  return (
-    <div className="product-switch" role="group" aria-label="Choose a product">
-      {products.map((entry) => {
-        const [primary, ...rest] = (entry.switchLabel ?? entry.label).split(' + ')
-        return (
-          <a
-            className="product-switch-option"
-            key={entry.key}
-            href={entry.home}
-            aria-current={entry.key === product.key ? 'page' : undefined}
-          >
-            <span className="product-switch-label">
-              {primary}
-              {rest.length > 0 ? <span className="product-switch-suffix"> + {rest.join(' + ')}</span> : null}
-            </span>
-            {entry.key === 'desktop' ? <span className="product-switch-new">New</span> : null}
-          </a>
-        )
-      })}
-    </div>
   )
 }
 
@@ -64,6 +37,7 @@ function GithubLink() {
   )
 }
 
+/** One plain header on every page. Docs means the Happy (desktop) docs. */
 export function SiteHeader({
   product = HAPPY,
   docsActive = false,
@@ -75,26 +49,11 @@ export function SiteHeader({
     <div className="site-header-wrap">
       <header className="site-header page-width" id="top">
         <div className="site-header-brand">
-          <Wordmark product={product} />
-          <ProductSwitch product={product} />
+          <Wordmark />
         </div>
         <nav aria-label="Primary navigation">
-          {product.key === 'desktop' ? (
-            <>
-              <a href={`${HAPPY_DESKTOP.docsBase}/`} aria-current={docsActive ? 'page' : undefined}>Docs</a>
-              <GithubLink />
-            </>
-          ) : (
-            <>
-              <a className="nav-store-link" href={APP_STORE_LINK} target="_blank" rel="noopener noreferrer">iOS App</a>
-              <a className="nav-store-link" href={GOOGLE_PLAY_LINK} target="_blank" rel="noopener noreferrer">Android App</a>
-              <a href="/docs/" aria-current={docsActive ? 'page' : undefined}>Docs</a>
-              <GithubLink />
-              <a className="nav-cta" href={WEB_APP} target="_blank" rel="noopener noreferrer">
-                <span className="nav-cta-prefix">Happy </span>Web
-              </a>
-            </>
-          )}
+          <a href={`${HAPPY_DESKTOP.docsBase}/`} aria-current={docsActive && product.key === 'desktop' ? 'page' : undefined}>Docs</a>
+          <GithubLink />
         </nav>
       </header>
     </div>
@@ -122,8 +81,9 @@ export function SiteFooter({ product = HAPPY, additionalLinks }: { product?: Pro
             <a href="/privacy/">Privacy</a>
             <a href="/terms/">Terms</a>
             {additionalLinks}
+            <a className="footer-link-quiet" href={`${HAPPY.docsBase}/`}>Original Happy CLI</a>
           </div>
-          <Wordmark product={product} />
+          <Wordmark />
           <p>© {currentYear} Happy Engineering</p>
         </div>
       </div>

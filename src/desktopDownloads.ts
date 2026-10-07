@@ -6,14 +6,14 @@ export type DesktopDownloads = Readonly<{
 }>
 
 // Verified production assets remain usable if GitHub is unavailable/rate-limited.
-const VERIFIED_RELEASE = 'https://github.com/slopus/happy-desktop/releases/download/v0.0.85'
+const VERIFIED_RELEASE = 'https://github.com/slopus/happy-desktop/releases/download/v0.0.90'
 export const verifiedDesktopDownloads: DesktopDownloads = {
   macos: {
-    arm64: `${VERIFIED_RELEASE}/Happy-0.0.85-arm64.dmg`,
-    x64: `${VERIFIED_RELEASE}/Happy-0.0.85-x64.dmg`,
+    arm64: `${VERIFIED_RELEASE}/Happy-0.0.90-arm64.dmg`,
+    x64: `${VERIFIED_RELEASE}/Happy-0.0.90-x64.dmg`,
   },
-  windows: `${VERIFIED_RELEASE}/Happy-0.0.85-x64.exe`,
-  linux: `${VERIFIED_RELEASE}/Happy-0.0.85-x64.AppImage`,
+  windows: `${VERIFIED_RELEASE}/Happy-0.0.90-x64.exe`,
+  linux: `${VERIFIED_RELEASE}/Happy-0.0.90-x64.AppImage`,
 }
 
 function assetUrl(assets: readonly unknown[], tag: string, name: string): string | null {

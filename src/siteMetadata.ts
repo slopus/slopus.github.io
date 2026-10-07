@@ -11,40 +11,38 @@ export interface PageMetadata {
   socialImage?: Readonly<{ path: string; width: number; height: number; alt: string }>
 }
 
+/** The desktop app's social card, the screenshot described in docs/happy-one-demo.md. Every page shares it. */
+export const defaultSocialImage = {
+  path: '/og/happy-harness-v23.png', width: 1200, height: 630,
+  alt: 'Happy Harness model picker and paired phone, with Free and open source and 23.8k GitHub stars.',
+} as const
+
+/**
+ * The homepage is the Happy desktop app's page. Keep index.html, which crawlers
+ * read for /, and scripts/generate-static-routes.mjs in sync.
+ */
 export const homepageMetadata: PageMetadata = {
-  title: 'Happy — Remote Control for Claude Code & Codex',
+  title: 'Happy — Desktop & Mobile App for Claude Code, Codex & Grok',
   description:
-    'Happy is the open-source remote control for Claude Code, Codex, and other coding agents running on your computers. Use them from iOS, Android, or the web.',
+    'Happy is the open-source desktop app for Claude Code, Codex, and Grok, with an iOS and Android app to control your coding agents from anywhere.',
   canonicalPath: '/',
-  socialTitle: 'Happy — Leave your desk. Keep your agents moving.',
+  socialTitle: 'Any Model. Your Team. Happy Harness.',
   socialDescription:
-    'Start, steer, approve, and review coding agents running on your own computers from iOS, Android, or the web.',
-  twitterDescription:
-    'Control Claude Code, Codex, and other coding agents running on your computers from anywhere.',
+    'Multi-provider and natively multiplayer. Use your current subscriptions. Open source under MIT, with an end-to-end encrypted mobile app.',
 }
 
-/** Shared with scripts/generate-static-routes.mjs, which writes the same values into dist/desktop/index.html. */
-export const desktopMetadata: PageMetadata = {
-  title: 'Any Model. Your Team. Happy Harness.',
-  description: 'Multi-provider and natively multiplayer. Use your current subscriptions. Open source under MIT, with an end-to-end encrypted mobile app.',
-  canonicalPath: '/desktop/',
-  socialImage: {
-    path: '/og/happy-harness-v23.png', width: 1200, height: 630,
-    alt: 'Happy Harness model picker and paired phone, with Free and open source and 23.8k GitHub stars.',
-  },
-}
-
+/** The original Happy CLI docs. Kept at their URLs, in maintenance mode. */
 export const docsMetadata: PageMetadata = {
-  title: 'Happy Docs — Remote Control for Coding Agents',
+  title: 'Happy Coder Docs — Claude Code & Codex Mobile App (Original CLI)',
   description:
-    'Install, configure, self-host, and use Happy with Claude Code, Codex, and other coding agents across desktop, mobile, and web.',
+    'Docs for the original Happy CLI (Happy Coder): use Claude Code and Codex from your iPhone, Android, or the web. Maintenance mode; new features ship in the Happy desktop app.',
   canonicalPath: '/docs/',
 }
 
 export const desktopDocsMetadata: PageMetadata = {
-  title: 'Happy Desktop Docs — The Open Source Harness for Coding Agents',
+  title: 'Happy Docs — The Open Source Desktop App for Coding Agents',
   description:
-    'Install Happy Desktop, run Claude, Codex, and Grok in one harness, pair your phone, and understand permissions, workspaces, teams, and plugins.',
+    'Install Happy on macOS, Windows, or Linux, run Claude, Codex, and Grok in one harness, pair your phone, and understand permissions, workspaces, teams, and plugins.',
   canonicalPath: '/desktop/docs/',
 }
 
@@ -63,6 +61,7 @@ export const thesisMetadata: PageMetadata = {
   title: 'Happy: Muse for agentmaxxers',
   description: "Soon you'll talk to one agent, and it will run all your other agents.",
   canonicalPath: '/thesis/',
+  robots: 'noindex, follow',
 }
 
 /**
@@ -105,10 +104,7 @@ export function applyPageMetadata(metadata: PageMetadata) {
   const canonicalUrl = new URL(metadata.canonicalPath, 'https://happy.engineering').toString()
   const socialTitle = metadata.socialTitle ?? metadata.title
   const socialDescription = metadata.socialDescription ?? metadata.description
-  const socialImage = metadata.socialImage ?? {
-    path: '/og/happy.png', width: 1200, height: 630,
-    alt: 'Happy controlling coding-agent sessions across desktop and mobile',
-  }
+  const socialImage = metadata.socialImage ?? defaultSocialImage
   const socialImageUrl = new URL(socialImage.path, 'https://happy.engineering').toString()
 
   document.title = metadata.title

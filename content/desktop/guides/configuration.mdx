@@ -64,7 +64,7 @@ auth_file = "/Users/me/.codex-work/auth.json"
 include_models = ["openai/gpt-5.6-sol"]
 ```
 
-Built-in providers are on when credentials exist. `include_models` and `exclude_models` trim the picker. `hidden = true` keeps an account usable by a routing provider but removes it from direct selection.
+Built-in providers are on when credentials exist. `include_models` and `exclude_models` trim the picker. `hidden = true` is display-only: it removes an account from direct selection, and a smart provider (`type = "smart"`, `strategy = "round_robin"`) still routes to it. See [Multiple accounts](/desktop/docs/models/#multiple-accounts).
 
 ## Docker
 

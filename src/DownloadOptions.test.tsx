@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DownloadOptions } from './DownloadOptions'
 
 const BREW = 'brew install --cask slopus/tap/happy'
-const RELEASES = 'https://github.com/slopus/happy-desktop/releases/download/v0.0.85'
+const RELEASES = 'https://github.com/slopus/happy-desktop/releases/download/v0.0.90'
 
 beforeEach(() => {
   // Exercise the verified direct-download fallback without making live requests.
@@ -47,7 +47,7 @@ describe('desktop and mobile downloads', () => {
     for (const os of ['macOS', 'Windows', 'Linux']) expect(screen.getByRole('link', { name: `Download Happy for ${os}` })).toBeTruthy()
   })
 
-  it.each([['Macintosh', 'macOS', 'Happy-0.0.85-arm64.dmg'], ['X11; Linux x86_64', 'Linux', 'Happy-0.0.85-x64.AppImage']])('uses the right desktop badge for %s', async (ua, label, asset) => {
+  it.each([['Macintosh', 'macOS', 'Happy-0.0.90-arm64.dmg'], ['X11; Linux x86_64', 'Linux', 'Happy-0.0.90-x64.AppImage']])('uses the right desktop badge for %s', async (ua, label, asset) => {
     device(ua)
     render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     await waitFor(() => expect(screen.getByRole('link', { name: `Download Happy for ${label}` }).getAttribute('href')).toBe(`${RELEASES}/${asset}`))
@@ -177,7 +177,7 @@ describe('desktop and mobile downloads', () => {
   it('keeps the Windows mark and direct download', async () => {
     device('Windows NT 10.0')
     const { container } = render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
-    await waitFor(() => expect(screen.getByRole('link', { name: 'Download Happy for Windows' }).getAttribute('href')).toBe(`${RELEASES}/Happy-0.0.85-x64.exe`))
+    await waitFor(() => expect(screen.getByRole('link', { name: 'Download Happy for Windows' }).getAttribute('href')).toBe(`${RELEASES}/Happy-0.0.90-x64.exe`))
     expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/windows.svg')
     expect(screen.queryByRole('button')).toBeNull()
   })

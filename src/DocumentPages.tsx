@@ -59,6 +59,20 @@ function DocsNavigation({
   )
 }
 
+/** Brief section 6, verbatim: every original Happy CLI docs page opens with it. */
+function LegacyNotice() {
+  return (
+    <aside className="legacy-notice" aria-label="The original Happy CLI is in maintenance mode">
+      <p>
+        <strong>Happy is now a desktop app.</strong> The original Happy CLI (<code>happy</code> on npm,
+        formerly <code>happy-coder</code>) is in maintenance mode: it keeps working and still gets critical
+        fixes, but new features ship in the <a href="/">Happy desktop app</a>. The Happy mobile app works
+        with both.
+      </p>
+    </aside>
+  )
+}
+
 export function DocsPage({ product = HAPPY, path }: { product?: Product; path: string }) {
   const [isSidebarScrollbarVisible, setIsSidebarScrollbarVisible] = useState(false)
   const sidebarScrollbarTimer = useRef<number | null>(null)
@@ -107,6 +121,7 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
         </aside>
 
         <article className="document-article">
+          {product.key === 'happy' && <LegacyNotice />}
           <p className="document-breadcrumb">
             <a href={documentHref(product, '')}>{product.label} docs</a>
             <span aria-hidden="true">/</span>
@@ -235,7 +250,7 @@ export function NotFoundPage() {
         <h1>That page wandered off.</h1>
         <p>Try the documentation index or head back to the Happy homepage.</p>
         <div className="not-found-actions">
-          <a className="button button-primary" href="/docs/">Browse docs</a>
+          <a className="button button-primary" href="/desktop/docs/">Browse docs</a>
           <a className="button button-ghost" href="/">Back home</a>
         </div>
       </main>

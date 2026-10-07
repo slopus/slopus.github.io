@@ -1,7 +1,7 @@
 {
-  "name": "Happy — Remote Control for Coding Agents",
+  "name": "Happy — Desktop & Mobile App for Claude Code, Codex & Grok",
   "short_name": "Happy",
-  "description": "Open-source remote control for coding agents running on your own computers.",
+  "description": "Happy is the open-source desktop app for Claude Code, Codex, and Grok, with an iOS and Android app to control your coding agents from anywhere.",
   "start_url": "/",
   "scope": "/",
   "icons": [

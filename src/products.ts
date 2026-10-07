@@ -3,8 +3,6 @@ export type ProductKey = 'happy' | 'desktop'
 export interface Product {
   key: ProductKey
   label: string
-  /** Shown in the product switch, where the two products are named side by side. */
-  switchLabel?: string
   home: string
   docsBase: string
   docsLabel: string
@@ -13,9 +11,9 @@ export interface Product {
 
 export const HAPPY: Product = {
   key: 'happy',
-  label: 'Happy',
-  switchLabel: 'Terminal + Mobile',
-  home: '/',
+  label: 'Happy Coder',
+  // The original Happy CLI is in maintenance mode; its home is its docs.
+  home: '/docs/',
   docsBase: '/docs',
   docsLabel: 'Documentation',
   repository: 'https://github.com/slopus/happy',
@@ -24,14 +22,12 @@ export const HAPPY: Product = {
 export const HAPPY_DESKTOP: Product = {
   key: 'desktop',
   label: 'Happy Desktop',
-  switchLabel: 'Desktop + Mobile',
-  home: '/desktop/',
+  // The desktop app owns the homepage; /desktop/ redirects here.
+  home: '/',
   docsBase: '/desktop/docs',
   docsLabel: 'Happy Desktop Docs',
   repository: 'https://github.com/slopus/happy-desktop',
 }
-
-export const products: Product[] = [HAPPY, HAPPY_DESKTOP]
 
 export function productForPath(pathname: string): Product {
   return pathname === '/desktop' || pathname.startsWith('/desktop/') ? HAPPY_DESKTOP : HAPPY

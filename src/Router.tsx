@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
-import App from './App'
 import DesktopApp from './DesktopApp'
 import ModelBenchmarksPage from './ModelBenchmarksPage'
 import { DocsPage, LegalPage, NotFoundPage, ThesisPage } from './DocumentPages'
 import { MemesPluginPage, PluginsPage } from './PluginPages'
 import { getDocument, normalizeDocumentPath } from './documents'
-import { HAPPY_DESKTOP, productForPath } from './products'
+import { productForPath } from './products'
 import {
   applyPageMetadata,
-  desktopMetadata,
   docsMetadataForProduct,
   homepageMetadata,
   memesPluginMetadata,
@@ -33,8 +31,11 @@ const pluginsBack = { href: '/plugins/', label: 'Back to plugins' }
 /** Pages that moved. Keep the old URLs working. */
 const movedPaths: Record<string, string> = {
   '/docs/comparisons/happy-2-vs-buzz': '/desktop/docs/comparisons/buzz',
-  // The harness page was reviewed unlisted before it became the Happy Desktop page.
-  '/tmp/happy-one': '/desktop',
+  // The desktop landing lived at /desktop/ (and /happy2/, and unlisted at
+  // /tmp/happy-one/) before it became the homepage.
+  '/desktop': '/',
+  '/happy2': '/',
+  '/tmp/happy-one': '/',
 }
 
 /** Sections that moved wholesale. The old prefix keeps resolving, path and all. */
@@ -66,10 +67,6 @@ function metadataForPath(pathname: string): PageMetadata {
 
   if (normalizedPath === '/') {
     return homepageMetadata
-  }
-
-  if (normalizedPath === HAPPY_DESKTOP.home.replace(/\/$/, '')) {
-    return desktopMetadata
   }
 
   if (normalizedPath === '/model-benchmarks') {
@@ -211,10 +208,6 @@ export function Router({ pathname }: { pathname?: string }) {
   }, [controlled])
 
   if (normalizedPath === '/') {
-    return <App />
-  }
-
-  if (normalizedPath === '/desktop') {
     return <DesktopApp />
   }
 

@@ -1,6 +1,5 @@
 import { cleanup, render, screen, within } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
-import App from './App'
 import DesktopApp from './DesktopApp'
 import { Router } from './Router'
 
@@ -20,10 +19,6 @@ beforeAll(() => {
 afterAll(() => {
   vi.unstubAllGlobals()
 })
-
-function productSwitch() {
-  return screen.getByRole('group', { name: 'Choose a product' })
-}
 
 describe('Happy Desktop landing page', () => {
   afterEach(() => {
@@ -73,9 +68,12 @@ describe('Happy Desktop landing page', () => {
     expect(container.querySelector('[data-social-preview]')).toBeNull()
   })
 
-  it('is served at /desktop', () => {
-    render(<Router pathname="/desktop/" />)
+  it('is the homepage, and the old /desktop URL still lands on it', () => {
+    const { unmount } = render(<Router pathname="/" />)
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/happy harness/i)
+    unmount()
 
+    render(<Router pathname="/desktop/" />)
     expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/happy harness/i)
   })
 
@@ -99,7 +97,7 @@ describe('site footer', () => {
   })
 
   it('names the people behind Happy on every page', () => {
-    for (const pathname of ['/', '/desktop/', '/docs/', '/desktop/docs/', '/privacy/']) {
+    for (const pathname of ['/', '/docs/', '/desktop/docs/', '/privacy/']) {
       const { unmount } = render(<Router pathname={pathname} />)
       const footer = screen.getByRole('contentinfo')
 
@@ -110,63 +108,38 @@ describe('site footer', () => {
     }
   })
 
+  it('keeps a quiet link to the original Happy CLI docs on every page', () => {
+    for (const pathname of ['/', '/docs/', '/desktop/docs/', '/privacy/']) {
+      const { unmount } = render(<Router pathname={pathname} />)
+      expect(within(screen.getByRole('contentinfo')).getByRole('link', { name: 'Original Happy CLI' }).getAttribute('href')).toBe('/docs/')
+      unmount()
+    }
+  })
+
   it('credits the device artwork only where it appears', () => {
-    const { unmount } = render(<Router pathname="/desktop/" />)
+    const { unmount } = render(<Router pathname="/" />)
     expect(within(screen.getByRole('contentinfo')).getByRole('link', { name: 'Credits' })).toBeTruthy()
     unmount()
 
-    render(<Router pathname="/" />)
+    render(<Router pathname="/docs/" />)
     expect(within(screen.getByRole('contentinfo')).queryByRole('link', { name: 'Credits' })).toBeNull()
   })
 })
 
-describe('product switch', () => {
+describe('site header', () => {
   afterEach(() => {
     cleanup()
   })
 
-  it('offers both products from either page', () => {
-    const { unmount } = render(<App />)
-    expect(within(productSwitch()).getAllByRole('link')).toHaveLength(2)
-    unmount()
+  it('is the same plain header on every page, without a product switch', () => {
+    for (const pathname of ['/', '/docs/', '/desktop/docs/quick-start/']) {
+      const { unmount } = render(<Router pathname={pathname} />)
+      const navigation = screen.getByRole('navigation', { name: 'Primary navigation' })
 
-    render(<DesktopApp />)
-    expect(within(productSwitch()).getAllByRole('link')).toHaveLength(2)
-  })
-
-  it('names the products by their surfaces and marks Desktop as new', () => {
-    render(<App />)
-
-    const options = within(productSwitch()).getAllByRole('link')
-
-    expect(options[0].textContent).toBe('Terminal + Mobile')
-    expect(options[1].textContent).toBe('Desktop + MobileNew')
-    expect(options[0].getAttribute('href')).toBe('/')
-    expect(options[1].getAttribute('href')).toBe('/desktop/')
-  })
-
-  it('marks Terminal + Mobile as current on the homepage', () => {
-    render(<App />)
-
-    const current = within(productSwitch()).getByRole('link', { name: 'Terminal + Mobile' })
-
-    expect(current.getAttribute('aria-current')).toBe('page')
-    expect(within(productSwitch()).getByRole('link', { name: /^Desktop \+ Mobile/ }).getAttribute('aria-current')).toBeNull()
-  })
-
-  it('follows the URL into the Happy Desktop documentation', () => {
-    render(<Router pathname="/desktop/docs/quick-start/" />)
-
-    const current = within(productSwitch()).getByRole('link', { name: /^Desktop \+ Mobile/ })
-
-    expect(current.getAttribute('aria-current')).toBe('page')
-  })
-
-  it('stays on Terminal + Mobile for the Happy documentation', () => {
-    render(<Router pathname="/docs/quick-start/" />)
-
-    const current = within(productSwitch()).getByRole('link', { name: 'Terminal + Mobile' })
-
-    expect(current.getAttribute('aria-current')).toBe('page')
+      expect(screen.queryByRole('group', { name: 'Choose a product' })).toBeNull()
+      expect(within(navigation).getAllByRole('link').map((link) => link.textContent)).toEqual(['Docs', '23.8k'])
+      expect(within(navigation).getByRole('link', { name: 'Docs' }).getAttribute('href')).toBe('/desktop/docs/')
+      unmount()
+    }
   })
 })
