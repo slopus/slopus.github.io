@@ -43,7 +43,7 @@ a { color: inherit; text-decoration: none; }
 .site-header-wrap { background: #f5f0e7; border-bottom: 1px solid transparent; position: sticky; top: 0; z-index: 40; transition: border-color .2s ease; }
 /* The hairline appears only once the page has scrolled under the header. */
 .site-header-wrap[data-scrolled] { border-bottom-color: #d9d3c5; }
-.site-header { align-items: center; display: flex; justify-content: space-between; min-height: 88px; }
+.site-header { align-items: center; display: flex; justify-content: space-between; min-height: 60px; }
 .site-header-brand { align-items: center; display: flex; gap: 1.15rem; min-width: 0; }
 .wordmark { color: #183f38; font-size: 1.05rem; font-weight: 700; letter-spacing: -.04em; white-space: nowrap; }
 .wordmark span { color: #e6522c; margin-left: .28em; }
@@ -53,10 +53,14 @@ a { color: inherit; text-decoration: none; }
 .site-header nav > a:not(.nav-cta) { opacity: .82; }
 .site-header nav > a:not(.nav-cta):hover { opacity: 1; }
 .site-header nav > a[aria-current='page'] { border-bottom: 2px solid #e6522c; opacity: 1; padding-bottom: .18rem; }
-.nav-github { align-items: center; display: inline-flex; gap: .4rem; opacity: 1 !important; }
+/* The repository and its star count, read as one GitHub-style star pill. The invisible
+   ::after keeps a 44px-tall tap target around the smaller pill. */
+.nav-github { align-items: center; border: 1px solid #d9d3c5; border-radius: 999px; display: inline-flex; gap: .45rem; height: 30px; opacity: 1 !important; padding: 0 .7rem 0 .6rem; position: relative; transition: border-color .2s ease, color .2s ease; }
+.nav-github::after { content: ''; inset: -7px -4px; position: absolute; }
 .nav-github svg { display: block; }
-.nav-github-count { font-family: 'DM Mono', monospace; font-size: .78rem; font-weight: 500; }
-.nav-github:hover { color: #e6522c; }
+.nav-github-count { align-items: center; display: inline-flex; font-family: 'DM Mono', monospace; font-size: .76rem; font-weight: 500; gap: .3em; white-space: nowrap; }
+.nav-github-star { color: #d4a72c; }
+.nav-github:hover { border-color: #e6522c; color: #e6522c; }
 .nav-cta { border: 1px solid #183f38; border-radius: 999px; padding: .6rem 1rem; opacity: 1; }
 .nav-cta:hover { background: #183f38; color: #f5f0e7; }
 
@@ -229,7 +233,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 
 /* Documentation and legal pages */
 .document-site-shell { min-height: 100vh; }
-.docs-layout { display: grid; gap: 4rem; grid-template-columns: 210px minmax(0, 760px); min-height: calc(100vh - 88px); padding-bottom: 7rem; padding-top: 3.5rem; }
+.docs-layout { display: grid; gap: 4rem; grid-template-columns: 210px minmax(0, 760px); min-height: calc(100vh - 61px); padding-bottom: 7rem; padding-top: 3.5rem; }
 .docs-sidebar { align-self: start; max-height: calc(100vh - 3rem); overflow-y: auto; position: sticky; scrollbar-color: transparent transparent; scrollbar-width: thin; top: 1.5rem; }
 .docs-sidebar::-webkit-scrollbar { height: 12px; width: 12px; }
 .docs-sidebar::-webkit-scrollbar-track { background: transparent; }
@@ -309,7 +313,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-pagination a span { color: #6b7f78; display: block; font-family: 'DM Mono', monospace; font-size: .58rem; font-weight: 500; letter-spacing: .06em; margin-bottom: .25rem; text-transform: uppercase; }
 .document-pagination-next { text-align: right; }
 
-.legal-layout { min-height: calc(100vh - 88px); padding-bottom: 7rem; padding-top: 3rem; }
+.legal-layout { min-height: calc(100vh - 61px); padding-bottom: 7rem; padding-top: 3rem; }
 .document-back-link { align-items: center; color: #557068; display: inline-flex; font-size: .82rem; gap: .45rem; margin-bottom: 3rem; }
 .document-back-link:hover { color: #e6522c; }
 .legal-article, .essay-article { margin: 0 auto; max-width: 760px; }
@@ -328,7 +332,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .x-post-handle { color: #6b7f78; font-family: 'DM Mono', monospace; font-size: .72rem; }
 .x-post-attribution a { color: #557068; text-decoration-color: rgba(85, 112, 104, .35); }
 .legal-article .document-content > p:nth-of-type(1) { color: #6b7f78; font-family: 'DM Mono', monospace; font-size: .72rem; letter-spacing: .03em; }
-.not-found { min-height: calc(100vh - 88px); padding-bottom: 8rem; padding-top: 8rem; }
+.not-found { min-height: calc(100vh - 61px); padding-bottom: 8rem; padding-top: 8rem; }
 .not-found h1 { font-size: clamp(3rem, 7vw, 6rem); margin-bottom: 1.5rem; }
 .not-found > p:not(.eyebrow) { color: #557068; font-size: 1.1rem; }
 .not-found-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
@@ -356,10 +360,9 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 @media (max-width: 760px) {
   :root { --section-y: 5rem; --section-gap: 4rem; }
   .page-width { width: min(100% - 40px, 620px); }
-  .site-header { gap: .75rem; min-height: 72px; }
+  .site-header { gap: .75rem; min-height: 52px; }
   .site-header nav { gap: .85rem; font-size: .8rem; }
   .site-header-brand { gap: .6rem; }
-  .site-header .wordmark span { display: none; }
   .hero { padding: 2.5rem 0 5rem; }
   .hero-actions { gap: .8rem; }
   .how-heading { margin-bottom: 2.5rem; }
@@ -386,9 +389,11 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 
 @media (max-width: 420px) {
   h1 { font-size: 2.7rem; }
+  /* "Happy Engineering" and the star count both stay; they fit down to 320px. */
   .site-header nav { gap: .7rem; }
   .site-header-brand { gap: .55rem; }
-  .nav-github-count { display: none; }
+  .wordmark { font-size: .98rem; }
+  .nav-github { gap: .35rem; padding: 0 .55rem 0 .5rem; }
   .store-button { width: 160px; height: 48px; }
   .encryption-summary { grid-template-columns: 1fr; }
   .summary-pill { grid-column: auto; }

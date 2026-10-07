@@ -1,6 +1,5 @@
 /* Happy Desktop landing page. Other pages keep their own styles. */
-.happy-one [id] { scroll-margin-top: 110px; }
-.happy-one .site-header .nav-github { min-height: 44px; }
+.happy-one [id] { scroll-margin-top: 82px; }
 .happy-one .button, .happy-one .nav-cta { border-radius: 8px; }
 .happy-one .button { min-height: 48px; justify-content: center; }
 .happy-one h2 { font-size: clamp(2.3rem, 4vw, 3.5rem); }
@@ -10,10 +9,10 @@
 /* The first screen holds the heading, the note, the whole recording, and the primary
    download. Everything but the recording is a known height, so the stage
    (happy-one-demo.css) sizes the recording from what is left of the viewport:
-   header 88px, hero top 12px, two heading lines at 1.04, heading margin 8px, note 24px,
+   header 60px, hero top 12px, two heading lines at 1.04, heading margin 8px, note 24px,
    movie gap 12px, stage padding 20px, download margin and padding 16px, badge with its
    architecture selector 70px. */
-.one-hero { --one-hero-reserved: calc(250px + 2.08 * var(--one-h1)); padding-top: .75rem; text-align: center; }
+.one-hero { --one-hero-reserved: calc(222px + 2.08 * var(--one-h1)); padding-top: .75rem; text-align: center; }
 .one-hero h1 { font-size: var(--one-h1); margin-bottom: .5rem; }
 .one-hero-note { margin: 0; }
 .one-hero .one-demo { margin-top: .75rem; }
@@ -49,8 +48,13 @@
 @media (max-width: 480px) {
   .one-mobile-downloads { flex-direction: column; align-items: center; }
 }
-.one-store-download { display: flex; flex-direction: column; align-items: center; gap: .55rem; }
-.one-store-download .store-rating { justify-content: center; padding-left: 0; }
+.one-store-download { display: flex; flex-direction: column; align-items: center; gap: .4rem; }
+/* One quiet line, like the README's rating badges: stars, score, and count share one
+   type size, about a quarter of the 46px badge, and never under 11px. */
+.one-store-download .store-rating { justify-content: center; gap: .3rem; padding-left: 0; font-size: 11.5px; line-height: 1.3; }
+.one-store-download .store-rating > * { font: inherit; }
+.one-store-download .store-stars { color: #d4a72c; letter-spacing: .03em; }
+.one-store-download .store-rating strong { color: #183f38; font-weight: 600; }
 /* Same height as the Homebrew strip beside them. */
 .one-download-actions .store-button { flex: none; width: 148px; height: 46px; }
 .one-download-actions .one-desktop-button { display: block; padding: 0; border: 0; background: #000; cursor: pointer; }

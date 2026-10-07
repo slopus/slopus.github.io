@@ -32,7 +32,7 @@ function GithubLink() {
       aria-label={`Happy on GitHub, ${HAPPY_ONE_GITHUB_STARS.count.toLocaleString('en-US')} stars`}
     >
       <GithubMark />
-      <span className="nav-github-count">{HAPPY_ONE_GITHUB_STARS.compact}</span>
+      <span className="nav-github-count"><span className="nav-github-star" aria-hidden="true">★</span>{HAPPY_ONE_GITHUB_STARS.compact}</span>
     </a>
   )
 }
