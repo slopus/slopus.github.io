@@ -26,14 +26,16 @@ points to them. The Buzz comparison stays reachable at
 
 ## Header and downloads
 
-Every page shares one plain `SiteHeader`: wordmark, Docs, GitHub stars. It is
-pinned while scrolling and shows a hairline only once the page has scrolled, so
-page shells must not use `overflow: hidden` (it breaks `position: sticky`);
-clip horizontally with `overflow-x: clip`. `/#download` is the README
-"Download" target: `id="download"` sits on the download block right under the
-demo, and the closing section is `#download-again`. The router scrolls to the
-fragment after the first render, and the 110px `scroll-margin-top` must keep the
-whole block visible under the header. Windows visitors see the SmartScreen
+Every page shares one plain `SiteHeader`: the full "Happy Engineering" wordmark
+at every width, Docs, and the GitHub mark with its ★ star count (no border or
+pill). It is 60px tall (52px on phones), pinned while scrolling, and shows a
+hairline only once the page has scrolled, so page shells must not use
+`overflow: hidden` (it breaks `position: sticky`); clip horizontally with
+`overflow-x: clip`. `/#download` is the README "Download" target:
+`id="download"` sits on the download block right under the demo, and the closing
+section is `#download-again`. The router scrolls to the fragment after the first
+render, and the 82px `scroll-margin-top` must keep the whole block visible under
+the header; change it with the header height. Windows visitors see the SmartScreen
 note; its signer name and profile link are constants in
 `src/DownloadOptions.tsx`. Release links use `releases/latest`, never a pinned
 version.

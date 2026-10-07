@@ -55,12 +55,12 @@ a { color: inherit; text-decoration: none; }
 .site-header nav > a[aria-current='page'] { border-bottom: 2px solid #e6522c; opacity: 1; padding-bottom: .18rem; }
 /* The repository and its star count, read as one GitHub-style star pill. The invisible
    ::after keeps a 44px-tall tap target around the smaller pill. */
-.nav-github { align-items: center; border: 1px solid #d9d3c5; border-radius: 999px; display: inline-flex; gap: .45rem; height: 30px; opacity: 1 !important; padding: 0 .7rem 0 .6rem; position: relative; transition: border-color .2s ease, color .2s ease; }
+.nav-github { align-items: center; display: inline-flex; gap: .45rem; height: 30px; opacity: 1 !important; position: relative; transition: color .2s ease; }
 .nav-github::after { content: ''; inset: -7px -4px; position: absolute; }
 .nav-github svg { display: block; }
 .nav-github-count { align-items: center; display: inline-flex; font-family: 'DM Mono', monospace; font-size: .76rem; font-weight: 500; gap: .3em; white-space: nowrap; }
 .nav-github-star { color: #d4a72c; }
-.nav-github:hover { border-color: #e6522c; color: #e6522c; }
+.nav-github:hover { color: #e6522c; }
 .nav-cta { border: 1px solid #183f38; border-radius: 999px; padding: .6rem 1rem; opacity: 1; }
 .nav-cta:hover { background: #183f38; color: #f5f0e7; }
 
@@ -393,7 +393,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .site-header nav { gap: .7rem; }
   .site-header-brand { gap: .55rem; }
   .wordmark { font-size: .98rem; }
-  .nav-github { gap: .35rem; padding: 0 .55rem 0 .5rem; }
+  .nav-github { gap: .35rem; }
   .store-button { width: 160px; height: 48px; }
   .encryption-summary { grid-template-columns: 1fr; }
   .summary-pill { grid-column: auto; }
