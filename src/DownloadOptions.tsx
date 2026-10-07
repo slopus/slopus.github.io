@@ -91,7 +91,7 @@ function PlatformLinks({ current, downloads, macArchitecture }: { current: Exclu
           style={{ '--platform-icon': `url('/img/happy-one/icons/${platform}.svg')` } as CSSProperties} />}
         {LABELS[platform]}
       </DesktopDownloadLink>)}
-      <a href="https://github.com/slopus/happy-desktop/releases"><GithubMark />All Releases</a>
+      <a href="https://github.com/slopus/happy-desktop/releases/latest"><GithubMark />All Releases</a>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from '@testing-library/react'
+import { act, cleanup, render, screen, within } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import DesktopApp from './DesktopApp'
 import { Router } from './Router'
@@ -139,6 +139,25 @@ describe('site footer', () => {
 describe('site header', () => {
   afterEach(() => {
     cleanup()
+    window.scrollY = 0
+  })
+
+  it('draws its hairline only once the page has scrolled', () => {
+    window.scrollY = 0
+    const { container } = render(<Router pathname="/" />)
+    const header = container.querySelector('.site-header-wrap')!
+
+    expect(header.hasAttribute('data-scrolled')).toBe(false)
+    act(() => {
+      window.scrollY = 240
+      document.dispatchEvent(new Event('scroll'))
+    })
+    expect(header.hasAttribute('data-scrolled')).toBe(true)
+    act(() => {
+      window.scrollY = 0
+      document.dispatchEvent(new Event('scroll'))
+    })
+    expect(header.hasAttribute('data-scrolled')).toBe(false)
   })
 
   it('is the same plain header on every page, without a product switch', () => {

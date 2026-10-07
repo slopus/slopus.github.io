@@ -34,11 +34,15 @@ html { scroll-behavior: smooth; }
 body { margin: 0; min-width: 320px; }
 a { color: inherit; text-decoration: none; }
 
-.site-shell { overflow: hidden; }
+/* Clip sideways overflow (the hero phone hangs off the edge) without making the shell a
+   scroll container: overflow: hidden there would unpin the sticky header. */
+.site-shell { overflow-x: hidden; overflow-x: clip; }
 .page-width { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
 
 /* Header */
-.site-header-wrap { background: #f5f0e7; position: sticky; top: 0; z-index: 40; }
+.site-header-wrap { background: #f5f0e7; border-bottom: 1px solid transparent; position: sticky; top: 0; z-index: 40; transition: border-color .2s ease; }
+/* The hairline appears only once the page has scrolled under the header. */
+.site-header-wrap[data-scrolled] { border-bottom-color: #d9d3c5; }
 .site-header { align-items: center; display: flex; justify-content: space-between; min-height: 88px; }
 .site-header-brand { align-items: center; display: flex; gap: 1.15rem; min-width: 0; }
 .wordmark { color: #183f38; font-size: 1.05rem; font-weight: 700; letter-spacing: -.04em; white-space: nowrap; }
@@ -225,7 +229,6 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 
 /* Documentation and legal pages */
 .document-site-shell { min-height: 100vh; }
-.document-site-shell .site-header-wrap { border-bottom: 1px solid #d9d3c5; }
 .docs-layout { display: grid; gap: 4rem; grid-template-columns: 210px minmax(0, 760px); min-height: calc(100vh - 88px); padding-bottom: 7rem; padding-top: 3.5rem; }
 .docs-sidebar { align-self: start; max-height: calc(100vh - 3rem); overflow-y: auto; position: sticky; scrollbar-color: transparent transparent; scrollbar-width: thin; top: 1.5rem; }
 .docs-sidebar::-webkit-scrollbar { height: 12px; width: 12px; }

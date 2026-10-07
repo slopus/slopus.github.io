@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import { HAPPY_ONE_GITHUB_STARS } from './happyOneGithubStars'
 import { KIRILL, STEVE } from './Team'
@@ -37,6 +37,25 @@ function GithubLink() {
   )
 }
 
+/**
+ * Whether the page has scrolled under the header. Wide docs pages scroll their
+ * article instead of the window; element scrolls do not bubble, so listen in
+ * the capture phase.
+ */
+function usePageScrolled() {
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => {
+    const update = () => {
+      const article = document.querySelector('.docs-shell .document-article')
+      setScrolled(window.scrollY > 0 || (article?.scrollTop ?? 0) > 0)
+    }
+    update()
+    document.addEventListener('scroll', update, { capture: true, passive: true })
+    return () => document.removeEventListener('scroll', update, { capture: true })
+  }, [])
+  return scrolled
+}
+
 /** One plain header on every page. Docs means the Happy (desktop) docs. */
 export function SiteHeader({
   product = HAPPY,
@@ -45,8 +64,9 @@ export function SiteHeader({
   product?: Product
   docsActive?: boolean
 }) {
+  const scrolled = usePageScrolled()
   return (
-    <div className="site-header-wrap">
+    <div className="site-header-wrap" data-scrolled={scrolled ? '' : undefined}>
       <header className="site-header page-width" id="top">
         <div className="site-header-brand">
           <Wordmark />

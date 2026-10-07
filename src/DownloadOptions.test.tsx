@@ -174,6 +174,11 @@ describe('desktop and mobile downloads', () => {
     expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/macos.svg')
   })
 
+  it('links All Releases to the latest release, never a pinned one', () => {
+    render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
+    expect(screen.getByRole('link', { name: 'All Releases' }).getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases/latest')
+  })
+
   it('keeps the Windows mark and direct download', async () => {
     device('Windows NT 10.0')
     const { container } = render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
