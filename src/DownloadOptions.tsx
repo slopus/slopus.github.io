@@ -11,11 +11,12 @@ const LABELS = { macos: 'macOS', windows: 'Windows', linux: 'Linux', desktop: 'D
 /** The exact signer on the Windows installer's Authenticode certificate (CN and O). */
 export const WINDOWS_SIGNING_PUBLISHER = 'Kirill Dubovitskiy'
 /** Optional profile linked from the publisher's name. Leave undefined to show the name alone. */
-export const WINDOWS_SIGNING_PUBLISHER_URL: string | undefined = undefined
+export const WINDOWS_SIGNING_PUBLISHER_URL: string | undefined = 'https://www.linkedin.com/in/kirill-dubovitskiy/'
 
 export type DownloadOptionsProps = {
   macArchitecture: MacArchitecture
   onMacArchitectureChange: (architecture: MacArchitecture) => void
+  id?: string
 }
 type DesktopPlatform = 'desktop' | 'macos' | 'windows' | 'linux'
 
@@ -187,7 +188,7 @@ function HomebrewCommand() {
   )
 }
 
-export function DownloadOptions({ macArchitecture, onMacArchitectureChange }: DownloadOptionsProps) {
+export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id }: DownloadOptionsProps) {
   const [downloads, setDownloads] = useState<DesktopDownloads | null>(null)
   useEffect(() => {
     let active = true
@@ -202,6 +203,7 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange }: Do
 
   return (
     <div
+      id={id}
       className="one-download-actions"
       data-platform={platform}
       data-primary-platform={primaryPlatform}

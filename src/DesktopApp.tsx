@@ -91,7 +91,7 @@ function Terminal() {
 
 function Downloads(props: DownloadOptionsProps) {
   return (
-    <section className="one-download page-width" id="download" aria-labelledby="download-heading">
+    <section className="one-download page-width" id="download-again" aria-labelledby="download-heading">
       <h2 id="download-heading">Download Happy.</h2>
       <p>Free and open source</p>
       <DownloadOptions {...props} />
@@ -118,7 +118,7 @@ export default function DesktopApp() {
             </a>}
           </div>
           <HappyOneDemo />
-          <DownloadOptions macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
+          <DownloadOptions id="download" macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
         </section>
         <Features />
         <Terminal />

@@ -189,6 +189,10 @@ describe('desktop and mobile downloads', () => {
     expect(note.textContent).toMatch(/SmartScreen may flag Happy/)
     expect(note.textContent).toMatch(/More info → Run anyway/)
     expect(note.textContent).toMatch(/signed by Kirill Dubovitskiy\)/)
+    const profile = screen.getByRole('link', { name: 'Kirill Dubovitskiy' })
+    expect(profile.getAttribute('href')).toBe('https://www.linkedin.com/in/kirill-dubovitskiy/')
+    expect(profile.getAttribute('target')).toBe('_blank')
+    expect(profile.getAttribute('rel')).toBe('noopener noreferrer')
     unmount()
 
     for (const ua of ['Macintosh', 'X11; Linux x86_64', 'iPhone']) {
