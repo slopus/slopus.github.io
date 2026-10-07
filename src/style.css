@@ -381,21 +381,11 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .document-back-link { margin-bottom: 2rem; }
 }
 
-/* Narrow header: stack the brand and the navigation instead of letting them collide. */
-@media (max-width: 540px) {
-  .site-header { align-items: stretch; flex-wrap: wrap; min-height: 0; padding: .85rem 0; row-gap: .7rem; }
-  .site-header-brand { flex: 1 1 100%; }
-  .site-header nav { flex: 1 1 100%; justify-content: flex-start; }
-  .nav-cta { margin-left: auto; }
-}
-
 @media (max-width: 420px) {
   h1 { font-size: 2.7rem; }
   .site-header nav { gap: .7rem; }
   .site-header-brand { gap: .55rem; }
-  /* "Terminal" and "Desktop" carry the choice; "+ Mobile" is true of both. */
-  .nav-github-count, .nav-cta-prefix { display: none; }
-  .nav-cta { padding: .52rem .78rem; }
+  .nav-github-count { display: none; }
   .store-button { width: 160px; height: 48px; }
   .encryption-summary { grid-template-columns: 1fr; }
   .summary-pill { grid-column: auto; }
