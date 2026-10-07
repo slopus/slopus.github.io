@@ -118,7 +118,7 @@ existing 47 tests and production build pass.
 ## Regenerating the social preview
 
 This is an agent-run screenshot recipe, not a production script. The ordinary
-page uses the requested capitalization, “Any Model. Your Team. Happy Harness.”,
+page uses the requested capitalization, “Any Model. Your Subscription. Happy Harness.”,
 and keeps its existing description. Every route uses
 `/og/happy-harness-v24.png` as its social image (a byte-identical copy of v23,
 renamed so link previews refetch; v23 stays for old shares).
@@ -146,7 +146,8 @@ match the widths exactly, with less than 0.03px height variation.
 3. The explicit `preview=og` flag mounts the GitHub/stars line and selects the
    fixed social-card composition in `src/happy-one-preview.css`. Without the
    flag, the extra hero line is not mounted and the normal layout is unchanged.
-   Keep the headline on three lines: “Any Model.” / “Your Team.” / “Happy Harness”.
+   Keep the headline on three lines: “Any Model.” / “Your Subscription.” / “Happy Harness”.
+   (The current v24 card predates this headline and still reads “Your Team.”)
    The copy starts at x=48px in a 440px column; a 24px gap separates it from
    the 596px desktop. The 200px phone starts 12px after the desktop, leaving
    80px visible. Do not stack the desktop below the headline in this mode.

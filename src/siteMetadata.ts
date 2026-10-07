@@ -26,7 +26,7 @@ export const homepageMetadata: PageMetadata = {
   description:
     'Happy is the open-source desktop app for Claude Code, Codex, and Grok, with an iOS and Android app to control your coding agents from anywhere.',
   canonicalPath: '/',
-  socialTitle: 'Any Model. Your Team. Happy Harness.',
+  socialTitle: 'Any Model. Your Subscription. Happy Harness.',
 }
 
 /** The original Happy CLI docs. Kept at their URLs, in maintenance mode. */

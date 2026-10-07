@@ -17,11 +17,6 @@ const features = [
     effect: 'providers',
   },
   {
-    title: 'Natively multiplayer',
-    body: 'Invite a colleague or a friend into the session. You both watch the same agent work, and either of you can steer it.',
-    effect: 'multiplayer',
-  },
-  {
     title: 'Reuse current subscriptions',
     body: 'Sign in with the Claude, Codex, and Grok plans you already pay for. Happy adds a harness, not another bill.',
     effect: null,
@@ -35,6 +30,11 @@ const features = [
     title: 'End-to-end encrypted mobile app',
     body: 'Left your desk? The same sessions are already on your phone, and what moves between your devices is encrypted.',
     effect: 'security',
+  },
+  {
+    title: 'Natively multiplayer',
+    body: 'Invite a colleague or a friend into the session. You both watch the same agent work, and either of you can steer it.',
+    effect: 'multiplayer',
   },
 ] as const
 
@@ -74,10 +74,9 @@ function Terminal() {
     <section className="one-terminal-section page-width" aria-labelledby="terminal-heading">
       <div>
         <h2 id="terminal-heading">Love your terminal?<br /><em>Keep it.</em></h2>
-        <p>The OG Happy experience (for those who have been around <span className="one-og-smile">:D</span>)</p>
+        <p>The OG Happy experience (if you know you know)</p>
         <p>Start Claude Code or Codex in your terminal. Resume that session or start a new one
           from your phone. No Desktop app required.</p>
-        <p className="one-terminal-note">Using Desktop? Onboarding handles this setup for you.</p>
       </div>
       <div className="one-terminal-example">
         <div className="terminal">
@@ -111,7 +110,7 @@ export default function DesktopApp() {
       <main>
         <section className="one-hero page-width" aria-labelledby="one-heading">
           <div className="one-hero-copy">
-            <h1 id="one-heading"><span>Any Model.</span>{' '}<span>Your Team.</span><br /><em>Happy Harness{ogPreview ? '' : '.'}</em></h1>
+            <h1 id="one-heading"><span>Any Model.</span>{' '}<span>Your Subscription.</span><br /><em>Happy Harness{ogPreview ? '' : '.'}</em></h1>
             <p className="one-hero-note">Free and open source</p>
             {ogPreview && <a className="one-social-stars" href={GITHUB_HAPPY}>
               <GithubMark /><span>GitHub · {HAPPY_ONE_GITHUB_STARS.compact} stars</span>

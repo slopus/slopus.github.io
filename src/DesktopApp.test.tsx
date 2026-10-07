@@ -30,7 +30,7 @@ describe('Happy Desktop landing page', () => {
 
     const heading = screen.getByRole('heading', { level: 1 })
 
-    expect(heading.textContent).toMatch(/any model\.\s*your team\.\s*happy harness\./i)
+    expect(heading.textContent).toMatch(/any model\.\s*your subscription\.\s*happy harness\./i)
   })
 
   it('offers every desktop platform and both app stores', () => {
@@ -69,6 +69,29 @@ describe('Happy Desktop landing page', () => {
     expect(target?.closest('.one-hero')).toBeTruthy()
     expect(target?.getAttribute('aria-label')).toBe('Desktop and mobile downloads')
     expect(container.querySelectorAll('#download')).toHaveLength(1)
+  })
+
+  it('lists the features with multiplayer last, each keeping its effect', () => {
+    const { container } = render(<DesktopApp />)
+    const items = [...container.querySelectorAll('.one-benefits li')]
+
+    expect(items.map((item) => item.querySelector('.one-benefit-title')?.textContent)).toEqual([
+      'Multi-provider within one session',
+      'Reuse current subscriptions',
+      'Open source MIT',
+      'End-to-end encrypted mobile app',
+      'Natively multiplayer',
+    ])
+    expect(items.map((item) => item.getAttribute('data-effect'))).toEqual(['providers', null, null, 'security', 'multiplayer'])
+    expect(container.querySelector('#one-multiplayer-surprise')).toBeTruthy()
+  })
+
+  it('keeps the terminal section short', () => {
+    const { container } = render(<DesktopApp />)
+    const text = container.querySelector('.one-terminal-section')?.textContent ?? ''
+
+    expect(text).toContain('The OG Happy experience (if you know you know)')
+    expect(text).not.toMatch(/Onboarding handles this setup|been around/)
   })
 
   it('does not mount the social-preview stars line by default', () => {

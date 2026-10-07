@@ -88,8 +88,6 @@
 .one-terminal-section > div { flex: 1; min-width: 0; }
 .one-terminal-section h2 { margin-bottom: 1.5rem; }
 .one-terminal-section p { color: #47645e; font-size: 1.02rem; line-height: 1.75; }
-.one-terminal-section .one-terminal-note { font-size: .9rem; }
-.one-og-smile { color: #e6522c; white-space: nowrap; }
 .one-terminal-section code { font-family: 'DM Mono', monospace; font-size: .88em; }
 .one-terminal-section .terminal { margin-bottom: 1rem; border-radius: 10px; }
 .one-terminal-section .terminal-body { padding: 1.7rem; font-size: 1.07rem; line-height: 1.8; }
