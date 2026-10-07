@@ -61,6 +61,13 @@ describe('Happy Desktop landing page', () => {
     expect(within(navigation).queryByRole('link', { name: /android app/i })).toBeNull()
   })
 
+  it('no longer has an Already using Happy section, and keeps the #download target', () => {
+    const { container } = render(<DesktopApp />)
+
+    expect(screen.queryByText(/already using happy/i)).toBeNull()
+    expect(container.querySelector('#download h2')?.textContent).toMatch(/download/i)
+  })
+
   it('does not mount the social-preview stars line by default', () => {
     const { container } = render(<DesktopApp />)
 

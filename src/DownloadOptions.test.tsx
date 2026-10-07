@@ -182,6 +182,25 @@ describe('desktop and mobile downloads', () => {
     expect(screen.queryByRole('button')).toBeNull()
   })
 
+  it('warns about SmartScreen, naming the exact signer, only when Windows is the primary download', () => {
+    device('Windows NT 10.0')
+    const { unmount } = render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
+    const note = screen.getByRole('note')
+    expect(note.textContent).toMatch(/SmartScreen may flag Happy/)
+    expect(note.textContent).toMatch(/More info → Run anyway/)
+    expect(note.textContent).toMatch(/signed by Kirill Dubovitskiy\)/)
+    unmount()
+
+    for (const ua of ['Macintosh', 'X11; Linux x86_64', 'iPhone']) {
+      device(ua)
+      const { unmount: next } = render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
+      expect(screen.getByRole('link', { name: 'Download Happy for Windows' })).toBeTruthy()
+      expect(screen.queryByRole('note')).toBeNull()
+      expect(screen.queryByText(/SmartScreen/)).toBeNull()
+      next()
+    }
+  })
+
   it('uses the exact App Store Apple silhouette and Download lettering in the macOS badge', () => {
     const read = (file: string) => readFileSync(resolve(process.cwd(), file), 'utf8')
     const reference = read('src/StoreButtons.tsx').split('export function GooglePlayButton')[0]

@@ -41,7 +41,7 @@ const features = [
 function Features() {
   const surprise = useFeatureSurprise()
   return (
-    <section className="one-benefits-section" id="product" aria-label="What you get with Happy">
+    <section className="one-benefits-section" id="product" aria-label="What you get">
       <div className="page-width">
         <ol ref={surprise.listRef} className="one-benefits" role="list">
           {features.map((feature, index) => (
@@ -64,21 +64,6 @@ function Features() {
             </li>
           ))}
         </ol>
-      </div>
-    </section>
-  )
-}
-
-function ExistingUsers() {
-  return (
-    <section className="one-existing-section" aria-labelledby="existing-heading">
-      <div className="page-width">
-        <aside className="one-existing" id="already-happy" aria-labelledby="existing-heading">
-          <div>
-            <h3 id="existing-heading">Already using Happy?</h3>
-            <p>Your existing account and sessions still work. Connect Desktop from <strong>Settings → Mobile Access</strong>.</p>
-          </div>
-        </aside>
       </div>
     </section>
   )
@@ -114,7 +99,7 @@ function Downloads(props: DownloadOptionsProps) {
   )
 }
 
-/** The public Happy Desktop page: the recorded harness demo, the pitch, and every download. */
+/** The homepage: the recorded harness demo, the pitch, and every download. */
 export default function DesktopApp() {
   const ogPreview = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('preview') === 'og'
   // The hero and footer downloads share one architecture choice.
@@ -137,7 +122,6 @@ export default function DesktopApp() {
         </section>
         <Features />
         <Terminal />
-        <ExistingUsers />
         <Downloads macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
       </main>
       <SiteFooter product={HAPPY_DESKTOP} additionalLinks={

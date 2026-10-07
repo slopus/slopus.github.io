@@ -8,6 +8,10 @@ import { latestDesktopDownloads, type DesktopDownloads, type MacArchitecture } f
 const BREW = 'brew install --cask slopus/tap/happy'
 const DESKTOP_PLATFORMS = ['macos', 'windows', 'linux'] as const
 const LABELS = { macos: 'macOS', windows: 'Windows', linux: 'Linux', desktop: 'Desktop' }
+/** The exact signer on the Windows installer's Authenticode certificate (CN and O). */
+export const WINDOWS_SIGNING_PUBLISHER = 'Kirill Dubovitskiy'
+/** Optional profile linked from the publisher's name. Leave undefined to show the name alone. */
+export const WINDOWS_SIGNING_PUBLISHER_URL: string | undefined = undefined
 
 export type DownloadOptionsProps = {
   macArchitecture: MacArchitecture
@@ -88,6 +92,22 @@ function PlatformLinks({ current, downloads, macArchitecture }: { current: Exclu
       </DesktopDownloadLink>)}
       <a href="https://github.com/slopus/happy-desktop/releases"><GithubMark />All Releases</a>
     </div>
+  )
+}
+
+/** Only for visitors offered the Windows installer first; new signed releases trip SmartScreen. */
+function SmartScreenWarning() {
+  const publisher = WINDOWS_SIGNING_PUBLISHER_URL
+    ? <a href={WINDOWS_SIGNING_PUBLISHER_URL} target="_blank" rel="noopener noreferrer">{WINDOWS_SIGNING_PUBLISHER}</a>
+    : WINDOWS_SIGNING_PUBLISHER
+  return (
+    <p className="one-smartscreen" role="note">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M10.3 3.9 1.8 18.5A2 2 0 0 0 3.5 21.5h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" /><path d="M12 9.5v4.5M12 17.5h.01" />
+      </svg>
+      <span>Windows SmartScreen may flag Happy while the app builds reputation. The installer is signed:
+        choose <strong>More info → Run anyway</strong>, and inspect the certificate (signed by {publisher}).</span>
+    </p>
   )
 }
 
@@ -199,6 +219,7 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange }: Do
             <option value="x64">Intel</option>
           </select>}
         </div>
+        {primaryPlatform === 'windows' && <SmartScreenWarning />}
         {showBrew && <HomebrewCommand />}
         <PlatformLinks current={primaryPlatform} downloads={downloads} macArchitecture={macArchitecture} />
       </div>

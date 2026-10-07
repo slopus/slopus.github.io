@@ -151,7 +151,7 @@ export function HappyOneDemo() {
   }, [])
 
   return (
-    <figure ref={stage} className="one-demo" aria-label="Happy Desktop and iPhone, one synchronized session">
+    <figure ref={stage} className="one-demo" aria-label="Desktop and iPhone, one synchronized session">
       <div className="one-demo-stage" data-phone-focus={phoneFocused ? '' : undefined}>
         <div className="one-demo-desktop">
           <div className="one-demo-window">

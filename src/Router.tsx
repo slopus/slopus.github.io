@@ -148,6 +148,20 @@ export function Router({ pathname }: { pathname?: string }) {
       window.history.replaceState({}, '', `${canonical}${window.location.search}${window.location.hash}`)
     }
 
+    // The page renders after the browser looked for the #fragment, so find it now
+    // (README "Download" buttons link to /#download). Web fonts can reflow the page
+    // once they load; follow the target then, unless the visitor scrolled meanwhile.
+    const fragmentTarget = window.location.hash
+      ? document.getElementById(decodeURIComponent(window.location.hash.slice(1)))
+      : null
+    if (fragmentTarget) {
+      fragmentTarget.scrollIntoView()
+      const scrolledTo = window.scrollY
+      void document.fonts?.ready.then(() => {
+        if (window.scrollY === scrolledTo) fragmentTarget.scrollIntoView()
+      })
+    }
+
     function navigateTo(url: URL, replace = false) {
       const nextPath = normalizedPathname(url.pathname)
       const currentPath = normalizedPathname(window.location.pathname)
