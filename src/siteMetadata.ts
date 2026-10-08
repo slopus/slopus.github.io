@@ -52,11 +52,11 @@ export const modelBenchmarksMetadata: PageMetadata = {
 }
 
 /**
- * The title from content/thesis.md's frontmatter, described by its first TL;DR
- * line. Keep scripts/generate-static-routes.mjs in sync.
+ * Titled after content/thesis.md's frontmatter and described by its first bullet.
+ * Keep scripts/generate-static-routes.mjs in sync.
  */
 export const thesisMetadata: PageMetadata = {
-  title: 'Happy: Muse for agentmaxxers',
+  title: 'Vision — Happy',
   description: 'One agent is your representative to the AI world. Every ping and escalation goes through it.',
   canonicalPath: '/thesis/',
   robots: 'noindex, follow',

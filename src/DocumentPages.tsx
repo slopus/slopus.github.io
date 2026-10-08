@@ -206,13 +206,29 @@ function QuotedXPost({ url, post }: { url: string; post: QuotedPost }) {
   )
 }
 
+/**
+ * The essay's images at their display size, so the text around them doesn't reflow
+ * while they load. A screenshot narrower than the column floats beside the text; a
+ * diagram spans the column.
+ */
+const thesisFigures: Record<string, { width: number; height: number; aside?: boolean }> = {
+  '/thesis/layout.svg': { width: 720, height: 400 },
+  '/thesis/sidebar.png': { width: 220, height: 306, aside: true },
+}
+
 const thesisComponents: Components = {
   // A post URL alone on its line in the essay stands for that post, and an image
-  // alone on its line is a figure. Both float beside the paragraph that follows.
+  // alone on its line is a figure. Posts and screenshots float beside the paragraph that follows.
   p: ({ node, children, ...props }) => {
     const [only, ...rest] = node?.children ?? []
     if (rest.length === 0 && only?.type === 'element' && only.tagName === 'img') {
-      return <figure className="essay-figure">{children}</figure>
+      const src = String(only.properties.src)
+      const figure = thesisFigures[src]
+      return (
+        <figure className={figure?.aside ? 'essay-figure essay-figure-aside' : 'essay-figure'}>
+          <img src={src} alt={String(only.properties.alt ?? '')} width={figure?.width} height={figure?.height} loading="lazy" />
+        </figure>
+      )
     }
     const href = only?.type === 'element' && only.tagName === 'a' ? String(only.properties.href) : ''
     const post = rest.length === 0 ? thesisPosts[href] : undefined

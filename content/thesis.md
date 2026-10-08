@@ -1,8 +1,6 @@
 ---
-title: "Happy: Muse for agentmaxxers"
+title: "Vision"
 ---
-
-# TL;DR
 
 - One agent is your representative to the AI world. Every ping and escalation goes through it.
 - Sessions become tasks. They spin off more sessions, work across repos, and form a tree.
@@ -40,11 +38,21 @@ A session tracks a deliverable, not a conversation. So sessions naturally form a
 
 Sessions also stop being tied to one repo. Codex already did this, and Claude Code has had it for a while: one session can work across several repositories.
 
+# Three columns, for now
+
+![Tasks and inbox on the left, the focused session in the middle, artifacts on the right](/thesis/layout.svg)
+
+People already have this layout in their heads. On the left: what you're doing today, what else you could pick up, and an inbox from your team. In the middle: the one session you're focused on, where you give input and steer. On the right: artifacts.
+
+The right column might not last. If the chat becomes the artifact, you just switch between the two. The same goes for the left: it could live in the main view too. But the main view will change all the time, and your brain needs something to anchor on. So we think the sidebar stays. It just gets more generated, and so does the artifact view.
+
+Three columns are fine for today. It's still worth pushing each one to the limit and asking what the screen turns into.
+
 # The sidebar is the task tracker
 
-![Our sidebar today](/thesis/sidebar.png)
+![A fragment of our sidebar today](/thesis/sidebar.png)
 
-This is our sidebar today. It's getting messy.
+This is a fragment of our sidebar today. It's getting messy.
 
 That the sidebar is the new task tracker is pretty much accepted by now. Some people think it goes away completely.
 

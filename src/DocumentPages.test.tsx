@@ -96,12 +96,12 @@ describe('static document pages', () => {
   it('renders the thesis with its title as the only h1 and every section as an h2', () => {
     const { container } = render(<Router pathname="/thesis/" />)
 
-    expect(screen.getAllByRole('heading', { level: 1 }).map((heading) => heading.id)).toEqual(['happy-muse-for-agentmaxxers'])
+    expect(screen.getAllByRole('heading', { level: 1 }).map((heading) => heading.id)).toEqual(['vision'])
     expect(screen.getAllByRole('heading', { level: 2 }).map((heading) => heading.firstChild?.textContent)).toEqual([
-      'TL;DR',
       "Who it's for",
       'One agent that talks back to you',
       'Sessions become tasks',
+      'Three columns, for now',
       'The sidebar is the task tracker',
       'Chat becomes a living document',
       'Why not just use Muse',
@@ -130,21 +130,31 @@ describe('static document pages', () => {
     expect(container.querySelector('.document-content')?.textContent).not.toContain('https://x.com/')
   })
 
-  it('sets the sidebar screenshot as a figure beside the paragraph about it', () => {
+  it('spans the layout diagram across the column and sets the sidebar screenshot beside its paragraph', () => {
     const { container } = render(<Router pathname="/thesis/" />)
-    const figure = container.querySelector('figure.essay-figure')
+    const [diagram, screenshot, ...rest] = [...container.querySelectorAll('figure.essay-figure')]
 
-    expect(figure?.querySelector('img')?.getAttribute('src')).toBe('/thesis/sidebar.png')
-    expect(figure?.querySelector('img')?.getAttribute('alt')).toBe('Our sidebar today')
-    expect(figure?.parentElement?.tagName).not.toBe('P')
-    expect(figure?.nextElementSibling?.textContent).toBe("This is our sidebar today. It's getting messy.")
+    expect(rest).toHaveLength(0)
+    expect(diagram.className).toBe('essay-figure')
+    expect(diagram.querySelector('img')?.getAttribute('src')).toBe('/thesis/layout.svg')
+    expect(diagram.previousElementSibling?.firstChild?.textContent).toBe('Three columns, for now')
+
+    expect(screenshot.className).toBe('essay-figure essay-figure-aside')
+    expect(screenshot.querySelector('img')?.getAttribute('src')).toBe('/thesis/sidebar.png')
+    expect(screenshot.querySelector('img')?.getAttribute('alt')).toBe('A fragment of our sidebar today')
+    expect(screenshot.parentElement?.tagName).not.toBe('P')
+    expect(screenshot.nextElementSibling?.textContent).toBe("This is a fragment of our sidebar today. It's getting messy.")
+    for (const figure of [diagram, screenshot]) {
+      expect(figure.querySelector('img')?.getAttribute('width')).toBeTruthy()
+      expect(figure.querySelector('img')?.getAttribute('height')).toBeTruthy()
+    }
   })
 
-  it('describes the thesis with its frontmatter title and first TL;DR line', () => {
+  it('titles the thesis Vision and describes it by its first bullet', () => {
     const markdown = getThesisMarkdown()
 
-    expect(markdown.startsWith(`# ${thesisMetadata.title}\n`)).toBe(true)
-    expect(markdown).toContain(`## TL;DR\n\n- ${thesisMetadata.description}\n`)
+    expect(thesisMetadata.title).toBe('Vision — Happy')
+    expect(markdown.startsWith(`# Vision\n\n- ${thesisMetadata.description}\n`)).toBe(true)
   })
 
   it('keeps the thesis out of navigation', () => {
