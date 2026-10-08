@@ -350,15 +350,14 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .x-post-attribution a { color: #557068; text-decoration-color: rgba(85, 112, 104, .35); }
 
 /* Past phone width the posts float right and the sidebar screenshot floats left, and the text wraps around them.
-   A tall float may run on beside the next section; each heading is its own formatting
-   context, so it and its rule narrow beside the float instead of running under it. */
+   Each section heading starts below every float above it, so a tall post stays in its own section. */
 @media (min-width: 761px) {
   /* Contain the floats, so a post that outruns the last paragraph pushes the footer down. */
   .essay-article .document-content { display: flow-root; }
   /* clear: both keeps a post and a screenshot from sitting side by side: each starts below the last. */
   .essay-article .x-post { clear: both; float: right; margin: .25rem 0 1rem 2rem; }
   .essay-article .essay-figure-aside { clear: both; float: left; margin: .25rem 2rem 1rem 0; }
-  .essay-article .document-content h2 { display: flow-root; }
+  .essay-article .document-content h2 { clear: both; }
 }
 .legal-article .document-content > p:nth-of-type(1) { color: #6b7f78; font-family: 'DM Mono', monospace; font-size: .72rem; letter-spacing: .03em; }
 .not-found { min-height: calc(100vh - 61px); padding-bottom: 8rem; padding-top: 8rem; }
