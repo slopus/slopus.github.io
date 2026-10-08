@@ -27,7 +27,7 @@ points to them. The Buzz comparison stays reachable at
 ## Header and downloads
 
 Every page shares one plain `SiteHeader`: the full "Happy Engineering" wordmark
-at every width, Docs, and the GitHub mark with its ★ star count (no border or
+at every width, Docs, and the GitHub mark with its plain star count (no star glyph, border, or
 pill). It is 60px tall (52px on phones), pinned while scrolling, and shows a
 hairline only once the page has scrolled, so page shells must not use
 `overflow: hidden` (it breaks `position: sticky`); clip horizontally with

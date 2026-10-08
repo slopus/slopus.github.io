@@ -189,7 +189,7 @@ describe('site header', () => {
       const navigation = screen.getByRole('navigation', { name: 'Primary navigation' })
 
       expect(screen.queryByRole('group', { name: 'Choose a product' })).toBeNull()
-      expect(within(navigation).getAllByRole('link').map((link) => link.textContent)).toEqual(['Docs', '★23.8k'])
+      expect(within(navigation).getAllByRole('link').map((link) => link.textContent)).toEqual(['Docs', '23.8k'])
       expect(within(navigation).getByRole('link', { name: 'Happy on GitHub, 23,810 stars' })).toBeTruthy()
       expect(within(navigation).getByRole('link', { name: 'Docs' }).getAttribute('href')).toBe('/desktop/docs/')
       unmount()

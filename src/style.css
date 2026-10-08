@@ -58,8 +58,7 @@ a { color: inherit; text-decoration: none; }
 .nav-github { align-items: center; display: inline-flex; gap: .45rem; height: 30px; opacity: 1 !important; position: relative; transition: color .2s ease; }
 .nav-github::after { content: ''; inset: -7px -4px; position: absolute; }
 .nav-github svg { display: block; }
-.nav-github-count { align-items: center; display: inline-flex; font-family: 'DM Mono', monospace; font-size: .76rem; font-weight: 500; gap: .3em; white-space: nowrap; }
-.nav-github-star { color: #d4a72c; }
+.nav-github-count { font-family: 'DM Mono', monospace; font-size: .76rem; font-weight: 500; white-space: nowrap; }
 .nav-github:hover { color: #e6522c; }
 .nav-cta { border: 1px solid #183f38; border-radius: 999px; padding: .6rem 1rem; opacity: 1; }
 .nav-cta:hover { background: #183f38; color: #f5f0e7; }
