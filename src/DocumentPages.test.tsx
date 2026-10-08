@@ -123,9 +123,9 @@ describe('static document pages', () => {
     expect(quotes[0].textContent).toContain('a non-SOTA model is good enough for Muse the agent')
     // Each post floats beside the paragraph it backs up, so it comes just before it.
     const supported = quotes.map((quote) => quote.closest('figure')?.nextElementSibling?.textContent)
-    expect(supported[0]).toMatch(/^Muse, Grok and dots will be enough for most people/)
+    expect(supported[0]).toMatch(/^People who want the best models, no lock-in, and open source/)
     expect(supported[1]).toMatch(/^We don't\. We think it looks more like a modern vertical-tabs browser/)
-    expect(supported[2]).toMatch(/^How much access should it hold\?/)
+    expect(supported[2]).toMatch(/^The agent logs into your computers and your accounts/)
     expect(supported[3]).toMatch(/^That's starting to happen\. Meta and Sierra just announced the Personal Agent Protocol/)
     expect(container.querySelector('.document-content')?.textContent).not.toContain('https://x.com/')
   })

@@ -192,6 +192,7 @@ function QuotedXPost({ url, post }: { url: string; post: QuotedPost }) {
         data-conversation="none"
         data-theme="light"
         data-width="270"
+        data-cards={post.hideCards ? 'hidden' : undefined}
       >
         <p lang="en" dir="ltr">{post.text}</p>
         <p className="x-post-attribution">

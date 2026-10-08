@@ -12,9 +12,9 @@ title: "Happy: Muse for agentmaxxers"
 
 # Who it's for
 
-People who want the best models, no lock-in, and open source. Early adopters.
-
 https://x.com/jayair/status/2105834279557341382
+
+People who want the best models, no lock-in, and open source. Early adopters.
 
 Muse, Grok and dots will be enough for most people, and Anthropic and Gemini will ship their own soon. We're not building for most people. We're building for the ones who want more.
 
@@ -78,9 +78,9 @@ We'll host it for you, or you can run it yourself.
 
 # The hard part: standards
 
-The agent logs into your computers and your accounts. To get anything done, it has to hand some of that access to its sub-agents.
-
 https://x.com/nikitabier/status/2107157904168239416
+
+The agent logs into your computers and your accounts. To get anything done, it has to hand some of that access to its sub-agents.
 
 How much access should it hold? How does it pass that access down? How does a service know an agent is acting for you? How do you check what it did? One company can't settle this. It needs standards the whole industry agrees on.
 
