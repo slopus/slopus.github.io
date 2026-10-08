@@ -100,10 +100,11 @@ describe('static document pages', () => {
     expect(screen.getAllByRole('heading', { level: 2 }).map((heading) => heading.firstChild?.textContent)).toEqual([
       'TL;DR',
       "Who it's for",
-      'One agent to talk to your other agents',
+      'One agent that talks back to you',
+      'Sessions become tasks',
+      'The sidebar is the task tracker',
+      'Chat becomes a living document',
       'Why not just use Muse',
-      'Always on',
-      'Fewer buttons, not zero',
       'The hard part: standards',
       'How it spreads',
     ])
@@ -123,10 +124,20 @@ describe('static document pages', () => {
     // Each post floats beside the paragraph it backs up, so it comes just before it.
     const supported = quotes.map((quote) => quote.closest('figure')?.nextElementSibling?.textContent)
     expect(supported[0]).toMatch(/^Muse, Grok and dots will be enough for most people/)
-    expect(supported[1]).toMatch(/^Everything is moving to one agent\./)
-    expect(supported[2]).toMatch(/^The agent logs into your computers/)
+    expect(supported[1]).toMatch(/^We don't\. We think it looks more like a modern vertical-tabs browser/)
+    expect(supported[2]).toMatch(/^How much access should it hold\?/)
     expect(supported[3]).toMatch(/^That's starting to happen\. Meta and Sierra just announced the Personal Agent Protocol/)
     expect(container.querySelector('.document-content')?.textContent).not.toContain('https://x.com/')
+  })
+
+  it('sets the sidebar screenshot as a figure beside the paragraph about it', () => {
+    const { container } = render(<Router pathname="/thesis/" />)
+    const figure = container.querySelector('figure.essay-figure')
+
+    expect(figure?.querySelector('img')?.getAttribute('src')).toBe('/thesis/sidebar.png')
+    expect(figure?.querySelector('img')?.getAttribute('alt')).toBe('Our sidebar today')
+    expect(figure?.parentElement?.tagName).not.toBe('P')
+    expect(figure?.nextElementSibling?.textContent).toBe("This is our sidebar today. It's getting messy.")
   })
 
   it('describes the thesis with its frontmatter title and first TL;DR line', () => {

@@ -315,18 +315,25 @@ for (const { route, title, description } of pluginPages) {
 // Mirrors thesisMetadata in src/siteMetadata.ts. Unlisted: reachable here, linked from nowhere.
 const thesisHtml = withAppMarkup(htmlForPage({
   title: 'Happy: Muse for agentmaxxers',
-  description: "Soon you'll talk to one agent, and it will run all your other agents.",
+  description: 'One agent is your representative to the AI world. Every ping and escalation goes through it.',
   canonicalPath: '/thesis/',
   robots: 'noindex, follow',
 }), renderPath('/thesis/'))
 const thesisApp = thesisHtml.slice(thesisHtml.indexOf('<div id="app">'))
-const thesisPostUrls = (await readFile(path.join(projectRoot, 'content', 'thesis.md'), 'utf8'))
-  .match(/^https:\/\/x\.com\/\S+$/gm) ?? []
+const thesisSource = await readFile(path.join(projectRoot, 'content', 'thesis.md'), 'utf8')
+const thesisPostUrls = thesisSource.match(/^https:\/\/x\.com\/\S+$/gm) ?? []
 if (thesisApp.match(/<h1[\s>]/g)?.length !== 1) {
   throw new Error('/thesis/ should render exactly one h1')
 }
 if (thesisApp.match(/<blockquote class="twitter-tweet"/g)?.length !== thesisPostUrls.length) {
   throw new Error('/thesis/ should render every X post in content/thesis.md as an embed')
+}
+// The essay's images ship from public/; the build fails if one is missing or not rendered.
+for (const [, imagePath] of thesisSource.matchAll(/^!\[[^\]]*\]\((\/[^)]+)\)$/gm)) {
+  await readFile(path.join(distRoot, imagePath))
+  if (!thesisApp.includes(`src="${imagePath}"`)) {
+    throw new Error(`/thesis/ should render the image ${imagePath}`)
+  }
 }
 await writeRoute('thesis', thesisHtml)
 

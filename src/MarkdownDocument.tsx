@@ -91,7 +91,8 @@ export function MarkdownDocument({
     h1: heading(1),
     h2: heading(2),
     h3: heading(3),
-    a: ({ href, children, ...props }) => {
+    // `node` is react-markdown's syntax tree, not an HTML attribute; keep it out of the markup.
+    a: ({ href, children, node: _node, ...props }) => {
       const normalizedHref = normalizeHref(href)
       const external = normalizedHref?.startsWith('http')
 
@@ -106,12 +107,12 @@ export function MarkdownDocument({
         </a>
       )
     },
-    table: ({ children, ...props }) => (
+    table: ({ children, node: _node, ...props }) => (
       <div className="document-table-wrap">
         <table {...props}>{children}</table>
       </div>
     ),
-    img: ({ alt, src, ...props }) => {
+    img: ({ alt, src, node: _node, ...props }) => {
       if (typeof src === 'string' && /\.(mp4|webm)$/.test(src)) {
         return (
           <video src={src} controls muted autoPlay loop playsInline aria-label={alt ?? ''} />

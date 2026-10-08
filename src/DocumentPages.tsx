@@ -206,9 +206,13 @@ function QuotedXPost({ url, post }: { url: string; post: QuotedPost }) {
 }
 
 const thesisComponents: Components = {
-  // A post URL alone on its line in the essay stands for that post.
+  // A post URL alone on its line in the essay stands for that post, and an image
+  // alone on its line is a figure. Both float beside the paragraph that follows.
   p: ({ node, children, ...props }) => {
     const [only, ...rest] = node?.children ?? []
+    if (rest.length === 0 && only?.type === 'element' && only.tagName === 'img') {
+      return <figure className="essay-figure">{children}</figure>
+    }
     const href = only?.type === 'element' && only.tagName === 'a' ? String(only.properties.href) : ''
     const post = rest.length === 0 ? thesisPosts[href] : undefined
     return post ? <QuotedXPost url={href} post={post} /> : <p {...props}>{children}</p>

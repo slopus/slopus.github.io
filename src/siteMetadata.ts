@@ -57,7 +57,7 @@ export const modelBenchmarksMetadata: PageMetadata = {
  */
 export const thesisMetadata: PageMetadata = {
   title: 'Happy: Muse for agentmaxxers',
-  description: "Soon you'll talk to one agent, and it will run all your other agents.",
+  description: 'One agent is your representative to the AI world. Every ping and escalation goes through it.',
   canonicalPath: '/thesis/',
   robots: 'noindex, follow',
 }
