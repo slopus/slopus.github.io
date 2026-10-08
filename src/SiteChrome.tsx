@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import { HAPPY_ONE_GITHUB_STARS } from './happyOneGithubStars'
+import { PageScrollbar } from './PageScrollbar'
 import { KIRILL, STEVE } from './Team'
 
 export const GITHUB_HAPPY = HAPPY.repository
@@ -56,7 +57,10 @@ function usePageScrolled() {
   return scrolled
 }
 
-/** One plain header on every page. Docs means the Happy (desktop) docs. */
+/**
+ * One plain header on every page, with the page's painted scrollbar. Docs means
+ * the Happy (desktop) docs.
+ */
 export function SiteHeader({
   product = HAPPY,
   docsActive = false,
@@ -66,17 +70,20 @@ export function SiteHeader({
 }) {
   const scrolled = usePageScrolled()
   return (
-    <div className="site-header-wrap" data-scrolled={scrolled ? '' : undefined}>
-      <header className="site-header page-width" id="top">
-        <div className="site-header-brand">
-          <Wordmark />
-        </div>
-        <nav aria-label="Primary navigation">
-          <a href={`${HAPPY_DESKTOP.docsBase}/`} aria-current={docsActive && product.key === 'desktop' ? 'page' : undefined}>Docs</a>
-          <GithubLink />
-        </nav>
-      </header>
-    </div>
+    <>
+      <PageScrollbar />
+      <div className="site-header-wrap" data-scrolled={scrolled ? '' : undefined}>
+        <header className="site-header page-width" id="top">
+          <div className="site-header-brand">
+            <Wordmark />
+          </div>
+          <nav aria-label="Primary navigation">
+            <a href={`${HAPPY_DESKTOP.docsBase}/`} aria-current={docsActive && product.key === 'desktop' ? 'page' : undefined}>Docs</a>
+            <GithubLink />
+          </nav>
+        </header>
+      </div>
+    </>
   )
 }
 

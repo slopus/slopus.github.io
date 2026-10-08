@@ -1,6 +1,5 @@
 import { useState, type CSSProperties } from 'react'
 import { GITHUB_HAPPY, GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
-import { PageScrollbar } from './PageScrollbar'
 import { FeatureSurprise, useFeatureSurprise } from './FeatureSurprise'
 import { HAPPY_DESKTOP } from './products'
 import { HappyOneDemo } from './HappyOneDemo'
@@ -105,7 +104,6 @@ export default function DesktopApp() {
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   return (
     <div className="site-shell happy-one" data-social-preview={ogPreview ? '' : undefined}>
-      <PageScrollbar />
       <SiteHeader product={HAPPY_DESKTOP} />
       <main>
         <section className="one-hero page-width" aria-labelledby="one-heading">

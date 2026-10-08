@@ -3,7 +3,7 @@ import path from 'node:path'
 import { StrictMode } from 'react'
 import { hydrateRoot } from 'react-dom/client'
 import { act, cleanup, render, screen, within } from '@testing-library/react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { Router } from './Router'
 import { prerenderedPaths, renderPath } from './prerender'
 import { getLegalSource } from './documents'
@@ -16,6 +16,15 @@ import {
 
 const projectRoot = path.resolve(__dirname, '..')
 const pluginMetadata = [pluginsMetadata, memesPluginMetadata, pluginPrivacyMetadata, pluginTermsMetadata]
+
+// jsdom has no ResizeObserver; the painted page scrollbar only observes with it.
+beforeAll(() => {
+  vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} })
+})
+
+afterAll(() => {
+  vi.unstubAllGlobals()
+})
 
 describe('plugin pages', () => {
   afterEach(() => {

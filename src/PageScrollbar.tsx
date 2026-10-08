@@ -4,11 +4,20 @@ import { useEffect, useRef } from 'react'
  * A custom-painted scrollbar for the page itself, following the same rule as
  * Happy Desktop: the browser keeps ownership of scrolling, only its chrome is
  * hidden. A native page scrollbar reserves a gutter, so full-bleed bands stop
- * short of the window edge; this one floats over them instead.
+ * short of the window edge and the header shifts between pages that scroll and
+ * pages that don't; this one floats over them instead. SiteHeader renders it,
+ * so every page has it.
  */
 
 const IDLE_MS = 1200
 const MIN_THUMB = 28
+
+/** Wide docs pages scroll their article instead of the window. */
+function pageScroller() {
+  const article = document.querySelector('.docs-shell .document-article')
+  if (article && getComputedStyle(article).overflowY !== 'visible') return article
+  return document.scrollingElement ?? document.documentElement
+}
 
 export function PageScrollbar() {
   const trackRef = useRef<HTMLDivElement>(null)
@@ -19,25 +28,25 @@ export function PageScrollbar() {
     const thumb = thumbRef.current
     if (!track || !thumb) return
     const root = document.documentElement
-    const scroller = document.scrollingElement ?? root
 
     let idleTimer: number | undefined
     let dragging = false
     let grabOffset = 0
 
     const metrics = () => {
-      const viewport = root.clientHeight
+      const scroller = pageScroller()
+      const viewport = scroller.clientHeight
       const extent = scroller.scrollHeight
       const trackLength = track.clientHeight
       const thumbLength = Math.min(
         trackLength,
         Math.max(MIN_THUMB, extent > 0 ? (trackLength * viewport) / extent : trackLength),
       )
-      return { maximum: extent - viewport, thumbLength, travel: trackLength - thumbLength }
+      return { scroller, maximum: extent - viewport, thumbLength, travel: trackLength - thumbLength }
     }
 
     const update = () => {
-      const { maximum, thumbLength, travel } = metrics()
+      const { scroller, maximum, thumbLength, travel } = metrics()
       track.toggleAttribute('data-overflow', maximum > 0.5)
       if (maximum <= 0.5) return
       thumb.style.height = `${thumbLength}px`
@@ -56,7 +65,7 @@ export function PageScrollbar() {
     }
 
     const scrollToPointer = (clientY: number) => {
-      const { maximum, travel } = metrics()
+      const { scroller, maximum, travel } = metrics()
       if (travel <= 0 || maximum <= 0) return
       const ratio = (clientY - track.getBoundingClientRect().top - grabOffset) / travel
       scroller.scrollTop = Math.max(0, Math.min(1, ratio)) * maximum
@@ -101,7 +110,10 @@ export function PageScrollbar() {
 
     const resize = new ResizeObserver(update)
     resize.observe(document.body)
-    window.addEventListener('scroll', onScroll, { passive: true })
+    // A docs article keeps its height while what's inside it grows.
+    for (const child of document.querySelector('.docs-shell .document-article')?.children ?? []) resize.observe(child)
+    // Element scrolls do not bubble, so listen in the capture phase.
+    document.addEventListener('scroll', onScroll, { capture: true, passive: true })
     window.addEventListener('resize', update)
     track.addEventListener('pointerenter', wake)
     track.addEventListener('pointerdown', onPointerDown)
@@ -112,7 +124,7 @@ export function PageScrollbar() {
 
     return () => {
       resize.disconnect()
-      window.removeEventListener('scroll', onScroll)
+      document.removeEventListener('scroll', onScroll, { capture: true })
       window.removeEventListener('resize', update)
       track.removeEventListener('pointerenter', wake)
       track.removeEventListener('pointerdown', onPointerDown)

@@ -101,16 +101,6 @@
 .happy-one .footer-meta .wordmark { white-space: normal; }
 .happy-one a:focus-visible { outline: 3px solid #e6522c; outline-offset: 5px; }
 
-/* Custom-painted page scrollbar; the native one is hidden in style.css. */
-.one-scrollbar { position: fixed; top: 0; right: 0; bottom: 0; z-index: 60; display: none; width: 10px; touch-action: none; }
-.one-scrollbar[data-overflow] { display: block; }
-.one-scrollbar-thumb { position: absolute; top: 0; right: 2px; width: 6px; border-radius: 999px; background: #183f3800; transition: background-color 480ms linear; }
-.one-scrollbar[data-active] .one-scrollbar-thumb { background: #183f3845; transition: none; }
-.one-scrollbar:hover .one-scrollbar-thumb { background: #183f3870; transition: none; }
-/* A pointer that cannot hover has nothing to grab, so it never covers content. */
-@media (hover: none) { .one-scrollbar { pointer-events: none; } }
-@media (prefers-reduced-motion: reduce) { .one-scrollbar-thumb { transition: none; } }
-
 @media (max-width: 960px) {
   .one-terminal-section { gap: 2.5rem; }
 }

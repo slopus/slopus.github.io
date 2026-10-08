@@ -1,5 +1,5 @@
 import { cleanup, render, screen } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { Router } from './Router'
 import {
   documents,
@@ -11,6 +11,15 @@ import {
 import { renderPath } from './prerender'
 import { thesisMetadata } from './siteMetadata'
 import { thesisPosts } from './thesisPosts'
+
+// jsdom has no ResizeObserver; the painted page scrollbar only observes with it.
+beforeAll(() => {
+  vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} })
+})
+
+afterAll(() => {
+  vi.unstubAllGlobals()
+})
 
 describe('static document pages', () => {
   afterEach(() => {
@@ -155,6 +164,12 @@ describe('static document pages', () => {
 
     expect(thesisMetadata.title).toBe('Vision — Happy')
     expect(markdown.startsWith(`# Vision\n\n- ${thesisMetadata.description}\n`)).toBe(true)
+  })
+
+  it('paints the same page scrollbar on every page, so the header sits in the same place', () => {
+    for (const pathname of ['/', '/docs/', '/desktop/docs/', '/model-benchmarks', '/plugins/', '/thesis/', '/privacy/']) {
+      expect(renderPath(pathname).match(/class="one-scrollbar"/g)).toHaveLength(1)
+    }
   })
 
   it('keeps the thesis out of navigation', () => {

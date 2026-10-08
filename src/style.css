@@ -16,18 +16,28 @@
   --section-gap: 6rem; /* 96px — gap between same-background sections */
 }
 
-/* Page scrollbar. The harness page hides the native one and paints its own in
+/* Page scrollbar. Every page hides the native one and paints its own in
    PageScrollbar.tsx: a native scrollbar reserves a gutter, so the full-bleed
-   bands would stop short of the window edge. */
-html:has(.happy-one) { scrollbar-width: none; }
-html:has(.happy-one)::-webkit-scrollbar { width: 0; height: 0; }
+   bands would stop short of the window edge, and the header would sit a few
+   pixels off on pages that scroll the window. Wide docs pages scroll their
+   article; it hides its native one below. */
+html:has(.one-scrollbar) { scrollbar-width: none; }
+html:has(.one-scrollbar)::-webkit-scrollbar { width: 0; height: 0; }
 html[data-scrollbar-dragging] { scroll-behavior: auto; }
-html:not(:has(.happy-one)) { scrollbar-color: #929292 transparent; scrollbar-width: thin; }
-html:not(:has(.happy-one))::-webkit-scrollbar { height: 12px; width: 12px; }
-html:not(:has(.happy-one))::-webkit-scrollbar-track { background: transparent; }
-html:not(:has(.happy-one))::-webkit-scrollbar-thumb { background: #929292; background-clip: padding-box; border: 3px solid transparent; border-radius: 999px; }
-html:not(:has(.happy-one))::-webkit-scrollbar-thumb:hover { background-color: #707070; }
-html:not(:has(.happy-one))::-webkit-scrollbar-corner { background: transparent; }
+html:not(:has(.one-scrollbar)) { scrollbar-color: #929292 transparent; scrollbar-width: thin; }
+html:not(:has(.one-scrollbar))::-webkit-scrollbar { height: 12px; width: 12px; }
+html:not(:has(.one-scrollbar))::-webkit-scrollbar-track { background: transparent; }
+html:not(:has(.one-scrollbar))::-webkit-scrollbar-thumb { background: #929292; background-clip: padding-box; border: 3px solid transparent; border-radius: 999px; }
+html:not(:has(.one-scrollbar))::-webkit-scrollbar-thumb:hover { background-color: #707070; }
+html:not(:has(.one-scrollbar))::-webkit-scrollbar-corner { background: transparent; }
+.one-scrollbar { position: fixed; top: 0; right: 0; bottom: 0; z-index: 60; display: none; width: 10px; touch-action: none; }
+.one-scrollbar[data-overflow] { display: block; }
+.one-scrollbar-thumb { position: absolute; top: 0; right: 2px; width: 6px; border-radius: 999px; background: #183f3800; transition: background-color 480ms linear; }
+.one-scrollbar[data-active] .one-scrollbar-thumb { background: #183f3845; transition: none; }
+.one-scrollbar:hover .one-scrollbar-thumb { background: #183f3870; transition: none; }
+/* A pointer that cannot hover has nothing to grab, so it never covers content. */
+@media (hover: none) { .one-scrollbar { pointer-events: none; } }
+@media (prefers-reduced-motion: reduce) { .one-scrollbar-thumb { transition: none; } }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -52,7 +62,8 @@ a { color: inherit; text-decoration: none; }
 .site-header nav { align-items: center; display: flex; gap: 1.65rem; font-size: .86rem; font-weight: 500; }
 .site-header nav > a:not(.nav-cta) { opacity: .82; }
 .site-header nav > a:not(.nav-cta):hover { opacity: 1; }
-.site-header nav > a[aria-current='page'] { border-bottom: 2px solid #e6522c; opacity: 1; padding-bottom: .18rem; }
+/* An underline, not a border, so the current link sits level with the others. */
+.site-header nav > a[aria-current='page'] { opacity: 1; text-decoration: underline 2px #e6522c; text-underline-offset: .5em; }
 /* The repository and its star count, read as one GitHub-style star pill. The invisible
    ::after keeps a 44px-tall tap target around the smaller pill. */
 .nav-github { align-items: center; display: inline-flex; gap: .45rem; height: 30px; opacity: 1 !important; position: relative; transition: color .2s ease; }
@@ -246,7 +257,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .site-header-wrap { flex: 0 0 auto; }
   .docs-shell .docs-layout { flex: 1 1 auto; margin: 0; max-width: none; min-height: 0; overflow: hidden; padding: 0 0 0 max(32px, calc((100% - 1180px) / 2)); width: 100%; grid-template-columns: 210px minmax(0, 1fr); }
   .docs-shell .docs-sidebar { align-self: stretch; height: 100%; max-height: none; min-height: 0; overflow-y: auto; padding: 3.5rem 2px 3rem; position: static; }
-  .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; padding: 3.5rem 0 0; }
+  .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; padding: 3.5rem 0 0; scrollbar-width: none; }
+  .docs-shell .document-article::-webkit-scrollbar { width: 0; height: 0; }
   .docs-shell .document-article > .legacy-notice { margin-right: 2rem; }
   .docs-shell .document-article > .document-breadcrumb,
   .docs-shell .document-article > .document-content,

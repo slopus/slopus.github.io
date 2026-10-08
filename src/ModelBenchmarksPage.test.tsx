@@ -1,5 +1,5 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import ModelBenchmarksPage from './ModelBenchmarksPage'
 import { absoluteDate, benchmarkCatalog, publicationAge, selectSources, TIERS, type BenchmarkCatalog, type BenchmarkSource } from './modelBenchmarks'
 import { Router } from './Router'
@@ -20,6 +20,9 @@ const fixture: BenchmarkCatalog = {
   ],
   sources: [source('300', ['test/beta']), source('100', ['test/alpha', 'test/beta'], ['test/alpha', 'test/beta']), { ...source('200', ['test/alpha']), kind: 'provider-reported' }],
 }
+// jsdom has no ResizeObserver; the painted page scrollbar only observes with it.
+beforeAll(() => { vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} }) })
+afterAll(() => { vi.unstubAllGlobals() })
 beforeEach(() => { window.twttr = { widgets: { createTweet: vi.fn().mockResolvedValue(undefined) } } })
 afterEach(() => { cleanup(); delete window.twttr; vi.restoreAllMocks() })
 
