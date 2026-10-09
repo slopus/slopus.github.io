@@ -131,12 +131,10 @@ describe('static document pages', () => {
       expect(quote.dataset).toMatchObject({ dnt: 'true', conversation: 'none', theme: 'light', width: '270' })
       expect(quote.querySelectorAll('a')).toHaveLength(1)
     }
-    expect(quotes[0].textContent).toContain("is this where we're going")
+    expect(quotes[0].textContent).toContain('The most important technology problem of the next 5 years')
     // Each post floats beside the paragraph it backs up, so it comes just before it.
     const supported = quotes.map((quote) => quote.closest('figure')?.nextElementSibling?.textContent)
-    expect(supported[0]).toMatch(/^Sessions are really tasks/)
-    expect(supported[1]).toMatch(/^One harness also makes deeper integrations possible/)
-    expect(supported[2]).toMatch(/^Some of this is bigger than one team/)
+    expect(supported[0]).toMatch(/^Some of this is bigger than one team/)
     expect(container.querySelector('.document-content')?.textContent).not.toContain('https://x.com/')
   })
 

@@ -28,11 +28,9 @@ Once one agent does the talking, you stop needing to read everything the others 
 
 When was the last time you scrolled up in a chat? Nobody rereads old messages.
 
-So the chat doesn't need to be a log that only grows. The sidebar (your task tracker) and the chat (your deep focus) are both prime to become artifacts the agent generates and keeps current. What replaces the log is still open. Maybe much better documents. Maybe a plan the agent keeps current as the work moves. Maybe an agent that decides when to clear the screen and when to edit what's already there. Codex, ChatGPT and T3 Code already draw charts and diagrams inline instead of walls of text.
+So the chat doesn't need to be a log that only grows. The sidebar (your task tracker) and the chat (your deep focus) are both prime to become artifacts the agent generates and keeps current. What replaces the log is still open. Maybe much better documents. Maybe a plan the agent keeps current as the work moves. Maybe an agent that decides when to clear the screen and when to edit what's already there.
 
-https://x.com/maria_rcks/status/2106620125923393849
-
-Sessions are really tasks. They spin off more sessions, work across repos and form a tree. So the sidebar becomes a map of what your agents are doing and what they've made: tasks, docs, previews, pull requests.
+Sessions are really tasks. They spin off more sessions, work across repos and form a tree. So the sidebar becomes a map of what your agents are doing and what they've made: tasks, docs, previews, pull requests. Reminds you of Arc a bit, right?
 
 ![Your agent at the top of the sidebar with a tree of tasks below it, the focused task as one living page in the middle, artifacts on the right](/thesis/layout.svg)
 
@@ -62,8 +60,6 @@ We're betting on one harness, Happy Agent, under every agent. Each provider gets
 
 That's what lets you switch from Claude to GPT to Grok mid-session and keep the transcript. Mixing providers isn't new; T3 Code and Conductor do it too. Happy uses the Claude Code, Codex and Grok CLI sign-ins already on your machine, so there's no key to paste. You get each model's strengths natively: Grok for X research, Anthropic models for novel problems, GPT Astra for computer use.
 
-https://x.com/dani_avila7/status/2107918789316854010
-
 One harness also makes deeper integrations possible that a pile of separate CLIs can't do: controlling every terminal session from one hypervisor, controlling updates of the harness itself, spreading agents across runners on a busy team server, and later, finer control over permissions.
 
 A busy team server brings us to the hardest part.
@@ -85,5 +81,7 @@ Standards only work when nobody owns the whole stack. That's how we want to buil
 # Be the nice guys
 
 Be the nice guys. Happy is open source, with no vendor lock-in. Host it yourself, or let us host it. Use any model from any provider, and switch when a better one ships. Muse runs only Meta's model. dots runs only OpenAI's.
+
+How are we going to make money? Not the question right now. The question is whether we can ship experiences people are genuinely excited about and get hardcore fans. We're going after the top of the funnel: the main agent you talk to for work, and later for the rest of your life. If people are happy using us, the rest follows.
 
 Meta got in touch about an internal pilot because their engineers kept asking to use Happy at work. We hope enough people agree with these bets to give Happy a shot.
