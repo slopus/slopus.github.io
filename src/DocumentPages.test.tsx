@@ -105,17 +105,19 @@ describe('static document pages', () => {
   it('renders the thesis with its title as the only h1 and every section as an h2', () => {
     const { container } = render(<Router pathname="/thesis/" />)
 
-    expect(screen.getAllByRole('heading', { level: 1 }).map((heading) => heading.id)).toEqual(['vision'])
+    expect(screen.getAllByRole('heading', { level: 1 }).map((heading) => heading.id)).toEqual(['don-t-scroll-up'])
     expect(screen.getAllByRole('heading', { level: 2 }).map((heading) => heading.firstChild?.textContent)).toEqual([
-      "Who it's for",
-      'One agent that talks back to you',
-      'Sessions become tasks',
-      'Three columns, for now',
-      'The sidebar is the task tracker',
-      'Chat becomes a living document',
-      'Why not just use Muse',
-      'The hard part: standards',
-      'How it spreads',
+      'Our own sidebar',
+      'Review moves up',
+      'The chat log is next',
+      'Your phone is enough',
+      'One agent at the top',
+      'Everything goes back to the agent',
+      'As above, so below',
+      'Generated, from our parts',
+      'Teams',
+      'Permissions need standards',
+      "Aren't there a lot of these already?",
     ])
     expect(container.querySelector('h3')).toBeNull()
   })
@@ -129,41 +131,39 @@ describe('static document pages', () => {
       expect(quote.dataset).toMatchObject({ dnt: 'true', conversation: 'none', theme: 'light', width: '270' })
       expect(quote.querySelectorAll('a')).toHaveLength(1)
     }
-    expect(quotes[0].textContent).toContain('a non-SOTA model is good enough for Muse the agent')
+    expect(quotes[0].textContent).toContain("is this where we're going")
     // Each post floats beside the paragraph it backs up, so it comes just before it.
     const supported = quotes.map((quote) => quote.closest('figure')?.nextElementSibling?.textContent)
-    expect(supported[0]).toMatch(/^People who want the best models, no lock-in, and open source/)
-    expect(supported[1]).toMatch(/^We don't\. We think it looks more like a modern vertical-tabs browser/)
-    expect(supported[2]).toMatch(/^The agent logs into your computers and your accounts/)
-    expect(supported[3]).toMatch(/^That's starting to happen\. Meta and Sierra just announced the Personal Agent Protocol/)
+    expect(supported[0]).toMatch(/^But it stops being a list of chats/)
+    expect(supported[1]).toMatch(/^The agent logs into your computers and accounts/)
     expect(container.querySelector('.document-content')?.textContent).not.toContain('https://x.com/')
   })
 
   it('spans the layout diagram across the column and sets the sidebar screenshot beside its paragraph', () => {
     const { container } = render(<Router pathname="/thesis/" />)
-    const [diagram, screenshot, ...rest] = [...container.querySelectorAll('figure.essay-figure')]
+    const [screenshot, diagram, ...rest] = [...container.querySelectorAll('figure.essay-figure')]
 
     expect(rest).toHaveLength(0)
-    expect(diagram.className).toBe('essay-figure')
-    expect(diagram.querySelector('img')?.getAttribute('src')).toBe('/thesis/layout.svg')
-    expect(diagram.previousElementSibling?.firstChild?.textContent).toBe('Three columns, for now')
-
     expect(screenshot.className).toBe('essay-figure essay-figure-aside')
     expect(screenshot.querySelector('img')?.getAttribute('src')).toBe('/thesis/sidebar.png')
     expect(screenshot.querySelector('img')?.getAttribute('alt')).toBe('A fragment of our sidebar today')
     expect(screenshot.parentElement?.tagName).not.toBe('P')
-    expect(screenshot.nextElementSibling?.textContent).toBe("This is a fragment of our sidebar today. It's getting messy.")
+    expect(screenshot.nextElementSibling?.textContent).toMatch(/^This is part of our sidebar on a normal day/)
+
+    expect(diagram.className).toBe('essay-figure')
+    expect(diagram.querySelector('img')?.getAttribute('src')).toBe('/thesis/layout.svg')
+    expect(diagram.previousElementSibling?.textContent).toMatch(/^We're keeping the layout people already know/)
     for (const figure of [diagram, screenshot]) {
       expect(figure.querySelector('img')?.getAttribute('width')).toBeTruthy()
       expect(figure.querySelector('img')?.getAttribute('height')).toBeTruthy()
     }
   })
 
-  it('titles the thesis Vision and describes it by its first bullet', () => {
+  it('titles the thesis after its frontmatter and describes it by its first bullet', () => {
     const markdown = getThesisMarkdown()
 
-    expect(thesisMetadata.title).toBe('Vision — Happy')
-    expect(markdown.startsWith(`# Vision\n\n- ${thesisMetadata.description}\n`)).toBe(true)
+    expect(thesisMetadata.title).toBe("Don't Scroll Up — Happy")
+    expect(markdown.startsWith(`# Don't Scroll Up\n\n- ${thesisMetadata.description}\n`)).toBe(true)
   })
 
   it('paints the same page scrollbar on every page, so the header sits in the same place', () => {

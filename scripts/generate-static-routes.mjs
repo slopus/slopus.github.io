@@ -314,8 +314,8 @@ for (const { route, title, description } of pluginPages) {
 
 // Mirrors thesisMetadata in src/siteMetadata.ts. Unlisted: reachable here, linked from nowhere.
 const thesisHtml = withAppMarkup(htmlForPage({
-  title: 'Vision — Happy',
-  description: 'One agent is your representative to the AI world. Every ping and escalation goes through it.',
+  title: "Don't Scroll Up — Happy",
+  description: "We review agents' work at a higher level every month. Tool calls already left the chat. The sidebar and the chat log are next.",
   canonicalPath: '/thesis/',
   robots: 'noindex, follow',
 }), renderPath('/thesis/'))

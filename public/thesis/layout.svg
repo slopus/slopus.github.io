@@ -4,58 +4,102 @@
   <line x1="500" y1="1" x2="500" y2="399" stroke="#d5cebf" stroke-width="1"/>
 
   <g font-size="11" fill="#6b7f78">
-    <text x="24" y="28">Tasks + inbox</text>
-    <text x="230" y="28">Focused session</text>
+    <text x="24" y="28">Your agent + tasks</text>
+    <text x="230" y="28">Focused task</text>
     <text x="520" y="28">Artifacts</text>
   </g>
 
-  <rect x="12" y="202" width="186" height="20" rx="4" fill="#ebe6da"/>
-  <rect x="12" y="202" width="3" height="20" fill="#e6522c"/>
+  <!-- Your agent: the first thing in the sidebar and the page you land on. -->
+  <rect x="12.5" y="40.5" width="185" height="46" rx="9" fill="#fffdf8" stroke="#d5cebf" stroke-width="1"/>
+  <circle cx="34" cy="63.5" r="10" fill="#183f38"/>
+  <text x="52" y="60" font-size="13" font-weight="600" fill="#183f38">Your agent</text>
+  <text x="52" y="76" font-size="11" fill="#6b7f78">2 things need you</text>
+  <circle cx="184" cy="63.5" r="4" fill="#e6522c"/>
+
+  <!-- The selected task. -->
+  <rect x="12" y="152" width="186" height="20" rx="4" fill="#ebe6da"/>
 
   <g fill="none" stroke="#6b7f78" stroke-width="1">
-    <path d="M30 101 V152 M30 112 H40 M30 132 H40 M30 152 H40"/>
-    <path d="M50 161 V192 M50 172 H60 M50 192 H60"/>
-    <path d="M30 241 V252 H40"/>
+    <path d="M30 111 V142 M30 122 H40 M30 142 H40"/>
+    <path d="M30 171 V222 M30 182 H40 M30 202 H40 M30 222 H40"/>
+    <path d="M30 251 V282 M30 262 H40 M30 282 H40"/>
+  </g>
+
+  <!-- Documents, previews and pull requests sit in the tree next to the tasks that made them. -->
+  <g fill="none" stroke="#6b7f78" stroke-width="1">
+    <rect x="44.5" y="177.5" width="8" height="10" rx="1.5"/>
+    <rect x="44.5" y="197.5" width="8" height="10" rx="1.5"/>
+    <rect x="44.5" y="217.5" width="8" height="10" rx="1.5"/>
+    <rect x="44.5" y="277.5" width="8" height="10" rx="1.5"/>
   </g>
 
   <g font-size="13" fill="#183f38">
-    <text x="24" y="56">Chief of Staff</text>
-    <text x="24" y="76">Growth</text>
-    <text x="24" y="96">Release health</text>
-    <text x="44" y="116">Subscriptions</text>
-    <text x="44" y="136">Today's performance</text>
-    <text x="44" y="156">Analytics</text>
-    <text x="64" y="176">Mobile analytics</text>
-    <text x="64" y="196">Desktop analytics</text>
-    <text x="24" y="216">Where are we going?</text>
-    <text x="24" y="236">Auth issues</text>
-    <text x="44" y="256">Intermittent 401s</text>
+    <text x="24" y="106">Release health</text>
+    <text x="44" y="126">Subscriptions</text>
+    <text x="44" y="146">Analytics</text>
+    <text x="24" y="166">Where are we going?</text>
+    <text x="58" y="186">Vision draft</text>
+    <text x="58" y="206">Wireframe</text>
+    <text x="58" y="226">Preview</text>
+    <text x="24" y="246">Auth issues</text>
+    <text x="44" y="266">Intermittent 401s</text>
+    <text x="58" y="286">PR #412</text>
   </g>
 
-  <text x="24" y="292" font-size="11" fill="#6b7f78">Inbox</text>
+  <!-- Progress on running tasks. -->
+  <g>
+    <rect x="160" y="118" width="32" height="5" rx="2.5" fill="#e7e4d8"/>
+    <rect x="160" y="118" width="22" height="5" rx="2.5" fill="#6b7f78"/>
+    <rect x="160" y="138" width="32" height="5" rx="2.5" fill="#e7e4d8"/>
+    <rect x="160" y="138" width="9" height="5" rx="2.5" fill="#6b7f78"/>
+    <rect x="160" y="258" width="32" height="5" rx="2.5" fill="#e7e4d8"/>
+    <rect x="160" y="258" width="28" height="5" rx="2.5" fill="#6b7f78"/>
+  </g>
+
+  <text x="24" y="316" font-size="11" fill="#6b7f78">Team</text>
   <g font-size="13" fill="#183f38">
-    <text x="24" y="314">Denis: review Files PR</text>
-    <text x="24" y="334">Maria: onboarding bugs</text>
+    <text x="24" y="336">Steve: release notes</text>
+    <text x="24" y="356">Denis: Files PR</text>
   </g>
 
+  <!-- The focused task is one living page the agent keeps rewriting, not a log. -->
+  <text x="230" y="58" font-size="15" font-weight="600" fill="#183f38">Where are we going?</text>
+  <text x="230" y="76" font-size="11" fill="#6b7f78">Rewritten 2 min ago</text>
+  <rect x="230" y="94" width="90" height="8" rx="4" fill="#d5cebf"/>
   <g fill="#e7e4d8">
-    <rect x="230" y="48" width="180" height="36" rx="10"/>
-    <rect x="290" y="98" width="190" height="28" rx="10"/>
-    <rect x="230" y="140" width="210" height="60" rx="10"/>
-    <rect x="310" y="214" width="170" height="28" rx="10"/>
+    <rect x="230" y="110" width="240" height="7" rx="3.5"/>
+    <rect x="230" y="124" width="220" height="7" rx="3.5"/>
+    <rect x="230" y="138" width="160" height="7" rx="3.5"/>
+    <rect x="230" y="190" width="18" height="16" rx="2"/>
+    <rect x="254" y="178" width="18" height="28" rx="2"/>
+    <rect x="278" y="184" width="18" height="22" rx="2"/>
+    <rect x="302" y="166" width="18" height="40" rx="2"/>
+    <rect x="326" y="172" width="18" height="34" rx="2"/>
+    <rect x="350" y="160" width="18" height="46" rx="2"/>
+    <rect x="230" y="238" width="230" height="7" rx="3.5"/>
+    <rect x="230" y="252" width="200" height="7" rx="3.5"/>
+    <rect x="230" y="266" width="140" height="7" rx="3.5"/>
   </g>
+  <rect x="230" y="222" width="70" height="8" rx="4" fill="#d5cebf"/>
+  <!-- A note marked up straight onto the page. -->
+  <ellipse cx="345" cy="255.5" rx="96" ry="12" fill="none" stroke="#6b7f78" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="380" y="292" font-size="11" fill="#6b7f78">cut this</text>
+
   <rect x="230.5" y="332.5" width="249" height="44" rx="10" fill="#fffdf8" stroke="#d5cebf" stroke-width="1"/>
-  <rect x="246" y="351" width="110" height="8" rx="4" fill="#e7e4d8"/>
+  <text x="246" y="359" font-size="12" fill="#6b7f78">Talk, or mark up the page</text>
 
-  <rect x="520.5" y="48.5" width="179" height="200" rx="8" fill="#fffdf8" stroke="#d5cebf" stroke-width="1"/>
-  <rect x="536" y="66" width="110" height="10" rx="5" fill="#d5cebf"/>
+  <rect x="520.5" y="48.5" width="179" height="150" rx="8" fill="#fffdf8" stroke="#d5cebf" stroke-width="1"/>
+  <text x="536" y="72" font-size="12" font-weight="600" fill="#183f38">Vision draft</text>
   <g fill="#e7e4d8">
-    <rect x="536" y="94" width="148" height="7" rx="3.5"/>
-    <rect x="536" y="110" width="136" height="7" rx="3.5"/>
-    <rect x="536" y="126" width="144" height="7" rx="3.5"/>
-    <rect x="536" y="142" width="96" height="7" rx="3.5"/>
-    <rect x="536" y="166" width="148" height="7" rx="3.5"/>
-    <rect x="536" y="182" width="128" height="7" rx="3.5"/>
-    <rect x="536" y="198" width="80" height="7" rx="3.5"/>
+    <rect x="536" y="88" width="148" height="7" rx="3.5"/>
+    <rect x="536" y="104" width="136" height="7" rx="3.5"/>
+    <rect x="536" y="120" width="144" height="7" rx="3.5"/>
+    <rect x="536" y="136" width="96" height="7" rx="3.5"/>
+    <rect x="536" y="160" width="148" height="7" rx="3.5"/>
+    <rect x="536" y="176" width="110" height="7" rx="3.5"/>
   </g>
+
+  <rect x="520.5" y="214.5" width="179" height="118" rx="8" fill="#fffdf8" stroke="#d5cebf" stroke-width="1"/>
+  <text x="536" y="238" font-size="12" font-weight="600" fill="#183f38">Preview</text>
+  <rect x="536" y="250" width="148" height="66" rx="4" fill="#e7e4d8"/>
 </svg>

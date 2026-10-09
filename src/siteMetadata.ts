@@ -56,8 +56,8 @@ export const modelBenchmarksMetadata: PageMetadata = {
  * Keep scripts/generate-static-routes.mjs in sync.
  */
 export const thesisMetadata: PageMetadata = {
-  title: 'Vision — Happy',
-  description: 'One agent is your representative to the AI world. Every ping and escalation goes through it.',
+  title: "Don't Scroll Up — Happy",
+  description: "We review agents' work at a higher level every month. Tool calls already left the chat. The sidebar and the chat log are next.",
   canonicalPath: '/thesis/',
   robots: 'noindex, follow',
 }
