@@ -113,7 +113,7 @@ describe('static document pages', () => {
       'Fiddle less, understand more',
       'Phone first',
       'One harness',
-      'Multiplayer is hard',
+      'Multiplayer is very hard',
       'Make people happy',
     ])
     // The bullets up top are the sections, one for one, in the same order.
@@ -140,10 +140,15 @@ describe('static document pages', () => {
     const [screenshot, diagram, picker, ...rest] = [...container.querySelectorAll('figure.essay-figure')]
 
     expect(rest).toHaveLength(0)
-    expect(picker.className).toBe('essay-figure')
+    expect(picker.className).toBe('essay-figure essay-figure-right')
     expect(picker.querySelector('img')?.getAttribute('src')).toBe('/thesis/model-picker.png')
-    expect(picker.querySelector('figcaption')?.textContent).toBe('Switching provider mid-session in Happy')
-    expect(screenshot.className).toBe('essay-figure essay-figure-aside')
+    expect(picker.querySelector('figcaption')?.textContent).toBe('Codex, Claude and Grok in one picker')
+    expect(picker.nextElementSibling?.textContent).toMatch(/^That's what lets you run Claude, GPT and Grok/)
+    // The pig sits inside the last bullet, so no other bullet moves.
+    const pig = container.querySelector('img.essay-pig')
+    expect(pig?.closest('li')?.textContent).toMatch(/^Make people happy\./)
+    expect(pig?.closest('figure')).toBeNull()
+    expect(screenshot.className).toBe('essay-figure essay-figure-left')
     expect(screenshot.querySelector('img')?.getAttribute('src')).toBe('/thesis/sidebar.png')
     expect(screenshot.querySelector('img')?.getAttribute('alt')).toBe('A fragment of our sidebar today')
     expect(screenshot.parentElement?.tagName).not.toBe('P')
@@ -152,7 +157,7 @@ describe('static document pages', () => {
 
     expect(diagram.className).toBe('essay-figure')
     expect(diagram.querySelector('img')?.getAttribute('src')).toBe('/thesis/layout.svg')
-    expect(diagram.previousElementSibling?.textContent).toMatch(/^Sessions are really tasks/)
+    expect(diagram.previousElementSibling?.textContent).toMatch(/^The agent's job is to help you keep that map/)
     for (const figure of [diagram, screenshot]) {
       expect(figure.querySelector('img')?.getAttribute('width')).toBeTruthy()
       expect(figure.querySelector('img')?.getAttribute('height')).toBeTruthy()

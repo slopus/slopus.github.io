@@ -211,13 +211,18 @@ function QuotedXPost({ url, post }: { url: string; post: QuotedPost }) {
  * while they load. A screenshot narrower than the column floats beside the text; a
  * diagram spans the column.
  */
-const thesisFigures: Record<string, { width: number; height: number; aside?: boolean }> = {
+const thesisFigures: Record<string, { width: number; height: number; side?: 'left' | 'right' }> = {
   '/thesis/layout.svg': { width: 720, height: 400 },
-  '/thesis/model-picker.png': { width: 720, height: 496 },
-  '/thesis/sidebar.png': { width: 220, height: 306, aside: true },
+  '/thesis/model-picker.png': { width: 270, height: 263, side: 'right' },
+  '/thesis/sidebar.png': { width: 220, height: 306, side: 'left' },
 }
 
 const thesisComponents: Components = {
+  // The pig beside the last bullet. Any other inline image renders as usual.
+  img: ({ node: _node, alt, src, ...props }) =>
+    src === '/thesis/pig.png'
+      ? <img {...props} src={src} alt={alt ?? ''} className="essay-pig" width="120" height="117" loading="lazy" />
+      : <img {...props} src={src} alt={alt ?? ''} loading="lazy" />,
   // A post URL alone on its line in the essay stands for that post, and an image
   // alone on its line is a figure. Posts and screenshots float beside the paragraph that follows.
   p: ({ node, children, ...props }) => {
@@ -228,7 +233,7 @@ const thesisComponents: Components = {
       // The markdown image title, `![alt](src "title")`, is the caption under the image.
       const caption = only.properties.title ? String(only.properties.title) : undefined
       return (
-        <figure className={figure?.aside ? 'essay-figure essay-figure-aside' : 'essay-figure'}>
+        <figure className={figure?.side ? `essay-figure essay-figure-${figure.side}` : 'essay-figure'}>
           <img src={src} alt={String(only.properties.alt ?? '')} width={figure?.width} height={figure?.height} loading="lazy" />
           {caption && <figcaption>{caption}</figcaption>}
         </figure>
