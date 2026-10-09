@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { renderToString } from 'react-dom/server'
 import { DownloadOptions } from './DownloadOptions'
 
 const BREW = 'brew install --cask slopus/tap/happy'
@@ -172,6 +173,25 @@ describe('desktop and mobile downloads', () => {
     fireEvent.click(group)
     fireEvent.keyDown(group, { key: 'ArrowRight' })
     expect(container.querySelector('.one-desktop-button img')?.getAttribute('src')).toBe('/img/happy-one/badges/macos.svg')
+  })
+
+  it.each([
+    ['iPhone', 'iPhone', '', 5, 'appStore'],
+    ['iPad desktop mode', 'Macintosh; Intel Mac OS X 10_15_7', 'MacIntel', 5, 'appStore'],
+    ['Android', 'Linux; Android 15', '', 5, 'googlePlay'],
+    ['a Mac', 'Macintosh', 'MacIntel', 0, null],
+    ['Windows', 'Windows NT 10.0', 'Win32', 0, null],
+  ])('names the store %s installs from, so the hero can lead with it', (_name, ua, platform, touch, store) => {
+    device(ua as string, platform as string, touch as number)
+    render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
+    expect(screen.getByRole('group', { name: 'Desktop and mobile downloads' }).getAttribute('data-mobile-store')).toBe(store)
+  })
+
+  it('prerenders without a store preference', () => {
+    device('Linux; Android 15', '', 5)
+    const html = renderToString(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
+    expect(html).not.toContain('data-mobile-store')
+    expect(html.indexOf('data-store="appStore"')).toBeLessThan(html.indexOf('data-store="googlePlay"'))
   })
 
   it('links All Releases to the latest release, never a pinned one', () => {

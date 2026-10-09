@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type MouseEvent, type ReactNode } from 'react'
 import { AppStoreButton, GooglePlayButton } from './StoreButtons'
 import { MOBILE_STORE_RATINGS } from './storeRatings'
 import { CopyIcon } from './CopyIcon'
@@ -30,6 +30,18 @@ function desktopPlatform(): DesktopPlatform {
   if (/Linux/i.test(navigator.userAgent)) return 'linux'
   return 'desktop'
 }
+
+type MobileStore = 'appStore' | 'googlePlay'
+
+/** The store this phone or tablet installs from; null elsewhere and on the server. */
+function mobileStore(): MobileStore | null {
+  if (typeof navigator === 'undefined') return null
+  if (/Android/i.test(navigator.userAgent)) return 'googlePlay'
+  if (/iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'appStore'
+  return null
+}
+
+const NO_SUBSCRIPTION = () => () => {}
 
 function DownloadBadge({ platform }: { platform: Exclude<DesktopPlatform, 'desktop'> }) {
   return (
@@ -200,6 +212,8 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id }
   // linked below its Homebrew command.
   const primaryPlatform = platform === 'desktop' ? 'macos' : platform
   const showBrew = primaryPlatform === 'macos'
+  // Prerendered markup has no store preference; hydration settles on this device's.
+  const store = useSyncExternalStore(NO_SUBSCRIPTION, mobileStore, () => null)
 
   return (
     <div
@@ -207,6 +221,7 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id }
       className="one-download-actions"
       data-platform={platform}
       data-primary-platform={primaryPlatform}
+      data-mobile-store={store ?? undefined}
       role="group"
       aria-label="Desktop and mobile downloads"
     >
@@ -226,8 +241,8 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id }
         <PlatformLinks current={primaryPlatform} downloads={downloads} macArchitecture={macArchitecture} />
       </div>
       <div className="one-mobile-downloads">
-        <div className="one-store-download"><AppStoreButton /><StoreRating store="appStore" /></div>
-        <div className="one-store-download"><GooglePlayButton /><StoreRating store="googlePlay" /></div>
+        <div className="one-store-download" data-store="appStore"><AppStoreButton /><StoreRating store="appStore" /></div>
+        <div className="one-store-download" data-store="googlePlay"><GooglePlayButton /><StoreRating store="googlePlay" /></div>
       </div>
     </div>
   )
