@@ -20,6 +20,12 @@ export const thesisPosts: Record<string, QuotedPost> = {
     date: 'October 4, 2026',
     text: "is this where we're going",
   },
+  'https://x.com/dani_avila7/status/2107918789316854010': {
+    name: 'Daniel San',
+    handle: 'dani_avila7',
+    date: 'October 7, 2026',
+    text: 'I really like this image! It perfectly reflects how I’m distributing each task across the different models',
+  },
   'https://x.com/nikitabier/status/2107157904168239416': {
     name: 'Nikita Bier',
     handle: 'nikitabier',

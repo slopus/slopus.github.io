@@ -105,20 +105,20 @@ describe('static document pages', () => {
   it('renders the thesis with its title as the only h1 and every section as an h2', () => {
     const { container } = render(<Router pathname="/thesis/" />)
 
-    expect(screen.getAllByRole('heading', { level: 1 }).map((heading) => heading.id)).toEqual(['don-t-scroll-up'])
-    expect(screen.getAllByRole('heading', { level: 2 }).map((heading) => heading.firstChild?.textContent)).toEqual([
-      'Our own sidebar',
-      'Review moves up',
-      'The chat log is next',
-      'Your phone is enough',
-      'One agent at the top',
-      'Everything goes back to the agent',
-      'As above, so below',
-      'Generated, from our parts',
-      'Teams',
-      'Permissions need standards',
-      "Aren't there a lot of these already?",
+    expect(screen.getAllByRole('heading', { level: 1 }).map((heading) => heading.id)).toEqual(['our-thesis'])
+    const sections = screen.getAllByRole('heading', { level: 2 }).map((heading) => heading.firstChild?.textContent)
+    expect(sections).toEqual([
+      'One core agent',
+      'Chat left the chat',
+      'Fiddle less, understand more',
+      'Phone first',
+      'One harness',
+      'Multiplayer is hard',
+      'Be the nice guys',
     ])
+    // The bullets up top are the sections, one for one, in the same order.
+    const bullets = [...container.querySelectorAll('.document-content > ul > li > strong')].map((bold) => bold.textContent?.replace(/\.$/, ''))
+    expect(bullets).toEqual(sections)
     expect(container.querySelector('h3')).toBeNull()
   })
 
@@ -134,8 +134,9 @@ describe('static document pages', () => {
     expect(quotes[0].textContent).toContain("is this where we're going")
     // Each post floats beside the paragraph it backs up, so it comes just before it.
     const supported = quotes.map((quote) => quote.closest('figure')?.nextElementSibling?.textContent)
-    expect(supported[0]).toMatch(/^But it stops being a list of chats/)
-    expect(supported[1]).toMatch(/^The agent logs into your computers and accounts/)
+    expect(supported[0]).toMatch(/^Sessions are really tasks/)
+    expect(supported[1]).toMatch(/^One harness also makes deeper integrations possible/)
+    expect(supported[2]).toMatch(/^Some of this is bigger than one team/)
     expect(container.querySelector('.document-content')?.textContent).not.toContain('https://x.com/')
   })
 
@@ -148,22 +149,23 @@ describe('static document pages', () => {
     expect(screenshot.querySelector('img')?.getAttribute('src')).toBe('/thesis/sidebar.png')
     expect(screenshot.querySelector('img')?.getAttribute('alt')).toBe('A fragment of our sidebar today')
     expect(screenshot.parentElement?.tagName).not.toBe('P')
-    expect(screenshot.nextElementSibling?.textContent).toMatch(/^This is part of our sidebar on a normal day/)
+    expect(screenshot.nextElementSibling?.textContent).toMatch(/^This isn't our idea/)
 
     expect(diagram.className).toBe('essay-figure')
     expect(diagram.querySelector('img')?.getAttribute('src')).toBe('/thesis/layout.svg')
-    expect(diagram.previousElementSibling?.textContent).toMatch(/^We're keeping the layout people already know/)
+    expect(diagram.previousElementSibling?.textContent).toMatch(/^Sessions are really tasks/)
     for (const figure of [diagram, screenshot]) {
       expect(figure.querySelector('img')?.getAttribute('width')).toBeTruthy()
       expect(figure.querySelector('img')?.getAttribute('height')).toBeTruthy()
     }
   })
 
-  it('titles the thesis after its frontmatter and describes it by its first bullet', () => {
+  it('titles the thesis after its frontmatter and opens with why, then the bets', () => {
     const markdown = getThesisMarkdown()
 
-    expect(thesisMetadata.title).toBe("Don't Scroll Up — Happy")
-    expect(markdown.startsWith(`# Don't Scroll Up\n\n- ${thesisMetadata.description}\n`)).toBe(true)
+    expect(thesisMetadata.title).toBe('Our Thesis — Happy')
+    expect(markdown.startsWith('# Our Thesis\n\nEveryone is going to need a way to talk to AI.')).toBe(true)
+    expect(markdown).toContain('\n\n- **One core agent.**')
   })
 
   it('paints the same page scrollbar on every page, so the header sits in the same place', () => {
@@ -175,7 +177,8 @@ describe('static document pages', () => {
   it('keeps the thesis out of navigation', () => {
     // Server markup: the landing pages' effects need browser APIs jsdom lacks.
     for (const pathname of ['/', '/docs/', '/desktop/', '/desktop/docs/', '/model-benchmarks', '/plugins/', '/thesis/', '/privacy/']) {
-      expect(renderPath(pathname)).not.toMatch(/href="[^"]*thesis/)
+      // No page links to /thesis/. The page's own heading anchors (#our-thesis) don't count.
+      expect(renderPath(pathname)).not.toMatch(/href="[^"]*\/thesis/)
     }
     expect(documents.some((document) => document.path.includes('thesis'))).toBe(false)
   })
