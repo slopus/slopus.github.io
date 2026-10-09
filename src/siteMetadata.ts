@@ -52,20 +52,14 @@ export const modelBenchmarksMetadata: PageMetadata = {
 }
 
 /**
- * Titled after content/thesis.md's frontmatter and described by its first bullet.
- * Keep scripts/generate-static-routes.mjs in sync.
+ * The Vision essay, a docs page that keeps its own title. Titled after
+ * content/thesis.md's frontmatter and described by its bullets. Keep the
+ * description in src/documents.ts and scripts/generate-static-routes.mjs in sync.
  */
 export const thesisMetadata: PageMetadata = {
-  title: 'Our Thesis — Happy',
-  description: 'One core agent, chat that left the chat, phone first, one harness, and open source with no lock-in. What Happy is betting on.',
+  title: 'Vision — Happy',
+  description: 'What Happy is betting on: one core agent, chat that left the chat, phone first, one harness, and open source with no lock-in.',
   canonicalPath: '/thesis/',
-}
-
-/** The blog index. Its posts are listed in src/DocumentPages.tsx's blogPosts. */
-export const blogMetadata: PageMetadata = {
-  title: 'Blog — Happy',
-  description: 'Writing from Happy Engineering on agents, the interfaces around them, and what we are betting on.',
-  canonicalPath: '/blog/',
 }
 
 /**

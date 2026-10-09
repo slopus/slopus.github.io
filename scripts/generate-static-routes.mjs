@@ -321,32 +321,22 @@ for (const { route, title, description } of pluginPages) {
   sitemapPaths.push(canonicalPath)
 }
 
-// Mirrors blogMetadata in src/siteMetadata.ts. The index lists posts that live at their own top-level routes.
-const blogHtml = withAppMarkup(htmlForPage({
-  title: 'Blog — Happy',
-  description: 'Writing from Happy Engineering on agents, the interfaces around them, and what we are betting on.',
-  canonicalPath: '/blog/',
-}), renderPath('/blog/'))
-if (!blogHtml.includes('href="/thesis/"')) {
-  throw new Error('/blog/ should list /thesis/')
-}
-await writeRoute('blog', blogHtml)
-sitemapPaths.push('/blog/')
+// The blog index lived at /blog/ briefly, with the essay as its only post. It is in routes.txt, so it stays served.
+await writeRoute('blog', redirectHtml('/thesis/'))
 
-// Mirrors thesisMetadata in src/siteMetadata.ts.
+// The Vision essay: a docs page (src/documents.ts) with its own title. Mirrors thesisMetadata in src/siteMetadata.ts.
 const thesisHtml = withAppMarkup(htmlForPage({
-  title: 'Our Thesis — Happy',
-  description: 'One core agent, chat that left the chat, phone first, one harness, and open source with no lock-in. What Happy is betting on.',
+  title: 'Vision — Happy',
+  description: 'What Happy is betting on: one core agent, chat that left the chat, phone first, one harness, and open source with no lock-in.',
   canonicalPath: '/thesis/',
 }), renderPath('/thesis/'))
 const thesisApp = thesisHtml.slice(thesisHtml.indexOf('<div id="app">'))
 const thesisSource = await readFile(path.join(projectRoot, 'content', 'thesis.md'), 'utf8')
-const thesisPostUrls = thesisSource.match(/^https:\/\/x\.com\/\S+$/gm) ?? []
 if (thesisApp.match(/<h1[\s>]/g)?.length !== 1) {
   throw new Error('/thesis/ should render exactly one h1')
 }
-if ((thesisApp.match(/<blockquote class="twitter-tweet"/g) ?? []).length !== thesisPostUrls.length) {
-  throw new Error('/thesis/ should render every X post in content/thesis.md as an embed')
+if (!thesisApp.includes('href="/thesis/" aria-current="page">Vision</a>')) {
+  throw new Error('/thesis/ should be the current page in the docs sidebar')
 }
 // The essay's images ship from public/; the build fails if one is missing or not rendered.
 // An image line may carry a quoted title after the path; that title is its caption.

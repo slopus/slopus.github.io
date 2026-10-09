@@ -18,6 +18,8 @@ export interface DocumentEntry {
   group: DocumentGroup
   /** Reachable by URL, but left out of navigation and previous/next links. */
   hidden?: boolean
+  /** An essay: rendered with captioned figures, floats, and the pig in its bullet (src/DocumentPages.tsx). */
+  essay?: boolean
 }
 
 const documentSources = import.meta.glob(
@@ -35,6 +37,8 @@ const legalSources = import.meta.glob('/content/legal/**/*.md', {
   query: '?raw',
 }) as Record<string, string>
 
+/** The Vision essay, a plain .md with a frontmatter title; it is the only doc outside the .mdx globs. */
+const THESIS_SOURCE_PATH = '/content/thesis.md'
 const thesisSource = Object.values(import.meta.glob('/content/thesis.md', {
   eager: true,
   import: 'default',
@@ -204,6 +208,15 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Start here',
   },
   {
+    // The Vision essay keeps the URL it was published at. /blog/ redirects here.
+    path: 'thesis',
+    sourcePath: THESIS_SOURCE_PATH,
+    title: 'Vision',
+    description: 'What Happy is betting on: one core agent, chat that left the chat, phone first, one harness, and open source with no lock-in.',
+    group: 'Start here',
+    essay: true,
+  },
+  {
     path: 'models',
     sourcePath: '/content/desktop/models.mdx',
     title: 'Models & Subscriptions',
@@ -318,6 +331,10 @@ export function getDocument(product: ProductKey, path: string) {
 }
 
 export function getDocumentSource(document: DocumentEntry) {
+  if (document.sourcePath === THESIS_SOURCE_PATH) {
+    return getThesisMarkdown()
+  }
+
   const source = documentSources[document.sourcePath] ?? ''
 
   if (source.trim()) {
@@ -334,7 +351,7 @@ export function getLegalSource(name: LegalName) {
   return legalSources[`/content/legal/${name}.md`] ?? ''
 }
 
-/** The Happy thesis essay at /thesis, listed on /blog/ and not in `documents`. */
+/** The Vision essay at /thesis/, titled by its frontmatter; the h1 is that title. */
 export function getThesisMarkdown() {
   const title = thesisSource.match(/^title:\s*"(.+)"\s*$/m)?.[1] ?? ''
   // The essay's sections are written as `#`; the frontmatter title is the page's only h1.

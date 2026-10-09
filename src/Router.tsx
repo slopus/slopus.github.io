@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import DesktopApp from './DesktopApp'
 import ModelBenchmarksPage from './ModelBenchmarksPage'
-import { BlogPage, DocsPage, LegalPage, NotFoundPage, ThesisPage } from './DocumentPages'
+import { DocsPage, LegalPage, NotFoundPage } from './DocumentPages'
 import { MemesPluginPage, PluginsPage } from './PluginPages'
 import { getDocument, normalizeDocumentPath } from './documents'
 import { documentHref, HAPPY, HAPPY_DESKTOP, type Product } from './products'
@@ -15,7 +15,6 @@ import {
   pluginsMetadata,
   pluginTermsMetadata,
   thesisMetadata,
-  blogMetadata,
   type PageMetadata,
 } from './siteMetadata'
 
@@ -41,6 +40,8 @@ const movedPaths: Record<string, string> = {
   '/desktop': '/',
   '/happy2': '/',
   '/tmp/happy-one': '/',
+  // The blog index lived here briefly, with the Vision essay as its only post.
+  '/blog': '/thesis',
 }
 
 /** Sections that moved wholesale. The old prefix keeps resolving, path and all. */
@@ -96,12 +97,9 @@ function metadataForPath(pathname: string): PageMetadata {
     return modelBenchmarksMetadata
   }
 
+  // The Vision essay is a docs page (src/documents.ts) that keeps its own title.
   if (normalizedPath === '/thesis') {
     return thesisMetadata
-  }
-
-  if (normalizedPath === '/blog') {
-    return blogMetadata
   }
 
   if (pluginPageMetadata[normalizedPath]) {
@@ -250,14 +248,6 @@ export function Router({ pathname }: { pathname?: string }) {
 
   if (normalizedPath === '/model-benchmarks') {
     return <ModelBenchmarksPage />
-  }
-
-  if (normalizedPath === '/thesis') {
-    return <ThesisPage />
-  }
-
-  if (normalizedPath === '/blog') {
-    return <BlogPage />
   }
 
   if (normalizedPath === '/plugins') {

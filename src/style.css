@@ -335,22 +335,10 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .legal-layout { min-height: calc(100vh - 61px); padding-bottom: 7rem; padding-top: 3rem; }
 .document-back-link { align-items: center; color: #557068; display: inline-flex; font-size: .82rem; gap: .45rem; margin-bottom: 3rem; }
 .document-back-link:hover { color: #e6522c; }
-.legal-article, .essay-article { margin: 0 auto; max-width: 760px; }
-/* The blog index: one block per post, title first, then date and summary. */
-.document-content .blog-list { list-style: none; margin: 0; padding: 0; }
-.document-content .blog-list li { border-top: 1px solid #ddd6c8; margin: 0; padding: 1.6rem 0; }
-.document-content .blog-list a { color: #183f38; font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-size: 1.45rem; font-weight: 600; letter-spacing: -.02em; text-decoration: none; }
-.document-content .blog-list a:hover { color: #e6522c; }
-.document-content .blog-list time { color: #6b7f78; display: block; font-family: 'DM Mono', monospace; font-size: .72rem; letter-spacing: .03em; margin-top: .4rem; }
-.document-content .blog-list p { margin: .6rem 0 0; }
-/* An essay has no lede paragraph; its first paragraph sits under a section heading. */
-.essay-article .document-content > p:first-of-type { color: inherit; font-size: inherit; }
+.legal-article { margin: 0 auto; max-width: 760px; }
 
-/* X posts in an essay. The blockquote is X's embed markup: widgets.js replaces it with the
-   live post, and until then (or if it is blocked) it reads as a quote card. Each post comes
-   just before the paragraph it backs up, so on wide screens its top lines up with that text.
-   The 270px width matches data-width on the blockquote. */
-.x-post { margin: 2rem auto; width: min(270px, 100%); }
+/* The Vision essay (.essay-article, a docs page): captioned figures, a screenshot beside the text
+   past phone width, and the pig in its bullet. On phones every figure stacks, centered. */
 .essay-figure { clear: both; margin: 2rem 0; }
 .essay-figure-left { margin: 2rem auto; width: min(220px, 100%); }
 .essay-figure-right { margin: 2rem auto; width: min(270px, 100%); }
@@ -362,22 +350,14 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 /* width and height on the img hold its space while it loads, so the text around it does not reflow. */
 .document-content .essay-figure img { display: block; height: auto; margin: 0; width: 100%; }
 .document-content .essay-figure figcaption { color: #6b7f78; font-size: .78rem; line-height: 1.4; margin-top: .55rem; text-align: center; }
-.x-post .twitter-tweet-rendered { margin: 0 !important; max-width: 100% !important; width: 100% !important; }
-.x-post iframe { max-width: 100% !important; }
-.document-content .x-post blockquote.twitter-tweet { background: #fcfaf5; border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); margin: 0; padding: .85rem 1rem; }
-.x-post blockquote.twitter-tweet p { color: #183f38; font-size: .82rem; line-height: 1.55; margin: 0; overflow-wrap: anywhere; white-space: pre-line; }
-.document-content .x-post .x-post-attribution { color: #557068; font-size: .7rem; margin-top: .65rem; white-space: normal; }
-.x-post-attribution strong { color: #183f38; font-weight: 600; }
-.x-post-handle { color: #6b7f78; font-family: 'DM Mono', monospace; font-size: .64rem; }
-.x-post-attribution a { color: #557068; text-decoration-color: rgba(85, 112, 104, .35); }
 
-/* Past phone width the posts float right and the sidebar screenshot floats left, and the text wraps around them.
-   Each section heading starts below every float above it, so a tall post stays in its own section. */
+/* Past phone width the sidebar screenshot floats left and the model picker floats right, and the text
+   wraps around them. Each section heading starts below every float above it, so a tall figure stays
+   in its own section. */
 @media (min-width: 761px) {
-  /* Contain the floats, so a post that outruns the last paragraph pushes the footer down. */
+  /* Contain the floats, so a figure that outruns the last paragraph pushes the footer down. */
   .essay-article .document-content { display: flow-root; }
-  /* clear: both keeps a post and a screenshot from sitting side by side: each starts below the last. */
-  .essay-article .x-post { clear: both; float: right; margin: .25rem 0 1rem 2rem; }
+  /* clear: both keeps two figures from sitting side by side: each starts below the last. */
   .essay-article .essay-figure-left { clear: both; float: left; margin: .25rem 2rem 1rem 0; }
   .essay-article .essay-figure-right { clear: both; float: right; margin: .25rem 0 1rem 2rem; }
   .essay-article .document-content h2 { clear: both; }

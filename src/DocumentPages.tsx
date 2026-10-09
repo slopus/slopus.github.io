@@ -7,7 +7,6 @@ import {
   getDocument,
   getDocumentSource,
   getLegalSource,
-  getThesisMarkdown,
   normalizeDocumentPath,
   prepareMarkdown,
   type DocumentEntry,
@@ -15,8 +14,6 @@ import {
 } from './documents'
 import { documentHref, HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import { SiteFooter, SiteHeader } from './SiteChrome'
-import { thesisPosts, type QuotedPost } from './thesisPosts'
-import { loadWidgets } from './XPostEmbed'
 
 function DocsNavigation({
   product,
@@ -120,14 +117,14 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
           <DocsNavigation product={product} activeDocument={activeDocument} />
         </aside>
 
-        <article className="document-article">
+        <article className={activeDocument.essay ? 'document-article essay-article' : 'document-article'}>
           {product.key === 'happy' && <LegacyNotice />}
           <p className="document-breadcrumb">
             <a href={product.docsHome}>{product.label} docs</a>
             <span aria-hidden="true">/</span>
             {activeDocument.group}
           </p>
-          <MarkdownDocument markdown={markdown} />
+          <MarkdownDocument markdown={markdown} components={activeDocument.essay ? essayComponents : undefined} />
 
           <nav className="document-pagination" aria-label="Previous and next documentation pages">
             {previousDocument ? (
@@ -178,58 +175,29 @@ export function LegalPage({
 }
 
 /**
- * X's official embed markup. widgets.js swaps it for the live post; until then,
- * or if the script never loads, it reads as a quote with the post's own text.
- * The posts are side notes, so they ask X for a narrow card (it accepts
- * 250–550); `.x-post` in style.css is the same width.
+ * The Vision essay's images at their display size, so the text around them doesn't
+ * reflow while they load. A screenshot narrower than the column floats beside the
+ * text past phone width; a diagram spans the column.
  */
-function QuotedXPost({ url, post }: { url: string; post: QuotedPost }) {
-  return (
-    <figure className="x-post">
-      <blockquote
-        className="twitter-tweet"
-        data-dnt="true"
-        data-conversation="none"
-        data-theme="light"
-        data-width="270"
-        data-cards={post.hideCards ? 'hidden' : undefined}
-      >
-        <p lang="en" dir="ltr">{post.text}</p>
-        <p className="x-post-attribution">
-          <span aria-hidden="true">&mdash; </span>
-          <strong>{post.name}</strong> <span className="x-post-handle">@{post.handle}</span>
-          {' · '}
-          <a href={url}>{post.date}</a>
-        </p>
-      </blockquote>
-    </figure>
-  )
-}
-
-/**
- * The essay's images at their display size, so the text around them doesn't reflow
- * while they load. A screenshot narrower than the column floats beside the text; a
- * diagram spans the column.
- */
-const thesisFigures: Record<string, { width: number; height: number; side?: 'left' | 'right' }> = {
+const essayFigures: Record<string, { width: number; height: number; side?: 'left' | 'right' }> = {
   '/thesis/layout.svg': { width: 720, height: 400 },
   '/thesis/model-picker.png': { width: 270, height: 263, side: 'right' },
   '/thesis/sidebar.png': { width: 220, height: 306, side: 'left' },
 }
 
-const thesisComponents: Components = {
+/** What an essay (`essay: true` in src/documents.ts) renders differently from a plain docs page. */
+const essayComponents: Components = {
   // The pig beside the last bullet. Any other inline image renders as usual.
   img: ({ node: _node, alt, src, ...props }) =>
     src === '/thesis/pig.png'
       ? <img {...props} src={src} alt={alt ?? ''} className="essay-pig" width="120" height="117" loading="lazy" />
       : <img {...props} src={src} alt={alt ?? ''} loading="lazy" />,
-  // A post URL alone on its line in the essay stands for that post, and an image
-  // alone on its line is a figure. Posts and screenshots float beside the paragraph that follows.
+  // An image alone on its line is a figure. Screenshots float beside the paragraph that follows.
   p: ({ node, children, ...props }) => {
     const [only, ...rest] = node?.children ?? []
     if (rest.length === 0 && only?.type === 'element' && only.tagName === 'img') {
       const src = String(only.properties.src)
-      const figure = thesisFigures[src]
+      const figure = essayFigures[src]
       // The markdown image title, `![alt](src "title")`, is the caption under the image.
       const caption = only.properties.title ? String(only.properties.title) : undefined
       return (
@@ -239,73 +207,8 @@ const thesisComponents: Components = {
         </figure>
       )
     }
-    const href = only?.type === 'element' && only.tagName === 'a' ? String(only.properties.href) : ''
-    const post = rest.length === 0 ? thesisPosts[href] : undefined
-    return post ? <QuotedXPost url={href} post={post} /> : <p {...props}>{children}</p>
+    return <p {...props}>{children}</p>
   },
-}
-
-export function ThesisPage() {
-  const article = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    let cancelled = false
-    loadWidgets()
-      .then((twttr) => {
-        if (!cancelled && article.current) twttr.widgets.load?.(article.current)
-      })
-      .catch(() => {
-        // Blocked or offline: the quotes stay as they are.
-      })
-    return () => { cancelled = true }
-  }, [])
-
-  return (
-    <div className="site-shell document-site-shell">
-      <SiteHeader blogActive />
-      <main className="legal-layout page-width">
-        <article className="document-article essay-article" ref={article}>
-          <MarkdownDocument markdown={getThesisMarkdown()} components={thesisComponents} />
-        </article>
-      </main>
-      <SiteFooter />
-    </div>
-  )
-}
-
-// Posts live at their own top-level routes (/thesis/, not /blog/thesis/); this index just lists them.
-export const blogPosts = [
-  {
-    href: '/thesis/',
-    title: 'Our Thesis',
-    date: '2026-10-09',
-    summary: 'One core agent, chat that left the chat, phone first, one harness, and open source with no lock-in. What Happy is betting on.',
-  },
-] as const
-
-export function BlogPage() {
-  return (
-    <div className="site-shell document-site-shell">
-      <SiteHeader blogActive />
-      <main className="legal-layout page-width">
-        <article className="document-article essay-article">
-          <div className="document-content">
-            <h1>Blog</h1>
-            <ul className="blog-list">
-              {blogPosts.map((post) => (
-                <li key={post.href}>
-                  <a href={post.href}>{post.title}</a>
-                  <time dateTime={post.date}>{post.date}</time>
-                  <p>{post.summary}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </article>
-      </main>
-      <SiteFooter />
-    </div>
-  )
 }
 
 export function NotFoundPage() {

@@ -26,6 +26,13 @@ URL; keep them all resolving. The original Happy CLI docs (`/docs`,
 notice, and only a quiet footer link points to them. The Buzz comparison stays
 reachable at `/comparisons/buzz/` but is unlisted (`hidden: true`).
 
+The Vision essay (`content/thesis.md`, a plain `.md` whose frontmatter title is
+the h1) is a desktop doc at `/thesis/` under Start here, right after How It
+Works, registered with `essay: true` so `DocsPage` renders its captioned
+figures, side floats and the pig in its last bullet. Its seven bold bullets
+match its seven sections 1:1. There is no blog: `/blog/` was live briefly and
+redirects to `/thesis/`. Keep the essay short enough to read on a phone.
+
 `routes.txt` records every URL the site has ever served. The build appends new
 URLs and fails if a listed URL is no longer served; dropping one means
 redirecting it or deleting its line on purpose. The build also fails on any

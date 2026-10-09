@@ -64,11 +64,9 @@ function usePageScrolled() {
 export function SiteHeader({
   product = HAPPY,
   docsActive = false,
-  blogActive = false,
 }: {
   product?: Product
   docsActive?: boolean
-  blogActive?: boolean
 }) {
   const scrolled = usePageScrolled()
   return (
@@ -81,7 +79,6 @@ export function SiteHeader({
           </div>
           <nav aria-label="Primary navigation">
             <a href={HAPPY_DESKTOP.docsHome} aria-current={docsActive && product.key === 'desktop' ? 'page' : undefined}>Docs</a>
-            <a href="/blog/" aria-current={blogActive ? 'page' : undefined}>Blog</a>
             <GithubLink />
           </nav>
         </header>
