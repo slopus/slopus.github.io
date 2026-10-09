@@ -2,7 +2,7 @@
 title: "Our Thesis"
 ---
 
-Everyone is going to need a way to talk to AI. We've tried a lot of ways ourselves: a phone remote for Claude Code, a desktop harness, a terminal UI, sub-agents, teams. Other teams are working on the same problem, and we've learned a lot from them. Most of the bets below aren't new, and where someone got there first, we say so. We think this is the last fun piece of software to build for humans, and we want to get it right.
+Everyone is going to need a way to talk to AI. As agents kept improving, working with them has changed quite a bit: chat to the side of the code, then chat front and center, then a growing need for worktrees, plugins, cloud environments and more. Other teams are working on similar problems, and we've learned a lot from them. Most of the bets below aren't new, and where someone got there first, we say so. We think this is the last fun piece of software to build for humans, and we want to get it right.
 
 - **One core agent.** You'll run lots of agents, but only one talks back to you. It sorts everything coming in and reaches out when something actually needs you.
 - **Chat left the chat.** When was the last time you scrolled up in a chat? The sidebar (your task tracker) and the chat (your deep focus) are both prime to become generated artifacts the agent keeps current.
