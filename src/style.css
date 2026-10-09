@@ -356,8 +356,9 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .essay-figure-right { margin: 2rem auto; width: min(270px, 100%); }
 /* The pig beside the last bullet: the bullet's text wraps around it, and the bullet grows to hold it. */
 .document-content .essay-pig { border: 0; border-radius: 0; box-shadow: none; float: right; height: auto; margin: 0 0 .25rem 1rem; width: 96px; }
-/* overflow, not flow-root: the list item has to stay a list item, or it loses its bullet dot. */
-.document-content li:has(.essay-pig) { overflow: hidden; }
+/* A clearfix, not overflow or flow-root: both hide the bullet dot (flow-root makes the item a plain
+   block; overflow clips the marker, which sits outside the item's box). */
+.document-content li:has(.essay-pig)::after { clear: both; content: ''; display: block; }
 /* width and height on the img hold its space while it loads, so the text around it does not reflow. */
 .document-content .essay-figure img { display: block; height: auto; margin: 0; width: 100%; }
 .document-content .essay-figure figcaption { color: #6b7f78; font-size: .78rem; line-height: 1.4; margin-top: .55rem; text-align: center; }
