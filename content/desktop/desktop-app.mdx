@@ -1,0 +1,42 @@
+# The Open Source Desktop App for Claude Code, Codex, and Grok
+
+Happy Desktop is a free, MIT-licensed desktop app for Claude Code, Codex, and Grok on macOS, Windows, and Linux. It runs the agents on your machine with the subscriptions you already pay for, under one permission model and an OS sandbox. Sessions survive closing the window, and the iOS and Android app reaches the same sessions.
+
+## How it compares
+
+Anthropic and OpenAI each ship a desktop app for their own agent: the Code tab in [Claude Desktop](https://code.claude.com/docs/en/desktop), and Codex in the [ChatGPT desktop app](https://learn.chatgpt.com/docs/app). We checked their docs on October 9, 2026.
+
+| | Happy Desktop | Claude Desktop, Code tab | ChatGPT desktop app, Codex |
+| --- | --- | --- | --- |
+| Made by | Happy Engineering | Anthropic | OpenAI |
+| Models | Claude, GPT, and Grok; Claude and GPT through Amazon Bedrock | Claude | OpenAI's models |
+| Switch models mid-session | Across Claude, GPT, and Grok; the transcript stays | Among Claude models | Among OpenAI models |
+| Model access | Your Claude Code, Codex, or Grok CLI sign-in; no Happy plan | Your Claude account | Your ChatGPT account |
+| Platforms | macOS, Windows, Linux | macOS, Windows, Linux (beta) | macOS, Windows, Linux |
+| Source code | Open, MIT | Closed | Closed |
+
+If you use one vendor and want its newest features the day they ship, its own app is the better fit. Claude Desktop also does things Happy does not, such as cloud sessions, computer use, and an iOS Simulator pane. Happy is for running several vendors' agents in one place, on your own machine, with code you can read.
+
+## One harness, every model native
+
+Claude gets Claude Code's prompts and tools, GPT models get Codex's, and Grok gets Grok Build's. Everything around the model is shared: one session, one permission model, one set of tools. Switch the model or reasoning effort mid-session and the transcript stays. Subagents each pick their own model, so one task can plan on one provider and review on another. See [Models & Subscriptions](/models/).
+
+## Your subscriptions, no keys
+
+Sign in to Claude Code, Codex, or the Grok CLI on the machine and Happy uses those credentials. There is no Happy plan for model access and no key to paste. Requests go to the vendor with your credentials; Happy never proxies them.
+
+## Sessions that outlive the window
+
+A headless runtime, Happy Agent, holds every session in a database on your machine. Quit the app and sessions keep running. Restart the runtime and they resume from disk. See [How It Works](/how-it-works/).
+
+## Permissions and the sandbox
+
+New sessions start in Auto. Reads and workspace edits run freely, everything else runs in the OS sandbox, and the few actions that cross the boundary are reviewed automatically by a separate agent. You are not prompted. See [Permissions & Sandbox](/permissions/).
+
+## Your phone, encrypted
+
+Pair the Happy app for iOS or Android once. Every session on the computer is on the phone, end-to-end encrypted. The relay sees ciphertext only. See [Claude Code on your phone](/mobile-app/).
+
+## Get it
+
+Download for [macOS, Windows, or Linux](/#download), or run `brew install --cask slopus/tap/happy` on macOS or Linux. The [Quick Start](/quick-start/) takes you from install to a first change. The source is on [GitHub](https://github.com/slopus/happy-desktop).

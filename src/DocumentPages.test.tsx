@@ -1,15 +1,17 @@
 import { cleanup, render, screen } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
-import { Router } from './Router'
+import { metadataForPath, Router } from './Router'
 import {
+  documentHeading,
   documents,
   documentsForProduct,
   getDocumentSource,
   getThesisMarkdown,
   prepareMarkdown,
 } from './documents'
-import { renderPath } from './prerender'
-import { thesisMetadata } from './siteMetadata'
+import { prerenderedPaths, renderPath } from './prerender'
+import { desktopDocsMetadata, docsMetadata, thesisMetadata } from './siteMetadata'
+import { documentHref, HAPPY, HAPPY_DESKTOP } from './products'
 import { thesisPosts } from './thesisPosts'
 
 // jsdom has no ResizeObserver; the painted page scrollbar only observes with it.
@@ -28,7 +30,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(15)
+    expect(documentsForProduct('desktop')).toHaveLength(18)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -82,7 +84,7 @@ describe('static document pages', () => {
   })
 
   it('serves the desktop docs as top-level pages whose slugs no other route owns', () => {
-    const fixedRoutes = ['', 'docs', 'thesis', 'blog', 'plugins', 'privacy', 'terms', 'tos', 'model-benchmarks', 'desktop', 'happy2', 'tmp', 'assets', 'img', 'og', 'notes']
+    const fixedRoutes = ['', 'docs', 'llms.txt', 'sitemap.xml', 'thesis', 'blog', 'plugins', 'privacy', 'terms', 'tos', 'model-benchmarks', 'desktop', 'happy2', 'tmp', 'assets', 'img', 'og', 'notes']
     for (const document of documentsForProduct('desktop')) {
       expect(document.path).not.toBe('')
       expect(fixedRoutes).not.toContain(document.path.split('/')[0])
@@ -91,6 +93,43 @@ describe('static document pages', () => {
     expect(renderPath('/welcome/')).toMatch(/<a href="\/welcome\/" aria-current="page">Docs<\/a>/)
     expect(renderPath('/chief-of-staff/')).toMatch(/<h1[^>]*>Chief of Staff/)
     expect(renderPath('/welcome/')).toContain('href="/quick-start/"')
+  })
+
+  it('prerenders every docs page with one h1, its own title and description', () => {
+    for (const document of documents) {
+      const pathname = documentHref(document.product === 'desktop' ? HAPPY_DESKTOP : HAPPY, document.path)
+      expect(prerenderedPaths).toContain(pathname)
+      const markup = renderPath(pathname)
+      expect(markup.match(/<h1[\s>]/g)).toHaveLength(1)
+      expect(markup).toContain(documentHeading(document).replace(/&/g, '&amp;'))
+
+      // Index pages keep their section titles and descriptions; checked below.
+      if (pathname === HAPPY.docsHome || pathname === HAPPY_DESKTOP.docsHome) continue
+      const metadata = metadataForPath(pathname)
+      expect(metadata.canonicalPath).toBe(pathname)
+      expect(metadata.description).toBe(document.description)
+      expect(metadata.title).toContain(document.pageTitle ?? documentHeading(document))
+    }
+    expect(metadataForPath('/welcome/')).toBe(desktopDocsMetadata)
+    expect(metadataForPath('/docs/')).toBe(docsMetadata)
+    // The old prefixes serve the same page, canonical to its top-level URL.
+    expect(metadataForPath('/desktop/docs/models/')).toEqual(metadataForPath('/models/'))
+  })
+
+  it('keeps the unlisted Buzz comparison out of search results', () => {
+    expect(metadataForPath('/comparisons/buzz/').robots).toBe('noindex, follow')
+    expect(metadataForPath('/models/').robots).toBeUndefined()
+  })
+
+  it('lists the comparison pages in the desktop docs, each linking to its sources', () => {
+    const welcome = renderPath('/welcome/')
+    for (const pathname of ['/desktop-app/', '/mobile-app/', '/vs/claude-code-remote-control/']) {
+      expect(welcome).toContain(`href="${pathname}"`)
+    }
+    expect(renderPath('/vs/claude-code-remote-control/')).toContain('href="https://code.claude.com/docs/en/remote-control"')
+    expect(renderPath('/mobile-app/')).toContain('href="https://code.claude.com/docs/en/remote-control"')
+    // Desktop docs links stay top-level; only the original CLI docs resolve under /docs.
+    expect(renderPath('/models/')).toContain('href="/guides/configuration/"')
   })
 
   it('keeps the announced Buzz comparison URL working', () => {
@@ -104,14 +143,15 @@ describe('static document pages', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: /happy desktop vs buzz/i })).toBeTruthy()
     expect(screen.queryByRole('link', { name: 'Happy Desktop vs Buzz' })).toBeNull()
-    expect(screen.queryByText('Comparisons', { selector: 'h2' })).toBeNull()
+    // The Comparisons group lists the other comparisons, not this one.
+    expect(screen.getAllByRole('link', { name: 'Happy vs Remote Control' }).length).toBeGreaterThan(0)
     expect(screen.queryByRole('link', { name: /^previous/i })).toBeNull()
     expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
     unmount()
 
-    render(<Router pathname="/guides/remote-agents/" />)
+    render(<Router pathname="/vs/claude-code-remote-control/" />)
     expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
-    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/configuration/i)
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/claude code on your phone/i)
   })
 
   it('renders the thesis with its title as the only h1 and every section as an h2', () => {

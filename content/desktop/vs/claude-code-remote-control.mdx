@@ -1,0 +1,49 @@
+# Happy vs Claude Code Remote Control
+
+Claude Code Remote Control is Anthropic's built-in way to continue a local Claude Code session from the Claude app or a browser. Happy is a free, open source app that does the same for Claude Code and Codex, and with Happy Desktop for Grok too, with end-to-end encryption. For Claude-only work with nothing extra to install, Remote Control is simpler.
+
+## Side by side
+
+Facts about Remote Control come from [Anthropic's Remote Control docs](https://code.claude.com/docs/en/remote-control), checked on October 9, 2026. It changes often; check there for the current state.
+
+| | Happy | Claude Code Remote Control |
+| --- | --- | --- |
+| Made by | Happy Engineering, open source (MIT) | Anthropic, part of Claude Code |
+| Agents | Claude Code and Codex through the `happy` CLI; Claude, Codex, and Grok in Happy Desktop | Claude Code |
+| Where the agent runs | Your computer | Your computer |
+| Phone and web | Happy for iOS and Android | The Claude app for iOS and Android, and claude.ai/code in any browser |
+| Plans | Your existing Claude Code, Codex, or Grok sign-in. Happy Desktop also runs Claude and GPT through Amazon Bedrock | Claude Pro, Max, Team, or Enterprise. Not with API keys, Amazon Bedrock, Google Cloud, Microsoft Foundry, or a custom `ANTHROPIC_BASE_URL` |
+| What the server in between sees | Ciphertext. Your devices hold the keys | The transcript, stored on Anthropic's servers while connected, over TLS |
+| Start a new session from the phone | Yes, in a directory you pick | Yes, with `claude remote-control` (server mode) running |
+| When the computer-side process stops | Happy Desktop's sessions belong to a background runtime, so quitting the app does not stop them. The `happy` CLI keeps a daemon so the phone can start and resume sessions | The session goes offline until you bring it back. Server sessions can be resumed for about four hours |
+| Push notifications | Yes, with the `happy` CLI | Yes, when Claude decides or when an action needs you |
+| Organization controls | No admin setting for mobile access | Owners turn it on for Team and Enterprise. Trusted Devices (beta) adds device enrollment and biometric checks |
+| Price | Free | Included with the Claude plan |
+
+## Where Remote Control is better
+
+- **Nothing to install.** If you use Claude Code and the Claude app, run `claude remote-control`, or `/remote-control` in a session, and scan the QR code.
+- **First-party.** It works from the Claude Code CLI, the Claude Desktop app, and the VS Code extension, and Anthropic supports it.
+- **A browser on any computer.** Any session opens at claude.ai/code.
+- **Admin controls.** Team and Enterprise owners decide whether it is on. Trusted Devices ties access to an enrolled device and a recent sign-in.
+- **Deep Claude Code integration.** Connected devices see subagent progress, compaction, and a diff pane, and can run commands like `/compact` and `/model`.
+
+## Where Happy is different
+
+- **More than Claude.** `happy codex` puts Codex on your phone the same way as `happy claude`. Happy Desktop runs Claude, Codex, and Grok in one session and lets you switch mid-session.
+- **End-to-end encryption.** Content is encrypted on one device and decrypted on another. Happy's relay stores and forwards opaque blobs; it sees that sessions exist, not what is in them. See [Security & Encryption](/docs/security/).
+- **Bedrock.** Happy Desktop runs Claude and GPT models through Amazon Bedrock, where Remote Control is not available.
+- **Sessions that outlive the window.** In Happy Desktop a session lives in the runtime, not the app, and survives a restart.
+- **Open source.** The app, the CLI, and Happy Desktop are MIT licensed. Read the code, fork it, ship your own build.
+
+## Which one
+
+| You want | Use |
+| --- | --- |
+| Claude Code from your phone, with the least setup | Remote Control |
+| Claude Code and Codex from the same phone app | Happy |
+| Session content that the server in between cannot read | Happy |
+| Claude, Codex, and Grok in one desktop app, plus the phone | [Happy Desktop](/desktop-app/) |
+| Company-managed access with device checks | Remote Control |
+
+To start with Happy, see [Claude Code on your phone](/mobile-app/) or the [Quick Start](/quick-start/).

@@ -44,11 +44,15 @@ export const desktopDocsMetadata: PageMetadata = {
   canonicalPath: '/welcome/',
 }
 
-/** Keep the static Pages route in scripts/generate-static-routes.mjs in sync. */
+/**
+ * Keep the static Pages route in scripts/generate-static-routes.mjs in sync.
+ * GitHub Pages redirects /model-benchmarks to /model-benchmarks/, so the
+ * canonical is the URL that answers 200.
+ */
 export const modelBenchmarksMetadata: PageMetadata = {
   title: 'The Trust Me Bro Model Tier List — Happy',
   description: 'A curated AI model tier list, with exact-version evidence from X, strengths, caveats, and head-to-head comparisons. Subjective synthesis, not a lab benchmark.',
-  canonicalPath: '/model-benchmarks',
+  canonicalPath: '/model-benchmarks/',
 }
 
 /**

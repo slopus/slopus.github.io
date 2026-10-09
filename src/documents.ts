@@ -16,6 +16,8 @@ export interface DocumentEntry {
   title: string
   description: string
   group: DocumentGroup
+  /** The page's own browser and search title, in place of its heading and the docs suffix. */
+  pageTitle?: string
   /** Reachable by URL, but left out of navigation and previous/next links. */
   hidden?: boolean
 }
@@ -281,6 +283,30 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Comparisons',
     hidden: true,
   },
+  {
+    path: 'desktop-app',
+    sourcePath: '/content/desktop/desktop-app.mdx',
+    title: 'Desktop App for Claude Code & Codex',
+    pageTitle: 'Open Source Desktop App for Claude Code, Codex & Grok — Happy',
+    description: 'Happy Desktop is a free, MIT-licensed desktop app for Claude Code, Codex, and Grok on macOS, Windows, and Linux, on the subscriptions you already have.',
+    group: 'Comparisons',
+  },
+  {
+    path: 'mobile-app',
+    sourcePath: '/content/desktop/mobile-app.mdx',
+    title: 'Claude Code on Your Phone',
+    pageTitle: 'Claude Code & Codex Mobile App for iPhone and Android — Happy',
+    description: 'Control Claude Code and Codex from your phone with Happy, a free, open source iOS and Android app. The agents stay on your computer; the sync is end-to-end encrypted.',
+    group: 'Comparisons',
+  },
+  {
+    path: 'vs/claude-code-remote-control',
+    sourcePath: '/content/desktop/vs/claude-code-remote-control.mdx',
+    title: 'Happy vs Remote Control',
+    pageTitle: 'Claude Code Remote Control vs Happy — An Open Source Alternative',
+    description: 'How Anthropic\'s Claude Code Remote Control and Happy compare for steering coding agents from your phone: models, encryption, sessions, setup, and where each one is better.',
+    group: 'Comparisons',
+  },
 ]
 
 export const documents: DocumentEntry[] = [
@@ -325,6 +351,11 @@ export function getDocumentSource(document: DocumentEntry) {
   }
 
   return `# ${document.title}\n\nDocumentation for this feature is coming soon.`
+}
+
+/** The page's h1. Its served title is this heading with the docs suffix, unless it sets its own. */
+export function documentHeading(document: DocumentEntry) {
+  return getDocumentSource(document).match(/^#\s+(.+)$/m)?.[1].trim() ?? document.title
 }
 
 /** The Happy app's policies, and the separate ones for Happy plugins. */

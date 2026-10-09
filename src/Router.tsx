@@ -3,7 +3,7 @@ import DesktopApp from './DesktopApp'
 import ModelBenchmarksPage from './ModelBenchmarksPage'
 import { BlogPage, DocsPage, LegalPage, NotFoundPage, ThesisPage } from './DocumentPages'
 import { MemesPluginPage, PluginsPage } from './PluginPages'
-import { getDocument, normalizeDocumentPath } from './documents'
+import { documentHeading, getDocument, normalizeDocumentPath } from './documents'
 import { documentHref, HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import {
   applyPageMetadata,
@@ -85,7 +85,11 @@ function documentForPath(normalizedPath: string): { product: Product; path: stri
   return undefined
 }
 
-function metadataForPath(pathname: string): PageMetadata {
+/**
+ * The head for a URL. scripts/generate-static-routes.mjs writes the docs pages'
+ * served HTML from this too, so the served head and the client agree.
+ */
+export function metadataForPath(pathname: string): PageMetadata {
   const normalizedPath = normalizedPathname(pathname)
 
   if (normalizedPath === '/') {
@@ -134,9 +138,11 @@ function metadataForPath(pathname: string): PageMetadata {
     }
 
     return {
-      title: `${document.title} — ${located.product.label} Docs`,
-      description: document.description,
+      title: document.pageTitle ?? `${documentHeading(document)} — ${located.product.label} Docs`,
+      description: document.description || docsMetadataForProduct(located.product.key).description,
       canonicalPath,
+      // An unlisted page stays reachable, but out of search results.
+      robots: document.hidden ? 'noindex, follow' : undefined,
     }
   }
 
