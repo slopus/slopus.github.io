@@ -137,9 +137,12 @@ describe('static document pages', () => {
 
   it('spans the layout diagram across the column and sets the sidebar screenshot beside its paragraph', () => {
     const { container } = render(<Router pathname="/thesis/" />)
-    const [screenshot, diagram, ...rest] = [...container.querySelectorAll('figure.essay-figure')]
+    const [screenshot, diagram, picker, ...rest] = [...container.querySelectorAll('figure.essay-figure')]
 
     expect(rest).toHaveLength(0)
+    expect(picker.className).toBe('essay-figure')
+    expect(picker.querySelector('img')?.getAttribute('src')).toBe('/thesis/model-picker.png')
+    expect(picker.querySelector('figcaption')?.textContent).toBe('Switching provider mid-session in Happy')
     expect(screenshot.className).toBe('essay-figure essay-figure-aside')
     expect(screenshot.querySelector('img')?.getAttribute('src')).toBe('/thesis/sidebar.png')
     expect(screenshot.querySelector('img')?.getAttribute('alt')).toBe('A fragment of our sidebar today')

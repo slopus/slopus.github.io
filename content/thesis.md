@@ -62,6 +62,8 @@ We're betting on one harness, Happy Agent, under every agent. Each provider gets
 
 That's what lets you switch from Claude to GPT to Grok mid-session, from your laptop or your phone, and keep the transcript. Subagents pick their own model too, so one task can plan on one provider and review on another. Happy uses the Claude Code, Codex and Grok CLI sign-ins already on your machine, so there's no key to paste. You get each model at its best: Grok for X research, Anthropic models for novel problems, GPT Astra for computer use.
 
+![Happy's model picker, open on a conversation running Opus 5.5, with Codex, Claude and Grok models in one list](/thesis/model-picker.png "Switching provider mid-session in Happy")
+
 One harness also makes deeper integrations possible that a pile of separate CLIs can't do: controlling every terminal session from one hypervisor, updating the harness itself, spreading agents across runners on a busy team server, and later, finer control over permissions.
 
 A busy team server brings us to the hardest part.

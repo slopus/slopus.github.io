@@ -213,6 +213,7 @@ function QuotedXPost({ url, post }: { url: string; post: QuotedPost }) {
  */
 const thesisFigures: Record<string, { width: number; height: number; aside?: boolean }> = {
   '/thesis/layout.svg': { width: 720, height: 400 },
+  '/thesis/model-picker.png': { width: 720, height: 496 },
   '/thesis/sidebar.png': { width: 220, height: 306, aside: true },
 }
 
