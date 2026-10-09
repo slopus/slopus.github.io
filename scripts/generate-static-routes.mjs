@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -15,48 +16,25 @@ for (const tag of ['name="description"', 'property="og:description"', 'property=
 const socialTags = baseHtml.match(/<meta (?:property="og:|name="twitter:)[^>]*\/>/g).join('\n    ')
 const siteUrl = 'https://happy.engineering'
 
-const docsSections = [
-  {
-    contentRoot: path.join(projectRoot, 'content', 'docs'),
-    routeRoot: 'docs',
-    canonicalRoot: '/docs',
-    indexTitle: 'Happy Coder Docs — Claude Code & Codex Mobile App (Original CLI)',
-    titleSuffix: 'Happy Coder Docs',
-    description:
-      'Docs for the original Happy CLI (Happy Coder): use Claude Code and Codex from your iPhone, Android, or the web. Maintenance mode; new features ship in the Happy desktop app.',
-  },
-  {
-    // Top-level pages: /welcome/, /quick-start/, /guides/terminal/. The old
-    // prefixes keep serving every page, each canonical to its top-level URL.
-    contentRoot: path.join(projectRoot, 'content', 'desktop'),
-    routeRoot: '',
-    indexRoute: 'welcome',
-    legacyRouteRoots: [path.posix.join('desktop', 'docs'), path.posix.join('happy2', 'docs')],
-    canonicalRoot: '',
-    indexTitle: 'Happy Docs — The Open Source Desktop App for Coding Agents',
-    titleSuffix: 'Happy Desktop Docs',
-    description:
-      'Install Happy on macOS, Windows, or Linux, run Claude, Codex, and Grok in one harness, pair your phone, and understand permissions, workspaces, teams, and plugins.',
-  },
-]
+// Pages that ship their rendered markup, and the app's own docs registry and page
+// metadata, so the served head matches what the client sets. Built by `vite build --ssr`.
+const {
+  APP_STORE_LINK,
+  documentHeading,
+  documentHref,
+  documents,
+  GOOGLE_PLAY_LINK,
+  HAPPY,
+  HAPPY_DESKTOP,
+  metadataForPath,
+  prerenderedPaths,
+  renderPath,
+} = await import(pathToFileURL(path.join(projectRoot, 'dist-ssr', 'prerender.js')).href)
 
-async function findMarkdownFiles(directory) {
-  const entries = await readdir(directory, { withFileTypes: true })
-  const files = await Promise.all(entries.map(async (entry) => {
-    const entryPath = path.join(directory, entry.name)
-    return entry.isDirectory() ? findMarkdownFiles(entryPath) : [entryPath]
-  }))
-
-  return files.flat().filter((file) => file.endsWith('.mdx'))
-}
-
-function titleFromFilename(filename) {
-  return filename
-    .replace(/\.mdx$/, '')
-    .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-}
+// routes.txt is the committed record of every URL this site has ever served; see the check at the end.
+const routesFile = path.join(projectRoot, 'routes.txt')
+const routesSource = await readFile(routesFile, 'utf8').catch(() => '')
+const declaredRoutes = routesSource.split('\n').map((line) => line.trim()).filter((line) => line && !line.startsWith('#'))
 
 function escapeHtml(value) {
   return value
@@ -121,44 +99,90 @@ async function writeRoute(route, html) {
   await writeFile(path.join(routeDirectory, 'index.html'), html)
 }
 
+function withAppMarkup(html, markup) {
+  const emptyRoot = '<div id="app"></div>'
+  if (!html.includes(emptyRoot)) {
+    throw new Error('dist/index.html no longer has an empty #app root to prerender into.')
+  }
+  return html.replace(emptyRoot, () => `<div id="app">${markup}</div>`)
+}
+
+function textOfHtml(html) {
+  return html
+    .replace(/<[^>]+>/g, '')
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ')
+}
+
+function prerendered(pathname) {
+  if (!prerenderedPaths.includes(pathname)) {
+    throw new Error(`${pathname} ships its markup; add it to prerenderedPaths in src/prerender.tsx.`)
+  }
+  return renderPath(pathname)
+}
+
+// <lastmod> is the date of the last commit that touched a page's sources. A
+// shallow checkout cannot tell, and an uncommitted file has no commit, so
+// those fall back to the build date.
+function git(...args) {
+  try {
+    return execFileSync('git', args, { cwd: projectRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim()
+  } catch {
+    return ''
+  }
+}
+const buildDate = new Date().toISOString().slice(0, 10)
+const historyAvailable = git('rev-parse', '--is-shallow-repository') === 'false'
+function lastModified(sources) {
+  return (historyAvailable && git('log', '-1', '--format=%cs', '--', ...sources)) || buildDate
+}
+
 let documentRoutes = 0
-// Indexable canonical URLs, written to sitemap.xml at the end.
-const sitemapPaths = ['/']
+// Indexable canonical URLs and the files each is built from, written to sitemap.xml at the end.
+const sitemapPages = [{ route: '/', sources: ['index.html', 'src/DesktopApp.tsx'] }]
 
-for (const section of docsSections) {
-  const files = await findMarkdownFiles(section.contentRoot)
+// Every docs page ships its rendered markup, so crawlers that do not run
+// JavaScript read it, under its own title and description from src/documents.ts.
+// The desktop docs moved to the top level from /desktop/docs/ and /happy2/docs/.
+// Those prefixes keep serving the pages they had, as routes.txt records, each
+// canonical to its new URL; pages added since live only at the top level.
+const legacyDocsRoots = ['/desktop/docs', '/happy2/docs']
 
-  for (const filename of files) {
-    const relativePath = path.relative(section.contentRoot, filename).replace(/\\/g, '/')
-    const documentPath = relativePath
-      .replace(/\.mdx$/, '')
-      .replace(/(^|\/)index$/, '')
-      .replace(/\/$/, '')
-    const markdown = await readFile(filename, 'utf8')
-    const markdownTitle = markdown.match(/^#\s+(.+)$/m)?.[1].trim()
-    const contentTitle = markdownTitle ?? titleFromFilename(path.basename(relativePath))
-    const isIndex = documentPath === ''
-    // A section without a prefix needs a slug for its index page.
-    const route = documentPath || section.indexRoute || ''
-    const canonicalPath = `${section.canonicalRoot}/${route ? `${route}/` : ''}`
+function assertDocumentServed(route, html, heading) {
+  const app = html.slice(html.indexOf('<div id="app">'))
+  const headings = app.match(/<h1[\s>][\s\S]*?<\/h1>/g) ?? []
+  if (headings.length !== 1) {
+    throw new Error(`${route} should render exactly one h1, not ${headings.length}`)
+  }
+  if (!textOfHtml(headings[0]).includes(heading)) {
+    throw new Error(`${route} should render its title "${heading}" as its h1`)
+  }
+}
 
-    const html = htmlForPage({
-      title: isIndex ? section.indexTitle : `${contentTitle} — ${section.titleSuffix}`,
-      description: section.description,
-      canonicalPath,
-    })
+for (const document of documents) {
+  const product = document.product === HAPPY_DESKTOP.key ? HAPPY_DESKTOP : HAPPY
+  const canonicalPath = documentHref(product, document.path)
+  const html = withAppMarkup(htmlForPage(metadataForPath(canonicalPath)), prerendered(canonicalPath))
+  assertDocumentServed(canonicalPath, html, documentHeading(document))
 
-    await writeRoute(path.posix.join(section.routeRoot, route), html)
-    documentRoutes += 1
-    // The Buzz comparison is unlisted (hidden: true in src/documents.ts).
-    if (documentPath !== 'comparisons/buzz') {
-      sitemapPaths.push(canonicalPath)
-    }
+  await writeRoute(canonicalPath, html)
+  documentRoutes += 1
+  // Unlisted pages (hidden: true) are noindex and stay out of the sitemap.
+  if (!document.hidden) {
+    sitemapPages.push({ route: canonicalPath, sources: [document.sourcePath.slice(1)] })
+  }
 
-    // The old URLs keep serving; each one canonicals to its new home and the app rewrites the path.
-    for (const legacyRouteRoot of section.legacyRouteRoots ?? []) {
-      await writeRoute(path.posix.join(legacyRouteRoot, documentPath), html)
-      documentRoutes += 1
+  if (product === HAPPY_DESKTOP) {
+    for (const root of legacyDocsRoots) {
+      const legacyPath = canonicalPath === HAPPY_DESKTOP.docsHome ? `${root}/` : `${root}${canonicalPath}`
+      if (declaredRoutes.includes(legacyPath)) {
+        await writeRoute(legacyPath, html)
+        documentRoutes += 1
+      }
     }
   }
 }
@@ -195,21 +219,20 @@ await writeRoute('happy2', redirectHtml('/'))
 // The page was reviewed unlisted at this URL before it became the homepage.
 await writeRoute('tmp/happy-one', redirectHtml('/'))
 
-// Mirrors modelBenchmarksMetadata. No trailing slash in the picker’s public URL.
-await writeRoute('model-benchmarks', htmlForPage({
-  title: 'The Trust Me Bro Model Tier List — Happy',
-  description: 'A curated AI model tier list, with exact-version evidence from X, strengths, caveats, and head-to-head comparisons. Subjective synthesis, not a lab benchmark.',
-  canonicalPath: '/model-benchmarks',
-}))
+// GitHub Pages answers /model-benchmarks with a redirect to /model-benchmarks/, so that is the canonical.
+await writeRoute('model-benchmarks', htmlForPage(metadataForPath('/model-benchmarks/')))
 
 // The Buzz comparison moved into the Happy Desktop section; keep the announced URL resolving.
-await writeRoute('docs/comparisons/happy-2-vs-buzz', htmlForPage({
-  title: 'Happy Desktop vs Buzz — Happy Desktop Docs',
-  description: "Where Happy Desktop and Block's Buzz agree, and where the designs split.",
-  canonicalPath: '/comparisons/buzz/',
-}))
+await writeRoute(
+  'docs/comparisons/happy-2-vs-buzz',
+  withAppMarkup(htmlForPage(metadataForPath('/docs/comparisons/happy-2-vs-buzz/')), prerendered('/comparisons/buzz/')),
+)
 
-sitemapPaths.push('/model-benchmarks', '/privacy/', '/terms/')
+sitemapPages.push(
+  { route: '/model-benchmarks/', sources: ['src/model-benchmarks.json', 'src/ModelBenchmarksPage.tsx'] },
+  { route: '/privacy/', sources: ['content/legal/privacy.md'] },
+  { route: '/terms/', sources: ['content/legal/terms.md'] },
+)
 await writeRoute('privacy', htmlForPage({
   title: 'Privacy Policy — Happy',
   description: 'Privacy policy for Happy.',
@@ -251,31 +274,6 @@ const pluginPages = [
   },
 ]
 
-// The plugin directory reads these pages without running JavaScript, so they
-// ship their rendered markup and the app hydrates it. Built by `vite build --ssr`.
-const { prerenderedPaths, renderPath } = await import(
-  pathToFileURL(path.join(projectRoot, 'dist-ssr', 'prerender.js')).href
-)
-
-function withAppMarkup(html, markup) {
-  const emptyRoot = '<div id="app"></div>'
-  if (!html.includes(emptyRoot)) {
-    throw new Error('dist/index.html no longer has an empty #app root to prerender into.')
-  }
-  return html.replace(emptyRoot, () => `<div id="app">${markup}</div>`)
-}
-
-function textOfHtml(html) {
-  return html
-    .replace(/<[^>]+>/g, '')
-    .replace(/&quot;/g, '"')
-    .replace(/&#x27;/g, "'")
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-    .replace(/\s+/g, ' ')
-}
-
 // Fail the build unless every line of the policy reaches the served HTML.
 async function assertPolicyServed(route, html, sourceFile) {
   const markdown = await readFile(path.join(projectRoot, sourceFile), 'utf8')
@@ -308,6 +306,8 @@ const policySources = {
   'plugins/terms': 'content/legal/plugins/terms.md',
 }
 
+// The plugin directory reads these pages without running JavaScript, so they
+// ship their rendered markup and the app hydrates it.
 for (const { route, title, description } of pluginPages) {
   const canonicalPath = `/${route}/`
   if (!prerenderedPaths.includes(canonicalPath)) {
@@ -318,7 +318,7 @@ for (const { route, title, description } of pluginPages) {
     await assertPolicyServed(route, html, policySources[route])
   }
   await writeRoute(route, html)
-  sitemapPaths.push(canonicalPath)
+  sitemapPages.push({ route: canonicalPath, sources: [policySources[route] ?? 'src/PluginPages.tsx'] })
 }
 
 // Mirrors blogMetadata in src/siteMetadata.ts. The index lists posts that live at their own top-level routes.
@@ -331,7 +331,7 @@ if (!blogHtml.includes('href="/thesis/"')) {
   throw new Error('/blog/ should list /thesis/')
 }
 await writeRoute('blog', blogHtml)
-sitemapPaths.push('/blog/')
+sitemapPages.push({ route: '/blog/', sources: ['src/DocumentPages.tsx'] })
 
 // Mirrors thesisMetadata in src/siteMetadata.ts.
 const thesisHtml = withAppMarkup(htmlForPage({
@@ -357,7 +357,7 @@ for (const [, imagePath] of thesisSource.matchAll(/^!\[[^\]]*\]\((\/[^)\s]+)(?: 
   }
 }
 await writeRoute('thesis', thesisHtml)
-sitemapPaths.push('/thesis/')
+sitemapPages.push({ route: '/thesis/', sources: ['content/thesis.md'] })
 
 await writeFile(
   path.join(distRoot, '404.html'),
@@ -373,10 +373,43 @@ await writeFile(
   path.join(distRoot, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${sitemapPaths.map((route) => `  <url><loc>${escapeHtml(new URL(route, siteUrl).toString())}</loc></url>`).join('\n')}
+${sitemapPages.map(({ route, sources }) => `  <url><loc>${escapeHtml(new URL(route, siteUrl).toString())}</loc><lastmod>${lastModified(sources)}</lastmod></url>`).join('\n')}
 </urlset>
 `,
 )
+
+// llms.txt (https://llmstxt.org): what Happy is and where its docs are, for language models.
+const absoluteUrl = (route) => new URL(route, siteUrl).toString()
+function docsLinks(product) {
+  return documents
+    .filter((document) => document.product === product.key && !document.hidden)
+    .map((document) => `- [${document.title}](${absoluteUrl(documentHref(product, document.path))}): ${document.description}`)
+}
+await writeFile(path.join(distRoot, 'llms.txt'), `# Happy
+
+> ${metadataForPath('/').description}
+
+Happy Desktop is the current product: a desktop app with its own agent runtime, free and MIT licensed, for macOS, Windows, and Linux. The Happy mobile app for iOS and Android works with it. The docs for the original Happy CLI (Happy Coder, \`happy\` on npm) at ${absoluteUrl(HAPPY.docsHome)} are in maintenance mode: it keeps working and gets critical fixes, but new features ship in Happy Desktop.
+
+## Happy Desktop docs
+
+${docsLinks(HAPPY_DESKTOP).join('\n')}
+
+## About
+
+- [Vision](${absoluteUrl('/thesis/')}): ${metadataForPath('/thesis/').description}
+
+## Download
+
+- [Happy Desktop for macOS, Windows, and Linux](https://github.com/slopus/happy-desktop/releases/latest): the latest release. Also on ${absoluteUrl('/#download')}.
+- [Happy for iPhone and iPad](${APP_STORE_LINK}): App Store.
+- [Happy for Android](${GOOGLE_PLAY_LINK}): Google Play.
+- [Source code](${HAPPY_DESKTOP.repository}): MIT licensed.
+
+## Optional
+
+${docsLinks(HAPPY).map((line) => line.replace(/^- \[/, '- [Original Happy CLI: ')).join('\n')}
+`)
 
 // Every URL the site serves, as a directory with an index.html, plus the homepage.
 async function servedRoutes() {
@@ -399,14 +432,11 @@ async function servedRoutes() {
 // routes.txt is the committed record of every URL this site has ever served.
 // The build may only add to it. A URL that stops being served fails the build:
 // keep serving it, redirect it, or remove the line on purpose in the same commit.
-const routesFile = path.join(projectRoot, 'routes.txt')
 const routesHeader = [
   '# Every URL happy.engineering serves, one per line, kept by scripts/generate-static-routes.mjs.',
   '# The build adds new URLs here and fails if a listed URL is no longer served.',
   '# Dropping a URL is a decision: redirect it or delete its line in the same commit.',
 ]
-const routesSource = await readFile(routesFile, 'utf8').catch(() => '')
-const declaredRoutes = routesSource.split('\n').map((line) => line.trim()).filter((line) => line && !line.startsWith('#'))
 const served = await servedRoutes()
 const droppedRoutes = declaredRoutes.filter((route) => !served.has(route))
 if (droppedRoutes.length > 0) {
@@ -421,10 +451,9 @@ if (newRoutes.length > 0) {
   await writeFile(routesFile, `${routesHeader.join('\n')}\n${allRoutes.join('\n')}\n`)
   console.log(`Added ${newRoutes.length} new URL(s) to routes.txt: ${newRoutes.join(', ')}`)
 }
-for (const route of sitemapPaths) {
-  const asDirectory = route.endsWith('/') ? route : `${route}/`
-  if (!served.has(asDirectory)) {
-    throw new Error(`sitemap.xml lists ${route}, which this build does not serve.`)
+for (const { route } of sitemapPages) {
+  if (!served.has(route)) {
+    throw new Error(`sitemap.xml lists ${route}, which this build does not serve at that exact URL.`)
   }
 }
 
@@ -470,4 +499,4 @@ if (brokenLinks.length > 0) {
   throw new Error(`Broken internal links in the built site:\n  ${[...new Set(brokenLinks)].join('\n  ')}`)
 }
 
-console.log(`Generated ${documentRoutes + 9 + pluginPages.length} static routes and a ${sitemapPaths.length}-URL sitemap.`)
+console.log(`Generated ${documentRoutes + 9 + pluginPages.length} static routes, a ${sitemapPages.length}-URL sitemap, and llms.txt.`)

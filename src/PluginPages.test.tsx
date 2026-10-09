@@ -144,12 +144,14 @@ describe('plugin pages', () => {
     expect(renderPath('/plugins/privacy/')).toContain('collects no personal data')
   })
 
-  it('hydrates the prerendered plugin pages without replacing or duplicating them', async () => {
+  it('hydrates every prerendered page (plugins, docs, thesis) without replacing or duplicating it', async () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    for (const pathname of prerenderedPaths) {
+    // The old desktop docs prefixes serve the top-level page's markup at their own URL.
+    const servedAt = [...prerenderedPaths.map((pathname) => [pathname, pathname]), ['/desktop/docs/models/', '/models/'], ['/happy2/docs/', '/welcome/']]
+    for (const [pathname, markupPath] of servedAt) {
       const container = document.createElement('div')
-      container.innerHTML = renderPath(pathname)
+      container.innerHTML = renderPath(markupPath)
       document.body.append(container)
       const servedHeading = container.querySelector('h1')
       const servedText = container.textContent

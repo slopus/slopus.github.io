@@ -127,7 +127,7 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
             <span aria-hidden="true">/</span>
             {activeDocument.group}
           </p>
-          <MarkdownDocument markdown={markdown} />
+          <MarkdownDocument markdown={markdown} originalDocsLinks={product.key === HAPPY.key} />
 
           <nav className="document-pagination" aria-label="Previous and next documentation pages">
             {previousDocument ? (

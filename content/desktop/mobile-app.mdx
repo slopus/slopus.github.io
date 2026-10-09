@@ -1,0 +1,56 @@
+# Claude Code and Codex on Your Phone
+
+Happy is a free, open source app for iPhone and Android that controls Claude Code and Codex running on your computer. Pair your phone once with a QR code. Then send messages, answer permission requests, switch models, and read the changes from anywhere. The agents keep running on your machine, and the sync is end-to-end encrypted.
+
+## Ways to reach your agent from a phone
+
+| | Happy | Claude Code Remote Control | SSH and a terminal app |
+| --- | --- | --- | --- |
+| Agents | Claude Code and Codex; Grok too with Happy Desktop | Claude Code | Anything you can run in a terminal |
+| Phone app | Happy for iOS and Android | The Claude app for iOS and Android, or claude.ai/code in a browser | Any SSH client |
+| Where the agent runs | Your computer | Your computer | Your computer |
+| What sits in between | Happy's relay, which sees ciphertext only | Anthropic's servers, which store the transcript while connected | Nothing, if the phone can reach the machine |
+| Made for a small screen | Yes | Yes | No, it is a terminal |
+| Cost | Free, MIT licensed | Included with Claude Pro, Max, Team, and Enterprise | Free to paid, depending on the app |
+
+Remote Control facts are from [Anthropic's Remote Control docs](https://code.claude.com/docs/en/remote-control), checked on October 9, 2026. For the details, see [Happy vs Claude Code Remote Control](/vs/claude-code-remote-control/).
+
+If you only use Claude Code and already have the Claude app, Remote Control is the shortest path: nothing else to install. If you want Codex too, or you want the content of your sessions unreadable to anyone in between, use Happy.
+
+## Pairing
+
+There are two ways to put your sessions on the phone.
+
+**With Happy Desktop.** Open **Settings → Mobile Access**. Install Happy from the [App Store or Google Play](/#download), scan the device QR Desktop shows, and approve the computer on the phone. One scan. Desktop also installs the `happy` CLI, so terminal sessions reach the phone too.
+
+**From the terminal only.** Install the CLI and start your agent through it:
+
+```sh
+npm install -g happy
+
+happy claude
+happy codex
+```
+
+`happy` wraps the real `claude` or `codex` with your normal sign-in and arguments. The first run pairs the machine by QR code. A background daemon lets the phone start and resume sessions with no terminal attached. See [Using the Terminal](/guides/terminal/).
+
+## What you can do from the phone
+
+- Send messages, with images.
+- Answer permission requests and questions.
+- Stop the turn.
+- Switch model and effort, and change the permission mode.
+- Start a session in a directory.
+- Read files and the session's Git changes.
+
+## Privacy
+
+The phone holds the account's primary key. Content is encrypted on one device and decrypted on another. The relay stores and forwards opaque blobs. It sees that machines and sessions exist and when they were active, not what is in them. The full write-up is in [Security & Encryption](/docs/security/).
+
+The agent runs on your computer, next to your files. Model requests go from your computer to the provider you chose, with your own credentials.
+
+## More
+
+- [Mobile Access](/mobile/): pairing, troubleshooting, and what the phone can do.
+- [The desktop app](/desktop-app/): Claude Code, Codex, and Grok in one window.
+- Source code on GitHub: [Happy](https://github.com/slopus/happy) and [Happy Desktop](https://github.com/slopus/happy-desktop).

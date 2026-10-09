@@ -88,12 +88,12 @@ describe('publication age', () => {
 })
 
 describe('model benchmarks page', () => {
-  it('renders both URL spellings and defines the requested canonical URL', () => {
+  it('renders both URL spellings and canonicals to the one that answers 200', () => {
     const { rerender } = render(<Router pathname="/model-benchmarks" />)
     expect(screen.getByRole('heading', { level: 1 }).textContent).toContain('trust me bro')
     rerender(<Router pathname="/model-benchmarks/" />)
     expect(screen.getByRole('table')).toBeTruthy()
-    expect(modelBenchmarksMetadata.canonicalPath).toBe('/model-benchmarks')
+    expect(modelBenchmarksMetadata.canonicalPath).toBe('/model-benchmarks/')
   })
   it('supports accessible notes, multi-selection and clearing', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
