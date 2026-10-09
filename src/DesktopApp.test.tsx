@@ -43,6 +43,26 @@ describe('Happy Desktop landing page', () => {
     expect(screen.getAllByRole('link', { name: /google play/i }).length).toBeGreaterThan(0)
   })
 
+  it('links the App Store listing by its current slug', () => {
+    render(<DesktopApp />)
+
+    for (const link of screen.getAllByRole('link', { name: /app store/i })) {
+      expect(link.getAttribute('href')).toBe('https://apps.apple.com/us/app/happy-codex-claude-code-app/id6748571505')
+    }
+  })
+
+  it('keeps the full download options in the hero, after the copy and recording it fits around on phones', () => {
+    const { container } = render(<DesktopApp />)
+    const fold = container.querySelector('.one-hero > .one-hero-fold')
+    const downloads = container.querySelector('#download')
+
+    expect(fold?.querySelector('h1')).toBeTruthy()
+    expect(fold?.querySelector('[data-testid="demo"]')).toBeTruthy()
+    expect(fold?.nextElementSibling).toBe(downloads)
+    expect(downloads?.querySelector('.one-desktop-downloads')).toBeTruthy()
+    expect(downloads?.querySelector('.one-mobile-downloads')).toBeTruthy()
+  })
+
   it('keeps the terminal path for people who do not want the app', () => {
     const { container } = render(<DesktopApp />)
 

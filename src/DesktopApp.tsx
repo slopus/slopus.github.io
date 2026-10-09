@@ -107,14 +107,17 @@ export default function DesktopApp() {
       <SiteHeader product={HAPPY_DESKTOP} />
       <main>
         <section className="one-hero page-width" aria-labelledby="one-heading">
-          <div className="one-hero-copy">
-            <h1 id="one-heading"><span>Any Model.</span>{' '}<span>Your Subscription.</span><br /><em>Happy Harness{ogPreview ? '' : '.'}</em></h1>
-            <p className="one-hero-note">Free and open source</p>
-            {ogPreview && <a className="one-social-stars" href={GITHUB_HAPPY}>
-              <GithubMark /><span>GitHub · {HAPPY_ONE_GITHUB_STARS.compact} stars</span>
-            </a>}
+          {/* On a phone this fills the first screen above the store badges. */}
+          <div className="one-hero-fold">
+            <div className="one-hero-copy">
+              <h1 id="one-heading"><span>Any Model.</span>{' '}<span>Your Subscription.</span><br /><em>Happy Harness{ogPreview ? '' : '.'}</em></h1>
+              <p className="one-hero-note">Free and open source</p>
+              {ogPreview && <a className="one-social-stars" href={GITHUB_HAPPY}>
+                <GithubMark /><span>GitHub · {HAPPY_ONE_GITHUB_STARS.compact} stars</span>
+              </a>}
+            </div>
+            <HappyOneDemo />
           </div>
-          <HappyOneDemo />
           <DownloadOptions id="download" macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
         </section>
         <Features />

@@ -9,13 +9,15 @@
 /* The first screen holds the heading, the note, the whole recording, and the primary
    download. Everything but the recording is a known height, so the stage
    (happy-one-demo.css) sizes the recording from what is left of the viewport:
-   header 60px, hero top 12px, two heading lines at 1.04, heading margin 8px, note 24px,
+   header 60px, hero top 28px, two heading lines at 1.04, heading margin 8px, note 24px,
    movie gap 12px, stage padding 20px, download margin and padding 16px, badge with its
    architecture selector 70px. */
-.one-hero { --one-hero-reserved: calc(222px + 2.08 * var(--one-h1)); padding-top: .75rem; text-align: center; }
+.one-hero { --one-hero-reserved: calc(238px + 2.08 * var(--one-h1)); padding-top: 1.75rem; text-align: center; }
 .one-hero h1 { font-size: var(--one-h1); margin-bottom: .5rem; }
 .one-hero-note { margin: 0; }
 .one-hero .one-demo { margin-top: .75rem; }
+/* Only phones lay out this wrapper; elsewhere the copy and recording are hero items. */
+.one-hero-fold { display: contents; }
 .one-benefits-section { margin-top: 3.25rem; }
 /* Numbered like a thread: the number hangs, the note keeps a uniform two lines. */
 .one-benefits { display: grid; grid-auto-rows: 1fr; gap: 1.4rem; width: min(100%, 34rem); margin: 0 auto; padding: 0; text-align: left; list-style: none; text-transform: lowercase; }
@@ -108,8 +110,17 @@
 @media (max-width: 700px) {
   .happy-one .page-width { width: calc(100% - 40px); }
   .happy-one { --one-h1: clamp(1.6rem, 5.2vw, 2.2rem); }
-  .one-hero { padding-top: 1rem; }
-  .one-hero .one-demo { margin-top: .75rem; }
+  /* The first screen ends with the store badges, side by side; the desktop
+     download is just below the fold. The copy and recording fill the rest, with
+     the same space above the heading, between note and recording, and between
+     recording and badges (its stage adds 20px under it, the downloads 8px). The
+     fold leaves room for the 53px header, 8px download padding, 67px badges with
+     their ratings, and 16px under them. */
+  .one-hero { padding-top: 0; }
+  .one-hero-fold { display: flex; flex-direction: column; justify-content: space-evenly; gap: 28px; min-height: calc(100svh - 144px); padding-top: 28px; }
+  .one-hero .one-demo { margin-top: 0; }
+  .one-hero .one-download-actions { margin-top: 0; }
+  .one-hero .one-mobile-downloads { order: -1; flex-direction: row; }
   .one-benefits-section { position: relative; margin-top: 2.5rem; }
   .one-benefit-number, .one-benefit-title { font-size: 1.06rem; }
   .one-benefit-body { font-size: .92rem; min-height: 0; }
@@ -146,6 +157,8 @@
 
 @media (max-width: 360px) {
   .one-benefit-number, .one-benefit-title { font-size: 1rem; }
+  /* Both ratings stay on one line under the side-by-side hero badges. */
+  .one-hero .one-store-download .store-rating { font-size: 11px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
