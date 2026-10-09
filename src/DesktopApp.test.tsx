@@ -55,7 +55,7 @@ describe('Happy Desktop landing page', () => {
 
     const navigation = screen.getByRole('navigation', { name: 'Primary navigation' })
 
-    expect(within(navigation).getByRole('link', { name: 'Docs' }).getAttribute('href')).toBe('/desktop/docs/')
+    expect(within(navigation).getByRole('link', { name: 'Docs' }).getAttribute('href')).toBe('/welcome/')
     expect(within(navigation).getByRole('link', { name: /on github/i })).toBeTruthy()
     expect(within(navigation).queryByRole('link', { name: /ios app/i })).toBeNull()
     expect(within(navigation).queryByRole('link', { name: /android app/i })).toBeNull()
@@ -122,6 +122,15 @@ describe('Happy Desktop landing page', () => {
     render(<Router pathname="/happy2/docs/quick-start/" />)
     expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/quick start/i)
   })
+
+  it('still serves the desktop docs at their old /desktop/docs URLs', () => {
+    const { unmount } = render(<Router pathname="/desktop/docs/" />)
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/welcome/i)
+    unmount()
+
+    render(<Router pathname="/desktop/docs/guides/terminal/" />)
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/terminal/i)
+  })
 })
 
 describe('site footer', () => {
@@ -130,7 +139,7 @@ describe('site footer', () => {
   })
 
   it('names the people behind Happy on every page', () => {
-    for (const pathname of ['/', '/docs/', '/desktop/docs/', '/privacy/']) {
+    for (const pathname of ['/', '/docs/', '/welcome/', '/privacy/']) {
       const { unmount } = render(<Router pathname={pathname} />)
       const footer = screen.getByRole('contentinfo')
 
@@ -142,7 +151,7 @@ describe('site footer', () => {
   })
 
   it('keeps a quiet link to the original Happy CLI docs on every page', () => {
-    for (const pathname of ['/', '/docs/', '/desktop/docs/', '/privacy/']) {
+    for (const pathname of ['/', '/docs/', '/welcome/', '/privacy/']) {
       const { unmount } = render(<Router pathname={pathname} />)
       expect(within(screen.getByRole('contentinfo')).getByRole('link', { name: 'Original Happy CLI' }).getAttribute('href')).toBe('/docs/')
       unmount()
@@ -184,7 +193,7 @@ describe('site header', () => {
   })
 
   it('is the same plain header on every page, without a product switch', () => {
-    for (const pathname of ['/', '/docs/', '/desktop/docs/quick-start/']) {
+    for (const pathname of ['/', '/docs/', '/quick-start/']) {
       const { unmount } = render(<Router pathname={pathname} />)
       const navigation = screen.getByRole('navigation', { name: 'Primary navigation' })
 
@@ -192,7 +201,7 @@ describe('site header', () => {
       expect(within(navigation).getAllByRole('link').map((link) => link.textContent)).toEqual(['Docs', 'Blog', '23.8k'])
       expect(within(navigation).getByRole('link', { name: 'Blog' }).getAttribute('href')).toBe('/blog/')
       expect(within(navigation).getByRole('link', { name: 'Happy on GitHub, 23,810 stars' })).toBeTruthy()
-      expect(within(navigation).getByRole('link', { name: 'Docs' }).getAttribute('href')).toBe('/desktop/docs/')
+      expect(within(navigation).getByRole('link', { name: 'Docs' }).getAttribute('href')).toBe('/welcome/')
       unmount()
     }
   })

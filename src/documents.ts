@@ -172,9 +172,11 @@ const happyDocuments: DocumentDefinition[] = [
   },
 ]
 
+// Served at the top level: /welcome/, /quick-start/, /guides/terminal/. A new path
+// must not collide with another site route; src/DocumentPages.test.tsx checks.
 const desktopDocuments: DocumentDefinition[] = [
   {
-    path: '',
+    path: 'welcome',
     sourcePath: '/content/desktop/index.mdx',
     title: 'Welcome',
     description: 'What Happy Desktop is, what you get, and where to start.',
@@ -332,10 +334,7 @@ export function getLegalSource(name: LegalName) {
   return legalSources[`/content/legal/${name}.md`] ?? ''
 }
 
-/**
- * The Happy thesis essay at /thesis. Reachable by URL and listed nowhere: not in
- * `documents`, the header, the footer, or the docs sidebar.
- */
+/** The Happy thesis essay at /thesis, listed on /blog/ and not in `documents`. */
 export function getThesisMarkdown() {
   const title = thesisSource.match(/^title:\s*"(.+)"\s*$/m)?.[1] ?? ''
   // The essay's sections are written as `#`; the frontmatter title is the page's only h1.

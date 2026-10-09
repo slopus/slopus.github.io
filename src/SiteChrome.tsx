@@ -80,7 +80,7 @@ export function SiteHeader({
             <Wordmark />
           </div>
           <nav aria-label="Primary navigation">
-            <a href={`${HAPPY_DESKTOP.docsBase}/`} aria-current={docsActive && product.key === 'desktop' ? 'page' : undefined}>Docs</a>
+            <a href={HAPPY_DESKTOP.docsHome} aria-current={docsActive && product.key === 'desktop' ? 'page' : undefined}>Docs</a>
             <a href="/blog/" aria-current={blogActive ? 'page' : undefined}>Blog</a>
             <GithubLink />
           </nav>
@@ -107,11 +107,11 @@ export function SiteFooter({ product = HAPPY, additionalLinks }: { product?: Pro
         </p>
         <div className="footer-meta">
           <div className="footer-links" aria-label="Footer navigation">
-            <a href={`${product.docsBase}/`}>Docs</a>
+            <a href={product.docsHome}>Docs</a>
             <a href="/privacy/">Privacy</a>
             <a href="/terms/">Terms</a>
             {additionalLinks}
-            <a className="footer-link-quiet" href={`${HAPPY.docsBase}/`}>Original Happy CLI</a>
+            <a className="footer-link-quiet" href={HAPPY.docsHome}>Original Happy CLI</a>
           </div>
           <Wordmark />
           <p>© {currentYear} Happy Engineering</p>

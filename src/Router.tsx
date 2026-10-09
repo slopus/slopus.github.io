@@ -4,7 +4,7 @@ import ModelBenchmarksPage from './ModelBenchmarksPage'
 import { BlogPage, DocsPage, LegalPage, NotFoundPage, ThesisPage } from './DocumentPages'
 import { MemesPluginPage, PluginsPage } from './PluginPages'
 import { getDocument, normalizeDocumentPath } from './documents'
-import { productForPath } from './products'
+import { documentHref, HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import {
   applyPageMetadata,
   docsMetadataForProduct,
@@ -31,7 +31,11 @@ const pluginsBack = { href: '/plugins/', label: 'Back to plugins' }
 
 /** Pages that moved. Keep the old URLs working. */
 const movedPaths: Record<string, string> = {
-  '/docs/comparisons/happy-2-vs-buzz': '/desktop/docs/comparisons/buzz',
+  '/docs/comparisons/happy-2-vs-buzz': '/comparisons/buzz',
+  // The desktop docs lived under /desktop/docs/ (and /happy2/docs/) before they
+  // became top-level pages; their index is /welcome/.
+  '/desktop/docs': '/welcome',
+  '/happy2/docs': '/welcome',
   // The desktop landing lived at /desktop/ (and /happy2/, and unlisted at
   // /tmp/happy-one/) before it became the homepage.
   '/desktop': '/',
@@ -40,7 +44,10 @@ const movedPaths: Record<string, string> = {
 }
 
 /** Sections that moved wholesale. The old prefix keeps resolving, path and all. */
-const movedPrefixes: Array<[string, string]> = [['/happy2', '/desktop']]
+const movedPrefixes: Array<[string, string]> = [
+  ['/happy2/docs', ''],
+  ['/desktop/docs', ''],
+]
 
 function normalizedPathname(pathname: string) {
   const trimmed = pathname.replace(/\/+$/, '') || '/'
@@ -51,16 +58,31 @@ function normalizedPathname(pathname: string) {
   }
 
   for (const [from, to] of movedPrefixes) {
-    if (trimmed === from) {
-      return to
-    }
-
     if (trimmed.startsWith(`${from}/`)) {
       return `${to}${trimmed.slice(from.length)}`
     }
   }
 
   return trimmed
+}
+
+/**
+ * The docs page a path names, if any. The original CLI docs keep their /docs
+ * prefix; the desktop docs are top-level pages, matched by slug after every
+ * fixed route so a docs slug can never shadow one.
+ */
+function documentForPath(normalizedPath: string): { product: Product; path: string } | undefined {
+  const { docsBase } = HAPPY
+  if (normalizedPath === docsBase || normalizedPath.startsWith(`${docsBase}/`)) {
+    return { product: HAPPY, path: normalizedPath.slice(docsBase.length) }
+  }
+
+  const path = normalizeDocumentPath(normalizedPath)
+  if (getDocument(HAPPY_DESKTOP.key, path)) {
+    return { product: HAPPY_DESKTOP, path }
+  }
+
+  return undefined
 }
 
 function metadataForPath(pathname: string): PageMetadata {
@@ -86,26 +108,6 @@ function metadataForPath(pathname: string): PageMetadata {
     return pluginPageMetadata[normalizedPath]
   }
 
-  const product = productForPath(normalizedPath)
-  const { docsBase } = product
-
-  if (normalizedPath === docsBase || normalizedPath.startsWith(`${docsBase}/`)) {
-    const documentPath = normalizeDocumentPath(normalizedPath.slice(docsBase.length))
-    const document = getDocument(product.key, documentPath)
-
-    if (document?.path === '') {
-      return docsMetadataForProduct(product.key)
-    }
-
-    if (document) {
-      return {
-        title: `${document.title} — ${product.label} Docs`,
-        description: document.description,
-        canonicalPath: `${docsBase}/${document.path}/`,
-      }
-    }
-  }
-
   if (normalizedPath === '/privacy') {
     return {
       title: 'Privacy Policy — Happy',
@@ -119,6 +121,22 @@ function metadataForPath(pathname: string): PageMetadata {
       title: 'Terms of Use — Happy',
       description: 'Terms of use for Happy.',
       canonicalPath: '/terms/',
+    }
+  }
+
+  const located = documentForPath(normalizedPath)
+  const document = located && getDocument(located.product.key, located.path)
+
+  if (located && document) {
+    const canonicalPath = documentHref(located.product, document.path)
+    if (canonicalPath === located.product.docsHome) {
+      return docsMetadataForProduct(located.product.key)
+    }
+
+    return {
+      title: `${document.title} — ${located.product.label} Docs`,
+      description: document.description,
+      canonicalPath,
     }
   }
 
@@ -258,19 +276,17 @@ export function Router({ pathname }: { pathname?: string }) {
     return <LegalPage name="plugins/terms" back={pluginsBack} />
   }
 
-  const product = productForPath(normalizedPath)
-  const { docsBase } = product
-
-  if (normalizedPath === docsBase || normalizedPath.startsWith(`${docsBase}/`)) {
-    return <DocsPage product={product} path={normalizedPath.slice(docsBase.length)} />
-  }
-
   if (normalizedPath === '/privacy') {
     return <LegalPage name="privacy" />
   }
 
   if (normalizedPath === '/terms' || normalizedPath === '/tos') {
     return <LegalPage name="terms" />
+  }
+
+  const located = documentForPath(normalizedPath)
+  if (located) {
+    return <DocsPage product={located.product} path={located.path} />
   }
 
   return <NotFoundPage />

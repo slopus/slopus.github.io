@@ -22,7 +22,7 @@ describe('header docs link', () => {
   })
 
   it('is marked current on a documentation route', () => {
-    render(<Router pathname="/desktop/docs/extending/" />)
+    render(<Router pathname="/extending/" />)
 
     const navigation = screen.getByRole('navigation', { name: 'Primary navigation' })
 
@@ -42,6 +42,6 @@ describe('header docs link', () => {
 
     const navigation = screen.getByRole('navigation', { name: 'Primary navigation' })
 
-    expect(within(navigation).getByRole('link', { name: 'Docs' }).getAttribute('href')).toBe('/desktop/docs/')
+    expect(within(navigation).getByRole('link', { name: 'Docs' }).getAttribute('href')).toBe('/welcome/')
   })
 })

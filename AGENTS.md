@@ -14,15 +14,22 @@ Maintain regeneration instructions, not a dedicated screenshot script.
 ## Products and docs
 
 Happy is desktop-first. The desktop app owns the homepage `/` and the primary
-docs at `/desktop/docs` (content in `content/desktop/`, registered in
-`src/documents.ts`); the header's Docs link goes there. `/desktop/`, `/happy2/`,
-and `/tmp/happy-one/` redirect to `/` (static redirect pages written by
-`scripts/generate-static-routes.mjs`, carrying the homepage's preview tags), and
-`/happy2/docs/*` still serves the desktop docs; keep them all resolving. The
-original Happy CLI docs (`/docs`, `content/docs/`) are in maintenance mode:
-every page opens with the maintenance notice, and only a quiet footer link
-points to them. The Buzz comparison stays reachable at
-`/desktop/docs/comparisons/buzz/` but is unlisted (`hidden: true`).
+docs as top-level pages: `/welcome/`, `/quick-start/`, `/guides/terminal/`
+(content in `content/desktop/`, registered in `src/documents.ts`; a new slug
+must not collide with another route). The header's Docs link goes to
+`/welcome/`. `/desktop/`, `/happy2/`, and `/tmp/happy-one/` redirect to `/`
+(static redirect pages written by `scripts/generate-static-routes.mjs`,
+carrying the homepage's preview tags), and `/desktop/docs/*` and
+`/happy2/docs/*` still serve the desktop docs, each canonical to its top-level
+URL; keep them all resolving. The original Happy CLI docs (`/docs`,
+`content/docs/`) are in maintenance mode: every page opens with the maintenance
+notice, and only a quiet footer link points to them. The Buzz comparison stays
+reachable at `/comparisons/buzz/` but is unlisted (`hidden: true`).
+
+`routes.txt` records every URL the site has ever served. The build appends new
+URLs and fails if a listed URL is no longer served; dropping one means
+redirecting it or deleting its line on purpose. The build also fails on any
+internal link or asset reference that does not resolve inside `dist/`.
 
 ## Header and downloads
 

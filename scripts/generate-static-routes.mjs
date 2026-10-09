@@ -26,10 +26,13 @@ const docsSections = [
       'Docs for the original Happy CLI (Happy Coder): use Claude Code and Codex from your iPhone, Android, or the web. Maintenance mode; new features ship in the Happy desktop app.',
   },
   {
+    // Top-level pages: /welcome/, /quick-start/, /guides/terminal/. The old
+    // prefixes keep serving every page, each canonical to its top-level URL.
     contentRoot: path.join(projectRoot, 'content', 'desktop'),
-    routeRoot: path.posix.join('desktop', 'docs'),
-    legacyRouteRoot: path.posix.join('happy2', 'docs'),
-    canonicalRoot: '/desktop/docs',
+    routeRoot: '',
+    indexRoute: 'welcome',
+    legacyRouteRoots: [path.posix.join('desktop', 'docs'), path.posix.join('happy2', 'docs')],
+    canonicalRoot: '',
     indexTitle: 'Happy Docs — The Open Source Desktop App for Coding Agents',
     titleSuffix: 'Happy Desktop Docs',
     description:
@@ -110,6 +113,9 @@ function htmlForPage({
 }
 
 async function writeRoute(route, html) {
+  if (!route || route === '.' || route === '/') {
+    throw new Error('A route needs a path; dist/index.html is the homepage, built from index.html.')
+  }
   const routeDirectory = path.join(distRoot, route)
   await mkdir(routeDirectory, { recursive: true })
   await writeFile(path.join(routeDirectory, 'index.html'), html)
@@ -132,23 +138,26 @@ for (const section of docsSections) {
     const markdownTitle = markdown.match(/^#\s+(.+)$/m)?.[1].trim()
     const contentTitle = markdownTitle ?? titleFromFilename(path.basename(relativePath))
     const isIndex = documentPath === ''
+    // A section without a prefix needs a slug for its index page.
+    const route = documentPath || section.indexRoute || ''
+    const canonicalPath = `${section.canonicalRoot}/${route ? `${route}/` : ''}`
 
     const html = htmlForPage({
       title: isIndex ? section.indexTitle : `${contentTitle} — ${section.titleSuffix}`,
       description: section.description,
-      canonicalPath: `${section.canonicalRoot}/${documentPath ? `${documentPath}/` : ''}`,
+      canonicalPath,
     })
 
-    await writeRoute(path.posix.join(section.routeRoot, documentPath), html)
+    await writeRoute(path.posix.join(section.routeRoot, route), html)
     documentRoutes += 1
     // The Buzz comparison is unlisted (hidden: true in src/documents.ts).
     if (documentPath !== 'comparisons/buzz') {
-      sitemapPaths.push(`${section.canonicalRoot}/${documentPath ? `${documentPath}/` : ''}`)
+      sitemapPaths.push(canonicalPath)
     }
 
     // The old URLs keep serving; each one canonicals to its new home and the app rewrites the path.
-    if (section.legacyRouteRoot) {
-      await writeRoute(path.posix.join(section.legacyRouteRoot, documentPath), html)
+    for (const legacyRouteRoot of section.legacyRouteRoots ?? []) {
+      await writeRoute(path.posix.join(legacyRouteRoot, documentPath), html)
       documentRoutes += 1
     }
   }
@@ -197,7 +206,7 @@ await writeRoute('model-benchmarks', htmlForPage({
 await writeRoute('docs/comparisons/happy-2-vs-buzz', htmlForPage({
   title: 'Happy Desktop vs Buzz — Happy Desktop Docs',
   description: "Where Happy Desktop and Block's Buzz agree, and where the designs split.",
-  canonicalPath: '/desktop/docs/comparisons/buzz/',
+  canonicalPath: '/comparisons/buzz/',
 }))
 
 sitemapPaths.push('/model-benchmarks', '/privacy/', '/terms/')
@@ -368,5 +377,97 @@ ${sitemapPaths.map((route) => `  <url><loc>${escapeHtml(new URL(route, siteUrl).
 </urlset>
 `,
 )
+
+// Every URL the site serves, as a directory with an index.html, plus the homepage.
+async function servedRoutes() {
+  const routes = new Set()
+  async function walk(directory) {
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      const entryPath = path.join(directory, entry.name)
+      if (entry.isDirectory()) {
+        await walk(entryPath)
+      } else if (entry.name === 'index.html') {
+        const relative = path.relative(distRoot, directory).split(path.sep).join('/')
+        routes.add(relative ? `/${relative}/` : '/')
+      }
+    }
+  }
+  await walk(distRoot)
+  return routes
+}
+
+// routes.txt is the committed record of every URL this site has ever served.
+// The build may only add to it. A URL that stops being served fails the build:
+// keep serving it, redirect it, or remove the line on purpose in the same commit.
+const routesFile = path.join(projectRoot, 'routes.txt')
+const routesHeader = [
+  '# Every URL happy.engineering serves, one per line, kept by scripts/generate-static-routes.mjs.',
+  '# The build adds new URLs here and fails if a listed URL is no longer served.',
+  '# Dropping a URL is a decision: redirect it or delete its line in the same commit.',
+]
+const routesSource = await readFile(routesFile, 'utf8').catch(() => '')
+const declaredRoutes = routesSource.split('\n').map((line) => line.trim()).filter((line) => line && !line.startsWith('#'))
+const served = await servedRoutes()
+const droppedRoutes = declaredRoutes.filter((route) => !served.has(route))
+if (droppedRoutes.length > 0) {
+  throw new Error(
+    `routes.txt lists URLs this build no longer serves:\n  ${droppedRoutes.join('\n  ')}\n`
+    + 'Keep them serving (a page or a redirect page), or remove them from routes.txt on purpose.',
+  )
+}
+const newRoutes = [...served].filter((route) => !declaredRoutes.includes(route))
+if (newRoutes.length > 0) {
+  const allRoutes = [...new Set([...declaredRoutes, ...newRoutes])].sort()
+  await writeFile(routesFile, `${routesHeader.join('\n')}\n${allRoutes.join('\n')}\n`)
+  console.log(`Added ${newRoutes.length} new URL(s) to routes.txt: ${newRoutes.join(', ')}`)
+}
+for (const route of sitemapPaths) {
+  const asDirectory = route.endsWith('/') ? route : `${route}/`
+  if (!served.has(asDirectory)) {
+    throw new Error(`sitemap.xml lists ${route}, which this build does not serve.`)
+  }
+}
+
+// Every internal link and asset reference in the built HTML must resolve within dist.
+async function htmlFiles(directory) {
+  const files = []
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const entryPath = path.join(directory, entry.name)
+    if (entry.isDirectory()) {
+      files.push(...await htmlFiles(entryPath))
+    } else if (entry.name.endsWith('.html')) {
+      files.push(entryPath)
+    }
+  }
+  return files
+}
+
+async function existsInDist(pathname) {
+  const target = path.join(distRoot, decodeURIComponent(pathname))
+  const candidates = pathname.endsWith('/') ? [path.join(target, 'index.html')] : [target, path.join(target, 'index.html')]
+  for (const candidate of candidates) {
+    const found = await readFile(candidate).then(() => true, () => false)
+    if (found) return true
+  }
+  return false
+}
+
+const brokenLinks = []
+for (const file of await htmlFiles(distRoot)) {
+  const html = await readFile(file, 'utf8')
+  const pageRoute = `/${path.relative(distRoot, path.dirname(file)).split(path.sep).join('/')}/`.replace('//', '/')
+  for (const [, value] of html.matchAll(/\b(?:href|src)="([^"]*)"/g)) {
+    const reference = value.replace(/&amp;/g, '&')
+    if (/^(?:#|mailto:|tel:|data:|javascript:)/.test(reference) || reference === '') continue
+    const url = new URL(reference, new URL(pageRoute, siteUrl))
+    if (url.origin !== siteUrl) continue
+    if (!await existsInDist(url.pathname)) {
+      brokenLinks.push(`${pageRoute} -> ${reference}`)
+    }
+  }
+}
+if (brokenLinks.length > 0) {
+  throw new Error(`Broken internal links in the built site:\n  ${[...new Set(brokenLinks)].join('\n  ')}`)
+}
 
 console.log(`Generated ${documentRoutes + 9 + pluginPages.length} static routes and a ${sitemapPaths.length}-URL sitemap.`)

@@ -47,14 +47,14 @@ describe('static document pages', () => {
   })
 
   it('renders Happy Desktop documentation under its own path', () => {
-    render(<Router pathname="/desktop/docs/how-it-works/" />)
+    render(<Router pathname="/how-it-works/" />)
 
     expect(screen.getByRole('heading', { level: 1, name: /how it works/i })).toBeTruthy()
     expect(screen.getAllByRole('link', { name: 'Permissions & Sandbox' }).length).toBeGreaterThan(0)
   })
 
   it('keeps Happy and Happy Desktop documentation separate', () => {
-    const { unmount } = render(<Router pathname="/desktop/docs/" />)
+    const { unmount } = render(<Router pathname="/welcome/" />)
 
     expect(screen.queryByRole('link', { name: 'Voice Coding' })).toBeNull()
     unmount()
@@ -71,7 +71,7 @@ describe('static document pages', () => {
     expect(screen.getByRole('link', { name: 'Happy desktop app' }).getAttribute('href')).toBe('/')
     unmount()
 
-    render(<Router pathname="/desktop/docs/quick-start/" />)
+    render(<Router pathname="/quick-start/" />)
     expect(screen.queryByRole('complementary', { name: /maintenance mode/i })).toBeNull()
   })
 
@@ -81,6 +81,18 @@ describe('static document pages', () => {
     }
   })
 
+  it('serves the desktop docs as top-level pages whose slugs no other route owns', () => {
+    const fixedRoutes = ['', 'docs', 'thesis', 'blog', 'plugins', 'privacy', 'terms', 'tos', 'model-benchmarks', 'desktop', 'happy2', 'tmp', 'assets', 'img', 'og', 'notes']
+    for (const document of documentsForProduct('desktop')) {
+      expect(document.path).not.toBe('')
+      expect(fixedRoutes).not.toContain(document.path.split('/')[0])
+    }
+    expect(renderPath('/welcome/')).toMatch(/<h1[^>]*>Welcome/)
+    expect(renderPath('/welcome/')).toMatch(/<a href="\/welcome\/" aria-current="page">Docs<\/a>/)
+    expect(renderPath('/chief-of-staff/')).toMatch(/<h1[^>]*>Chief of Staff/)
+    expect(renderPath('/welcome/')).toContain('href="/quick-start/"')
+  })
+
   it('keeps the announced Buzz comparison URL working', () => {
     render(<Router pathname="/docs/comparisons/happy-2-vs-buzz" />)
 
@@ -88,7 +100,7 @@ describe('static document pages', () => {
   })
 
   it('leaves the Buzz comparison out of navigation and the reading order', () => {
-    const { unmount } = render(<Router pathname="/desktop/docs/comparisons/buzz/" />)
+    const { unmount } = render(<Router pathname="/comparisons/buzz/" />)
 
     expect(screen.getByRole('heading', { level: 1, name: /happy desktop vs buzz/i })).toBeTruthy()
     expect(screen.queryByRole('link', { name: 'Happy Desktop vs Buzz' })).toBeNull()
@@ -97,7 +109,7 @@ describe('static document pages', () => {
     expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
     unmount()
 
-    render(<Router pathname="/desktop/docs/guides/remote-agents/" />)
+    render(<Router pathname="/guides/remote-agents/" />)
     expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/configuration/i)
   })
@@ -173,7 +185,7 @@ describe('static document pages', () => {
   })
 
   it('paints the same page scrollbar on every page, so the header sits in the same place', () => {
-    for (const pathname of ['/', '/docs/', '/desktop/docs/', '/model-benchmarks', '/plugins/', '/thesis/', '/privacy/']) {
+    for (const pathname of ['/', '/docs/', '/welcome/', '/model-benchmarks', '/plugins/', '/thesis/', '/privacy/']) {
       expect(renderPath(pathname).match(/class="one-scrollbar"/g)).toHaveLength(1)
     }
   })
@@ -185,14 +197,14 @@ describe('static document pages', () => {
     expect(blog).toContain('href="/thesis/"')
     expect(blog).toContain('Our Thesis')
     expect(documents.some((document) => document.path.includes('thesis'))).toBe(false)
-    expect(renderPath('/desktop/docs/')).not.toMatch(/href="[^"]*\/thesis/)
+    expect(renderPath('/welcome/')).not.toMatch(/href="[^"]*\/thesis/)
   })
 
   it('marks Blog as the current section on the blog index and on posts', () => {
     for (const pathname of ['/blog/', '/thesis/']) {
       expect(renderPath(pathname)).toMatch(/<a href="\/blog\/" aria-current="page">Blog<\/a>/)
     }
-    expect(renderPath('/desktop/docs/')).not.toContain('aria-current="page">Blog')
+    expect(renderPath('/welcome/')).not.toContain('aria-current="page">Blog')
     expect(thesisMetadata.robots).toBeUndefined()
   })
 

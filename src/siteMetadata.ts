@@ -41,7 +41,7 @@ export const desktopDocsMetadata: PageMetadata = {
   title: 'Happy Docs — The Open Source Desktop App for Coding Agents',
   description:
     'Install Happy on macOS, Windows, or Linux, run Claude, Codex, and Grok in one harness, pair your phone, and understand permissions, workspaces, teams, and plugins.',
-  canonicalPath: '/desktop/docs/',
+  canonicalPath: '/welcome/',
 }
 
 /** Keep the static Pages route in scripts/generate-static-routes.mjs in sync. */

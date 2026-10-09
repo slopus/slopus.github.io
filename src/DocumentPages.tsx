@@ -13,7 +13,7 @@ import {
   type DocumentEntry,
   type LegalName,
 } from './documents'
-import { documentHref, HAPPY, type Product } from './products'
+import { documentHref, HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import { SiteFooter, SiteHeader } from './SiteChrome'
 import { thesisPosts, type QuotedPost } from './thesisPosts'
 import { loadWidgets } from './XPostEmbed'
@@ -123,7 +123,7 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
         <article className="document-article">
           {product.key === 'happy' && <LegacyNotice />}
           <p className="document-breadcrumb">
-            <a href={documentHref(product, '')}>{product.label} docs</a>
+            <a href={product.docsHome}>{product.label} docs</a>
             <span aria-hidden="true">/</span>
             {activeDocument.group}
           </p>
@@ -317,7 +317,7 @@ export function NotFoundPage() {
         <h1>That page wandered off.</h1>
         <p>Try the documentation index or head back to the Happy homepage.</p>
         <div className="not-found-actions">
-          <a className="button button-primary" href="/desktop/docs/">Browse docs</a>
+          <a className="button button-primary" href={HAPPY_DESKTOP.docsHome}>Browse docs</a>
           <a className="button button-ghost" href="/">Back home</a>
         </div>
       </main>

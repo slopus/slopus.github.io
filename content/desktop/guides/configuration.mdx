@@ -9,7 +9,7 @@ Two TOML files. Neither is required.
 
 The machine file is written with comments on first start and never overwritten. Your global `AGENTS.md` sits beside it. The repository file wins where it is allowed to; providers, Docker, and anything that exposes the machine are machine-only. Agents see the repository file read-only.
 
-MCP servers go in `mcp.toml` in the same two places. See [Plugins, Skills & MCP](/desktop/docs/extending/).
+MCP servers go in `mcp.toml` in the same two places. See [Plugins, Skills & MCP](/extending/).
 
 ## Defaults
 
@@ -64,7 +64,7 @@ auth_file = "/Users/me/.codex-work/auth.json"
 include_models = ["openai/gpt-5.6-sol"]
 ```
 
-Built-in providers are on when credentials exist. `include_models` and `exclude_models` trim the picker. `hidden = true` is display-only: it removes an account from direct selection, and a smart provider (`type = "smart"`, `strategy = "round_robin"`) still routes to it. See [Multiple accounts](/desktop/docs/models/#multiple-accounts).
+Built-in providers are on when credentials exist. `include_models` and `exclude_models` trim the picker. `hidden = true` is display-only: it removes an account from direct selection, and a smart provider (`type = "smart"`, `strategy = "round_robin"`) still routes to it. See [Multiple accounts](/models/#multiple-accounts).
 
 ## Docker
 
