@@ -9,7 +9,7 @@ Two TOML files. Neither is required.
 
 The machine file is written with comments on first start and never overwritten. Your global `AGENTS.md` sits beside it. The repository file wins where it is allowed to; providers, Docker, and anything that exposes the machine are machine-only. Agents see the repository file read-only.
 
-MCP servers go in `mcp.toml` in the same two places. See [Plugins, Skills & MCP](/extending/).
+MCP servers go in `mcp.toml` in the same two places. See [Skills & MCP](/extending/).
 
 ## Defaults
 
@@ -49,7 +49,7 @@ sync = [".env"]
 protected_sync = [".env.production"]
 ```
 
-Setup commands run with full access as trusted project code. A failure leaves the workspace unusable.
+Setup commands run with full access as trusted project code. A failed command is logged; the workspace stays usable.
 
 ## Providers
 
@@ -75,7 +75,7 @@ workdir = "/workspace"
 mounts = [{ source = ".", target = "/workspace" }]
 ```
 
-Same permission model inside the container. Images need `bubblewrap` and `socat` for restricted modes. Happy never pulls an image on its own.
+Same permission model inside the container. Happy mounts its own sandbox into the container; no extra packages are needed. Happy never pulls an image on its own.
 
 ## The rest
 

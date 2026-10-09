@@ -8,25 +8,25 @@ A session has a working directory, a model, an effort, a permission mode, and a 
 
 ## Subagents
 
-An agent delegates bounded work to subagents, background by default. Depth is capped at three; a bounded number run at once per tree.
+An agent delegates bounded work to subagents, background by default. Depth is capped at three; a tree holds at most five, finished ones included.
 
 - Each child picks its own model and effort. Nothing is inherited.
-- A child starts with only its task, unless given the parent's context explicitly.
-- `read_only` keeps a child from editing anything, whatever mode the parent runs in.
+- A child starts with only its task.
+- A child runs in Auto, whatever mode the parent runs in.
 - A finished child takes follow-ups instead of being respawned.
-- A background child notifies its parent when done, even while the parent is idle. Parents wait once or end their turn; they do not poll.
+- A background child notifies its parent when done, even while the parent is idle. Parents keep working or end their turn; they do not wait or poll.
 
 ## Reaching any agent
 
-Subagent tools reach only an agent's own children. For anything else (a delegated session, another project, another machine) an agent states its own ID, inspects the exact ID it was given, then sends. Skipping the inspection step is refused. The receiver learns who wrote.
+Messaging reaches an agent's creator and its own collaborators. For anything else (a subtask, another project, another machine) an agent sends to the exact ID it was given; unknown IDs are refused. The receiver learns who wrote.
 
 ## Time
 
-Every agent can **wait** durably, for a duration or until a time up to a day away; a restart in between changes nothing, and a new message ends the wait early. Primary sessions can **schedule a message** to any agent whose ID they know, including themselves, hours or days ahead. You can see and cancel scheduled messages in the app.
+Every agent can **wait** durably, for a duration or until a time up to a day away; a restart in between changes nothing, and a new message ends the wait early. Primary sessions can **schedule a message** to any agent whose ID they know, including themselves, hours or days ahead. An agent can list and cancel its scheduled messages.
 
 ## Inbox and presence
 
-A question from an agent appears in the conversation and in the **Inbox** as one state. Answer in either place, on any device, and it closes in both.
+A question from an agent appears in the conversation and, with experimental features on, in the **Inbox** as one state. Answer in either place, on any device, and it closes in both.
 
 | Presence | What agents do |
 | --- | --- |

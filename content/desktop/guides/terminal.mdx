@@ -17,7 +17,7 @@ With Desktop, Mobile Access setup installs this CLI for you and links it to the 
 
 ## Happy Terminal
 
-The same harness as Desktop, as a TUI: every provider, every permission mode, workspaces, subagents, the Inbox. It talks to the Happy Agent that Desktop runs, so a session opened here is the one Desktop shows. It ships with Desktop.
+The same harness as Desktop, as a TUI: every provider, every permission mode, workspaces, subagents, the Inbox. It talks to the Happy Agent that Desktop runs, so a session opened here is the one Desktop shows. Install it with `pnpm add --global @slopus/happy-terminal`.
 
 Its command line covers the interactive app, headless `exec` for scripted runs, resuming and forking stored sessions, and `happy-terminal daemon start|stop|status`. Sessions are held by the daemon; if the terminal dies, the session keeps running.
 
@@ -27,4 +27,4 @@ Its command line covers the interactive app, headless `exec` for scripted runs, 
 | --- | --- |
 | Claude Code or Codex as the vendor ships it, plus a phone | `happy claude`, `happy codex` |
 | One harness across providers, in a terminal | Happy Terminal |
-| The same, with files, diffs, terminals, and the Inbox in a window | Happy Desktop |
+| The same, with files, diffs, and terminals in a window | Happy Desktop |

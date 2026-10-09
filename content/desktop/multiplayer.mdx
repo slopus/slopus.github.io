@@ -10,7 +10,7 @@ A team is a **Happy Social** organization with a registered Happy Agent endpoint
 
 The [Chief of Staff](/chief-of-staff/) runs the setup, in this order:
 
-1. **Sign in to Happy Social** on your own installation (**Settings → Account → Join Happy Social**) and bind an email. Any address works. This is separate from provider credentials.
+1. **Sign in to Happy Social** on your own installation (**Settings → Account → Connect account**) and bind an email. Any address works. This is separate from provider credentials.
 2. **Deploy the server**: a Linux or macOS machine with outbound internet, a dedicated service account, and that account's own provider sign-ins. Happy Agent is one self-contained binary under systemd or similar. Its embedded **Tailcat** transport gives it a stable, unguessable address through NAT, with no tunnel account.
 3. **Create the team** with a name and that endpoint. You become administrator.
 4. **Switch the server to team mode** with the organization ID. It then authenticates members by Happy Social identity and keeps no local socket or token.

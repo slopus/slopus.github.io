@@ -25,10 +25,10 @@ A separate read-only agent reviews the described action against the conversation
 
 ## What the sandbox enforces
 
-Seatbelt on macOS, Bubblewrap on Linux.
+Seatbelt on macOS; on Linux, Happy's own supervisor using kernel namespaces and seccomp.
 
-- Writes: working directory, its Git control paths, temporary directories. The rest is readable.
-- Protected paths are read-only even inside the workspace: the repository's `happy.toml`, `.agents`, `.codex`, the runtime's own state.
+- Writes: working directory and temporary directories; Git control paths are read-only. The rest is readable.
+- Protected paths are read-only even inside the workspace: the repository's `AGENTS.md`, `AGENTS_SECURITY.md`, `happy.toml`, and `mcp.toml`, and the runtime's own state.
 - Network: only domains and ports in your configuration, through a managed proxy the agent cannot change.
 - Local ports: refused on macOS unless enabled. On Linux a listener is reachable only from inside its own command.
 - Keychain: unavailable. Secrets reach a command only as an attached bundle.

@@ -12,7 +12,7 @@ Each provider gets its vendor's prompts and tools verbatim, close enough to the 
 
 - One permission model. Claude's `Bash`, Codex's `exec_command`, and Grok's `run_terminal_command` run the same sandboxed shell.
 - One session. Switching models keeps the transcript.
-- One set of Happy tools: subagents, waits, scheduling, messaging other agents, plugins, MCP.
+- One set of Happy tools: subagents, waits, scheduling, messaging other agents, MCP.
 
 ## Durable
 
@@ -22,8 +22,8 @@ Every change is written to the database before it is applied in memory. Subagent
 
 | Client | What it is |
 | --- | --- |
-| **Happy Desktop** | Projects, workspaces, sessions, changed files, terminals, the Inbox, settings |
-| **Happy Terminal** | The same client as a TUI, shipped with Desktop |
+| **Happy Desktop** | Projects, workspaces, sessions, changed files, terminals, the Inbox (experimental), settings |
+| **Happy Terminal** | The same client as a TUI, installed separately (`@slopus/happy-terminal`) |
 | **Happy mobile** | iOS and Android, attached to the same sessions through an encrypted relay |
 
 A message from any client enters the same session, queue, and permission boundary. There is no remote mode.
@@ -32,9 +32,9 @@ A message from any client enters the same session, queue, and permission boundar
 
 - Model requests, to the provider you chose, with your credentials.
 - Session sync to your phone, through Happy's relay, as ciphertext. Your devices hold the keys.
-- Product analytics from the app to PostHog, tied to a random install ID: which features you use, the model, the OS, and the app version. PostHog also sees the IP address of each request. Never your messages, code, or files. Turn it off in Settings → Privacy.
+- Product analytics from the app to PostHog, tied to a random install ID: which features you use, the model, the OS, and the app version. PostHog also sees the IP address of each request. Never your messages, code, or files. Turn it off in Settings → General → Privacy.
 - No hosted account for the app, and no copy of your project.
 
 ## Not yet
 
-Forking a running provider session. The "add a remote machine by name" experience; the SSH transport exists, see [Remote Agents](/guides/remote-agents/).
+Forking a running provider session. The "add a remote machine by name" experience; the Tailcat transport exists, see [Remote Agents](/guides/remote-agents/).

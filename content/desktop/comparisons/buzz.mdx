@@ -13,7 +13,7 @@ We agree on more than we disagree on: open source, nothing hosted for you, agent
 | secrets | attached to a session and injected only when a command names the bundle; never prompt text; the keychain is unreachable from the sandbox | `BUZZ_PRIVATE_KEY` straight in the agent's env; per-call approval bypassed by default |
 | phone | first-class: same sessions, end-to-end encrypted, relay sees ciphertext only | none |
 | sharing | invite someone into a session, or run one Happy Agent for a team behind Happy Social sign-in | channels on a shared relay |
-| plugins | sandboxed TypeScript processes: MCP tools for every model, small local apps for the UI, written from inside by an agent | no installable surface; extend via MCP servers, workflows, or new event kinds baked into relay and clients |
+| plugins | skills and MCP servers, written from inside by an agent | no installable surface; extend via MCP servers, workflows, or new event kinds baked into relay and clients |
 | install | download and open; nothing to host unless you want a team server | docker compose: rust relay + postgres + redis + minio |
 
 Where Buzz is ahead: the team surface. If you want Slack with agents as members, Buzz built that well, and the onboarding is nice. Happy Desktop's team setup is multi-step today.

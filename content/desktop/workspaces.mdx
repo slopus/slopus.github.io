@@ -14,7 +14,7 @@ Importing registers the folder. Happy does not move it, copy it, or initialize G
 4. Copy the files in `workspace.sync` (a gitignored `.env`, say) and keep them current whenever the project root's copy changes.
 5. Run `workspace.setup_commands`, such as `pnpm install --frozen-lockfile`.
 
-A workspace is ready only after all of that succeeds. It starts with a cold build cache. Managed workspaces require a Git repository.
+A workspace is ready once the checkout and file sync succeed; a failed setup command is logged as a warning. It starts with a cold build cache. A project without Git gets a plain copy of its folder instead of a worktree.
 
 A new workspace takes the name of its first conversation, and the branch follows. A workspace you named is never renamed by an agent.
 
@@ -24,12 +24,11 @@ Immediate and irreversible: the workspace leaves the list, the worktree and fold
 
 ## Agents in another workspace
 
-An agent never edits another workspace by path. Work runs from inside the workspace, two ways:
+An agent never edits another workspace by path. Work runs from inside the workspace:
 
-- **Hidden workspace agent**: a subagent whose working directory is the workspace. You see only the result.
-- **Delegated session**: a full conversation in your session list, with the delegator as its parent. Reviewed in Auto.
+- **Subtask**: a full conversation in your session list, in its own new workspace, with the creating agent as its coordinator. Only bots and their subtasks create them.
 
-Only the creating session may archive a workspace or start hidden agents in it.
+Only the creating session may archive a workspace.
 
 ## When to create one
 
@@ -37,7 +36,7 @@ When work will run alongside other work and their changes could collide. That is
 
 ## Changes
 
-Measured against the branch's merge base with `origin/main`, never local `main`. Desktop shows changed files beside the conversation.
+Measured against the branch's merge base with the remote default branch (`origin/main`), falling back to the local one only when there is no remote. Desktop shows changed files beside the conversation.
 
 ```toml
 [workspace]

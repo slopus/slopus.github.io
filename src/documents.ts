@@ -248,8 +248,8 @@ const desktopDocuments: DocumentDefinition[] = [
   {
     path: 'extending',
     sourcePath: '/content/desktop/extending.mdx',
-    title: 'Plugins, Skills & MCP',
-    description: 'Add tools and small apps with plugins, instructions with skills, and services over MCP.',
+    title: 'Skills & MCP',
+    description: 'Add instructions with skills and tools over MCP.',
     group: 'Features',
   },
   {
