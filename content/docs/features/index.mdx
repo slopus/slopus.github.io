@@ -52,15 +52,14 @@ Happy Coder provides a native mobile experience for Claude Code, including file 
 > **User Story**: As a security-conscious developer, I want my code and conversations to remain private even from the service provider, so I can use the tool with proprietary or sensitive codebases without compromising confidentiality.
 
 **Technical Implementation**:
-- AES encryption for all data in transit
+- AES-256-GCM and NaCl (XSalsa20-Poly1305) encryption
 - Key exchange via QR code scanning
 - Zero round-trip authentication protocol
-- Public key hashing for channel identification
 - Open-source relay server for self-hosting
 
 ### 4. Offline-First Architecture with Encrypted Pub/Sub
 
-**Engineering Description**: Asynchronous communication through encrypted relay server that acts as a message queue between desktop CLI and mobile app. Desktop CLI logs Claude Code activity, encrypts it, and uploads encrypted blobs to object storage. Mobile app fetches and decrypts these blobs to display progress. Commands flow in reverse - mobile encrypts instructions, uploads to relay, desktop downloads and decrypts to execute.
+**Engineering Description**: Asynchronous communication through encrypted relay server that acts as a message queue between desktop CLI and mobile app. Desktop CLI logs Claude Code activity, encrypts it, and uploads encrypted messages to the relay server's database. Mobile app fetches and decrypts these blobs to display progress. Commands flow in reverse - mobile encrypts instructions, uploads to relay, desktop downloads and decrypts to execute.
 
 > **User Story 1**: As a developer, I want to queue up tasks for Claude Code and then go on a hike or ride through train tunnels, knowing that Claude will continue working and I can catch up on progress later without the session dying due to connectivity issues.
 
@@ -68,8 +67,8 @@ Happy Coder provides a native mobile experience for Claude Code, including file 
 
 **Technical Implementation**:
 - Encrypted blob storage on relay server (server cannot read contents)
-- Desktop CLI writes encrypted activity logs to object storage
-- Mobile app polls for encrypted updates and decrypts locally
+- Desktop CLI writes encrypted activity logs to the relay server
+- Mobile app receives encrypted updates over WebSocket and decrypts locally
 - Bidirectional encrypted pub/sub messaging system
 - Session persistence independent of network connectivity
 - Simple relay server with no access to plaintext data
@@ -97,7 +96,7 @@ Happy Coder provides a native mobile experience for Claude Code, including file 
 
 ### 7. Custom Slash Commands and Agent Library
 
-**Engineering Description**: Complete Claude Code slash command and custom agent ecosystem accessible from mobile. All user-defined agents from `~/.claude/agents/` directory are synchronized and available through the mobile interface. The system provides intelligent autocomplete, command history, and seamless agent switching without requiring separate mobile-specific agent definitions.
+**Engineering Description**: Complete Claude Code slash command and custom agent ecosystem accessible from mobile. User-defined agents in `~/.claude/agents/` work because Claude Code runs on your computer; the CLI forwards Claude Code's slash commands to the app. The system provides intelligent autocomplete, command history, and seamless agent switching without requiring separate mobile-specific agent definitions.
 
 > **User Story 1**: As a developer, I want to access my custom bedtime planning agent (`/bedtime`) from my phone while lying in bed, so I can set up tomorrow's coding tasks using the same specialized prompts and workflows I've refined on desktop.
 
@@ -106,7 +105,7 @@ Happy Coder provides a native mobile experience for Claude Code, including file 
 > **User Story 3**: As a developer, I want access to my complete library of specialized agents (database migration helper, API documentation generator, security audit bot) from mobile, so I can run the same high-quality automated workflows regardless of which device I'm using.
 
 **Technical Implementation**:
-- Real-time synchronization of `~/.claude/agents/` directory contents to mobile app
+- Claude Code's slash commands forwarded to the mobile app
 - Command autocomplete with fuzzy search across all available agents
 - Agent metadata parsing (name, description, tools, model preferences)
 - Session-aware agent switching that preserves context and conversation history
@@ -119,12 +118,12 @@ Happy Coder provides a native mobile experience for Claude Code, including file 
 ### 8. Push Notification System
 
 **Engineering Description**: Push notifications triggered by Claude Code state changes. Notifications 
-include session status updates, completion alerts, error notifications, and input requests. Unlike social media apps where notification fatigue is a concern, work-focused notifications prioritize immediate awareness over filtering - when you're actively developing, you need to know when each async operation completes to make the next work mode decision.
+include session status updates, completion alerts, permission requests, and questions. Unlike social media apps where notification fatigue is a concern, work-focused notifications prioritize immediate awareness over filtering - when you're actively developing, you need to know when each async operation completes to make the next work mode decision.
 
 > **User Story**: As a developer, I want to be notified when Claude Code finishes a task or needs my input, so I can provide guidance without constantly checking my phone or wondering if progress has stalled.
 
 **Technical Implementation**:
-- Comprehensive state change notifications (completion, error, input needed)
+- Comprehensive state change notifications (completion, permission request, clarification needed)
 - Immediate delivery without smart filtering or bundling delays
 - Deep linking to specific sessions and exact completion points
 - Rich notification content with operation details

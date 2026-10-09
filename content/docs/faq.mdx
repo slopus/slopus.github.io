@@ -6,7 +6,7 @@ Happy Coder is a mobile app that lets you control coding agents on many differen
 
 ## Is Happy Coder free?
 
-Yes, completely free. No catches.
+Yes, free. Voice has a free tier with limits and an optional subscription.
 
 - **No usage limits** - Run as many sessions as you want
 - **No user limits** - Install on all your devices
@@ -33,7 +33,7 @@ Happy Coder removes all the friction from mobile Claude Code access:
 
 3. **It just works** - Handles network issues gracefully. Reconnects automatically. Queues messages when offline. No broken SSH sessions or tmux corruption.
 
-4. **Smart error handling** - Detects common problems and tells you exactly how to fix them. Port already in use? It tells you which process. Claude Code not found? It shows you where to install it.
+4. **Smart error handling** - Detects common problems and tells you exactly how to fix them. Claude Code not found? It shows you where to install it.
 
 5. **Unix philosophy** - Does one thing well: extends Claude Code to mobile. Doesn't try to be an IDE, a project manager, or a cloud platform.
 
@@ -133,7 +133,7 @@ The magic is seamlessly switching between both in the same conversation.
 
 **For regular Claude:** Visit claude.ai and start chatting.
 
-**For desktop Claude Code:** Use terminal commands like `claude-code "help me fix this bug"`
+**For desktop Claude Code:** Use terminal commands like `claude "help me fix this bug"`
 
 ### Which Claude is best for coding?
 
@@ -211,7 +211,7 @@ For comparison, SSH over mobile usually has 100-200ms latency but with terrible 
 
 Yes! You can run multiple sessions simultaneously:
 - Different sessions on different machines
-- Multiple sessions on the same machine (different ports)
+- Multiple sessions on the same machine
 - Switch between sessions instantly on your phone
 - Each session maintains its own context and history
 
@@ -226,10 +226,9 @@ Full support for all MCP (Model Context Protocol) tools:
 ### Can I use custom Claude Code agents?
 
 Yes, all your custom agents work perfectly:
-- Agents in `~/.claude/agents/` sync automatically
+- Agents in `~/.claude/agents/` work as usual (Claude Code runs on your computer)
 - Custom slash commands work from mobile
 - Agent switching preserves conversation context
-- Create new agents from your phone
 
 ### What happens if my connection drops?
 
@@ -284,7 +283,7 @@ The relay server stores encrypted blobs for sync, which we cannot read.
 Happy Coder needs Claude Code installed first:
 ```bash
 npm install -g @anthropic-ai/claude-code
-claude-code --version  # Verify installation
+claude --version  # Verify installation
 happy  # Now this should work
 ```
 
@@ -293,28 +292,13 @@ happy  # Now this should work
 Common fixes:
 1. Increase screen brightness
 2. Clean your camera lens
-3. Make QR code bigger: `happy --qr-size large`
-4. Use manual code: `happy --no-qr` (shows text code to type)
-
-### "Port already in use" error
-
-Another process is using port 8765:
-```bash
-# Find what's using the port
-lsof -i :8765
-
-# Kill it
-kill -9 [PID]
-
-# Or use a different port
-happy --port 8766
-```
+3. Use the URL printed under the QR code ("Enter URL manually" in the app), or pick Web Browser in `happy auth login`
 
 ### Can't connect to relay server
 
 Check if you're behind a corporate firewall:
 1. Try using cellular data instead of WiFi
-2. Ask IT to whitelist `relay.happy.engineering`
+2. Ask IT to whitelist `api.cluster-fluster.com` and `app.happy.engineering`
 3. Or [self-host your relay server](/guides/self-hosting)
 
 ## Need More Help?

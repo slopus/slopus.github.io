@@ -12,7 +12,7 @@ When you self-host the Happy Server, you get:
 - **Team control** - Run one server for your whole team
 - **Zero dependencies** - Never worry about a service shutting down
 
-The entire server is only 1,293 lines of typescript. You can read it yourself to
+The server is about 12,000 lines of TypeScript. You can read it yourself to
 verify it just forwards encrypted messages.
 
 ## Quick Start
@@ -22,11 +22,11 @@ verify it just forwards encrypted messages.
 
 ```bash
 # Get the code
-git clone https://github.com/slopus/happy-server
-cd happy-server
+git clone https://github.com/slopus/happy
+cd happy
 
-# Build with Docker
-docker build -t happy-server:latest .
+# Build with Docker, from the monorepo root
+docker build -t happy-server:latest -f Dockerfile .
 ```
 
 ### Run the Server
@@ -34,20 +34,17 @@ docker build -t happy-server:latest .
 ```bash
 docker run -d \
   --name happy-server \
-  -p 3000:3000 \
+  -p 3005:3005 \
   -e NODE_ENV=production \
-  -e DATABASE_URL="postgresql://postgres:postgres@localhost:5432/happy-server" \
-  -e REDIS_URL="redis://localhost:6379" \
-  -e SEED="your-seed-for-token-generation" \
+  -e HANDY_MASTER_SECRET="your-master-secret" \
   -e PORT=3005 \
   --restart unless-stopped \
   happy-server:latest
 ```
 
 **Important**: Replace the environment variable values with your actual configuration:
-- `DATABASE_URL`: Your PostgreSQL connection string
-- `REDIS_URL`: Your Redis connection string  
-- `SEED`: A secure random seed for token generation
+- `HANDY_MASTER_SECRET`: A secure random secret for auth and encryption
+- `DATABASE_URL`, `REDIS_URL`: Optional. Without them the image runs an embedded database
 - `PORT`: The port the application listens on (3005)
 
 ### Configure Your Devices
@@ -55,12 +52,12 @@ docker run -d \
 **On your phone:**
 1. Open Happy app
 2. Go to Settings
-3. Set "Relay Server URL" to `http://your-server:3000`
+3. Set "Server URL" to `http://your-server:3005`
 4. Save
 
 **On your computer:**
 ```bash
-export HAPPY_SERVER_URL="http://your-server:3000"
+export HAPPY_SERVER_URL="http://your-server:3005"
 # Configure your CLI to use your server
 ```
 
@@ -83,7 +80,7 @@ sudo apt install caddy
 # Configure reverse proxy
 sudo tee /etc/caddy/Caddyfile <<EOF
 your-domain.com {
-    reverse_proxy localhost:3000
+    reverse_proxy localhost:3005
 }
 EOF
 
@@ -104,13 +101,13 @@ services:
   happy-server:
     image: happy-server:latest
     ports:
-      - "3000:3000"
+      - "3005:3005"
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/happy-server
-      - REDIS_URL=redis://localhost:6379
-      - SEED=your-seed-for-token-generation
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/happy-server
+      - REDIS_URL=redis://redis:6379
+      - HANDY_MASTER_SECRET=your-master-secret
       - PORT=3005
     depends_on:
       - postgres
@@ -185,10 +182,8 @@ Check server health:
 docker logs -f happy-server
 
 # Check health endpoint
-curl http://your-server:3000/health
+curl http://your-server:3005/health
 
-# See connection count  
-curl http://your-server:3000/stats
 ```
 
 ## Backup Your Data
@@ -310,7 +305,7 @@ type: Opaque
 stringData:
   DATABASE_URL: "postgresql://postgres:postgres@postgres-service:5432/happy-server"
   REDIS_URL: "redis://redis-service:6379"
-  SEED: "your-secure-seed-for-token-generation"
+  HANDY_MASTER_SECRET: "your-secure-master-secret"
   PORT: "3005"
   NODE_ENV: "production"
 ```
@@ -321,7 +316,7 @@ kubectl apply -f happy-secrets.yaml
 ```
 
 **Security Note**: Replace the values with your actual configuration. For production:
-- Use a strong, random SEED value
+- Use a strong, random HANDY_MASTER_SECRET value
 - Use proper database credentials
 - Consider using external secret management tools like external-secrets-operator with Vault
 

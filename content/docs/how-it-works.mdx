@@ -65,30 +65,31 @@ Good question! You don't have to trust us. Here's why:
 
 ### Your Data Stays Private
 
-Your phone and computer share a secret key through a QR code. The server never
-sees this key. Before sending any data, your computer encrypts it with this key.
+Your computer shows a QR code with a one-time public key. Your phone scans it
+and sends back your account's public key, sealed so only your computer can open
+it. For each session your computer makes a random key, encrypts your data with
+it, and stores that key on the server locked to your account's public key.
 The server only sees encrypted blobs - it can't read them.
 
-> **Diagram needed**: Show the encryption flow. QR code containing secret key
-scanned by CLI, both devices now have shared secret, all messages encrypted with
-this secret before sending to server.
+> **Diagram needed**: Show the encryption flow. QR code containing the CLI's one-time
+public key, scanned by the phone; the phone sends back the account's public key;
+each session gets its own random key, wrapped with that public key.
 
 ### How Your Devices Connect
 
-Your phone and computer use their shared secret key to find each other:
+Your phone (or browser) logs in with a key derived from your account secret:
 
-**Zero Round-Trip Authentication**: Each device sends everything at once:
+**Zero Round-Trip Authentication**: The device sends everything at once:
 1. The device picks a random challenge (not the server!)
 2. The device signs this challenge with its secret key
 3. The device sends: challenge + signature + public key
 
-The server checks the signature matches the public key. If it does, you're
-connected. This happens instantly - no back-and-forth needed.
+The server checks the signature matches the public key. If it does, it issues
+a token. This happens instantly - no back-and-forth needed. Your computer
+receives its token when you approve its QR code from your phone.
 
-**Extra Security**: 
-- The server only saves a hash of your public key
-- The actual public key is deleted from memory right after you connect
-- If someone looks at the server's hard drive, they can't even see what public keys were used
+**Extra Security**: The server stores your account's public signing key, never
+a secret key.
 
 This design stops many attacks. The server can't trick you into revealing your
 secret key. Even if someone hacks the server, they can't read your data.
@@ -99,8 +100,7 @@ proof process.
 
 ### Run Your Own Server
 
-The server is small - only 900 lines of code. You can:
-- Read all the code in a few minutes
+The server is open source (about 12,000 lines of TypeScript). You can:
 - Check that it really just forwards messages
 - Run your own server (takes 2 minutes to set up)
 - Write your own server from our spec
@@ -119,7 +119,7 @@ When you run `happy` on your computer:
 6. The server saves the blob and sends it to your phone
 7. Your phone decrypts it and shows you what's happening
 
-The server never knows what you're working on. It just sees encrypted data with timestamps.
+The server never knows what you're working on. Your messages, code and session metadata reach it only as encrypted data.
 
 ## Why Save Encrypted Blobs?
 

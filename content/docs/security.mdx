@@ -5,7 +5,7 @@ Happy Coder uses end-to-end encryption. Your code stays private, even from us.
 ## The Short Version
 
 1. **Your code is encrypted** before leaving your device
-2. **Only you have the keys** - master secret never leaves your phone
+2. **Only you have the keys** - master secret never leaves your phones and browsers
 3. **The relay server can't read anything** - it only sees encrypted blobs
 4. **Open source** - audit the code yourself
 
@@ -69,14 +69,14 @@ The following diagrams explain how Happy Coder's encryption works in detail.
   ╠═══════════════════════════════════════════════════════════════════════════╣
   ║                                                                           ║
   ║  Lifecycle:    [ONCE/ACCOUNT] - created at signup                         ║
-  ║  Stored:       Mobile secure storage only                                 ║
+  ║  Stored:       Your linked phones/browser                                 ║
   ║  Backup:       XXXXX-XXXXX-XXXXX-... (base32)                             ║
   ║                                                                           ║
-  ║  ❌ Never leaves device   ❌ Never sent anywhere                           ║
+  ║  ❌ Never sent to server   ❌ Never seen by CLIs                           ║
   ║                                                                           ║
   ╚═══════════════════════════════════════════════════════════════════════════╝
                                       │
-                                      │ HKDF derive
+                                      │ HMAC-SHA512 derive
                                       ▼
 
                          LAYER 2: CONTENT KEY PAIR
@@ -92,7 +92,7 @@ The following diagrams explain how Happy Coder's encryption works in detail.
   ║                                      ║    │                                │
   ║  Purpose:                            ║    │  Purpose:                      │
   ║  • Decrypt DEKs from server          ║    │  • Encrypt DEKs for storage    │
-  ║  • Sign messages to CLI              ║    │  • Sent to CLI during auth     │
+  ║                                      ║    │  • Sent to CLI during auth     │
   ║                                      ║    │                                │
   ║  ❌ Never leaves mobile               ║    │  ✓ Shared with all CLIs        │
   ║                                      ║    │                                │
@@ -167,7 +167,7 @@ The following diagrams explain how Happy Coder's encryption works in detail.
 │  ║  content_secret_key     ║  │  │    (encrypted)      │  │                               │
 │  ╚═════════════════════════╝  │  │                     │  │  «═════════════════════════»  │
 │             │                 │  │  • Session content  │  │  ║  session DEKs           ║  │
-│       decrypts                │  │    (encrypted)      │  │  ║  (decrypted in memory)  ║  │
+│       decrypts                │  │    (encrypted)      │  │  ║  (memory and on disk)   ║  │
 │             ▼                 │  │                     │  │  «═════════════════════════»  │
 │  «═════════════════════════»  │  │  • Machine data     │  │                               │
 │  ║  All DEKs (decrypted)   ║  │  │    (encrypted)      │  │  ❌ No master_secret          │
@@ -320,12 +320,7 @@ To share a session with a friend:
 ├──────────────────────┼───────────────┼───────────────────────────────────────┤
 │                      │               │                                       │
 │  MACHINE DEK         │ ONCE/MACHINE  │  Encrypt machine-specific data        │
-│  (AES-256)           │               │  Revocable per-machine                │
-│                      │               │                                       │
-├──────────────────────┼───────────────┼───────────────────────────────────────┤
-│                      │               │                                       │
-│  MACHINE KEY (local) │ ONCE/MACHINE  │  Local CLI cache encryption           │
-│                      │               │  Never sent anywhere                  │
+│  (AES-256)           │               │  Stored in ~/.happy/access.key        │
 │                      │               │                                       │
 ├──────────────────────┼───────────────┼───────────────────────────────────────┤
 │                      │               │                                       │
@@ -347,7 +342,7 @@ To share a session with a friend:
 
   CLI machine compromised         • content_public_key        • master_secret
                                   • machine_key (local)       • content_secret_key
-                                  • session DEKs (in memory)  • OTHER sessions' DEKs
+                                  • session DEKs (on disk)    • OTHER sessions' DEKs
                                   • THIS machine's sessions   • friends' sessions
 
   Server compromised              • encrypted DEKs            • decrypted DEKs
@@ -361,18 +356,19 @@ To share a session with a friend:
   RECOVERY SCENARIO               SOLUTION
   ─────────────────────────────────────────────────────────────────────────────
 
-  CLI machine lost/stolen         Remove from account - session DEKs were only
-                                  in memory, machine DEK is revoked
+  CLI machine lost/stolen         Remove from account. The machine keeps its
+                                  machine key and the last 14 days' session DEKs
 
   Mobile lost + have backup       Restore master_secret → re-derive content keys
                                   → can decrypt all DEKs again
 
-  Mobile lost + no backup         Account unrecoverable (by design)
+  Mobile lost + no backup         Account unrecoverable (by design), unless
+                                  another linked device still holds the secret
 ```
 
 ## Why This Design?
 
-**Your master secret never leaves your mobile device.** Each CLI machine receives only a derived public key for encryption. This means:
+**Your master secret never leaves your phones and browsers.** Each CLI machine receives only a derived public key for encryption. This means:
 
 - If a CLI machine is compromised, the attacker cannot access your backup code or other machines
 - The server only stores encrypted blobs it cannot read
