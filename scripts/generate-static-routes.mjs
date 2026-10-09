@@ -312,12 +312,23 @@ for (const { route, title, description } of pluginPages) {
   sitemapPaths.push(canonicalPath)
 }
 
-// Mirrors thesisMetadata in src/siteMetadata.ts. Unlisted: reachable here, linked from nowhere.
+// Mirrors blogMetadata in src/siteMetadata.ts. The index lists posts that live at their own top-level routes.
+const blogHtml = withAppMarkup(htmlForPage({
+  title: 'Blog — Happy',
+  description: 'Writing from Happy Engineering on agents, the interfaces around them, and what we are betting on.',
+  canonicalPath: '/blog/',
+}), renderPath('/blog/'))
+if (!blogHtml.includes('href="/thesis/"')) {
+  throw new Error('/blog/ should list /thesis/')
+}
+await writeRoute('blog', blogHtml)
+sitemapPaths.push('/blog/')
+
+// Mirrors thesisMetadata in src/siteMetadata.ts.
 const thesisHtml = withAppMarkup(htmlForPage({
   title: 'Our Thesis — Happy',
   description: 'One core agent, chat that left the chat, phone first, one harness, and open source with no lock-in. What Happy is betting on.',
   canonicalPath: '/thesis/',
-  robots: 'noindex, follow',
 }), renderPath('/thesis/'))
 const thesisApp = thesisHtml.slice(thesisHtml.indexOf('<div id="app">'))
 const thesisSource = await readFile(path.join(projectRoot, 'content', 'thesis.md'), 'utf8')
@@ -337,6 +348,7 @@ for (const [, imagePath] of thesisSource.matchAll(/^!\[[^\]]*\]\((\/[^)\s]+)(?: 
   }
 }
 await writeRoute('thesis', thesisHtml)
+sitemapPaths.push('/thesis/')
 
 await writeFile(
   path.join(distRoot, '404.html'),

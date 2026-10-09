@@ -336,6 +336,13 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-back-link { align-items: center; color: #557068; display: inline-flex; font-size: .82rem; gap: .45rem; margin-bottom: 3rem; }
 .document-back-link:hover { color: #e6522c; }
 .legal-article, .essay-article { margin: 0 auto; max-width: 760px; }
+/* The blog index: one block per post, title first, then date and summary. */
+.document-content .blog-list { list-style: none; margin: 0; padding: 0; }
+.document-content .blog-list li { border-top: 1px solid #ddd6c8; margin: 0; padding: 1.6rem 0; }
+.document-content .blog-list a { color: #183f38; font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-size: 1.45rem; font-weight: 600; letter-spacing: -.02em; text-decoration: none; }
+.document-content .blog-list a:hover { color: #e6522c; }
+.document-content .blog-list time { color: #6b7f78; display: block; font-family: 'DM Mono', monospace; font-size: .72rem; letter-spacing: .03em; margin-top: .4rem; }
+.document-content .blog-list p { margin: .6rem 0 0; }
 /* An essay has no lede paragraph; its first paragraph sits under a section heading. */
 .essay-article .document-content > p:first-of-type { color: inherit; font-size: inherit; }
 

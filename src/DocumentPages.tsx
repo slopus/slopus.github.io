@@ -262,10 +262,45 @@ export function ThesisPage() {
 
   return (
     <div className="site-shell document-site-shell">
-      <SiteHeader />
+      <SiteHeader blogActive />
       <main className="legal-layout page-width">
         <article className="document-article essay-article" ref={article}>
           <MarkdownDocument markdown={getThesisMarkdown()} components={thesisComponents} />
+        </article>
+      </main>
+      <SiteFooter />
+    </div>
+  )
+}
+
+// Posts live at their own top-level routes (/thesis/, not /blog/thesis/); this index just lists them.
+export const blogPosts = [
+  {
+    href: '/thesis/',
+    title: 'Our Thesis',
+    date: '2026-10-09',
+    summary: 'One core agent, chat that left the chat, phone first, one harness, and open source with no lock-in. What Happy is betting on.',
+  },
+] as const
+
+export function BlogPage() {
+  return (
+    <div className="site-shell document-site-shell">
+      <SiteHeader blogActive />
+      <main className="legal-layout page-width">
+        <article className="document-article essay-article">
+          <div className="document-content">
+            <h1>Blog</h1>
+            <ul className="blog-list">
+              {blogPosts.map((post) => (
+                <li key={post.href}>
+                  <a href={post.href}>{post.title}</a>
+                  <time dateTime={post.date}>{post.date}</time>
+                  <p>{post.summary}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
         </article>
       </main>
       <SiteFooter />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import DesktopApp from './DesktopApp'
 import ModelBenchmarksPage from './ModelBenchmarksPage'
-import { DocsPage, LegalPage, NotFoundPage, ThesisPage } from './DocumentPages'
+import { BlogPage, DocsPage, LegalPage, NotFoundPage, ThesisPage } from './DocumentPages'
 import { MemesPluginPage, PluginsPage } from './PluginPages'
 import { getDocument, normalizeDocumentPath } from './documents'
 import { productForPath } from './products'
@@ -15,6 +15,7 @@ import {
   pluginsMetadata,
   pluginTermsMetadata,
   thesisMetadata,
+  blogMetadata,
   type PageMetadata,
 } from './siteMetadata'
 
@@ -75,6 +76,10 @@ function metadataForPath(pathname: string): PageMetadata {
 
   if (normalizedPath === '/thesis') {
     return thesisMetadata
+  }
+
+  if (normalizedPath === '/blog') {
+    return blogMetadata
   }
 
   if (pluginPageMetadata[normalizedPath]) {
@@ -231,6 +236,10 @@ export function Router({ pathname }: { pathname?: string }) {
 
   if (normalizedPath === '/thesis') {
     return <ThesisPage />
+  }
+
+  if (normalizedPath === '/blog') {
+    return <BlogPage />
   }
 
   if (normalizedPath === '/plugins') {

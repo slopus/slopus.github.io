@@ -8,7 +8,7 @@ import { Router } from './Router'
  * URLs without running JavaScript. The thesis ships its text so shared links
  * and crawlers see the essay. The client hydrates this markup in place.
  */
-export const prerenderedPaths = ['/plugins/', '/plugins/memes/', '/plugins/privacy/', '/plugins/terms/', '/thesis/']
+export const prerenderedPaths = ['/plugins/', '/plugins/memes/', '/plugins/privacy/', '/plugins/terms/', '/blog/', '/thesis/']
 
 export function renderPath(pathname: string) {
   return renderToString(

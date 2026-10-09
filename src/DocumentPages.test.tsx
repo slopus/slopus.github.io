@@ -178,13 +178,22 @@ describe('static document pages', () => {
     }
   })
 
-  it('keeps the thesis out of navigation', () => {
+  it('lists the thesis on the blog index, not in the docs sidebar', () => {
     // Server markup: the landing pages' effects need browser APIs jsdom lacks.
-    for (const pathname of ['/', '/docs/', '/desktop/', '/desktop/docs/', '/model-benchmarks', '/plugins/', '/thesis/', '/privacy/']) {
-      // No page links to /thesis/. The page's own heading anchors (#our-thesis) don't count.
-      expect(renderPath(pathname)).not.toMatch(/href="[^"]*\/thesis/)
-    }
+    const blog = renderPath('/blog/')
+    expect(blog).toMatch(/<h1[^>]*>Blog<\/h1>/)
+    expect(blog).toContain('href="/thesis/"')
+    expect(blog).toContain('Our Thesis')
     expect(documents.some((document) => document.path.includes('thesis'))).toBe(false)
+    expect(renderPath('/desktop/docs/')).not.toMatch(/href="[^"]*\/thesis/)
+  })
+
+  it('marks Blog as the current section on the blog index and on posts', () => {
+    for (const pathname of ['/blog/', '/thesis/']) {
+      expect(renderPath(pathname)).toMatch(/<a href="\/blog\/" aria-current="page">Blog<\/a>/)
+    }
+    expect(renderPath('/desktop/docs/')).not.toContain('aria-current="page">Blog')
+    expect(thesisMetadata.robots).toBeUndefined()
   })
 
   it('renders privacy and terms as site pages', () => {

@@ -59,7 +59,13 @@ export const thesisMetadata: PageMetadata = {
   title: 'Our Thesis — Happy',
   description: 'One core agent, chat that left the chat, phone first, one harness, and open source with no lock-in. What Happy is betting on.',
   canonicalPath: '/thesis/',
-  robots: 'noindex, follow',
+}
+
+/** The blog index. Its posts are listed in src/DocumentPages.tsx's blogPosts. */
+export const blogMetadata: PageMetadata = {
+  title: 'Blog — Happy',
+  description: 'Writing from Happy Engineering on agents, the interfaces around them, and what we are betting on.',
+  canonicalPath: '/blog/',
 }
 
 /**
