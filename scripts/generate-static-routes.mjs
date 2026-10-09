@@ -321,43 +321,26 @@ for (const { route, title, description } of pluginPages) {
   sitemapPages.push({ route: canonicalPath, sources: [policySources[route] ?? 'src/PluginPages.tsx'] })
 }
 
-// Mirrors blogMetadata in src/siteMetadata.ts. The index lists posts that live at their own top-level routes.
-const blogHtml = withAppMarkup(htmlForPage({
-  title: 'Blog — Happy',
-  description: 'Writing from Happy Engineering on agents, the interfaces around them, and what we are betting on.',
-  canonicalPath: '/blog/',
-}), renderPath('/blog/'))
-if (!blogHtml.includes('href="/thesis/"')) {
-  throw new Error('/blog/ should list /thesis/')
-}
-await writeRoute('blog', blogHtml)
-sitemapPages.push({ route: '/blog/', sources: ['src/DocumentPages.tsx'] })
+// The Vision essay was published at /thesis/, and the blog index lived at /blog/
+// briefly with it as its only post. Both are in routes.txt, so both redirect to /vision/.
+await writeRoute('thesis', redirectHtml('/vision/'))
+await writeRoute('blog', redirectHtml('/vision/'))
 
-// Mirrors thesisMetadata in src/siteMetadata.ts.
-const thesisHtml = withAppMarkup(htmlForPage({
-  title: 'Our Thesis — Happy',
-  description: 'One core agent, chat that left the chat, phone first, one harness, and open source with no lock-in. What Happy is betting on.',
-  canonicalPath: '/thesis/',
-}), renderPath('/thesis/'))
-const thesisApp = thesisHtml.slice(thesisHtml.indexOf('<div id="app">'))
-const thesisSource = await readFile(path.join(projectRoot, 'content', 'thesis.md'), 'utf8')
-const thesisPostUrls = thesisSource.match(/^https:\/\/x\.com\/\S+$/gm) ?? []
-if (thesisApp.match(/<h1[\s>]/g)?.length !== 1) {
-  throw new Error('/thesis/ should render exactly one h1')
-}
-if ((thesisApp.match(/<blockquote class="twitter-tweet"/g) ?? []).length !== thesisPostUrls.length) {
-  throw new Error('/thesis/ should render every X post in content/thesis.md as an embed')
+// The Vision essay is a docs page (src/documents.ts), written by the docs loop above.
+const visionHtml = await readFile(path.join(distRoot, 'vision', 'index.html'), 'utf8')
+const visionApp = visionHtml.slice(visionHtml.indexOf('<div id="app">'))
+const visionSource = await readFile(path.join(projectRoot, 'content', 'thesis.md'), 'utf8')
+if (!visionApp.includes('href="/vision/" aria-current="page">Vision</a>')) {
+  throw new Error('/vision/ should be the current page in the docs sidebar')
 }
 // The essay's images ship from public/; the build fails if one is missing or not rendered.
 // An image line may carry a quoted title after the path; that title is its caption.
-for (const [, imagePath] of thesisSource.matchAll(/^!\[[^\]]*\]\((\/[^)\s]+)(?: "[^"]*")?\)$/gm)) {
+for (const [, imagePath] of visionSource.matchAll(/^!\[[^\]]*\]\((\/[^)\s]+)(?: "[^"]*")?\)$/gm)) {
   await readFile(path.join(distRoot, imagePath))
-  if (!thesisApp.includes(`src="${imagePath}"`)) {
-    throw new Error(`/thesis/ should render the image ${imagePath}`)
+  if (!visionApp.includes(`src="${imagePath}"`)) {
+    throw new Error(`/vision/ should render the image ${imagePath}`)
   }
 }
-await writeRoute('thesis', thesisHtml)
-sitemapPages.push({ route: '/thesis/', sources: ['content/thesis.md'] })
 
 await writeFile(
   path.join(distRoot, '404.html'),
@@ -394,10 +377,6 @@ Happy Desktop is the current product: a desktop app with its own agent runtime, 
 ## Happy Desktop docs
 
 ${docsLinks(HAPPY_DESKTOP).join('\n')}
-
-## About
-
-- [Vision](${absoluteUrl('/thesis/')}): ${metadataForPath('/thesis/').description}
 
 ## Download
 

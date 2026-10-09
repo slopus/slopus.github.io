@@ -14,12 +14,12 @@ export { APP_STORE_LINK, GOOGLE_PLAY_LINK } from './StoreButtons'
 /**
  * Pages whose full text must be in the served HTML, not only after the app
  * loads. The plugin directory reads the plugin's website, terms, and privacy
- * URLs without running JavaScript. The thesis and every docs page ship their
+ * URLs without running JavaScript. Every docs page, Vision included, ships its
  * text so shared links and crawlers that do not run JavaScript see it. The
  * client hydrates this markup in place.
  */
 export const prerenderedPaths = [
-  '/plugins/', '/plugins/memes/', '/plugins/privacy/', '/plugins/terms/', '/blog/', '/thesis/',
+  '/plugins/', '/plugins/memes/', '/plugins/privacy/', '/plugins/terms/',
   ...documents.map((document) => documentHref(document.product === 'desktop' ? HAPPY_DESKTOP : HAPPY, document.path)),
 ]
 

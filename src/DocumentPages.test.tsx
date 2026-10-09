@@ -1,10 +1,11 @@
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, render, screen, within } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { metadataForPath, Router } from './Router'
 import {
   documentHeading,
   documents,
   documentsForProduct,
+  getDocument,
   getDocumentSource,
   getThesisMarkdown,
   prepareMarkdown,
@@ -12,7 +13,6 @@ import {
 import { prerenderedPaths, renderPath } from './prerender'
 import { desktopDocsMetadata, docsMetadata, thesisMetadata } from './siteMetadata'
 import { documentHref, HAPPY, HAPPY_DESKTOP } from './products'
-import { thesisPosts } from './thesisPosts'
 
 // jsdom has no ResizeObserver; the painted page scrollbar only observes with it.
 beforeAll(() => {
@@ -30,7 +30,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(18)
+    expect(documentsForProduct('desktop')).toHaveLength(19)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -63,6 +63,7 @@ describe('static document pages', () => {
 
     render(<Router pathname="/docs/" />)
     expect(screen.queryByRole('link', { name: 'Happy Desktop vs Buzz' })).toBeNull()
+    expect(screen.queryByRole('link', { name: 'Vision' })).toBeNull()
   })
 
   it('opens every original Happy CLI docs page with the maintenance notice, and no desktop page', () => {
@@ -154,11 +155,11 @@ describe('static document pages', () => {
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/claude code on your phone/i)
   })
 
-  it('renders the thesis with its title as the only h1 and every section as an h2', () => {
-    const { container } = render(<Router pathname="/thesis/" />)
+  it('renders the Vision essay with its title as the only h1 and every section as an h2', () => {
+    const { container } = render(<Router pathname="/vision/" />)
 
-    expect(screen.getAllByRole('heading', { level: 1 }).map((heading) => heading.id)).toEqual(['our-thesis'])
-    const sections = screen.getAllByRole('heading', { level: 2 }).map((heading) => heading.firstChild?.textContent)
+    expect(screen.getAllByRole('heading', { level: 1 }).map((heading) => heading.id)).toEqual(['vision'])
+    const sections = [...container.querySelectorAll('.document-content h2')].map((heading) => heading.firstChild?.textContent)
     expect(sections).toEqual([
       'One core agent',
       'Chat left the chat',
@@ -171,24 +172,14 @@ describe('static document pages', () => {
     // The bullets up top are the sections, one for one, in the same order.
     const bullets = [...container.querySelectorAll('.document-content > ul > li > strong')].map((bold) => bold.textContent?.replace(/\.$/, ''))
     expect(bullets).toEqual(sections)
-    expect(container.querySelector('h3')).toBeNull()
+    expect(container.querySelector('.document-content h3')).toBeNull()
+    // One bold line in the whole body: the first section's.
+    const boldLines = [...container.querySelectorAll('.document-content > p > strong')].map((bold) => bold.textContent)
+    expect(boldLines).toEqual(["You'll run lots of agents. Only one of them should talk back to you."])
   })
 
-  it('quotes each X post in the thesis as an official embed with its own text', () => {
-    const { container } = render(<Router pathname="/thesis/" />)
-    const quotes = [...container.querySelectorAll<HTMLElement>('blockquote.twitter-tweet')]
-
-    // The thesis currently embeds no posts; a bare post URL on its own line would add one here.
-    expect(quotes.map((quote) => quote.querySelector('a')?.getAttribute('href'))).toEqual(Object.keys(thesisPosts))
-    for (const quote of quotes) {
-      expect(quote.dataset).toMatchObject({ dnt: 'true', conversation: 'none', theme: 'light', width: '270' })
-      expect(quote.querySelectorAll('a')).toHaveLength(1)
-    }
-    expect(container.querySelector('.document-content')?.textContent).not.toContain('https://x.com/')
-  })
-
-  it('spans the layout diagram across the column and sets the sidebar screenshot beside its paragraph', () => {
-    const { container } = render(<Router pathname="/thesis/" />)
+  it('spans the layout diagram across the column and sets the screenshots beside their paragraphs', () => {
+    const { container } = render(<Router pathname="/vision/" />)
     const [screenshot, diagram, picker, ...rest] = [...container.querySelectorAll('figure.essay-figure')]
 
     expect(rest).toHaveLength(0)
@@ -205,46 +196,59 @@ describe('static document pages', () => {
     expect(screenshot.querySelector('img')?.getAttribute('alt')).toBe('A fragment of our sidebar today')
     expect(screenshot.parentElement?.tagName).not.toBe('P')
     expect(screenshot.querySelector('figcaption')?.textContent).toBe('A fragment of our sidebar today')
-    expect(screenshot.nextElementSibling?.textContent).toMatch(/^This agent is a lifesaver/)
+    // Right after the section's bold line, so the whole first paragraph wraps around it.
+    expect(screenshot.previousElementSibling?.querySelector('strong')).not.toBeNull()
+    expect(screenshot.nextElementSibling?.textContent).toMatch(/^Ten sessions means ten sources of pings/)
 
     expect(diagram.className).toBe('essay-figure')
     expect(diagram.querySelector('img')?.getAttribute('src')).toBe('/thesis/layout.svg')
-    expect(diagram.previousElementSibling?.textContent).toMatch(/^The agent's job is to help you keep that map/)
+    expect(diagram.previousElementSibling?.textContent).toMatch(/Reminds you of Arc a bit, right\?$/)
     for (const figure of [diagram, screenshot]) {
       expect(figure.querySelector('img')?.getAttribute('width')).toBeTruthy()
       expect(figure.querySelector('img')?.getAttribute('height')).toBeTruthy()
     }
   })
 
-  it('titles the thesis after its frontmatter and opens with why, then the bets', () => {
+  it('titles the Vision essay after its frontmatter and opens with why, then the bets', () => {
     const markdown = getThesisMarkdown()
 
-    expect(thesisMetadata.title).toBe('Our Thesis — Happy')
-    expect(markdown.startsWith('# Our Thesis\n\nEveryone is going to need a way to talk to AI.')).toBe(true)
+    expect(thesisMetadata.title).toBe('Vision — Happy')
+    expect(getDocument('desktop', 'vision')?.title).toBe('Vision')
+    expect(markdown.startsWith('# Vision\n\nEveryone is going to need a way to talk to AI.')).toBe(true)
     expect(markdown).toContain('\n\n- **One core agent.**')
+    // No X posts or embeds: a bare post URL alone on a line would be one.
+    expect(markdown).not.toMatch(/^https:\/\/x\.com\//m)
   })
 
   it('paints the same page scrollbar on every page, so the header sits in the same place', () => {
-    for (const pathname of ['/', '/docs/', '/welcome/', '/model-benchmarks', '/plugins/', '/thesis/', '/privacy/']) {
+    for (const pathname of ['/', '/docs/', '/welcome/', '/model-benchmarks', '/plugins/', '/vision/', '/privacy/']) {
       expect(renderPath(pathname).match(/class="one-scrollbar"/g)).toHaveLength(1)
     }
   })
 
-  it('lists the thesis on the blog index, not in the docs sidebar', () => {
-    // Server markup: the landing pages' effects need browser APIs jsdom lacks.
-    const blog = renderPath('/blog/')
-    expect(blog).toMatch(/<h1[^>]*>Blog<\/h1>/)
-    expect(blog).toContain('href="/thesis/"')
-    expect(blog).toContain('Our Thesis')
-    expect(documents.some((document) => document.path.includes('thesis'))).toBe(false)
-    expect(renderPath('/welcome/')).not.toMatch(/href="[^"]*\/thesis/)
+  it('lists Vision in the docs sidebar right after How It Works and renders it in the docs layout', () => {
+    render(<Router pathname="/vision/" />)
+
+    const [sidebar] = screen.getAllByRole('navigation', { name: 'Documentation navigation' })
+    const startHere = within(sidebar).getAllByRole('link').map((link) => link.textContent).slice(0, 5)
+    expect(startHere).toEqual(['Welcome', 'Quick Start', 'Chief of Staff', 'How It Works', 'Vision'])
+    const visionLink = within(sidebar).getByRole('link', { name: 'Vision' })
+    expect(visionLink.getAttribute('href')).toBe('/vision/')
+    expect(visionLink.getAttribute('aria-current')).toBe('page')
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/how it works/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/models & subscriptions/i)
+    expect(within(screen.getByRole('navigation', { name: 'Primary navigation' })).getByRole('link', { name: 'Docs' }).getAttribute('aria-current')).toBe('page')
+    expect(documents.filter((document) => document.path === 'vision')).toHaveLength(1)
   })
 
-  it('marks Blog as the current section on the blog index and on posts', () => {
-    for (const pathname of ['/blog/', '/thesis/']) {
-      expect(renderPath(pathname)).toMatch(/<a href="\/blog\/" aria-current="page">Blog<\/a>/)
-    }
-    expect(renderPath('/welcome/')).not.toContain('aria-current="page">Blog')
+  it('has no blog: the header has no Blog link, and /blog/ and /thesis/ open the Vision essay', () => {
+    // Server markup: the landing pages' effects need browser APIs jsdom lacks.
+    expect(renderPath('/welcome/')).not.toMatch(/>Blog</)
+    expect(renderPath('/blog/')).toMatch(/<h1 id="vision"/)
+    expect(renderPath('/thesis/')).toMatch(/<h1 id="vision"/)
+    expect(prerenderedPaths).toContain('/vision/')
+    expect(prerenderedPaths).not.toContain('/thesis/')
+    expect(prerenderedPaths).not.toContain('/blog/')
     expect(thesisMetadata.robots).toBeUndefined()
   })
 

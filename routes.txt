@@ -79,6 +79,7 @@
 /thesis/
 /tmp/happy-one/
 /tos/
+/vision/
 /vs/claude-code-remote-control/
 /welcome/
 /workspaces/
