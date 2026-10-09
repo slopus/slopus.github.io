@@ -13,16 +13,4 @@ export interface QuotedPost {
  * there. The text is copied exactly so the quote reads the same before X's
  * widget replaces it, or if the widget never loads.
  */
-export const thesisPosts: Record<string, QuotedPost> = {
-  'https://x.com/nikitabier/status/2107157904168239416': {
-    name: 'Nikita Bier',
-    handle: 'nikitabier',
-    date: 'October 5, 2026',
-    text: [
-      'The most important technology problem of the next 5 years:',
-      'Creating a broadly accepted standard for agents to identify themselves to service providers, so that providers can adjust the way they interface with clients (as compared to human-based traffic).',
-      'In the interim (i.e., for the next 6 months), there will be a cat-and-mouse game that agents will play -- to circumvent detection and maintain their product\'s utility during this growth phase.',
-      'However, this will only be a stopgap and it will not be the terminal state of the world.',
-    ].join('\n\n'),
-  },
-}
+export const thesisPosts: Record<string, QuotedPost> = {}

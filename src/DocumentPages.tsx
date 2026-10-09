@@ -224,9 +224,12 @@ const thesisComponents: Components = {
     if (rest.length === 0 && only?.type === 'element' && only.tagName === 'img') {
       const src = String(only.properties.src)
       const figure = thesisFigures[src]
+      // The markdown image title, `![alt](src "title")`, is the caption under the image.
+      const caption = only.properties.title ? String(only.properties.title) : undefined
       return (
         <figure className={figure?.aside ? 'essay-figure essay-figure-aside' : 'essay-figure'}>
           <img src={src} alt={String(only.properties.alt ?? '')} width={figure?.width} height={figure?.height} loading="lazy" />
+          {caption && <figcaption>{caption}</figcaption>}
         </figure>
       )
     }

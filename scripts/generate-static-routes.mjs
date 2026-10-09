@@ -325,11 +325,12 @@ const thesisPostUrls = thesisSource.match(/^https:\/\/x\.com\/\S+$/gm) ?? []
 if (thesisApp.match(/<h1[\s>]/g)?.length !== 1) {
   throw new Error('/thesis/ should render exactly one h1')
 }
-if (thesisApp.match(/<blockquote class="twitter-tweet"/g)?.length !== thesisPostUrls.length) {
+if ((thesisApp.match(/<blockquote class="twitter-tweet"/g) ?? []).length !== thesisPostUrls.length) {
   throw new Error('/thesis/ should render every X post in content/thesis.md as an embed')
 }
 // The essay's images ship from public/; the build fails if one is missing or not rendered.
-for (const [, imagePath] of thesisSource.matchAll(/^!\[[^\]]*\]\((\/[^)]+)\)$/gm)) {
+// An image line may carry a quoted title after the path; that title is its caption.
+for (const [, imagePath] of thesisSource.matchAll(/^!\[[^\]]*\]\((\/[^)\s]+)(?: "[^"]*")?\)$/gm)) {
   await readFile(path.join(distRoot, imagePath))
   if (!thesisApp.includes(`src="${imagePath}"`)) {
     throw new Error(`/thesis/ should render the image ${imagePath}`)

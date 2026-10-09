@@ -10,17 +10,19 @@ Everyone is going to need a way to talk to AI. We've tried a lot of ways ourselv
 - **Phone first.** Less to read and less to fiddle with means your phone is enough to steer your agents.
 - **One harness.** One harness under every agent lets you switch models mid-session and build things a pile of separate CLIs can't.
 - **Multiplayer is hard.** Whoever can talk to an agent holds its permissions. Sharing agents safely is the unsolved part, for us and for everyone else.
-- **Be the nice guys.** Open source, any model, no lock-in. Host it yourself or let us host it.
+- **Make people happy.** Open source, any model, no lock-in. If people are happy using us, the rest follows.
 
 # One core agent
 
-You'll run lots of agents. Only one of them should talk back to you.
+**You'll run lots of agents. Only one of them should talk back to you.**
 
 Ten sessions means ten sources of pings, and most of them don't need you. So everything coming in goes through one agent. It knows what you care about this week, sorts the pings and escalations, and interrupts you only when something does need you. It also checks on things without being asked. Cheap models can ask "is everything ok? anything new?" all day for almost nothing. It should live in the cloud, so it keeps going when one of your devices goes offline.
 
-![A fragment of our sidebar today](/thesis/sidebar.png)
+![A fragment of our sidebar today](/thesis/sidebar.png "A fragment of our sidebar today")
 
-This isn't our idea. Greg Brockman [described ChatGPT](https://x.com/gdb/status/2055335361921130861) as becoming "your personal agent, operating on your behalf 24/7" back in May, and Muse, dots and Grok Bot are all pitched as one always-on agent. In Happy today, the first row of the sidebar is the Chief of Staff, a built-in agent you configure Happy by talking to.
+This agent is a lifesaver if you keep opening more work than you can handle. It becomes something like a scrum master for your agents: it knows what's in flight, what's blocked and what needs you.
+
+This isn't our idea. Greg Brockman [described ChatGPT](https://x.com/gdb/status/2055335361921130861) as becoming "your personal agent, operating on your behalf 24/7", and Muse, dots and Grok Bot are all pitched as one always-on agent.
 
 Once one agent does the talking, you stop needing to read everything the others said.
 
@@ -28,11 +30,11 @@ Once one agent does the talking, you stop needing to read everything the others 
 
 When was the last time you scrolled up in a chat? Nobody rereads old messages.
 
-So the chat doesn't need to be a log that only grows. The sidebar (your task tracker) and the chat (your deep focus) are both prime to become artifacts the agent generates and keeps current. What replaces the log is still open. Maybe much better documents. Maybe a plan the agent keeps current as the work moves. Maybe an agent that decides when to clear the screen and when to edit what's already there.
+So the chat doesn't need to be a log that only grows. The sidebar (your task tracker) and the chat (your deep focus) are both prime to become artifacts the agent generates and keeps up to date. What replaces the log is still open. Maybe much better documents. Maybe a plan that changes as the work moves. Maybe an agent that decides when to clear the screen and when to edit what's already there.
 
 Sessions are really tasks. They spin off more sessions, work across repos and form a tree. So the sidebar becomes a map of what your agents are doing and what they've made: tasks, docs, previews, pull requests. Reminds you of Arc a bit, right?
 
-![Your agent at the top of the sidebar with a tree of tasks below it, the focused task as one living page in the middle, artifacts on the right](/thesis/layout.svg)
+![Your agent at the top of the sidebar with a tree of tasks below it, and the focused task as one living page](/thesis/layout.svg)
 
 If the agent keeps the page current, you shouldn't have to keep the app tidy either.
 
@@ -40,7 +42,7 @@ If the agent keeps the page current, you shouldn't have to keep the app tidy eit
 
 Agents already took over a lot of busy work. The busy work of the interface is next: configuring, naming things, archiving sessions, opening documents, searching for code. When was the last time you changed an app's settings by hand?
 
-You say what you want, or you mark up what the agent shows you. Circle a number, cross out a paragraph, click a thing. It goes to the agent instead of running a fixed action. Our Chief of Staff already configures Happy this way. The exceptions are things you can't take back, like sharing a secret or messaging someone as you. Those stay hard permissions you approve yourself.
+You say what you want, or you mark up what the agent shows you. Circle a number, cross out a paragraph, click a thing. It goes to the agent instead of running a fixed action. Our Chief of Staff already works this way: tell it to pair your phone or put an agent on your server, and it does the setup, asking you only for the choices that are yours. The exceptions are things you can't take back, like sharing a secret or messaging someone as you. Those stay hard permissions you approve yourself.
 
 The time you save goes into understanding. Your brain isn't getting smarter, but the agents are. Our comprehension speed is the bottleneck now, so agents should spend more effort explaining: very simple visualizations, small interactive demos. As Charlie Holtz at Conductor [put it](https://x.com/charlieholtz/status/2107214308744790109), you don't need to read the diffs closely when the agent can package up an overview instead. That's generative UI through and through, built from our own components (sidebar trees, progress indicators on tasks, session icons) inside areas we design.
 
@@ -56,11 +58,11 @@ To be the same agent on every device, it has to be the same harness underneath.
 
 # One harness
 
-We're betting on one harness, Happy Agent, under every agent. Each provider gets its vendor's own prompts and tools, close enough to the native request that prompt caching keeps working. Everything around the model is shared: one session, one permission model, one set of tools.
+We're betting on one harness, Happy Agent, under every agent. Each provider gets its vendor's own prompts and tools, verbatim, close enough to the native request that prompt caching keeps working. Everything around the model is shared: one session, one permission model, one set of tools.
 
-That's what lets you switch from Claude to GPT to Grok mid-session and keep the transcript. Mixing providers isn't new; T3 Code and Conductor do it too. Happy uses the Claude Code, Codex and Grok CLI sign-ins already on your machine, so there's no key to paste. You get each model's strengths natively: Grok for X research, Anthropic models for novel problems, GPT Astra for computer use.
+That's what lets you switch from Claude to GPT to Grok mid-session, from your laptop or your phone, and keep the transcript. Subagents pick their own model too, so one task can plan on one provider and review on another. Happy uses the Claude Code, Codex and Grok CLI sign-ins already on your machine, so there's no key to paste. You get each model at its best: Grok for X research, Anthropic models for novel problems, GPT Astra for computer use.
 
-One harness also makes deeper integrations possible that a pile of separate CLIs can't do: controlling every terminal session from one hypervisor, controlling updates of the harness itself, spreading agents across runners on a busy team server, and later, finer control over permissions.
+One harness also makes deeper integrations possible that a pile of separate CLIs can't do: controlling every terminal session from one hypervisor, updating the harness itself, spreading agents across runners on a busy team server, and later, finer control over permissions.
 
 A busy team server brings us to the hardest part.
 
@@ -68,20 +70,16 @@ A busy team server brings us to the hardest part.
 
 Agents need permissions to do anything. If you let someone talk to your agent, that person now has its permissions. If agents message other agents, those agents need permissions too. Should an automatic reviewer approve an agent asking for more access? Whose commit is it when several people work from the same server?
 
-Group chats in ChatGPT and Claude in Slack already put several people in front of one AI. Our team mode keeps the trust question simple: a team that trusts each other runs a [shared server](https://happy.engineering/desktop/docs/multiplayer/), and everyone connects with their own identity. Plain OpenClaw also draws one trust boundary per gateway. [OpenClaw Enterprise](https://openclaw.ai/blog/openclaw-enterprise), announced September 29, goes further: each agent gets its own identity, and agents and credentials are split into separate namespaces with roles.
+Group chats in ChatGPT and Claude in Slack already put several people in front of one AI. In Happy you can invite someone into a session today, but the agent still runs on your machine with your permissions. For a whole team, we keep the trust question simple: a team that trusts each other runs a [shared server](https://happy.engineering/desktop/docs/multiplayer/). Everyone connects with their own identity, and every command runs under the same sandbox and review. It's a start, not an answer.
 
-https://x.com/nikitabier/status/2107157904168239416
+[OpenClaw Enterprise](https://openclaw.ai/blog/openclaw-enterprise), announced September 29, goes further: each agent gets its own identity, and agents and credentials live in separate namespaces with roles. We think that's the right direction. Permissions should belong to the agent, not to whoever happens to be talking to it.
 
-Some of this is bigger than one team.
+We haven't solved this yet. Whatever we build here, you'll be able to read it, run it on your own server, and point it at any model.
 
-Meta and Sierra's [Personal Agent Protocol](https://sierra.ai/blog/introducing-personal-agent-protocol), announced October 6, is a start: an open way for personal agents to prove they act for a real user. We'd rather build on standards like that than invent our own.
+# Make people happy
 
-Standards only work when nobody owns the whole stack. That's how we want to build Happy too.
+Happy is open source, with no vendor lock-in. Host it yourself, or let us host it. Use any model from any provider, and switch when a better one ships. Muse runs only Meta's model. dots runs only OpenAI's.
 
-# Be the nice guys
-
-Be the nice guys. Happy is open source, with no vendor lock-in. Host it yourself, or let us host it. Use any model from any provider, and switch when a better one ships. Muse runs only Meta's model. dots runs only OpenAI's.
-
-How are we going to make money? Not the question right now. The question is whether we can ship experiences people are genuinely excited about and get hardcore fans. We're going after the top of the funnel: the main agent you talk to for work, and later for the rest of your life. If people are happy using us, the rest follows.
+How are we going to make money? Not the question right now. The question is whether we can ship experiences people are genuinely excited about, and earn hardcore fans. So we're going after the top of the funnel: the main agent you talk to for work, and later for the rest of your life. If people are happy using us, the rest follows.
 
 Meta got in touch about an internal pilot because their engineers kept asking to use Happy at work. We hope enough people agree with these bets to give Happy a shot.

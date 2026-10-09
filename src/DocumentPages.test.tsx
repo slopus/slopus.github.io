@@ -114,7 +114,7 @@ describe('static document pages', () => {
       'Phone first',
       'One harness',
       'Multiplayer is hard',
-      'Be the nice guys',
+      'Make people happy',
     ])
     // The bullets up top are the sections, one for one, in the same order.
     const bullets = [...container.querySelectorAll('.document-content > ul > li > strong')].map((bold) => bold.textContent?.replace(/\.$/, ''))
@@ -126,15 +126,12 @@ describe('static document pages', () => {
     const { container } = render(<Router pathname="/thesis/" />)
     const quotes = [...container.querySelectorAll<HTMLElement>('blockquote.twitter-tweet')]
 
+    // The thesis currently embeds no posts; a bare post URL on its own line would add one here.
     expect(quotes.map((quote) => quote.querySelector('a')?.getAttribute('href'))).toEqual(Object.keys(thesisPosts))
     for (const quote of quotes) {
       expect(quote.dataset).toMatchObject({ dnt: 'true', conversation: 'none', theme: 'light', width: '270' })
       expect(quote.querySelectorAll('a')).toHaveLength(1)
     }
-    expect(quotes[0].textContent).toContain('The most important technology problem of the next 5 years')
-    // Each post floats beside the paragraph it backs up, so it comes just before it.
-    const supported = quotes.map((quote) => quote.closest('figure')?.nextElementSibling?.textContent)
-    expect(supported[0]).toMatch(/^Some of this is bigger than one team/)
     expect(container.querySelector('.document-content')?.textContent).not.toContain('https://x.com/')
   })
 
@@ -147,7 +144,8 @@ describe('static document pages', () => {
     expect(screenshot.querySelector('img')?.getAttribute('src')).toBe('/thesis/sidebar.png')
     expect(screenshot.querySelector('img')?.getAttribute('alt')).toBe('A fragment of our sidebar today')
     expect(screenshot.parentElement?.tagName).not.toBe('P')
-    expect(screenshot.nextElementSibling?.textContent).toMatch(/^This isn't our idea/)
+    expect(screenshot.querySelector('figcaption')?.textContent).toBe('A fragment of our sidebar today')
+    expect(screenshot.nextElementSibling?.textContent).toMatch(/^This agent is a lifesaver/)
 
     expect(diagram.className).toBe('essay-figure')
     expect(diagram.querySelector('img')?.getAttribute('src')).toBe('/thesis/layout.svg')

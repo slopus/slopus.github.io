@@ -340,6 +340,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .essay-figure-aside { margin: 2rem auto; width: min(220px, 100%); }
 /* width and height on the img hold its space while it loads, so the text around it does not reflow. */
 .document-content .essay-figure img { display: block; height: auto; margin: 0; width: 100%; }
+.document-content .essay-figure figcaption { color: #6b7f78; font-size: .78rem; line-height: 1.4; margin-top: .55rem; text-align: center; }
 .x-post .twitter-tweet-rendered { margin: 0 !important; max-width: 100% !important; width: 100% !important; }
 .x-post iframe { max-width: 100% !important; }
 .document-content .x-post blockquote.twitter-tweet { background: #fcfaf5; border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); margin: 0; padding: .85rem 1rem; }
