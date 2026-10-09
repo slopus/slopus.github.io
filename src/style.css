@@ -307,6 +307,14 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content blockquote p:last-child { margin-bottom: 0; }
 .document-content pre { background: #14352f; border: 1px solid #24463f; border-radius: 12px; color: #eef0e8; font-family: 'DM Mono', monospace; font-size: .76rem; line-height: 1.65; margin: 1.6rem 0; overflow-x: auto; padding: 1.15rem 1.25rem; }
 .document-content pre code { background: none; color: inherit; font: inherit; padding: 0; }
+/* Sideways scrollbars inside code blocks and wide tables: the same thin, trackless bar the docs sidebar
+   uses, so a wide block doesn't get the browser's boxed white one. */
+.document-content pre, .document-table-wrap, .code-block, .terminal-body { scrollbar-color: rgba(146, 146, 146, .7) transparent; scrollbar-width: thin; }
+.document-content pre::-webkit-scrollbar, .document-table-wrap::-webkit-scrollbar, .code-block::-webkit-scrollbar, .terminal-body::-webkit-scrollbar { height: 10px; width: 10px; }
+.document-content pre::-webkit-scrollbar-track, .document-table-wrap::-webkit-scrollbar-track, .code-block::-webkit-scrollbar-track, .terminal-body::-webkit-scrollbar-track { background: transparent; }
+.document-content pre::-webkit-scrollbar-thumb, .document-table-wrap::-webkit-scrollbar-thumb, .code-block::-webkit-scrollbar-thumb, .terminal-body::-webkit-scrollbar-thumb { background: rgba(146, 146, 146, .7); background-clip: padding-box; border: 3px solid transparent; border-radius: 999px; }
+.document-content pre::-webkit-scrollbar-thumb:hover, .document-table-wrap::-webkit-scrollbar-thumb:hover, .code-block::-webkit-scrollbar-thumb:hover, .terminal-body::-webkit-scrollbar-thumb:hover { background-color: #929292; }
+.document-content pre::-webkit-scrollbar-corner, .document-table-wrap::-webkit-scrollbar-corner { background: transparent; }
 .document-content :not(pre) > code { background: #e5dfd2; border-radius: 5px; color: #c84425; font-family: 'DM Mono', monospace; font-size: .82em; padding: .15em .38em; }
 .document-content img { border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); height: auto; margin: 1.2rem 0; max-width: 100%; }
 .document-content video { border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); height: auto; margin: 1.2rem 0; max-width: 100%; width: 100%; }
