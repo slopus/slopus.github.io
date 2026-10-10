@@ -5,21 +5,40 @@ Open items as of 2026-10-09. Owner is who has to act: **site** (a change in this
 ## Top five next
 
 1. Search Console access for `pnpm gsc` and the sitemap submitted (Kirill, S). Everything after this gets measured.
-2. GitHub topics, README line, and docs link on both repositories (Kirill, S). The repositories outrank the site for most product queries.
-3. Homepage prerender (site, M). `/` is the page with the most links and still ships an empty `<div id="app">`.
-4. App Store and Google Play listing text (store accounts, S).
-5. The "run Claude Code and Codex on your server" guide (site, M), the first page for the new audience in `positioning.md`.
+2. The server tutorial, "Run Claude Code on a Hetzner VPS and approve it from your phone" (site, M), tested end to end. It is the first page for the new audience, and the Show HN and Reddit posts in `channels.md` wait for it.
+3. Decide the homepage headline (Kirill, S), then prerender the homepage (site, M). `/` is the page with the most links, leads with the model list, and still ships an empty `<div id="app">`.
+4. GitHub topics, README line, and docs link on both repositories (Kirill, S). The repositories outrank the site for most product queries.
+5. App Store and Google Play listing text (store accounts, S).
+
+## Four weeks, in order
+
+From the growth research in `positioning.md` and `channels.md`. Week numbers are a suggestion.
+
+| Week | Item | Channel |
+| --- | --- | --- |
+| 1 | Search Console, GitHub, stores, sitemap dates (above) | accounts |
+| 1 | Homepage headline decided and shipped with the prerender | site |
+| 1 | "How did you hear about Happy?" in onboarding | Happy Desktop |
+| 2 | Hetzner tutorial, then "Happy on exe.dev" | site |
+| 2 | 20-second phone-approval clip; start replying on X | X |
+| 3 | One r/ClaudeCode post about the setup | Reddit |
+| 3 | Comparison page that does not rank Happy first | site |
+| 4 | Show HN, as a workflow, founder in the thread all day | Hacker News |
+| 4 | First Search Console review against the log; pick the next pages | site |
 
 ## Site
 
 | Item | Status | Owner | Effort |
 | --- | --- | --- | --- |
+| **Homepage headline.** The current H1 and schema lead with the model list, which is T3 Code's category and not how this audience talks. Proposed: H1 "Your Claude Code and Codex subscription, on a computer that doesn't sleep."; second line "Steer it from your phone. Desktop app for Claude, Codex, and Grok." The wording is opinion; the diagnosis is in `positioning.md`. Kirill decides. The social preview title and description stay unless he says otherwise (`AGENTS.md`). | Needs a decision | Kirill, then site | S |
 | **Homepage prerender.** Unblocked now that the hero change is merged. Add `/` to `prerenderedPaths` in `src/prerender.tsx` and write it from `generate-static-routes.mjs`. The catch is `DownloadOptions`: it calls `desktopPlatform()` during render, so the server renders the generic `desktop` layout and a Windows or Linux browser would hydrate different markup. Read the platform through `useSyncExternalStore` with a `'desktop'` server snapshot, the way the store preference already is, so hydration matches and then settles. The demo player and the GitHub star count also need to render the same on server and first client pass. | Ready | site | M |
 | **Real sitemap dates.** Add `fetch-depth: 0` to the Checkout step in `.github/workflows/deploy-pages.yml`. The build falls back to the build date in a shallow clone, so every `<lastmod>` is the deploy date today. | Ready | site | S |
-| **Remote agents landing page**, e.g. `/remote-agents/` or `/server/`: Happy Agent on your own server, Tailcat, desktop and phone. A marketing page over `/guides/remote-agents/`, honest that adding a remote by name is in progress. Check the slug against existing routes. | Idea | site | M |
-| **Guide: run Claude Code and Codex on a server and control it from your phone.** From a fresh Ubuntu VM to an approved change on the phone. Two paths: Happy Agent as a systemd service over Tailcat (with Desktop), and `happy claude` on the server (phone only). Test both end to end before publishing. | Idea | site | M |
-| **Guide: Happy on an exe.dev VM.** Only after testing the install there. Write it as "use them together", not a versus page; see `positioning.md`. A "Happy vs exe.dev" page only if testing shows a real overlap to compare fairly. | Idea, needs a test | site | M |
-| More pages from Grok's research and the first Search Console pull. | Waiting | site | – |
+| **Tutorial: "Run Claude Code on a Hetzner VPS and approve it from your phone."** The title is the query; the answer is on the first screen. From a fresh VM to an approved change on the phone, and what happens when the laptop sleeps (nothing). Two paths: Happy Agent as a systemd service over Tailcat, with Desktop; and `happy claude` on the server, phone only. No Tailscale or tmux needed; say so, since that is the stack readers have. Honest aside: tmux and Termius still win for a full terminal, and Remote Control wins for a ten-minute break. Test both paths end to end before publishing. | Ready to write | site | M |
+| **Guide: Happy on exe.dev.** `ssh exe.dev`, Claude Code and Codex are already installed, install Happy, pair the phone. Shelley is theirs; Happy is for the subscription you already have. Not a versus page. Test the install there first. | Needs a test | site | S |
+| **Comparison: Happy vs Claude Code Remote Control vs tmux and Termius vs T3 Code vs Omnara.** States tradeoffs and does not rank Happy first. Cite T3's user numbers as founder claims, Remote Control's sleep failures with the HN links, and phone-terminal pain. Extends `/vs/claude-code-remote-control/` or lives beside it. | Idea | site | M |
+| **Remote agents landing page**, e.g. `/remote-agents/` or `/server/`: Happy Agent on your own server, Tailcat, desktop and phone, over `/guides/remote-agents/`. Honest that adding a remote by name is in progress. Check the slug against existing routes. Could be the tutorial's parent instead. | Idea | site | M |
+| **Self-hosted relay.** People ask for the relay on their own box. It is documented for the original stack (`/docs/guides/self-hosting/`). Find out whether Happy Desktop's Mobile Access can use it; if so, tighten the guide to ten minutes and add it to the desktop docs. Only then a careful r/selfhosted post. | Needs a check | Kirill, then site | S–M |
+| **"How did you hear about Happy?"** One free-text question in onboarding. Lives in the Happy Desktop repo, not here. | Idea | Kirill | S |
 
 ## Search Console and Bing
 

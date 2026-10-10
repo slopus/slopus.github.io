@@ -10,11 +10,13 @@ Happy is the open source harness for coding agents: Claude, Codex, and Grok on t
 
 ### 1. Agents on your own server (new primary, proposed)
 
-**Who.** Developers who keep coding agents running on a machine that is not their laptop: a VPS, a home server, a GPU box, a cloud VM they leave on. They want the agent to keep working while the laptop sleeps, and to start, watch, and approve work from anywhere. exe.dev's users are this crowd: persistent Linux VMs with root and systemd, a built-in web agent (Shelley), and quotes like "I haven't found a service I could code on my phone from like this" on its homepage.
+**Who.** People who already pay for Claude Code or Codex and are tired of a laptop that sleeps. They put the agent on a Hetzner or OVH box (about £5–€19 a month), an old laptop, a Mac mini, or an exe.dev or Fly Sprite VM; keep it alive with tmux; reach it over Tailscale; and steer it from Termius, Termux, a Telegram bot, or a phone app (T3 Code, Omnara, Looper, Shellular, Happy). They post the stack, the price, and the failure. See [the research](#x-and-reddit-research) below.
 
-**Pitch.** *Run Claude Code, Codex, and Grok on your own server. Manage them from your desktop and your phone.*
+**Pitch.** *Your Claude Code and Codex subscription, on a computer that doesn't sleep.* Subhead: *Steer it from your phone. Open source, with a desktop app for Claude, Codex, and Grok.*
 
-Short forms: "Your agents, on your server, in your pocket." / "A home for coding agents on machines you own."
+Alternatives, in the order the research ranks them: "Run Claude Code, Codex, and Grok on your own server. Manage them from your desktop and your phone." (closest to the brief; assumes the reader already has a server) and, for a Reddit title only, "The open-source remote control for a VPS."
+
+The headline is true only on the server path: Happy does not keep a laptop awake. Keep the model list as the second or third line, not the headline; multi-model is a reason to stay, not the job people search for.
 
 **What is true today.**
 
@@ -33,8 +35,10 @@ Short forms: "Your agents, on your server, in your pocket." / "A home for coding
 - There is no SSH transport. SSH is only how the Chief of Staff reaches the machine to install it.
 - Not hosted. We do not sell machines; you bring the server.
 - The by-hand path is Linux with systemd. On Ubuntu 24.04 an administrator AppArmor profile for the daemon is needed. (`/guides/remote-agents/`)
+- Tailscale and tmux are what this crowd uses today, but Happy needs neither: Tailcat reaches the remote, the relay reaches the phone, and sessions live in the runtime. Say that, rather than writing tutorials that require them.
+- A self-hosted relay is documented only for the original stack (`/docs/guides/self-hosting/`). Check whether Happy Desktop's Mobile Access can use one before promising it to the people asking for it.
 
-**How we relate to exe.dev.** Complementary, not a rival. exe.dev sells the computer (persistent VMs from $15/month, SSH in as root, HTTPS proxy, its own agent Shelley, bring-your-own LLM subscription; checked 2026-10-09). Happy is what runs the agents on it and puts them on your desktop and phone, with Claude Code's, Codex's, and Grok's native tools. A "Happy on an exe.dev VM" guide fits better than a "Happy vs exe.dev" page; the only real overlap is Shelley. Test the install on an exe.dev VM before writing it.
+**How we relate to exe.dev.** Complementary, not a rival. exe.dev sells the computer: persistent Linux VMs sharing a CPU and memory pool (Personal plan $15/month for 2 vCPU / 4 GiB), SSH in as root with apt and systemd, an HTTPS proxy, no public IP. New VMs ship with Claude Code and Codex installed; Shelley is its own web agent, and it proxies LLM calls so no key sits on disk. (exe.dev, `/pricing`, `/docs/use-case-agent`, checked 2026-10-09.) Happy is the control surface for the subscription the user already has: approvals and sessions on the phone and desktop instead of a phone terminal. Never pitch Happy as a Shelley replacement. A "Happy on exe.dev" docs page fits; a "Happy vs exe.dev" page does not. Test the install on an exe.dev VM first. A helpful docs page and answers beat a co-marketing ask.
 
 **Proof we owe this audience.** A page that walks from a fresh VM to an approved change from the phone, a 60-second video of the same, and the by-hand install tested on Ubuntu 24.04 and Debian.
 
@@ -82,4 +86,46 @@ Short forms: "Your agents, on your server, in your pocket." / "A home for coding
 
 ## X and Reddit research
 
-> Placeholder. A Grok research subtask is collecting: how the agents-on-your-server crowd describes the problem in their own words, how exe.dev and similar tools are talked about, which one-liners match that language, and which practitioners are credible. This section and the audience 1 pitch get updated when it arrives.
+Read-only research on X, Reddit, and Hacker News, 2026-10-09. Links are to public posts; titles and paraphrases come from search tools, and Reddit bodies were not fully fetched. Founder-claimed numbers are marked as claims; opinions are marked.
+
+### What the audience says
+
+The language is "a computer that doesn't sleep, steered from my phone", not "one app for three models".
+
+- The common stack: agent in tmux, Tailscale to the box, Termius on the phone. Termius posts it as a recipe ([TermiusHQ](https://x.com/TermiusHQ/status/2082616764605874207)). Variations add Hetzner, Herdr, mosh, or a Telegram bot with a button for decisions ([1](https://x.com/millerbath/status/2108000199255929102), [2](https://x.com/gamccarthy/status/2108569720001528088), [3](https://x.com/axadrn/status/2107020048787255696), [4](https://x.com/henryhund/status/2108584951171989826)).
+- Reddit threads with the job in the title: "Tmux + Tailscale + Claude Code + Phone, 2026 coding meta" ([r/Tailscale](https://www.reddit.com/r/Tailscale/comments/1q9xwni/tmux_tailscale_claude_code_phone_2026_coding_meta)); "why I moved Claude Code off my laptop and onto a [Hetzner]" ([r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/comments/1w5bx9x/why_i_moved_claude_code_off_my_laptop_and_onto_a/)); "PSA: you don't need a paid closed-lid agent", since tmux, Tailscale, and SSH are enough ([r/LLMDevs](https://www.reddit.com/r/LLMDevs/comments/1wu0r26/psa_you_dont_need_a_paid_closedlid_agent/)). Commenters say the tools on top exist to fix phone UX.
+- Complaints:
+  - Phone terminals: bad paste, no images, a shifting screen ([jackfriks](https://x.com/jackfriks/status/2080647131241591098)).
+  - Claude Code Remote Control drops when the host sleeps or the network is down for about ten minutes ([HN](https://news.ycombinator.com/item?id=47645915), [HN](https://news.ycombinator.com/item?id=47775039), [r/ClaudeCode](https://www.reddit.com/r/ClaudeCode/comments/1wv64xl/remotecontrol_still_dies_fix_it_or_remove_the/)).
+  - A phone app lives or dies on one-tap permission approval ([karanjagtiani04](https://x.com/karanjagtiani04/status/2108304916800471171)).
+- Happy users already do this: a VPS or Mac mini with Happy for notifications, and some ask to run the relay on their own box over Tailscale ([chrisemoody](https://x.com/chrisemoody/status/2028115246926156016), [9hills](https://x.com/9hills/status/2042445100421406775)).
+- The unit people shared about Happy was "type `happy` instead of `claude`, pick it up on your phone" ([iannuttall](https://x.com/iannuttall/status/1963938928186245536)).
+- Not in this conversation: Modal and Coolify (an app PaaS, not an agent host). OpenClaw on a Hetzner box is a chat assistant, a different job.
+
+### One-liners tested against that language
+
+| Line | Verdict |
+| --- | --- |
+| "One app for Claude Code, Codex and Grok" (the current homepage) | Nobody talks this way; they name one agent and a box. It is T3 Code's category, and T3 has Theo's audience. Keep it as the third line |
+| "Agents on your server, steered from your phone" | Closest to the brief. Assumes the reader already has a server |
+| "Your Claude subscription, on a computer that doesn't sleep" | The strongest pain line: Remote Control's documented failure is the host sleeping. Proposed headline (opinion) |
+| "ssh, but you can approve the diff from your phone" | Matches Termius refugees, but sounds like another phone terminal |
+| "The open-source remote control for a VPS" | A good Reddit title, too aggressive as the brand line (opinion) |
+
+What the current pitch misses: the laptop can sleep when the agent is on a server, and the pain is permission stalls and dropped sessions, not a model list. Theo's claim of about 85% week-over-week retention among T3 users with both Claude and Codex installed ([theo](https://x.com/theo/status/2108710634095612213)) is a reason to keep multi-model visible, lower down.
+
+### The landscape
+
+| Product | What it is | Signal |
+| --- | --- | --- |
+| [T3 Code](https://github.com/pingdotgg/t3code) | Free OSS client; mobile apps since July 2026; drives a machine you own | Founder claims 400k → 450k users in four days in early October 2026; distribution is Theo's existing audience |
+| [Omnara](https://news.ycombinator.com/item?id=44878650) (YC S25) | "Run Claude Code from anywhere"; later a cloud sandbox for when the laptop drops | Show HN about 310 points; Product Hunt #1 |
+| [Conductor](https://www.conductor.build/changelog/0.90.0-conductor-for-ios) (YC S24) | Mac app for parallel agents in worktrees; iOS app on 2 October 2026 | Site claims 100k+ builders |
+| Claude Code Remote Control | First-party, Claude only | Simplest; drops on sleep (above). See `/vs/claude-code-remote-control/` |
+| Looper, Shellular, pocketdev | Small phone apps or scripts for a VPS-hosted agent | Single posts |
+| exe.dev | The computer, not the client | Preview Show HN 457 points; Crawshaw's essay ["I am building a cloud"](https://news.ycombinator.com/item?id=47872324) 1,115 points, while the Series A post got 20 |
+| [Crystal](https://github.com/stravu/crystal), [1Code](https://github.com/21st-dev/1code) | "A nicer Claude window" | Stalled at about 3k and 5.6k stars; deprecated or archived |
+
+The pattern: launches that moved had an existing audience (Theo), a one-line job (Omnara, `ssh exe.dev`), or a technical essay (Crawshaw). GUIs without a job stalled.
+
+exe.dev was built by David Crawshaw (a Tailscale co-founder) and Josh Bleecher Snyder ([about](https://exe.dev/about)).
