@@ -33,7 +33,7 @@ export const homepageMetadata: PageMetadata = {
 export const docsMetadata: PageMetadata = {
   title: 'Happy Coder Docs — Claude Code & Codex Mobile App (Original CLI)',
   description:
-    'Docs for the original Happy CLI (Happy Coder): use Claude Code and Codex from your iPhone, Android, or the web. Maintenance mode; new features ship in the Happy desktop app.',
+    'Docs for the original Happy CLI (Happy Coder): Claude Code and Codex on iPhone, Android, or the web. Maintenance mode; new features ship in Happy Desktop.',
   canonicalPath: '/docs/',
 }
 
