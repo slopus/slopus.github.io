@@ -2,15 +2,14 @@ import { Steps } from 'nextra/components'
 
 # Self-Host Your Own Happy Server
 
-Run your own relay server in minutes. Keep complete control over your Claude Code mobile setup.
+Run your own relay server and keep control over your Claude Code mobile setup.
 
 ## Why Run Your Own Server?
 
 When you self-host the Happy Server, you get:
-- **Total privacy** - Your encrypted data stays on your hardware
+- **Your hardware** - Your encrypted sessions and your account records are stored on your machine
 - **No limits** - Set your own rate limits and storage
 - **Team control** - Run one server for your whole team
-- **Zero dependencies** - Never worry about a service shutting down
 
 The server is about 12,000 lines of TypeScript. You can read it yourself to
 verify it just forwards encrypted messages.
@@ -29,31 +28,38 @@ cd happy
 docker build -t happy-server:latest -f Dockerfile .
 ```
 
+This image is the standalone server: an embedded Postgres (PGlite) and uploaded files in `/data`, with no Postgres, Redis, or S3 to run beside it.
+
 ### Run the Server
 
 ```bash
+# Generate the master secret once and keep the file
+echo "HANDY_MASTER_SECRET=$(openssl rand -hex 32)" > happy.env
+chmod 600 happy.env
+
 docker run -d \
   --name happy-server \
   -p 3005:3005 \
-  -e NODE_ENV=production \
-  -e HANDY_MASTER_SECRET="your-master-secret" \
+  -v "$PWD/happy-data:/data" \
+  --env-file happy.env \
   -e PORT=3005 \
   --restart unless-stopped \
   happy-server:latest
 ```
 
-**Important**: Replace the environment variable values with your actual configuration:
-- `HANDY_MASTER_SECRET`: A secure random secret for auth and encryption
-- `DATABASE_URL`, `REDIS_URL`: Optional. Without them the image runs an embedded database
-- `PORT`: The port the application listens on (3005)
+- `HANDY_MASTER_SECRET`: Required. A random secret for auth tokens and server-side encryption. Reuse the same `happy.env` when you recreate the container, or existing sign-ins stop working.
+- `-v "$PWD/happy-data:/data"`: Keeps the database and uploads in `./happy-data` on the host. Without it they live in an anonymous Docker volume.
+- `PORT`: The port the server listens on (3005).
+
+The standalone image keeps its database in PGlite and ignores `DATABASE_URL`. To use your own Postgres, see [Docker Compose with Postgres](#docker-compose-with-postgres).
 
 ### Configure Your Devices
 
 **On your phone:**
-1. Open Happy app
-2. Go to Settings
-3. Set "Server URL" to `http://your-server:3005`
-4. Save
+1. Before signing in, tap the gear at the top of the Happy app's first screen. It opens **Server**.
+2. Enter `http://your-server:3005` as the Server URL and save. The app checks that it is a Happy server.
+
+Already signed in? The setting is then in the developer menu: in **Settings**, tap **Version** ten times to turn on developer mode, then open **Developer Tools → API Endpoint** and restart the app. Sign out and back in after changing the server.
 
 **On your computer:**
 ```bash
@@ -61,9 +67,11 @@ export HAPPY_SERVER_URL="http://your-server:3005"
 # Configure your CLI to use your server
 ```
 
+**Happy Desktop** has no server setting yet. Its Mobile Access uses the server named by `HAPPY_AGENT_HAPPY_SERVER_URL` or `HAPPY_SERVER_URL` in the environment its agent runs with, otherwise the server saved with its pairing or with the Happy CLI login it imported, otherwise Happy's public server.
+
 </Steps>
 
-That's it! Your Happy setup now runs through your own server.
+Your Happy setup now runs through your own server.
 
 ## Production Setup with HTTPS
 
@@ -88,15 +96,20 @@ EOF
 sudo systemctl restart caddy
 ```
 
-Now use `https://your-domain.com` in your Happy Coder settings.
+Now use `https://your-domain.com` as the Server URL on your phone and in `HAPPY_SERVER_URL`.
 
 ## Docker Compose Setup
 
-For easier management, use Docker Compose:
+The standalone server needs nothing beside it:
+
+```bash
+# Generate the master secret once, into .env next to docker-compose.yml
+echo "HANDY_MASTER_SECRET=$(openssl rand -hex 32)" > .env
+chmod 600 .env
+```
 
 ```yaml
 # docker-compose.yml
-version: '3.8'
 services:
   happy-server:
     image: happy-server:latest
@@ -104,56 +117,87 @@ services:
       - "3005:3005"
     restart: unless-stopped
     environment:
-      - NODE_ENV=production
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/happy-server
-      - REDIS_URL=redis://redis:6379
-      - HANDY_MASTER_SECRET=your-master-secret
+      - HANDY_MASTER_SECRET=${HANDY_MASTER_SECRET}
       - PORT=3005
+    volumes:
+      - ./happy-data:/data
+```
+
+Run with: `docker compose up -d`
+
+### Docker Compose with Postgres
+
+To keep data in your own Postgres instead, build the other image, `Dockerfile.server`, which runs the server against `DATABASE_URL`:
+
+```bash
+docker build -t happy-server-pg:latest -f Dockerfile.server .
+
+# Generate both secrets once, into .env
+{
+  echo "HANDY_MASTER_SECRET=$(openssl rand -hex 32)"
+  echo "POSTGRES_PASSWORD=$(openssl rand -hex 24)"
+} > .env
+chmod 600 .env
+```
+
+```yaml
+# docker-compose.yml
+services:
+  happy-server:
+    image: happy-server-pg:latest
+    ports:
+      - "3005:3005"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://happy:${POSTGRES_PASSWORD}@postgres:5432/happy-server
+      - HANDY_MASTER_SECRET=${HANDY_MASTER_SECRET}
+      - PORT=3005
+      - DATA_DIR=/data
+    volumes:
+      - ./happy-data:/data
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
 
   postgres:
     image: postgres:15
+    restart: unless-stopped
     environment:
       - POSTGRES_DB=happy-server
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=happy
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U happy -d happy-server"]
+      interval: 5s
+      retries: 10
 
 volumes:
   postgres_data:
-  redis_data:
 ```
 
-Run with: `docker-compose up -d`
+Only the server's port is published; Postgres is reachable only on the Compose network. This image does not migrate on start, so apply the migrations first, and again after each upgrade:
 
-This setup includes PostgreSQL and Redis containers that the Happy Server depends on.
+```bash
+docker compose run --rm happy-server pnpm exec prisma migrate deploy
+docker compose up -d
+```
+
+Redis is optional. The server uses it only when `REDIS_URL` is set, to share live connections across several server processes; one process does not need it. Uploaded files go to `/data/files` unless you set the `S3_*` variables.
 
 ## Where to Host
 
-### Option 1: Home Server (Free)
+### Option 1: Home Server
 Run on any computer at home:
-- Raspberry Pi ($35 one-time)
+- Raspberry Pi
 - Old laptop
 - Mac Mini
 - Desktop that's always on
 
-### Option 2: Cloud VPS ($5-10/month)
-- **DigitalOcean**: $6/month droplet works great
-- **Linode**: $5/month shared CPU
-- **Vultr**: $6/month regular performance
-- **Hetzner**: €4/month (best value in Europe)
+### Option 2: Cloud VPS
+A small VPS from DigitalOcean, Linode, Vultr, Hetzner, or similar.
 
 ### Option 3: Corporate Network
 Run inside your company network for team use. The server works behind firewalls and proxies.
@@ -188,24 +232,24 @@ curl http://your-server:3005/health
 
 ## Backup Your Data
 
-The server stores encrypted blobs in `/data`. To backup:
+The standalone server keeps its database and uploads in `./happy-data`. The database is a live Postgres data directory, so stop the server while you copy it:
 
 ```bash
-# Simple backup
-tar -czf backup-$(date +%Y%m%d).tar.gz ./data
-
-# Or sync to another location
-rsync -av ./data/ backup-location/
+docker stop happy-server
+tar -czf backup-$(date +%Y%m%d).tar.gz ./happy-data
+docker start happy-server
 ```
 
-Remember: These backups are encrypted. No one can read them without your device keys.
+With your own Postgres, back it up with `pg_dump` as usual.
+
+Session messages and metadata in a backup are encrypted with keys on your devices. Account records, such as your public key, an optional profile and GitHub link, and push notification tokens, are not.
 
 
 ## Security Notes
 
 The Happy Server design keeps your data safe:
 
-1. **Server can't read your data** - Everything is encrypted before sending
+1. **Server can't read your sessions** - Session content is encrypted on your devices before sending
 2. **No account needed** - Authentication uses cryptographic proofs
 3. **No logs of your code** - Server only logs connection metadata
 4. **Open source** - Audit the code yourself
@@ -215,23 +259,19 @@ For extra security:
 - Run behind a VPN for team deployments
 - Set up fail2ban for brute force protection
 
-## Cost Comparison
+## What still leaves your server
 
-**Self-hosted Happy Server:**
-- Home: Free (use existing hardware)
-- VPS: $5-10/month for unlimited use
+Self-hosting moves sync and storage onto your machine. These still talk to other services:
 
-**Commercial alternatives:**
-- Omnara: $9/month per user
-- Cursor Mobile: Runs on their VMs
-- Terragon/Siteboon: Usage-based pricing
-- Conductor: $29/month after free tier
-
-Self-hosting saves money and gives you control.
+- **Model providers.** Claude Code, Codex, and the other agents on your computer call their providers' APIs directly: Anthropic, OpenAI, xAI. That traffic never passes through the Happy server.
+- **Push notifications.** The server sends them through Expo's push service, which hands them to Apple or Google. A notification carries its kind, such as "It's ready!", and the session's title as plain text. The Happy CLI can also send one to Expo directly when it cannot attribute it to a session.
+- **Analytics.** The phone app sends product analytics to PostHog whichever server it uses. Turn it off in **Settings → Account → Privacy → Analytics**. Happy Desktop sends its own, with a **Share product analytics** switch in its settings. The server itself sends none.
+- **Optional integrations**, only if you configure them: GitHub sign-in, ElevenLabs for voice, and RevenueCat for voice subscriptions.
+- **Happy Desktop's Tailcat link.** Desktop reaches a remote Happy Agent through Tailcat, which may route through Tailscale's free DERP relays. They carry WireGuard ciphertext only. That link does not involve this server.
 
 ## Advanced: Kubernetes Deployment
 
-For teams using Kubernetes, here's the production configuration:
+For teams using Kubernetes. Build the image from `Dockerfile.server`, since the standalone image ignores `DATABASE_URL`, and run `pnpm exec prisma migrate deploy` with the same secret before each rollout:
 
 ```yaml
 apiVersion: apps/v1
@@ -303,8 +343,7 @@ metadata:
   name: happy-secrets
 type: Opaque
 stringData:
-  DATABASE_URL: "postgresql://postgres:postgres@postgres-service:5432/happy-server"
-  REDIS_URL: "redis://redis-service:6379"
+  DATABASE_URL: "postgresql://happy:A_GENERATED_PASSWORD@postgres-service:5432/happy-server"
   HANDY_MASTER_SECRET: "your-secure-master-secret"
   PORT: "3005"
   NODE_ENV: "production"
@@ -316,8 +355,9 @@ kubectl apply -f happy-secrets.yaml
 ```
 
 **Security Note**: Replace the values with your actual configuration. For production:
-- Use a strong, random HANDY_MASTER_SECRET value
-- Use proper database credentials
+- Use a strong, random HANDY_MASTER_SECRET value, such as `openssl rand -hex 32`
+- Use a generated database password, such as `openssl rand -hex 24`
+- Add `REDIS_URL` only if you run more than one replica
 - Consider using external secret management tools like external-secrets-operator with Vault
 
 ## Next Steps
@@ -325,5 +365,3 @@ kubectl apply -f happy-secrets.yaml
 After setting up your server:
 
 - [Enable voice coding](/docs/features/voice-coding-with-claude-code)
-
-Running your own Happy Server takes 3 minutes and gives you permanent control over your Claude Code mobile access. No subscriptions, no lock-in, no surprises.

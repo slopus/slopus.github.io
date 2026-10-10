@@ -329,27 +329,43 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content th { background: #e7e4d8; color: #183f38; font-weight: 700; text-align: left; }
 .document-content th, .document-content td { border-bottom: 1px solid #d5cebf; border-right: 1px solid #d5cebf; padding: .7rem .75rem; vertical-align: top; }
 
-/* The remote server guide's alternatives table compares options in columns. On a phone each
-   column becomes a card: its header, then its cells in row order, each beside its row's label
-   (data-label, from MarkdownDocument). Grid order regroups the cells without changing the markup. */
+/* On a phone, tables of three or more columns become cards (data-cards, from MarkdownDocument).
+   "columns": each compared column becomes a card, its header and then its cells in row order, each
+   beside its row's label; grid order regroups the cells without changing the markup.
+   "rows": each row becomes a card headed by its first cell, each other cell under its column's header.
+   Two-column tables stay tables, at the column's width. */
 @media (max-width: 760px) {
-  .document-content #alternatives + .document-table-wrap { border: 0; border-radius: 0; overflow: visible; }
-  .document-content #alternatives + .document-table-wrap table { display: grid; min-width: 0; }
-  .document-content #alternatives + .document-table-wrap :is(thead, tbody, tr) { display: contents; }
-  .document-content #alternatives + .document-table-wrap :is(th, td):first-child { display: none; }
-  .document-content #alternatives + .document-table-wrap :is(th, td) { border-left: 1px solid #d5cebf; border-right: 1px solid #d5cebf; }
-  .document-content #alternatives + .document-table-wrap th { border-radius: 10px 10px 0 0; border-top: 1px solid #d5cebf; font-size: .9rem; }
-  .document-content #alternatives + .document-table-wrap tr:last-child td { border-bottom: 1px solid #d5cebf; border-radius: 0 0 10px 10px; }
+  .document-content .document-table-wrap:not(.document-table-cards) table { min-width: 0; }
+  .document-content .document-table-cards { border: 0; border-radius: 0; overflow: visible; }
+  .document-content .document-table-cards table { min-width: 0; }
+
+  .document-content .document-table-cards table[data-cards="columns"] { display: grid; }
+  .document-content .document-table-cards table[data-cards="columns"] :is(thead, tbody, tr) { display: contents; }
+  .document-content .document-table-cards table[data-cards="columns"] :is(th, td):first-child { display: none; }
+  .document-content .document-table-cards table[data-cards="columns"] :is(th, td) { border-left: 1px solid #d5cebf; border-right: 1px solid #d5cebf; }
+  .document-content .document-table-cards table[data-cards="columns"] th { border-radius: 10px 10px 0 0; border-top: 1px solid #d5cebf; font-size: .9rem; margin-top: 12px; }
+  .document-content .document-table-cards table[data-cards="columns"] th:nth-child(2) { margin-top: 0; }
+  .document-content .document-table-cards table[data-cards="columns"] tr:last-child td { border-bottom: 1px solid #d5cebf; border-radius: 0 0 10px 10px; }
   /* The label floats into the cell's left padding; a grid item contains its floats, so a two-line
      label still sets the row's height. */
-  .document-content #alternatives + .document-table-wrap td { font-size: 14px; line-height: 1.5; padding: .55rem .75rem .55rem 7.5rem; }
-  .document-content #alternatives + .document-table-wrap td::before { color: #6b7f78; content: attr(data-label); float: left; font-size: 12px; font-weight: 700; line-height: 1.5; margin: .1rem 0 0 -6.75rem; width: 6.2rem; }
-  .document-content #alternatives + .document-table-wrap th { margin-top: 12px; }
-  .document-content #alternatives + .document-table-wrap th:nth-child(2) { margin-top: 0; }
-  .document-content #alternatives + .document-table-wrap :is(th, td):nth-child(2) { order: 2; }
-  .document-content #alternatives + .document-table-wrap :is(th, td):nth-child(3) { order: 3; }
-  .document-content #alternatives + .document-table-wrap :is(th, td):nth-child(4) { order: 4; }
-  .document-content #alternatives + .document-table-wrap :is(th, td):nth-child(5) { order: 5; }
+  .document-content .document-table-cards table[data-cards="columns"] td { font-size: 14px; line-height: 1.5; padding: .55rem .75rem .55rem 7.5rem; }
+  .document-content .document-table-cards table[data-cards="columns"] td::before { color: #6b7f78; content: attr(data-label); float: left; font-size: 12px; font-weight: 700; line-height: 1.5; margin: .1rem 0 0 -6.75rem; width: 6.2rem; }
+  .document-content .document-table-cards table[data-cards="columns"] :is(th, td):nth-child(2) { order: 2; }
+  .document-content .document-table-cards table[data-cards="columns"] :is(th, td):nth-child(3) { order: 3; }
+  .document-content .document-table-cards table[data-cards="columns"] :is(th, td):nth-child(4) { order: 4; }
+  .document-content .document-table-cards table[data-cards="columns"] :is(th, td):nth-child(5) { order: 5; }
+  .document-content .document-table-cards table[data-cards="columns"] :is(th, td):nth-child(6) { order: 6; }
+  .document-content .document-table-cards table[data-cards="columns"] :is(th, td):nth-child(7) { order: 7; }
+  .document-content .document-table-cards table[data-cards="columns"] :is(th, td):nth-child(8) { order: 8; }
+
+  .document-content .document-table-cards table[data-cards="rows"] { display: block; }
+  .document-content .document-table-cards table[data-cards="rows"] thead { clip-path: inset(50%); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
+  .document-content .document-table-cards table[data-cards="rows"] tbody { display: grid; gap: 12px; }
+  .document-content .document-table-cards table[data-cards="rows"] tr { border: 1px solid #d5cebf; border-radius: 10px; display: block; overflow: hidden; }
+  .document-content .document-table-cards table[data-cards="rows"] td { border: 0; border-top: 1px solid #d5cebf; display: block; font-size: 14px; line-height: 1.5; padding: .55rem .75rem; }
+  .document-content .document-table-cards table[data-cards="rows"] td::before { color: #6b7f78; content: attr(data-label); display: block; font-size: 12px; font-weight: 700; }
+  .document-content .document-table-cards table[data-cards="rows"] td:first-child { background: #e7e4d8; border-top: 0; color: #183f38; font-size: .9rem; font-weight: 700; }
+  .document-content .document-table-cards table[data-cards="rows"] td:first-child::before { content: none; }
 }
 .document-content tr:last-child td { border-bottom: 0; }
 .document-content th:last-child, .document-content td:last-child { border-right: 0; }

@@ -58,17 +58,37 @@ function hastText(node: HastNode): string {
   return node.type === 'text' ? node.value ?? '' : (node.children ?? []).map(hastText).join('')
 }
 
+function hastChildren(node: HastNode, tagName: string) {
+  return (node.children ?? []).filter((child) => child.tagName === tagName)
+}
+
 /**
- * Gives each table body cell its row's first-cell text as data-label, so a
- * table can be restacked into labeled cards on narrow screens with CSS alone.
+ * Marks each table of three or more columns for cards on narrow screens, which CSS alone
+ * then restacks (data-cards on the table, data-label on each body cell):
+ * - "columns" when the top-left header is empty: the columns are the things compared, so each
+ *   column becomes a card, and a cell's label is its row's first cell.
+ * - "rows" otherwise: each row becomes a card headed by its first cell, and a cell's label is
+ *   its column's header.
+ * Two-column tables stay tables.
  */
-function rehypeTableCellLabels() {
-  const visit = (node: HastNode) => {
-    if (node.type === 'element' && node.tagName === 'tr') {
-      const cells = (node.children ?? []).filter((child) => child.tagName === 'td')
-      const label = cells[0] ? hastText(cells[0]).trim() : ''
-      for (const cell of cells.slice(1)) cell.properties = { ...cell.properties, dataLabel: label }
+function rehypeTableCards() {
+  const label = (table: HastNode) => {
+    const sections = (table.children ?? []).filter((child) => child.tagName === 'thead' || child.tagName === 'tbody')
+    const rows = sections.flatMap((section) => hastChildren(section, 'tr'))
+    const headers = hastChildren(rows[0] ?? { type: 'element' }, 'th').map((cell) => hastText(cell).trim())
+    if (headers.length < 3) return
+    const mode = headers[0] ? 'rows' : 'columns'
+    table.properties = { ...table.properties, dataCards: mode }
+    for (const row of rows) {
+      const cells = hastChildren(row, 'td')
+      const rowLabel = cells[0] ? hastText(cells[0]).trim() : ''
+      cells.forEach((cell, index) => {
+        if (index > 0) cell.properties = { ...cell.properties, dataLabel: mode === 'rows' ? headers[index] ?? '' : rowLabel }
+      })
     }
+  }
+  const visit = (node: HastNode) => {
+    if (node.type === 'element' && node.tagName === 'table') label(node)
     for (const child of node.children ?? []) visit(child)
   }
   return (tree: HastNode) => visit(tree)
@@ -143,7 +163,7 @@ export function MarkdownDocument({
       )
     },
     table: ({ children, node: _node, ...props }) => (
-      <div className="document-table-wrap">
+      <div className={'data-cards' in props ? 'document-table-wrap document-table-cards' : 'document-table-wrap'}>
         <table {...props}>{children}</table>
       </div>
     ),
@@ -159,7 +179,7 @@ export function MarkdownDocument({
 
   return (
     <div className="document-content">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeTableCellLabels]} components={{ ...components, ...overrides }}>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeTableCards]} components={{ ...components, ...overrides }}>
         {markdown}
       </ReactMarkdown>
     </div>
