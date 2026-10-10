@@ -308,7 +308,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content pre { background: #14352f; border: 1px solid #24463f; border-radius: 12px; color: #eef0e8; font-family: 'DM Mono', monospace; font-size: .76rem; line-height: 1.65; margin: 1.6rem 0; overflow-x: auto; padding: 1.15rem 1.25rem; }
 .document-content pre code { background: none; color: inherit; font: inherit; padding: 0; }
 /* A long path or command in running text wraps rather than spilling out of a phone column. */
-.document-content :not(pre) > code { overflow-wrap: anywhere; }
+.document-content :not(pre) > code { hyphens: manual; overflow-wrap: anywhere; }
 /* Sideways scrollbars inside code blocks and wide tables: the same thin, trackless bar the docs sidebar
    uses, so a wide block doesn't get the browser's boxed white one. */
 .document-content pre, .document-table-wrap, .code-block, .terminal-body { scrollbar-color: rgba(146, 146, 146, .7) transparent; scrollbar-width: thin; }
@@ -322,6 +322,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 /* The team server diagram, on Multiplayer and the remote server guide: centered, as wide as the column
    allows up to a readable size, with its height reserved so a jump to a later heading lands before it loads. */
 .document-content img[src="/multiplayer/team-server.svg"] { aspect-ratio: 520 / 736; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
+.document-content img[src="/img/remote-server-harness.svg"] { aspect-ratio: 520 / 612; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content video { border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); height: auto; margin: 1.2rem 0; max-width: 100%; width: 100%; }
 .document-content hr { border: 0; border-top: 1px solid #d9d3c5; margin: 3rem 0; }
 .document-table-wrap { border: 1px solid #d5cebf; border-radius: 10px; margin: 1.6rem 0; overflow-x: auto; }
@@ -329,13 +330,14 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content th { background: #e7e4d8; color: #183f38; font-weight: 700; text-align: left; }
 .document-content th, .document-content td { border-bottom: 1px solid #d5cebf; border-right: 1px solid #d5cebf; padding: .7rem .75rem; vertical-align: top; }
 
-/* On a phone, tables of three or more columns become cards (data-cards, from MarkdownDocument).
+/* On a phone, comparison tables of five or more columns become cards (data-cards, from MarkdownDocument).
    "columns": each compared column becomes a card, its header and then its cells in row order, each
    beside its row's label; grid order regroups the cells without changing the markup.
    "rows": each row becomes a card headed by its first cell, each other cell under its column's header.
-   Two-column tables stay tables, at the column's width. */
+   Every other table stays a table at the column's width, its cells wrapping onto more lines. */
 @media (max-width: 760px) {
-  .document-content .document-table-wrap:not(.document-table-cards) table { min-width: 0; }
+  .document-content .document-table-wrap:not(.document-table-cards) table { font-size: 12.5px; line-height: 1.4; min-width: 0; }
+  .document-content .document-table-wrap:not(.document-table-cards) :is(th, td) { hyphens: auto; overflow-wrap: break-word; padding: .5rem .45rem; }
   .document-content .document-table-cards { border: 0; border-radius: 0; overflow: visible; }
   .document-content .document-table-cards table { min-width: 0; }
 
@@ -471,6 +473,14 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .document-breadcrumb { display: none; }
   .docs-sidebar { display: none; }
   .docs-layout { display: block; min-height: 0; padding-bottom: 5rem; padding-top: 2.5rem; }
+  /* The docs footer sits at the end of the article. On a phone it runs edge to edge, keeps its
+     distance from the pagination, and on a short page sits on the bottom of the screen. */
+  .docs-shell { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+  .docs-shell .docs-layout { display: flex; flex: 1 0 auto; flex-direction: column; padding-bottom: 0; }
+  .docs-shell .document-article { display: flex; flex: 1 0 auto; flex-direction: column; }
+  .docs-shell .document-article > * { min-width: 0; }
+  .docs-shell .document-pagination { margin-bottom: 4rem; }
+  .docs-shell .site-footer { margin: auto calc(50% - 50vw) 0; }
   .document-content h1 { font-size: clamp(2.45rem, 12vw, 3.6rem); }
   /* The sticky header covers the top 53px of a phone screen; land anchors below it. */
   .document-content h1[id], .document-content h2[id], .document-content h3[id] { scroll-margin-top: 72px; }

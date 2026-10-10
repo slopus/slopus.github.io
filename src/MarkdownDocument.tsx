@@ -63,20 +63,20 @@ function hastChildren(node: HastNode, tagName: string) {
 }
 
 /**
- * Marks each table of three or more columns for cards on narrow screens, which CSS alone
- * then restacks (data-cards on the table, data-label on each body cell):
+ * Marks each wide comparison table, five or more columns, for cards on narrow screens, which
+ * CSS alone then restacks (data-cards on the table, data-label on each body cell):
  * - "columns" when the top-left header is empty: the columns are the things compared, so each
  *   column becomes a card, and a cell's label is its row's first cell.
  * - "rows" otherwise: each row becomes a card headed by its first cell, and a cell's label is
  *   its column's header.
- * Two-column tables stay tables.
+ * Narrower tables stay tables and wrap their text to fit.
  */
 function rehypeTableCards() {
   const label = (table: HastNode) => {
     const sections = (table.children ?? []).filter((child) => child.tagName === 'thead' || child.tagName === 'tbody')
     const rows = sections.flatMap((section) => hastChildren(section, 'tr'))
     const headers = hastChildren(rows[0] ?? { type: 'element' }, 'th').map((cell) => hastText(cell).trim())
-    if (headers.length < 3) return
+    if (headers.length < 5) return
     const mode = headers[0] ? 'rows' : 'columns'
     table.properties = { ...table.properties, dataCards: mode }
     for (const row of rows) {
