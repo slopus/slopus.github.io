@@ -87,17 +87,18 @@ rows = []
 
 def label(x, y, s, size=18, c=INK, wt=400):
     per = size * (0.56 if wt >= 700 else 0.52)
-    rows.append((x - 3, x + per * len(s) + 3, y - size * 0.8 - 3, y + size * 0.28 + 3))
+    rows.append((x - 3, x + per * len(s) + 3, y - size * 0.8 - 6, y + size * 0.28 + 6))
     return text(x, y, s, size, c, wt)
 
 
 def lifeline(x, y1, y2):
     out, start = [], y1
     for y0, yb in sorted((y0, yb) for x0, x1, y0, yb in rows if x0 <= x <= x1):
-        if y0 > start + 4:
+        # A stub shorter than a dash or two between rows reads as a strike through the text: skip it.
+        if y0 > start + 14:
             out.append(line(x, start, x, y0, 1.2, MUTED, .3, "3 6"))
         start = max(start, yb)
-    if y2 > start + 4:
+    if y2 > start + 14:
         out.append(line(x, start, x, y2, 1.2, MUTED, .3, "3 6"))
     return "\n".join(out)
 
