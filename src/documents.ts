@@ -257,7 +257,8 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'multiplayer',
     sourcePath: '/content/desktop/multiplayer.mdx',
     title: 'Multiplayer & Teams',
-    description: 'Run one Happy Agent for a team: sign-in, shared sessions, the sandbox, and sharing your own computer.',
+    pageTitle: 'Multiplayer & Teams: a Self-Hosted Coding Agent Server for Your Team — Happy',
+    description: 'Run one Happy Agent for your team: each member signs in as themselves, shares projects and sessions, and works under one sandbox. Plus sharing your own computer.',
     group: 'Features',
   },
   {
@@ -286,8 +287,8 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'guides/remote-server',
     sourcePath: '/content/desktop/guides/remote-server.mdx',
     title: 'Remote Server',
-    pageTitle: 'Run Claude Code and Codex on a Remote Server, Steered from Your Phone — Happy',
-    description: 'Keep Claude Code and Codex working while your laptop sleeps: run Happy Agent on a VM or Mac mini and steer it from your phone. Alternatives compared.',
+    pageTitle: 'Claude Code and Codex on a Remote Server or VPS, for You or Your Team — Happy',
+    description: 'Self-host one coding agent server for Claude, Codex, and Grok on your existing subscriptions. It keeps working while your laptop sleeps; steer it from Desktop or your phone, alone or as a team.',
     group: 'Guides',
   },
   {

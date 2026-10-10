@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { flushSync } from 'react-dom'
 import DesktopApp from './DesktopApp'
 import ModelBenchmarksPage from './ModelBenchmarksPage'
 import { DocsPage, LegalPage, NotFoundPage } from './DocumentPages'
@@ -182,12 +183,18 @@ export function Router({ pathname }: { pathname?: string }) {
     const fragmentTarget = window.location.hash
       ? document.getElementById(decodeURIComponent(window.location.hash.slice(1)))
       : null
+    // Jump without the page's smooth scrolling, so scrollY is final when the fonts check reads it.
     if (fragmentTarget) {
-      fragmentTarget.scrollIntoView()
+      fragmentTarget.scrollIntoView({ behavior: 'instant' })
       const scrolledTo = window.scrollY
       void document.fonts?.ready.then(() => {
-        if (window.scrollY === scrolledTo) fragmentTarget.scrollIntoView()
+        if (window.scrollY === scrolledTo) fragmentTarget.scrollIntoView({ behavior: 'instant' })
       })
+    }
+
+    // An id can start with a digit (#9-add-it-to-desktop), which a CSS selector cannot.
+    function fragmentElement(hash: string) {
+      return hash ? document.getElementById(decodeURIComponent(hash.slice(1))) : null
     }
 
     function navigateTo(url: URL, replace = false) {
@@ -203,11 +210,16 @@ export function Router({ pathname }: { pathname?: string }) {
 
       if (nextPath !== currentPath) {
         applyPageMetadata(metadataForPath(url.pathname))
-        setCurrentPathname(url.pathname)
-        window.scrollTo({ top: 0 })
-        document.querySelector('.document-article')?.scrollTo({ top: 0 })
+        flushSync(() => setCurrentPathname(url.pathname))
+        const target = fragmentElement(url.hash)
+        if (target) {
+          target.scrollIntoView({ behavior: 'instant' })
+        } else {
+          window.scrollTo({ top: 0 })
+          document.querySelector('.document-article')?.scrollTo({ top: 0 })
+        }
       } else if (url.hash) {
-        document.querySelector(url.hash)?.scrollIntoView()
+        fragmentElement(url.hash)?.scrollIntoView()
       }
     }
 

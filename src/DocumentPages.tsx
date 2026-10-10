@@ -117,7 +117,10 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
           <DocsNavigation product={product} activeDocument={activeDocument} />
         </aside>
 
-        <article className={activeDocument.essay ? 'document-article essay-article' : 'document-article'}>
+        <article
+          className={activeDocument.essay ? 'document-article essay-article' : 'document-article'}
+          data-document={activeDocument.path || undefined}
+        >
           {product.key === 'happy' && <LegacyNotice />}
           <p className="document-breadcrumb">
             <a href={product.docsHome}>{product.label} docs</a>

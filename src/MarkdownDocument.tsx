@@ -46,6 +46,34 @@ function normalizeHref(href: string | undefined, originalDocsLinks: boolean) {
   return aliasedHref
 }
 
+interface HastNode {
+  type: string
+  tagName?: string
+  value?: string
+  properties?: Record<string, unknown>
+  children?: HastNode[]
+}
+
+function hastText(node: HastNode): string {
+  return node.type === 'text' ? node.value ?? '' : (node.children ?? []).map(hastText).join('')
+}
+
+/**
+ * Gives each table body cell its row's first-cell text as data-label, so a
+ * table can be restacked into labeled cards on narrow screens with CSS alone.
+ */
+function rehypeTableCellLabels() {
+  const visit = (node: HastNode) => {
+    if (node.type === 'element' && node.tagName === 'tr') {
+      const cells = (node.children ?? []).filter((child) => child.tagName === 'td')
+      const label = cells[0] ? hastText(cells[0]).trim() : ''
+      for (const cell of cells.slice(1)) cell.properties = { ...cell.properties, dataLabel: label }
+    }
+    for (const child of node.children ?? []) visit(child)
+  }
+  return (tree: HastNode) => visit(tree)
+}
+
 export function MarkdownDocument({
   markdown,
   components: overrides,
@@ -131,7 +159,7 @@ export function MarkdownDocument({
 
   return (
     <div className="document-content">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ ...components, ...overrides }}>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeTableCellLabels]} components={{ ...components, ...overrides }}>
         {markdown}
       </ReactMarkdown>
     </div>

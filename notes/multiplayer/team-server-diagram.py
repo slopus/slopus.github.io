@@ -7,7 +7,7 @@ import random
 random.seed(11)
 INK = "#183f38"; MUTED = "#6b7f78"; ACC = "#e6522c"; PAPER = "#fffdf8"
 SAND = "#f6eadf"; STONE = "#efe9dc"; MINT = "#e3efe9"
-W, H = 520, 1010
+W, H = 520, 696
 j = lambda a=1.2: random.uniform(-a, a)
 
 
@@ -79,85 +79,73 @@ def key(x, y):
 
 o = [f'<rect x="0" y="0" width="{W}" height="{H}" rx="12" fill="{PAPER}"/>']
 
-# Members
-o.append(text(20, 38, "Members", 20, INK, 700))
-o.append(text(W - 20, 38, "each with their own sign-in", 15, MUTED, 400, "end"))
+# The core picture only; relays, drafts, and the mode details live in the page text below it.
+# Text is at least 18 units: about 12px when a phone shrinks this to 350px.
+o.append(text(16, 36, "Members", 24, INK, 700))
 for i, name in enumerate(["Ana", "Ben", "Chi"]):
-    x = 16 + i * 166
-    o.append(rect(x, 54, 156, 96, 1.6, INK, SAND))
-    o.append(face(x + 26, 80))
-    o.append(text(x + 48, 87, name, 18, INK, 700))
-    o.append(laptop(x + 12, 108)); o.append(text(x + 13, 140, "Desktop", 14))
-    o.append(phone(x + 112, 106)); o.append(text(x + 118, 140, "Phone", 14, INK, 400, "middle"))
+    x = 12 + i * 168
+    o.append(rect(x, 50, 160, 64, 1.6, INK, SAND))
+    o.append(face(x + 26, 82))
+    o.append(text(x + 48, 89, name, 20, INK, 700))
+    o.append(laptop(x + 94, 72))
+    o.append(phone(x + 134, 70))
 
-# Desktop goes over Tailcat; phones sync through their own end-to-end encrypted path.
-o.append(line(41, 172, 373, 172, 1.6, INK, .5))
-o.append(line(134, 188, 466, 188, 1.4, MUTED, .5, "5 5"))
+# Desktop over Tailcat (solid); phones through Happy's relay (dashed).
+o.append(line(119, 132, 455, 132, 1.6, INK, .5))
+o.append(line(151, 146, 487, 146, 1.4, MUTED, .5, "5 5"))
 for i in range(3):
-    x = 16 + i * 166
-    o.append(line(x + 25, 154, x + 25, 172, 1.6, INK, .3))
-    o.append(line(x + 118, 154, x + 118, 188, 1.4, MUTED, .3, "5 5"))
-o.append(arrow(240, 172, 240, 214, INK))
-o.append(arrow(417, 188, 417, 214, MUTED, 1.4, "5 5"))
-o.append(text(24, 205, "Happy Social sign-in", 14, INK, 700))
+    x = 12 + i * 168
+    o.append(line(x + 107, 118, x + 107, 132, 1.6, INK, .3))
+    o.append(line(x + 139, 118, x + 139, 146, 1.4, MUTED, .3, "5 5"))
+o.append(arrow(150, 132, 150, 170, INK))
+o.append(arrow(420, 146, 420, 170, MUTED, 1.4, "5 5"))
 
-o.append(rect(16, 218, 300, 96, 1.8, INK, MINT))
-o.append(lock(30, 230))
-o.append(text(56, 245, "Tailcat", 18, INK, 700))
-o.append(text(30, 270, "WireGuard-encrypted, through", 15))
-o.append(text(30, 288, "NAT, outbound only. Relays see", 15))
-o.append(text(30, 306, "no content. Not a sign-in.", 15, MUTED))
+o.append(rect(12, 174, 316, 84, 1.8, INK, MINT))
+o.append(lock(26, 186))
+o.append(text(52, 202, "Desktop: Tailcat", 20, INK, 700))
+o.append(text(26, 232, "Encrypted connection,", 18))
+o.append(text(26, 252, "no open ports", 18))
 
-o.append(rect(330, 218, 174, 96, 1.6, MUTED, STONE, "5 5"))
-o.append(text(344, 245, "Phone sync", 18, INK, 700))
-o.append(text(344, 270, "End-to-end", 15))
-o.append(text(344, 288, "encrypted. Each", 15))
-o.append(text(344, 306, "pairs their own.", 15, MUTED))
+o.append(rect(340, 174, 168, 84, 1.6, MUTED, STONE, "5 5"))
+o.append(text(354, 202, "Phone", 20, INK, 700))
+o.append(text(354, 232, "End-to-end", 18))
+o.append(text(354, 252, "encrypted", 18))
 
-o.append(arrow(166, 318, 166, 360, INK))
-o.append(arrow(417, 318, 417, 360, MUTED, 1.4, "5 5"))
+o.append(arrow(170, 262, 170, 296, INK))
+o.append(arrow(424, 262, 424, 296, MUTED, 1.4, "5 5"))
 
 # The team server
-o.append(rect(8, 364, 504, 634, 2, INK))
-o.append(rect(8, 364, 504, 50, 2, INK, INK))
-o.append(text(26, 395, "Team server: one Happy Agent", 18, PAPER, 700))
+o.append(rect(6, 300, 508, 384, 2, INK))
+o.append(rect(6, 300, 508, 48, 2, INK, INK))
+o.append(text(22, 331, "Team server: one Happy Agent", 22, PAPER, 700))
 
-# 1. The authentication boundary
-o.append(rect(24, 430, 472, 76, 1.6, ACC, "#fbe6dc"))
-o.append(lock(40, 444, ACC))
-o.append(text(68, 460, "Checks every request", 17, INK, 700))
-o.append(text(40, 490, "Happy Social token for this team, or 401.", 15))
+# 1. The sign-in gate
+o.append(rect(20, 362, 480, 52, 1.6, INK, MINT))
+o.append(lock(34, 375))
+o.append(text(62, 395, "Only this team's sign-ins get in", 18, INK, 700))
 
-# 2. What members share
-o.append(text(24, 540, "Shared by all members", 17, INK, 700))
+# 2. Shared work
+o.append(text(20, 446, "Shared by all members", 20, INK, 700))
 for k, label in enumerate(["Projects", "Sessions", "Tasks"]):
-    x = 24 + k * 160
-    o.append(rect(x, 554, 150, 38, 1.4, INK, SAND))
-    o.append(text(x + 75, 579, label, 15, INK, 400, "middle"))
-o.append(text(24, 616, "The agent is told who sent each message.", 15))
-o.append(text(24, 636, "Drafts and task order stay per person.", 15, MUTED))
+    x = 20 + k * 162
+    o.append(rect(x, 458, 154, 40, 1.4, INK, SAND))
+    o.append(text(x + 77, 484, label, 18, INK, 400, "middle"))
 
-# 3. Provider credentials
-o.append(key(24, 662))
-o.append(text(62, 675, "Service account", 17, INK, 700))
-o.append(text(24, 702, "Claude, Codex, and Grok sign-ins live here.", 15))
-o.append(text(24, 722, "Every member's work spends these accounts.", 15, MUTED))
+# 3. Permission modes: the sandbox holds three of them; Full access sits outside it.
+o.append(rect(20, 518, 330, 150, 1.6, INK, None, "7 5"))
+o.append(text(34, 544, "OS sandbox", 20, INK, 700))
+o.append(rect(34, 556, 116, 42, 1.5, INK, STONE))
+o.append(text(92, 583, "Read only", 18, INK, 400, "middle"))
+o.append(rect(158, 556, 178, 42, 1.5, INK, STONE))
+o.append(text(247, 583, "Workspace write", 18, INK, 400, "middle"))
+o.append(rect(34, 610, 302, 46, 2.2, INK, MINT))
+o.append(text(48, 639, "Auto", 18, INK, 700))
+o.append(text(98, 639, "reviews each crossing", 18, MUTED))
 
-# 4. The sandbox and review boundary
-o.append(rect(24, 746, 472, 236, 1.6, INK, None, "7 5"))
-o.append(text(40, 774, "Every command runs under", 17, INK, 700))
-o.append(text(40, 795, "the OS sandbox and Auto review", 17, INK, 700))
-o.append(text(40, 820, "Each member picks a session's mode:", 15, MUTED))
-modes = [("Read only", STONE, INK, None), ("Workspace write", STONE, INK, None),
-         ("Auto", MINT, INK, "default"), ("Full access", "#fbe6dc", ACC, "no sandbox")]
-for k, (label, fill, color, note) in enumerate(modes):
-    x = 40 + (k % 2) * 224
-    y = 834 + (k // 2) * 54
-    o.append(rect(x, y, 216, 42, 2.2 if label == "Auto" else 1.5, color, fill))
-    o.append(text(x + 14, y + 27, label, 15, color, 700 if label == "Auto" else 400))
-    if note:
-        o.append(text(x + 202, y + 27, note, 13, ACC if color == ACC else MUTED, 400, "end"))
-o.append(text(40, 960, "Crossings are reviewed one action at a time.", 15))
+o.append(rect(362, 556, 138, 100, 1.6, ACC, "#fbe6dc"))
+o.append(text(431, 596, "Full access", 18, ACC, 700, "middle"))
+o.append(text(431, 624, "no sandbox", 18, ACC, 400, "middle"))
+
 svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
        "font-family=\"'Shantell Sans', 'Comic Sans MS', 'Chalkboard SE', 'Segoe Print', cursive\" role=\"img\">\n"
        + "\n".join(o) + "\n</svg>\n")

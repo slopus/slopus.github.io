@@ -1,8 +1,8 @@
 # Multiplayer & Teams
 
-A team is several people on one Happy Agent. It runs on a server you control. Each member reaches it from their own Desktop with their own Happy Social sign-in, and pairs their own phone.
+Run one Happy Agent for your whole team: a self-hosted coding agent server with Claude, Codex, and Grok, on a machine you control. Each member signs in with their own Happy Social account from Happy Desktop, pairs their own phone, and works in shared projects and sessions, under the same sandbox and review rules as on a personal machine. The server is an ordinary [remote server](/guides/remote-server/) switched into team mode.
 
-![Three members, Ana, Ben, and Chi, each with Desktop and a phone. Desktop signs in with Happy Social and reaches the team server over Tailcat: WireGuard-encrypted, through NAT, outbound only; relays see no content, and it is not a sign-in. Phones sync end to end encrypted, each member pairing their own. On the team server: every request is checked for a Happy Social token issued for this team, or refused with 401. All members share projects, sessions, and tasks; the agent is told who sent each message, and drafts stay per person. Claude, Codex, and Grok sign-ins belong to the server's service account, so every member's work spends those accounts. Every command runs under the OS sandbox and Auto review, and each member picks a session's mode: Read only, Workspace write, Auto (the default), or Full access, which has no sandbox.](/multiplayer/team-server.svg)
+![Three members, Ana, Ben, and Chi, each with a laptop and a phone. Their Desktop apps reach the team server over Tailcat, an encrypted connection with no open ports. Their phones connect separately, end-to-end encrypted. The team server, one Happy Agent, lets in only this team's sign-ins. All members share its projects, sessions, and tasks. Three permission modes run inside the OS sandbox: Read only, Workspace write, and Auto, which reviews each action that would cross the sandbox. Full access sits outside the sandbox.](/multiplayer/team-server.svg)
 
 ## How it works
 
@@ -11,7 +11,7 @@ A team is several people on one Happy Agent. It runs on a server you control. Ea
 - **Phones.** Each member pairs their own phone from **Settings → Mobile Access** while the team server is selected. Pairings and drafts are kept per member, and sync is end-to-end encrypted.
 - **Shared work.** Everyone sees the same projects and sessions. Before each message, the agent is told who sent it, by name and email. That tells the agent who is talking; it grants nothing. Drafts and the order of each person's task list stay their own.
 - **Provider accounts.** The Claude, Codex, and Grok sign-ins belong to the server's service account. Every member's work runs on those accounts and their limits; members' own subscriptions are not used.
-- **Sandbox and review.** Every command runs under the same OS sandbox and Auto review as on your own machine. Members pick a session's permission mode, including Full access. On Ubuntu 24.04, an administrator first grants the daemon executable an AppArmor namespace allowance.
+- **Sandbox and review.** The rules are the ones on your own machine. Read only, Workspace write, and Auto, the default, run every command inside the OS sandbox; in Auto, an action that would cross it is reviewed first, one action at a time. Full access removes the sandbox, and any member can switch a session to it. On Ubuntu 24.04, an administrator first grants the daemon executable an AppArmor namespace allowance.
 - **Owner.** The person who created the team is its owner. Only the owner can rename the installation or turn global skills on and off. Otherwise members have the same access.
 
 ## Set up a team

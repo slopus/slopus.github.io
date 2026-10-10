@@ -307,6 +307,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content blockquote p:last-child { margin-bottom: 0; }
 .document-content pre { background: #14352f; border: 1px solid #24463f; border-radius: 12px; color: #eef0e8; font-family: 'DM Mono', monospace; font-size: .76rem; line-height: 1.65; margin: 1.6rem 0; overflow-x: auto; padding: 1.15rem 1.25rem; }
 .document-content pre code { background: none; color: inherit; font: inherit; padding: 0; }
+/* A long path or command in running text wraps rather than spilling out of a phone column. */
+.document-content :not(pre) > code { overflow-wrap: anywhere; }
 /* Sideways scrollbars inside code blocks and wide tables: the same thin, trackless bar the docs sidebar
    uses, so a wide block doesn't get the browser's boxed white one. */
 .document-content pre, .document-table-wrap, .code-block, .terminal-body { scrollbar-color: rgba(146, 146, 146, .7) transparent; scrollbar-width: thin; }
@@ -323,6 +325,29 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content table { border-collapse: collapse; font-size: .82rem; line-height: 1.45; min-width: 620px; width: 100%; }
 .document-content th { background: #e7e4d8; color: #183f38; font-weight: 700; text-align: left; }
 .document-content th, .document-content td { border-bottom: 1px solid #d5cebf; border-right: 1px solid #d5cebf; padding: .7rem .75rem; vertical-align: top; }
+
+/* The remote server guide's alternatives table compares options in columns. On a phone each
+   column becomes a card: its header, then its cells in row order, each beside its row's label
+   (data-label, from MarkdownDocument). Grid order regroups the cells without changing the markup. */
+@media (max-width: 760px) {
+  .document-content #alternatives + .document-table-wrap { border: 0; border-radius: 0; overflow: visible; }
+  .document-content #alternatives + .document-table-wrap table { display: grid; min-width: 0; }
+  .document-content #alternatives + .document-table-wrap :is(thead, tbody, tr) { display: contents; }
+  .document-content #alternatives + .document-table-wrap :is(th, td):first-child { display: none; }
+  .document-content #alternatives + .document-table-wrap :is(th, td) { border-left: 1px solid #d5cebf; border-right: 1px solid #d5cebf; }
+  .document-content #alternatives + .document-table-wrap th { border-radius: 10px 10px 0 0; border-top: 1px solid #d5cebf; font-size: .9rem; }
+  .document-content #alternatives + .document-table-wrap tr:last-child td { border-bottom: 1px solid #d5cebf; border-radius: 0 0 10px 10px; }
+  /* The label floats into the cell's left padding; a grid item contains its floats, so a two-line
+     label still sets the row's height. */
+  .document-content #alternatives + .document-table-wrap td { font-size: 14px; line-height: 1.5; padding: .55rem .75rem .55rem 7.5rem; }
+  .document-content #alternatives + .document-table-wrap td::before { color: #6b7f78; content: attr(data-label); float: left; font-size: 12px; font-weight: 700; line-height: 1.5; margin: .1rem 0 0 -6.75rem; width: 6.2rem; }
+  .document-content #alternatives + .document-table-wrap th { margin-top: 12px; }
+  .document-content #alternatives + .document-table-wrap th:nth-child(2) { margin-top: 0; }
+  .document-content #alternatives + .document-table-wrap :is(th, td):nth-child(2) { order: 2; }
+  .document-content #alternatives + .document-table-wrap :is(th, td):nth-child(3) { order: 3; }
+  .document-content #alternatives + .document-table-wrap :is(th, td):nth-child(4) { order: 4; }
+  .document-content #alternatives + .document-table-wrap :is(th, td):nth-child(5) { order: 5; }
+}
 .document-content tr:last-child td { border-bottom: 0; }
 .document-content th:last-child, .document-content td:last-child { border-right: 0; }
 
@@ -406,13 +431,23 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .footer-meta { text-align: left; }
   .footer-links { justify-content: flex-start; }
   .document-site-shell .site-header { margin-bottom: 0; }
-  .docs-mobile-navigation { border-bottom: 1px solid #d9d3c5; display: block; padding-bottom: 1rem; padding-top: 1rem; }
-  .docs-mobile-navigation summary { cursor: pointer; font-family: 'DM Mono', monospace; font-size: .68rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; }
-  .docs-mobile-navigation[open] summary { margin-bottom: 1.2rem; }
+  .docs-mobile-navigation { border-bottom: 1px solid #d9d3c5; display: block; padding-bottom: .25rem; padding-top: .25rem; }
+  /* A 44px tap target with its own chevron; the strip keeps its height by trimming the padding above. */
+  .docs-mobile-navigation summary { align-items: center; cursor: pointer; display: flex; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; gap: .5rem; letter-spacing: .06em; list-style: none; min-height: 44px; text-transform: uppercase; }
+  .docs-mobile-navigation summary::-webkit-details-marker { display: none; }
+  .docs-mobile-navigation summary::before { border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; content: ''; height: 6px; transform: rotate(-45deg); transition: transform .15s; width: 6px; }
+  .docs-mobile-navigation[open] summary::before { transform: rotate(45deg); }
+  .docs-mobile-navigation[open] summary { margin-bottom: .75rem; }
+  .docs-mobile-navigation[open] { padding-bottom: 1rem; }
   .docs-mobile-navigation .docs-navigation { gap: 1.1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .docs-sidebar { display: none; }
   .docs-layout { display: block; min-height: 0; padding-bottom: 5rem; padding-top: 2.5rem; }
   .document-content h1 { font-size: clamp(2.45rem, 12vw, 3.6rem); }
+  /* The sticky header covers the top 53px of a phone screen; land anchors below it. */
+  .document-content h1[id], .document-content h2[id], .document-content h3[id] { scroll-margin-top: 72px; }
+  .document-content pre { font-size: 13px; line-height: 1.65; padding: 16px; }
+  /* The remote server guide's first screen: the setup is long, so its title stays short. */
+  [data-document="guides/remote-server"] .document-content h1 { font-size: 32px; line-height: 1.1; margin-bottom: 24px; }
   .document-content h2 { margin-top: 3.2rem; }
   .legal-layout { padding-bottom: 5rem; padding-top: 2rem; }
   .document-back-link { margin-bottom: 2rem; }

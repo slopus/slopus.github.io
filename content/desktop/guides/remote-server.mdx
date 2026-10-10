@@ -1,35 +1,54 @@
-# Run Claude Code and Codex on a Remote Server, Steered from Your Phone
+# Run Claude Code and Codex on a Server
 
-Run Happy Agent on a machine that stays on: a cloud VM, a Mac mini, a Raspberry Pi. It uses your Claude Code, Codex, and Grok sign-ins, keeps working while your laptop sleeps, and you watch and steer it from the Happy app on your phone or from Happy Desktop. Setup is one request to the Chief of Staff, or the steps below.
+Install Happy Agent on a server, a VPS, or a Mac mini. It is one agent harness for Claude, Codex, and Grok models, signed in with the Claude Code, Codex, and Grok subscriptions you already pay for. It keeps working while your laptop sleeps, and you steer it from Happy Desktop or the Happy phone app, alone or [with your team](#share-it-with-your-team).
+
+Jump to: [Quick setup](#ask-the-chief-of-staff) · [Manual setup](#by-hand) · [Providers](#providers) · [Teams](#share-it-with-your-team)
 
 ## The problem
 
-You start a long task in Claude Code or Codex, then you want to close the laptop and check on it from your phone. Today that usually means one of:
+A coding agent runs where you start it. Start Claude Code or Codex on your laptop, and the work stops when the lid closes. The usual workarounds each solve part of that:
 
-- **Keep the laptop open.** The agent runs on it, so it has to stay awake and online.
-- **Claude Code Remote Control.** Steer from the Claude app. The session still runs on your computer: while the laptop sleeps, the work pauses, and it reconnects when the laptop wakes.
-- **A server with tmux, SSH, and a phone terminal.** The agent keeps running, but you type prompts, paste, and answer approval prompts in a terminal on a phone keyboard.
+- **Keep the laptop open.** It has to stay awake, plugged in, and online.
+- **Claude Code Remote Control.** A window into a Claude Code session on your computer, from the Claude app or a browser. While the laptop sleeps, the work pauses until it wakes.
+- **A server with tmux and SSH.** The work keeps going, but you steer it through a terminal, one CLI per provider with its own login, and type approvals on a phone keyboard.
+- **Working with a teammate.** Usually means sharing the machine, a shell account or a VM, rather than the agent's sessions.
+
+Happy Agent takes the server route without the terminal: one runtime on the server, a desktop app and a phone app in front of it, and a team mode for sharing it.
 
 ## Alternatives
 
 | | tmux + SSH or Mosh + Tailscale + Termius | Claude Code Remote Control | A VM with its own agent (exe.dev and Shelley) | Happy Agent on a server |
 | --- | --- | --- | --- | --- |
-| Agents | Any terminal agent | Claude Code | Shelley; Claude Code, Codex, and Pi preinstalled | Claude, Codex, and Grok on your existing sign-ins |
-| Where it runs | Your server | Your computer, or a server inside tmux | An exe.dev VM | Your server, VM, or Mac |
-| When the laptop sleeps | Keeps running on the server | On a laptop, pauses until it wakes; on a server, keeps running | Keeps running | Keeps running |
-| From the phone | A terminal app, over SSH or Mosh | The Claude app or claude.ai/code | Shelley's web page; a terminal for the other agents | The Happy app, built for agent sessions |
-| Approvals | Terminal prompts, typed on the phone | Permission prompts in the app, with push notifications | Depends on the agent; the VM is the boundary | Auto mode reviews actions itself, inside the OS sandbox |
-| In between | Tailscale's coordination and relays; traffic WireGuard-encrypted | Anthropic stores the transcript while connected | exe.dev runs the VM and its HTTPS proxy | Tailcat relay for Desktop (WireGuard-encrypted); Happy's relay for the phone (end-to-end encrypted) |
+| Agents | Any terminal agent | Claude Code | Shelley; Claude Code, Codex, and Pi preinstalled | Claude, Codex, and Grok models in one harness, on your existing subscriptions |
+| Runs on | Your server | Your computer, or a server inside tmux | An exe.dev VM | Your server, VPS, or Mac |
+| While your laptop sleeps | Keeps running | On a laptop, pauses until it wakes; on a server, keeps running | Keeps running | Keeps running |
+| Steer it from | A terminal app on any device, over SSH or Mosh | The Claude app, claude.ai/code, or Claude Desktop | Shelley's web page; SSH for the other agents | Happy Desktop and the Happy phone app |
+| Approvals | Terminal prompts, typed by hand | Permission prompts in the app, with push notifications | Depends on the agent; the VM is the boundary | Auto mode reviews actions itself, inside the OS sandbox |
+| With a team | Shell accounts on the server | One person's sessions; organization controls on Team and Enterprise | Share the VM with Web or Root access, per person or with the whole team | Team mode: each member signs in as themselves, in shared projects and sessions |
+| In between | Tailscale's coordination and relays; traffic WireGuard-encrypted | Anthropic stores the transcript while connected | exe.dev runs the VM and its HTTPS proxy | Tailcat relay for Desktop, WireGuard-encrypted; Happy's relay for the phone, end-to-end encrypted |
 | Setup | Install and connect four tools | One command | Create a VM | Ask the Chief of Staff, or about a dozen steps |
 
 Where each is better:
 
 - **tmux + SSH or Mosh.** Works with every terminal agent and tool, with nothing new to trust. [Mosh](https://mosh.org/) survives sleep and network changes, and [Termius](https://termius.com/free-ssh-client-for-iphone) speaks it on iOS and Android.
-- **Remote Control.** Nothing to install if you already use Claude Code and the Claude app, Anthropic supports it, and permission prompts come to your phone as push notifications. Team and Enterprise get admin controls. See [Happy vs Remote Control](/vs/claude-code-remote-control/).
-- **exe.dev.** A persistent VM with agents already installed, and [Shelley](https://exe.dev/docs/shelley/intro), a web agent that works on mobile, at an HTTPS address. No service to set up. You can also run Happy Agent on it, [below](#exe-dev).
-- **Happy Agent.** A phone app made for agent sessions instead of a terminal, Claude, Codex, and Grok side by side on the plans you pay for, and sessions that survive restarts. It is more setup than the others, you run and upgrade the server, and Desktop has no "add remote" button yet.
+- **Remote Control.** Nothing to install if you already use Claude Code and the Claude app, Anthropic supports it, and permission prompts reach your phone as push notifications. Team and Enterprise get admin controls. See [Happy vs Remote Control](/vs/claude-code-remote-control/).
+- **exe.dev.** A persistent VM with agents already installed, [Shelley](https://exe.dev/docs/shelley/intro), a web agent that works on mobile, and [VM sharing](https://exe.dev/docs/sharing) that follows team membership. No service to set up. You can also run Happy Agent on it, [below](#exe-dev).
+- **Happy Agent.** One runtime for three model families under one sandbox and review, a desktop app and a phone app built for agent sessions, and a team mode where everyone keeps their own identity. The cost: more setup than the others, you run and upgrade the server, and Desktop has no "add remote" button yet.
 
-Sources, checked October 10, 2026: [Remote Control docs](https://code.claude.com/docs/en/remote-control) ("your computer has to stay on and the claude process has to keep running"; "if your laptop sleeps or your network drops, Claude Code reconnects automatically"; "start it inside tmux or screen" on a remote machine), [exe.dev docs](https://exe.dev/docs/upgrade-codex) (claude, codex, and pi preinstalled), [Mosh](https://mosh.org/), [Termius](https://docs.termius.com/termius-handbook/connecting-to-a-host), [How Tailscale works](https://tailscale.com/blog/how-tailscale-works).
+Sources, checked October 10, 2026: [Remote Control docs](https://code.claude.com/docs/en/remote-control) ("your computer has to stay on and the claude process has to keep running"; "if your laptop sleeps or your network drops, Claude Code reconnects automatically"; "start it inside tmux or screen" on a remote machine), [exe.dev docs](https://exe.dev/docs/upgrade-codex) (claude, codex, and pi preinstalled) and [sharing](https://exe.dev/docs/sharing), [Mosh](https://mosh.org/), [Termius](https://docs.termius.com/termius-handbook/connecting-to-a-host), [How Tailscale works](https://tailscale.com/blog/how-tailscale-works).
+
+## Share it with your team
+
+The same server can serve a team. In team mode:
+
+- Each member signs in with their own Happy Social account from their own Happy Desktop, and pairs their own phone.
+- Everyone works in the server's shared projects and sessions. The agent is told who sent each message; drafts and each person's task order stay their own.
+- The same sandbox and review rules apply to everyone: commands run inside the OS sandbox unless a session is switched to Full access, and in Auto each action that would cross it is reviewed first.
+- The server stops accepting its API token. Only Happy Social sign-ins issued for this team get in.
+
+Know first: all work spends the server's Claude, Codex, and Grok accounts, not each member's, and any member can choose Full access. There are no per-session invites, and no way yet to remove one member short of stopping the server.
+
+To set it up, ask the Chief of Staff, "Create a team called Acme on my server", or follow [Multiplayer & Teams](/multiplayer/), which has the steps and a diagram of how sign-in, sharing, and the sandbox fit together.
 
 ## How the connection works
 
