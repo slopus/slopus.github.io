@@ -268,8 +268,8 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'multiplayer',
     sourcePath: '/content/desktop/multiplayer.mdx',
     title: 'Multiplayer & Teams',
-    pageTitle: 'Multiplayer & Teams: a Self-Hosted Coding Agent Server for Your Team — Happy',
-    description: 'Run one Happy Agent for your team: each member signs in as themselves, shares projects and sessions, and works under one sandbox. Plus sharing your own computer.',
+    pageTitle: 'Multiplayer: Self-Hosted Coding Agent Server for Teams — Happy',
+    description: 'A self-hosted coding agent server for your team: one Happy Agent, each member signed in as themselves, sharing projects and sessions under one sandbox.',
     group: 'Features',
   },
   {
