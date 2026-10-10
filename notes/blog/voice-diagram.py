@@ -80,29 +80,50 @@ o.append(rect(190, 8, 140, 44, 1.5, INK, SAND))
 o.append(text(HS, 37, "Happy server", 18, INK, 700, "middle"))
 o.append(rect(372, 8, 140, 44, 1.8, INK, MINT))
 o.append(text(EL, 37, "ElevenLabs", 20, INK, 700, "middle"))
-for x in (APP, HS, EL):
-    o.append(line(x, 56, x, 346, 1.2, MUTED, .3, "3 6"))
+
+# Labels between the lifelines, with their extents, so a lifeline breaks instead of crossing one.
+rows = []
+
+
+def label(x, y, s, size=18, c=INK, wt=400):
+    per = size * (0.56 if wt >= 700 else 0.52)
+    rows.append((x - 3, x + per * len(s) + 3, y - size * 0.8 - 3, y + size * 0.28 + 3))
+    return text(x, y, s, size, c, wt)
+
+
+def lifeline(x, y1, y2):
+    out, start = [], y1
+    for y0, yb in sorted((y0, yb) for x0, x1, y0, yb in rows if x0 <= x <= x1):
+        if y0 > start + 4:
+            out.append(line(x, start, x, y0, 1.2, MUTED, .3, "3 6"))
+        start = max(start, yb)
+    if y2 > start + 4:
+        out.append(line(x, start, x, y2, 1.2, MUTED, .3, "3 6"))
+    return "\n".join(out)
+
 
 # 1. The app asks Happy's server for a conversation.
-o.append(text(APP + 10, 92, "1  Tap the mic", 18, INK, 700))
+o.append(label(APP + 10, 92, "1  Tap the mic", 18, INK, 700))
 o.append(mic(APP + 150, 76))
 o.append(arrow(APP, 102, HS, 102, INK))
-o.append(text(APP + 10, 126, "with your Happy sign-in", 18, MUTED))
+o.append(label(APP + 10, 126, "with your Happy sign-in", 18, MUTED))
 
 # 2. The server reads usage from ElevenLabs and mints a token there.
-o.append(text(APP + 10, 160, "2  Minutes used? Then a token", 18, INK, 700))
+o.append(label(APP + 10, 160, "2  Minutes used? Then a token", 18, INK, 700))
 o.append(arrow(HS, 170, EL, 170, INK))
 o.append(arrow(EL, 196, HS, 196, INK))
-o.append(text(APP + 10, 220, "user id is a one-way hash, no voice DB", 18, MUTED))
+o.append(label(APP + 10, 220, "user id is a one-way hash, no voice DB", 18, MUTED))
 
 # 3. The token comes back, or the paywall.
-o.append(text(APP + 10, 256, "3  Token, or the paywall", 18, INK, 700))
+o.append(label(APP + 10, 256, "3  Token, or the paywall", 18, INK, 700))
 o.append(arrow(HS, 266, APP, 266, INK))
 
 # 4. Audio runs between the phone and ElevenLabs; the server is out of the loop.
-o.append(text(APP + 10, 302, "4  WebRTC: your voice, its voice", 18, INK, 700))
+o.append(label(APP + 10, 302, "4  WebRTC: your voice, its voice", 18, INK, 700))
 o.append(darrow(APP, 312, EL, 312, INK))
-o.append(text(APP + 10, 336, "plus the session's recent messages", 18, MUTED))
+o.append(label(APP + 10, 336, "plus the session's recent messages", 18, MUTED))
+for x in (APP, HS, EL):
+    o.append(lifeline(x, 56, 346))
 
 # 5. What you asked for goes to the coding agent on your computer.
 o.append(arrow(APP, 350, APP, 392, INK))
