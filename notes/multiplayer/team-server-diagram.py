@@ -7,7 +7,7 @@ import random
 random.seed(11)
 INK = "#183f38"; MUTED = "#6b7f78"; ACC = "#e6522c"; PAPER = "#fffdf8"
 SAND = "#f6eadf"; STONE = "#efe9dc"; MINT = "#e3efe9"
-W, H = 520, 736
+W, H = 520, 708
 j = lambda a=1.2: random.uniform(-a, a)
 
 
@@ -77,7 +77,8 @@ def key(x, y):
     return circle(x + 6, y + 8, 6) + line(x + 12, y + 8, x + 28, y + 8, 1.5) + line(x + 23, y + 8, x + 23, y + 13, 1.4) + line(x + 27, y + 8, x + 27, y + 12, 1.4)
 
 
-o = [f'<rect x="0" y="0" width="{W}" height="{H}" rx="12" fill="{PAPER}"/>']
+# Transparent, with no frame: the diagram sits on the page itself.
+o = []
 
 # The core picture only; relays, drafts, and the mode details live in the page text below it.
 # Text is at least 18 units: about 12px when a phone shrinks this to 350px.
@@ -120,7 +121,7 @@ o.append(arrow(380, 294, 380, 336, MUTED, 1.4, "5 5"))
 
 # The team server, drawn 40 units lower to make room for the transport boxes.
 server_start = len(o)
-o.append(rect(6, 300, 508, 384, 2, INK))
+# A title band, not a container: what follows sits on the page under it.
 o.append(rect(6, 300, 508, 48, 2, INK, INK))
 o.append(text(22, 331, "Team server: one Happy Agent", 22, PAPER, 700))
 
@@ -136,20 +137,21 @@ for k, label in enumerate(["Projects", "Sessions", "Tasks"]):
     o.append(rect(x, 458, 154, 40, 1.4, INK, SAND))
     o.append(text(x + 77, 484, label, 18, INK, 400, "middle"))
 
-# 3. Permission modes: the sandbox holds three of them; Full access sits outside it.
-o.append(rect(20, 518, 330, 150, 1.6, INK, None, "7 5"))
-o.append(text(34, 544, "OS sandbox", 20, INK, 700))
-o.append(rect(34, 556, 116, 42, 1.5, INK, STONE))
-o.append(text(92, 583, "Read only", 18, INK, 400, "middle"))
-o.append(rect(158, 556, 178, 42, 1.5, INK, STONE))
-o.append(text(247, 583, "Workspace write", 18, INK, 400, "middle"))
-o.append(rect(34, 610, 302, 46, 2.2, INK, MINT))
-o.append(text(48, 639, "Auto", 18, INK, 700))
-o.append(text(98, 639, "reviews each crossing", 18, MUTED))
+# 3. Permission modes: three run inside the OS sandbox, under its label and a dashed rule; Full access
+# stands apart in orange.
+o.append(text(20, 544, "Inside the OS sandbox", 20, INK, 700))
+o.append(line(20, 554, 336, 554, 1.4, INK, .4, "7 5"))
+o.append(rect(20, 566, 116, 42, 1.5, INK, STONE))
+o.append(text(78, 593, "Read only", 18, INK, 400, "middle"))
+o.append(rect(144, 566, 192, 42, 1.5, INK, STONE))
+o.append(text(240, 593, "Workspace write", 18, INK, 400, "middle"))
+o.append(rect(20, 618, 316, 46, 2.2, INK, MINT))
+o.append(text(34, 647, "Auto", 18, INK, 700))
+o.append(text(84, 647, "reviews each crossing", 18, MUTED))
 
-o.append(rect(362, 556, 138, 100, 1.6, ACC, "#fbe6dc"))
-o.append(text(431, 596, "Full access", 18, ACC, 700, "middle"))
-o.append(text(431, 624, "no sandbox", 18, ACC, 400, "middle"))
+o.append(rect(362, 566, 138, 98, 1.6, ACC, "#fbe6dc"))
+o.append(text(431, 606, "Full access", 18, ACC, 700, "middle"))
+o.append(text(431, 634, "no sandbox", 18, ACC, 400, "middle"))
 
 o[server_start:] = ['<g transform="translate(0 40)">', *o[server_start:], "</g>"]
 

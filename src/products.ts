@@ -8,7 +8,6 @@ export interface Product {
   docsBase: string
   /** The docs landing page: the first page the Docs links open. */
   docsHome: string
-  docsLabel: string
   repository: string
 }
 
@@ -19,7 +18,6 @@ export const HAPPY: Product = {
   home: '/docs/',
   docsBase: '/docs',
   docsHome: '/docs/',
-  docsLabel: 'Documentation',
   repository: 'https://github.com/slopus/happy',
 }
 
@@ -32,7 +30,6 @@ export const HAPPY_DESKTOP: Product = {
   // The old /desktop/docs/* and /happy2/docs/* URLs keep serving them.
   docsBase: '',
   docsHome: '/welcome/',
-  docsLabel: 'Happy Desktop Docs',
   repository: 'https://github.com/slopus/happy-desktop',
 }
 

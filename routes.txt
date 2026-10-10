@@ -76,6 +76,7 @@
 /plugins/terms/
 /privacy/
 /quick-start/
+/team-sign-in-workos/
 /team/
 /terms/
 /thesis/

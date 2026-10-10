@@ -46,7 +46,12 @@ export function PageScrollbar() {
     }
 
     const update = () => {
-      const { scroller, maximum, thumbLength, travel } = metrics()
+      // A docs article scrolls below the pinned header, so its track starts there too.
+      const scroller = pageScroller()
+      track.style.top = scroller instanceof HTMLElement && scroller !== document.documentElement
+        ? `${Math.max(0, scroller.getBoundingClientRect().top)}px`
+        : ''
+      const { maximum, thumbLength, travel } = metrics()
       track.toggleAttribute('data-overflow', maximum > 0.5)
       if (maximum <= 0.5) return
       thumb.style.height = `${thumbLength}px`

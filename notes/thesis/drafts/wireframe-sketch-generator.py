@@ -34,7 +34,7 @@ def doc(x,y): return line(x,y,x+7,y,1.3)+line(x+7,y,x+10,y+3,1.3)+line(x+10,y+3,
 def prev(x,y): return rect(x,y,12,10,1.3)+line(x,y+3,x+12,y+3,1.1)
 
 o=[]
-o.append('<rect x="0" y="0" width="720" height="400" rx="12" fill="#fffdf8"/>')
+# Transparent: only the window outline is drawn, on the page itself.
 o.append(rect(4,4,712,392,1.8))
 o.append(line(230,10,230,390,1.5))
 o.append(rect(12,14,206,42,1.6,INK,"#f6eadf"))

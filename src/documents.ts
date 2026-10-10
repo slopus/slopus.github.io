@@ -270,6 +270,14 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Features',
   },
   {
+    path: 'team-sign-in-workos',
+    sourcePath: '/content/desktop/team-sign-in-workos.mdx',
+    title: 'Team Sign-In with WorkOS',
+    pageTitle: 'Team Sign-In with WorkOS for a Self-Hosted Agent Server — Happy',
+    description: 'How a Happy Agent team server uses WorkOS AuthKit and Organizations: members sign in, and the server checks each token locally. Or bring your own IdP.',
+    group: 'Features',
+  },
+  {
     path: 'extending',
     sourcePath: '/content/desktop/extending.mdx',
     title: 'Skills & MCP',

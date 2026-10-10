@@ -244,20 +244,22 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 /* Documentation and legal pages */
 .document-site-shell { min-height: 100vh; }
 .docs-layout { display: grid; gap: 4rem; grid-template-columns: 210px minmax(0, 760px); min-height: calc(100vh - 61px); padding-bottom: 7rem; padding-top: 3.5rem; }
+/* The sidebar's scrollbar looks like the page's own (.one-scrollbar): a 6px thumb two pixels from the edge,
+   no track, shown while the sidebar is scrolled or pointed at. */
 .docs-sidebar { align-self: start; max-height: calc(100vh - 3rem); overflow-y: auto; position: sticky; scrollbar-color: transparent transparent; scrollbar-width: thin; top: 1.5rem; }
-.docs-sidebar::-webkit-scrollbar { height: 12px; width: 12px; }
+.docs-sidebar::-webkit-scrollbar { height: 10px; width: 10px; }
 .docs-sidebar::-webkit-scrollbar-track { background: transparent; }
-.docs-sidebar::-webkit-scrollbar-thumb { background: transparent; background-clip: padding-box; border: 3px solid transparent; border-radius: 999px; }
-.docs-sidebar.is-scrollbar-active { scrollbar-color: #929292 transparent; }
-.docs-sidebar.is-scrollbar-active::-webkit-scrollbar-thumb { background-color: #929292; }
-.docs-sidebar.is-scrollbar-active::-webkit-scrollbar-thumb:hover { background-color: #707070; }
+.docs-sidebar::-webkit-scrollbar-thumb { background: transparent; background-clip: padding-box; border: 2px solid transparent; border-radius: 999px; }
+.docs-sidebar.is-scrollbar-active { scrollbar-color: #183f3845 transparent; }
+.docs-sidebar.is-scrollbar-active::-webkit-scrollbar-thumb { background-color: #183f3845; }
+.docs-sidebar.is-scrollbar-active::-webkit-scrollbar-thumb:hover { background-color: #183f3870; }
 
 @media (min-width: 761px) {
   .docs-shell { display: flex; flex-direction: column; height: 100vh; height: 100dvh; overflow: hidden; }
   .docs-shell .site-header-wrap { flex: 0 0 auto; }
   .docs-shell .docs-layout { flex: 1 1 auto; margin: 0; max-width: none; min-height: 0; overflow: hidden; padding: 0 0 0 max(32px, calc((100% - 1180px) / 2)); width: 100%; grid-template-columns: 210px minmax(0, 1fr); }
-  .docs-shell .docs-sidebar { align-self: stretch; height: 100%; max-height: none; min-height: 0; overflow-y: auto; padding: 3.5rem 2px 3rem; position: static; }
-  .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; padding: 3.5rem 0 0; scrollbar-width: none; }
+  .docs-shell .docs-sidebar { align-self: stretch; height: 100%; max-height: none; min-height: 0; overflow-y: auto; padding: 1.75rem 2px 3rem; position: static; }
+  .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; padding: 1.75rem 0 0; scrollbar-width: none; }
   .docs-shell .document-article::-webkit-scrollbar { width: 0; height: 0; }
   .docs-shell .document-article > .legacy-notice { margin-right: 2rem; }
   .docs-shell .document-article > .document-breadcrumb,
@@ -270,7 +272,6 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 @media (min-width: 761px) and (max-width: 900px) {
   .docs-shell .docs-layout { grid-template-columns: 190px minmax(0, 1fr); }
 }
-.docs-sidebar-label { color: #e6522c; font-family: 'DM Mono', monospace; font-size: .65rem; font-weight: 500; letter-spacing: .08em; margin: 0 0 1.3rem; text-transform: uppercase; }
 .docs-navigation { display: grid; gap: 1.5rem; }
 .docs-nav-group h2 { color: #183f38; font-family: 'DM Sans', sans-serif; font-size: .77rem; font-weight: 700; letter-spacing: 0; margin: 0 0 .5rem; }
 .docs-nav-group ul { display: grid; gap: .2rem; list-style: none; margin: 0; padding: 0; }
@@ -321,8 +322,11 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content img { border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); height: auto; margin: 1.2rem 0; max-width: 100%; }
 /* The team server diagram, on Multiplayer and the remote server guide: centered, as wide as the column
    allows up to a readable size, with its height reserved so a jump to a later heading lands before it loads. */
-.document-content img[src="/multiplayer/team-server.svg"] { aspect-ratio: 520 / 736; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
-.document-content img[src="/img/remote-server-harness.svg"] { aspect-ratio: 520 / 612; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
+/* Diagrams are drawn on the page itself: no border, radius, or shadow around them. */
+.document-content img[src$=".svg"] { border: 0; border-radius: 0; box-shadow: none; }
+.document-content img[src="/multiplayer/team-server.svg"] { aspect-ratio: 520 / 708; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
+.document-content img[src="/img/remote-server-harness.svg"] { aspect-ratio: 520 / 574; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
+.document-content img[src="/img/team-sign-in-workos.svg"] { aspect-ratio: 520 / 566; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content video { border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); height: auto; margin: 1.2rem 0; max-width: 100%; width: 100%; }
 .document-content hr { border: 0; border-top: 1px solid #d9d3c5; margin: 3rem 0; }
 .document-table-wrap { border: 1px solid #d5cebf; border-radius: 10px; margin: 1.6rem 0; overflow-x: auto; }
@@ -411,6 +415,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 [data-document="team"] .document-content h2 { clear: both; }
 /* width and height on the img hold its space while it loads, so the text around it does not reflow. */
 .document-content .essay-figure img { display: block; height: auto; margin: 0; width: 100%; }
+/* The model picker is cut out of its screenshot, so it sits on the page like a menu that just opened. */
+.document-content .essay-figure img[src="/thesis/model-picker.png"] { border: 0; border-radius: 0; box-shadow: none; filter: drop-shadow(0 10px 22px rgba(24, 63, 56, .14)); }
 .document-content .essay-figure figcaption { color: #6b7f78; font-size: .78rem; line-height: 1.4; margin-top: .55rem; text-align: center; }
 
 /* Past phone width the sidebar screenshot floats left and the model picker floats right, and the text

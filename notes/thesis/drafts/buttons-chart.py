@@ -67,8 +67,7 @@ def curve_y(t):
 
 X0, X1 = 86, 472
 o = []
-o.append(f'<rect x="0" y="0" width="{W}" height="{H}" rx="12" fill="#fffdf8"/>')
-o.append(rect(4, 4, W - 8, H - 8, 1.8))
+# Transparent, with no frame: the chart is drawn on the page itself.
 o.append(line(OX, OY, OX, TOP, 1.8))
 o.append(arrowhead(OX, TOP, 0, -1))
 o.append(line(OX, OY, RIGHT, OY, 1.8))

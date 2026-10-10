@@ -1,97 +1,85 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="520" height="612" viewBox="0 0 520 612" font-family="'Shantell Sans', 'Comic Sans MS', 'Chalkboard SE', 'Segoe Print', cursive" role="img">
-<rect x="0" y="0" width="520" height="612" rx="12" fill="#fffdf8"/>
-<path d="M8.1 8.4 L46.8 8.0 L85.9 7.4 L124.6 8.2 L164.0 7.2 L201.8 7.2 L241.7 8.4 L279.0 8.9 L319.7 8.3 L357.8 7.3 L395.5 8.0 L434.4 7.3 L473.6 7.0 L513.0 7.9" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5"/>
-<path d="M512.0 7.1 L512.1 43.3 L512.1 78.6 L513.2 116.0 L513.0 151.4 L512.0 186.5 L512.2 222.6" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5"/>
-<path d="M512.9 222.3 L473.8 222.9 L435.8 221.1 L395.7 222.9 L357.2 223.1 L318.2 221.3 L279.7 222.7 L240.1 221.3 L201.3 223.1 L163.2 221.5 L123.3 221.4 L84.0 222.9 L45.3 222.4 L6.9 222.0" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5"/>
-<path d="M7.6 223.1 L7.3 186.8 L7.5 150.5 L9.1 115.6 L7.8 79.8 L7.7 42.8 L8.6 7.1" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5"/>
-<text x="24" y="42" font-size="22" font-weight="700" fill="#183f38">A remote control</text>
-<text x="24" y="68" font-size="18" font-weight="400" fill="#6b7f78">Claude Remote Control, or the original Happy CLI</text>
-<path d="M26 94 L113 93 L112 169 L25 168 Z" fill="#f6eadf"/>
-<path d="M24.5 91.7 L53.8 92.4 L84.3 91.3 L114.6 91.1" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M113.7 91.1 L113.8 117.6 L115.0 144.3 L114.2 171.4" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M114.7 170.4 L85.0 169.4 L53.0 170.2 L23.4 169.3" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M24.4 171.1 L24.0 143.5 L23.4 118.6 L24.3 91.2" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M63.3 102.1 L68.6 101.2 L75.2 101.3" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M74.1 101.4 L74.1 110.6 L74.1 120.7" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M74.8 119.9 L67.6 119.1 L61.9 119.5" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M62.9 121.4 L63.7 111.3 L62.7 101.1" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M66.6 116.5 L67.5 117.8 L70.2 117.5" fill="none" stroke="#183f38" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="69" y="156" font-size="18" font-weight="700" fill="#183f38" text-anchor="middle">Phone</text>
-<path d="M117.5 131.1 L132.0 131.3 L145.8 131.5" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/><path d="M136.6 136.0 L141.6 133.7 L146.2 131.2" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M137.3 126.4 L141.4 128.6 L146.4 131.4" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M152 94 L239 93 L238 169 L151 168 Z" fill="#efe9dc"/>
-<path d="M150.3 92.4 L180.5 92.2 L210.4 92.1 L241.1 91.5" fill="none" stroke="#6b7f78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
-<path d="M240.5 91.4 L240.5 117.4 L240.6 144.5 L240.1 171.3" fill="none" stroke="#6b7f78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
-<path d="M241.3 169.5 L210.5 169.8 L179.1 170.1 L149.0 169.6" fill="none" stroke="#6b7f78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
-<path d="M149.8 170.5 L149.8 144.7 L149.7 117.0 L150.9 91.2" fill="none" stroke="#6b7f78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
-<text x="195" y="137" font-size="20" font-weight="700" fill="#183f38" text-anchor="middle">Relay</text>
-<path d="M243.9 131.4 L257.8 131.2 L271.7 130.9" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/><path d="M263.3 136.4 L267.7 133.5 L272.1 130.8" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M262.6 126.0 L267.6 128.6 L272.2 131.5" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M278 94 L495 93 L494 169 L277 168 Z" fill="#f6eadf"/>
-<path d="M275.7 92.0 L312.4 91.4 L349.5 92.2 L386.5 91.5 L424.0 92.8 L460.1 90.9 L496.5 92.1" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M496.2 91.1 L495.4 118.2 L494.7 143.6 L495.4 170.5" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M496.7 169.6 L459.1 170.3 L422.9 170.4 L386.3 170.8 L349.9 170.6 L311.4 170.3 L274.7 169.9" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M276.2 170.7 L275.5 144.0 L276.4 117.7 L276.1 91.3" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M293.3 104.4 L302.7 104.8 L314.2 103.5" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M313.1 103.4 L312.7 110.6 L313.3 118.3" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M314.0 117.2 L302.4 117.7 L292.3 117.7" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M292.7 118.4 L294.1 111.5 L293.3 103.3" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M289.8 120.4 L303.7 119.7 L315.6 119.9" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="324" y="120" font-size="20" font-weight="700" fill="#183f38">Your laptop</text>
-<text x="290" y="154" font-size="18" font-weight="400" fill="#183f38">claude in a terminal</text>
-<text x="24" y="204" font-size="18" font-weight="400" fill="#6b7f78">Only while your computer stays on</text>
-<path d="M8.3 240.0 L45.9 240.6 L84.8 240.6 L123.9 239.7 L164.0 239.3 L201.5 240.1 L241.5 240.7 L280.3 240.9 L318.8 240.9 L356.8 239.5 L396.5 239.6 L435.8 240.3 L474.2 240.7 L513.1 239.9" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M512.3 239.4 L511.4 276.3 L512.9 312.2 L512.1 348.2 L512.0 385.4 L512.1 421.1 L512.9 458.6 L511.7 495.8 L512.0 531.8 L512.3 567.5 L511.9 604.9" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M513.4 603.8 L474.0 603.3 L435.0 604.7 L397.0 604.1 L356.9 603.6 L318.6 605.1 L278.7 604.8 L239.6 603.7 L201.1 604.7 L162.3 604.1 L124.0 603.6 L85.3 603.7 L45.9 604.0 L6.7 604.6" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M7.9 604.9 L8.1 567.7 L7.4 532.1 L8.3 495.3 L8.7 458.8 L8.7 421.5 L8.4 386.0 L8.8 348.4 L7.6 313.0 L7.4 276.6 L8.3 238.6" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="24" y="274" font-size="22" font-weight="700" fill="#183f38">Happy Agent runs the harness</text>
-<path d="M26 292 L173 291 L172 341 L25 340 Z" fill="#f6eadf"/>
-<path d="M24.2 289.8 L60.9 290.6 L99.3 290.4 L136.5 289.6 L175.2 289.2" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M174.2 289.4 L174.8 315.2 L173.6 343.3" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M175.2 341.7 L136.1 341.2 L98.1 342.1 L61.0 342.1 L22.6 341.7" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M24.3 343.5 L24.7 315.2 L23.2 289.5" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M41.3 305.8 L51.4 306.0 L61.9 306.1" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M61.2 305.3 L60.1 312.4 L60.7 319.9" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M61.7 319.0 L50.0 319.6 L40.3 318.8" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M41.1 319.9 L41.4 312.5 L41.9 305.3" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M37.8 322.4 L51.5 322.6 L64.3 321.9" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="72" y="323" font-size="20" font-weight="700" fill="#183f38">Desktop</text>
-<path d="M188 292 L309 291 L308 341 L187 340 Z" fill="#f6eadf"/>
-<path d="M186.4 290.2 L217.8 290.6 L248.3 290.7 L278.9 290.0 L311.0 290.0" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M310.1 289.1 L309.4 316.9 L310.0 342.8" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M311.1 342.0 L279.3 343.0 L248.3 342.5 L217.0 343.1 L184.5 342.3" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M185.8 342.9 L185.2 315.4 L186.2 288.6" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M200.4 302.1 L206.0 302.8 L212.1 302.2" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M211.3 300.6 L211.3 311.5 L210.7 321.4" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M212.0 319.7 L205.5 320.0 L198.6 320.0" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M200.0 321.1 L199.7 310.6 L200.1 301.1" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M203.8 317.2 L205.1 316.0 L206.7 316.5" fill="none" stroke="#183f38" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="222" y="323" font-size="20" font-weight="700" fill="#183f38">Phone</text>
-<path d="M98.7 346.3 L98.9 359.5 L99.2 371.6" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M94.5 363.4 L96.3 367.7 L98.9 372.0" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M104.5 362.7 L101.5 367.7 L99.2 372.0" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M248.5 346.3 L248.1 358.5 L248.1 372.0" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M242.7 362.6 L245.5 367.3 L247.9 372.2" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M253.0 362.8 L250.5 367.5 L248.3 372.0" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M24.5 376.2 L62.9 375.3 L103.6 376.7 L142.5 375.9 L181.2 376.6 L221.2 376.4 L260.8 376.8 L299.3 375.8 L340.3 377.2 L379.5 375.5 L417.3 376.0 L457.4 376.8 L496.6 376.6" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M495.6 375.2 L496.0 410.1 L495.5 444.6 L495.1 479.1 L496.1 514.9 L495.1 548.6" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M497.1 548.3 L456.9 547.9 L417.5 548.7 L378.2 548.4 L340.0 547.8 L299.6 548.6 L260.8 548.0 L220.2 547.4 L181.8 547.4 L140.7 548.4 L102.0 548.7 L62.1 548.9 L22.6 548.1" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M23.6 548.8 L24.5 514.6 L23.6 478.7 L23.8 445.1 L23.9 409.0 L24.4 375.1" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M26 378 L495 377 L494 419 L25 418 Z" fill="#183f38"/>
-<path d="M24.4 376.4 L63.3 376.6 L102.4 375.7 L142.0 377.0 L182.5 375.7 L220.8 375.9 L260.2 376.0 L299.7 375.7 L339.5 376.9 L378.8 377.0 L418.3 375.8 L458.1 377.2 L496.8 376.0" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M496.0 375.1 L496.9 398.3 L496.3 420.6" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M497.3 419.6 L456.7 420.5 L418.8 419.2 L378.8 419.3 L339.5 420.3 L299.0 419.5 L260.5 420.1 L221.0 419.8 L180.7 421.0 L141.8 420.0 L102.1 420.5 L62.9 420.9 L22.9 420.4" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M24.4 421.3 L24.8 398.8 L24.7 375.1" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="40" y="405" font-size="20" font-weight="700" fill="#fffdf8">Your server: Happy Agent</text>
-<text x="40" y="446" font-size="18" font-weight="400" fill="#183f38">Its own loop, tools, sandbox, review</text>
-<path d="M42 464 L235 463 L234 505 L41 504 Z" fill="#e3efe9"/>
-<path d="M40.2 462.3 L79.2 461.8 L118.1 462.5 L159.2 461.8 L196.9 461.4 L236.9 461.8" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M235.6 460.8 L235.5 484.3 L236.8 506.7" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M237.0 506.1 L198.2 505.0 L157.0 505.2 L117.6 505.2 L79.0 505.8 L38.7 505.2" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M39.7 507.3 L39.5 484.1 L40.1 461.0" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="138.0" y="490" font-size="18" font-weight="700" fill="#183f38" text-anchor="middle">Claude Agent SDK</text>
-<path d="M250 464 L363 463 L362 505 L249 504 Z" fill="#e3efe9"/>
-<path d="M248.4 462.4 L286.7 462.0 L326.9 461.8 L364.7 461.3" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M364.3 460.9 L364.3 484.0 L364.3 507.5" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M364.7 505.5 L325.6 505.8 L286.9 506.6 L247.1 505.8" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M247.8 506.8 L248.5 484.0 L247.7 461.5" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="306.0" y="490" font-size="18" font-weight="700" fill="#183f38" text-anchor="middle">Codex</text>
-<path d="M378 464 L479 463 L478 505 L377 504 Z" fill="#e3efe9"/>
-<path d="M376.0 461.7 L411.5 460.9 L446.6 462.5 L481.3 461.3" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M480.2 460.6 L479.8 483.9 L480.2 507.1" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M480.8 506.3 L445.5 507.0 L409.5 506.9 L374.7 506.5" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M375.7 507.3 L375.6 483.6 L375.6 460.8" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="428.0" y="490" font-size="18" font-weight="700" fill="#183f38" text-anchor="middle">Grok</text>
-<text x="40" y="532" font-size="18" font-weight="400" fill="#6b7f78">On the subscriptions you have</text>
-<text x="24" y="584" font-size="18" font-weight="700" fill="#183f38">Keeps working while your laptop sleeps</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="574" viewBox="0 0 520 574" font-family="'Shantell Sans', 'Comic Sans MS', 'Chalkboard SE', 'Segoe Print', cursive" role="img">
+<text x="8" y="30" font-size="22" font-weight="700" fill="#183f38">A remote control</text>
+<text x="8" y="56" font-size="18" font-weight="400" fill="#6b7f78">Claude Remote Control, or the original Happy CLI</text>
+<path d="M10 80 L103 79 L102 151 L9 150 Z" fill="#f6eadf"/>
+<path d="M8.1 78.4 L40.3 78.0 L72.8 77.3 L105.0 78.1" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M103.6 76.8 L103.4 115.6 L104.5 152.5" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M105.5 152.2 L72.6 151.5 L38.7 152.4 L6.6 152.3" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M7.5 153.0 L7.7 115.7 L7.7 77.1" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M51.2 88.0 L56.6 89.0 L63.5 88.3" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M61.8 86.7 L61.7 96.1 L62.5 106.9" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M62.9 106.5 L57.2 105.2 L49.7 106.8" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M51.5 106.9 L50.1 97.3 L51.2 86.8" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M54.6 102.8 L57.4 103.5 L57.6 102.7" fill="none" stroke="#183f38" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="56" y="138" font-size="18" font-weight="700" fill="#183f38" text-anchor="middle">Phone</text>
+<path d="M107.6 114.6 L124.4 114.6 L140.1 114.9" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/><path d="M130.7 120.2 L135.4 117.6 L139.6 114.9" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M130.7 109.8 L135.7 112.6 L139.8 115.4" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M146 80 L239 79 L238 151 L145 150 Z" fill="#efe9dc"/>
+<path d="M143.9 78.4 L176.6 77.1 L209.6 77.2 L240.8 77.9" fill="none" stroke="#6b7f78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
+<path d="M239.8 76.6 L239.1 115.2 L239.5 153.1" fill="none" stroke="#6b7f78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
+<path d="M241.0 152.5 L208.3 152.1 L176.4 151.3 L142.7 152.3" fill="none" stroke="#6b7f78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
+<path d="M143.7 152.7 L144.7 115.9 L144.1 77.5" fill="none" stroke="#6b7f78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
+<text x="192" y="121" font-size="20" font-weight="700" fill="#183f38" text-anchor="middle">Relay</text>
+<path d="M244.4 115.1 L259.9 114.5 L275.5 115.5" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/><path d="M266.7 120.2 L271.4 117.6 L276.1 114.8" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M266.7 110.2 L271.3 112.4 L276.1 115.4" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M282 80 L511 79 L510 151 L281 150 Z" fill="#f6eadf"/>
+<path d="M279.8 78.4 L318.2 77.1 L357.2 77.9 L395.6 77.4 L435.1 78.2 L473.4 77.8 L513.4 78.6" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M512.2 77.1 L511.4 114.1 L511.7 153.4" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M513.5 151.5 L474.3 152.0 L435.5 151.7 L397.0 151.3 L357.1 152.6 L318.8 152.7 L279.2 152.5" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M279.9 153.2 L281.1 115.7 L280.4 77.3" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M297.1 90.1 L307.3 90.4 L318.1 90.0" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M317.5 89.4 L317.5 96.3 L317.4 104.1" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M318.3 102.6 L307.5 102.0 L296.1 102.9" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M297.2 104.0 L297.1 97.3 L296.4 88.5" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M293.8 106.2 L306.4 105.3 L320.4 106.2" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="328" y="106" font-size="20" font-weight="700" fill="#183f38">Your laptop</text>
+<text x="294" y="138" font-size="18" font-weight="400" fill="#183f38">claude in a terminal</text>
+<text x="8" y="184" font-size="18" font-weight="400" fill="#6b7f78">Only while your computer stays on</text>
+<path d="M7.9 214.4 L46.6 214.1 L85.3 213.9 L124.6 214.3 L163.4 213.9 L201.9 213.9 L240.3 214.0 L279.7 214.3 L318.3 214.4 L356.7 213.7 L395.7 213.8 L434.2 213.9 L473.3 214.0 L511.8 214.3" fill="none" stroke="#6b7f78" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 7"/>
+<text x="8" y="256" font-size="22" font-weight="700" fill="#183f38">Happy Agent runs the harness</text>
+<path d="M10 276 L157 275 L156 325 L9 324 Z" fill="#f6eadf"/>
+<path d="M8.0 273.6 L44.8 274.9 L82.6 274.7 L121.4 274.1 L159.3 274.1" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M158.0 272.5 L158.4 299.5 L157.2 326.5" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M158.9 326.1 L121.3 326.7 L83.9 326.4 L44.4 326.1 L6.7 325.7" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.2 326.7 L7.5 299.7 L8.2 273.0" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M25.3 289.9 L36.1 290.9 L45.6 290.6" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M44.6 289.0 L45.4 297.3 L45.1 304.1" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M46.3 303.4 L34.9 303.5 L23.7 303.7" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M25.1 304.2 L24.6 297.3 L25.9 289.5" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M22.0 306.3 L34.6 306.8 L48.4 305.8" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="56" y="307" font-size="20" font-weight="700" fill="#183f38">Desktop</text>
+<path d="M172 276 L293 275 L292 325 L171 324 Z" fill="#f6eadf"/>
+<path d="M169.9 274.1 L201.8 273.8 L231.6 274.4 L262.9 274.2 L294.7 273.3" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M293.6 272.6 L294.2 300.4 L294.7 327.2" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M295.0 326.4 L262.7 325.6 L232.1 325.8 L201.0 326.7 L169.0 326.9" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M169.8 326.9 L170.7 300.8 L169.8 273.4" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M184.0 286.1 L189.4 286.4 L196.0 286.7" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M195.5 285.0 L194.5 295.6 L194.5 305.0" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M195.6 304.0 L189.3 305.0 L183.4 304.0" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M183.6 304.9 L184.6 295.8 L183.9 284.8" fill="none" stroke="#183f38" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M187.7 301.1 L190.4 300.3 L191.3 300.5" fill="none" stroke="#183f38" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="206" y="307" font-size="20" font-weight="700" fill="#183f38">Phone</text>
+<path d="M82.7 329.7 L83.2 342.8 L82.9 356.1" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M77.6 347.2 L80.3 351.5 L82.8 355.7" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M88.0 346.9 L85.5 351.5 L83.0 355.7" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M231.7 330.1 L232.2 343.0 L232.4 356.1" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M227.4 346.7 L229.6 351.6 L232.4 355.8" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M236.8 347.4 L234.4 351.7 L232.4 355.6" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M10 362 L511 361 L510 403 L9 402 Z" fill="#183f38"/>
+<path d="M8.2 359.8 L46.0 360.6 L85.5 360.5 L123.8 359.7 L163.8 358.9 L201.6 360.2 L241.9 360.8 L279.2 359.8 L319.3 359.8 L358.0 359.2 L395.6 359.0 L434.4 359.8 L474.2 359.8 L512.6 359.4" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M512.3 359.5 L512.7 381.2 L511.2 405.5" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M513.3 403.8 L474.0 404.0 L435.0 404.2 L395.3 404.4 L358.0 403.3 L318.3 404.5 L279.3 403.4 L239.9 404.0 L200.6 404.8 L163.3 404.4 L124.5 404.2 L84.7 404.2 L45.9 404.9 L7.3 403.7" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.2 405.3 L8.9 381.8 L8.9 359.4" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="24" y="389" font-size="20" font-weight="700" fill="#fffdf8">Your server: Happy Agent</text>
+<text x="8" y="436" font-size="18" font-weight="400" fill="#183f38">Its own loop, tools, sandbox, review</text>
+<path d="M10 454 L211 453 L210 495 L9 494 Z" fill="#e3efe9"/>
+<path d="M8.3 452.3 L42.0 452.5 L75.5 451.8 L110.4 451.1 L144.4 452.4 L179.1 451.7 L213.4 452.4" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M212.2 451.1 L212.0 473.8 L212.3 497.1" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M213.3 496.5 L177.7 496.3 L144.8 495.6 L109.8 495.2 L75.1 495.9 L40.5 495.7 L7.4 496.3" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.5 497.1 L9.0 474.3 L8.3 450.6" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="110.0" y="480" font-size="18" font-weight="700" fill="#183f38" text-anchor="middle">Claude Agent SDK</text>
+<path d="M224 454 L357 453 L356 495 L223 494 Z" fill="#e3efe9"/>
+<path d="M222.3 451.5 L257.1 451.3 L290.4 451.4 L324.7 452.3 L358.6 452.6" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M358.0 451.1 L357.7 473.6 L358.1 497.1" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M359.2 495.8 L323.5 495.4 L289.1 495.2 L256.0 495.6 L221.4 496.0" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M222.5 497.4 L220.9 474.8 L221.4 451.0" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="290.0" y="480" font-size="18" font-weight="700" fill="#183f38" text-anchor="middle">Codex</text>
+<path d="M370 454 L511 453 L510 495 L369 494 Z" fill="#e3efe9"/>
+<path d="M367.7 452.0 L405.1 452.6 L440.4 453.2 L477.4 452.6 L512.6 452.7" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M511.7 450.6 L512.0 473.2 L511.9 497.2" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M512.8 496.1 L476.3 496.5 L440.1 497.0 L404.4 496.4 L366.7 495.6" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M368.3 497.1 L368.0 473.5 L368.7 451.1" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="440.0" y="480" font-size="18" font-weight="700" fill="#183f38" text-anchor="middle">Grok</text>
+<text x="8" y="524" font-size="18" font-weight="400" fill="#6b7f78">On the subscriptions you have</text>
+<text x="8" y="562" font-size="18" font-weight="700" fill="#183f38">Keeps working while your laptop sleeps</text>
 </svg>

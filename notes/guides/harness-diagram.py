@@ -8,7 +8,7 @@ import random
 random.seed(11)
 INK = "#183f38"; MUTED = "#6b7f78"; ACC = "#e6522c"; PAPER = "#fffdf8"
 SAND = "#f6eadf"; STONE = "#efe9dc"; MINT = "#e3efe9"
-W, H = 520, 612
+W, H = 520, 574
 j = lambda a=1.2: random.uniform(-a, a)
 
 
@@ -78,46 +78,46 @@ def key(x, y):
     return circle(x + 6, y + 8, 6) + line(x + 12, y + 8, x + 28, y + 8, 1.5) + line(x + 23, y + 8, x + 23, y + 13, 1.4) + line(x + 27, y + 8, x + 27, y + 12, 1.4)
 
 
-o = [f'<rect x="0" y="0" width="{W}" height="{H}" rx="12" fill="{PAPER}"/>']
+# Transparent, with no frame or nested boxes: each half is a heading, one row of shapes, and a note.
+o = []
 
 # Text is at least 18 units: about 12px when a phone shrinks this to 350px.
 # 1. A remote control: the vendor's own harness keeps running in a terminal on your computer.
-o.append(rect(8, 8, 504, 214, 1.6, MUTED, None, "7 5"))
-o.append(text(24, 42, "A remote control", 22, INK, 700))
-o.append(text(24, 68, "Claude Remote Control, or the original Happy CLI", 18, MUTED))
-o.append(rect(24, 92, 90, 78, 1.5, INK, SAND))
-o.append(phone(63, 102))
-o.append(text(69, 156, "Phone", 18, INK, 700, "middle"))
-o.append(arrow(118, 131, 146, 131, MUTED, 1.4, "5 5"))
-o.append(rect(150, 92, 90, 78, 1.5, MUTED, STONE, "5 5"))
-o.append(text(195, 137, "Relay", 20, INK, 700, "middle"))
-o.append(arrow(244, 131, 272, 131, MUTED, 1.4, "5 5"))
-o.append(rect(276, 92, 220, 78, 1.5, INK, SAND))
-o.append(laptop(290, 104))
-o.append(text(324, 120, "Your laptop", 20, INK, 700))
-o.append(text(290, 154, "claude in a terminal", 18))
-o.append(text(24, 204, "Only while your computer stays on", 18, MUTED))
+o.append(text(8, 30, "A remote control", 22, INK, 700))
+o.append(text(8, 56, "Claude Remote Control, or the original Happy CLI", 18, MUTED))
+o.append(rect(8, 78, 96, 74, 1.5, INK, SAND))
+o.append(phone(51, 88))
+o.append(text(56, 138, "Phone", 18, INK, 700, "middle"))
+o.append(arrow(108, 115, 140, 115, MUTED, 1.4, "5 5"))
+o.append(rect(144, 78, 96, 74, 1.5, MUTED, STONE, "5 5"))
+o.append(text(192, 121, "Relay", 20, INK, 700, "middle"))
+o.append(arrow(244, 115, 276, 115, MUTED, 1.4, "5 5"))
+o.append(rect(280, 78, 232, 74, 1.5, INK, SAND))
+o.append(laptop(294, 90))
+o.append(text(328, 106, "Your laptop", 20, INK, 700))
+o.append(text(294, 138, "claude in a terminal", 18))
+o.append(text(8, 184, "Only while your computer stays on", 18, MUTED))
+
+o.append(line(8, 214, 512, 214, 1.2, MUTED, .4, "3 7"))
 
 # 2. Happy Agent is the harness: it runs the models itself, on a machine that stays on.
-o.append(rect(8, 240, 504, 364, 2, INK))
-o.append(text(24, 274, "Happy Agent runs the harness", 22, INK, 700))
-o.append(rect(24, 290, 150, 52, 1.5, INK, SAND))
-o.append(laptop(38, 306))
-o.append(text(72, 323, "Desktop", 20, INK, 700))
-o.append(rect(186, 290, 124, 52, 1.5, INK, SAND))
-o.append(phone(200, 302))
-o.append(text(222, 323, "Phone", 20, INK, 700))
-o.append(arrow(99, 346, 99, 372, INK))
-o.append(arrow(248, 346, 248, 372, INK))
-o.append(rect(24, 376, 472, 172, 2, INK))
-o.append(rect(24, 376, 472, 44, 2, INK, INK))
-o.append(text(40, 405, "Your server: Happy Agent", 20, PAPER, 700))
-o.append(text(40, 446, "Its own loop, tools, sandbox, review", 18))
-for x, w, label in [(40, 196, "Claude Agent SDK"), (248, 116, "Codex"), (376, 104, "Grok")]:
-    o.append(rect(x, 462, w, 44, 1.4, INK, MINT))
-    o.append(text(x + w / 2, 490, label, 18, INK, 700, "middle"))
-o.append(text(40, 532, "On the subscriptions you have", 18, MUTED))
-o.append(text(24, 584, "Keeps working while your laptop sleeps", 18, INK, 700))
+o.append(text(8, 256, "Happy Agent runs the harness", 22, INK, 700))
+o.append(rect(8, 274, 150, 52, 1.5, INK, SAND))
+o.append(laptop(22, 290))
+o.append(text(56, 307, "Desktop", 20, INK, 700))
+o.append(rect(170, 274, 124, 52, 1.5, INK, SAND))
+o.append(phone(184, 286))
+o.append(text(206, 307, "Phone", 20, INK, 700))
+o.append(arrow(83, 330, 83, 356, INK))
+o.append(arrow(232, 330, 232, 356, INK))
+o.append(rect(8, 360, 504, 44, 2, INK, INK))
+o.append(text(24, 389, "Your server: Happy Agent", 20, PAPER, 700))
+o.append(text(8, 436, "Its own loop, tools, sandbox, review", 18))
+for x, w, label in [(8, 204, "Claude Agent SDK"), (222, 136, "Codex"), (368, 144, "Grok")]:
+    o.append(rect(x, 452, w, 44, 1.4, INK, MINT))
+    o.append(text(x + w / 2, 480, label, 18, INK, 700, "middle"))
+o.append(text(8, 524, "On the subscriptions you have", 18, MUTED))
+o.append(text(8, 562, "Keeps working while your laptop sleeps", 18, INK, 700))
 
 svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
        "font-family=\"'Shantell Sans', 'Comic Sans MS', 'Chalkboard SE', 'Segoe Print', cursive\" role=\"img\">\n"

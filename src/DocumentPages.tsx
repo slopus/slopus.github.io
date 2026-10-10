@@ -150,7 +150,6 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
           onMouseMove={revealSidebarScrollbar}
           onScroll={revealSidebarScrollbar}
         >
-          <p className="docs-sidebar-label">{product.docsLabel}</p>
           <DocsNavigation product={product} activeDocument={activeDocument} />
         </aside>
 

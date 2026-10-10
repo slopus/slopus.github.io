@@ -30,7 +30,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(20)
+    expect(documentsForProduct('desktop')).toHaveLength(21)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
