@@ -30,7 +30,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(19)
+    expect(documentsForProduct('desktop')).toHaveLength(20)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -268,6 +268,9 @@ describe('static document pages', () => {
     expect(getDocument('desktop', 'vision')?.description).toBe(thesisMetadata.description)
     // The intelligent UI link points at OpenAI's own post, not a writeup of it.
     expect(markdown).toContain('(https://openai.com/index/gpt-6-for-everyone/)')
+    // Money, plainly: what is paid today (voice), what might be later, and that it is not the focus.
+    expect(markdown).toMatch(/How will we make money\? We're not focusing on it right now\. Today the only paid thing is voice: 20 free minutes every 30 days through ElevenLabs, then up to 5 hours per 30 days/)
+    expect(markdown).toMatch(/referral code/)
     // No X posts or embeds: a bare post URL alone on a line would be one.
     expect(markdown).not.toMatch(/^https:\/\/x\.com\//m)
   })
@@ -282,15 +285,38 @@ describe('static document pages', () => {
     render(<Router pathname="/vision/" />)
 
     const [sidebar] = screen.getAllByRole('navigation', { name: 'Documentation navigation' })
-    const startHere = within(sidebar).getAllByRole('link').map((link) => link.textContent).slice(0, 5)
-    expect(startHere).toEqual(['Welcome', 'Quick Start', 'Chief of Staff', 'How It Works', 'Vision'])
+    const startHere = within(sidebar).getAllByRole('link').map((link) => link.textContent).slice(0, 6)
+    expect(startHere).toEqual(['Welcome', 'Quick Start', 'Chief of Staff', 'How It Works', 'Vision', 'Team'])
     const visionLink = within(sidebar).getByRole('link', { name: 'Vision' })
     expect(visionLink.getAttribute('href')).toBe('/vision/')
     expect(visionLink.getAttribute('aria-current')).toBe('page')
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/how it works/i)
-    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/models & subscriptions/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/team/i)
     expect(within(screen.getByRole('navigation', { name: 'Primary navigation' })).getByRole('link', { name: 'Docs' }).getAttribute('aria-current')).toBe('page')
     expect(documents.filter((document) => document.path === 'vision')).toHaveLength(1)
+  })
+
+  it('lists Team right after Vision, with each founder\'s site and X handle, and says nothing about anyone\'s hours', () => {
+    const { container } = render(<Router pathname="/team/" />)
+
+    expect(screen.getByRole('heading', { level: 1, name: /^team/i })).toBeTruthy()
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/vision/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/models & subscriptions/i)
+    const people = [...container.querySelectorAll('.document-content h2')].map((heading) => heading.firstChild?.textContent)
+    expect(people).toEqual(['Kirill Dubovitskiy', 'Steve Korshakov'])
+    for (const href of [
+      'https://bra1ndump.com', 'https://x.com/bra1n_dump', 'https://github.com/bra1nDump',
+      'https://korshakov.com', 'https://x.com/ex3ndr', 'https://github.com/ex3ndr',
+    ]) {
+      expect(container.querySelector(`.document-content a[href="${href}"]`)).not.toBeNull()
+    }
+    expect([...container.querySelectorAll('.document-content img')].map((image) => image.getAttribute('src'))).toEqual([
+      '/img/team/kirill-dubovitskiy.jpg',
+      '/img/team/steve-korshakov.jpg',
+    ])
+    // Nobody's level of involvement, in either direction.
+    expect(container.querySelector('.document-content')?.textContent).not.toMatch(/full[- ]time|part[- ]time|day job|side project|spare time/i)
+    expect(documents.filter((document) => document.path === 'team')).toHaveLength(1)
   })
 
   it('has no blog: the header has no Blog link, and /blog/ and /thesis/ open the Vision essay', () => {

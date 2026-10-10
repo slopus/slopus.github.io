@@ -16,7 +16,7 @@ Everyone is going to need a way to talk to AI. We think this is one of the most 
 
 We want to make something nice. Polished UX. Open source. Any model from any provider, and switch when a better one ships. Host it yourself or let us.
 
-How will we make money? Not the question right now. The question is whether people get genuinely excited and become hardcore fans. We're going after the top of the funnel: the main agent you talk to for work, and later for the rest of your life.
+How will we make money? We're not focusing on it right now. Today the only paid thing is voice: 20 free minutes every 30 days through ElevenLabs, then up to 5 hours per 30 days on a paid tier in the mobile app. Later, probably a referral code with the VPS providers you host your Happy agents on, or our own hosting and extra features. The question right now is whether people get genuinely excited and become hardcore fans. We're going after the top of the funnel: the main agent you talk to for work, and later for the rest of your life.
 
 Meta got in touch about an internal pilot because their engineers kept asking to use Happy at work. We hope enough people agree with these bets to give Happy a shot.
 

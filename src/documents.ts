@@ -219,6 +219,14 @@ const desktopDocuments: DocumentDefinition[] = [
     essay: true,
   },
   {
+    // Who builds Happy, from their own sites and profiles. Never anyone's level of involvement.
+    path: 'team',
+    sourcePath: '/content/desktop/team.mdx',
+    title: 'Team',
+    description: 'Who builds Happy: Kirill Dubovitskiy and Steve Korshakov, and what they built before.',
+    group: 'Start here',
+  },
+  {
     path: 'models',
     sourcePath: '/content/desktop/models.mdx',
     title: 'Models & Subscriptions',

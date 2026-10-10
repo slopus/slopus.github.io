@@ -390,14 +390,25 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .essay-figure-right { margin: 2rem auto; width: min(270px, 100%); }
 /* The chart stays at its drawn width at every size, so its labels read on a phone (12px+ at 350px). */
 .essay-figure-center { margin: 2rem auto; width: min(520px, 100%); }
-/* The pig beside the first bullet: the bullet's text wraps around it, and the bullet grows to hold it. */
-.document-content .essay-pig { border: 0; border-radius: 0; box-shadow: none; float: right; height: auto; margin: 0 0 .25rem 1rem; width: 96px; }
+/* The pig beside the first bullet: the bullet's text wraps around it, and the bullet grows to hold it.
+   Small (0.6 of its first 96px), so it barely changes the list's line lengths. */
+.document-content .essay-pig { border: 0; border-radius: 0; box-shadow: none; float: right; height: auto; margin: 0 0 .25rem .75rem; width: 58px; }
 /* A clearfix, not overflow or flow-root: both hide the bullet dot (flow-root makes the item a plain
    block; overflow clips the marker, which sits outside the item's box). */
 .document-content li:has(.essay-pig)::after { clear: both; content: ''; display: block; }
 /* The pig alone on the last line signs the essay off: centered under the last section, below any float. */
 .essay-signoff { clear: both; margin: 3rem 0 0; text-align: center; }
 .document-content .essay-pig-signoff { display: inline-block; float: none; margin: 0; width: 120px; }
+
+/* The Team page (/team/): under each person's h2 comes a paragraph holding only their photo, which floats
+   beside the next paragraph. The photo paragraph keeps no margin, so that first line sits level with the
+   photo's top. Only that one paragraph wraps beside the photo: on a desktop it is two lines, shorter than
+   the photo, so the paragraph after it clears below the photo rather than starting with one indented line.
+   No :has(), so the rules hold in older engines too. */
+[data-document="team"] .document-content h2 + p { margin: 0; }
+[data-document="team"] .document-content h2 + p > img { border: 0; border-radius: 50%; box-shadow: none; float: left; height: 84px; margin: .35rem 1.1rem .5rem 0; object-fit: cover; width: 84px; }
+[data-document="team"] .document-content h2 + p + p + p { clear: both; }
+[data-document="team"] .document-content h2 { clear: both; }
 /* width and height on the img hold its space while it loads, so the text around it does not reflow. */
 .document-content .essay-figure img { display: block; height: auto; margin: 0; width: 100%; }
 .document-content .essay-figure figcaption { color: #6b7f78; font-size: .78rem; line-height: 1.4; margin-top: .55rem; text-align: center; }
