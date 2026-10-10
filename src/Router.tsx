@@ -192,7 +192,7 @@ export function Router({ pathname }: { pathname?: string }) {
       })
     }
 
-    // An id can start with a digit (#9-add-it-to-desktop), which a CSS selector cannot.
+    // An id can start with a digit (#2-the-server), which a CSS selector cannot.
     function fragmentElement(hash: string) {
       return hash ? document.getElementById(decodeURIComponent(hash.slice(1))) : null
     }

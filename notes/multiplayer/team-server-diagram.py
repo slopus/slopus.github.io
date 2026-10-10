@@ -7,7 +7,7 @@ import random
 random.seed(11)
 INK = "#183f38"; MUTED = "#6b7f78"; ACC = "#e6522c"; PAPER = "#fffdf8"
 SAND = "#f6eadf"; STONE = "#efe9dc"; MINT = "#e3efe9"
-W, H = 520, 706
+W, H = 520, 736
 j = lambda a=1.2: random.uniform(-a, a)
 
 
@@ -90,31 +90,35 @@ for i, name in enumerate(["Ana", "Ben", "Chi"]):
     o.append(laptop(x + 94, 72))
     o.append(phone(x + 134, 70))
 
-# Desktop over Tailcat (solid); phones through Happy's relay (dashed).
+# Desktop reaches the server through a Tailcat tunnel (solid); phones go through Happy's relay
+# (dashed), which keeps end-to-end encrypted chats readable while the server is offline.
 o.append(line(119, 132, 455, 132, 1.6, INK, .5))
 o.append(line(151, 146, 487, 146, 1.4, MUTED, .5, "5 5"))
 for i in range(3):
     x = 12 + i * 168
     o.append(line(x + 107, 118, x + 107, 132, 1.6, INK, .3))
     o.append(line(x + 139, 118, x + 139, 146, 1.4, MUTED, .3, "5 5"))
-o.append(arrow(150, 132, 150, 170, INK))
-o.append(arrow(420, 146, 420, 170, MUTED, 1.4, "5 5"))
+o.append(arrow(128, 132, 128, 170, INK))
+o.append(arrow(380, 146, 380, 170, MUTED, 1.4, "5 5"))
 
-o.append(rect(12, 174, 316, 94, 1.8, INK, MINT))
+o.append(rect(12, 174, 232, 116, 1.8, INK, MINT))
 o.append(lock(26, 186))
-o.append(text(52, 202, "Desktop: Tailcat", 20, INK, 700))
-o.append(text(26, 232, "Encrypted connection,", 18))
-o.append(text(26, 252, "no open ports", 18))
+o.append(text(52, 202, "Tailcat", 20, INK, 700))
+o.append(text(26, 234, "Desktop's encrypted", 18))
+o.append(text(26, 256, "tunnel to the server,", 18))
+o.append(text(26, 278, "no open ports", 18))
 
-o.append(rect(340, 174, 168, 94, 1.6, MUTED, STONE, "5 5"))
-o.append(text(354, 202, "Phone", 20, INK, 700))
-o.append(text(354, 232, "End-to-end", 18))
-o.append(text(354, 252, "encrypted", 18))
+o.append(rect(256, 174, 252, 116, 1.6, MUTED, STONE, "5 5"))
+o.append(lock(270, 186))
+o.append(text(296, 202, "Happy relay", 20, INK, 700))
+o.append(text(270, 234, "End-to-end encrypted.", 18))
+o.append(text(270, 256, "Phones read chats even", 18))
+o.append(text(270, 278, "with the server offline", 18))
 
-o.append(arrow(170, 272, 170, 306, INK))
-o.append(arrow(424, 272, 424, 306, MUTED, 1.4, "5 5"))
+o.append(arrow(128, 294, 128, 336, INK))
+o.append(arrow(380, 294, 380, 336, MUTED, 1.4, "5 5"))
 
-# The team server, drawn 10 units lower to make room for the taller transport boxes.
+# The team server, drawn 40 units lower to make room for the transport boxes.
 server_start = len(o)
 o.append(rect(6, 300, 508, 384, 2, INK))
 o.append(rect(6, 300, 508, 48, 2, INK, INK))
@@ -147,7 +151,7 @@ o.append(rect(362, 556, 138, 100, 1.6, ACC, "#fbe6dc"))
 o.append(text(431, 596, "Full access", 18, ACC, 700, "middle"))
 o.append(text(431, 624, "no sandbox", 18, ACC, 400, "middle"))
 
-o[server_start:] = ['<g transform="translate(0 10)">', *o[server_start:], "</g>"]
+o[server_start:] = ['<g transform="translate(0 40)">', *o[server_start:], "</g>"]
 
 svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
        "font-family=\"'Shantell Sans', 'Comic Sans MS', 'Chalkboard SE', 'Segoe Print', cursive\" role=\"img\">\n"

@@ -2,13 +2,13 @@
 
 Run one Happy Agent for your whole team: a self-hosted coding agent server with Claude, Codex, and Grok, on a machine you control. Each member signs in with their own Happy Social account from Happy Desktop, pairs their own phone, and works in shared projects and sessions, under the same sandbox and review rules as on a personal machine. The server is an ordinary [remote server](/guides/remote-server/) switched into team mode.
 
-![Three members, Ana, Ben, and Chi, each with a laptop and a phone. Their Desktop apps reach the team server over Tailcat, an encrypted connection with no open ports. Their phones connect separately, end-to-end encrypted. The team server, one Happy Agent, lets in only this team's sign-ins. All members share its projects, sessions, and tasks. Three permission modes run inside the OS sandbox: Read only, Workspace write, and Auto, which reviews each action that would cross the sandbox. Full access sits outside the sandbox.](/multiplayer/team-server.svg)
+![Three members, Ana, Ben, and Chi, each with a laptop and a phone. Their Desktop apps reach the team server through Tailcat, an encrypted tunnel with no open ports. Their phones go through Happy's relay instead, end-to-end encrypted, so they can read chats even while the server is offline. The team server, one Happy Agent, lets in only this team's sign-ins. All members share its projects, sessions, and tasks. Three permission modes run inside the OS sandbox: Read only, Workspace write, and Auto, which reviews each action that would cross the sandbox. Full access sits outside the sandbox.](/multiplayer/team-server.svg)
 
 ## How it works
 
 - **Sign-in.** Each member connects a Happy Social account in Desktop (**Settings → Account → Connect account**). Their Desktop then gets a short-lived token for the team. The server checks it on every request, health included: right signature, right team, not expired. Anything else gets the same `401`.
 - **Transport.** Tailcat is WireGuard without a Tailscale account: no open port, traffic encrypted end to end, and Tailscale's free relays see addresses and timing, not content. Knowing the address gets you only as far as the sign-in check. See [how the connection works](/guides/remote-server/#how-the-connection-works).
-- **Phones.** Each member pairs their own phone from **Settings → Mobile Access** while the team server is selected. Pairings and drafts are kept per member, and sync is end-to-end encrypted.
+- **Phones.** Each member pairs their own phone from **Settings → Mobile Access** while the team server is selected. Phones go through Happy's relay, not Tailcat: the server publishes each member's sessions to their own Happy account, end-to-end encrypted, so the phone can read them even while the server is offline. Drafts stay per member.
 - **Shared work.** Everyone sees the same projects and sessions. Whenever the speaker changes, the agent is told who it is, by name and email. That tells the agent who is talking; it grants nothing. Drafts and the order of each person's task list stay their own.
 - **Provider accounts.** The Claude, Codex, and Grok sign-ins belong to the server's service account. Every member's work runs on those accounts and their limits; members' own subscriptions are not used.
 - **Sandbox and review.** The rules are the ones on your own machine. Read only, Workspace write, and Auto, the default, run every command inside the OS sandbox; in Auto, an action that would cross it is reviewed first, one action at a time. Full access removes the sandbox, and any member can switch a session to it. On Ubuntu 24.04, an administrator first grants the daemon executable an AppArmor namespace allowance.
@@ -20,32 +20,7 @@ Ask the [Chief of Staff](/chief-of-staff/):
 
 > Create a team called Acme on my server `ubuntu@203.0.113.10`.
 
-It does this in order, and asks for invitations last:
-
-1. **Your account.** Connect Happy Social in **Settings → Account** and bind an email. Any address you can read works.
-2. **The server.** Install Happy Agent with a service account and its own provider sign-ins, as in [the remote server guide](/guides/remote-server/), and turn on Tailcat to get the server's address.
-3. **The team.** Create it with a name and that address. You become its administrator.
-4. **Team mode.** Switch the server to team mode with the team's ID. It then accepts only Happy Social tokens for that team, and keeps no local socket or token.
-5. **Verify.** Connect from your Desktop and run a real task in a throwaway project.
-6. **Invite** members by email. An invitation grants ordinary membership.
-
-The server's `happy.toml` in team mode:
-
-```toml
-[feature.team]
-enabled = true
-host = "127.0.0.1"
-port = 3000
-workos_organization_id = "org_..."
-owner_workos_user_id = "user_..."
-workos_client_id = "client_..."
-
-[feature.tailcat]
-enabled = true
-port = 24779
-```
-
-`host = "127.0.0.1"` keeps the server off the network except through Tailcat. A team server rejects a `[profile]` section: each member makes their own profile when they first connect.
+It confirms your Happy Social account, installs Happy Agent on the server as in [the remote server guide](/guides/remote-server/), creates the team, switches the server to team mode, and runs a real task from your Desktop. Only then does it ask whom to invite. In team mode the server accepts only Happy Social sign-ins for that team, listens only through Tailcat, and keeps no local socket or token. Every step is in the public recipe, [Create and deploy a Happy team](https://github.com/slopus/happy-agent/blob/main/docs/recipe/deploy-happy-team.md).
 
 **Joining.** Accept the email invitation, connect Happy Social in Desktop with that email, then ask your Chief of Staff to connect to the team.
 
@@ -55,7 +30,7 @@ port = 24779
 
 You can let someone use the Happy Agent on your own machine. You probably shouldn't, unless it is family or someone you would hand your unlocked laptop to.
 
-The only way today is to give them your connection: turn on Tailcat ("Turn on Tailcat" to the Chief of Staff), then privately send them the address, the port, and your API token from `~/.happy/agent/token`. They add it as a `[connections.<id>]` entry on their machine, as in [step 9](/guides/remote-server/#9-add-it-to-desktop).
+The only way today is to give them your connection: turn on Tailcat ("Turn on Tailcat" to the Chief of Staff), then privately send them the address, the port, and your API token from `~/.happy/agent/token`. They add it as a `[connections.<id>]` entry on their machine, or ask their Chief of Staff to add the connection.
 
 They are then you:
 

@@ -388,7 +388,9 @@ ${docsLinks(HAPPY_DESKTOP).join('\n')}
 - [Happy Desktop for macOS, Windows, and Linux](https://github.com/slopus/happy-desktop/releases/latest): the latest release. Also on ${absoluteUrl('/#download')}.
 - [Happy for iPhone and iPad](${APP_STORE_LINK}): App Store.
 - [Happy for Android](${GOOGLE_PLAY_LINK}): Google Play.
-- [Source code](${HAPPY_DESKTOP.repository}): MIT licensed.
+- [Happy](${HAPPY.repository}): the original Happy, with the mobile app, CLI, and server. MIT licensed.
+- [Happy Desktop](${HAPPY_DESKTOP.repository}): the new iteration, the desktop app. MIT licensed.
+- [Happy Agent](https://github.com/slopus/happy-agent): the agent runtime. MIT licensed.
 
 ## Optional
 
