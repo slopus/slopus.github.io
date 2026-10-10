@@ -326,6 +326,11 @@ for (const { route, title, description } of pluginPages) {
 await writeRoute('thesis', redirectHtml('/vision/'))
 await writeRoute('blog', redirectHtml('/vision/'))
 
+// The Remote Agents guide became the remote server guide; its URLs, old prefixes included, redirect.
+for (const route of ['guides/remote-agents', 'desktop/docs/guides/remote-agents', 'happy2/docs/guides/remote-agents']) {
+  await writeRoute(route, redirectHtml('/guides/remote-server/'))
+}
+
 // The Vision essay is a docs page (src/documents.ts), written by the docs loop above.
 const visionHtml = await readFile(path.join(distRoot, 'vision', 'index.html'), 'utf8')
 const visionApp = visionHtml.slice(visionHtml.indexOf('<div id="app">'))

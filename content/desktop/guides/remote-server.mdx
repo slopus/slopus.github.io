@@ -1,0 +1,318 @@
+# Happy Agent on a Remote Server
+
+A personal Happy Agent on a machine that stays on: a cloud VM, a Mac mini, a Raspberry Pi. It has its own projects, sessions, profile, and provider sign-ins. Desktop lists it beside your own machine, and your phone pairs with it separately. It is one person's machine, not a team; for that, see [Multiplayer & Teams](/multiplayer/).
+
+The connection is **Tailcat**, built into every release. The server dials out, so it needs no open port, public IP, or tunnel account. Reaching its address is not access: every request still needs the server's API token. SSH is used only to install.
+
+## Ask the Chief of Staff
+
+Get a Linux machine you can SSH into ([providers](#providers)), then tell the [Chief of Staff](/chief-of-staff/) in Desktop:
+
+> Put Happy Agent on my server `ubuntu@203.0.113.10`. Call it Build box. Use my Codex and Claude accounts, and set up GitHub for acme/api.
+
+It runs the deployment end to end and stops only for what is yours to decide:
+
+- **SSH**: the account to use and the host key.
+- **Provider accounts**: which ones the server may use. A copied credential gives that machine your account and its limits, so it prefers a fresh sign-in on the server where it can.
+- **Sign-ins**: browser or device codes for Claude, Codex, Grok, or `gh`, and any macOS Keychain prompt.
+- **Exposure**: turning on Tailcat on the server.
+- **Ubuntu 24.04**: an AppArmor allowance for the Happy Agent binary, so the sandbox can start.
+- **Git identity**: it proposes your name and email; say if the server should use different ones.
+
+It copies your profile name and email, installs the service, registers the connection, runs a test task in a throwaway project, restarts the service, and checks again. An existing installation is inspected and kept, not replaced. The handoff lists what passed and anything still waiting on you.
+
+Later: "Upgrade Happy Agent on Build box."
+
+## By hand
+
+The steps the Chief of Staff follows, for a fresh Debian or Ubuntu machine with systemd. Run them over SSH as a user with `sudo`. Never paste tokens or auth files into chat or command arguments.
+
+### 1. Check the machine
+
+```sh
+uname -m          # x86_64 → linux-x64, aarch64 → linux-arm64
+systemctl --version
+```
+
+Releases ship `linux-x64`, `linux-arm64`, `darwin-arm64`, `darwin-x64`, and `win32-x64`. Inbound, only SSH for setup; Tailcat needs outbound internet only.
+
+### 2. Create the service account
+
+The daemon, provider sign-ins, Git, and repositories all belong to `happy-agent`, not root.
+
+```sh
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl git jq tar
+sudo useradd --system --create-home --home-dir /var/lib/happy-agent \
+  --shell /bin/bash happy-agent
+sudo chmod 0700 /var/lib/happy-agent
+sudo install -d -m 0700 -o happy-agent -g happy-agent \
+  /var/lib/happy-agent/happy/config \
+  /var/lib/happy-agent/.happy \
+  /var/lib/happy-agent/.config/happy-agent/credentials \
+  /var/lib/happy-agent/projects
+```
+
+### 3. Install the binary
+
+Latest stable release, checksum verified:
+
+```sh
+set -eu
+cd "$(mktemp -d)"
+TAG="$(curl -fsSL 'https://api.github.com/repos/slopus/happy-agent/releases?per_page=100' |
+  jq -er '[.[] | select(.draft == false and .prerelease == false) |
+    select(.tag_name | test("^v[0-9]+\\.[0-9]+\\.[0-9]+$"))][0].tag_name')"
+VERSION="${TAG#v}"
+case "$(uname -m)" in
+  x86_64) TARGET="linux-x64" ;;
+  aarch64|arm64) TARGET="linux-arm64" ;;
+  *) echo "Unsupported architecture" >&2; exit 1 ;;
+esac
+ARCHIVE="happy-agent-$VERSION-$TARGET.tar.gz"
+URL="https://github.com/slopus/happy-agent/releases/download/v$VERSION"
+curl -fLO "$URL/$ARCHIVE"
+curl -fLO "$URL/$ARCHIVE.sha256"
+sha256sum --check "$ARCHIVE.sha256"
+tar -xzf "$ARCHIVE"
+sudo install -m 0755 "happy-agent-$TARGET" /usr/local/bin/happy-agent
+/usr/local/bin/happy-agent --version
+```
+
+Expect `Happy Agent <version>`. The binary embeds Tailcat and the sandbox; no Node.js or separate Tailcat install. Stop on a checksum failure.
+
+### 4. Ubuntu 24.04: let the sandbox start
+
+Ubuntu 24.04 can block the sandbox's user namespaces. If `sysctl kernel.apparmor_restrict_unprivileged_userns` reports `= 1`, grant the Happy Agent binary, and only it:
+
+```sh
+sudo tee /etc/apparmor.d/happy-agent >/dev/null <<'EOF'
+abi <abi/4.0>,
+include <tunables/global>
+
+profile happy-agent /usr/local/bin/happy-agent flags=(unconfined) {
+    userns,
+}
+EOF
+sudo chmod 0644 /etc/apparmor.d/happy-agent
+sudo apparmor_parser --skip-kernel-load /etc/apparmor.d/happy-agent
+sudo apparmor_parser --replace /etc/apparmor.d/happy-agent
+```
+
+Do not disable AppArmor, change the sysctl, or switch to Full access instead. If the machine already confines Happy Agent, amend that profile.
+
+### 5. Provider credentials
+
+Only the providers you chose. Install each file as the service account, mode `0600`:
+
+```sh
+sudo install -m 0600 -o happy-agent -g happy-agent \
+  /PRIVATE_STAGING_PATH/auth.json \
+  /var/lib/happy-agent/.config/happy-agent/credentials/codex.json
+```
+
+| Provider | Credential | `happy.toml` |
+| --- | --- | --- |
+| Codex | Your file-backed `~/.codex/auth.json`, whole, copied with `scp` to a `mktemp -d` staging folder | `[providers.codex]` `auth_file = ".../credentials/codex.json"` |
+| Claude | A long-lived token from `claude setup-token` | `[providers.claude]` `oauth_token = "..."` |
+| Grok | Your `~/.grok/auth.json`, whole | `[providers.grok]` `auth_file = ".../credentials/grok.json"` |
+| Bedrock | An instance role on AWS; otherwise a Bedrock key | `[providers.bedrock]` `region`, `bearer_token` |
+| API key | Any of the above, billed per use | `api_key = "..."` instead |
+
+Codex and Grok rewrite their files when they refresh, so keep the file and its folder writable by `happy-agent`. Two machines sharing one OAuth login may interfere when tokens rotate; if that happens, sign in on the server instead (`sudo -u happy-agent -H codex login`, with the provider's CLI installed there) and leave out `auth_file`: Happy reads each CLI's usual location. Claude tokens expire; renew with `claude setup-token`.
+
+### 6. Write `happy.toml`
+
+Make a fresh API token, 43 characters, and keep it out of chat and shell history:
+
+```sh
+head -c 32 /dev/urandom | base64 | tr '+/' '-_' | tr -d '=\n'
+```
+
+`/var/lib/happy-agent/happy/config/happy.toml`:
+
+```toml
+[providers]
+default_enable = false
+
+[providers.codex]
+enabled = true
+auth_file = "/var/lib/happy-agent/.config/happy-agent/credentials/codex.json"
+
+[profile]
+name = "Ada Lovelace"
+email = "ada@example.com"
+
+[feature.team]
+enabled = false
+
+[api]
+token = "YOUR_43_CHARACTER_TOKEN"
+
+[feature.tailcat]
+enabled = true
+port = 24779
+
+[defaults]
+permission_mode = "auto"
+```
+
+- `[profile]` is your name and email. Both fields are required, and they stand in for the first-start profile screen. Write it before the first start.
+- Add `provider` and `model` under `[defaults]` if you want a default model, for example `provider = "codex"` and `model = "openai/gpt-5.6-sol"`.
+- Keep Auto. Do not pick Full access to make setup checks pass.
+
+```sh
+sudo chown happy-agent:happy-agent /var/lib/happy-agent/happy/config/happy.toml
+sudo chmod 0600 /var/lib/happy-agent/happy/config/happy.toml
+```
+
+### 7. Run it under systemd
+
+`/etc/systemd/system/happy-agent.service`:
+
+```ini
+[Unit]
+Description=Happy Agent (standalone)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=happy-agent
+Group=happy-agent
+WorkingDirectory=/var/lib/happy-agent
+Environment=HOME=/var/lib/happy-agent
+EnvironmentFile=-/var/lib/happy-agent/.config/happy-agent/service.env
+ExecStart=/usr/local/bin/happy-agent run
+Restart=on-failure
+RestartSec=2
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```sh
+sudo systemctl daemon-reload
+sudo systemctl enable --now happy-agent
+sudo systemctl is-active happy-agent
+```
+
+`service.env` is optional: private `NAME=value` lines, owned by `happy-agent`, mode `0600`, for credentials given as environment variables. Do not also run `happy-agent start`; systemd owns the daemon.
+
+### 8. Verify
+
+```sh
+sudo -u happy-agent -H bash -c 'curl -s --unix-socket ~/.happy/agent/server.sock \
+  -H @<(printf "Authorization: Bearer %s\n" "$(cat ~/.happy/agent/token)") \
+  http://localhost/v0/health'
+sudo cat /var/lib/happy-agent/.happy/agent/tailcat/address
+sudo cat /var/lib/happy-agent/.happy/agent/tailcat/port
+```
+
+Expect `"status":"ready"` in the health response, an address starting with `tc`, and `24779`. The Tailcat files can take up to 90 seconds to appear. If health fails, read `sudo journalctl -u happy-agent -n 100`.
+
+### 9. Add it to Desktop
+
+Ask the Chief of Staff on your own machine to register it. It calls `set_remote_connection` with the name, address, port, and token, and needs no restart. Then `check_remote_connection_health` must report `reachable`, `authenticated`, and `ready` all true.
+
+By hand, in **your machine's** global `happy.toml` (not the server's):
+
+```toml
+[connections.build-box]
+name = "Build box"
+address = "tc..."
+port = 24779
+token = "THE_SERVER_API_TOKEN"
+```
+
+Use the address exactly as printed, not a `tailcat://` URL. The ID is lowercase letters, digits, `-` or `_`. Restart Happy Agent on your machine to apply a file change. The server then appears in Desktop's connection rail beside your own machine.
+
+Then send the server a small task in a new, throwaway project and confirm it answers and runs a command. Health alone does not prove the model or the sandbox works.
+
+### 10. Pair your phone
+
+Select the server in Desktop, then open **Settings → Mobile Access**. The server has its own pairing; pairing your local machine installs nothing on it.
+
+### 11. Git and GitHub
+
+As the service account:
+
+```sh
+sudo -u happy-agent -H git config --global user.name "Ada Lovelace"
+sudo -u happy-agent -H git config --global user.email "ada@example.com"
+sudo -u happy-agent -H gh auth login --hostname github.com --git-protocol https --web
+sudo -u happy-agent -H gh auth setup-git --hostname github.com
+```
+
+Clone repositories into `/var/lib/happy-agent/projects` as `happy-agent`.
+
+## Upgrade
+
+From an SSH session, not from an agent running on that server:
+
+```sh
+sudo -u happy-agent -H /usr/local/bin/happy-agent drain
+sudo systemctl stop happy-agent
+# back up /usr/local/bin/happy-agent, /var/lib/happy-agent, and the unit file
+# download and verify the new release as in step 3, then:
+sudo install -m 0755 "happy-agent-$TARGET" /usr/local/bin/happy-agent
+sudo systemctl start happy-agent
+```
+
+`drain` waits until running work reaches a safe stopping point and prints `Daemon drain is complete.` Keep `/var/lib/happy-agent/.happy/agent`: it holds the data, the token, and the Tailcat identity, so the address and connection survive. Keep the AppArmor profile; it is bound to the binary's path.
+
+## Uninstall
+
+In Desktop, ask the Chief of Staff to remove the connection (`remove_remote_connection`), or delete the `[connections.<id>]` entry. Then on the server:
+
+```sh
+sudo systemctl disable --now happy-agent
+sudo rm /etc/systemd/system/happy-agent.service
+sudo systemctl daemon-reload
+sudo rm /usr/local/bin/happy-agent
+sudo apparmor_parser -R /etc/apparmor.d/happy-agent   # only if you added it in step 4
+sudo rm /etc/apparmor.d/happy-agent
+sudo userdel happy-agent
+sudo rm -rf /var/lib/happy-agent   # projects, history, credentials: back up first
+```
+
+Sign the server out of anything it held, or revoke those sessions from the provider's side: copied OAuth logins, `claude setup-token` tokens, and the `gh` login.
+
+## Providers
+
+The steps above apply everywhere. Only what differs is listed here. We have not tested every provider; follow their own docs to create the machine.
+
+### Hetzner
+
+A Cloud server with Ubuntu 24.04 or Debian. The Arm (CAX) types use `linux-arm64`. With a Hetzner firewall, allow inbound SSH and add no outbound rules; with none, all outbound traffic is allowed. [Creating a server](https://docs.hetzner.com/cloud/servers/getting-started/creating-a-server/).
+
+### DigitalOcean
+
+A Droplet with Ubuntu 24.04 LTS. A Cloud Firewall needs only inbound SSH. [Create a Droplet](https://docs.digitalocean.com/products/droplets/how-to/create/).
+
+### AWS EC2 and Lightsail
+
+Ubuntu 24.04 LTS; the login user is `ubuntu`. Graviton instances use `linux-arm64`. The security group needs only inbound SSH. For Bedrock on EC2, attach a least-privilege instance role, so there is no key to copy. [EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html), [Lightsail](https://docs.aws.amazon.com/lightsail/latest/userguide/how-to-create-amazon-lightsail-instance-virtual-private-server.html).
+
+### Google Cloud
+
+A Compute Engine VM with Ubuntu 24.04 LTS or Debian. Arm machine types use `linux-arm64`. No firewall rule is needed for Tailcat. [Create a Linux VM](https://cloud.google.com/compute/docs/create-linux-vm-instance).
+
+### exe.dev
+
+Persistent VMs, created with `ssh exe.dev new`. Claude Code and Codex come preinstalled, and you have `sudo`. Use `linux-x64` after checking `uname -m`. Provider logins must belong to `happy-agent`, not your login user: sign in with `sudo -u happy-agent -H codex login`, or install copied credentials as in step 5. Use SSH with your own key; the exe.dev API token cannot SSH and is not a Happy credential. Skip first-boot scripts: they run once as your login user, not the service account. exe.dev's own agent, Shelley, keeps running; Happy Agent is a separate service beside it. [exe.dev docs](https://exe.dev/docs).
+
+### A Mac mini or old laptop at home
+
+A laptop running Linux follows the steps above. Keep it plugged in and the lid open; a closed lid usually sleeps the machine.
+
+On a Mac, use the `darwin-arm64` or `darwin-x64` archive and check it with `shasum -a 256 -c`. The config is `~/Happy/Config/happy.toml` for the user that runs Happy Agent, and the sandbox is macOS's own, so there is no AppArmor step. Run `happy-agent run` as a launchd service under that user; Happy does not ship the plist, so the Chief of Staff writes one. Stop the Mac from sleeping with `sudo pmset -a sleep 0`.
+
+### Raspberry Pi and other ARM boards
+
+Use `linux-arm64`, which needs a 64-bit OS: `uname -m` must print `aarch64`. A 32-bit OS (`armv7l`) is not supported.
+
+## Status
+
+Remotes connect over Tailcat only. Desktop has no "add remote" button yet; register one with the Chief of Staff or `happy.toml`.

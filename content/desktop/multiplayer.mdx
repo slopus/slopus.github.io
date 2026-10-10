@@ -1,32 +1,74 @@
 # Multiplayer & Teams
 
-## Share a session
+A team is several people on one Happy Agent. It runs on a server you control. Each member reaches it from their own Desktop with their own Happy Social sign-in, and pairs their own phone.
 
-Invite a colleague or a friend into a session. They see the same transcript, tool calls, and changed files as they happen, from Desktop or their phone, and their messages enter the same queue as yours. The agent still runs on your machine under your permission mode.
+![Three members, Ana, Ben, and Chi, each with Desktop and a phone. Desktop signs in with Happy Social and reaches the team server over Tailcat, which encrypts the connection but lets no one in by itself. Phones sync end to end encrypted, each member pairing their own. On the team server: every request is checked for a Happy Social token issued for this team, or refused with 401. All members share projects, sessions, and tasks; the agent is told who sent each message, and drafts stay per person. Claude, Codex, and Grok sign-ins belong to the server's service account, so every member's work spends those accounts. Every command runs under the OS sandbox and Auto review, and each member picks a session's mode: Read only, Workspace write, Auto (the default), or Full access, which has no sandbox.](/multiplayer/team-server.svg)
 
-## Run one Happy Agent for a team
+## How it works
 
-A team is a **Happy Social** organization with a registered Happy Agent endpoint. Members connect from their own Desktop and phone with their own identity; projects, workspaces, and sessions on that server belong to the team.
+- **Sign-in.** Each member connects a Happy Social account in Desktop (**Settings → Account → Connect account**). Their Desktop then gets a short-lived token for the team. The server checks it on every request, health included: right signature, right team, not expired. Anything else gets the same `401`.
+- **Transport.** Tailcat encrypts the connection and gets through NAT; the server needs no open port. It is not authentication: knowing the address gets you only as far as the sign-in check.
+- **Phones.** Each member pairs their own phone from **Settings → Mobile Access** while the team server is selected. Pairings and drafts are kept per member, and sync is end-to-end encrypted.
+- **Shared work.** Everyone sees the same projects and sessions. Before each message, the agent is told who sent it, by name and email. That tells the agent who is talking; it grants nothing. Drafts and the order of each person's task list stay their own.
+- **Provider accounts.** The Claude, Codex, and Grok sign-ins belong to the server's service account. Every member's work runs on those accounts and their limits; members' own subscriptions are not used.
+- **Sandbox and review.** Every command runs under the same OS sandbox and Auto review as on your own machine. Members pick a session's permission mode, including Full access. On Ubuntu 24.04, an administrator first grants the daemon executable an AppArmor namespace allowance.
+- **Owner.** The person who created the team is its owner. Only the owner can rename the installation or turn global skills on and off. Otherwise members have the same access.
 
-The [Chief of Staff](/chief-of-staff/) runs the setup, in this order:
+## Set up a team
 
-1. **Sign in to Happy Social** on your own installation (**Settings → Account → Connect account**) and bind an email. Any address works. This is separate from provider credentials.
-2. **Deploy the server**: a Linux or macOS machine with outbound internet, a dedicated service account, and that account's own provider sign-ins. Happy Agent is one self-contained binary under systemd or similar. Its embedded **Tailcat** transport gives it a stable, unguessable address through NAT, with no tunnel account.
-3. **Create the team** with a name and that endpoint. You become administrator.
-4. **Switch the server to team mode** with the organization ID. It then authenticates members by Happy Social identity and keeps no local socket or token.
-5. **Verify** a real connection from your Desktop.
-6. **Invite members by email.**
+Ask the [Chief of Staff](/chief-of-staff/):
 
-Tailcat encrypts the transport. Happy Social sign-in is the authentication boundary.
+> Create a team called Acme on my server `ubuntu@203.0.113.10`.
 
-## What a team server is not
+It does this in order, and asks for invitations last:
 
-- Not a credential vault. The service account signs in to providers like a person would.
-- Not unsandboxed. Every command runs under the same OS sandbox and Auto review. On Ubuntu 24.04 the administrator grants the daemon executable an AppArmor namespace allowance first.
-- Not hosted. You run it.
+1. **Your account.** Connect Happy Social in **Settings → Account** and bind an email. Any address you can read works.
+2. **The server.** Install Happy Agent with a service account and its own provider sign-ins, as in [Happy Agent on a Remote Server](/guides/remote-server/), and turn on Tailcat to get the server's address.
+3. **The team.** Create it with a name and that address. You become its administrator.
+4. **Team mode.** Switch the server to team mode with the team's ID. It then accepts only Happy Social tokens for that team, and keeps no local socket or token.
+5. **Verify.** Connect from your Desktop and run a real task in a throwaway project.
+6. **Invite** members by email. An invitation grants ordinary membership.
+
+The server's `happy.toml` in team mode:
+
+```toml
+[feature.team]
+enabled = true
+host = "127.0.0.1"
+port = 3000
+workos_organization_id = "org_..."
+owner_workos_user_id = "user_..."
+workos_client_id = "client_..."
+
+[feature.tailcat]
+enabled = true
+port = 24779
+```
+
+`host = "127.0.0.1"` keeps the server off the network except through Tailcat. A team server rejects a `[profile]` section: each member makes their own profile when they first connect.
+
+**Joining.** Accept the email invitation, connect Happy Social in Desktop with that email, then ask your Chief of Staff to connect to the team.
+
+**Leaving.** Happy has no remove-member action yet. Stopping the server cuts everyone off at once.
+
+## Share your own computer
+
+You can let someone use the Happy Agent on your own machine. You probably shouldn't, unless it is family or someone you would hand your unlocked laptop to.
+
+The only way today is to give them your connection: turn on Tailcat ("Turn on Tailcat" to the Chief of Staff), then privately send them the address, the port, and your API token from `~/.happy/agent/token`. They add it as a `[connections.<id>]` entry on their machine, as in [step 9](/guides/remote-server/#9-add-it-to-desktop).
+
+They are then you:
+
+- **Everything is shared.** Your projects, sessions, Chief of Staff, settings, and profile. The agent cannot tell you apart.
+- **Your accounts pay.** Their work runs on your Claude, Codex, and Grok subscriptions, your Git identity, and whatever the projects can push to.
+- **The sandbox is their choice.** In Auto, commands cannot write outside the workspace, reach unlisted domains, or read credential folders such as `~/.ssh`, `~/.aws`, `~/.claude`, and `~/.codex`. They can still read the rest of your home folder, and they can switch any session to Full access, which removes the sandbox. MCP servers always run outside it.
+
+There is no per-session invite. Team mode on your own machine gives each person their own identity, but it turns off the local socket your own Desktop uses, so it belongs on a separate machine.
+
+**To revoke:** ask the Chief of Staff to turn off Tailcat, which closes the connection at once. Then set a new `[api] token` in your `happy.toml` and restart Happy Agent; the old token stops working. Turning Tailcat back on restores the same address, so rotate the token before you do.
 
 ## Status
 
-Team setup is deliberate and multi-step today. Adding a teammate from the sidebar is not built yet.
+Team setup is deliberate and multi-step today. Adding or removing a teammate from the sidebar is not built yet.
 
-For one person and one extra machine, see [Remote Agents](/guides/remote-agents/).
+For one person and one extra machine, see [Happy Agent on a Remote Server](/guides/remote-server/).

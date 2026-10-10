@@ -257,7 +257,7 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'multiplayer',
     sourcePath: '/content/desktop/multiplayer.mdx',
     title: 'Multiplayer & Teams',
-    description: 'Share a session with a colleague, and run one Happy Agent for a whole team.',
+    description: 'Run one Happy Agent for a team: sign-in, shared sessions, the sandbox, and sharing your own computer.',
     group: 'Features',
   },
   {
@@ -282,10 +282,12 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Guides',
   },
   {
-    path: 'guides/remote-agents',
-    sourcePath: '/content/desktop/guides/remote-agents.mdx',
-    title: 'Remote Agents',
-    description: 'Run Happy Agent on another machine and work with it from Desktop and your phone.',
+    // Replaced /guides/remote-agents/, which redirects here.
+    path: 'guides/remote-server',
+    sourcePath: '/content/desktop/guides/remote-server.mdx',
+    title: 'Remote Server',
+    pageTitle: 'Happy Agent on a Remote Server — Happy',
+    description: 'Run your own Happy Agent on a VM, a Mac mini, or a Raspberry Pi: ask the Chief of Staff, or follow the exact steps.',
     group: 'Guides',
   },
   {

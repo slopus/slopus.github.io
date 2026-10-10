@@ -45,6 +45,7 @@
 /extending/
 /guides/configuration/
 /guides/remote-agents/
+/guides/remote-server/
 /guides/terminal/
 /happy2/
 /happy2/docs/
