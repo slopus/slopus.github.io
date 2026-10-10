@@ -323,7 +323,7 @@ const desktopDocuments: DocumentDefinition[] = [
     sourcePath: '/content/desktop/mobile-app.mdx',
     title: 'Claude Code on Your Phone',
     pageTitle: 'Claude Code & Codex Mobile App for iPhone and Android — Happy',
-    description: 'Control Claude Code and Codex from your phone with Happy, a free, open source iOS and Android app. The agents stay on your computer; the sync is end-to-end encrypted.',
+    description: 'Control Claude Code and Codex from your phone with Happy, a free, open source iOS and Android app. Agents run on your computer, end-to-end encrypted.',
     group: 'Comparisons',
   },
   {
@@ -331,7 +331,7 @@ const desktopDocuments: DocumentDefinition[] = [
     sourcePath: '/content/desktop/vs/claude-code-remote-control.mdx',
     title: 'Happy vs Remote Control',
     pageTitle: 'Claude Code Remote Control vs Happy — An Open Source Alternative',
-    description: 'How Anthropic\'s Claude Code Remote Control and Happy compare for steering coding agents from your phone: models, encryption, sessions, setup, and where each one is better.',
+    description: 'Claude Code Remote Control vs Happy for steering coding agents from your phone: models, encryption, sessions, setup, and where each one is better.',
     group: 'Comparisons',
   },
   {
