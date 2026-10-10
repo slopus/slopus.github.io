@@ -4,3 +4,5 @@ dist-ssr
 coverage
 .DS_Store
 .context/
+# Search Console numbers are private; see marketing/README.md.
+marketing/data/
