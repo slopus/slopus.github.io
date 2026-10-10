@@ -74,26 +74,46 @@ o.append(rect(196, 8, 128, 44, 1.8, INK, MINT))
 o.append(text(RELAY, 37, "DERP relay", 20, INK, 700, "middle"))
 o.append(rect(368, 8, 144, 44, 1.5, INK, SAND))
 o.append(text(SRV, 37, "Your server", 18, INK, 700, "middle"))
-for x in (DESK, RELAY, SRV):
-    o.append(line(x, 56, x, 318, 1.2, MUTED, .3, "3 6"))
+
+# Labels between the lifelines, with their extents, so a lifeline breaks instead of crossing one.
+rows = []
+
+
+def label(x, y, s, size=18, c=INK, wt=400):
+    per = size * (0.56 if wt >= 700 else 0.52)
+    rows.append((x - 3, x + per * len(s) + 3, y - size * 0.8 - 3, y + size * 0.28 + 3))
+    return text(x, y, s, size, c, wt)
+
+
+def lifeline(x, y1, y2):
+    out, start = [], y1
+    for y0, yb in sorted((y0, yb) for x0, x1, y0, yb in rows if x0 <= x <= x1):
+        if y0 > start + 4:
+            out.append(line(x, start, x, y0, 1.2, MUTED, .3, "3 6"))
+        start = max(start, yb)
+    if y2 > start + 4:
+        out.append(line(x, start, x, y2, 1.2, MUTED, .3, "3 6"))
+    return "\n".join(out)
+
 
 # 1. Both machines dial out to the relay; neither opens a port.
-o.append(text(DESK + 10, 92, "1  Both sides dial out to a relay", 18, INK, 700))
+o.append(label(DESK + 10, 92, "1  Both sides dial out to a relay", 18, INK, 700))
 o.append(arrow(DESK, 102, RELAY - 4, 102, MUTED, 1.4))
 o.append(arrow(SRV, 102, RELAY + 4, 102, MUTED, 1.4))
-o.append(text(DESK + 10, 126, "no inbound port, either side", 18, MUTED))
+o.append(label(DESK + 10, 126, "no inbound port, either side", 18, MUTED))
 
 # 2. The WireGuard handshake runs end to end; the relay only forwards it.
-o.append(text(DESK + 10, 166, "2  WireGuard handshake, end to end", 18, INK, 700))
-o.append(lock(418, 150))
+o.append(label(DESK + 10, 166, "2  WireGuard handshake, end to end", 18, INK, 700))
 o.append(arrow(DESK, 176, SRV, 176, INK))
-o.append(text(DESK + 10, 200, "throwaway client key on this side", 18, MUTED))
-o.append(text(DESK + 10, 224, "server key and pre-shared key from tc\u2026", 18, MUTED))
+o.append(label(DESK + 10, 200, "throwaway client key on this side", 18, MUTED))
+o.append(label(DESK + 10, 224, "server key and pre-shared key from tc\u2026", 18, MUTED))
 
 # 3. NAT traversal, with the relay as the fallback path.
-o.append(text(DESK + 10, 264, "3  Direct UDP path when NAT allows", 18, INK, 700))
+o.append(label(DESK + 10, 264, "3  Direct UDP path when NAT allows", 18, INK, 700))
 o.append(arrow(DESK, 274, SRV, 274, INK, 1.6, "6 5"))
-o.append(text(DESK + 10, 298, "else the relay forwards ciphertext", 18, MUTED))
+o.append(label(DESK + 10, 298, "else the relay forwards ciphertext", 18, MUTED))
+for x in (DESK, RELAY, SRV):
+    o.append(lifeline(x, 56, 318))
 
 # 4. Inside the tunnel, the ordinary Happy Agent API with its credential.
 o.append(text(8, 350, "4  Inside: HTTP to server.tailcat:24779", 20, INK, 700))
