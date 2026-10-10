@@ -161,36 +161,48 @@ describe('static document pages', () => {
     expect(screen.getAllByRole('heading', { level: 1 }).map((heading) => heading.id)).toEqual(['vision'])
     const sections = [...container.querySelectorAll('.document-content h2')].map((heading) => heading.firstChild?.textContent)
     expect(sections).toEqual([
-      'One core agent',
+      'Make people happy',
+      'One primary agent',
       'Chat left the chat',
       'Fiddle less, understand more',
       'Phone first',
       'One harness',
-      'Multiplayer is very hard',
-      'Make people happy',
+      'Permissions belong to the agent',
     ])
     // The bullets up top are the sections, one for one, in the same order.
     const bullets = [...container.querySelectorAll('.document-content > ul > li > strong')].map((bold) => bold.textContent?.replace(/\.$/, ''))
     expect(bullets).toEqual(sections)
     expect(container.querySelector('.document-content h3')).toBeNull()
-    // One bold line in the whole body: the first section's.
+    // Three bold lines in the whole body: the primary agent's, and the two claims about chat.
     const boldLines = [...container.querySelectorAll('.document-content > p > strong')].map((bold) => bold.textContent)
-    expect(boldLines).toEqual(["You'll run lots of agents. Only one of them should talk back to you."])
+    expect(boldLines).toEqual([
+      "You'll run lots of agents. Only one of them should talk back to you.",
+      'Nobody rereads old messages.',
+      'The sidebar and the chat are both prime to become generated artifacts.',
+    ])
   })
 
-  it('spans the layout diagram across the column and sets the screenshots beside their paragraphs', () => {
+  it('leads each section with its figure: the diagram and chart span the column, the screenshots float', () => {
     const { container } = render(<Router pathname="/vision/" />)
-    const [screenshot, diagram, picker, ...rest] = [...container.querySelectorAll('figure.essay-figure')]
+    const [screenshot, diagram, chart, picker, ...rest] = [...container.querySelectorAll('figure.essay-figure')]
 
     expect(rest).toHaveLength(0)
     expect(picker.className).toBe('essay-figure essay-figure-right')
     expect(picker.querySelector('img')?.getAttribute('src')).toBe('/thesis/model-picker.png')
     expect(picker.querySelector('figcaption')?.textContent).toBe('Codex, Claude and Grok in one picker')
-    expect(picker.nextElementSibling?.textContent).toMatch(/^That's what lets you run Claude, GPT and Grok/)
-    // The pig sits inside the last bullet, so no other bullet moves.
-    const pig = container.querySelector('img.essay-pig')
-    expect(pig?.closest('li')?.textContent).toMatch(/^Make people happy\./)
-    expect(pig?.closest('figure')).toBeNull()
+    expect(picker.previousElementSibling?.textContent).toMatch(/^One harness/)
+    expect(picker.nextElementSibling?.textContent).toMatch(/^We're betting on one harness/)
+    // The pig sits inside the first bullet, so no other bullet moves, and alone at the very end signs off.
+    const pigs = [...container.querySelectorAll('img.essay-pig')]
+    expect(pigs).toHaveLength(2)
+    const bullet = pigs[0].closest('li')
+    expect(bullet?.textContent).toMatch(/^Make people happy\./)
+    expect(bullet?.parentElement?.firstElementChild).toBe(bullet)
+    expect(pigs[0].closest('figure')).toBeNull()
+    const content = container.querySelector('.document-content')
+    expect(content?.lastElementChild).toBe(pigs[1].parentElement)
+    expect(pigs[1].parentElement?.className).toBe('essay-signoff')
+    expect(pigs[1].className).toBe('essay-pig essay-pig-signoff')
     expect(screenshot.className).toBe('essay-figure essay-figure-left')
     expect(screenshot.querySelector('img')?.getAttribute('src')).toBe('/thesis/sidebar.png')
     expect(screenshot.querySelector('img')?.getAttribute('alt')).toBe('A fragment of our sidebar today')
@@ -202,8 +214,16 @@ describe('static document pages', () => {
 
     expect(diagram.className).toBe('essay-figure')
     expect(diagram.querySelector('img')?.getAttribute('src')).toBe('/thesis/layout.svg')
-    expect(diagram.previousElementSibling?.textContent).toMatch(/Reminds you of Arc a bit, right\?$/)
-    for (const figure of [diagram, screenshot]) {
+    expect(diagram.previousElementSibling?.textContent).toMatch(/^Chat left the chat/)
+    expect(diagram.nextElementSibling?.querySelector('strong')?.textContent).toBe('Nobody rereads old messages.')
+
+    // The chart: illustrative, so no numbers or years on it, and its labels read at a phone's 350px column.
+    expect(chart.className).toBe('essay-figure essay-figure-center')
+    expect(chart.querySelector('img')?.getAttribute('src')).toBe('/thesis/buttons.svg')
+    expect(chart.querySelector('figcaption')?.textContent).toBe('Static buttons in apps are on their way to zero')
+    expect(chart.previousElementSibling?.textContent).toMatch(/^Fiddle less, understand more/)
+    expect(chart.nextElementSibling?.textContent).toMatch(/^Configuring, naming things/)
+    for (const figure of [diagram, screenshot, chart]) {
       expect(figure.querySelector('img')?.getAttribute('width')).toBeTruthy()
       expect(figure.querySelector('img')?.getAttribute('height')).toBeTruthy()
     }
@@ -215,7 +235,13 @@ describe('static document pages', () => {
     expect(thesisMetadata.title).toBe('Vision — Happy')
     expect(getDocument('desktop', 'vision')?.title).toBe('Vision')
     expect(markdown.startsWith('# Vision\n\nEveryone is going to need a way to talk to AI.')).toBe(true)
-    expect(markdown).toContain('\n\n- **One core agent.**')
+    expect(markdown).toContain('\n\n- **Make people happy.**')
+    // One primary agent, never a core one; and multiplayer is not called hard.
+    expect(markdown).not.toMatch(/core agent|is (?:very )?hard|last .*piece of software/i)
+    expect(thesisMetadata.description).toContain('one primary agent')
+    expect(getDocument('desktop', 'vision')?.description).toBe(thesisMetadata.description)
+    // The intelligent UI link points at OpenAI's own post, not a writeup of it.
+    expect(markdown).toContain('(https://openai.com/index/gpt-6-for-everyone/)')
     // No X posts or embeds: a bare post URL alone on a line would be one.
     expect(markdown).not.toMatch(/^https:\/\/x\.com\//m)
   })

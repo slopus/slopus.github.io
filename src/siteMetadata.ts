@@ -62,7 +62,7 @@ export const modelBenchmarksMetadata: PageMetadata = {
  */
 export const thesisMetadata: PageMetadata = {
   title: 'Vision — Happy',
-  description: 'What Happy is betting on: one core agent, chat that left the chat, phone first, one harness, and open source with no lock-in.',
+  description: 'What Happy is betting on: one primary agent, chat that left the chat, phone first, one harness, and open source with no lock-in.',
   canonicalPath: '/vision/',
 }
 
