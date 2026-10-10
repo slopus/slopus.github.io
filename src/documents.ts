@@ -8,6 +8,7 @@ export type DocumentGroup =
   | 'Comparisons'
   | 'Releases'
   | 'Resources'
+  | 'Blog'
 
 export interface DocumentEntry {
   product: ProductKey
@@ -339,6 +340,23 @@ const desktopDocuments: DocumentDefinition[] = [
     description: 'How Anthropic\'s Claude Code Remote Control and Happy compare for steering coding agents from your phone: models, encryption, sessions, setup, and where each one is better.',
     group: 'Comparisons',
   },
+  {
+    // Blog: short URLs to type from memory; the titles stay long.
+    path: 'tailcat',
+    sourcePath: '/content/desktop/tailcat.mdx',
+    title: 'No Open Ports: Tailcat',
+    pageTitle: 'No Open Ports: How Happy Reaches Your Server with Tailcat',
+    description: 'How Happy Desktop reaches a remote Happy Agent through Tailcat, Tailscale\'s open source data plane: WireGuard end to end, no open port, no account.',
+    group: 'Blog',
+  },
+  {
+    path: 'voice',
+    sourcePath: '/content/desktop/voice.mdx',
+    title: 'Voice with ElevenLabs',
+    pageTitle: 'Talk to Your Agents: How Happy Uses ElevenLabs for Voice',
+    description: 'How voice in the Happy app runs on ElevenLabs: the token flow, what ElevenLabs hears, the free minutes, the subscription, and bringing your own agent.',
+    group: 'Blog',
+  },
 ]
 
 export const documents: DocumentEntry[] = [
@@ -348,7 +366,7 @@ export const documents: DocumentEntry[] = [
 
 const productDocumentGroups: Record<ProductKey, DocumentGroup[]> = {
   happy: ['Start here', 'Guides', 'Features', 'Use cases', 'Comparisons', 'Releases', 'Resources'],
-  desktop: ['Start here', 'Features', 'Guides', 'Comparisons'],
+  desktop: ['Start here', 'Features', 'Guides', 'Comparisons', 'Blog'],
 }
 
 export function documentsForProduct(product: ProductKey) {

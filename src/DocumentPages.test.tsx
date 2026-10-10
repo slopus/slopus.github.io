@@ -30,7 +30,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(21)
+    expect(documentsForProduct('desktop')).toHaveLength(23)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -63,7 +63,7 @@ describe('static document pages', () => {
     expect(trail.getAttribute('aria-expanded')).toBe('true')
     expect(menu.hidden).toBe(false)
     expect(within(menu).getByRole('link', { name: 'Chief of Staff' }).getAttribute('aria-current')).toBe('page')
-    expect(within(menu).getAllByRole('heading', { level: 2 }).map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Comparisons'])
+    expect(within(menu).getAllByRole('heading', { level: 2 }).map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Comparisons', 'Blog'])
 
     fireEvent.click(trail)
     expect(menu.hidden).toBe(true)
@@ -177,8 +177,36 @@ describe('static document pages', () => {
     unmount()
 
     render(<Router pathname="/vs/claude-code-remote-control/" />)
-    expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
+    // The Blog group follows Comparisons, so the last comparison reads on to its first post.
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/tailcat/i)
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/claude code on your phone/i)
+  })
+
+  it('lists the Blog last, at short URLs, each post with its diagram and its sources', () => {
+    const { container, unmount } = render(<Router pathname="/tailcat/" />)
+
+    expect(screen.getByRole('heading', { level: 1, name: /no open ports: how happy reaches your server/i })).toBeTruthy()
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/remote control/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/voice/i)
+    expect(container.querySelector('.document-content img[src="/img/tailcat.svg"]')).not.toBeNull()
+    expect(container.querySelector('.document-content a[href="https://github.com/tailscale/tailcat"]')).not.toBeNull()
+    // The version main ships, and the one older identities came from.
+    expect(container.querySelector('.document-content')?.textContent).toMatch(/embeds Tailcat v0\.7\.0/)
+    expect(container.querySelector('.document-content')?.textContent).toMatch(/bundled Tailcat v0\.4\.0, has no pre-shared key/)
+    unmount()
+
+    render(<Router pathname="/voice/" />)
+    expect(screen.getByRole('heading', { level: 1, name: /talk to your agents: voice with elevenlabs/i })).toBeTruthy()
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/tailcat/i)
+    expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
+    for (const document of documents.filter((entry) => entry.group === 'Blog')) {
+      expect(document.product).toBe('desktop')
+      expect(['tailcat', 'voice']).toContain(document.path)
+      expect(document.pageTitle?.length).toBeLessThanOrEqual(65)
+      expect(document.description.length).toBeLessThanOrEqual(155)
+      // No narration: nothing on the page points at the diagram's files or announces what follows.
+      expect(getDocumentSource(document)).not.toMatch(/The diagram as|below is|this page explains/i)
+    }
   })
 
   it('renders the Vision essay with its title as the only h1 and every section as an h2', () => {
@@ -319,9 +347,13 @@ describe('static document pages', () => {
     expect(documents.filter((document) => document.path === 'team')).toHaveLength(1)
   })
 
-  it('has no blog: the header has no Blog link, and /blog/ and /thesis/ open the Vision essay', () => {
+  it('keeps Blog out of the header while /blog/ and /thesis/ open the Vision essay', () => {
     // Server markup: the landing pages' effects need browser APIs jsdom lacks.
-    expect(renderPath('/welcome/')).not.toMatch(/>Blog</)
+    const header = renderPath('/welcome/').match(/<nav[^>]*aria-label="Primary navigation"[\s\S]*?<\/nav>/)?.[0]
+    expect(header).toBeTruthy()
+    expect(header).not.toMatch(/>Blog</)
+    // The Blog group itself is the last in the docs sidebar.
+    expect(renderPath('/welcome/')).toMatch(/>Blog<[\s\S]*href="\/tailcat\/"[\s\S]*href="\/voice\/"/)
     expect(renderPath('/blog/')).toMatch(/<h1 id="vision"/)
     expect(renderPath('/thesis/')).toMatch(/<h1 id="vision"/)
     expect(prerenderedPaths).toContain('/vision/')

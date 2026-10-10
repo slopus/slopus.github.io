@@ -327,6 +327,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content img[src="/multiplayer/team-server.svg"] { aspect-ratio: 520 / 708; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content img[src="/img/remote-server-harness.svg"] { aspect-ratio: 520 / 574; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content img[src="/img/team-sign-in-workos.svg"] { aspect-ratio: 520 / 566; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
+.document-content img[src="/img/tailcat.svg"] { aspect-ratio: 520 / 590; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
+.document-content img[src="/img/voice.svg"] { aspect-ratio: 520 / 676; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content video { border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); height: auto; margin: 1.2rem 0; max-width: 100%; width: 100%; }
 .document-content hr { border: 0; border-top: 1px solid #d9d3c5; margin: 3rem 0; }
 .document-table-wrap { border: 1px solid #d5cebf; border-radius: 10px; margin: 1.6rem 0; overflow-x: auto; }

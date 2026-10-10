@@ -76,6 +76,7 @@
 /plugins/terms/
 /privacy/
 /quick-start/
+/tailcat/
 /team-sign-in-workos/
 /team/
 /terms/
@@ -83,6 +84,7 @@
 /tmp/happy-one/
 /tos/
 /vision/
+/voice/
 /vs/claude-code-remote-control/
 /welcome/
 /workspaces/
