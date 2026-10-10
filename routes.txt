@@ -76,6 +76,7 @@
 /plugins/terms/
 /privacy/
 /quick-start/
+/team/
 /terms/
 /thesis/
 /tmp/happy-one/
