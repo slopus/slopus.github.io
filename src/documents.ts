@@ -340,7 +340,7 @@ const desktopDocuments: DocumentDefinition[] = [
     sourcePath: '/content/desktop/blog.mdx',
     title: 'All Posts',
     pageTitle: 'Blog — Happy',
-    description: 'How Happy is built: team sign-in with WorkOS, and the other services under Happy Agent and what each one does.',
+    description: 'How Happy is built on other people\'s work: team sign-in with WorkOS, Tailcat for reaching your server, and ElevenLabs for voice.',
     group: 'Blog',
     lists: 'Blog',
   },
@@ -351,6 +351,23 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Team Sign-In with WorkOS',
     pageTitle: 'Team Sign-In with WorkOS for a Self-Hosted Agent Server — Happy',
     description: 'How a Happy Agent team server uses WorkOS AuthKit and Organizations: members sign in, and the server checks each token locally. Or bring your own IdP.',
+    group: 'Blog',
+  },
+  {
+    // Blog: short URLs to type from memory; the titles stay long.
+    path: 'tailcat',
+    sourcePath: '/content/desktop/tailcat.mdx',
+    title: 'No Open Ports: Tailcat',
+    pageTitle: 'No Open Ports: How Happy Reaches Your Server with Tailcat',
+    description: 'How Happy Desktop reaches a remote Happy Agent through Tailcat, Tailscale\'s open source data plane: WireGuard end to end, no open port, no account.',
+    group: 'Blog',
+  },
+  {
+    path: 'voice',
+    sourcePath: '/content/desktop/voice.mdx',
+    title: 'Voice with ElevenLabs',
+    pageTitle: 'Talk to Your Agents: How Happy Uses ElevenLabs for Voice',
+    description: 'How voice in the Happy app runs on ElevenLabs: the token flow, what ElevenLabs hears, the free minutes, the subscription, and bringing your own agent.',
     group: 'Blog',
   },
 ]

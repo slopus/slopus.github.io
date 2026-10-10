@@ -30,7 +30,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(22)
+    expect(documentsForProduct('desktop')).toHaveLength(24)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -179,6 +179,33 @@ describe('static document pages', () => {
     render(<Router pathname="/vs/claude-code-remote-control/" />)
     expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/all posts/i)
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/claude code on your phone/i)
+  })
+
+  it('lists the Blog last, at short URLs, each post with its diagram and its sources', () => {
+    const { container, unmount } = render(<Router pathname="/tailcat/" />)
+
+    expect(screen.getByRole('heading', { level: 1, name: /no open ports: how happy reaches your server/i })).toBeTruthy()
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/workos/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/voice/i)
+    expect(container.querySelector('.document-content img[src="/img/tailcat.svg"]')).not.toBeNull()
+    expect(container.querySelector('.document-content a[href="https://github.com/tailscale/tailcat"]')).not.toBeNull()
+    // The version main ships, and the one older identities came from.
+    expect(container.querySelector('.document-content')?.textContent).toMatch(/embeds Tailcat v0\.7\.0/)
+    expect(container.querySelector('.document-content')?.textContent).toMatch(/bundled Tailcat v0\.4\.0, has no pre-shared key/)
+    unmount()
+
+    render(<Router pathname="/voice/" />)
+    expect(screen.getByRole('heading', { level: 1, name: /talk to your agents: voice with elevenlabs/i })).toBeTruthy()
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/tailcat/i)
+    expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
+    for (const document of documents.filter((entry) => entry.group === 'Blog')) {
+      expect(document.product).toBe('desktop')
+      expect(['blog', 'team-sign-in-workos', 'tailcat', 'voice']).toContain(document.path)
+      expect(document.pageTitle?.length).toBeLessThanOrEqual(65)
+      expect(document.description.length).toBeLessThanOrEqual(155)
+      // No narration: nothing on the page points at the diagram's files or announces what follows.
+      expect(getDocumentSource(document)).not.toMatch(/The diagram as|below is|this page explains/i)
+    }
   })
 
   it('renders the Vision essay with its title as the only h1 and every section as an h2', () => {
