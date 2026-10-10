@@ -7,7 +7,7 @@ import random
 random.seed(11)
 INK = "#183f38"; MUTED = "#6b7f78"; ACC = "#e6522c"; PAPER = "#fffdf8"
 SAND = "#f6eadf"; STONE = "#efe9dc"; MINT = "#e3efe9"
-W, H = 520, 696
+W, H = 520, 706
 j = lambda a=1.2: random.uniform(-a, a)
 
 
@@ -100,21 +100,22 @@ for i in range(3):
 o.append(arrow(150, 132, 150, 170, INK))
 o.append(arrow(420, 146, 420, 170, MUTED, 1.4, "5 5"))
 
-o.append(rect(12, 174, 316, 84, 1.8, INK, MINT))
+o.append(rect(12, 174, 316, 94, 1.8, INK, MINT))
 o.append(lock(26, 186))
 o.append(text(52, 202, "Desktop: Tailcat", 20, INK, 700))
 o.append(text(26, 232, "Encrypted connection,", 18))
 o.append(text(26, 252, "no open ports", 18))
 
-o.append(rect(340, 174, 168, 84, 1.6, MUTED, STONE, "5 5"))
+o.append(rect(340, 174, 168, 94, 1.6, MUTED, STONE, "5 5"))
 o.append(text(354, 202, "Phone", 20, INK, 700))
 o.append(text(354, 232, "End-to-end", 18))
 o.append(text(354, 252, "encrypted", 18))
 
-o.append(arrow(170, 262, 170, 296, INK))
-o.append(arrow(424, 262, 424, 296, MUTED, 1.4, "5 5"))
+o.append(arrow(170, 272, 170, 306, INK))
+o.append(arrow(424, 272, 424, 306, MUTED, 1.4, "5 5"))
 
-# The team server
+# The team server, drawn 10 units lower to make room for the taller transport boxes.
+server_start = len(o)
 o.append(rect(6, 300, 508, 384, 2, INK))
 o.append(rect(6, 300, 508, 48, 2, INK, INK))
 o.append(text(22, 331, "Team server: one Happy Agent", 22, PAPER, 700))
@@ -145,6 +146,8 @@ o.append(text(98, 639, "reviews each crossing", 18, MUTED))
 o.append(rect(362, 556, 138, 100, 1.6, ACC, "#fbe6dc"))
 o.append(text(431, 596, "Full access", 18, ACC, 700, "middle"))
 o.append(text(431, 624, "no sandbox", 18, ACC, 400, "middle"))
+
+o[server_start:] = ['<g transform="translate(0 10)">', *o[server_start:], "</g>"]
 
 svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
        "font-family=\"'Shantell Sans', 'Comic Sans MS', 'Chalkboard SE', 'Segoe Print', cursive\" role=\"img\">\n"

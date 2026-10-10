@@ -1,8 +1,6 @@
-# Run Claude Code and Codex on a Server
+# Run Claude Code and Codex on a Remote Server
 
-Install Happy Agent on a server, a VPS, or a Mac mini. It is one agent harness for Claude, Codex, and Grok models, signed in with the Claude Code, Codex, and Grok subscriptions you already pay for. It keeps working while your laptop sleeps, and you steer it from Happy Desktop or the Happy phone app, alone or [with your team](#share-it-with-your-team).
-
-Jump to: [Quick setup](#ask-the-chief-of-staff) · [Manual setup](#by-hand) · [Providers](#providers) · [Teams](#share-it-with-your-team)
+Install Happy Agent on a server, a VPS, or a Mac mini. It is one agent harness for Claude, Codex, and Grok, signed in with the subscriptions you already pay for. It keeps working while your laptop sleeps, and you steer it from Happy Desktop or the Happy phone app, alone or [with your team](#share-it-with-your-team).
 
 ## The problem
 
@@ -22,7 +20,7 @@ Happy Agent takes the server route without the terminal: one runtime on the serv
 | Agents | Any terminal agent | Claude Code | Shelley; Claude Code, Codex, and Pi preinstalled | Claude, Codex, and Grok models in one harness, on your existing subscriptions |
 | Runs on | Your server | Your computer, or a server inside tmux | An exe.dev VM | Your server, VPS, or Mac |
 | While your laptop sleeps | Keeps running | On a laptop, pauses until it wakes; on a server, keeps running | Keeps running | Keeps running |
-| Steer it from | A terminal app on any device, over SSH or Mosh | The Claude app, claude.ai/code, or Claude Desktop | Shelley's web page; SSH for the other agents | Happy Desktop and the Happy phone app |
+| Steer it from | A terminal app on any device, over SSH or Mosh | The Claude app, claude.ai/code, or Claude Desktop | Shelley's web page; SSH or the browser terminal for the other agents | Happy Desktop and the Happy phone app |
 | Approvals | Terminal prompts, typed by hand | Permission prompts in the app, with push notifications | Depends on the agent; the VM is the boundary | Auto mode reviews actions itself, inside the OS sandbox |
 | With a team | Shell accounts on the server | One person's sessions; organization controls on Team and Enterprise | Share the VM with Web or Root access, per person or with the whole team | Team mode: each member signs in as themselves, in shared projects and sessions |
 | In between | Tailscale's coordination and relays; traffic WireGuard-encrypted | Anthropic stores the transcript while connected | exe.dev runs the VM and its HTTPS proxy | Tailcat relay for Desktop, WireGuard-encrypted; Happy's relay for the phone, end-to-end encrypted |
@@ -33,7 +31,7 @@ Where each is better:
 - **tmux + SSH or Mosh.** Works with every terminal agent and tool, with nothing new to trust. [Mosh](https://mosh.org/) survives sleep and network changes, and [Termius](https://termius.com/free-ssh-client-for-iphone) speaks it on iOS and Android.
 - **Remote Control.** Nothing to install if you already use Claude Code and the Claude app, Anthropic supports it, and permission prompts reach your phone as push notifications. Team and Enterprise get admin controls. See [Happy vs Remote Control](/vs/claude-code-remote-control/).
 - **exe.dev.** A persistent VM with agents already installed, [Shelley](https://exe.dev/docs/shelley/intro), a web agent that works on mobile, and [VM sharing](https://exe.dev/docs/sharing) that follows team membership. No service to set up. You can also run Happy Agent on it, [below](#exe-dev).
-- **Happy Agent.** One runtime for three model families under one sandbox and review, a desktop app and a phone app built for agent sessions, and a team mode where everyone keeps their own identity. The cost: more setup than the others, you run and upgrade the server, and Desktop has no "add remote" button yet.
+- **Happy Agent.** One runtime for three model families under one sandbox and review, a desktop app and a phone app built for agent sessions, and a team mode where everyone keeps their own identity. The cost: more setup than the others, and you run and upgrade the server.
 
 Sources, checked October 10, 2026: [Remote Control docs](https://code.claude.com/docs/en/remote-control) ("your computer has to stay on and the claude process has to keep running"; "if your laptop sleeps or your network drops, Claude Code reconnects automatically"; "start it inside tmux or screen" on a remote machine), [exe.dev docs](https://exe.dev/docs/upgrade-codex) (claude, codex, and pi preinstalled) and [sharing](https://exe.dev/docs/sharing), [Mosh](https://mosh.org/), [Termius](https://docs.termius.com/termius-handbook/connecting-to-a-host), [How Tailscale works](https://tailscale.com/blog/how-tailscale-works).
 
@@ -42,11 +40,11 @@ Sources, checked October 10, 2026: [Remote Control docs](https://code.claude.com
 The same server can serve a team. In team mode:
 
 - Each member signs in with their own Happy Social account from their own Happy Desktop, and pairs their own phone.
-- Everyone works in the server's shared projects and sessions. The agent is told who sent each message; drafts and each person's task order stay their own.
+- Everyone works in the server's shared projects and sessions. Whenever the speaker changes, the agent is told who it is; drafts and each person's task order stay their own.
 - The same sandbox and review rules apply to everyone: commands run inside the OS sandbox unless a session is switched to Full access, and in Auto each action that would cross it is reviewed first.
 - The server stops accepting its API token. Only Happy Social sign-ins issued for this team get in.
 
-Know first: all work spends the server's Claude, Codex, and Grok accounts, not each member's, and any member can choose Full access. There are no per-session invites, and no way yet to remove one member short of stopping the server.
+Before you do: all work spends the server's Claude, Codex, and Grok accounts, not each member's, and any member can choose Full access. There are no per-session invites, and Happy ships no remove-member action yet.
 
 To set it up, ask the Chief of Staff, "Create a team called Acme on my server", or follow [Multiplayer & Teams](/multiplayer/), which has the steps and a diagram of how sign-in, sharing, and the sandbox fit together.
 
@@ -55,9 +53,9 @@ To set it up, ask the Chief of Staff, "Create a team called Acme on my server", 
 Desktop reaches the server over **Tailcat**, built into every release. Tailcat is [Tailscale's open source data plane without its control plane](https://github.com/tailscale/tailcat): no account, no open port, no public IP. SSH is used only to install.
 
 - **The address is the server's key.** A `tc…` address encodes the server's WireGuard public key and its relay region. The private key stays on the server in `~/.happy/agent/tailcat/default.private.json`, so only that machine can answer at that address.
-- **WireGuard, end to end.** Your machine makes a throwaway key each time it opens the tunnel and runs the standard [WireGuard](https://www.wireguard.com/protocol/) handshake with the server. Everything after that is encrypted between the two machines, and decrypted only where Tailcat hands it to Happy Agent over loopback.
+- **WireGuard, end to end.** Your machine makes a throwaway key each time it opens the tunnel and runs the standard [WireGuard](https://www.wireguard.com/protocol/) handshake with the server. Everything after that is encrypted between the two machines, and decrypted only on the server, where Tailcat hands it to Happy Agent.
 - **Relays carry ciphertext.** Both sides meet first at a DERP relay that Tailscale runs for free, rate-limited and without an uptime promise. They then try a direct path through NAT, and the relay keeps carrying traffic if that fails. A relay sees IP addresses, timing, sizes, and the public keys it routes by. It cannot read or change the content.
-- **The address is not the lock.** Anyone who has the address can open a tunnel; Happy does not use Tailcat's client allowlist. Every request inside still needs the server's API token, or a team sign-in. Keep both private; the token is the secret.
+- **The address is not the lock.** Anyone who has the address can open a tunnel; Happy does not use Tailcat's client allowlist. Every request inside still needs the server's API token, or a team sign-in. A relay operator sees enough to open a tunnel too; the token, not the address, is what keeps them out.
 
 Your phone does not use Tailcat. It pairs with the server through Happy's own end-to-end encrypted relay.
 
@@ -180,12 +178,6 @@ Codex and Grok rewrite their files when they refresh, so keep the file and its f
 
 ### 6. Write `happy.toml`
 
-Make a fresh API token, 43 characters, and keep it out of chat and shell history:
-
-```sh
-head -c 32 /dev/urandom | base64 | tr '+/' '-_' | tr -d '=\n'
-```
-
 `/var/lib/happy-agent/happy/config/happy.toml`:
 
 ```toml
@@ -203,9 +195,6 @@ email = "ada@example.com"
 [feature.team]
 enabled = false
 
-[api]
-token = "YOUR_43_CHARACTER_TOKEN"
-
 [feature.tailcat]
 enabled = true
 port = 24779
@@ -218,9 +207,17 @@ permission_mode = "auto"
 - Add `provider` and `model` under `[defaults]` if you want a default model, for example `provider = "codex"` and `model = "openai/gpt-5.6-sol"`.
 - Keep Auto. Do not pick Full access to make setup checks pass.
 
+Give the file to the service account:
+
 ```sh
 sudo chown happy-agent:happy-agent /var/lib/happy-agent/happy/config/happy.toml
 sudo chmod 0600 /var/lib/happy-agent/happy/config/happy.toml
+```
+
+Then append a fresh 43-character API token. This writes it without ever printing it, so it stays out of your terminal, chat, and shell history. Step 9 needs it again; copy it from that file privately, never by printing it into a chat or tool log:
+
+```sh
+sudo -u happy-agent -H sh -c 'umask 077; printf "\n[api]\ntoken = \"%s\"\n" "$(head -c 32 /dev/urandom | base64 | tr "+/" "-_" | tr -d "=\n")" >> ~/happy/config/happy.toml'
 ```
 
 ### 7. Run it under systemd
@@ -283,7 +280,7 @@ port = 24779
 token = "THE_SERVER_API_TOKEN"
 ```
 
-Use the address exactly as printed, not a `tailcat://` URL. The ID is lowercase letters, digits, `-` or `_`. Restart Happy Agent on your machine to apply a file change. The server then appears in Desktop's connection rail beside your own machine.
+Use the address exactly as printed, not a `tailcat://` URL. The ID starts with a lowercase letter, then letters, digits, `-` or `_`. Restart Happy Agent on your machine to apply a file change. The server then appears in Desktop's connection rail beside your own machine.
 
 Then send the server a small task in a new, throwaway project and confirm it answers and runs a command. Health alone does not prove the model or the sandbox works.
 
@@ -293,9 +290,10 @@ Select the server in Desktop, then open **Settings → Mobile Access**. The serv
 
 ### 11. Git and GitHub
 
-As the service account:
+Install GitHub CLI, then set up Git as the service account:
 
 ```sh
+sudo apt-get install -y gh
 sudo -u happy-agent -H git config --global user.name "Ada Lovelace"
 sudo -u happy-agent -H git config --global user.email "ada@example.com"
 sudo -u happy-agent -H gh auth login --hostname github.com --git-protocol https --web

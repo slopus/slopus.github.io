@@ -319,6 +319,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content pre::-webkit-scrollbar-corner, .document-table-wrap::-webkit-scrollbar-corner { background: transparent; }
 .document-content :not(pre) > code { background: #e5dfd2; border-radius: 5px; color: #c84425; font-family: 'DM Mono', monospace; font-size: .82em; padding: .15em .38em; }
 .document-content img { border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); height: auto; margin: 1.2rem 0; max-width: 100%; }
+/* The Multiplayer diagram: centered, and as wide as the column allows up to a readable size. */
+.document-content img[src="/multiplayer/team-server.svg"] { display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content video { border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); height: auto; margin: 1.2rem 0; max-width: 100%; width: 100%; }
 .document-content hr { border: 0; border-top: 1px solid #d9d3c5; margin: 3rem 0; }
 .document-table-wrap { border: 1px solid #d5cebf; border-radius: 10px; margin: 1.6rem 0; overflow-x: auto; }

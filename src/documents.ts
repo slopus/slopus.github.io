@@ -287,8 +287,8 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'guides/remote-server',
     sourcePath: '/content/desktop/guides/remote-server.mdx',
     title: 'Remote Server',
-    pageTitle: 'Claude Code and Codex on a Remote Server or VPS, for You or Your Team — Happy',
-    description: 'Self-host one coding agent server for Claude, Codex, and Grok on your existing subscriptions. It keeps working while your laptop sleeps; steer it from Desktop or your phone, alone or as a team.',
+    pageTitle: 'Claude Code and Codex on a Remote Server, from Phone or Desktop — Happy',
+    description: 'Run Claude Code and Codex on a server that keeps working while your laptop sleeps. Steer it from Happy Desktop or your phone, alone or as a team.',
     group: 'Guides',
   },
   {

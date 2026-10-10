@@ -7,12 +7,12 @@ Run one Happy Agent for your whole team: a self-hosted coding agent server with 
 ## How it works
 
 - **Sign-in.** Each member connects a Happy Social account in Desktop (**Settings → Account → Connect account**). Their Desktop then gets a short-lived token for the team. The server checks it on every request, health included: right signature, right team, not expired. Anything else gets the same `401`.
-- **Transport.** Tailcat is WireGuard without a Tailscale account. The server's address encodes its WireGuard public key, so only the server can answer at it, and traffic is encrypted between each member's machine and the server. Tailscale's free DERP relays introduce the two sides and carry traffic when no direct path through NAT works; they see addresses and timing, not content. The server needs no open port. Tailcat is not authentication: knowing the address gets you only as far as the sign-in check. See [how the connection works](/guides/remote-server/#how-the-connection-works).
+- **Transport.** Tailcat is WireGuard without a Tailscale account: no open port, traffic encrypted end to end, and Tailscale's free relays see addresses and timing, not content. Knowing the address gets you only as far as the sign-in check. See [how the connection works](/guides/remote-server/#how-the-connection-works).
 - **Phones.** Each member pairs their own phone from **Settings → Mobile Access** while the team server is selected. Pairings and drafts are kept per member, and sync is end-to-end encrypted.
-- **Shared work.** Everyone sees the same projects and sessions. Before each message, the agent is told who sent it, by name and email. That tells the agent who is talking; it grants nothing. Drafts and the order of each person's task list stay their own.
+- **Shared work.** Everyone sees the same projects and sessions. Whenever the speaker changes, the agent is told who it is, by name and email. That tells the agent who is talking; it grants nothing. Drafts and the order of each person's task list stay their own.
 - **Provider accounts.** The Claude, Codex, and Grok sign-ins belong to the server's service account. Every member's work runs on those accounts and their limits; members' own subscriptions are not used.
 - **Sandbox and review.** The rules are the ones on your own machine. Read only, Workspace write, and Auto, the default, run every command inside the OS sandbox; in Auto, an action that would cross it is reviewed first, one action at a time. Full access removes the sandbox, and any member can switch a session to it. On Ubuntu 24.04, an administrator first grants the daemon executable an AppArmor namespace allowance.
-- **Owner.** The person who created the team is its owner. Only the owner can rename the installation or turn global skills on and off. Otherwise members have the same access.
+- **Owner.** The person who created the team is its owner. Only the owner can rename the installation, turn global skills on and off, or archive another member's task. Otherwise members have the same access.
 
 ## Set up a team
 
@@ -61,7 +61,7 @@ They are then you:
 
 - **Everything is shared.** Your projects, sessions, Chief of Staff, settings, and profile. The agent cannot tell you apart.
 - **Your accounts pay.** Their work runs on your Claude, Codex, and Grok subscriptions, your Git identity, and whatever the projects can push to.
-- **The sandbox is their choice.** In Auto, commands cannot write outside the workspace, reach unlisted domains, or read credential folders such as `~/.ssh`, `~/.aws`, `~/.claude`, and `~/.codex`. They can still read the rest of your home folder, and they can switch any session to Full access, which removes the sandbox. MCP servers always run outside it.
+- **The sandbox is their choice.** In Auto, shell commands cannot write outside the workspace, reach unlisted domains, or read credential folders such as `~/.ssh`, `~/.aws`, `~/.claude`, and `~/.codex`; the agent's file tools can still read them, and the rest of your home folder. They can switch any session to Full access, which removes the sandbox. MCP servers always run outside it.
 
 There is no per-session invite. Team mode on your own machine gives each person their own identity, but it turns off the local socket your own Desktop uses, so it belongs on a separate machine.
 

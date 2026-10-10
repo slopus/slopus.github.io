@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="520" height="696" viewBox="0 0 520 696" font-family="'Shantell Sans', 'Comic Sans MS', 'Chalkboard SE', 'Segoe Print', cursive" role="img">
-<rect x="0" y="0" width="520" height="696" rx="12" fill="#fffdf8"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="706" viewBox="0 0 520 706" font-family="'Shantell Sans', 'Comic Sans MS', 'Chalkboard SE', 'Segoe Print', cursive" role="img">
+<rect x="0" y="0" width="520" height="706" rx="12" fill="#fffdf8"/>
 <text x="16" y="36" font-size="24" font-weight="700" fill="#183f38">Members</text>
 <path d="M14 52 L171 51 L170 113 L13 112 Z" fill="#f6eadf"/>
 <path d="M12.1 50.4 L44.1 50.0 L76.6 49.3 L108.6 50.2 L141.4 49.1 L172.8 49.5" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -56,11 +56,11 @@
 <path d="M486.8 117.6 L486.9 132.1 L486.9 145.6" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
 <path d="M150.2 132.1 L150.5 151.5 L150.4 169.9" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M145.3 160.8 L147.4 165.5 L150.4 170.4" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M154.7 160.9 L152.4 165.4 L149.9 169.9" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M419.7 146.1 L420.4 158.0 L420.3 170.1" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/><path d="M414.7 161.3 L417.7 165.4 L419.5 170.0" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M425.0 161.1 L422.7 165.6 L420.3 169.6" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M14 176 L327 175 L326 257 L13 256 Z" fill="#e3efe9"/>
+<path d="M14 176 L327 175 L326 267 L13 266 Z" fill="#e3efe9"/>
 <path d="M12.3 173.6 L50.8 174.5 L92.0 173.2 L131.1 173.3 L171.0 174.3 L209.6 173.5 L250.3 174.1 L289.9 173.8 L328.8 174.5" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M328.0 173.0 L328.5 202.1 L329.0 230.2 L328.5 259.2" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M329.3 258.3 L290.0 259.0 L249.8 258.2 L210.2 258.8 L169.8 258.1 L129.5 258.7 L91.5 258.1 L50.1 257.8 L10.9 258.2" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M11.6 258.8 L11.4 230.6 L12.9 201.0 L12.1 173.0" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M328.0 173.0 L328.5 205.4 L329.0 236.8 L328.5 269.2" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M329.3 268.3 L290.0 269.0 L249.8 268.2 L210.2 268.8 L169.8 268.1 L129.5 268.7 L91.5 268.1 L50.1 267.8 L10.9 268.2" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M11.6 268.8 L11.4 237.3 L12.9 204.4 L12.1 173.0" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M26.4 193.5 L33.7 193.4 L42.7 193.8" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M42.1 192.7 L41.5 199.6 L41.9 207.3" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M43.0 206.3 L34.0 205.4 L25.4 206.2" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -68,16 +68,17 @@
 <text x="52" y="202" font-size="20" font-weight="700" fill="#183f38">Desktop: Tailcat</text>
 <text x="26" y="232" font-size="18" font-weight="400" fill="#183f38">Encrypted connection,</text>
 <text x="26" y="252" font-size="18" font-weight="400" fill="#183f38">no open ports</text>
-<path d="M342 176 L507 175 L506 257 L341 256 Z" fill="#efe9dc"/>
+<path d="M342 176 L507 175 L506 267 L341 266 Z" fill="#efe9dc"/>
 <path d="M340.3 173.5 L374.4 174.6 L408.2 173.0 L440.9 174.2 L474.4 173.6 L509.0 174.0" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
-<path d="M508.4 172.8 L508.6 201.5 L508.9 229.5 L508.4 258.7" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
-<path d="M509.0 257.7 L475.7 257.6 L440.6 257.2 L406.6 258.0 L373.4 257.8 L339.2 257.7" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
-<path d="M340.0 259.5 L340.6 230.6 L338.9 201.4 L340.1 172.7" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
+<path d="M508.4 172.8 L508.6 204.8 L508.9 236.2 L508.4 268.7" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
+<path d="M509.0 267.7 L475.7 267.6 L440.6 267.2 L406.6 268.0 L373.4 267.8 L339.2 267.7" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
+<path d="M340.0 269.5 L340.6 237.3 L338.9 204.8 L340.1 172.7" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
 <text x="354" y="202" font-size="20" font-weight="700" fill="#183f38">Phone</text>
 <text x="354" y="232" font-size="18" font-weight="400" fill="#183f38">End-to-end</text>
 <text x="354" y="252" font-size="18" font-weight="400" fill="#183f38">encrypted</text>
-<path d="M170.1 262.0 L169.4 279.6 L170.3 295.7" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M165.1 286.8 L167.5 291.5 L169.8 295.8" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M174.9 287.2 L172.4 291.4 L170.2 295.8" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M424.4 262.1 L424.3 278.8 L424.3 295.6" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/><path d="M418.6 286.6 L421.6 291.6 L423.7 295.9" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M429.3 287.1 L426.3 291.4 L423.7 295.6" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M170.1 272.0 L169.4 289.6 L170.3 305.7" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M165.1 296.8 L167.5 301.5 L169.8 305.8" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M174.9 297.2 L172.4 301.4 L170.2 305.8" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M424.4 272.1 L424.3 288.8 L424.3 305.6" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/><path d="M418.6 296.6 L421.6 301.6 L423.7 305.9" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M429.3 297.1 L426.3 301.4 L423.7 305.6" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(0 10)">
 <path d="M5.6 300.4 L45.0 300.0 L84.6 300.5 L124.1 299.7 L162.3 299.8 L200.8 299.8 L241.3 300.9 L280.7 300.3 L319.4 299.0 L358.0 299.6 L397.8 299.1 L436.4 299.9 L476.4 300.5 L515.1 299.5" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M514.4 299.0 L513.7 337.6 L513.3 376.6 L515.1 414.8 L514.6 454.1 L513.6 492.9 L514.4 530.0 L513.4 568.7 L514.4 608.2 L513.9 647.3 L514.2 685.0" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M515.5 683.6 L476.6 684.1 L436.7 684.1 L396.8 684.7 L359.1 684.5 L319.0 683.1 L280.3 683.4 L241.2 683.2 L201.3 684.4 L161.3 683.8 L121.8 682.7 L82.8 684.6 L45.1 683.9 L4.8 683.7" fill="none" stroke="#183f38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -148,4 +149,5 @@
 <path d="M362.4 656.8 L361.0 622.4 L361.6 590.0 L361.2 555.4" fill="none" stroke="#e6522c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
 <text x="431" y="596" font-size="18" font-weight="700" fill="#e6522c" text-anchor="middle">Full access</text>
 <text x="431" y="624" font-size="18" font-weight="400" fill="#e6522c" text-anchor="middle">no sandbox</text>
+</g>
 </svg>
