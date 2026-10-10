@@ -321,10 +321,9 @@ for (const { route, title, description } of pluginPages) {
   sitemapPages.push({ route: canonicalPath, sources: [policySources[route] ?? 'src/PluginPages.tsx'] })
 }
 
-// The Vision essay was published at /thesis/, and the blog index lived at /blog/
-// briefly with it as its only post. Both are in routes.txt, so both redirect to /vision/.
+// The Vision essay was published at /thesis/, which is in routes.txt, so it redirects to /vision/.
+// /blog/ redirected there too, until it became the Blog group's index (src/documents.ts).
 await writeRoute('thesis', redirectHtml('/vision/'))
-await writeRoute('blog', redirectHtml('/vision/'))
 
 // The Remote Agents guide became the remote server guide; its URLs, old prefixes included, redirect.
 for (const route of ['guides/remote-agents', 'desktop/docs/guides/remote-agents', 'happy2/docs/guides/remote-agents']) {
@@ -485,4 +484,4 @@ if (brokenLinks.length > 0) {
   throw new Error(`Broken internal links in the built site:\n  ${[...new Set(brokenLinks)].join('\n  ')}`)
 }
 
-console.log(`Generated ${documentRoutes + 9 + pluginPages.length} static routes, a ${sitemapPages.length}-URL sitemap, and llms.txt.`)
+console.log(`Generated ${documentRoutes + 8 + pluginPages.length} static routes, a ${sitemapPages.length}-URL sitemap, and llms.txt.`)

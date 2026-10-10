@@ -262,7 +262,6 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; padding: 1.75rem 0 0; scrollbar-width: none; }
   .docs-shell .document-article::-webkit-scrollbar { width: 0; height: 0; }
   .docs-shell .document-article > .legacy-notice { margin-right: 2rem; }
-  .docs-shell .document-article > .document-breadcrumb,
   .docs-shell .document-article > .document-content,
   .docs-shell .document-article > .document-pagination { max-width: 760px; padding-right: 2rem; }
   .docs-shell .site-footer { margin-top: 4.5rem; }
@@ -281,8 +280,6 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .docs-mobile-navigation { display: none; }
 
 .document-article { min-width: 0; }
-.document-breadcrumb { align-items: center; color: #6b7f78; display: flex; font-family: 'DM Mono', monospace; font-size: .66rem; gap: .55rem; letter-spacing: .04em; margin: 0 0 1.5rem; text-transform: uppercase; }
-.document-breadcrumb a:hover { color: #e6522c; }
 .legacy-notice { max-width: 760px; margin: 0 0 2rem; padding: .9rem 1.1rem; border: 1px solid #d5cebf; border-left: 3px solid #e6522c; border-radius: 8px; background: #fbf8f2; color: #385950; font-size: .9rem; line-height: 1.6; }
 .legacy-notice p { margin: 0; }
 .legacy-notice code { font-family: 'DM Mono', monospace; font-size: .88em; }
@@ -301,6 +298,11 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content strong { color: #183f38; font-weight: 700; }
 .document-content a { color: #d94725; text-decoration: underline; text-decoration-color: rgba(217, 71, 37, .35); text-underline-offset: .2em; }
 .document-content a:hover { text-decoration-color: currentColor; }
+/* The Blog index (/blog/): each post is its title, a link in ink, over its description. */
+[data-document="blog"] .document-content h2 { font-size: clamp(1.4rem, 2.4vw, 1.7rem); margin: 0; padding: 1.6rem 0 .5rem; }
+[data-document="blog"] .document-content h2 a { color: #183f38; text-decoration: none; }
+[data-document="blog"] .document-content h2 a:hover { color: #e6522c; }
+[data-document="blog"] .document-content > p { color: #557068; font-size: 1rem; margin-bottom: 1.6rem; }
 .document-content ul, .document-content ol { margin: 0 0 1.4rem; padding-left: 1.45rem; }
 .document-content li { margin: .35rem 0; padding-left: .2rem; }
 .document-content li::marker { color: #e6522c; }
@@ -475,19 +477,18 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .footer-links { justify-content: flex-start; }
   .document-site-shell .site-header { margin-bottom: 0; }
   /* The phone's docs navigation (DocsMobileNavigation): the current group and page, a 44px tap
-     target with its own chevron, opening every group and page below it. It stands in for the
-     article's "Happy Desktop docs / group" breadcrumb, which would repeat it. */
+     target with a chevron at its right end, no taller than the text's capitals, opening every
+     group and page below it. */
   .docs-mobile-navigation { border-bottom: 1px solid #d9d3c5; display: block; padding-bottom: .25rem; padding-top: .25rem; }
   .docs-mobile-trail { align-items: center; appearance: none; background: none; border: 0; border-radius: 7px; color: #183f38; cursor: pointer; display: flex; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; gap: .5rem; letter-spacing: .06em; min-height: 44px; padding: 0; text-align: left; text-transform: uppercase; width: 100%; }
-  .docs-mobile-trail::before { border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; content: ''; flex: none; height: 6px; transform: rotate(-45deg); transition: transform .15s; width: 6px; }
-  .docs-mobile-trail[aria-expanded='true']::before { transform: rotate(45deg); }
+  .docs-mobile-trail::after { border-bottom: 1.5px solid currentColor; border-right: 1.5px solid currentColor; box-sizing: border-box; content: ''; flex: none; height: 6px; margin: 0 4px 0 auto; transform: translateY(-1.5px) rotate(45deg); transition: transform .15s; width: 6px; }
+  .docs-mobile-trail[aria-expanded='true']::after { transform: translateY(1.5px) rotate(-135deg); }
   .docs-mobile-trail:focus-visible { outline: 2px solid #e6522c; outline-offset: 2px; }
   .docs-mobile-trail > span { flex: none; }
   .docs-mobile-trail-group { color: #6b7f78; }
   .docs-mobile-trail > .docs-mobile-trail-page { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .docs-mobile-menu { padding: .5rem 0 1rem; }
   .docs-mobile-navigation .docs-navigation { gap: 1.1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .docs-shell .document-breadcrumb { display: none; }
   .docs-sidebar { display: none; }
   .docs-layout { display: block; min-height: 0; padding-bottom: 5rem; padding-top: 2.5rem; }
   /* The docs footer sits at the end of the article. On a phone it runs edge to edge, keeps its

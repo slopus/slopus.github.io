@@ -17,8 +17,6 @@ Happy Agent takes the server route without the terminal: one runtime on the serv
 
 ![Two ways to work from another device. A remote control, such as Claude Remote Control or the original Happy CLI: the phone reaches a relay, which reaches claude running in a terminal on your laptop, so it works only while your computer stays on. Happy Agent runs the harness: Desktop and the phone reach Happy Agent on your server, which has its own loop, tools, sandbox, and review, and runs Claude through the Claude Agent SDK, Codex, and Grok on the subscriptions you have. It keeps working while your laptop sleeps.](/img/remote-server-harness.svg)
 
-There are two ways to work with Claude Code or Codex from another device:
-
 - **A remote control** forwards a session that runs in the vendor's own CLI on your computer. Claude Code Remote Control works this way, and so does the original Happy CLI. The session lasts as long as that process and that computer.
 - **Happy Agent is the harness.** It runs the agent loop itself, with its own tools, [sandbox](/permissions/), and review, and calls the models directly. Put it on a server and the sessions keep going while your laptop sleeps; Desktop and the phone are windows onto them.
 
@@ -115,7 +113,7 @@ The Chief of Staff follows public recipes from the Happy Agent repository. Read 
 
 ## Providers
 
-Any Linux machine with systemd that you can SSH into with `sudo` works, and Tailcat needs no inbound port. Notes per provider follow. We have not tested every one; follow their own docs to create the machine.
+Any Linux machine with systemd that you can SSH into with `sudo` works, and Tailcat needs no inbound port. We have not tested every one; follow their own docs to create the machine.
 
 ### Hetzner
 

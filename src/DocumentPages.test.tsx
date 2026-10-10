@@ -30,7 +30,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(21)
+    expect(documentsForProduct('desktop')).toHaveLength(22)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -63,7 +63,7 @@ describe('static document pages', () => {
     expect(trail.getAttribute('aria-expanded')).toBe('true')
     expect(menu.hidden).toBe(false)
     expect(within(menu).getByRole('link', { name: 'Chief of Staff' }).getAttribute('aria-current')).toBe('page')
-    expect(within(menu).getAllByRole('heading', { level: 2 }).map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Comparisons'])
+    expect(within(menu).getAllByRole('heading', { level: 2 }).map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Comparisons', 'Blog'])
 
     fireEvent.click(trail)
     expect(menu.hidden).toBe(true)
@@ -111,7 +111,7 @@ describe('static document pages', () => {
   })
 
   it('serves the desktop docs as top-level pages whose slugs no other route owns', () => {
-    const fixedRoutes = ['', 'docs', 'llms.txt', 'sitemap.xml', 'thesis', 'blog', 'plugins', 'privacy', 'terms', 'tos', 'model-benchmarks', 'desktop', 'happy2', 'tmp', 'assets', 'img', 'og', 'notes']
+    const fixedRoutes = ['', 'docs', 'llms.txt', 'sitemap.xml', 'thesis', 'plugins', 'privacy', 'terms', 'tos', 'model-benchmarks', 'desktop', 'happy2', 'tmp', 'assets', 'img', 'og', 'notes']
     for (const document of documentsForProduct('desktop')) {
       expect(document.path).not.toBe('')
       expect(fixedRoutes).not.toContain(document.path.split('/')[0])
@@ -177,7 +177,7 @@ describe('static document pages', () => {
     unmount()
 
     render(<Router pathname="/vs/claude-code-remote-control/" />)
-    expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/all posts/i)
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/claude code on your phone/i)
   })
 
@@ -319,15 +319,27 @@ describe('static document pages', () => {
     expect(documents.filter((document) => document.path === 'team')).toHaveLength(1)
   })
 
-  it('has no blog: the header has no Blog link, and /blog/ and /thesis/ open the Vision essay', () => {
+  it('lists the Blog group last, its index at /blog/ listing every post, and /thesis/ opening the Vision essay', () => {
+    const { container } = render(<Router pathname="/blog/" />)
+
+    const [sidebar] = screen.getAllByRole('navigation', { name: 'Documentation navigation' })
+    expect(within(sidebar).getAllByRole('heading', { level: 2 }).at(-1)?.textContent).toBe('Blog')
+    expect(screen.getByRole('heading', { level: 1, name: /^blog/i })).toBeTruthy()
+    const posts = documentsForProduct('desktop').filter((document) => document.group === 'Blog' && document.path !== 'blog')
+    expect(posts.map((post) => post.path)).toContain('team-sign-in-workos')
+    for (const post of posts) {
+      const link = container.querySelector(`.document-content h2 a[href="/${post.path}/"]`)
+      expect(link).not.toBeNull()
+      expect(link?.closest('h2')?.nextElementSibling?.textContent).toBe(post.description)
+    }
     // Server markup: the landing pages' effects need browser APIs jsdom lacks.
-    expect(renderPath('/welcome/')).not.toMatch(/>Blog</)
-    expect(renderPath('/blog/')).toMatch(/<h1 id="vision"/)
+    expect(renderPath('/welcome/')).not.toMatch(/>Blog<\/a>/)
     expect(renderPath('/thesis/')).toMatch(/<h1 id="vision"/)
     expect(prerenderedPaths).toContain('/vision/')
+    expect(prerenderedPaths).toContain('/blog/')
     expect(prerenderedPaths).not.toContain('/thesis/')
-    expect(prerenderedPaths).not.toContain('/blog/')
     expect(thesisMetadata.robots).toBeUndefined()
+    expect(metadataForPath('/blog/').title).toBe('Blog — Happy')
   })
 
   it('renders privacy and terms as site pages', () => {

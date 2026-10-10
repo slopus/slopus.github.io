@@ -158,11 +158,6 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
           data-document={activeDocument.path || undefined}
         >
           {product.key === 'happy' && <LegacyNotice />}
-          <p className="document-breadcrumb">
-            <a href={product.docsHome}>{product.label} docs</a>
-            <span aria-hidden="true">/</span>
-            {activeDocument.group}
-          </p>
           <MarkdownDocument markdown={markdown} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} />
 
           <nav className="document-pagination" aria-label="Previous and next documentation pages">

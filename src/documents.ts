@@ -8,6 +8,7 @@ export type DocumentGroup =
   | 'Comparisons'
   | 'Releases'
   | 'Resources'
+  | 'Blog'
 
 export interface DocumentEntry {
   product: ProductKey
@@ -22,6 +23,8 @@ export interface DocumentEntry {
   hidden?: boolean
   /** An essay: rendered with captioned figures, floats, and the pig in its bullet (src/DocumentPages.tsx). */
   essay?: boolean
+  /** An index: its source is followed by every other listed page in this group, with its description. */
+  lists?: DocumentGroup
 }
 
 const documentSources = import.meta.glob(
@@ -270,14 +273,6 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Features',
   },
   {
-    path: 'team-sign-in-workos',
-    sourcePath: '/content/desktop/team-sign-in-workos.mdx',
-    title: 'Team Sign-In with WorkOS',
-    pageTitle: 'Team Sign-In with WorkOS for a Self-Hosted Agent Server — Happy',
-    description: 'How a Happy Agent team server uses WorkOS AuthKit and Organizations: members sign in, and the server checks each token locally. Or bring your own IdP.',
-    group: 'Features',
-  },
-  {
     path: 'extending',
     sourcePath: '/content/desktop/extending.mdx',
     title: 'Skills & MCP',
@@ -339,6 +334,25 @@ const desktopDocuments: DocumentDefinition[] = [
     description: 'How Anthropic\'s Claude Code Remote Control and Happy compare for steering coding agents from your phone: models, encryption, sessions, setup, and where each one is better.',
     group: 'Comparisons',
   },
+  {
+    // /blog/ redirected to /vision/ until the Blog group had posts of its own.
+    path: 'blog',
+    sourcePath: '/content/desktop/blog.mdx',
+    title: 'All Posts',
+    pageTitle: 'Blog — Happy',
+    description: 'How Happy is built: team sign-in with WorkOS, and the other services under Happy Agent and what each one does.',
+    group: 'Blog',
+    lists: 'Blog',
+  },
+  {
+    // Shared as /team-sign-in-workos/ before the Blog group existed; keep the URL.
+    path: 'team-sign-in-workos',
+    sourcePath: '/content/desktop/team-sign-in-workos.mdx',
+    title: 'Team Sign-In with WorkOS',
+    pageTitle: 'Team Sign-In with WorkOS for a Self-Hosted Agent Server — Happy',
+    description: 'How a Happy Agent team server uses WorkOS AuthKit and Organizations: members sign in, and the server checks each token locally. Or bring your own IdP.',
+    group: 'Blog',
+  },
 ]
 
 export const documents: DocumentEntry[] = [
@@ -348,7 +362,7 @@ export const documents: DocumentEntry[] = [
 
 const productDocumentGroups: Record<ProductKey, DocumentGroup[]> = {
   happy: ['Start here', 'Guides', 'Features', 'Use cases', 'Comparisons', 'Releases', 'Resources'],
-  desktop: ['Start here', 'Features', 'Guides', 'Comparisons'],
+  desktop: ['Start here', 'Features', 'Guides', 'Comparisons', 'Blog'],
 }
 
 export function documentsForProduct(product: ProductKey) {
@@ -375,12 +389,19 @@ export function getDocument(product: ProductKey, path: string) {
   )
 }
 
-export function getDocumentSource(document: DocumentEntry) {
+export function getDocumentSource(document: DocumentEntry): string {
   if (document.sourcePath === THESIS_SOURCE_PATH) {
     return getThesisMarkdown()
   }
 
   const source = documentSources[document.sourcePath] ?? ''
+
+  if (document.lists) {
+    const pages = documentsForProduct(document.product)
+      .filter((page) => page.group === document.lists && page !== document && !page.hidden)
+      .map((page) => `## [${documentHeading(page)}](/${page.path}/)\n\n${page.description}`)
+    return [source.trim(), ...pages].join('\n\n')
+  }
 
   if (source.trim()) {
     return /^#\s+/m.test(source) ? source : `# ${document.title}\n\n${source}`
@@ -390,7 +411,7 @@ export function getDocumentSource(document: DocumentEntry) {
 }
 
 /** The page's h1. Its served title is this heading with the docs suffix, unless it sets its own. */
-export function documentHeading(document: DocumentEntry) {
+export function documentHeading(document: DocumentEntry): string {
   return getDocumentSource(document).match(/^#\s+(.+)$/m)?.[1].trim() ?? document.title
 }
 

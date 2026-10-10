@@ -1,5 +1,8 @@
 # Agent notes
 
+Follow `DESIGN.md` for copy, claims, diagrams, screenshots, tables, and docs
+pages. Its first rule: no narration; every line must give the reader something.
+
 ## Happy Desktop link preview
 
 The homepage `/` (the Happy Harness page, formerly at `/desktop/` and reviewed
@@ -34,8 +37,7 @@ pig alone on its last line as the sign-off. Its seven bold bullets match its
 seven sections 1:1, and "Make people happy" comes first so it is on the first
 phone screen. Each section leads with its figure. It says "one primary agent",
 never "core agent", and does not call multiplayer hard. It was first published
-at `/thesis/`, and there is no blog: `/thesis/` and `/blog/` (live briefly)
-both redirect to `/vision/`. Its images stay under `public/thesis/`; the
+at `/thesis/`, which redirects to `/vision/`. Its images stay under `public/thesis/`; the
 hand-drawn SVGs are generated in the style of
 `notes/thesis/drafts/wireframe-sketch-generator.py`, with labels of 19px+ in a
 520-wide viewBox so they read at a 350px phone column. Keep the essay short
@@ -46,6 +48,11 @@ The Team page (`content/desktop/team.mdx`, `/team/`) follows Vision under Start
 here: a few lines per person, taken from their own sites and public profiles,
 with their X handles and the photos in `public/img/team/`. It never states or
 hints at anyone's level of involvement, in either direction.
+
+The Blog is the last group in the desktop docs sidebar. Posts are desktop docs
+with top-level slugs (`group: 'Blog'` in `src/documents.ts`); `/blog/` is its
+index, which lists every post with its description (`lists: 'Blog'`). The
+WorkOS post keeps `/team-sign-in-workos/`, a URL already shared.
 
 `routes.txt` records every URL the site has ever served. The build appends new
 URLs and fails if a listed URL is no longer served; dropping one means

@@ -41,8 +41,7 @@ const movedPaths: Record<string, string> = {
   '/desktop': '/',
   '/happy2': '/',
   '/tmp/happy-one': '/',
-  // The Vision essay was published at /thesis/; the blog index lived at /blog/ briefly, with it as its only post.
-  '/blog': '/vision',
+  // The Vision essay was published at /thesis/. (/blog/ redirected here too until the Blog group had posts.)
   '/thesis': '/vision',
 }
 
