@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { metadataForPath, Router } from './Router'
 import {
@@ -44,8 +44,34 @@ describe('static document pages', () => {
     render(<Router pathname="/docs/quick-start/" />)
 
     expect(screen.getByRole('heading', { level: 1, name: /quick start guide/i })).toBeTruthy()
-    expect(screen.getAllByRole('navigation', { name: 'Documentation navigation' })).toHaveLength(2)
+    // The sidebar, and the phone's copy, closed until its breadcrumb opens it.
+    expect(screen.getAllByRole('navigation', { name: 'Documentation navigation' })).toHaveLength(1)
+    expect(screen.getAllByRole('navigation', { name: 'Documentation navigation', hidden: true })).toHaveLength(2)
     expect(screen.getAllByRole('link', { name: /self-hosting/i }).length).toBeGreaterThan(0)
+  })
+
+  it('shows the group and page as a breadcrumb on a phone that opens the docs navigation', () => {
+    const { container } = render(<Router pathname="/chief-of-staff/" />)
+    const trail = screen.getByRole('button', { name: 'Start here Chief of Staff' })
+    const menu = container.querySelector<HTMLElement>(`#${trail.getAttribute('aria-controls')}`)!
+
+    expect(screen.queryByText('Browse documentation')).toBeNull()
+    expect(trail.getAttribute('aria-expanded')).toBe('false')
+    expect(menu.hidden).toBe(true)
+
+    fireEvent.click(trail)
+    expect(trail.getAttribute('aria-expanded')).toBe('true')
+    expect(menu.hidden).toBe(false)
+    expect(within(menu).getByRole('link', { name: 'Chief of Staff' }).getAttribute('aria-current')).toBe('page')
+    expect(within(menu).getAllByRole('heading', { level: 2 }).map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Comparisons'])
+
+    fireEvent.click(trail)
+    expect(menu.hidden).toBe(true)
+    fireEvent.click(trail)
+    // The router follows links in the browser; jsdom cannot.
+    container.addEventListener('click', (event) => event.preventDefault())
+    fireEvent.click(within(menu).getByRole('link', { name: 'Chief of Staff' }))
+    expect(menu.hidden).toBe(true)
   })
 
   it('renders Happy Desktop documentation under its own path', () => {

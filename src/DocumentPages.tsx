@@ -56,6 +56,46 @@ function DocsNavigation({
   )
 }
 
+/**
+ * The docs navigation on a phone: the current group and page as a breadcrumb that
+ * opens every group and page below it. Picking a page closes it; so does a new page.
+ */
+function DocsMobileNavigation({
+  product,
+  activeDocument,
+}: {
+  product: Product
+  activeDocument: DocumentEntry
+}) {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <div className="docs-mobile-navigation page-width">
+      <button
+        type="button"
+        className="docs-mobile-trail"
+        aria-expanded={isOpen}
+        aria-controls="docs-mobile-menu"
+        onClick={() => setIsOpen((open) => !open)}
+      >
+        <span className="docs-mobile-trail-group">{activeDocument.group}</span>
+        <span aria-hidden="true">/</span>
+        <span className="docs-mobile-trail-page">{activeDocument.title}</span>
+      </button>
+      <div
+        id="docs-mobile-menu"
+        className="docs-mobile-menu"
+        hidden={!isOpen}
+        onClick={(event) => {
+          if (event.target instanceof Element && event.target.closest('a')) setIsOpen(false)
+        }}
+      >
+        <DocsNavigation product={product} activeDocument={activeDocument} />
+      </div>
+    </div>
+  )
+}
+
 /** Brief section 6, verbatim: every original Happy CLI docs page opens with it. */
 function LegacyNotice() {
   return (
@@ -103,10 +143,7 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
   return (
     <div className="site-shell document-site-shell docs-shell">
       <SiteHeader product={product} docsActive />
-      <details className="docs-mobile-navigation page-width">
-        <summary>Browse documentation</summary>
-        <DocsNavigation product={product} activeDocument={activeDocument} />
-      </details>
+      <DocsMobileNavigation key={activeDocument.path} product={product} activeDocument={activeDocument} />
       <main className="docs-layout page-width">
         <aside
           className={`docs-sidebar${isSidebarScrollbarVisible ? ' is-scrollbar-active' : ''}`}
