@@ -27,7 +27,8 @@ A separate read-only agent reviews the described action against the conversation
 
 Seatbelt on macOS; on Linux, Happy's own supervisor using kernel namespaces and seccomp.
 
-- Writes: working directory and temporary directories; Git control paths are read-only. The rest is readable.
+- Writes: working directory and temporary directories; Git control paths are read-only.
+- Reads: the rest of the machine is readable, except credential folders such as `~/.ssh`, `~/.aws`, `~/.claude`, `~/.codex`, `~/.docker`, `~/.gnupg`, `~/.config/gh`, and shell histories.
 - Protected paths are read-only even inside the workspace: the repository's `AGENTS.md`, `AGENTS_SECURITY.md`, `happy.toml`, and `mcp.toml`, and the runtime's own state.
 - Network: only domains and ports in your configuration, through a managed proxy the agent cannot change.
 - Local ports: refused on macOS unless enabled. On Linux a listener is reachable only from inside its own command.

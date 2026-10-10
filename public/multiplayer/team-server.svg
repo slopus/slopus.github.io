@@ -74,9 +74,9 @@
 <path d="M47.0 250.3 L38.0 249.4 L29.4 250.2" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M30.0 251.5 L29.9 243.4 L29.4 237.4" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M33.3 237.9 L33.1 235.5 L32.8 233.5" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M33.2 232.7 L34.5 231.4 L37.9 230.3" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M38.2 230.1 L39.8 230.8 L42.8 232.8" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M43.4 233.0 L43.3 236.5 L42.8 238.0" fill="none" stroke="#183f38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
 <text x="56" y="245" font-size="18" font-weight="700" fill="#183f38">Tailcat</text>
-<text x="30" y="270" font-size="15" font-weight="400" fill="#183f38">Encrypted, through NAT,</text>
-<text x="30" y="288" font-size="15" font-weight="400" fill="#183f38">outbound only. Carries requests;</text>
-<text x="30" y="306" font-size="15" font-weight="400" fill="#6b7f78">does not let anyone in.</text>
+<text x="30" y="270" font-size="15" font-weight="400" fill="#183f38">WireGuard-encrypted, through</text>
+<text x="30" y="288" font-size="15" font-weight="400" fill="#183f38">NAT, outbound only. Relays see</text>
+<text x="30" y="306" font-size="15" font-weight="400" fill="#6b7f78">no content. Not a sign-in.</text>
 <path d="M332 220 L503 219 L502 313 L331 312 Z" fill="#efe9dc"/>
 <path d="M330.3 217.5 L365.6 218.6 L400.6 217.0 L434.5 218.2 L469.2 217.6 L505.0 218.0" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
 <path d="M504.4 216.8 L504.6 249.5 L504.9 281.5 L504.4 314.7" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>

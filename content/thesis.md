@@ -58,7 +58,7 @@ It also allows what a pile of separate CLIs can't: one hypervisor over every ter
 
 Agents need permissions to do anything. Let someone talk to your agent and they hold its permissions. Let agents message agents and those need permissions too. Should an automatic reviewer approve an agent asking for more access? Whose commit is it when several people work from one server?
 
-Today you can invite someone into a Happy session, but the agent still runs with your permissions. A team that trusts each other can run a [shared server](/multiplayer/), each member with their own identity, every command under the same [sandbox and review](/permissions/). A start, not an answer.
+Today a team that trusts each other can run a [shared server](/multiplayer/), each member with their own identity, every command under the same [sandbox and review](/permissions/). But the agent still runs with the server's permissions, whoever is talking to it. A start, not an answer.
 
 The one serious attempt we've seen is [OpenClaw Enterprise](https://openclaw.ai/blog/openclaw-enterprise): each agent gets its own identity, and agents and credentials live in separate namespaces with roles. Respect. Permissions should belong to the agent, not to whoever is talking to it.
 

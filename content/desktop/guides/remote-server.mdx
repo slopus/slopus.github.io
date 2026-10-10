@@ -1,8 +1,46 @@
-# Happy Agent on a Remote Server
+# Run Claude Code and Codex on a Remote Server, Steered from Your Phone
 
-A personal Happy Agent on a machine that stays on: a cloud VM, a Mac mini, a Raspberry Pi. It has its own projects, sessions, profile, and provider sign-ins. Desktop lists it beside your own machine, and your phone pairs with it separately. It is one person's machine, not a team; for that, see [Multiplayer & Teams](/multiplayer/).
+Run Happy Agent on a machine that stays on: a cloud VM, a Mac mini, a Raspberry Pi. It uses your Claude Code, Codex, and Grok sign-ins, keeps working while your laptop sleeps, and you watch and steer it from the Happy app on your phone or from Happy Desktop. Setup is one request to the Chief of Staff, or the steps below.
 
-The connection is **Tailcat**, built into every release. The server dials out, so it needs no open port, public IP, or tunnel account. Reaching its address is not access: every request still needs the server's API token. SSH is used only to install.
+## The problem
+
+You start a long task in Claude Code or Codex, then you want to close the laptop and check on it from your phone. Today that usually means one of:
+
+- **Keep the laptop open.** The agent runs on it, so it has to stay awake and online.
+- **Claude Code Remote Control.** Steer from the Claude app. The session still runs on your computer: while the laptop sleeps, the work pauses, and it reconnects when the laptop wakes.
+- **A server with tmux, SSH, and a phone terminal.** The agent keeps running, but you type prompts, paste, and answer approval prompts in a terminal on a phone keyboard.
+
+## Alternatives
+
+| | tmux + SSH or Mosh + Tailscale + Termius | Claude Code Remote Control | A VM with its own agent (exe.dev and Shelley) | Happy Agent on a server |
+| --- | --- | --- | --- | --- |
+| Agents | Any terminal agent | Claude Code | Shelley; Claude Code, Codex, and Pi preinstalled | Claude, Codex, and Grok on your existing sign-ins |
+| Where it runs | Your server | Your computer, or a server inside tmux | An exe.dev VM | Your server, VM, or Mac |
+| When the laptop sleeps | Keeps running on the server | On a laptop, pauses until it wakes; on a server, keeps running | Keeps running | Keeps running |
+| From the phone | A terminal app, over SSH or Mosh | The Claude app or claude.ai/code | Shelley's web page; a terminal for the other agents | The Happy app, built for agent sessions |
+| Approvals | Terminal prompts, typed on the phone | Permission prompts in the app, with push notifications | Depends on the agent; the VM is the boundary | Auto mode reviews actions itself, inside the OS sandbox |
+| In between | Tailscale's coordination and relays; traffic WireGuard-encrypted | Anthropic stores the transcript while connected | exe.dev runs the VM and its HTTPS proxy | Tailcat relay for Desktop (WireGuard-encrypted); Happy's relay for the phone (end-to-end encrypted) |
+| Setup | Install and connect four tools | One command | Create a VM | Ask the Chief of Staff, or about a dozen steps |
+
+Where each is better:
+
+- **tmux + SSH or Mosh.** Works with every terminal agent and tool, with nothing new to trust. [Mosh](https://mosh.org/) survives sleep and network changes, and [Termius](https://termius.com/free-ssh-client-for-iphone) speaks it on iOS and Android.
+- **Remote Control.** Nothing to install if you already use Claude Code and the Claude app, Anthropic supports it, and permission prompts come to your phone as push notifications. Team and Enterprise get admin controls. See [Happy vs Remote Control](/vs/claude-code-remote-control/).
+- **exe.dev.** A persistent VM with agents already installed, and [Shelley](https://exe.dev/docs/shelley/intro), a web agent that works on mobile, at an HTTPS address. No service to set up. You can also run Happy Agent on it, [below](#exe-dev).
+- **Happy Agent.** A phone app made for agent sessions instead of a terminal, Claude, Codex, and Grok side by side on the plans you pay for, and sessions that survive restarts. It is more setup than the others, you run and upgrade the server, and Desktop has no "add remote" button yet.
+
+Sources, checked October 10, 2026: [Remote Control docs](https://code.claude.com/docs/en/remote-control) ("your computer has to stay on and the claude process has to keep running"; "if your laptop sleeps or your network drops, Claude Code reconnects automatically"; "start it inside tmux or screen" on a remote machine), [exe.dev docs](https://exe.dev/docs/upgrade-codex) (claude, codex, and pi preinstalled), [Mosh](https://mosh.org/), [Termius](https://docs.termius.com/termius-handbook/connecting-to-a-host), [How Tailscale works](https://tailscale.com/blog/how-tailscale-works).
+
+## How the connection works
+
+Desktop reaches the server over **Tailcat**, built into every release. Tailcat is [Tailscale's open source data plane without its control plane](https://github.com/tailscale/tailcat): no account, no open port, no public IP. SSH is used only to install.
+
+- **The address is the server's key.** A `tc…` address encodes the server's WireGuard public key and its relay region. The private key stays on the server in `~/.happy/agent/tailcat/default.private.json`, so only that machine can answer at that address.
+- **WireGuard, end to end.** Your machine makes a throwaway key each time it opens the tunnel and runs the standard [WireGuard](https://www.wireguard.com/protocol/) handshake with the server. Everything after that is encrypted between the two machines, and decrypted only where Tailcat hands it to Happy Agent over loopback.
+- **Relays carry ciphertext.** Both sides meet first at a DERP relay that Tailscale runs for free, rate-limited and without an uptime promise. They then try a direct path through NAT, and the relay keeps carrying traffic if that fails. A relay sees IP addresses, timing, sizes, and the public keys it routes by. It cannot read or change the content.
+- **The address is not the lock.** Anyone who has the address can open a tunnel; Happy does not use Tailcat's client allowlist. Every request inside still needs the server's API token, or a team sign-in. Keep both private; the token is the secret.
+
+Your phone does not use Tailcat. It pairs with the server through Happy's own end-to-end encrypted relay.
 
 ## Ask the Chief of Staff
 

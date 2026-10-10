@@ -286,8 +286,8 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'guides/remote-server',
     sourcePath: '/content/desktop/guides/remote-server.mdx',
     title: 'Remote Server',
-    pageTitle: 'Happy Agent on a Remote Server — Happy',
-    description: 'Run your own Happy Agent on a VM, a Mac mini, or a Raspberry Pi: ask the Chief of Staff, or follow the exact steps.',
+    pageTitle: 'Run Claude Code and Codex on a Remote Server, Steered from Your Phone — Happy',
+    description: 'Keep Claude Code and Codex working while your laptop sleeps: run Happy Agent on a VM or Mac mini and steer it from your phone. Alternatives compared.',
     group: 'Guides',
   },
   {
