@@ -214,7 +214,7 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'vision',
     sourcePath: THESIS_SOURCE_PATH,
     title: 'Vision',
-    description: 'What Happy is betting on: one core agent, chat that left the chat, phone first, one harness, and open source with no lock-in.',
+    description: 'What Happy is betting on: one primary agent, chat that left the chat, phone first, one harness, and open source with no lock-in.',
     group: 'Start here',
     essay: true,
   },

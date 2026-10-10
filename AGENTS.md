@@ -29,11 +29,17 @@ reachable at `/comparisons/buzz/` but is unlisted (`hidden: true`).
 The Vision essay (`content/thesis.md`, a plain `.md` whose frontmatter title is
 the h1) is a desktop doc at `/vision/` under Start here, right after How It
 Works, registered with `essay: true` so `DocsPage` renders its captioned
-figures, side floats and the pig in its last bullet. Its seven bold bullets
-match its seven sections 1:1. It was first published at `/thesis/`, and there
-is no blog: `/thesis/` and `/blog/` (live briefly) both redirect to `/vision/`.
-Its images stay under `public/thesis/`. Keep the essay short enough to read on
-a phone.
+figures, side floats, the centered chart, the pig in its first bullet and the
+pig alone on its last line as the sign-off. Its seven bold bullets match its
+seven sections 1:1, and "Make people happy" comes first so it is on the first
+phone screen. Each section leads with its figure. It says "one primary agent",
+never "core agent", and does not call multiplayer hard. It was first published
+at `/thesis/`, and there is no blog: `/thesis/` and `/blog/` (live briefly)
+both redirect to `/vision/`. Its images stay under `public/thesis/`; the
+hand-drawn SVGs are generated in the style of
+`notes/thesis/drafts/wireframe-sketch-generator.py`, with labels of 19px+ in a
+520-wide viewBox so they read at a 350px phone column. Keep the essay short
+enough to read on a phone.
 
 `routes.txt` records every URL the site has ever served. The build appends new
 URLs and fails if a listed URL is no longer served; dropping one means

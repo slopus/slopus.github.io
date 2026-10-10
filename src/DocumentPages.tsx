@@ -217,19 +217,24 @@ export function LegalPage({
 /**
  * The Vision essay's images at their display size, so the text around them doesn't
  * reflow while they load. A screenshot narrower than the column floats beside the
- * text past phone width; a diagram spans the column.
+ * text past phone width; a diagram spans the column; the chart sits centered at its
+ * drawn size, so its labels stay legible on a phone.
  */
-const essayFigures: Record<string, { width: number; height: number; side?: 'left' | 'right' }> = {
+const essayFigures: Record<string, { width: number; height: number; place?: 'left' | 'right' | 'center' }> = {
+  '/thesis/buttons.svg': { width: 520, height: 320, place: 'center' },
   '/thesis/layout.svg': { width: 720, height: 400 },
-  '/thesis/model-picker.png': { width: 270, height: 263, side: 'right' },
-  '/thesis/sidebar.png': { width: 220, height: 306, side: 'left' },
+  '/thesis/model-picker.png': { width: 270, height: 263, place: 'right' },
+  '/thesis/sidebar.png': { width: 220, height: 306, place: 'left' },
 }
+
+/** The pig: beside the first bullet, and alone on the essay's last line as its sign-off. */
+const ESSAY_PIG = '/thesis/pig.png'
 
 /** What an essay (`essay: true` in src/documents.ts) renders differently from a plain docs page. */
 const essayComponents: Components = {
-  // The pig beside the last bullet. Any other inline image renders as usual.
+  // The pig beside the first bullet. Any other inline image renders as usual.
   img: ({ node: _node, alt, src, ...props }) =>
-    src === '/thesis/pig.png'
+    src === ESSAY_PIG
       ? <img {...props} src={src} alt={alt ?? ''} className="essay-pig" width="120" height="117" loading="lazy" />
       : <img {...props} src={src} alt={alt ?? ''} loading="lazy" />,
   // An image alone on its line is a figure. Screenshots float beside the paragraph that follows.
@@ -237,12 +242,21 @@ const essayComponents: Components = {
     const [only, ...rest] = node?.children ?? []
     if (rest.length === 0 && only?.type === 'element' && only.tagName === 'img') {
       const src = String(only.properties.src)
+      const alt = String(only.properties.alt ?? '')
+      // The pig alone on a line signs the essay off: centered, not floated, no caption.
+      if (src === ESSAY_PIG) {
+        return (
+          <p className="essay-signoff">
+            <img src={src} alt={alt} className="essay-pig essay-pig-signoff" width="120" height="117" loading="lazy" />
+          </p>
+        )
+      }
       const figure = essayFigures[src]
       // The markdown image title, `![alt](src "title")`, is the caption under the image.
       const caption = only.properties.title ? String(only.properties.title) : undefined
       return (
-        <figure className={figure?.side ? `essay-figure essay-figure-${figure.side}` : 'essay-figure'}>
-          <img src={src} alt={String(only.properties.alt ?? '')} width={figure?.width} height={figure?.height} loading="lazy" />
+        <figure className={figure?.place ? `essay-figure essay-figure-${figure.place}` : 'essay-figure'}>
+          <img src={src} alt={alt} width={figure?.width} height={figure?.height} loading="lazy" />
           {caption && <figcaption>{caption}</figcaption>}
         </figure>
       )
