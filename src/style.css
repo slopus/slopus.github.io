@@ -433,15 +433,20 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .footer-meta { text-align: left; }
   .footer-links { justify-content: flex-start; }
   .document-site-shell .site-header { margin-bottom: 0; }
+  /* The phone's docs navigation (DocsMobileNavigation): the current group and page, a 44px tap
+     target with its own chevron, opening every group and page below it. It stands in for the
+     article's "Happy Desktop docs / group" breadcrumb, which would repeat it. */
   .docs-mobile-navigation { border-bottom: 1px solid #d9d3c5; display: block; padding-bottom: .25rem; padding-top: .25rem; }
-  /* A 44px tap target with its own chevron; the strip keeps its height by trimming the padding above. */
-  .docs-mobile-navigation summary { align-items: center; cursor: pointer; display: flex; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; gap: .5rem; letter-spacing: .06em; list-style: none; min-height: 44px; text-transform: uppercase; }
-  .docs-mobile-navigation summary::-webkit-details-marker { display: none; }
-  .docs-mobile-navigation summary::before { border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; content: ''; height: 6px; transform: rotate(-45deg); transition: transform .15s; width: 6px; }
-  .docs-mobile-navigation[open] summary::before { transform: rotate(45deg); }
-  .docs-mobile-navigation[open] summary { margin-bottom: .75rem; }
-  .docs-mobile-navigation[open] { padding-bottom: 1rem; }
+  .docs-mobile-trail { align-items: center; appearance: none; background: none; border: 0; border-radius: 7px; color: #183f38; cursor: pointer; display: flex; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; gap: .5rem; letter-spacing: .06em; min-height: 44px; padding: 0; text-align: left; text-transform: uppercase; width: 100%; }
+  .docs-mobile-trail::before { border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; content: ''; flex: none; height: 6px; transform: rotate(-45deg); transition: transform .15s; width: 6px; }
+  .docs-mobile-trail[aria-expanded='true']::before { transform: rotate(45deg); }
+  .docs-mobile-trail:focus-visible { outline: 2px solid #e6522c; outline-offset: 2px; }
+  .docs-mobile-trail > span { flex: none; }
+  .docs-mobile-trail-group { color: #6b7f78; }
+  .docs-mobile-trail > .docs-mobile-trail-page { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .docs-mobile-menu { padding: .5rem 0 1rem; }
   .docs-mobile-navigation .docs-navigation { gap: 1.1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .docs-shell .document-breadcrumb { display: none; }
   .docs-sidebar { display: none; }
   .docs-layout { display: block; min-height: 0; padding-bottom: 5rem; padding-top: 2.5rem; }
   .document-content h1 { font-size: clamp(2.45rem, 12vw, 3.6rem); }
