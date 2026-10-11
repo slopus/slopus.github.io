@@ -153,7 +153,7 @@ def tailcat_x(browser, head):
     # Beside the wordmark, as in the site header: the GitHub mark and a plain count, no pill.
     o.append(f'<path transform="translate(188 22) scale(.8)" d="{GITHUB_MARK}" fill="{INK}"/>')
     o.append(text(206, 33, f"{GITHUB_STARS} stars · MIT", 11, INK, 500, "start", "DM Mono"))
-    o.append(text(20, 56, "Open-source harness for Claude, Codex & Grok agents", 11.5, MUTED, 500, "start", "DM Sans"))
+    o.append(text(20, 56, "Orchestrate Claude, Codex and Grok in one app", 11.5, MUTED, 500, "start", "DM Sans"))
 
     # Tailscale runs the relay; it only forwards.
     o.append(rect(260, 84, 280, 62, 1.8, INK, MINT))
