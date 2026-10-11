@@ -131,9 +131,9 @@ def arrow(x1, y1, x2, y2, c=INK, w=1.6, dash=None):
     return line(x1, y1, x2, y2, w, c, .6, dash) + line(l[0], l[1], x2, y2, w, c, .2) + line(r[0], r[1], x2, y2, w, c, .2)
 
 
-def chip(x, y, w, s):
+def chip(x, y, w, s, h=30, size=15):
     """A process inside a machine: its name in a thin outline, no fill."""
-    return rect(x, y, w, 30, 1.1, INK) + "\n" + text(x + w / 2, y + 21, s, 15, INK, 600)
+    return rect(x, y, w, h, 1.2, INK) + "\n" + text(x + w / 2, y + h / 2 + size * .36, s, size, INK, 600)
 
 
 # github.com/slopus/happy stars, rounded down to whole thousands: gh api repos/slopus/happy --jq .stargazers_count
@@ -143,52 +143,70 @@ GITHUB_STARS = "24k"
 GITHUB_MARK = "M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"
 
 
-def tailcat_x(browser, head):
-    """Tailcat for X, drawn in 800x450 units and rendered at 2x. On each machine Happy Agent runs
-    Tailcat as a child process: `tailcat socks` beside Happy Desktop, `tailcat serve` on the server."""
+# The Tailscale logo, unmodified: Tailscale_logo_blk_rgb.svg from the media kit linked as
+# "Brand Assets" on https://tailscale.com/press
+# (https://cdn.sanity.io/files/w77i7m8x/production/a426ba5f63316745e108a18a6dbbfed6970752fd.zip).
+# Their brand toolkit asks for at least 48px; it renders 52px tall here. Never recolor or stretch it.
+TAILSCALE_LOGO = ROOT / "notes/brand/tailscale-logo-blk-rgb.svg"
+
+DESCRIPTOR = "Orchestrate Claude, Codex and Grok in one app"
+
+
+def lockup(x, y):
+    """The brand lockup, as in the site header: the wordmark, the GitHub mark with stars and the
+    licence, and the descriptor under them. 170 units wide, 48 tall, from its top-left corner."""
     wordmark = (ROOT / "public/brand/happy-engineering-inline-light.svg").read_text()
-    wordmark = re.sub(r'width="[\d.]+" height="[\d.]+"', 'width="151" height="17"', wordmark, count=1)
-    o = []
-    o.append(f'<g transform="translate(20 20)">{wordmark}</g>')
-    # Beside the wordmark, as in the site header: the GitHub mark and a plain count, no pill.
-    o.append(f'<path transform="translate(188 22) scale(.8)" d="{GITHUB_MARK}" fill="{INK}"/>')
-    o.append(text(206, 33, f"{GITHUB_STARS} stars · MIT", 11, INK, 500, "start", "DM Mono"))
-    o.append(text(20, 56, "Orchestrate Claude, Codex and Grok in one app", 11.5, MUTED, 500, "start", "DM Sans"))
+    wordmark = re.sub(r'width="[\d.]+" height="[\d.]+"', 'width="170" height="19"', wordmark, count=1)
+    return "\n".join([
+        f'<g transform="translate({x} {y})">{wordmark}</g>',
+        f'<path transform="translate({x + 184} {y + 2}) scale(.95)" d="{GITHUB_MARK}" fill="{INK}"/>',
+        text(x + 205, y + 15, f"{GITHUB_STARS} stars · MIT", 14, INK, 500, "start", "DM Mono"),
+        text(x, y + 44, DESCRIPTOR, 16, MUTED, 500, "start", "DM Sans"),
+    ])
+
+
+def tailcat_x(browser, head):
+    """Tailcat for X, drawn in 800x600 units and rendered at 2x, 1600x1200. On each machine Happy
+    Agent runs Tailcat as a child process: `tailcat socks` beside Happy Desktop, `tailcat serve` on
+    the server. Text is 17 units or larger so it reads in a phone feed."""
+    logo = TAILSCALE_LOGO.read_text()
+    logo = re.sub(r"<\?xml[^>]*>\s*", "", logo)
+    logo = logo.replace("<svg ", '<svg x="646" y="22" width="134" height="26" ', 1)
+    o = [lockup(20, 20), logo]
 
     # Tailscale runs the relay; it only forwards.
-    o.append(rect(260, 84, 280, 62, 1.8, INK, MINT))
-    o.append(text(400, 109, "Tailcat relay", 19, INK, 700))
-    o.append(text(400, 133, "Tailscale DERP · forwards ciphertext only", 12.5, MUTED))
+    o.append(rect(190, 106, 420, 84, 2, INK, MINT))
+    o.append(text(400, 141, "Tailcat relay", 28, INK, 700))
+    o.append(text(400, 175, "Tailscale DERP · forwards ciphertext only", 19, MUTED))
 
-    o.append(rect(20, 196, 310, 104, 1.6, INK, SAND))
-    o.append(text(36, 220, "Happy Desktop", 17, INK, 700, "start"))
-    o.append(chip(36, 234, 130, "Happy Agent"))
-    o.append(chip(206, 234, 100, "Tailcat"))
+    # Each machine: Happy Agent, and under it the Tailcat it talks through, on the side facing the
+    # other machine.
+    chip_w, chip_h = 224, 46
+    for bx, title, anchor, cx in ((20, "Happy Desktop", "start", 106), (430, "Your server", "end", 470)):
+        o.append(rect(bx, 250, 350, 222, 1.8, INK, SAND))
+        o.append(text(bx + 24 if anchor == "start" else bx + 326, 286, title, 25, INK, 700, anchor))
+        o.append(chip(cx, 300, chip_w, "Happy Agent", chip_h, 23))
+        o.append(chip(cx, 394, chip_w, "Tailcat", chip_h, 23))
+    o.append(line(218, 348, 218, 392, 1.6, INK, .3))
+    o.append(line(582, 378, 582, 392, 1.6, INK, .3))
+    o.append(text(470, 370, "Claude · Codex · Grok agents", 18, MUTED, 400, "start"))
 
-    o.append(rect(450, 196, 330, 104, 1.6, INK, SAND))
-    o.append(text(764, 220, "Your server", 17, INK, 700, "end"))
-    o.append(chip(466, 234, 100, "Tailcat"))
-    o.append(chip(606, 234, 158, "Happy Agent"))
-    o.append(text(685, 286, "Claude · Codex · Grok agents", 12.5, MUTED))
-
-    # Happy Agent talks through its own Tailcat.
-    o.append(line(170, 249, 202, 249, 1.4, INK, .3))
-    o.append(line(570, 249, 602, 249, 1.4, INK, .3))
     # Both sides dial out to the relay.
-    o.append(arrow(256, 230, 300, 152, INK, 1.6))
-    o.append(arrow(516, 230, 500, 152, INK, 1.6))
+    o.append(line(330, 417, 350, 417, 2, INK, .3))
+    o.append(arrow(350, 417, 350, 198, INK, 2))
+    o.append(line(470, 417, 450, 417, 2, INK, .3))
+    o.append(arrow(450, 417, 450, 198, INK, 2))
     # The direct path, Tailcat to Tailcat.
-    o.append(line(256, 268, 256, 326, 1.6, INK, .4, "7 6"))
-    o.append(line(256, 326, 516, 326, 1.6, INK, .6, "7 6"))
-    o.append(line(516, 326, 516, 268, 1.6, INK, .4, "7 6"))
-    o.append(text(386, 346, "direct WireGuard (UDP) when NAT allows", 13, MUTED))
+    o.append(line(218, 442, 218, 498, 2, INK, .4, "8 7"))
+    o.append(line(218, 498, 582, 498, 2, INK, .6, "8 7"))
+    o.append(line(582, 498, 582, 442, 2, INK, .4, "8 7"))
+    o.append(text(400, 528, "direct WireGuard (UDP) when NAT allows", 20, MUTED))
 
-    o.append(text(400, 392, "No open ports · no public IP · no Tailscale account", 18, INK, 700))
-    o.append(text(780, 434, "Powered by Tailscale’s Tailcat", 10.5, MUTED, 500, "end", "DM Sans"))
+    o.append(text(400, 578, "No open ports · no public IP · no Tailscale account", 27, INK, 700))
 
-    svg = ('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" '
+    svg = ('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" '
            "font-family=\"'Shantell Sans', cursive\">" + "\n".join(o) + "</svg>")
-    shoot(browser, head, IMG / "tailcat-x.png", 800, 450, 2, svg)
+    shoot(browser, head, IMG / "tailcat-x.png", 800, 600, 2, svg)
 
 
 def main():
