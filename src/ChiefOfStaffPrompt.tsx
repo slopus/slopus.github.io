@@ -44,7 +44,7 @@ function PromptLine({ prompt }: { prompt: string }) {
     try {
       await copyText(prompt)
       setState('copied')
-      timer.current = setTimeout(() => setState('idle'), 1600)
+      timer.current = setTimeout(() => setState('idle'), 1500)
     } catch {
       setState('failed')
     }
@@ -52,28 +52,32 @@ function PromptLine({ prompt }: { prompt: string }) {
 
   return (
     <li className="cos-prompt-line">
-      {/* The button follows the prompt in the same line of text, so it never takes a column from it. */}
-      <span className="cos-prompt-text">{prompt}</span>
-      <button type="button" className="cos-prompt-copy" data-state={state} onClick={copy} aria-label={state === 'copied' ? `Copied: ${prompt}` : `Copy prompt: ${prompt}`}>
-        {state === 'copied'
-          ? <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
-          : <CopyIcon />}
-        <span aria-hidden="true">{state === 'copied' ? 'Copied' : 'Copy'}</span>
-      </button>
+      {/* A header row above the prompt: the label left, Copy right. The prompt runs the full width
+          under it, and only the prompt is copied. */}
+      <div className="cos-prompt-head">
+        <span className="cos-prompt-example">Example</span>
+        <button type="button" className="cos-prompt-copy" data-state={state} onClick={copy} aria-label={state === 'copied' ? `Copied: ${prompt}` : `Copy prompt: ${prompt}`}>
+          {state === 'copied'
+            ? <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+            : <CopyIcon />}
+          <span aria-hidden="true">{state === 'copied' ? 'Copied' : 'Copy'}</span>
+        </button>
+      </div>
+      <p className="cos-prompt-text">{prompt}</p>
       <span className="cos-prompt-status" role="status">{state === 'copied' ? 'Copied.' : state === 'failed' ? 'Clipboard unavailable. Select the prompt to copy it.' : ''}</span>
     </li>
   )
 }
 
 /**
- * A ready-to-paste request for the Chief of Staff in Happy Desktop, each with its own Copy
- * button. The prompts are plain text in the served page, so they read and select without
- * JavaScript.
+ * A ready-to-paste request for the Chief of Staff in Happy Desktop: under one intro line, each
+ * prompt in its own lightly tinted box, "Example" top left and Copy top right. The prompts are
+ * plain text in the served page, so they read and select without JavaScript.
  */
 export function ChiefOfStaffPrompt({ prompts }: { prompts: string[] }) {
   return (
     <aside className="cos-prompt" aria-label="Ask the Chief of Staff">
-      <p className="cos-prompt-label">Ask the <a href="/chief-of-staff/">Chief of Staff</a></p>
+      <p className="cos-prompt-label">How do I change configuration? Ask the <a href="/chief-of-staff/">Chief of Staff</a>.</p>
       <ul>
         {prompts.map((prompt) => <PromptLine key={prompt} prompt={prompt} />)}
       </ul>

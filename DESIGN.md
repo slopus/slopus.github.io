@@ -75,7 +75,13 @@ The short descriptor is **Orchestrate Claude, Codex and Grok in one app** (`HAPP
   Everything below is the reference layer. It is for readers who want to know how the feature works, and for search engines and AI assistants working out what Happy can do. Each h2 names its question in the words people search with: "Use several accounts of one provider", not "Accounts". Each section stands on its own and states concrete facts. No keyword stuffing.
 
   Lead with what you get, never with the problem. The problem and the workarounds belong in the reference layer, beside the alternatives.
-- **The Chief of Staff block.** Every feature page, and every guide whose task the [Chief of Staff](/chief-of-staff/) can do, has a `chief-of-staff` fence right after its intro, with one prompt per line. It renders as part of the page, not a card: no fill and no colored border. Each prompt is a line of text flush with the article, behind a “›”, and a small Copy control follows its last word.
+- **The Chief of Staff block.** Every feature page, and every guide whose task the [Chief of Staff](/chief-of-staff/) can do, has a `chief-of-staff` fence right after its intro, with one prompt per line. Every page renders it the same way (`src/ChiefOfStaffPrompt.tsx`):
+  - One intro line: "How do I change configuration? Ask the Chief of Staff."
+  - Each prompt in its own quote-style box: a very light mint tint and a 3px accent left edge. No card: no full border, no shadow, no heavy fill.
+  - A header row inside the box: a quiet "Example" label in small caps top left, the Copy button top right. The prompt runs the full width below them, never squeezed by a button column, and wraps under them at 390.
+  - Copy copies only the prompt. It keeps a fixed size and place, shows "Copied" for 1.5 seconds without changing width, has an `aria-label` naming the prompt and a visible focus ring, and a hit area of at least 32px (44px on phones).
+  - Contrast on the tint: text and label at least 4.5:1, the button border and the accent edge at least 3:1.
+  - Without JavaScript the prompt is plain text that selects and copies by hand.
   - Use prompts the Chief of Staff can carry out today with its tools and recipes. Check before adding one.
   - Make them copyable as written. Use example names such as `acme/api`, `ubuntu@203.0.113.10`, and `alice@example.com`.
   - Leave the block off pages where it can't help: Voice, Using the Terminal, How It Works, comparisons, Vision, Team.
