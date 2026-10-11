@@ -76,3 +76,20 @@ the header; change it with the header height. Windows visitors see the SmartScre
 note; its signer name and profile link are constants in
 `src/DownloadOptions.tsx`. Release links use `releases/latest`, never a pinned
 version.
+
+## SEO skills
+
+Three upstream SEO skills are installed under `.agents/skills/`, with their
+sources pinned in `skills-lock.json`. Update them with `npx skills update`
+and read the diff before committing; don't edit them in place.
+
+- `seo-audit`: technical and on-page SEO audit.
+  [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills)
+- `ai-seo`: citations in AI answers, crawler access, `llms.txt`.
+  [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills)
+- `seo-geo`: AI Overviews and answer engines, weighed against Google's own
+  guidance. [AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo);
+  this skill only, never the plugin, its scripts, hooks or `install.sh`.
+
+Their advice is generic: `DESIGN.md` wins wherever they disagree. Reports go
+in `.context/`, never in the repo or `dist/`.
