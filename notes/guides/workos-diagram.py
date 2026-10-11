@@ -88,25 +88,47 @@ o.append(rect(212, 8, 120, 44, 1.8, INK, MINT))
 o.append(text(WOS, 37, "WorkOS", 20, INK, 700, "middle"))
 o.append(rect(380, 8, 132, 44, 1.5, INK, SAND))
 o.append(text(SRV, 37, "Team server", 18, INK, 700, "middle"))
-for x in (APP, WOS, SRV):
-    o.append(line(x, 56, x, 340, 1.2, MUTED, .3, "3 6"))
+
+# Labels between the lifelines, with their extents, so a lifeline breaks instead of crossing one.
+rows = []
+
+
+def label(x, y, s, size=18, c=INK, wt=400):
+    per = size * (0.56 if wt >= 700 else 0.52)
+    rows.append((x - 3, x + per * len(s) + 3, y - size * 0.8 - 6, y + size * 0.28 + 6))
+    return text(x, y, s, size, c, wt)
+
+
+def lifeline(x, y1, y2):
+    out, start = [], y1
+    for y0, yb in sorted((y0, yb) for x0, x1, y0, yb in rows if x0 <= x <= x1):
+        # A stub shorter than a dash or two between rows reads as a strike through the text: skip it.
+        if y0 > start + 14:
+            out.append(line(x, start, x, y0, 1.2, MUTED, .3, "3 6"))
+        start = max(start, yb)
+    if y2 > start + 14:
+        out.append(line(x, start, x, y2, 1.2, MUTED, .3, "3 6"))
+    return "\n".join(out)
 
 # 1-2. Sign-in happens between the app and WorkOS; the server never sees it.
-o.append(text(APP + 10, 92, "1  Sign in", 18, INK, 700))
+o.append(label(APP + 10, 92, "1  Sign in", 18, INK, 700))
 o.append(arrow(APP, 102, WOS, 102, INK))
-o.append(text(APP + 10, 126, "AuthKit, PKCE", 18, MUTED))
-o.append(text(APP + 10, 166, "2  Access token", 18, INK, 700))
+o.append(label(APP + 10, 126, "AuthKit, PKCE", 18, MUTED))
+o.append(label(APP + 10, 166, "2  Access token", 18, INK, 700))
 o.append(arrow(WOS, 176, APP, 176, INK))
-o.append(text(APP + 10, 200, "for the team", 18, MUTED))
+o.append(label(APP + 10, 200, "for the team", 18, MUTED))
 
 # 3. Each request carries the token.
-o.append(text(APP + 10, 246, "3  Every request: Bearer token", 18, INK, 700))
+o.append(label(APP + 10, 246, "3  Every request: Bearer token", 18, INK, 700))
 o.append(arrow(APP, 256, SRV, 256, INK))
 
 # The server fetches WorkOS's public signing keys and caches them.
 o.append(arrow(SRV, 300, WOS, 300, MUTED, 1.4, "5 5"))
-o.append(text(WOS + 12, 290, "Signing keys", 18, MUTED))
-o.append(text(WOS + 12, 324, "(JWKS, cached)", 18, MUTED))
+o.append(label(WOS + 12, 290, "Signing keys", 18, MUTED))
+o.append(label(WOS + 12, 324, "(JWKS, cached)", 18, MUTED))
+
+for x in (APP, WOS, SRV):
+    o.append(lifeline(x, 56, 340))
 
 # 4. What the server checks, locally.
 o.append(text(8, 380, "4  The server checks it locally", 20, INK, 700))
