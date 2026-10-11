@@ -58,7 +58,7 @@ Approving from your phone is already normal. Doing the work from it is next. We 
 
 ![Happy's model picker, with Codex, Claude and Grok models in one list](/thesis/model-picker.png "Codex, Claude and Grok in one picker")
 
-We're betting on one harness, [Happy Agent](/how-it-works/), under every agent. Each provider gets its vendor's own prompts and tools, verbatim. Everything else is shared: one session, one permission model, one set of tools.
+We're betting on one harness, [Happy Agent](/how-it-works/), under every agent. Each provider gets its vendor's own prompts and tools, verbatim. Everything else is shared: one permission model, one set of tools.
 
 That's what lets you [run Claude, GPT and Grok](/models/) in one app and give each subagent the model it's best with: Grok for X research, Anthropic models for novel problems, GPT Astra for computer use.
 

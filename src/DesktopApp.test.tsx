@@ -96,8 +96,8 @@ describe('Happy Desktop landing page', () => {
     const items = [...container.querySelectorAll('.one-benefits li')]
 
     expect(items.map((item) => item.querySelector('.one-benefit-title')?.textContent)).toEqual([
-      'Multi-provider within one session',
-      'Reuse current subscriptions',
+      'Multi-provider',
+      'Reuse your subscriptions',
       'Open source MIT',
       'End-to-end encrypted mobile app',
       'Natively multiplayer',

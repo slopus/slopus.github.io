@@ -423,7 +423,9 @@ await writeFile(path.join(distRoot, 'llms.txt'), `# Happy
 
 > ${metadataForPath('/').description}
 
-Happy Desktop is the current product: a desktop app with its own agent runtime, free and MIT licensed, for macOS, Windows, and Linux. The Happy mobile app for iOS and Android works with it. The docs for the original Happy CLI (Happy Coder, \`happy\` on npm) at ${absoluteUrl(HAPPY.docsHome)} are in maintenance mode: it keeps working and gets critical fixes, but new features ship in Happy Desktop.
+Happy orchestrates coding agents. Happy Desktop runs Happy Agent, its own agent runtime, on your machine: Claude, Codex, and Grok each get their vendor's own prompts and tools, share one permission model and OS sandbox, and hand work to each other as subagents. Sessions survive restarts, and a built-in Chief of Staff bot sets Happy up in conversation. It is free, MIT licensed, and runs on macOS, Windows, and Linux. The Happy phone app for iOS and Android is one part of it: the same sessions, end-to-end encrypted. Happy Agent also runs on a server, alone or for a team.
+
+The original Happy CLI (Happy Coder, \`happy\` on npm) was a phone remote for Claude Code and Codex in your terminal. It is in maintenance mode: it keeps working and gets critical fixes, but new features ship in Happy Desktop. Its docs at ${absoluteUrl(HAPPY.docsHome)} describe that CLI, not Happy today.
 
 ## Happy Desktop docs
 

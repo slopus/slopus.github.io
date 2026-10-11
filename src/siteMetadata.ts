@@ -36,25 +36,25 @@ export function documentSocialImage(path: string, heading: string): NonNullable<
  * read for /, and scripts/generate-static-routes.mjs in sync.
  */
 export const homepageMetadata: PageMetadata = {
-  title: 'Happy — Desktop & Mobile App for Claude Code, Codex & Grok',
+  title: 'Happy — Open-Source Harness to Orchestrate Claude Code, Codex & Grok',
   description:
-    'Happy is the open-source desktop app for Claude Code, Codex, and Grok, with an iOS and Android app to control your coding agents from anywhere.',
+    'Happy is an open-source harness for orchestrating coding agents: Claude, Codex, and Grok in one desktop app, reusing the subscriptions you already pay for.',
   canonicalPath: '/',
   socialTitle: 'Any Model. Your Subscription. Happy Harness.',
 }
 
 /** The original Happy CLI docs. Kept at their URLs, in maintenance mode. */
 export const docsMetadata: PageMetadata = {
-  title: 'Happy Coder Docs — Claude Code & Codex Mobile App (Original CLI)',
+  title: 'Original Happy CLI Docs (Happy Coder): Claude Code on Your Phone',
   description:
-    'Docs for the original Happy CLI (Happy Coder): Claude Code and Codex on iPhone, Android, or the web. Maintenance mode; new features ship in Happy Desktop.',
+    'Docs for the original Happy CLI (Happy Coder), a phone remote for Claude Code and Codex in your terminal. In maintenance mode; Happy today is a desktop harness.',
   canonicalPath: '/docs/',
 }
 
 export const desktopDocsMetadata: PageMetadata = {
-  title: 'Happy Docs — The Open Source Desktop App for Coding Agents',
+  title: 'Happy Docs — The Open-Source Harness for Orchestrating Coding Agents',
   description:
-    'Install Happy on macOS, Windows, or Linux, run Claude, Codex, and Grok in one harness, pair your phone, and learn permissions, workspaces, and teams.',
+    'Happy is an open-source harness for orchestrating Claude, Codex, and Grok agents in one desktop app, reusing your subscriptions: what you get, where to start.',
   canonicalPath: '/welcome/',
 }
 

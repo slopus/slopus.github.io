@@ -2,6 +2,16 @@
 
 These rules cover the docs, guides, comparisons, and blog. The homepage has rules of its own; see Landing page below.
 
+## Positioning
+
+> Happy is an open-source harness for orchestrating coding agents: Claude, Codex, and Grok in one desktop app, reusing the subscriptions you already pay for.
+
+Use this sentence, or a shortening of it, wherever a page says what Happy is: the homepage metadata, `llms.txt`, Welcome, and every lede that introduces Happy.
+
+- **Lead with orchestration and multi-provider.** The desktop app comes first. The phone app, servers, and teams are parts of Happy, never the headline. Happy is not a phone remote for Claude Code; that describes only the original Happy CLI.
+- **"Reuse your subscriptions"**, or "the subscriptions you already pay for". Don't mix in "plans", "existing subscriptions", or "the subscriptions you have".
+- **Don't sell "one session".** "Multi-provider", not "several models in one session". Switching models keeps the transcript; say that as a fact where it matters, not as the pitch.
+
 ## Copy
 
 - **No commentary or narration.** Every line must tell the reader something they can use. Cut lines that only describe the page or point at a file:

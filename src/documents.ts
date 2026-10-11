@@ -55,14 +55,14 @@ const happyDocuments: DocumentDefinition[] = [
     path: '',
     sourcePath: '/content/docs/index.mdx',
     title: 'Welcome',
-    description: 'Learn what Happy does and start controlling coding agents from anywhere.',
+    description: 'The original Happy CLI: control Claude Code and Codex on your computer from your phone. In maintenance mode; Happy today is the desktop harness.',
     group: 'Start here',
   },
   {
     path: 'quick-start',
     sourcePath: '/content/docs/quick-start.mdx',
     title: 'Quick Start',
-    description: 'Install Happy, pair your phone, and start your first coding session.',
+    description: 'Install the original Happy CLI, pair your phone, and start a Claude Code session. For Happy today, see the Happy Desktop Quick Start.',
     group: 'Start here',
   },
   {
@@ -111,6 +111,7 @@ const happyDocuments: DocumentDefinition[] = [
     path: 'features',
     sourcePath: '/content/docs/features/index.mdx',
     title: 'All Features',
+    pageTitle: 'All Features of Happy Coder — Original Happy CLI Docs',
     description: 'Explore Happy’s core architecture and mobile workflow features.',
     group: 'Features',
   },
@@ -132,6 +133,7 @@ const happyDocuments: DocumentDefinition[] = [
     path: 'features/voice-coding-with-claude-code',
     sourcePath: '/content/docs/features/voice-coding-with-claude-code.mdx',
     title: 'Voice Coding',
+    pageTitle: 'Why Voice Coding Makes Sense — Original Happy CLI Docs',
     description: 'Use voice to shape ideas and send structured work to your coding agent.',
     group: 'Features',
   },
@@ -186,7 +188,7 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'welcome',
     sourcePath: '/content/desktop/index.mdx',
     title: 'Welcome',
-    description: 'What Happy Desktop is, what you get, and where to start.',
+    description: 'Happy is an open-source harness for orchestrating Claude, Codex, and Grok agents in one desktop app, reusing your subscriptions: what you get, where to start.',
     group: 'Start here',
   },
   {
@@ -208,7 +210,7 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'how-it-works',
     sourcePath: '/content/desktop/how-it-works.mdx',
     title: 'How It Works',
-    description: 'The agent runtime on your machine, the app in front of it, and the phone beside it.',
+    description: 'How Happy orchestrates agents: Happy Agent runs the loop, tools, and sandbox for Claude, Codex, and Grok, and Desktop and the phone app are its clients.',
     group: 'Start here',
   },
   {
@@ -232,7 +234,7 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'models',
     sourcePath: '/content/desktop/models.mdx',
     title: 'Models & Subscriptions',
-    description: 'Claude, Codex, and Grok in one session, on the plans you already pay for.',
+    description: 'Run Claude, Codex, and Grok side by side, reusing the subscriptions you already pay for: subagents on any model, several accounts per provider, and quotas.',
     group: 'Features',
   },
   {
@@ -322,7 +324,7 @@ const desktopDocuments: DocumentDefinition[] = [
     sourcePath: '/content/desktop/desktop-app.mdx',
     title: 'Desktop App for Claude Code & Codex',
     pageTitle: 'Open Source Desktop App for Claude Code, Codex & Grok — Happy',
-    description: 'Happy Desktop is a free, MIT-licensed desktop app for Claude Code, Codex, and Grok on macOS, Windows, and Linux, on the subscriptions you already have.',
+    description: 'Happy Desktop is a free, MIT-licensed app for orchestrating Claude Code, Codex, and Grok agents on macOS, Windows, and Linux, reusing your subscriptions.',
     group: 'Comparisons',
   },
   {
@@ -330,7 +332,7 @@ const desktopDocuments: DocumentDefinition[] = [
     sourcePath: '/content/desktop/mobile-app.mdx',
     title: 'Claude Code on Your Phone',
     pageTitle: 'Claude Code & Codex Mobile App for iPhone and Android — Happy',
-    description: 'Control Claude Code and Codex from your phone with Happy, a free, open source iOS and Android app. Agents run on your computer, end-to-end encrypted.',
+    description: 'The Happy phone app for iPhone and Android: steer the Claude Code, Codex, and Grok agents Happy runs on your computer, end-to-end encrypted. Free, open source.',
     group: 'Comparisons',
   },
   {

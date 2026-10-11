@@ -13,7 +13,7 @@ Put Happy Agent on my server ubuntu@203.0.113.10. Call it Build box. Use my Code
 - **A remote control** forwards a session that runs in the vendor's own CLI on your computer. Claude Code Remote Control works this way, and so does the original Happy CLI. The session lasts as long as that process and that computer.
 - **Happy Agent is the harness.** It runs the agent loop itself, with its own tools, [sandbox](/permissions/), and review, and calls the models directly. Put it on a server and the sessions keep going while your laptop sleeps; Desktop and the phone are windows onto them.
 
-It runs on the subscriptions you already have:
+It reuses the subscriptions you already pay for:
 
 - **Claude** goes through Anthropic's own [Claude Agent SDK](https://code.claude.com/docs/en/agent-sdk/overview), which you can use with your Claude plan. Anthropic announced a change that would have moved SDK usage onto a separate credit, then paused it. From its help center, [Use the Claude Agent SDK with your Claude plan](https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan):
 
@@ -32,7 +32,7 @@ A coding agent runs on the machine where you start it. To keep one working, keep
 
 | | tmux + SSH or Mosh + Tailscale + Termius | Claude Code Remote Control | A VM with its own agent (exe.dev and Shelley) | T3 Code | Happy Agent on a server |
 | --- | --- | --- | --- | --- | --- |
-| Agents | Any terminal agent | Claude Code | Shelley; Claude Code, Codex, and Pi [preinstalled](https://exe.dev/docs/upgrade-codex) | Claude Code, Codex, Cursor, Grok Build, OpenCode, Pi, Muse Code, and any ACP Registry agent, on your existing subscriptions | Claude, Codex, and Grok models in one harness, on your existing subscriptions |
+| Agents | Any terminal agent | Claude Code | Shelley; Claude Code, Codex, and Pi [preinstalled](https://exe.dev/docs/upgrade-codex) | Claude Code, Codex, Cursor, Grok Build, OpenCode, Pi, Muse Code, and any ACP Registry agent, on your existing subscriptions | Claude, Codex, and Grok models in one harness, reusing your subscriptions |
 | Runs on | Your server | Your computer, or a server inside tmux | An exe.dev VM | Your computer, or a Linux or Apple silicon server it launches over SSH | Your server, VPS, or Mac |
 | While your laptop sleeps | Keeps running | On a laptop, [pauses until it wakes](https://code.claude.com/docs/en/remote-control); on a server, keeps running | Keeps running | On a laptop, stops; on a server with `t3 service install`, keeps running, and a Mac host must stay logged in and awake | Keeps running |
 | Steer it from | A terminal app on any device, over SSH or Mosh | The Claude app, claude.ai/code, or Claude Desktop | Shelley's web page; SSH or the browser terminal for the other agents | T3 Code desktop, the web app, and the iOS and Android app; outside agents over MCP | Happy Desktop and the Happy phone app |

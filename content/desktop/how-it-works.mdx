@@ -1,5 +1,7 @@
 # How It Works
 
+Happy is a harness. One runtime, Happy Agent, runs the agent loop, the tools, and the sandbox for Claude, Codex, and Grok, and lets agents hand work to each other. Happy Desktop, Happy Terminal, and the phone app are windows onto it.
+
 ## The runtime
 
 **Happy Agent** is a headless daemon on your machine. Desktop starts it and talks to it over a private local socket. The daemon holds the agent loop, the tools, the sandbox, and a SQLite database of every session. Quit Desktop and sessions keep running; restart the daemon and they resume from disk.
@@ -11,7 +13,7 @@ The daemon authenticates to providers the way Claude Code, Codex, and the Grok C
 Each provider gets its vendor's prompts and tools verbatim, close enough to the native request that prompt caching and native compaction keep working. Everything around inference is shared:
 
 - One permission model. Claude's `Bash`, Codex's `exec_command`, and Grok's `run_terminal_command` run the same sandboxed shell.
-- One session. Switching models keeps the transcript.
+- One transcript. Switch models and the conversation keeps its history.
 - One set of Happy tools: subagents, waits, scheduling, messaging other agents, MCP.
 
 ## Durable

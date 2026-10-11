@@ -13,7 +13,7 @@ export interface Product {
 
 export const HAPPY: Product = {
   key: 'happy',
-  label: 'Happy Coder',
+  label: 'Original Happy CLI',
   // The original Happy CLI is in maintenance mode; its home is its docs.
   home: '/docs/',
   docsBase: '/docs',

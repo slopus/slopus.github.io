@@ -10,12 +10,12 @@ import './happy-one-preview.css'
 
 const features = [
   {
-    title: 'Multi-provider within one session',
-    body: 'Astra, Fable, and Grok in the same session. Switch models in the middle of a task or delegate to subagents.',
+    title: 'Multi-provider',
+    body: 'Astra, Fable, and Grok in one app, each with its vendor\'s own prompts and tools. Give every task the model that fits, and delegate to subagents on any of them.',
   },
   {
-    title: 'Reuse current subscriptions',
-    body: 'Sign in with the Claude, Codex, and Grok plans you already pay for. Happy adds a harness, not another bill.',
+    title: 'Reuse your subscriptions',
+    body: 'Sign in with the Claude, Codex, and Grok subscriptions you already pay for. Happy adds a harness, not another bill.',
   },
   {
     title: 'Open source MIT',

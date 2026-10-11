@@ -104,7 +104,8 @@ function LegacyNotice() {
         <strong>Happy is now a desktop app.</strong> The original Happy CLI (<code>happy</code> on npm,
         formerly <code>happy-coder</code>) is in maintenance mode: it keeps working and still gets critical
         fixes, but new features ship in the <a href="/">Happy desktop app</a>. The Happy mobile app works
-        with both.
+        with both. These docs describe the CLI; for Happy today, an open-source harness for orchestrating
+        Claude, Codex, and Grok, start at <a href="/welcome/">Welcome</a>.
       </p>
     </aside>
   )
