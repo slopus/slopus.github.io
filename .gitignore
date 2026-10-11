@@ -4,3 +4,4 @@ dist-ssr
 coverage
 .DS_Store
 .context/
+notes/og/.fonts/

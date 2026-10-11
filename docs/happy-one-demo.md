@@ -119,7 +119,8 @@ existing 47 tests and production build pass.
 
 This is an agent-run screenshot recipe, not a production script. The ordinary
 page uses the requested capitalization, “Any Model. Your Subscription. Happy Harness.”,
-and keeps its existing description. Every route uses
+and keeps its existing description. Every route without its own card (all but
+the desktop docs, whose cards come from `notes/og/cards.py`) uses
 `/og/happy-harness-v24.png` as its social image (a byte-identical copy of v23,
 renamed so link previews refetch; v23 stays for old shares).
 

@@ -70,7 +70,8 @@ These rules cover the docs, guides, comparisons, and blog. The homepage has rule
 - **Nothing above the h1 on desktop.** No eyebrow, breadcrumb, or product label, because the sidebar already shows where you are. On a phone, the docs navigation is the group-and-page trail:
   - a 44px tap target;
   - its chevron at the right end, no taller than the text's capitals.
-- **Metadata.** Each page's title, search title, and description (160 characters at most) live in `src/documents.ts`. The description also becomes the page's line in `llms.txt`, so it states the capability plainly.
+- **Metadata.** Each page's title, search title, and description (160 characters at most) live in `src/documents.ts`.
+- **Link preview.** Each desktop doc has its own card, `public/og/<path with dashes>.png`: its title, description, and first figure. After adding a page or changing its title, description, or figure, run `python3 notes/og/cards.py <slug>` and commit the PNG; the build fails without it. The original CLI docs under `/docs/` keep the homepage's card. The description also becomes the page's line in `llms.txt`, so it states the capability plainly.
 - **The Blog** is the last sidebar group, with no list page. Each post gets a one-word slug you can type from memory: `/workos/`, `/tailcat/`, `/voice/`.
 - **URLs don't break.** `routes.txt` only grows. A shared URL keeps working when its page moves: `/team-sign-in-workos/` redirects to `/workos/`.
 

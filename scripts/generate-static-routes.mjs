@@ -12,8 +12,6 @@ for (const tag of ['name="description"', 'property="og:description"', 'property=
     throw new Error(`dist/index.html is missing a one-line <meta ${tag} content="..."> tag.`)
   }
 }
-// The homepage's head, reused by the redirect pages so shared old URLs still preview.
-const socialTags = baseHtml.match(/<meta (?:property="og:|name="twitter:)[^>]*\/>/g).join('\n    ')
 const siteUrl = 'https://happy.engineering'
 
 // Pages that ship their rendered markup, and the app's own docs registry and page
@@ -163,11 +161,54 @@ function assertDocumentServed(route, html, heading) {
   }
 }
 
+function metaContent(html, attribute, name) {
+  return html.match(new RegExp(`<meta ${attribute}="${name}" content="([^"]*)"`))?.[1]
+}
+
+// Link previews: every desktop doc shows its own 1200x630 card, public/og/<path with
+// dashes>.png, drawn by notes/og/cards.py; the original CLI docs keep the homepage's.
+const defaultSocialImage = metaContent(baseHtml, 'property', 'og:image')
+async function assertSocialCard(route, html, document) {
+  const desktop = document.product === HAPPY_DESKTOP.key
+  const expected = desktop ? `${siteUrl}/og/${document.path.replaceAll('/', '-')}.png` : defaultSocialImage
+  const tags = {
+    'og:image': metaContent(html, 'property', 'og:image'),
+    'twitter:image': metaContent(html, 'name', 'twitter:image'),
+    'twitter:card': metaContent(html, 'name', 'twitter:card'),
+    'og:url': metaContent(html, 'property', 'og:url'),
+    'og:image:width': metaContent(html, 'property', 'og:image:width'),
+    'og:image:height': metaContent(html, 'property', 'og:image:height'),
+  }
+  const wanted = {
+    'og:image': expected,
+    'twitter:image': expected,
+    'twitter:card': 'summary_large_image',
+    'og:url': new URL(route, siteUrl).toString(),
+    'og:image:width': '1200',
+    'og:image:height': '630',
+  }
+  for (const [tag, value] of Object.entries(wanted)) {
+    if (tags[tag] !== value) {
+      throw new Error(`${route} should have ${tag} "${value}", not "${tags[tag]}"${desktop && tag === 'og:image' ? '; run python3 notes/og/cards.py' : ''}`)
+    }
+  }
+  for (const tag of ['og:title', 'og:description']) {
+    if (!metaContent(html, 'property', tag)) throw new Error(`${route} is missing ${tag}`)
+  }
+  if (desktop) {
+    const png = await readFile(path.join(distRoot, new URL(expected).pathname)).catch(() => null)
+    if (!png) throw new Error(`${route} has no card at public${new URL(expected).pathname}; run python3 notes/og/cards.py`)
+    const size = png.toString('latin1', 1, 4) === 'PNG' ? `${png.readUInt32BE(16)}x${png.readUInt32BE(20)}` : 'not a PNG'
+    if (size !== '1200x630') throw new Error(`public${new URL(expected).pathname} should be a 1200x630 PNG, not ${size}`)
+  }
+}
+
 for (const document of documents) {
   const product = document.product === HAPPY_DESKTOP.key ? HAPPY_DESKTOP : HAPPY
   const canonicalPath = documentHref(product, document.path)
   const html = withAppMarkup(htmlForPage(metadataForPath(canonicalPath)), prerendered(canonicalPath))
   assertDocumentServed(canonicalPath, html, documentHeading(document))
+  await assertSocialCard(canonicalPath, html, document)
 
   await writeRoute(canonicalPath, html)
   documentRoutes += 1
@@ -189,19 +230,21 @@ for (const document of documents) {
 
 // The desktop page is the homepage now (dist/index.html, built from index.html).
 // Its old URLs redirect there without JavaScript, so GitHub Pages serves a real
-// redirect: a refresh, a canonical to /, and a script that keeps ?query and #hash.
-const homepageTitle = baseHtml.match(/<title>(.*?)<\/title>/)[1]
-const homepageDescription = baseHtml.match(/<meta name="description" content="([^"]*)"/)[1]
-  .replace(/&amp;/g, '&').replace(/&quot;/g, '"')
-
+// redirect: a refresh, a canonical to the target, and a script that keeps ?query and #hash.
+// It carries the target's title, description, and link preview, so a shared old URL
+// previews as the page it moved to.
 function redirectHtml(target) {
   const url = new URL(target, siteUrl).toString()
+  const head = htmlForPage(metadataForPath(target))
+  const title = head.match(/<title>.*?<\/title>/)[0]
+  const description = head.match(/<meta name="description"[^>]*\/>/)[0]
+  const socialTags = head.match(/<meta (?:property="og:|name="twitter:)[^>]*\/>/g).join('\n    ')
   return `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>${homepageTitle}</title>
-    <meta name="description" content="${escapeHtml(homepageDescription)}" />
+    ${title}
+    ${description}
     <link rel="canonical" href="${escapeHtml(url)}" />
     ${socialTags}
     <meta http-equiv="refresh" content="0; url=${escapeHtml(target)}" />

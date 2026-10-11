@@ -11,11 +11,25 @@ export interface PageMetadata {
   socialImage?: Readonly<{ path: string; width: number; height: number; alt: string }>
 }
 
-/** The desktop app's social card, the screenshot described in docs/happy-one-demo.md. Every page shares it. */
+/**
+ * The desktop app's social card, the screenshot described in docs/happy-one-demo.md.
+ * Every page without its own card shares it, the original CLI docs included.
+ */
 export const defaultSocialImage = {
   path: '/og/happy-harness-v24.png', width: 1200, height: 630,
   alt: 'Happy Harness model picker and paired phone, with Free and open source and 23.8k GitHub stars.',
 } as const
+
+/**
+ * A desktop doc's own card: its title beside its figure, at /og/<path with dashes>.png.
+ * notes/og/cards.py draws them; the build fails if one is missing.
+ */
+export function documentSocialImage(path: string, heading: string): NonNullable<PageMetadata['socialImage']> {
+  return {
+    path: `/og/${path.replace(/\//g, '-')}.png`, width: 1200, height: 630,
+    alt: `${heading} — Happy Engineering`,
+  }
+}
 
 /**
  * The homepage is the Happy desktop app's page. Keep index.html, which crawlers

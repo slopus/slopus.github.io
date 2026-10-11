@@ -9,6 +9,7 @@ import { documentHref, HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import {
   applyPageMetadata,
   docsMetadataForProduct,
+  documentSocialImage,
   homepageMetadata,
   memesPluginMetadata,
   modelBenchmarksMetadata,
@@ -94,6 +95,12 @@ function documentForPath(normalizedPath: string): { product: Product; path: stri
  * The head for a URL. scripts/generate-static-routes.mjs writes the docs pages'
  * served HTML from this too, so the served head and the client agree.
  */
+/** A desktop doc's own link preview. The original CLI docs keep the default one. */
+function desktopDocumentCard(path: string) {
+  const document = getDocument(HAPPY_DESKTOP.key, path)
+  return document && documentSocialImage(document.path, documentHeading(document))
+}
+
 export function metadataForPath(pathname: string): PageMetadata {
   const normalizedPath = normalizedPathname(pathname)
 
@@ -107,7 +114,7 @@ export function metadataForPath(pathname: string): PageMetadata {
 
   // The Vision essay is a docs page (src/documents.ts) that keeps its own title.
   if (normalizedPath === '/vision') {
-    return thesisMetadata
+    return { ...thesisMetadata, socialImage: desktopDocumentCard('vision') }
   }
 
   if (pluginPageMetadata[normalizedPath]) {
@@ -135,8 +142,10 @@ export function metadataForPath(pathname: string): PageMetadata {
 
   if (located && document) {
     const canonicalPath = documentHref(located.product, document.path)
+    const socialImage = located.product === HAPPY_DESKTOP ? desktopDocumentCard(document.path) : undefined
     if (canonicalPath === located.product.docsHome) {
-      return docsMetadataForProduct(located.product.key)
+      const metadata = docsMetadataForProduct(located.product.key)
+      return socialImage ? { ...metadata, socialImage } : metadata
     }
 
     return {
@@ -145,6 +154,7 @@ export function metadataForPath(pathname: string): PageMetadata {
       canonicalPath,
       // An unlisted page stays reachable, but out of search results.
       robots: document.hidden ? 'noindex, follow' : undefined,
+      socialImage,
     }
   }
 

@@ -138,7 +138,7 @@ describe('static document pages', () => {
       expect(metadata.description).toBe(document.description)
       expect(metadata.title).toContain(document.pageTitle ?? documentHeading(document))
     }
-    expect(metadataForPath('/welcome/')).toBe(desktopDocsMetadata)
+    expect(metadataForPath('/welcome/')).toMatchObject(desktopDocsMetadata)
     expect(metadataForPath('/docs/')).toBe(docsMetadata)
     // The old prefixes serve the same page, canonical to its top-level URL.
     expect(metadataForPath('/desktop/docs/models/')).toEqual(metadataForPath('/models/'))
