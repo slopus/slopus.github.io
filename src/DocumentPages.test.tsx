@@ -122,6 +122,7 @@ describe('static document pages', () => {
     expect(renderPath('/welcome/')).toContain('href="/quick-start/"')
   })
 
+  // One server render per docs page, so it grows with the docs; CI runs several times slower than a laptop.
   it('prerenders every docs page with one h1, its own title and description', () => {
     for (const document of documents) {
       const pathname = documentHref(document.product === 'desktop' ? HAPPY_DESKTOP : HAPPY, document.path)
@@ -141,7 +142,7 @@ describe('static document pages', () => {
     expect(metadataForPath('/docs/')).toBe(docsMetadata)
     // The old prefixes serve the same page, canonical to its top-level URL.
     expect(metadataForPath('/desktop/docs/models/')).toEqual(metadataForPath('/models/'))
-  })
+  }, 30_000)
 
   it('keeps the unlisted Buzz comparison out of search results', () => {
     expect(metadataForPath('/comparisons/buzz/').robots).toBe('noindex, follow')

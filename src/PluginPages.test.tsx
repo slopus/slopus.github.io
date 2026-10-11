@@ -144,6 +144,7 @@ describe('plugin pages', () => {
     expect(renderPath('/plugins/privacy/')).toContain('collects no personal data')
   })
 
+  // One hydration per prerendered page: it grows with every docs page and outran the 5s default on CI.
   it('hydrates every prerendered page (plugins, docs, thesis) without replacing or duplicating it', async () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
 
@@ -174,5 +175,5 @@ describe('plugin pages', () => {
     expect(consoleError).not.toHaveBeenCalled()
     consoleError.mockRestore()
     window.history.replaceState({}, '', '/')
-  })
+  }, 30_000)
 })
