@@ -1,5 +1,5 @@
 # Writes public/og/<slug>.png, the 1200x630 link preview of every desktop doc: the
-# Happy Engineering wordmark, the page's title and description, its URL, and its
+# Happy Engineering wordmark with the descriptor under it, the page's title and description, its URL, and its
 # figure (the first image on the page) on the right. A page without a figure gets
 # the site's H mark instead. The original CLI docs under /docs/ keep the homepage's card.
 #
@@ -43,6 +43,8 @@ FIGURE_OVERRIDES = {
 }
 
 W, H = 1200, 630
+# Under the wordmark on every card, as on public/img/tailcat-x.png; src/products.ts HAPPY_DESCRIPTOR.
+DESCRIPTOR = "Orchestrate Claude, Codex and Grok in one app"
 INK, MUTED, BODY, ACCENT, PAPER = "#183f38", "#6b7f78", "#47645e", "#e6522c", "#f5f0e7"
 
 
@@ -135,6 +137,7 @@ html, body {{ margin: 0; background: {PAPER}; }}
 .card {{ position: relative; width: {W}px; height: {H}px; overflow: hidden; background: {PAPER}; color: {INK}; font-family: 'DM Sans', sans-serif; }}
 .copy {{ position: absolute; left: 72px; top: 62px; bottom: 58px; width: {copy_w}px; display: flex; flex-direction: column; }}
 .wordmark svg {{ display: block; width: auto; height: 30px; }}
+.descriptor {{ margin-top: 10px; color: {MUTED}; font-size: 22px; font-weight: 500; line-height: 1.2; }}
 .text {{ margin: auto 0; }}
 h1 {{ margin: 0; font: 600 var(--size, 76px)/1.04 'Space Grotesk', sans-serif; letter-spacing: -.025em; text-wrap: balance; }}
 p {{ margin: 24px 0 0; color: {BODY}; font-size: 27px; line-height: 1.4; text-wrap: pretty;
@@ -150,7 +153,7 @@ p {{ margin: 24px 0 0; color: {BODY}; font-size: 27px; line-height: 1.4; text-wr
 .person figcaption {{ font-size: 24px; font-weight: 500; color: {INK}; text-align: center; }}
 </style></head><body><div class="card">
 <div class="copy">
-  <div class="wordmark">{wordmark}</div>
+  <div class="wordmark">{wordmark}<div class="descriptor">{DESCRIPTOR}</div></div>
   <div class="text"><h1>{html.escape(page['heading'])}</h1><p>{html.escape(page['description'])}</p></div>
   <div class="url">{html.escape(url)}</div>
 </div>
@@ -160,7 +163,7 @@ p {{ margin: 24px 0 0; color: {BODY}; font-size: 27px; line-height: 1.4; text-wr
 
 # A description over three lines loses whole clauses from its end, never half a word.
 # Then the title is the largest that fits in four lines, 32px clear of the wordmark and the URL.
-FIT = """(max) => {
+FIT = r"""(max) => {
   const box = (selector) => document.querySelector(selector).getBoundingClientRect()
   const h1 = document.querySelector('h1'), p = document.querySelector('p')
   const clauses = p.textContent.split(/(?<=[.,:;])\s+/)

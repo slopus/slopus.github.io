@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import { Router } from './Router'
+import { startAnalytics } from './analytics'
 import './style.css'
 
 const root = document.querySelector<HTMLDivElement>('#app')
@@ -21,3 +22,5 @@ if (root.hasChildNodes()) {
 } else {
   createRoot(root).render(app)
 }
+
+startAnalytics()

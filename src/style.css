@@ -234,6 +234,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .footer-statement { font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-weight: 500; font-size: 1.3rem; letter-spacing: -.01em; line-height: 1.4; margin: 0; max-width: 30ch; }
 .footer-meta { text-align: right; }
 .footer-meta p { color: #47645e; font-size: .78rem; margin: .6rem 0 0; }
+.footer-meta .footer-descriptor { color: #183f38; font-size: .9rem; margin-top: .45rem; }
 .footer-links { display: flex; font-size: .8rem; gap: 1.25rem; justify-content: flex-end; margin-bottom: 1.1rem; }
 .footer-links a { border-bottom: 1px solid transparent; }
 .footer-links a:hover { border-color: currentColor; }

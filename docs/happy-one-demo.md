@@ -119,13 +119,15 @@ existing 47 tests and production build pass.
 
 This is an agent-run screenshot recipe, not a production script. The ordinary
 page uses the requested capitalization, “Any Model. Your Subscription. Happy Harness.”,
-and keeps its existing description. Every route without its own card (all but
+with “Orchestrate Claude, Codex and Grok in one app” under it. Every route without its own card (all but
 the desktop docs, whose cards come from `notes/og/cards.py`) uses
-`/og/happy-harness-v24.png` as its social image (a byte-identical copy of v23,
-renamed so link previews refetch; v23 stays for old shares).
+`/og/happy-harness-v25.png` as its social image, served with `?v=` and
+`SOCIAL_IMAGE_VERSION` from `src/siteMetadata.ts` so link previews refetch;
+v22–v24 stay for old shares.
 
-The v23 card is a horizontal composition: the three-line headline, “Free and
-open source”, and GitHub stars on the left; the full desktop on the right;
+The v25 card is a horizontal composition: the three-line headline at 52px, the
+descriptor “Orchestrate Claude, Codex and Grok in one app” on two lines, “Free
+and open source”, and GitHub stars on the left; the full desktop on the right;
 and only 40% of the parked phone peeking in from the right edge. At 1200×630,
 the desktop's visible layout box is 596×507.34375px at (512, 47.328125):
 49.666667% of image width and 39.997470% of image area. The phone's visible
@@ -136,7 +138,7 @@ match the widths exactly, with less than 0.03px height variation.
 
 1. Read the current public `https://api.github.com/repos/slopus/happy` response.
    Update the dated snapshot in `src/happyOneGithubStars.ts` using
-   `stargazers_count` (23,810 / 23.8k on 2026-09-17). The header and screenshot
+   `stargazers_count` (24,083 / 24k on 2026-10-10). The header and screenshot
    both link to the **original** `https://github.com/slopus/happy` repository.
    Download “All Releases” deliberately still links to `happy-desktop`.
 2. Build the website. Open `/?preview=og` in Chromium at
@@ -148,7 +150,6 @@ match the widths exactly, with less than 0.03px height variation.
    fixed social-card composition in `src/happy-one-preview.css`. Without the
    flag, the extra hero line is not mounted and the normal layout is unchanged.
    Keep the headline on three lines: “Any Model.” / “Your Subscription.” / “Happy Harness”.
-   (The current v24 card predates this headline and still reads “Your Team.”)
    The copy starts at x=48px in a 440px column; a 24px gap separates it from
    the 596px desktop. The 200px phone starts 12px after the desktop, leaving
    80px visible. Do not stack the desktop below the headline in this mode.

@@ -8,10 +8,11 @@
 .happy-one[data-social-preview] .page-scrollbar { display: none; }
 .happy-one[data-social-preview] .one-hero { display: flex; align-items: center; gap: 24px; width: 1200px; height: 630px; margin: 0; padding: 0 0 0 48px; text-align: left; }
 .happy-one[data-social-preview] .one-hero-copy { display: flex; flex: 0 0 440px; flex-direction: column; align-items: flex-start; gap: 18px; }
-.happy-one[data-social-preview] .one-hero h1 { font-size: 62px; line-height: 1.08; margin: 0; white-space: nowrap; }
+.happy-one[data-social-preview] .one-hero h1 { font-size: 52px; line-height: 1.08; margin: 0; white-space: nowrap; }
 .happy-one[data-social-preview] .one-hero h1 > span,
 .happy-one[data-social-preview] .one-hero h1 > em { display: block; }
 .happy-one[data-social-preview] .one-hero h1 > br { display: none; }
+.happy-one[data-social-preview] .one-hero-tagline { font-size: 24px; line-height: 31px; }
 .happy-one[data-social-preview] .one-hero-note { font-size: 22px; line-height: 28px; }
 .happy-one[data-social-preview] .one-social-stars { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 18px; line-height: 24px; }
 .happy-one[data-social-preview] .one-social-stars svg { width: 18px; height: 18px; }

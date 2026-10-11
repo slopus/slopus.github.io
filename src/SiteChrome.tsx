@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { HAPPY, HAPPY_DESKTOP, type Product } from './products'
+import { HAPPY, HAPPY_DESCRIPTOR, HAPPY_DESKTOP, type Product } from './products'
 import { HAPPY_ONE_GITHUB_STARS } from './happyOneGithubStars'
 import { PageScrollbar } from './PageScrollbar'
 import { KIRILL, STEVE } from './Team'
@@ -111,6 +111,7 @@ export function SiteFooter({ product = HAPPY, additionalLinks }: { product?: Pro
             <a className="footer-link-quiet" href={HAPPY.docsHome}>Original Happy CLI</a>
           </div>
           <Wordmark />
+          <p className="footer-descriptor">{HAPPY_DESCRIPTOR}</p>
           <p>© {currentYear} Happy Engineering</p>
         </div>
       </div>

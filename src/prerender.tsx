@@ -9,6 +9,7 @@ import { Router } from './Router'
 export { documentHeading, documents } from './documents'
 export { documentHref, HAPPY, HAPPY_DESKTOP } from './products'
 export { metadataForPath } from './Router'
+export { defaultSocialImage, socialImageUrl } from './siteMetadata'
 export { APP_STORE_LINK, GOOGLE_PLAY_LINK } from './StoreButtons'
 
 /**

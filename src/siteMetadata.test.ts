@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { documents } from './documents'
 import { documentHref, HAPPY, HAPPY_DESKTOP } from './products'
 import { metadataForPath } from './Router'
-import { applyPageMetadata, defaultSocialImage } from './siteMetadata'
+import { applyPageMetadata, defaultSocialImage, SOCIAL_IMAGE_VERSION } from './siteMetadata'
 
 describe('link previews', () => {
   it('gives every desktop doc its own card, named after its path', () => {
@@ -30,11 +30,12 @@ describe('link previews', () => {
     const read = (selector: string) => document.querySelector(selector)?.getAttribute('content')
 
     applyPageMetadata(metadataForPath('/multiplayer/'))
-    expect(read('meta[property="og:image"]')).toBe('https://happy.engineering/og/multiplayer.png')
-    expect(read('meta[name="twitter:image"]')).toBe('https://happy.engineering/og/multiplayer.png')
+    const card = `https://happy.engineering/og/multiplayer.png?v=${SOCIAL_IMAGE_VERSION}`
+    expect(read('meta[property="og:image"]')).toBe(card)
+    expect(read('meta[name="twitter:image"]')).toBe(card)
     expect(read('meta[property="og:url"]')).toBe('https://happy.engineering/multiplayer/')
 
     applyPageMetadata(metadataForPath('/docs/quick-start/'))
-    expect(read('meta[property="og:image"]')).toBe(`https://happy.engineering${defaultSocialImage.path}`)
+    expect(read('meta[property="og:image"]')).toBe(`https://happy.engineering${defaultSocialImage.path}?v=${SOCIAL_IMAGE_VERSION}`)
   })
 })

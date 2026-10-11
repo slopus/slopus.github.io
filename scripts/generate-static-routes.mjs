@@ -18,6 +18,7 @@ const siteUrl = 'https://happy.engineering'
 // metadata, so the served head matches what the client sets. Built by `vite build --ssr`.
 const {
   APP_STORE_LINK,
+  defaultSocialImage,
   documentHeading,
   documentHref,
   documents,
@@ -27,6 +28,7 @@ const {
   metadataForPath,
   prerenderedPaths,
   renderPath,
+  socialImageUrl,
 } = await import(pathToFileURL(path.join(projectRoot, 'dist-ssr', 'prerender.js')).href)
 
 // routes.txt is the committed record of every URL this site has ever served; see the check at the end.
@@ -77,7 +79,7 @@ function htmlForPage({
   html = replaceMeta(html, 'name', 'twitter:title', socialTitle)
   html = replaceMeta(html, 'name', 'twitter:description', twitterDescription)
   if (socialImage) {
-    const imageUrl = new URL(socialImage.path, siteUrl).toString()
+    const imageUrl = socialImageUrl(socialImage)
     html = replaceMeta(html, 'property', 'og:image', imageUrl)
     html = replaceMeta(html, 'property', 'og:image:width', String(socialImage.width))
     html = replaceMeta(html, 'property', 'og:image:height', String(socialImage.height))
@@ -167,10 +169,17 @@ function metaContent(html, attribute, name) {
 
 // Link previews: every desktop doc shows its own 1200x630 card, public/og/<path with
 // dashes>.png, drawn by notes/og/cards.py; the original CLI docs keep the homepage's.
-const defaultSocialImage = metaContent(baseHtml, 'property', 'og:image')
+// Every image URL carries ?v=SOCIAL_IMAGE_VERSION (src/siteMetadata.ts), so previews refetch.
+const homepageSocialImage = socialImageUrl(defaultSocialImage)
+for (const tag of ['property="og:image"', 'name="twitter:image"']) {
+  const content = baseHtml.match(new RegExp(`<meta ${tag} content="([^"]*)"`))[1]
+  if (content !== homepageSocialImage) {
+    throw new Error(`index.html should have <meta ${tag} content="${homepageSocialImage}">, as src/siteMetadata.ts says, not "${content}"`)
+  }
+}
 async function assertSocialCard(route, html, document) {
   const desktop = document.product === HAPPY_DESKTOP.key
-  const expected = desktop ? `${siteUrl}/og/${document.path.replaceAll('/', '-')}.png` : defaultSocialImage
+  const expected = desktop ? socialImageUrl({ path: `/og/${document.path.replaceAll('/', '-')}.png` }) : homepageSocialImage
   const tags = {
     'og:image': metaContent(html, 'property', 'og:image'),
     'twitter:image': metaContent(html, 'name', 'twitter:image'),

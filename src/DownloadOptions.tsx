@@ -86,6 +86,7 @@ function DesktopDownloadLink({ platform, macArchitecture, downloads, className, 
   }
   return <a className={className} href={downloads ? desktopDownloadUrl(downloads, platform, macArchitecture) : undefined} role="link" tabIndex={0}
     aria-label={`Download Happy for ${LABELS[platform]}`} aria-busy={checking || undefined}
+    data-download-platform={platform} data-download-arch={platform === 'macos' ? macArchitecture : 'x64'}
     onClick={start} onAuxClick={start}
     onKeyDown={event => {
       if (!downloads && event.key === 'Enter') { event.preventDefault(); event.currentTarget.click() }

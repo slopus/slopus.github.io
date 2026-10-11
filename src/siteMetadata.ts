@@ -16,9 +16,20 @@ export interface PageMetadata {
  * Every page without its own card shares it, the original CLI docs included.
  */
 export const defaultSocialImage = {
-  path: '/og/happy-harness-v24.png', width: 1200, height: 630,
-  alt: 'Happy Harness model picker and paired phone, with Free and open source and 23.8k GitHub stars.',
+  path: '/og/happy-harness-v25.png', width: 1200, height: 630,
+  alt: 'Happy Harness model picker and paired phone, with Orchestrate Claude, Codex and Grok in one app, Free and open source, and 24k GitHub stars.',
 } as const
+
+/**
+ * X, Slack and iMessage cache a preview by its image URL. Bump this after redrawing the
+ * cards, so links shared before show the new ones.
+ */
+export const SOCIAL_IMAGE_VERSION = 2
+
+/** The absolute og:image and twitter:image URL of a card, with its cache-busting version. */
+export function socialImageUrl(image: Readonly<{ path: string }>) {
+  return `https://happy.engineering${image.path}?v=${SOCIAL_IMAGE_VERSION}`
+}
 
 /**
  * A desktop doc's own card: its title beside its figure, at /og/<path with dashes>.png.
@@ -38,7 +49,7 @@ export function documentSocialImage(path: string, heading: string): NonNullable<
 export const homepageMetadata: PageMetadata = {
   title: 'Happy — Open-Source Harness to Orchestrate Claude Code, Codex & Grok',
   description:
-    'Happy is an open-source harness for orchestrating coding agents: Claude, Codex, and Grok in one desktop app, reusing the subscriptions you already pay for.',
+    'Orchestrate Claude, Codex and Grok in one app. Happy is an open-source harness that reuses the subscriptions you already pay for.',
   canonicalPath: '/',
   socialTitle: 'Any Model. Your Subscription. Happy Harness.',
 }
@@ -121,7 +132,7 @@ export function applyPageMetadata(metadata: PageMetadata) {
   const socialTitle = metadata.socialTitle ?? metadata.title
   const socialDescription = metadata.socialDescription ?? metadata.description
   const socialImage = metadata.socialImage ?? defaultSocialImage
-  const socialImageUrl = new URL(socialImage.path, 'https://happy.engineering').toString()
+  const imageUrl = socialImageUrl(socialImage)
 
   document.title = metadata.title
   setMetaContent('meta[name="description"]', metadata.description)
@@ -130,11 +141,11 @@ export function applyPageMetadata(metadata: PageMetadata) {
   setMetaContent('meta[property="og:url"]', canonicalUrl)
   setMetaContent('meta[property="og:title"]', socialTitle)
   setMetaContent('meta[property="og:description"]', socialDescription)
-  setMetaContent('meta[property="og:image"]', socialImageUrl)
+  setMetaContent('meta[property="og:image"]', imageUrl)
   setMetaContent('meta[property="og:image:width"]', String(socialImage.width))
   setMetaContent('meta[property="og:image:height"]', String(socialImage.height))
   setMetaContent('meta[property="og:image:alt"]', socialImage.alt)
-  setMetaContent('meta[name="twitter:image"]', socialImageUrl)
+  setMetaContent('meta[name="twitter:image"]', imageUrl)
   setMetaContent('meta[name="twitter:image:alt"]', socialImage.alt)
   setMetaContent('meta[name="twitter:title"]', socialTitle)
   setMetaContent(

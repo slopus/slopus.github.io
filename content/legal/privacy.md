@@ -1,6 +1,6 @@
 # Privacy Policy
 
-Last updated: July 15, 2026
+Last updated: October 11, 2026
 
 ## About Happy
 
@@ -14,6 +14,8 @@ Happy collects limited, pseudonymous product analytics through PostHog. We use t
 - Events may include basic technical context such as app, operating-system, and device details so we can diagnose reliability issues.
 - Analytics use a pseudonymous app identifier, not your code or conversation content.
 - You can turn off analytics in the app settings.
+
+This website, happy.engineering, records page views and clicks through PostHog, the same project as the app. It sets no cookies and stores nothing in your browser, so each visit is counted on its own; PostHog handles IP addresses according to our project settings.
 
 ## Encrypted Session Data
 
