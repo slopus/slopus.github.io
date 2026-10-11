@@ -29,7 +29,9 @@ GOOGLE_FONTS = "https://raw.githubusercontent.com/google/fonts/bd8f81ddb5c74d5c8
 FONT_FILES = {
     "ShantellSans.ttf": "shantellsans/ShantellSans%5BBNCE,INFM,SPAC,wght%5D.ttf",
     "DMSans.ttf": "dmsans/DMSans%5Bopsz,wght%5D.ttf",
+    "DMMono-Medium.ttf": "dmmono/DMMono-Medium.ttf",
 }
+FAMILIES = {"ShantellSans.ttf": "Shantell Sans", "DMSans.ttf": "DM Sans", "DMMono-Medium.ttf": "DM Mono"}
 PAGE = "#f5f0e7"
 INK = "#183f38"; MUTED = "#6b7f78"; SAND = "#f6eadf"; MINT = "#e3efe9"
 
@@ -50,7 +52,7 @@ def fonts_css():
         if not target.exists():
             print(f"downloading {name}")
             target.write_bytes(urllib.request.urlopen(f"{GOOGLE_FONTS}/{remote}").read())
-        family = "Shantell Sans" if name.startswith("Shantell") else "DM Sans"
+        family = FAMILIES[name]
         data = base64.b64encode(target.read_bytes()).decode()
         css.append(f"@font-face{{font-family:'{family}';src:url(data:font/ttf;base64,{data}) format('truetype');font-weight:100 900}}")
     return "".join(css)
@@ -134,6 +136,13 @@ def chip(x, y, w, s):
     return rect(x, y, w, 30, 1.1, INK) + "\n" + text(x + w / 2, y + 21, s, 15, INK, 600)
 
 
+# github.com/slopus/happy stars, rounded down to whole thousands: gh api repos/slopus/happy --jq .stargazers_count
+GITHUB_STARS = "24k"
+
+# The site header's GitHub mark (src/SiteChrome.tsx), 16 units square.
+GITHUB_MARK = "M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"
+
+
 def tailcat_x(browser, head):
     """Tailcat for X, drawn in 800x450 units and rendered at 2x. On each machine Happy Agent runs
     Tailcat as a child process: `tailcat socks` beside Happy Desktop, `tailcat serve` on the server."""
@@ -141,6 +150,9 @@ def tailcat_x(browser, head):
     wordmark = re.sub(r'width="[\d.]+" height="[\d.]+"', 'width="151" height="17"', wordmark, count=1)
     o = []
     o.append(f'<g transform="translate(20 20)">{wordmark}</g>')
+    # Beside the wordmark, as in the site header: the GitHub mark and a plain count, no pill.
+    o.append(f'<path transform="translate(188 22) scale(.8)" d="{GITHUB_MARK}" fill="{INK}"/>')
+    o.append(text(206, 33, f"{GITHUB_STARS} stars · MIT", 11, INK, 500, "start", "DM Mono"))
     o.append(text(20, 56, "Open-source harness for Claude, Codex & Grok agents", 11.5, MUTED, 500, "start", "DM Sans"))
 
     # Tailscale runs the relay; it only forwards.
