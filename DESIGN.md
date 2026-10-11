@@ -61,7 +61,9 @@ These rules cover the docs, guides, comparisons, and blog. The homepage has rule
   4. the Chief of Staff block.
 
   Everything below is the reference layer. It is for readers who want to know how the feature works, and for search engines and AI assistants working out what Happy can do. Each h2 names its question in the words people search with: "Use several accounts of one provider", not "Accounts". Each section stands on its own and states concrete facts. No keyword stuffing.
-- **The Chief of Staff block.** Every feature page, and every guide whose task the [Chief of Staff](/chief-of-staff/) can do, has a `chief-of-staff` fence right after its intro, with one prompt per line. Each line renders with a Copy button.
+
+  Lead with what you get, never with the problem. The problem and the workarounds belong in the reference layer, beside the alternatives.
+- **The Chief of Staff block.** Every feature page, and every guide whose task the [Chief of Staff](/chief-of-staff/) can do, has a `chief-of-staff` fence right after its intro, with one prompt per line. It renders as part of the page, not a card: no fill and no colored border. Each prompt is a line of text flush with the article, behind a “›”, and a small Copy control follows its last word.
   - Use prompts the Chief of Staff can carry out today with its tools and recipes. Check before adding one.
   - Make them copyable as written. Use example names such as `acme/api`, `ubuntu@203.0.113.10`, and `alice@example.com`.
   - Leave the block off pages where it can't help: Voice, Using the Terminal, How It Works, comparisons, Vision, Team.

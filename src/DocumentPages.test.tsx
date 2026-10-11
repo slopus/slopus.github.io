@@ -342,7 +342,7 @@ describe('static document pages', () => {
       expect(bio).toMatch(/\bI\b/)
       expect(bio).not.toContain(heading.firstChild!.textContent!.split(' ')[0])
     }
-    expect(content.textContent).toContain('I work on Happy day to day')
+    expect(content.textContent).toContain('I build the desktop app')
     expect(content.textContent).toMatch(/Before Happy I built/)
     expect(content.textContent).not.toMatch(/YC interview|continue\.dev|Fizz|architected|bootstrapped/i)
     for (const href of [
@@ -359,7 +359,7 @@ describe('static document pages', () => {
       '/img/team/kirill-dubovitskiy.jpg',
     ])
     // Nobody's level of involvement, in either direction.
-    expect(content.textContent).not.toMatch(/full[- ]time|part[- ]time|day job|side project|spare time/i)
+    expect(content.textContent).not.toMatch(/full[- ]time|part[- ]time|day job|day to day|side project|spare time/i)
     expect(documents.filter((document) => document.path === 'team')).toHaveLength(1)
   })
 
@@ -434,11 +434,15 @@ describe('static document pages', () => {
       if (document.path !== 'quick-start') {
         expect(block, document.path).toBeLessThan(markup.indexOf('<h2', markup.indexOf('<h1')))
       }
-      expect(markup).toMatch(/<p class="cos-prompt-text">[^<]+<\/p><button type="button" class="cos-prompt-copy" aria-label="Copy prompt: /)
+      expect(markup).toMatch(/<span class="cos-prompt-text">[^<]+<\/span><button type="button" class="cos-prompt-copy" data-state="idle" aria-label="Copy prompt: /)
       // The block replaces the old prose section.
       expect(markup).not.toMatch(/<h2[^>]*>Ask the Chief of Staff</)
     }
     expect(withPrompt.filter((path) => !getDocument('desktop', path))).toEqual([])
+    // The remote-server guide leads with what you get: the harness diagram, then the prompt; the problem waits in the reference layer.
+    const remote = renderPath('/guides/remote-server/')
+    expect(remote.indexOf('src="/img/remote-server-harness.svg"')).toBeLessThan(remote.indexOf('<aside class="cos-prompt"'))
+    expect(remote.slice(0, remote.indexOf('<h2', remote.indexOf('<h1')))).not.toMatch(/lid closes|laptop sleeps<\/h2>|workarounds/i)
     // The Chief of Staff page shows the real sidebar, where it is the first bot.
     expect(renderPath('/chief-of-staff/')).toContain('src="/img/chief-of-staff-sidebar.png"')
   }, 30_000)
