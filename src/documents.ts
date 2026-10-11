@@ -24,8 +24,8 @@ export interface DocumentEntry {
   /** An essay: rendered with captioned figures, floats, and the pig in its bullet (src/DocumentPages.tsx). */
   essay?: boolean
   /**
-   * A page without a figure: what its link-preview card says under the title, in place of the
-   * description. Four to eight words, benefit first, no closing period (notes/og/cards.py).
+   * What the link-preview card says under the title, in place of the description: four to eight
+   * words, benefit first, no closing period. Required on a page without a figure (notes/og/cards.py).
    */
   cardLine?: string
 }
@@ -212,6 +212,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Chief of Staff',
     pageTitle: 'Chief of Staff: The Built-In Bot That Sets Up Happy Desktop',
     description: 'The first bot in Happy Desktop: it walks you through setup, adds model accounts and providers, pairs your phone, and deploys servers, in conversation.',
+    cardLine: 'Your first bot sets up the rest',
     group: 'Start here',
   },
   {

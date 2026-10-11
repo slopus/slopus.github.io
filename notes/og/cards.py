@@ -1,8 +1,8 @@
 # Writes public/og/<slug>.png, the 1200x630 link preview of every desktop doc: the
 # Happy Engineering wordmark with the descriptor under it, the page's title and description, its URL, and its
-# figure (the first image on the page) on the right. A page without a figure gives the title the
-# full width and puts its cardLine (src/documents.ts) in place of the description. The original
-# CLI docs under /docs/ keep the homepage's card.
+# figure (the first image on the page) on the right. A page's cardLine (src/documents.ts), where it
+# has one, replaces the description; a page without a figure must have one, and gives the title
+# the full width. The original CLI docs under /docs/ keep the homepage's card.
 #
 # Run from the repository root after adding or retitling a desktop doc:
 #   python3 notes/og/cards.py            # every desktop doc
@@ -42,6 +42,11 @@ FONT_FILES = {
 FIGURE_OVERRIDES = {
     "/vision/": "/thesis/layout.svg",
 }
+# Where the page's own figure is too small for a card: a larger cutout kept in notes/og/figures/.
+CARD_FIGURES = {
+    # The sidebar from the homepage demo (public/video/happy-one/v22/desktop.mp4, first frame).
+    "/chief-of-staff/": "/__figures/chief-of-staff-sidebar.png",
+}
 
 W, H = 1200, 630
 # Under the wordmark on every card, as on public/img/tailcat-x.png; src/products.ts HAPPY_DESCRIPTOR.
@@ -79,14 +84,22 @@ def desktop_documents():
 
 def inline_svg(path, width, height):
     """An SVG inlined, not an <img>, so its text uses the fonts loaded here."""
-    source = re.sub(r"<\?xml[^>]*>\s*", "", (PUBLIC / path.lstrip("/")).read_text())
+    source = re.sub(r"<\?xml[^>]*>\s*", "", asset(path).read_text())
     tag = re.search(r"<svg\b[^>]*>", source).group(0)
     sized = re.sub(r'\s(?:width|height)="[^"]*"', "", tag).replace("<svg", f'<svg width="{width:.0f}" height="{height:.0f}"', 1)
     return source.replace(tag, sized, 1)
 
 
+def asset(path):
+    """A path the card loads: a card-only figure, a font, or a file under public/."""
+    for prefix, folder in (("/__figures/", ROOT / "notes/og/figures"), ("/__fonts/", FONTS)):
+        if path.startswith(prefix):
+            return folder / path[len(prefix):]
+    return PUBLIC / path.lstrip("/")
+
+
 def natural_size(path):
-    file = PUBLIC / path.lstrip("/")
+    file = asset(path)
     if file.suffix == ".svg":
         x, y, w, h = map(float, re.search(r'viewBox="([^"]+)"', file.read_text()).group(1).replace(",", " ").split())
         return w, h
@@ -100,6 +113,8 @@ def figure_markup(page):
     override = FIGURE_OVERRIDES.get(page["href"])
     if override:
         figures = [f for f in figures if f["src"] == override]
+    if page["href"] in CARD_FIGURES:
+        figures = [{"src": CARD_FIGURES[page["href"]], "alt": ""}]
     if not figures:
         return 0, ""
     # Portraits (the Team page): every photo, side by side, with its caption.
@@ -127,7 +142,7 @@ def card_html(page):
     copy_w = W - 72 - 56 - 48 - figure_w if figure else W - 2 * 72
     if not figure and not page.get("cardLine"):
         sys.exit(f"{page['href']} has no figure: give it a cardLine in src/documents.ts")
-    text = page["description"] if figure else page["cardLine"]
+    text = page.get("cardLine") or page["description"]
     url = f"happy.engineering{page['href']}".rstrip("/")
     wordmark = (PUBLIC / "brand/happy-engineering-inline-light.svg").read_text()
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
@@ -157,7 +172,7 @@ p.line {{ display: block; white-space: nowrap; }}
 </style></head><body><div class="card">
 <div class="copy">
   <div class="wordmark">{wordmark}<div class="descriptor">{DESCRIPTOR}</div></div>
-  <div class="text"><h1>{html.escape(page['heading'])}</h1><p{'' if figure else ' class="line"'}>{html.escape(text)}</p></div>
+  <div class="text"><h1>{html.escape(page['heading'])}</h1><p{' class="line"' if page.get("cardLine") else ''}>{html.escape(text)}</p></div>
   <div class="url">{html.escape(url)}</div>
 </div>
 {figure}
@@ -189,7 +204,7 @@ def serve(route):
     path = url.split(SITE, 1)[1].split("?")[0]
     if path == "/__card":
         return route.fulfill(status=200, body=serve.html, content_type="text/html")
-    file = FONTS / path[len("/__fonts/"):] if path.startswith("/__fonts/") else PUBLIC / path.lstrip("/")
+    file = asset(path)
     if not file.is_file():
         return route.fulfill(status=404, body="")
     route.fulfill(status=200, body=file.read_bytes(), content_type=mimetypes.guess_type(str(file))[0] or "application/octet-stream")
@@ -214,8 +229,8 @@ def main():
             png = page.screenshot(clip={"x": 0, "y": 0, "width": W, "height": H})
             # Drawn at 2x and reduced, so thin diagram strokes stay smooth.
             image = Image.open(io.BytesIO(png)).convert("RGB").resize((W, H), Image.LANCZOS)
-            # Drawings and screenshots keep their look in 256 colors at a third of the size; photos stay full color.
-            if ".jpg" not in serve.html:
+            # Drawings keep their look in 256 colors at a third of the size; photos and screenshots stay full color.
+            if "<img " not in serve.html:
                 image = image.quantize(colors=256, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
             target = PUBLIC / doc["card"].lstrip("/")
             target.parent.mkdir(parents=True, exist_ok=True)

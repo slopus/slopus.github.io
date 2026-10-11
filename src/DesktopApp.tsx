@@ -27,7 +27,7 @@ const features = [
   },
   {
     title: 'Natively multiplayer',
-    body: 'Invite a colleague or a friend into the session. You both watch the same agent work, and either of you can steer it.',
+    body: 'Deploy a team server and work together. Everyone signs in as themselves and shares the same projects and sessions.',
   },
 ] as const
 
