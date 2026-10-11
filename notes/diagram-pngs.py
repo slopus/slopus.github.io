@@ -33,7 +33,7 @@ FONT_FILES = {
 }
 FAMILIES = {"ShantellSans.ttf": "Shantell Sans", "DMSans.ttf": "DM Sans", "DMMono-Medium.ttf": "DM Mono"}
 PAGE = "#f5f0e7"
-INK = "#183f38"; MUTED = "#6b7f78"; SAND = "#f6eadf"; MINT = "#e3efe9"
+INK = "#183f38"; MUTED = "#6b7f78"; BODY = "#47645e"; SAND = "#f6eadf"; MINT = "#e3efe9"
 
 # name: (left column ends, right column starts, right column width), in viewBox units, or None
 # for a single column.
@@ -148,20 +148,25 @@ GITHUB_MARK = "M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-
 # (https://cdn.sanity.io/files/w77i7m8x/production/a426ba5f63316745e108a18a6dbbfed6970752fd.zip).
 # Their brand toolkit asks for at least 48px; it renders 52px tall here. Never recolor or stretch it.
 TAILSCALE_LOGO = ROOT / "notes/brand/tailscale-logo-blk-rgb.svg"
+# Tailcat's own mark, unmodified: the pixel cat in its README,
+# https://github.com/tailscale/tailcat/blob/main/tailcat.png (149x176, BSD-3-Clause), the same
+# cat as the @tailcat.dev Bluesky avatar. Scaled whole, never recolored or stretched.
+TAILCAT_MARK = ROOT / "notes/brand/tailcat.png"
 
 DESCRIPTOR = "Orchestrate Claude, Codex and Grok in one app"
 
 
 def lockup(x, y):
     """The brand lockup, as in the site header: the wordmark, the GitHub mark with stars and the
-    licence, and the descriptor under them. 170 units wide, 48 tall, from its top-left corner."""
+    licence, and the descriptor under them, all three at the wordmark's cap height (17 units).
+    204 units wide, 60 tall, from its top-left corner."""
     wordmark = (ROOT / "public/brand/happy-engineering-inline-light.svg").read_text()
-    wordmark = re.sub(r'width="[\d.]+" height="[\d.]+"', 'width="170" height="19"', wordmark, count=1)
+    wordmark = re.sub(r'width="[\d.]+" height="[\d.]+"', 'width="204" height="23"', wordmark, count=1)
     return "\n".join([
         f'<g transform="translate({x} {y})">{wordmark}</g>',
-        f'<path transform="translate({x + 184} {y + 2}) scale(.95)" d="{GITHUB_MARK}" fill="{INK}"/>',
-        text(x + 205, y + 15, f"{GITHUB_STARS} stars · MIT", 14, INK, 500, "start", "DM Mono"),
-        text(x, y + 44, DESCRIPTOR, 16, MUTED, 500, "start", "DM Sans"),
+        f'<path transform="translate({x + 222} {y + 1}) scale(1.3)" d="{GITHUB_MARK}" fill="{INK}"/>',
+        text(x + 250, y + 18, f"{GITHUB_STARS} stars · MIT", 24, INK, 500, "start", "DM Mono"),
+        text(x, y + 56, DESCRIPTOR, 24, BODY, 500, "start", "DM Sans"),
     ])
 
 
@@ -172,12 +177,13 @@ def tailcat_x(browser, head):
     logo = TAILSCALE_LOGO.read_text()
     logo = re.sub(r"<\?xml[^>]*>\s*", "", logo)
     logo = logo.replace("<svg ", '<svg x="646" y="22" width="134" height="26" ', 1)
+    cat = base64.b64encode(TAILCAT_MARK.read_bytes()).decode()
     o = [lockup(20, 20), logo]
 
     # Tailscale runs the relay; it only forwards.
-    o.append(rect(190, 106, 420, 84, 2, INK, MINT))
-    o.append(text(400, 141, "Tailcat relay", 28, INK, 700))
-    o.append(text(400, 175, "Tailscale DERP · forwards ciphertext only", 19, MUTED))
+    o.append(rect(190, 112, 420, 80, 2, INK, MINT))
+    o.append(text(400, 145, "Tailcat relay", 28, INK, 700))
+    o.append(text(400, 177, "Tailscale DERP · forwards ciphertext only", 19, MUTED))
 
     # Each machine: Happy Agent, and under it the Tailcat it talks through, on the side facing the
     # other machine.
@@ -187,6 +193,7 @@ def tailcat_x(browser, head):
         o.append(text(bx + 24 if anchor == "start" else bx + 326, 286, title, 25, INK, 700, anchor))
         o.append(chip(cx, 300, chip_w, "Happy Agent", chip_h, 23))
         o.append(chip(cx, 394, chip_w, "Tailcat", chip_h, 23))
+        o.append(f'<image x="{cx + 16}" y="397" width="34" height="40.2" href="data:image/png;base64,{cat}"/>')
     o.append(line(218, 348, 218, 392, 1.6, INK, .3))
     o.append(line(582, 378, 582, 392, 1.6, INK, .3))
     o.append(text(470, 370, "Claude · Codex · Grok agents", 18, MUTED, 400, "start"))
