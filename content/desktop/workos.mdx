@@ -4,10 +4,6 @@ A Happy Agent [team server](/multiplayer/) is powered by [WorkOS](https://workos
 
 ![How a team member signs in. Happy Desktop signs in with WorkOS through AuthKit with PKCE, and gets back an access token for the team. Every request to the team server carries that token. The team server fetches WorkOS's public signing keys once and caches them, then checks each token locally: the RS256 signature, the issuer, the client, and the org_id, and maps the user to a team member. Or, with authentication set to jwt, the server verifies tokens from your own OAuth server instead.](/img/team-sign-in-workos.svg)
 
-```chief-of-staff
-Create a team called Acme on my server ubuntu@203.0.113.10
-```
-
 ## What WorkOS does
 
 - **Accounts and sign-in: AuthKit.** Your Happy Social account is a WorkOS user. Desktop signs it in with [AuthKit](https://workos.com/docs/authkit) in your browser, using the public-client PKCE flow, so the app ships no client secret. The rotating refresh token stays on your machine.

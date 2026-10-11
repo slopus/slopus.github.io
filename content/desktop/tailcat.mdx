@@ -4,10 +4,6 @@ Happy Desktop reaches a [remote Happy Agent](/guides/remote-server/) through [Ta
 
 ![How Happy Desktop reaches a server through Tailcat. Happy Desktop and the server both dial out to a DERP relay; neither opens an inbound port. They run the WireGuard handshake end to end, with a throwaway client key on the Desktop side and the server's key and pre-shared key taken from the tc… address. When NAT allows they move to a direct UDP path; otherwise the relay keeps forwarding ciphertext. Inside the tunnel, Happy Agent's ordinary HTTP API at server.tailcat:24779 still requires the bearer token or a team sign-in on every request. The address encodes the server's keys, the pre-shared key, and the relay region; anyone with it reaches the lock, not the agent. Your phone uses Happy's relay instead, end-to-end encrypted, whether the server is online or not.](/img/tailcat.svg)
 
-```chief-of-staff
-Turn on Tailcat on this machine and show me its address
-```
-
 ## What Tailcat is
 
 "Tailscale without Tailscale, by Tailscale." Tailcat takes the pieces of Tailscale that move packets, WireGuard tunnels, NAT traversal, and the DERP relays, and leaves out the coordination server. One side runs a Tailcat server and gets a short `tc…` address; the other side connects to that address. The two meet at a relay, try to punch through NAT to a direct UDP path, and keep using the relay if that fails. It runs in userspace, without root and without touching routing tables or DNS. Tailscale runs free, rate-limited relays for it; the default [DERP map](https://tailcat.dev/derpmap.json) lists them, and you can [run your own](https://github.com/tailscale/tailscale/tree/main/cmd/derper#derp).

@@ -53,6 +53,8 @@ interface HastNode {
   value?: string
   properties?: Record<string, unknown>
   children?: HastNode[]
+  /** A fence's info string after its language: ```chief-of-staff add skills. */
+  data?: { meta?: string }
 }
 
 function hastText(node: HastNode): string {
@@ -168,13 +170,14 @@ export function MarkdownDocument({
         <table {...props}>{children}</table>
       </div>
     ),
-    // A ```chief-of-staff fence is a copyable request for the Chief of Staff, one per line.
+    // A ```chief-of-staff fence is a copyable request for the Chief of Staff, one per line; the rest
+    // of its first line says what they do: ```chief-of-staff add skills.
     pre: ({ children, node, ...props }) => {
       const code = (node as HastNode | undefined)?.children?.find((child) => child.tagName === 'code')
       const className = code?.properties?.className
       if (code && Array.isArray(className) && className.includes(`language-${CHIEF_OF_STAFF_LANGUAGE}`)) {
         const prompts = hastText(code).split('\n').map((line) => line.trim()).filter(Boolean)
-        return <ChiefOfStaffPrompt prompts={prompts} />
+        return <ChiefOfStaffPrompt task={code.data?.meta?.trim() ?? ''} prompts={prompts} />
       }
       return <pre {...props}>{children}</pre>
     },

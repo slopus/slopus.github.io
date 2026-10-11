@@ -431,7 +431,7 @@ describe('static document pages', () => {
   })
 
   it('puts a copyable Chief of Staff prompt right after the intro of every page it can help with', () => {
-    const withPrompt = ['quick-start', 'chief-of-staff', 'models', 'permissions', 'secrets', 'workspaces', 'agents', 'mobile', 'multiplayer', 'extending', 'guides/configuration', 'guides/remote-server', 'workos', 'tailcat']
+    const withPrompt = ['quick-start', 'chief-of-staff', 'models', 'permissions', 'secrets', 'workspaces', 'agents', 'mobile', 'multiplayer', 'extending', 'guides/configuration', 'guides/remote-server']
     for (const document of documentsForProduct('desktop')) {
       const markup = renderPath(`/${document.path}/`)
       const block = markup.indexOf('<aside class="cos-prompt"')
@@ -444,13 +444,16 @@ describe('static document pages', () => {
       if (document.path !== 'quick-start') {
         expect(block, document.path).toBeLessThan(markup.indexOf('<h2', markup.indexOf('<h1')))
       }
-      // One intro line, then each prompt under a header row: "Example" left, Copy right.
-      expect(markup).toContain('<p class="cos-prompt-label">How do I change configuration? Ask the <a href="/chief-of-staff/">Chief of Staff</a>.</p>')
+      // A line naming the page's task, then each prompt under a header row: "Example" left, Copy right.
+      expect(markup).toMatch(/<p class="cos-prompt-label">To [^<]+, simply ask the <a href="\/chief-of-staff\/">Chief of Staff<\/a>:<\/p>/)
       expect(markup).toMatch(/<div class="cos-prompt-head"><span class="cos-prompt-example">Example<\/span><button type="button" class="cos-prompt-copy" data-state="idle" aria-label="Copy prompt: [^"]+">[\s\S]*?<\/button><\/div><p class="cos-prompt-text">[^<]+<\/p>/)
       // The block replaces the old prose section.
       expect(markup).not.toMatch(/<h2[^>]*>Ask the Chief of Staff</)
     }
     expect(withPrompt.filter((path) => !getDocument('desktop', path))).toEqual([])
+    // Blog posts explain how something works; they never carry the block.
+    expect(withPrompt.filter((path) => getDocument('desktop', path)?.group === 'Blog')).toEqual([])
+    expect(renderPath('/extending/')).toContain('To add skills, simply ask the <a href="/chief-of-staff/">Chief of Staff</a>:')
     // The remote-server guide leads with what you get: the harness diagram, then the prompt; the problem waits in the reference layer.
     const remote = renderPath('/guides/remote-server/')
     expect(remote.indexOf('src="/img/remote-server-harness.svg"')).toBeLessThan(remote.indexOf('<aside class="cos-prompt"'))

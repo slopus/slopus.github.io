@@ -76,15 +76,16 @@ The short descriptor is **Orchestrate Claude, Codex and Grok in one app** (`HAPP
 
   Lead with what you get, never with the problem. The problem and the workarounds belong in the reference layer, beside the alternatives.
 - **The Chief of Staff block.** Every feature page, and every guide whose task the [Chief of Staff](/chief-of-staff/) can do, has a `chief-of-staff` fence right after its intro, with one prompt per line. Every page renders it the same way (`src/ChiefOfStaffPrompt.tsx`):
-  - One intro line: "How do I change configuration? Ask the Chief of Staff."
-  - Each prompt in its own quote-style box: a very light mint tint and a 3px accent left edge. No card: no full border, no shadow, no heavy fill.
+  - One line naming what the prompts do, from the fence's first line: ```` ```chief-of-staff add skills ```` renders "To add skills, simply ask the Chief of Staff:". Keep the task short and specific to the page.
+  - Each prompt in its own quote-style box: the accent at 7% as its fill and a 3px accent left edge. No card: no full border, no shadow, no heavy fill.
   - A header row inside the box: a quiet "Example" label in small caps top left, the Copy button top right. The prompt runs the full width below them, never squeezed by a button column, and wraps under them at 390.
-  - Copy copies only the prompt. It keeps a fixed size and place, shows "Copied" for 1.5 seconds without changing width, has an `aria-label` naming the prompt and a visible focus ring, and a hit area of at least 32px (44px on phones).
-  - Contrast on the tint: text and label at least 4.5:1, the button border and the accent edge at least 3:1.
+  - Copy is borderless and copies only the prompt. It keeps a fixed size and place, shows "Copied" for 1.5 seconds without changing width, has an `aria-label` naming the prompt and a visible focus ring, and a hit area of at least 32px (44px on phones).
+  - Contrast on the tint: text and label at least 4.5:1, the accent edge and the focus ring at least 3:1.
   - Without JavaScript the prompt is plain text that selects and copies by hand.
   - Use prompts the Chief of Staff can carry out today with its tools and recipes. Check before adding one.
   - Make them copyable as written. Use example names such as `acme/api`, `ubuntu@203.0.113.10`, and `alice@example.com`.
-  - Leave the block off pages where it can't help: Voice, Using the Terminal, How It Works, comparisons, Vision, Team.
+  - Leave the block off pages where it can't help: Using the Terminal, How It Works, comparisons, Vision, Team.
+  - Blog posts never get it. They explain how something works; the feature page they link to carries the prompt.
   - Don't repeat the prompt in a prose "Ask the Chief of Staff" section.
 - **One h1 per page.** The build fails otherwise. Sections are h2.
 - **Nothing above the h1 on desktop.** No eyebrow, breadcrumb, or product label, because the sidebar already shows where you are. On a phone, the docs navigation is the group-and-page trail:

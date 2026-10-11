@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { CopyIcon } from './CopyIcon'
 
-/** The fence that authors a prompt block in the docs: ```chief-of-staff, one prompt per line. */
+/** The fence that authors a prompt block in the docs: ```chief-of-staff <task>, one prompt per line. */
 export const CHIEF_OF_STAFF_LANGUAGE = 'chief-of-staff'
 
 async function copyText(text: string) {
@@ -70,14 +70,16 @@ function PromptLine({ prompt }: { prompt: string }) {
 }
 
 /**
- * A ready-to-paste request for the Chief of Staff in Happy Desktop: under one intro line, each
- * prompt in its own lightly tinted box, "Example" top left and Copy top right. The prompts are
- * plain text in the served page, so they read and select without JavaScript.
+ * A ready-to-paste request for the Chief of Staff in Happy Desktop: under a line naming the task
+ * ("To add skills, simply ask the Chief of Staff:"), each prompt in its own lightly tinted box,
+ * "Example" top left and Copy top right. The prompts are plain text in the served page, so they
+ * read and select without JavaScript.
  */
-export function ChiefOfStaffPrompt({ prompts }: { prompts: string[] }) {
+export function ChiefOfStaffPrompt({ task, prompts }: { task: string; prompts: string[] }) {
+  if (!task) throw new Error('A chief-of-staff fence names what its prompts do: ```chief-of-staff add skills')
   return (
     <aside className="cos-prompt" aria-label="Ask the Chief of Staff">
-      <p className="cos-prompt-label">How do I change configuration? Ask the <a href="/chief-of-staff/">Chief of Staff</a>.</p>
+      <p className="cos-prompt-label">{`To ${task}, simply ask the `}<a href="/chief-of-staff/">Chief of Staff</a>:</p>
       <ul>
         {prompts.map((prompt) => <PromptLine key={prompt} prompt={prompt} />)}
       </ul>
