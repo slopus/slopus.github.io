@@ -241,6 +241,14 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Features',
   },
   {
+    path: 'secrets',
+    sourcePath: '/content/desktop/secrets.mdx',
+    title: 'Secrets',
+    pageTitle: 'Secrets for AI Coding Agents: Give Claude Code API Keys Safely',
+    description: 'Secrets for Claude Code, Codex, and Grok in Happy: a catalog on your machine, values the model never sees, and how Hermes Agent and OpenClaw compare.',
+    group: 'Features',
+  },
+  {
     path: 'workspaces',
     sourcePath: '/content/desktop/workspaces.mdx',
     title: 'Projects & Workspaces',
