@@ -6,6 +6,7 @@
 # - public/img/<name>-16x9.png: 1600x900. A tall diagram is laid out in two columns, its sequence
 #   on the left and its notes on the right, so the text stays readable as a thumbnail.
 # - public/img/tailcat-x.png: a simpler Tailcat picture for the post, with the brand lockup.
+#   tailcat_x() draws it; it renders alone with: python3 notes/diagram-pngs.py tailcat-x
 #
 # Needs Python Playwright with Chromium (pip install playwright; playwright install chromium);
 # CHROMIUM=/path/to/chrome overrides the browser. Fonts download once into notes/og/.fonts/,
@@ -15,6 +16,7 @@ import math
 import os
 import random
 import re
+import sys
 import urllib.request
 from pathlib import Path
 
@@ -127,31 +129,50 @@ def arrow(x1, y1, x2, y2, c=INK, w=1.6, dash=None):
     return line(x1, y1, x2, y2, w, c, .6, dash) + line(l[0], l[1], x2, y2, w, c, .2) + line(r[0], r[1], x2, y2, w, c, .2)
 
 
+def chip(x, y, w, s):
+    """A process inside a machine: its name in a thin outline, no fill."""
+    return rect(x, y, w, 30, 1.1, INK) + "\n" + text(x + w / 2, y + 21, s, 15, INK, 600)
+
+
 def tailcat_x(browser, head):
-    """Tailcat for X, drawn in 800x450 units and rendered at 2x: three boxes, three paths, one line of claims."""
+    """Tailcat for X, drawn in 800x450 units and rendered at 2x. On each machine Happy Agent runs
+    Tailcat as a child process: `tailcat socks` beside Happy Desktop, `tailcat serve` on the server."""
     wordmark = (ROOT / "public/brand/happy-engineering-inline-light.svg").read_text()
     wordmark = re.sub(r'width="[\d.]+" height="[\d.]+"', 'width="151" height="17"', wordmark, count=1)
     o = []
-    o.append(f'<g transform="translate(40 26)">{wordmark}</g>')
-    o.append(text(40, 60, "Open-source harness for Claude, Codex & Grok agents", 11.5, MUTED, 500, "start", "DM Sans"))
+    o.append(f'<g transform="translate(20 20)">{wordmark}</g>')
+    o.append(text(20, 56, "Open-source harness for Claude, Codex & Grok agents", 11.5, MUTED, 500, "start", "DM Sans"))
 
-    o.append(rect(320, 146, 160, 44, 1.8, INK, MINT))
-    o.append(text(400, 175, "Relay", 20, INK, 700))
-    o.append(text(400, 214, "forwards ciphertext only", 15, MUTED))
+    # Tailscale runs the relay; it only forwards.
+    o.append(rect(260, 84, 280, 62, 1.8, INK, MINT))
+    o.append(text(400, 109, "Tailcat relay", 19, INK, 700))
+    o.append(text(400, 133, "Tailscale DERP · forwards ciphertext only", 12.5, MUTED))
 
-    o.append(rect(50, 242, 180, 48, 1.6, INK, SAND))
-    o.append(text(140, 273, "Happy Desktop", 20, INK, 700))
-    o.append(rect(570, 242, 180, 48, 1.6, INK, SAND))
-    o.append(text(660, 273, "Your server", 20, INK, 700))
-    o.append(text(660, 314, "Claude · Codex · Grok agents", 15, MUTED))
+    o.append(rect(20, 196, 310, 104, 1.6, INK, SAND))
+    o.append(text(36, 220, "Happy Desktop", 17, INK, 700, "start"))
+    o.append(chip(36, 234, 130, "Happy Agent"))
+    o.append(chip(206, 234, 100, "Tailcat"))
 
-    o.append(arrow(180, 238, 316, 182, INK, 1.6))
-    o.append(arrow(484, 182, 620, 238, INK, 1.6))
-    o.append(arrow(236, 266, 564, 266, INK, 1.6, "7 6"))
-    o.append(text(400, 290, "direct UDP when NAT allows", 15, MUTED))
+    o.append(rect(450, 196, 330, 104, 1.6, INK, SAND))
+    o.append(text(764, 220, "Your server", 17, INK, 700, "end"))
+    o.append(chip(466, 234, 100, "Tailcat"))
+    o.append(chip(606, 234, 158, "Happy Agent"))
+    o.append(text(685, 286, "Claude · Codex · Grok agents", 12.5, MUTED))
 
-    o.append(text(400, 378, "No open ports · no public IP · no Tailscale account", 18, INK, 700))
-    o.append(text(760, 426, "Powered by Tailscale’s Tailcat", 10.5, MUTED, 500, "end", "DM Sans"))
+    # Happy Agent talks through its own Tailcat.
+    o.append(line(170, 249, 202, 249, 1.4, INK, .3))
+    o.append(line(570, 249, 602, 249, 1.4, INK, .3))
+    # Both sides dial out to the relay.
+    o.append(arrow(256, 230, 300, 152, INK, 1.6))
+    o.append(arrow(516, 230, 500, 152, INK, 1.6))
+    # The direct path, Tailcat to Tailcat.
+    o.append(line(256, 268, 256, 326, 1.6, INK, .4, "7 6"))
+    o.append(line(256, 326, 516, 326, 1.6, INK, .6, "7 6"))
+    o.append(line(516, 326, 516, 268, 1.6, INK, .4, "7 6"))
+    o.append(text(386, 346, "direct WireGuard (UDP) when NAT allows", 13, MUTED))
+
+    o.append(text(400, 392, "No open ports · no public IP · no Tailscale account", 18, INK, 700))
+    o.append(text(780, 434, "Powered by Tailscale’s Tailcat", 10.5, MUTED, 500, "end", "DM Sans"))
 
     svg = ('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" '
            "font-family=\"'Shantell Sans', cursive\">" + "\n".join(o) + "</svg>")
@@ -162,9 +183,12 @@ def main():
     head = fonts_css()
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(executable_path=os.environ.get("CHROMIUM") or None)
+        only = sys.argv[1:]
         for name, split in DIAGRAMS.items():
-            export(browser, head, name, split)
-        tailcat_x(browser, head)
+            if not only or name in only:
+                export(browser, head, name, split)
+        if not only or "tailcat-x" in only:
+            tailcat_x(browser, head)
         browser.close()
 
 
