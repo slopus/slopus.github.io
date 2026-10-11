@@ -136,7 +136,7 @@ def chip(x, y, w, s, h=30, size=15):
     return rect(x, y, w, h, 1.2, INK) + "\n" + text(x + w / 2, y + h / 2 + size * .36, s, size, INK, 600)
 
 
-# github.com/slopus/happy stars, rounded down to whole thousands: gh api repos/slopus/happy --jq .stargazers_count
+# github.com/slopus/happy stars, rounded down to whole thousands, shown as "★ 24k": gh api repos/slopus/happy --jq .stargazers_count
 GITHUB_STARS = "24k"
 
 # The site header's GitHub mark (src/SiteChrome.tsx), 16 units square.
@@ -156,16 +156,30 @@ TAILCAT_MARK = ROOT / "notes/brand/tailcat.png"
 DESCRIPTOR = "Orchestrate Claude, Codex and Grok in one app"
 
 
+def star(cx, cy, r):
+    """A five-pointed star (★) as a path, so no font has to carry the glyph. Its outline is
+    1.81r tall; its centre (cx, cy) sits 0.095r below the middle of that outline."""
+    pts = []
+    for i in range(10):
+        a = math.radians(-90 + 36 * i)
+        rr = r if i % 2 == 0 else r * .382
+        pts.append(f"{cx + rr * math.cos(a):.2f} {cy + rr * math.sin(a):.2f}")
+    return f'<path d="M{" L".join(pts)} Z" fill="{INK}"/>'
+
+
 def lockup(x, y):
-    """The brand lockup, as in the site header: the wordmark, the GitHub mark with stars and the
-    licence, and the descriptor under them, all three at the wordmark's cap height (17 units).
-    204 units wide, 60 tall, from its top-left corner."""
+    """The brand lockup, as in the site header: the wordmark, then the GitHub mark and "★ 24k",
+    and the descriptor under them, all at the wordmark's cap height (17 units, from y + .6 to its
+    baseline at y + 17.4). The icons are centred on that cap band, at y + 9. 204 units wide, 60 tall,
+    from its top-left corner."""
     wordmark = (ROOT / "public/brand/happy-engineering-inline-light.svg").read_text()
     wordmark = re.sub(r'width="[\d.]+" height="[\d.]+"', 'width="204" height="23"', wordmark, count=1)
+    mid = y + 9
     return "\n".join([
         f'<g transform="translate({x} {y})">{wordmark}</g>',
-        f'<path transform="translate({x + 222} {y + 1}) scale(1.3)" d="{GITHUB_MARK}" fill="{INK}"/>',
-        text(x + 250, y + 18, f"{GITHUB_STARS} stars · MIT", 24, INK, 500, "start", "DM Mono"),
+        f'<path transform="translate({x + 222} {mid - 9}) scale(1.125)" d="{GITHUB_MARK}" fill="{INK}"/>',
+        star(x + 259, mid + .095 * 9.3, 9.3),
+        text(x + 274, y + 17.4, GITHUB_STARS, 24, INK, 500, "start", "DM Mono"),
         text(x, y + 56, DESCRIPTOR, 24, BODY, 500, "start", "DM Sans"),
     ])
 
@@ -176,7 +190,8 @@ def tailcat_x(browser, head):
     the server. Text is 17 units or larger so it reads in a phone feed."""
     logo = TAILSCALE_LOGO.read_text()
     logo = re.sub(r"<\?xml[^>]*>\s*", "", logo)
-    logo = logo.replace("<svg ", '<svg x="646" y="22" width="134" height="26" ', 1)
+    # The logo's centre on the wordmark's cap band (y 29).
+    logo = logo.replace("<svg ", '<svg x="646" y="16" width="134" height="26" ', 1)
     cat = base64.b64encode(TAILCAT_MARK.read_bytes()).decode()
     o = [lockup(20, 20), logo]
 
