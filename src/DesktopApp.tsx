@@ -1,6 +1,5 @@
-import { useState, type CSSProperties } from 'react'
+import { useState } from 'react'
 import { GITHUB_HAPPY, GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
-import { FeatureSurprise, useFeatureSurprise } from './FeatureSurprise'
 import { HAPPY_DESKTOP } from './products'
 import { HappyOneDemo } from './HappyOneDemo'
 import { DownloadOptions, type DownloadOptionsProps } from './DownloadOptions'
@@ -13,43 +12,32 @@ const features = [
   {
     title: 'Multi-provider within one session',
     body: 'Astra, Fable, and Grok in the same session. Switch models in the middle of a task or delegate to subagents.',
-    effect: 'providers',
   },
   {
     title: 'Reuse current subscriptions',
     body: 'Sign in with the Claude, Codex, and Grok plans you already pay for. Happy adds a harness, not another bill.',
-    effect: null,
   },
   {
     title: 'Open source MIT',
     body: 'It runs on your own hardware and your projects stay ordinary folders. Read the code, fork it, ship your own build.',
-    effect: null,
   },
   {
     title: 'End-to-end encrypted mobile app',
     body: 'Left your desk? The same sessions are already on your phone, and what moves between your devices is encrypted.',
-    effect: 'security',
   },
   {
     title: 'Natively multiplayer',
     body: 'Invite a colleague or a friend into the session. You both watch the same agent work, and either of you can steer it.',
-    effect: 'multiplayer',
   },
 ] as const
 
 function Features() {
-  const surprise = useFeatureSurprise()
   return (
     <section className="one-benefits-section" id="product" aria-label="What you get">
       <div className="page-width">
-        <ol ref={surprise.listRef} className="one-benefits" role="list">
+        <ol className="one-benefits" role="list">
           {features.map((feature, index) => (
-            <li
-              key={feature.title}
-              data-effect={feature.effect ?? undefined}
-              data-active={surprise.isActive(feature.effect) ? '' : undefined}
-              style={{ '--feature-progress': surprise.progress(feature.effect) ** 2 * (3 - 2 * surprise.progress(feature.effect)) } as CSSProperties}
-            >
+            <li key={feature.title}>
               <span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>
               <div className="one-benefit-heading">
                 <span className="one-benefit-title">
@@ -57,7 +45,6 @@ function Features() {
                     Open source <span className="one-mit">MIT</span>
                   </> : feature.title}
                 </span>
-                <FeatureSurprise effect={feature.effect} surprise={surprise} />
               </div>
               <p className="one-benefit-body">{feature.body}</p>
             </li>
@@ -110,7 +97,7 @@ export default function DesktopApp() {
           {/* On a phone this fills the first screen above the store badges. */}
           <div className="one-hero-fold">
             <div className="one-hero-copy">
-              <h1 id="one-heading"><span>Any Model.</span>{' '}<span>Your Subscription.</span><br /><em>Happy Harness{ogPreview ? '' : '.'}</em></h1>
+              <h1 id="one-heading"><span>Any Model.</span>{' '}<span>Your Subscription.</span>{' '}<em>Happy Harness{ogPreview ? '' : '.'}</em></h1>
               <p className="one-hero-note">Free and open source</p>
               {ogPreview && <a className="one-social-stars" href={GITHUB_HAPPY}>
                 <GithubMark /><span>GitHub · {HAPPY_ONE_GITHUB_STARS.compact} stars</span>
