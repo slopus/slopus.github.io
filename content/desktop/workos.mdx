@@ -31,7 +31,7 @@ owner_workos_user_id = "user_..."
 
 ## Why WorkOS
 
-It is the part of a team product nobody wants to build twice: accounts, organizations, invitations, and sessions. With WorkOS handling them, Happy runs no password database and no invitation mailer of its own, and a server you host yourself can trust a team sign-in by checking a signature. Thank you, WorkOS.
+It is the part of a team product nobody wants to build twice: accounts, organizations, invitations, and sessions. With WorkOS handling them, we run no password database and no invitation mailer of our own, and a server you host yourself can trust a team sign-in by checking a signature. Thank you, WorkOS.
 
 ## Bring your own identity provider
 
@@ -40,5 +40,3 @@ Set `authentication = "jwt"` and members sign in with your organization's own OA
 ## Set it up
 
 Ask the [Chief of Staff](/chief-of-staff/), "Create a team called Acme on my server". It follows the public recipe, [Create and deploy a Happy team](https://github.com/slopus/happy-agent/blob/main/docs/recipe/deploy-happy-team.md): your account, the name and endpoint, the team, team mode, a verified connection, then invitations.
-
-Sources in Happy Agent: [the token check](https://github.com/slopus/happy-agent/blob/main/packages/happy-agent-modules/sources/team/WorkOSAccessTokenVerifier.ts), [AuthKit sign-in and teams](https://github.com/slopus/happy-agent/blob/main/packages/happy-agent-modules/sources/cloud/CloudWorkOS.ts), [Happy teams](https://github.com/slopus/happy-agent/blob/main/docs/happy-teams.md), and [team mode settings](https://github.com/slopus/happy-agent/blob/main/docs/configuration.md#team-deployment-mode).

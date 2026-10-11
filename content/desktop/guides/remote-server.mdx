@@ -31,17 +31,17 @@ It runs on the subscriptions you already have:
 
 ### Where Happy came from
 
-Happy started as the Happy CLI, `happy` on npm. It runs Claude Code, Codex, and other ACP-compatible agents in your terminal, unchanged, and lets you control them from the Happy app. It is still the way to keep the exact original CLIs and the terminal on your own machine, and its [legacy docs](/docs/) are still here, in maintenance mode. Happy Agent and Happy Desktop are the current iteration, where Happy runs the harness itself, on your computer or a server.
+We started Happy as the Happy CLI, `happy` on npm. It runs Claude Code, Codex, and other ACP-compatible agents in your terminal, unchanged, and lets you control them from the Happy app. It is still the way to keep the exact original CLIs and the terminal on your own machine, and its [legacy docs](/docs/) are still here, in maintenance mode. Happy Agent and Happy Desktop are the current iteration, where Happy runs the harness itself, on your computer or a server.
 
 ## Alternatives
 
 | | tmux + SSH or Mosh + Tailscale + Termius | Claude Code Remote Control | A VM with its own agent (exe.dev and Shelley) | T3 Code | Happy Agent on a server |
 | --- | --- | --- | --- | --- | --- |
-| Agents | Any terminal agent | Claude Code | Shelley; Claude Code, Codex, and Pi preinstalled | Claude Code, Codex, Cursor, Grok Build, OpenCode, Pi, Muse Code, and any ACP Registry agent, on your existing subscriptions | Claude, Codex, and Grok models in one harness, on your existing subscriptions |
+| Agents | Any terminal agent | Claude Code | Shelley; Claude Code, Codex, and Pi [preinstalled](https://exe.dev/docs/upgrade-codex) | Claude Code, Codex, Cursor, Grok Build, OpenCode, Pi, Muse Code, and any ACP Registry agent, on your existing subscriptions | Claude, Codex, and Grok models in one harness, on your existing subscriptions |
 | Runs on | Your server | Your computer, or a server inside tmux | An exe.dev VM | Your computer, or a Linux or Apple silicon server it launches over SSH | Your server, VPS, or Mac |
-| While your laptop sleeps | Keeps running | On a laptop, pauses until it wakes; on a server, keeps running | Keeps running | On a laptop, stops; on a server with `t3 service install`, keeps running, and a Mac host must stay logged in and awake | Keeps running |
+| While your laptop sleeps | Keeps running | On a laptop, [pauses until it wakes](https://code.claude.com/docs/en/remote-control); on a server, keeps running | Keeps running | On a laptop, stops; on a server with `t3 service install`, keeps running, and a Mac host must stay logged in and awake | Keeps running |
 | Steer it from | A terminal app on any device, over SSH or Mosh | The Claude app, claude.ai/code, or Claude Desktop | Shelley's web page; SSH or the browser terminal for the other agents | T3 Code desktop, the web app, and the iOS and Android app; outside agents over MCP | Happy Desktop and the Happy phone app |
-| Approvals | Terminal prompts, typed by hand | Permission prompts in the app, with push notifications | Depends on the agent; the VM is the boundary | Supervised, Auto-accept edits, Auto (the provider's own review), or Full access, the default; push notifications through T3 Connect; no sandbox of its own | Auto mode reviews actions itself, inside the OS sandbox |
+| Approvals | Terminal prompts, typed by hand | Permission prompts in the app, with push notifications | Depends on the agent; the VM is the boundary | Supervised, Auto-accept edits, Auto (the provider's own review), or Full access, [the default](https://github.com/pingdotgg/t3code/blob/main/docs/user/permission-modes.md); push notifications through T3 Connect; no sandbox of its own | Auto mode reviews actions itself, inside the OS sandbox |
 | With a team | Shell accounts on the server | One person's sessions; organization controls on Team and Enterprise | Share the VM with Web or Root access, per person or with the whole team | No team mode in its docs; one owner pairs devices and agents with scoped links, such as read-only | Team mode: each member signs in as themselves, in shared projects and sessions |
 | In between | Tailscale's coordination and relays; traffic WireGuard-encrypted | Anthropic stores the transcript while connected | exe.dev runs the VM and its HTTPS proxy | T3 Connect, with Clerk sign-in and a Cloudflare Tunnel per machine; without it, direct LAN, Tailscale, or SSH | Tailcat relay for Desktop, WireGuard-encrypted; Happy's relay for the phone, end-to-end encrypted |
 | Setup | Install and connect four tools | One command | Create a VM | One install command or the desktop app, then `t3 connect` to reach it from elsewhere | Ask the Chief of Staff; it follows a public recipe |
@@ -54,8 +54,6 @@ Where each is better:
 - **T3 Code.** Works with more agents: seven built in, plus the ACP Registry. It has a polished free phone app with push notifications and Live Activities, routes work across several machines, launches servers over SSH from its desktop app, and has a much larger community (26.8k GitHub stars; T3 says over 400,000 developers use it).
 - **Happy Agent.** One runtime for three model families under one sandbox and review, a desktop app and a phone app built for agent sessions, and a team mode where everyone keeps their own identity. The cost: more setup than the others, and you run and upgrade the server.
 
-Sources, checked October 10, 2026: [Remote Control docs](https://code.claude.com/docs/en/remote-control) ("your computer has to stay on and the claude process has to keep running"; "if your laptop sleeps or your network drops, Claude Code reconnects automatically"; "start it inside tmux or screen" on a remote machine), [exe.dev docs](https://exe.dev/docs/upgrade-codex) (claude, codex, and pi preinstalled) and [sharing](https://exe.dev/docs/sharing), [Mosh](https://mosh.org/), [Termius](https://docs.termius.com/termius-handbook/connecting-to-a-host), [How Tailscale works](https://tailscale.com/blog/how-tailscale-works); T3 Code's [README](https://github.com/pingdotgg/t3code), [install and providers](https://github.com/pingdotgg/t3code/blob/main/docs/user/install.md), [remote access](https://github.com/pingdotgg/t3code/blob/main/docs/user/remote-access.md) ("That machine must stay running and reachable while you work"), [background service](https://github.com/pingdotgg/t3code/blob/main/docs/user/background-service.md), [permission modes](https://github.com/pingdotgg/t3code/blob/main/docs/user/permission-modes.md) ("The initial default is Full access"), [ACP providers](https://github.com/pingdotgg/t3code/blob/main/docs/user/providers-acp.md), [mobile notifications](https://github.com/pingdotgg/t3code/blob/main/docs/user/mobile-notifications.md), [outside agents](https://github.com/pingdotgg/t3code/blob/main/docs/user/outside-agents.md), [T3 Connect](https://github.com/pingdotgg/t3code/blob/main/docs/internals/t3-connect.md), and [t3.codes](https://t3.codes).
-
 ## Share it with your team
 
 The same server can serve a team. In team mode:
@@ -65,7 +63,7 @@ The same server can serve a team. In team mode:
 - The same sandbox and review rules apply to everyone: commands run inside the OS sandbox unless a session is switched to Full access, and in Auto each action that would cross it is reviewed first.
 - The server stops accepting its API token. Only Happy Social sign-ins issued for this team get in.
 
-Before you do: all work spends the server's Claude, Codex, and Grok accounts, not each member's, and any member can choose Full access. There are no per-session invites, and Happy ships no remove-member action yet.
+Before you do: all work spends the server's Claude, Codex, and Grok accounts, not each member's, and any member can choose Full access. There are no per-session invites, and we haven't built a remove-member action yet.
 
 To set it up, ask the Chief of Staff, "Create a team called Acme on my server". [Multiplayer & Teams](/multiplayer/) has the details.
 
@@ -78,7 +76,7 @@ Desktop reaches the server through **Tailcat**, an encrypted tunnel built into e
 - **The address is the server's key.** A `tc…` address encodes the server's WireGuard public key, its relay region, and a WireGuard pre-shared key. The private key stays on the server in `~/.happy/agent/tailcat/default.private.json`, so only that machine can answer at that address.
 - **WireGuard, end to end.** Your machine makes a throwaway key each time it opens the tunnel and runs the standard [WireGuard](https://www.wireguard.com/protocol/) handshake with the server. Everything after that is encrypted between the two machines, and decrypted only on the server, where Tailcat hands it to Happy Agent.
 - **Relays carry ciphertext.** Both sides meet first at a DERP relay that Tailscale runs for free, rate-limited and without an uptime promise. They then try a direct path through NAT, and the relay keeps carrying traffic if that fails. A relay sees IP addresses, timing, sizes, and the public keys it routes by. It cannot read or change the content.
-- **The address is a secret, and not the lock.** Without the pre-shared key, which only the address carries, nobody can open a tunnel, a relay operator included; keep the address private. Anyone who has it can, since Happy does not use Tailcat's client allowlist, and every request inside still needs the server's API token or a team sign-in. An address made by an older Happy Agent, which bundled Tailcat v0.4.0, has no pre-shared key and keeps working; for it, the server's public key and region are enough to reach the sign-in check. Details: [No Open Ports](/tailcat/), and Happy Agent's [Tailcat docs](https://github.com/slopus/happy-agent/blob/main/docs/tailcat.md#install-the-remote-client).
+- **The address is a secret, and not the lock.** Without the pre-shared key, which only the address carries, nobody can open a tunnel, a relay operator included; keep the address private. Anyone who has it can, since Happy does not use Tailcat's client allowlist, and every request inside still needs the server's API token or a team sign-in. An address made by an older Happy Agent, which bundled Tailcat v0.4.0, has no pre-shared key and keeps working; for it, the server's public key and region are enough to reach the sign-in check. Details: [No Open Ports](/tailcat/).
 
 Your phone does not use Tailcat. It goes through Happy's own relay: the server publishes its sessions to your Happy account, end-to-end encrypted, so the phone can read them even while the server is offline. A newly published session brings at most its latest 50 messages, without tool output or the model's reasoning.
 
@@ -139,7 +137,7 @@ Persistent VMs, created with `ssh exe.dev new`, with `sudo`. Claude Code and Cod
 
 A laptop running Linux works like any server. Keep it plugged in and the lid open; a closed lid usually sleeps the machine.
 
-A Mac works too, on Apple silicon or Intel. Happy Agent uses macOS's own sandbox, and runs as a launchd service; Happy does not ship one, so the Chief of Staff writes it. Keep the Mac from sleeping.
+A Mac works too, on Apple silicon or Intel. Happy Agent uses macOS's own sandbox, and runs as a launchd service; we don't ship one, so the Chief of Staff writes it. Keep the Mac from sleeping.
 
 ### Raspberry Pi and other ARM boards
 

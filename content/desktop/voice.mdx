@@ -2,7 +2,7 @@
 
 In the Happy app on your phone, tap the mic and talk. A voice agent, also called Happy, listens, sends what you ask to the coding agent in the session you are looking at, tells you when it is done, and takes your yes or no on a permission request. It runs on [ElevenAgents](https://elevenlabs.io/agents), ElevenLabs's conversational agent platform. Voice is the one paid thing in Happy: 20 free minutes every 30 days, then a subscription, or your own ElevenLabs agent with no limit from us.
 
-![How a voice conversation works. You tap the mic in the phone app, which asks Happy's server for a conversation with your Happy sign-in. The server asks ElevenLabs how many minutes you have used in the last 30 days, under a user ID that is a one-way hash of yours, and mints a conversation token there; Happy keeps no voice database. The token, or the paywall, comes back to the app. The app then opens a WebRTC session straight to ElevenLabs: your voice, the agent's voice, and the session's recent messages. What you ask for goes on to the coding agent on your computer, as a message or as allow or deny on a permission request. ElevenLabs hears your voice, the session list, recent chat, and permission requests with their arguments. Limits per 30 days: 20 minutes free, 5 hours with a subscription, and no limit from Happy with your own ElevenLabs agent.](/img/voice.svg)
+![How a voice conversation works. You tap the mic in the phone app, which asks Happy's server for a conversation with your Happy sign-in. The server asks ElevenLabs how many minutes you have used in the last 30 days, under a user ID that is a one-way hash of yours, and mints a conversation token there; we keep no voice database. The token, or the paywall, comes back to the app. The app then opens a WebRTC session straight to ElevenLabs: your voice, the agent's voice, and the session's recent messages. What you ask for goes on to the coding agent on your computer, as a message or as allow or deny on a permission request. ElevenLabs hears your voice, the session list, recent chat, and permission requests with their arguments. Limits per 30 days: 20 minutes free, 5 hours with a subscription, and no limit from Happy with your own ElevenLabs agent.](/img/voice.svg)
 
 ## What the voice agent does
 
@@ -15,13 +15,13 @@ In the Happy app on your phone, tap the mic and talk. A voice agent, also called
 
 ## How a conversation starts
 
-1. The app asks Happy's server for a conversation, with your Happy sign-in and the ID of Happy's ElevenLabs agent.
+1. The app asks Happy's server for a conversation, with your Happy sign-in and the ID of our ElevenLabs agent.
 2. The server derives your ElevenLabs user ID, a one-way hash of your Happy user ID under a server secret. Your Happy account is not sent; ElevenLabs sees that `u_…` string.
-3. It asks ElevenLabs for your conversations of the last 30 days and adds up their durations. ElevenLabs is the record; Happy keeps no voice database.
+3. It asks ElevenLabs for your conversations of the last 30 days and adds up their durations. ElevenLabs is the record; we keep no voice database.
 4. Within the limits, it mints a single-use conversation token from ElevenLabs under that user ID and returns it. Past them, the app shows the paywall instead.
 5. The app opens a WebRTC session with ElevenLabs on that token. From here Happy's server is out of the loop: audio moves between your phone and ElevenLabs.
 
-Happy's ElevenLabs agent accepts only tokens minted by Happy's server, so the agent ID in the open source app is harmless on its own.
+Our ElevenLabs agent accepts only tokens minted by Happy's server, so the agent ID in the open source app is harmless on its own.
 
 ## What ElevenLabs hears
 
@@ -45,7 +45,7 @@ If a session holds something you would not hand to a third party, keep voice clo
 | Your own ElevenLabs agent | No limit from Happy |
 | Everyone | 100 conversations |
 
-ElevenLabs costs Happy about a cent a minute. The subscription in the app pays for that and for Happy's open source work. The 100-conversation cap is a limit of the usage query, which reads at most 100 conversations; reaching it blocks voice until the window moves on, and is worth [an issue](https://github.com/slopus/happy/issues). **Settings → Voice** shows your minutes and conversations against their limits.
+ElevenLabs costs us about a cent a minute. The subscription in the app pays for that and for our open source work. The 100-conversation cap is a limit of the usage query, which reads at most 100 conversations; reaching it blocks voice until the window moves on, and is worth [an issue](https://github.com/slopus/happy/issues). **Settings → Voice** shows your minutes and conversations against their limits.
 
 ## Bring your own agent
 
@@ -53,10 +53,8 @@ ElevenLabs costs Happy about a cent a minute. The subscription in the app pays f
 
 ## GPT-Live on Happy Desktop
 
-Happy Desktop has experimental voice calls of its own, on OpenAI's GPT-Live instead of ElevenLabs. Turn on **Settings → General → Enable experimental features**, then **Settings → Experimental → Voice calls**, and pick the account: a Codex subscription, which uses `gpt-live-1-codex` on your ChatGPT plan, or an OpenAI API key, which uses `gpt-live-1` and bills that API account. A phone button appears beside Settings. The call runs from the Happy Agent on your machine with that account, so Happy's minutes and paywall do not apply. It steers the Desktop window rather than a coding agent: it navigates and stages a message, and you press Send. Sources in Happy Desktop and Happy Agent: [the setting](https://github.com/slopus/happy-desktop/blob/main/packages/happy-desktop-ui/src/GptLiveSettings.tsx), [the model and endpoints](https://github.com/slopus/happy-agent/blob/main/packages/happy-agent-modules/sources/live/impl/liveProviderTransport.ts), and [what we learned](https://github.com/slopus/happy-agent/blob/main/packages/happy-agent-modules/sources/live/LEARNINGS.md).
+Happy Desktop has experimental voice calls of its own, on OpenAI's GPT-Live instead of ElevenLabs. Turn on **Settings → General → Enable experimental features**, then **Settings → Experimental → Voice calls**, and pick the account: a Codex subscription, which uses `gpt-live-1-codex` on your ChatGPT plan, or an OpenAI API key, which uses `gpt-live-1` and bills that API account. A phone button appears beside Settings. The call runs from the Happy Agent on your machine with that account, so Happy's minutes and paywall do not apply. It steers the Desktop window rather than a coding agent: it navigates and stages a message, and you press Send.
 
 ## Why ElevenLabs
 
-A voice agent that listens continuously, handles interruptions, and speaks back without a pause is a product in itself. ElevenAgents gives us that, with per-conversation tokens so our agent accepts only what Happy's server minted, and conversation records we can count from without a database of our own. Thank you, ElevenLabs.
-
-Sources in Happy: [paid voice](https://github.com/slopus/happy/blob/main/docs/paid-voice.md), [the server route](https://github.com/slopus/happy/blob/main/packages/happy-server/sources/app/api/routes/voiceRoutes.ts), [starting a session](https://github.com/slopus/happy/blob/main/packages/happy-app/sources/realtime/RealtimeSession.ts), [the system prompt](https://github.com/slopus/happy/blob/main/packages/happy-app/sources/realtime/voiceSystemPrompt.ts), [the client tools](https://github.com/slopus/happy/blob/main/packages/happy-app/sources/realtime/realtimeClientTools.ts), [what is sent as context](https://github.com/slopus/happy/blob/main/packages/happy-app/sources/realtime/hooks/contextFormatters.ts) and [its switches](https://github.com/slopus/happy/blob/main/packages/happy-app/sources/realtime/voiceConfig.ts), and [voice settings](https://github.com/slopus/happy/blob/main/packages/happy-app/sources/app/(app)/settings/voice.tsx). ElevenLabs: [ElevenAgents](https://elevenlabs.io/agents) and [the React Native SDK](https://github.com/elevenlabs/packages/tree/main/packages/react-native).
+A voice agent that listens continuously, handles interruptions, and speaks back without a pause is a product in itself. ElevenAgents gives us that, with per-conversation tokens so our agent accepts only what our server minted, and conversation records we can count from without a database of our own. Thank you, ElevenLabs.

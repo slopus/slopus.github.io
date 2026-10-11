@@ -347,7 +347,7 @@ describe('static document pages', () => {
     expect(documents.filter((document) => document.path === 'team')).toHaveLength(1)
   })
 
-  it('lists Secrets under Features after Permissions, sourced, with a search title and description that fit', () => {
+  it('lists Secrets under Features after Permissions, with a search title and description that fit', () => {
     render(<Router pathname="/secrets/" />)
 
     expect(screen.getAllByRole('heading', { level: 1 }).map((heading) => heading.id)).toEqual(['secrets'])
@@ -359,14 +359,11 @@ describe('static document pages', () => {
     expect(secrets.description.length).toBeLessThanOrEqual(155)
     expect(metadataForPath('/secrets/').title).toBe(secrets.pageTitle)
     const markup = renderPath('/secrets/')
-    // Every section the page promises, and the comparison's claims each link to the other project's own docs.
+    // Every section the page promises; the comparison links each other project's own docs, and no source list closes the page.
     for (const heading of ['One catalog per installation', 'Creating and updating', 'What the model sees', 'Attaching', 'One command at a time', 'The sandbox and Auto review', 'At rest', 'In Happy Desktop', 'In team mode', 'Compared with Hermes Agent and OpenClaw']) {
       expect(markup).toContain(`>${heading}<`)
     }
     for (const href of [
-      'https://github.com/slopus/happy-agent/blob/main/packages/happy-agent-modules/sources/secrets/README.md',
-      'https://github.com/slopus/happy-agent/blob/main/packages/happy-agent-modules/sources/compute/impl/createAttachedSecretsHostShell.ts',
-      'https://github.com/slopus/happy-desktop/blob/main/packages/happy-desktop-ui/src/pages/settings/HappyAgentSecretSettings.tsx',
       'https://hermes-agent.nousresearch.com/docs/user-guide/secrets/',
       'https://docs.openclaw.ai/gateway/secrets/secret-store-and-egress',
       'https://docs.openclaw.ai/tools/secrets',
@@ -377,6 +374,10 @@ describe('static document pages', () => {
     expect(markup).toContain('src="/img/secrets.svg"')
     expect(markup).not.toMatch(/The diagram as|below is|this page explains/i)
     expect(renderPath('/permissions/')).toContain('href="/secrets/"')
+    // Written for people: no paragraph of sources at the end of any desktop docs page.
+    for (const document of documentsForProduct('desktop')) {
+      expect(getDocumentSource(document)).not.toMatch(/^Sources?\b[^\n]*:/m)
+    }
     expect(documents.filter((document) => document.path === 'secrets')).toHaveLength(1)
   })
 

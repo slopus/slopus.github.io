@@ -52,7 +52,7 @@ Your brain isn't getting smarter, but the agents are. So they should do the expl
 
 # Phone first
 
-Approving from your phone is already normal. Doing the work from it is next. Happy started as Claude Code on your phone; today the [mobile app](/mobile/) joins the same sessions as Desktop, and we still design for the phone first.
+Approving from your phone is already normal. Doing the work from it is next. We started Happy as Claude Code on your phone; today the [mobile app](/mobile/) joins the same sessions as Desktop, and we still design for the phone first.
 
 # One harness
 

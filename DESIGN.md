@@ -12,13 +12,17 @@ These rules cover the docs, guides, comparisons, and blog. The homepage has rule
   - "Let's take a look at…"
 
   The download links for a diagram live where they are needed, such as the post that shares it, and not in the article.
+- **We write as ourselves, in first person.** "We" for the team; the product name only for what the software does. "We haven't built a remove-member action yet", but "Happy Agent checks the token".
 - **Terse and concrete.** Use names, commands, file paths, and settings. Drop marketing filler: "seamless", "powerful", "effortless", "unlock", "supercharge", "next-level".
 - **Lead with the answer.** The first paragraph says what the thing is and why it matters. Background comes after.
 - **Short enough to read on a phone.**
 
 ## Claims
 
-- Back every product claim with a link to the Happy source that implements it (happy-agent, happy-desktop, or happy), down to the file. Back every claim about another product with a link to that product's docs or its own announcement.
+- **Write for humans.** A page is read, not audited.
+- **Verify every claim** against the code or the docs before writing it.
+- **Link sparingly and inline**, only on a claim about another product or one a reader would doubt. Too many links and none of them carry weight.
+- **No source lists** and no file-by-file references at the end of a page. Code references belong in commit messages and agent reports, not on the page.
 - Quote other companies verbatim, with the date. Don't paraphrase them into something stronger.
 - Use no number without a source: no setup times, user counts, or benchmarks that nobody measured.
 - Don't overclaim. If the code doesn't do it yet, leave it out. If you can't verify it, leave it out.
