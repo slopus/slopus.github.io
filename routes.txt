@@ -84,6 +84,7 @@
 /thesis/
 /tmp/happy-one/
 /tos/
+/updates/
 /vision/
 /voice/
 /vs/claude-code-remote-control/

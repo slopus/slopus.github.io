@@ -30,7 +30,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(24)
+    expect(documentsForProduct('desktop')).toHaveLength(25)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -195,13 +195,23 @@ describe('static document pages', () => {
     expect(container.querySelector('.document-content')?.textContent).toMatch(/bundled Tailcat v0\.4\.0, has no pre-shared key/)
     unmount()
 
-    render(<Router pathname="/voice/" />)
+    const { unmount: unmount2 } = render(<Router pathname="/voice/" />)
     expect(screen.getByRole('heading', { level: 1, name: /talk to your agents: voice with elevenlabs/i })).toBeTruthy()
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/tailcat/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/updates/i)
+    unmount2()
+
+    const updates = render(<Router pathname="/updates/" />)
+    expect(screen.getByRole('heading', { level: 1, name: /updates that pick up where they left off/i })).toBeTruthy()
     expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
+    const video = updates.container.querySelector('.document-content video')
+    expect(video?.getAttribute('src')).toBe('/video/updates/update.mp4')
+    expect(video?.getAttribute('poster')).toBe('/video/updates/update-poster.webp')
+    expect(updates.container.querySelector('.document-content img[src="/img/updates.svg"]')).not.toBeNull()
+    expect(updates.container.querySelector('.document-content img[src="/img/updates-drain.svg"]')).not.toBeNull()
     for (const document of documents.filter((entry) => entry.group === 'Blog')) {
       expect(document.product).toBe('desktop')
-      expect(['workos', 'tailcat', 'voice']).toContain(document.path)
+      expect(['workos', 'tailcat', 'voice', 'updates']).toContain(document.path)
       expect(document.pageTitle?.length).toBeLessThanOrEqual(65)
       expect(document.description.length).toBeLessThanOrEqual(155)
       // No narration: nothing on the page points at the diagram's files or announces what follows.
@@ -404,7 +414,7 @@ describe('static document pages', () => {
     const groups = within(sidebar).getAllByRole('heading', { level: 2 })
     expect(groups.at(-1)?.textContent).toBe('Blog')
     const posts = within(groups.at(-1)!.closest('section')!).getAllByRole('link').map((link) => link.getAttribute('href'))
-    expect(posts).toEqual(['/workos/', '/tailcat/', '/voice/'])
+    expect(posts).toEqual(['/workos/', '/tailcat/', '/voice/', '/updates/'])
     expect(screen.getByRole('heading', { level: 1, name: /team sign-in with workos/i })).toBeTruthy()
     // Server markup: the landing pages' effects need browser APIs jsdom lacks.
     const header = renderPath('/welcome/').match(/<nav[^>]*aria-label="Primary navigation"[\s\S]*?<\/nav>/)?.[0]

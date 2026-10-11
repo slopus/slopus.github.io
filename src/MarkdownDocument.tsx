@@ -179,9 +179,12 @@ export function MarkdownDocument({
       return <pre {...props}>{children}</pre>
     },
     img: ({ alt, src, node: _node, ...props }) => {
+      // A video shows its poster, `<name>-poster.webp` beside it, until it plays. The served
+      // markup carries `muted`, so it autoplays before hydration; a DOM that doesn't turn that
+      // attribute into the `muted` property (jsdom) would otherwise report a mismatch.
       if (typeof src === 'string' && /\.(mp4|webm)$/.test(src)) {
         return (
-          <video src={src} controls muted autoPlay loop playsInline aria-label={alt ?? ''} />
+          <video src={src} poster={src.replace(/\.(mp4|webm)$/, '-poster.webp')} controls muted autoPlay loop playsInline aria-label={alt ?? ''} suppressHydrationWarning />
         )
       }
       return <img {...props} src={src} alt={alt ?? ''} loading="lazy" />

@@ -346,8 +346,11 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content img[src="/img/tailcat.svg"] { aspect-ratio: 520 / 590; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content img[src="/img/voice.svg"] { aspect-ratio: 520 / 676; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content img[src="/img/secrets.svg"] { aspect-ratio: 520 / 548; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
+.document-content img[src="/img/updates.svg"] { aspect-ratio: 520 / 500; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
+.document-content img[src="/img/updates-drain.svg"] { aspect-ratio: 520 / 548; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content img[src="/img/chief-of-staff-sidebar.png"] { aspect-ratio: 440 / 94; border: 0; border-radius: 14px; box-shadow: none; display: block; filter: drop-shadow(0 10px 22px rgba(24, 63, 56, .2)); margin: 1.6rem 0 1.4rem; width: min(100%, 440px); }
 .document-content video { border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); height: auto; margin: 1.2rem 0; max-width: 100%; width: 100%; }
+.document-content video[src="/video/updates/update.mp4"] { aspect-ratio: 1; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content hr { border: 0; border-top: 1px solid #d9d3c5; margin: 3rem 0; }
 .document-table-wrap { border: 1px solid #d5cebf; border-radius: 10px; margin: 1.6rem 0; overflow-x: auto; }
 .document-content table { border-collapse: collapse; font-size: .82rem; line-height: 1.45; min-width: 620px; width: 100%; }

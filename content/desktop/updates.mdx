@@ -1,0 +1,35 @@
+# Updates That Pick Up Where They Left Off
+
+Install a Happy Agent update while an agent is mid-turn, and the turn carries on after it. Happy Agent lets the running step finish and saves it, restarts on the new version, and continues the same turn from there. The Happy window stays open throughout and doesn't reload.
+
+![A Happy Agent update in the middle of a turn, 18 seconds, no sound. The agent is running node check.mjs when the update starts. The card in the sidebar says Finishing work, offers Restart now, and names the agent it is waiting for. Once the command finishes, the card goes through Shutting down, Starting and Reconnecting to Updated, took 10s. The same turn then runs node verify.mjs on the new version and ends with Completed in 15s.](/video/updates/update.mp4)
+
+The agent's replies in the video are scripted. The update, between two published Happy Agent releases, and the restart are real.
+
+## Why an update usually ends the session
+
+A coding agent runs inside a long-lived process, and an update replaces that process. In many agent tools that ends whatever was running: the session stops, and you resume it by hand or start the task again. So you put updates off until nothing is running.
+
+## How Happy Agent restarts without losing the turn
+
+Happy Agent is the service on your machine that runs your agents; the Happy window is a client that connects to it. Happy Agent writes every turn to its SQLite database under `~/.happy/agent` as it goes: messages, tool calls, and their results.
+
+An update replaces the Happy Agent process and nothing else. Happy Desktop downloads the new release, asks the running Happy Agent to drain, stops it, and starts the new version. The new process reads the unfinished turn back from the database and continues it, and the window reconnects.
+
+![What a Happy Agent update replaces. The desktop window stays open and never reloads. Happy Desktop's updater downloads the new release, then drains the old Happy Agent process, stops it, and starts the new version under a new PID. The window was connected to the old process and reconnects to the new one. The old process saved each step of the turn to the SQLite database in ~/.happy/agent: turns, tool calls, and results. The new process reads the turn back and continues it on the new version, from its last saved step.](/img/updates.svg)
+
+## The drain boundary
+
+Draining doesn't keep your agent working through the restart. It lets the current step reach a saved edge: the running tool call finishes and its result is written, and an inference in flight completes. New work waits. Then the old process exits, and the next step runs on the new version.
+
+![The update in the video as a timeline, to scale, 0 to 16 seconds from the start of the turn. The card's steps along the top: Finishing work from 2.2s, Shutting down at 5.9s, Starting from 6s, Reconnecting at 11.7s, Updated at 12.3s. The desktop window is open the whole time. The old Happy Agent runs until 6s; the new one starts then and is ready from 11.7s. The agent's turn runs check.mjs from 0.3s to 5.6s. At the drain boundary, 5.9s, the running step has finished and been saved, and the old process exits. The turn waits, saved, until verify.mjs runs on the new version from 13s, and completes in 15s.](/img/updates-drain.svg)
+
+In the recording, `node check.mjs` was running when the update began. Happy Agent waited under four seconds for it to finish, and the new version took about six seconds to start and reconnect. Then the same turn ran `node verify.mjs` and finished once: Completed in 15s.
+
+## What you see in Happy Desktop
+
+A card in the sidebar names each step: Finishing work, Shutting down, Starting, Reconnecting, then Updated with how long it took. While work is finishing, it lists the agents it is waiting on, and **Restart now** skips the wait. That stops what is still running: a shell command or a file edit is recorded as interrupted and not run again after the restart.
+
+Nothing else on screen changes. The window doesn't reload or show a disconnected screen. While Happy Agent is down, background writes such as draft saves are held and sent once it is back, and the layout doesn't jump.
+
+Install updates when they arrive. Your agents carry on after.

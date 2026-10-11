@@ -369,6 +369,14 @@ const desktopDocuments: DocumentDefinition[] = [
     description: 'How voice in the Happy app runs on ElevenLabs: the token flow, what ElevenLabs hears, the free minutes, the subscription, and bringing your own agent.',
     group: 'Blog',
   },
+  {
+    path: 'updates',
+    sourcePath: '/content/desktop/updates.mdx',
+    title: 'Updates Mid-Turn',
+    pageTitle: 'Updates That Pick Up Where They Left Off — Happy',
+    description: 'Update Happy Agent mid-turn: the running step finishes and is saved, the new version starts, and the same turn continues. The window never reloads.',
+    group: 'Blog',
+  },
 ]
 
 export const documents: DocumentEntry[] = [

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="500" viewBox="0 0 520 500" font-family="'Shantell Sans', 'Comic Sans MS', 'Chalkboard SE', 'Segoe Print', cursive" role="img">
+<path d="M10 10 L303 9 L302 73 L9 72 Z" fill="#f6eadf"/>
+<path d="M8.1 8.4 L45.1 8.0 L82.4 7.4 L119.4 8.2 L157.1 7.2 L193.2 7.1 L231.4 8.3 L267.0 8.9 L305.5 8.1" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M303.7 6.5 L304.1 40.1 L303.8 74.7" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M305.0 73.9 L268.4 74.0 L230.8 73.9 L193.6 73.7 L155.6 74.7 L119.7 74.3 L81.9 73.2 L43.7 73.1 L6.6 73.7" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.3 74.9 L8.9 41.7 L7.4 6.7" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="156" y="36" font-size="20" font-weight="700" fill="#183f38" text-anchor="middle">Desktop window</text>
+<text x="156" y="62" font-size="18" font-weight="400" fill="#6b7f78" text-anchor="middle">stays open, never reloads</text>
+<path d="M330 10 L511 9 L510 73 L329 72 Z" fill="#efe9dc"/>
+<path d="M328.0 8.5 L364.8 7.2 L402.3 8.8 L438.5 7.5 L475.7 9.3 L513.3 8.1" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M511.6 6.6 L512.4 40.4 L511.8 74.9" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M513.2 73.6 L476.1 73.2 L438.4 73.3 L400.9 74.7 L364.8 73.3 L327.4 73.3" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M328.4 75.1 L327.1 42.0 L327.6 6.8" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="420" y="36" font-size="20" font-weight="700" fill="#183f38" text-anchor="middle">Updater</text>
+<text x="420" y="62" font-size="18" font-weight="400" fill="#6b7f78" text-anchor="middle">downloads release</text>
+<path d="M7.8 181.8 L44.0 181.2 L81.8 181.6 L118.7 181.9 L155.2 183.1 L192.1 182.4 L229.4 182.0" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<path d="M228.4 181.3 L227.3 214.4 L227.8 249.4" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<path d="M229.5 248.4 L192.2 247.8 L154.2 247.0 L118.9 247.3 L81.4 247.3 L44.6 247.9 L6.8 247.3" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<path d="M7.6 248.7 L8.3 215.7 L8.4 180.8" fill="none" stroke="#6b7f78" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<text x="118" y="210" font-size="20" font-weight="700" fill="#6b7f78" text-anchor="middle">Happy Agent</text>
+<text x="118" y="236" font-size="18" font-weight="400" fill="#6b7f78" text-anchor="middle">old version, old PID</text>
+<path d="M294 184 L511 183 L510 247 L293 246 Z" fill="#e3efe9"/>
+<path d="M291.7 181.5 L328.4 182.0 L364.8 181.5 L402.2 182.4 L438.6 182.1 L476.9 183.4 L513.2 182.7" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M511.6 180.5 L511.1 215.8 L512.3 249.5" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M513.1 248.0 L476.5 247.5 L440.0 247.0 L402.1 248.2 L365.8 248.1 L328.4 248.1 L291.4 247.3" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M292.4 249.4 L291.9 215.6 L292.6 181.1" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="402" y="210" font-size="20" font-weight="700" fill="#183f38" text-anchor="middle">Happy Agent</text>
+<text x="402" y="236" font-size="18" font-weight="400" fill="#183f38" text-anchor="middle">new version, new PID</text>
+<path d="M236.1 214.9 L260.1 215.1 L283.6 215.1" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M275.5 220.4 L279.6 217.5 L284.2 215.1" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M274.9 210.3 L279.3 212.6 L283.5 215.1" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M80.0 79.7 L80.2 112.0 L80.1 144.5 L79.8 175.5" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/><path d="M74.8 167.2 L77.4 171.4 L80.4 176.2" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M84.9 167.4 L82.4 171.6 L79.7 175.9" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M80.3 176.4 L80.5 143.9 L80.1 111.8 L79.6 80.0" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/><path d="M85.3 89.3 L82.6 84.7 L79.8 79.7" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M75.0 88.8 L77.4 84.5 L80.1 80.0" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="92" y="134" font-size="18" font-weight="400" fill="#6b7f78">before</text>
+<path d="M235.8 80.3 L257.2 95.9 L276.8 111.4 L298.4 127.4 L318.9 144.1 L339.1 160.3 L359.5 175.6" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M349.8 174.0 L355.0 175.1 L359.6 175.5" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M356.1 166.5 L358.0 171.3 L360.3 176.5" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M360.2 175.7 L339.3 159.6 L318.1 144.0 L298.3 127.6 L277.1 111.8 L256.9 96.0 L236.1 80.3" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M246.1 81.8 L241.3 80.6 L236.4 80.2" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M239.7 89.4 L238.1 84.9 L235.9 80.1" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="306" y="160" font-size="18" font-weight="400" fill="#183f38" text-anchor="end">reconnects</text>
+<path d="M490.4 80.3 L490.5 112.0 L490.2 143.6 L490.2 176.3" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M485.1 167.2 L487.4 171.7 L490.5 176.5" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M495.0 167.3 L492.4 171.7 L490.4 175.8" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="478" y="112" font-size="18" font-weight="400" fill="#183f38" text-anchor="end">1 drain old</text>
+<text x="478" y="136" font-size="18" font-weight="400" fill="#183f38" text-anchor="end">2 stop old</text>
+<text x="478" y="160" font-size="18" font-weight="400" fill="#183f38" text-anchor="end">3 start new</text>
+<path d="M10 332 L511 331 L510 395 L9 394 Z" fill="#f6eadf"/>
+<path d="M7.9 330.1 L47.4 329.9 L84.7 330.5 L123.7 330.5 L162.7 329.5 L202.8 329.1 L240.4 329.8 L280.4 330.4 L319.1 330.6 L357.6 330.6 L395.6 329.1 L435.4 329.2 L474.6 329.8 L513.0 329.8" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M511.8 328.9 L512.7 363.8 L511.8 397.4" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M513.0 396.1 L473.5 396.1 L435.2 396.3 L395.3 397.1 L357.3 396.0 L319.0 396.3 L279.4 396.6 L239.7 396.4 L201.4 397.3 L163.5 395.9 L123.7 395.7 L84.7 397.1 L46.7 396.5 L6.8 396.3" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.4 396.6 L8.6 362.0 L7.8 328.7" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="260" y="358" font-size="20" font-weight="700" fill="#183f38" text-anchor="middle">SQLite database</text>
+<text x="260" y="384" font-size="18" font-weight="400" fill="#6b7f78" text-anchor="middle">~/.happy/agent: turns, tool calls, results</text>
+<path d="M60.2 253.8 L59.8 289.1 L59.6 324.2" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M54.6 315.0 L57.4 319.4 L60.0 323.9" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M64.9 314.9 L62.5 319.4 L59.7 324.1" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="72" y="296" font-size="18" font-weight="400" fill="#6b7f78">saves each step</text>
+<path d="M330.1 324.0 L330.4 289.1 L330.4 253.7" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M335.2 263.3 L332.7 258.4 L329.8 254.4" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M324.7 263.5 L327.7 258.4 L329.7 254.2" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="342" y="296" font-size="18" font-weight="400" fill="#183f38">reads the turn</text>
+<path d="M7.8 423.6 L47.0 423.9 L85.8 423.7 L124.2 424.1 L162.7 423.8 L202.0 424.3 L241.0 423.7 L279.4 424.2 L318.2 424.1 L356.7 423.7 L395.4 423.6 L434.5 424.0 L473.3 423.7 L511.7 423.7" fill="none" stroke="#6b7f78" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 7"/>
+<text x="8" y="460" font-size="20" font-weight="700" fill="#183f38">The same turn continues</text>
+<text x="8" y="488" font-size="18" font-weight="400" fill="#6b7f78">on the new version, from its last saved step</text>
+</svg>
