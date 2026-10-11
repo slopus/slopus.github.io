@@ -1,41 +1,41 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="520" height="566" viewBox="0 0 520 566" font-family="'Shantell Sans', 'Comic Sans MS', 'Chalkboard SE', 'Segoe Print', cursive" role="img">
-<path d="M10 10 L147 9 L146 51 L9 50 Z" fill="#f6eadf"/>
-<path d="M8.1 8.4 L43.2 8.0 L78.7 7.3 L113.8 8.2 L149.3 7.5" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M147.6 7.3 L148.3 29.1 L148.2 53.5" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M149.1 51.7 L112.5 52.1 L77.1 51.5 L42.0 51.2 L7.0 52.1" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M8.0 53.1 L8.2 30.3 L8.4 6.8" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="78" y="37" font-size="18" font-weight="700" fill="#183f38" text-anchor="middle">Happy Desktop</text>
-<path d="M214 10 L331 9 L330 51 L213 50 Z" fill="#e3efe9"/>
-<path d="M212.5 8.3 L242.7 7.8 L272.0 7.9 L301.9 9.0 L332.9 8.9" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M332.5 7.3 L330.9 29.4 L332.3 53.0" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M332.9 51.6 L302.8 52.7 L271.5 51.5 L241.2 53.4 L211.3 52.2" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M211.6 52.6 L212.4 29.4 L211.8 6.9" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="272" y="37" font-size="20" font-weight="700" fill="#183f38" text-anchor="middle">WorkOS</text>
-<path d="M382 10 L511 9 L510 51 L381 50 Z" fill="#f6eadf"/>
-<path d="M380.2 7.6 L413.5 7.1 L446.3 7.2 L479.3 8.7 L513.3 7.4" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M511.7 6.9 L512.9 30.3 L512.1 53.5" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M512.8 52.3 L479.2 51.5 L445.1 51.0 L412.7 51.2 L379.1 51.5" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M380.5 53.0 L380.1 30.7 L379.6 6.7" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="446" y="37" font-size="18" font-weight="700" fill="#183f38" text-anchor="middle">Team server</text>
-<text x="88" y="92" font-size="18" font-weight="700" fill="#183f38">1  Sign in</text>
-<path d="M78.4 102.3 L116.5 101.6 L155.9 102.5 L194.0 102.5 L233.7 102.1 L271.9 101.6" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M262.5 107.5 L267.4 104.6 L271.8 102.3" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M263.1 96.8 L267.4 99.6 L271.6 101.7" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="88" y="126" font-size="18" font-weight="400" fill="#6b7f78">AuthKit, PKCE</text>
-<text x="88" y="166" font-size="18" font-weight="700" fill="#183f38">2  Access token</text>
-<path d="M272.1 176.4 L233.3 175.7 L194.9 175.6 L155.0 175.7 L116.7 175.5 L77.7 175.9" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M87.1 170.6 L82.4 173.7 L78.5 176.2" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M87.2 181.1 L82.4 178.3 L77.5 176.4" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="88" y="200" font-size="18" font-weight="400" fill="#6b7f78">for the team</text>
-<text x="88" y="246" font-size="18" font-weight="700" fill="#183f38">3  Every request: Bearer token</text>
-<path d="M78.2 256.5 L114.2 256.2 L151.6 256.3 L188.2 256.6 L224.7 256.1 L262.3 256.5 L299.1 256.2 L336.0 256.5 L372.2 256.2 L409.7 256.4 L445.9 256.3" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M437.4 261.1 L441.5 258.5 L446.1 256.1" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M436.6 251.1 L441.7 253.7 L446.2 255.9" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M446.2 300.1 L411.1 300.4 L375.9 300.3 L341.0 300.1 L306.8 299.7 L272.2 300.0" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/><path d="M281.1 295.4 L276.4 297.3 L271.8 300.2" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M280.7 304.7 L276.7 302.6 L271.9 300.4" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="284" y="290" font-size="18" font-weight="400" fill="#6b7f78">Signing keys</text>
-<text x="284" y="324" font-size="18" font-weight="400" fill="#6b7f78">(JWKS, cached)</text>
-<path d="M77.8 56.2 L77.8 91.5 L78.2 127.2 L78.2 162.4 L78.0 197.9 L77.8 233.5 L78.2 269.2 L78.1 304.8 L77.8 339.7" fill="none" stroke="#6b7f78" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 6"/>
-<path d="M272.0 55.8 L271.8 89.9 L272.1 123.8 L271.9 158.0 L272.3 191.7 L271.6 225.1" fill="none" stroke="#6b7f78" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 6"/>
-<path d="M272.4 256.6 L272.1 284.7 L271.9 312.5 L271.5 339.6" fill="none" stroke="#6b7f78" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 6"/>
-<path d="M446.0 55.5 L446.2 91.3 L445.8 126.7 L446.1 162.5 L446.1 198.1 L446.2 233.8 L446.1 268.8 L446.0 304.3 L445.5 340.0" fill="none" stroke="#6b7f78" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 6"/>
+<path d="M10 10 L167 9 L166 51 L9 50 Z" fill="#f6eadf"/>
+<path d="M8.1 8.4 L40.1 8.0 L72.6 7.3 L104.6 8.2 L137.4 7.1 L168.8 7.5" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M168.2 6.5 L169.2 30.9 L168.5 53.1" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M168.5 52.0 L135.7 51.3 L103.7 50.9 L71.7 51.6 L40.1 51.7 L7.1 51.6" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.0 52.8 L9.1 31.0 L8.5 7.2" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="88" y="37" font-size="18" font-weight="700" fill="#183f38" text-anchor="middle">Happy Desktop</text>
+<path d="M216 10 L333 9 L332 51 L215 50 Z" fill="#e3efe9"/>
+<path d="M213.7 7.8 L243.4 8.5 L274.3 8.6 L304.5 8.7 L335.3 7.3" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M334.4 7.0 L334.8 29.8 L333.2 53.1" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M334.8 51.6 L304.2 53.0 L274.5 51.4 L243.0 51.5 L212.6 52.6" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M214.1 52.9 L213.2 30.5 L213.2 7.1" fill="none" stroke="#183f38" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="274" y="37" font-size="20" font-weight="700" fill="#183f38" text-anchor="middle">WorkOS</text>
+<path d="M378 10 L511 9 L510 51 L377 50 Z" fill="#f6eadf"/>
+<path d="M375.9 7.7 L409.8 8.8 L445.1 7.4 L479.5 7.1 L512.9 7.9" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M511.6 7.5 L511.5 29.5 L512.4 52.8" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M512.6 51.6 L478.7 51.4 L444.2 51.6 L409.4 52.7 L375.0 51.8" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M375.7 52.7 L377.0 30.6 L376.2 6.7" fill="none" stroke="#183f38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="444" y="37" font-size="18" font-weight="700" fill="#183f38" text-anchor="middle">Team server</text>
+<text x="98" y="92" font-size="18" font-weight="700" fill="#183f38">1  Sign in</text>
+<path d="M88.2 102.4 L124.8 102.5 L162.9 102.1 L199.5 101.5 L236.2 102.6 L273.7 102.2" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M264.8 107.3 L269.5 104.4 L273.7 102.2" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M264.6 96.7 L269.5 99.6 L274.1 101.8" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="98" y="126" font-size="18" font-weight="400" fill="#6b7f78">AuthKit, PKCE</text>
+<text x="98" y="166" font-size="18" font-weight="700" fill="#183f38">2  Access token</text>
+<path d="M274.4 175.7 L236.2 175.7 L199.5 175.5 L162.0 175.8 L125.3 175.6 L87.9 176.4" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M97.5 171.2 L92.6 173.5 L87.6 175.5" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M96.5 181.4 L92.6 178.7 L87.5 176.1" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="98" y="200" font-size="18" font-weight="400" fill="#6b7f78">for the team</text>
+<text x="98" y="246" font-size="18" font-weight="700" fill="#183f38">3  Every request: Bearer token</text>
+<path d="M88.0 256.2 L127.3 256.6 L166.6 256.1 L207.0 256.5 L246.5 256.2 L286.1 256.5 L325.2 256.2 L365.4 256.4 L404.3 256.3 L444.4 256.1" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M435.1 260.9 L439.5 258.5 L443.6 256.1" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M435.5 251.4 L439.6 253.5 L444.2 256.1" fill="none" stroke="#183f38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M443.9 300.3 L409.5 300.3 L375.4 300.1 L342.0 299.7 L308.2 300.0 L274.1 300.4" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/><path d="M282.8 294.5 L278.4 297.6 L273.7 299.7" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M283.4 305.2 L278.5 302.7 L273.8 300.2" fill="none" stroke="#6b7f78" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="286" y="290" font-size="18" font-weight="400" fill="#6b7f78">Signing keys</text>
+<text x="286" y="324" font-size="18" font-weight="400" fill="#6b7f78">(JWKS, cached)</text>
+<path d="M87.7 55.9 L88.2 91.7 L88.2 126.9 L88.0 162.4 L87.8 198.0 L88.2 233.7 L88.1 269.3 L87.9 304.3 L88.0 339.8" fill="none" stroke="#6b7f78" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 6"/>
+<path d="M273.7 55.9 L274.1 89.9 L273.9 124.0 L274.3 157.7 L273.7 191.4 L274.4 225.1" fill="none" stroke="#6b7f78" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 6"/>
+<path d="M274.2 257.1 L273.9 284.9 L273.7 312.1 L274.0 339.5" fill="none" stroke="#6b7f78" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 6"/>
+<path d="M444.3 55.7 L443.8 91.2 L444.1 127.0 L444.1 162.6 L444.2 198.3 L444.1 233.3 L444.0 268.8 L443.7 304.5 L444.2 339.7" fill="none" stroke="#6b7f78" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 6"/>
 <text x="8" y="380" font-size="20" font-weight="700" fill="#183f38">4  The server checks it locally</text>
 <text x="8" y="408" font-size="18" font-weight="400" fill="#183f38">RS256 signature, issuer, client, org_id</text>
 <text x="8" y="434" font-size="18" font-weight="400" fill="#183f38">then maps the user to a team member</text>
-<path d="M8.2 461.7 L46.6 461.9 L85.7 462.0 L124.4 462.2 L163.0 462.2 L202.2 461.7 L241.0 462.2 L279.1 462.0 L318.3 462.3 L356.8 462.1 L396.0 462.2 L434.8 462.0 L473.4 461.8 L512.2 462.3" fill="none" stroke="#6b7f78" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 7"/>
+<path d="M7.8 461.8 L46.9 462.0 L85.6 462.2 L124.2 462.2 L163.4 461.7 L202.2 462.2 L240.3 462.0 L279.5 462.3 L318.1 462.1 L357.2 462.2 L396.0 462.0 L434.6 461.8 L473.4 462.3 L512.1 462.2" fill="none" stroke="#6b7f78" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 7"/>
 <text x="8" y="498" font-size="20" font-weight="700" fill="#183f38">Or your own identity provider</text>
 <text x="8" y="526" font-size="18" font-weight="400" fill="#6b7f78">authentication = "jwt": the server verifies</text>
 <text x="8" y="552" font-size="18" font-weight="400" fill="#6b7f78">your OAuth server's tokens instead</text>

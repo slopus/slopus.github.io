@@ -67,15 +67,16 @@ def key(x, y):
 
 o = []
 # Text is at least 18 units: about 12px when a phone shrinks this to 350px.
-DESK, RELAY, SRV = 80, 260, 440
-o.append(rect(8, 8, 144, 44, 1.5, INK, SAND))
+DESK, RELAY, SRV = 88, 262, 440
+o.append(rect(8, 8, 160, 44, 1.5, INK, SAND))
 o.append(text(DESK, 37, "Happy Desktop", 18, INK, 700, "middle"))
-o.append(rect(196, 8, 128, 44, 1.8, INK, MINT))
+o.append(rect(192, 8, 140, 44, 1.8, INK, MINT))
 o.append(text(RELAY, 37, "DERP relay", 20, INK, 700, "middle"))
 o.append(rect(368, 8, 144, 44, 1.5, INK, SAND))
 o.append(text(SRV, 37, "Your server", 18, INK, 700, "middle"))
 
 # Labels between the lifelines, with their extents, so a lifeline breaks instead of crossing one.
+# They start at x = 90, so the longest still ends at the server lifeline.
 rows = []
 
 
@@ -98,21 +99,21 @@ def lifeline(x, y1, y2):
 
 
 # 1. Both machines dial out to the relay; neither opens a port.
-o.append(label(DESK + 10, 92, "1  Both sides dial out to a relay", 18, INK, 700))
+o.append(label(DESK + 2, 92, "1  Both sides dial out to a relay", 18, INK, 700))
 o.append(arrow(DESK, 102, RELAY - 4, 102, MUTED, 1.4))
 o.append(arrow(SRV, 102, RELAY + 4, 102, MUTED, 1.4))
-o.append(label(DESK + 10, 126, "no inbound port, either side", 18, MUTED))
+o.append(label(DESK + 2, 126, "no inbound port, either side", 18, MUTED))
 
 # 2. The WireGuard handshake runs end to end; the relay only forwards it.
-o.append(label(DESK + 10, 166, "2  WireGuard handshake, end to end", 18, INK, 700))
+o.append(label(DESK + 2, 166, "2  WireGuard handshake, end to end", 18, INK, 700))
 o.append(arrow(DESK, 176, SRV, 176, INK))
-o.append(label(DESK + 10, 200, "throwaway client key on this side", 18, MUTED))
-o.append(label(DESK + 10, 224, "server key and pre-shared key from tc\u2026", 18, MUTED))
+o.append(label(DESK + 2, 200, "throwaway client key on this side", 18, MUTED))
+o.append(label(DESK + 2, 224, "server key and pre-shared key from tc\u2026", 18, MUTED))
 
 # 3. NAT traversal, with the relay as the fallback path.
-o.append(label(DESK + 10, 264, "3  Direct UDP path when NAT allows", 18, INK, 700))
+o.append(label(DESK + 2, 264, "3  Direct UDP path when NAT allows", 18, INK, 700))
 o.append(arrow(DESK, 274, SRV, 274, INK, 1.6, "6 5"))
-o.append(label(DESK + 10, 298, "else the relay forwards ciphertext", 18, MUTED))
+o.append(label(DESK + 2, 298, "else the relay forwards ciphertext", 18, MUTED))
 for x in (DESK, RELAY, SRV):
     o.append(lifeline(x, 56, 318))
 

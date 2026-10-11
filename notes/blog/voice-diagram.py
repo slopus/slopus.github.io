@@ -76,7 +76,7 @@ o = []
 APP, HS, EL = 78, 260, 442
 o.append(rect(8, 8, 140, 44, 1.5, INK, SAND))
 o.append(text(APP, 37, "Phone app", 18, INK, 700, "middle"))
-o.append(rect(190, 8, 140, 44, 1.5, INK, SAND))
+o.append(rect(186, 8, 148, 44, 1.5, INK, SAND))
 o.append(text(HS, 37, "Happy server", 18, INK, 700, "middle"))
 o.append(rect(372, 8, 140, 44, 1.8, INK, MINT))
 o.append(text(EL, 37, "ElevenLabs", 20, INK, 700, "middle"))
@@ -129,9 +129,9 @@ for x in (APP, HS, EL):
 # 5. What you asked for goes to the coding agent on your computer.
 o.append(arrow(APP, 350, APP, 392, INK))
 o.append(text(100, 376, "5  On to the coding agent", 20, INK, 700))
-o.append(rect(8, 396, 140, 44, 1.5, INK, SAND))
-o.append(text(APP, 425, "Coding agent", 18, INK, 700, "middle"))
-o.append(text(160, 424, "your request, allow, or deny", 18, MUTED))
+o.append(rect(8, 396, 148, 44, 1.5, INK, SAND))
+o.append(text(82, 425, "Coding agent", 18, INK, 700, "middle"))
+o.append(text(168, 424, "your request, allow, or deny", 18, MUTED))
 
 o.append(line(8, 462, 512, 462, 1.2, MUTED, .4, "3 7"))
 o.append(text(8, 498, "What ElevenLabs hears", 20, INK, 700))

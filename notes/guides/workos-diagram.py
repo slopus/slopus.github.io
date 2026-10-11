@@ -81,12 +81,12 @@ def key(x, y):
 
 o = []
 # Text is at least 18 units: about 12px when a phone shrinks this to 350px.
-APP, WOS, SRV = 78, 272, 446
-o.append(rect(8, 8, 140, 44, 1.5, INK, SAND))
+APP, WOS, SRV = 88, 274, 444
+o.append(rect(8, 8, 160, 44, 1.5, INK, SAND))
 o.append(text(APP, 37, "Happy Desktop", 18, INK, 700, "middle"))
-o.append(rect(212, 8, 120, 44, 1.8, INK, MINT))
+o.append(rect(214, 8, 120, 44, 1.8, INK, MINT))
 o.append(text(WOS, 37, "WorkOS", 20, INK, 700, "middle"))
-o.append(rect(380, 8, 132, 44, 1.5, INK, SAND))
+o.append(rect(376, 8, 136, 44, 1.5, INK, SAND))
 o.append(text(SRV, 37, "Team server", 18, INK, 700, "middle"))
 
 # Labels between the lifelines, with their extents, so a lifeline breaks instead of crossing one.
