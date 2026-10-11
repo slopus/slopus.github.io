@@ -199,6 +199,23 @@ describe('desktop and mobile downloads', () => {
     expect(screen.getByRole('link', { name: 'All Releases' }).getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases/latest')
   })
 
+  it('links every download to the latest release until the lookup resolves, and still fetches the file on click', async () => {
+    const html = renderToString(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
+    const links = [...html.matchAll(/<a [^>]*data-download-platform[^>]*>/g)].map(([tag]) => tag)
+    expect(links).toHaveLength(3)
+    for (const tag of links) expect(tag).toContain('href="https://github.com/slopus/happy-desktop/releases/latest"')
+
+    vi.resetModules()
+    vi.stubGlobal('fetch', vi.fn(() => new Promise(() => {})))
+    device('X11; Linux x86_64')
+    const { DownloadOptions: Fresh } = await import('./DownloadOptions')
+    render(<Fresh macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
+    const link = screen.getByRole('link', { name: 'Download Happy for Linux' })
+    expect(link.getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases/latest')
+    expect(fireEvent.click(link)).toBe(false)
+    expect(link.getAttribute('aria-busy')).toBe('true')
+  })
+
   it('keeps the Windows mark and direct download', async () => {
     device('Windows NT 10.0')
     const { container } = render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)

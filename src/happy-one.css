@@ -34,8 +34,10 @@
 .one-download-actions { position: relative; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%; margin: .5rem auto 0; padding-block: .5rem; }
 .one-desktop-downloads, .one-mobile-downloads { display: flex; flex-direction: column; align-items: center; gap: .75rem; min-width: 0; }
 .one-desktop-downloads { max-width: 100%; }
-/* Windows and Linux (index.html): no Mac download flashes before this platform's appears. */
+/* Windows and Linux (index.html): no Mac download flashes before this platform's appears, and on
+   Linux the placeholder drops the architecture select and Homebrew strip to keep Linux's height. */
 html[data-desktop-platform] .one-download-actions[data-platform='desktop'] .one-desktop-downloads { visibility: hidden; }
+html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop'] :is(.one-mac-architecture, .one-brew-command) { display: none; }
 .one-primary-download { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .one-mac-architecture { height: 20px; padding: 0; border: 0; border-radius: 0; background: transparent; color: #47645e; font: inherit; font-size: .82rem; line-height: 20px; cursor: pointer; }
 .one-mac-architecture:focus-visible { outline: 2px solid #183f38; outline-offset: 3px; border-radius: 2px; }

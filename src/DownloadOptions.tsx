@@ -6,6 +6,7 @@ import { GithubMark } from './SiteChrome'
 import { latestDesktopDownloads, type DesktopDownloads, type MacArchitecture } from './desktopDownloads'
 
 const BREW = 'brew install --cask slopus/tap/happy'
+const LATEST_RELEASE = 'https://github.com/slopus/happy-desktop/releases/latest'
 const DESKTOP_PLATFORMS = ['macos', 'windows', 'linux'] as const
 const LABELS = { macos: 'macOS', windows: 'Windows', linux: 'Linux', desktop: 'Desktop' }
 /** The exact signer on the Windows installer's Authenticode certificate (CN and O). */
@@ -84,13 +85,11 @@ function DesktopDownloadLink({ platform, macArchitecture, downloads, className, 
       setMessage('')
     })
   }
-  return <a className={className} href={downloads ? desktopDownloadUrl(downloads, platform, macArchitecture) : undefined} role="link" tabIndex={0}
+  // Until the lookup resolves, the click handler fetches the file; without JavaScript the link opens the release page.
+  return <a className={className} href={downloads ? desktopDownloadUrl(downloads, platform, macArchitecture) : LATEST_RELEASE}
     aria-label={`Download Happy for ${LABELS[platform]}`} aria-busy={checking || undefined}
     data-download-platform={platform} data-download-arch={platform === 'macos' ? macArchitecture : 'x64'}
-    onClick={start} onAuxClick={start}
-    onKeyDown={event => {
-      if (!downloads && event.key === 'Enter') { event.preventDefault(); event.currentTarget.click() }
-    }}>
+    onClick={start} onAuxClick={start}>
     {children}
     {message && <span className="one-download-sr" role="status">{message}</span>}
   </a>
@@ -104,7 +103,7 @@ function PlatformLinks({ current, downloads, macArchitecture }: { current: Exclu
           style={{ '--platform-icon': `url('/img/happy-one/icons/${platform}.svg')` } as CSSProperties} />}
         {LABELS[platform]}
       </DesktopDownloadLink>)}
-      <a href="https://github.com/slopus/happy-desktop/releases/latest"><GithubMark />All Releases</a>
+      <a href={LATEST_RELEASE}><GithubMark />All Releases</a>
     </div>
   )
 }

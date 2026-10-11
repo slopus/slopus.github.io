@@ -72,8 +72,10 @@
       // until the app replaces it with this platform's, and Android lists Google Play first from
       // the start (src/DownloadOptions.tsx, src/happy-one.css).
       if (/Android/i.test(navigator.userAgent)) document.documentElement.dataset.mobileStore = 'googlePlay'
-      if (!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) && !(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
-        && /Windows|Linux/i.test(navigator.userAgent)) document.documentElement.dataset.desktopPlatform = 'other'
+      if (!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) && !(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+        if (/Windows/i.test(navigator.userAgent)) document.documentElement.dataset.desktopPlatform = 'windows'
+        else if (/Linux/i.test(navigator.userAgent) && !/Macintosh|Mac OS X/i.test(navigator.userAgent)) document.documentElement.dataset.desktopPlatform = 'linux'
+      }
     </script>
   </head>
   <body>
