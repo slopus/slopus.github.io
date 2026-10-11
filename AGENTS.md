@@ -45,9 +45,10 @@ enough to read on a phone. Its money paragraph names what is paid today (voice)
 and what might be later, and says plainly that monetization is not the focus.
 
 The Team page (`content/desktop/team.mdx`, `/team/`) follows Vision under Start
-here: a few lines per person, taken from their own sites and public profiles,
-with their X handles and the photos in `public/img/team/`. It never states or
-hints at anyone's level of involvement, in either direction.
+here: Steve first, then Kirill, each bio in its own first person ("I built"),
+two or three lines of specific, sourced wins taken from their own sites, talks
+and public profiles, with their X handles and the photos in `public/img/team/`.
+It never states or hints at anyone's level of involvement, in either direction.
 
 The Blog is the last group in the desktop docs sidebar, with no list page.
 Posts are desktop docs (`group: 'Blog'` in `src/documents.ts`) at one-word

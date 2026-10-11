@@ -220,11 +220,11 @@ const desktopDocuments: DocumentDefinition[] = [
     essay: true,
   },
   {
-    // Who builds Happy, from their own sites and profiles. Never anyone's level of involvement.
+    // Who builds Happy, in our own words, from our own sites and profiles. Never anyone's level of involvement.
     path: 'team',
     sourcePath: '/content/desktop/team.mdx',
     title: 'Team',
-    description: 'Who builds Happy: Kirill Dubovitskiy and Steve Korshakov, and what they built before.',
+    description: 'Who builds Happy, in our own words: Steve Korshakov and Kirill Dubovitskiy, and what we built before.',
     group: 'Start here',
   },
   {
