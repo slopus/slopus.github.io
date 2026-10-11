@@ -298,11 +298,6 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content strong { color: #183f38; font-weight: 700; }
 .document-content a { color: #d94725; text-decoration: underline; text-decoration-color: rgba(217, 71, 37, .35); text-underline-offset: .2em; }
 .document-content a:hover { text-decoration-color: currentColor; }
-/* The Blog index (/blog/): each post is its title, a link in ink, over its description. */
-[data-document="blog"] .document-content h2 { font-size: clamp(1.4rem, 2.4vw, 1.7rem); margin: 0; padding: 1.6rem 0 .5rem; }
-[data-document="blog"] .document-content h2 a { color: #183f38; text-decoration: none; }
-[data-document="blog"] .document-content h2 a:hover { color: #e6522c; }
-[data-document="blog"] .document-content > p { color: #557068; font-size: 1rem; margin-bottom: 1.6rem; }
 .document-content ul, .document-content ol { margin: 0 0 1.4rem; padding-left: 1.45rem; }
 .document-content li { margin: .35rem 0; padding-left: .2rem; }
 .document-content li::marker { color: #e6522c; }

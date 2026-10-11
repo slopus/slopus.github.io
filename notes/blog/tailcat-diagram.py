@@ -1,5 +1,5 @@
 # Writes public/img/tailcat.svg, the Tailcat diagram on /tailcat/, in the
-# hand-drawn style of public/img/team-sign-in-workos.svg (same primitives as notes/guides/workos-diagram.py).
+# hand-drawn style of the WorkOS post diagram (same primitives as notes/guides/workos-diagram.py).
 # Transparent, with no frame or nested boxes. Text is at least 18 units: about 12px at a phone's 350px.
 # Run from the repository root: python3 notes/blog/tailcat-diagram.py
 import math

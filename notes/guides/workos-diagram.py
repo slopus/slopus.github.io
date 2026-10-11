@@ -1,4 +1,4 @@
-# Writes public/img/team-sign-in-workos.svg, the team sign-in diagram on /guides/team-sign-in-workos/, in
+# Writes public/img/team-sign-in-workos.svg, the team sign-in diagram on /workos/, in
 # the hand-drawn style of public/multiplayer/team-server.svg (same primitives as
 # notes/multiplayer/team-server-diagram.py). Transparent, with no frame or nested boxes.
 # Run from the repository root: python3 notes/guides/workos-diagram.py

@@ -41,8 +41,11 @@ const movedPaths: Record<string, string> = {
   '/desktop': '/',
   '/happy2': '/',
   '/tmp/happy-one': '/',
-  // The Vision essay was published at /thesis/. (/blog/ redirected here too until the Blog group had posts.)
+  // The Vision essay was published at /thesis/; the blog index lived at /blog/ briefly, with it as its only post.
+  '/blog': '/vision',
   '/thesis': '/vision',
+  // The WorkOS post was published at /team-sign-in-workos/ before the Blog moved to short URLs.
+  '/team-sign-in-workos': '/workos',
 }
 
 /** Sections that moved wholesale. The old prefix keeps resolving, path and all. */

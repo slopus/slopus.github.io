@@ -87,4 +87,5 @@
 /voice/
 /vs/claude-code-remote-control/
 /welcome/
+/workos/
 /workspaces/

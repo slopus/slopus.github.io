@@ -23,8 +23,6 @@ export interface DocumentEntry {
   hidden?: boolean
   /** An essay: rendered with captioned figures, floats, and the pig in its bullet (src/DocumentPages.tsx). */
   essay?: boolean
-  /** An index: its source is followed by every other listed page in this group, with its description. */
-  lists?: DocumentGroup
 }
 
 const documentSources = import.meta.glob(
@@ -335,26 +333,16 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Comparisons',
   },
   {
-    // /blog/ redirected to /vision/ until the Blog group had posts of its own.
-    path: 'blog',
-    sourcePath: '/content/desktop/blog.mdx',
-    title: 'All Posts',
-    pageTitle: 'Blog — Happy',
-    description: 'How Happy is built on other people\'s work: team sign-in with WorkOS, Tailcat for reaching your server, and ElevenLabs for voice.',
-    group: 'Blog',
-    lists: 'Blog',
-  },
-  {
-    // Shared as /team-sign-in-workos/ before the Blog group existed; keep the URL.
-    path: 'team-sign-in-workos',
-    sourcePath: '/content/desktop/team-sign-in-workos.mdx',
+    // Blog: short URLs to type from memory; the titles stay long.
+    // First published at /team-sign-in-workos/, which redirects here.
+    path: 'workos',
+    sourcePath: '/content/desktop/workos.mdx',
     title: 'Team Sign-In with WorkOS',
     pageTitle: 'Team Sign-In with WorkOS for a Self-Hosted Agent Server — Happy',
     description: 'How a Happy Agent team server uses WorkOS AuthKit and Organizations: members sign in, and the server checks each token locally. Or bring your own IdP.',
     group: 'Blog',
   },
   {
-    // Blog: short URLs to type from memory; the titles stay long.
     path: 'tailcat',
     sourcePath: '/content/desktop/tailcat.mdx',
     title: 'No Open Ports: Tailcat',
@@ -412,13 +400,6 @@ export function getDocumentSource(document: DocumentEntry): string {
   }
 
   const source = documentSources[document.sourcePath] ?? ''
-
-  if (document.lists) {
-    const pages = documentsForProduct(document.product)
-      .filter((page) => page.group === document.lists && page !== document && !page.hidden)
-      .map((page) => `## [${documentHeading(page)}](/${page.path}/)\n\n${page.description}`)
-    return [source.trim(), ...pages].join('\n\n')
-  }
 
   if (source.trim()) {
     return /^#\s+/m.test(source) ? source : `# ${document.title}\n\n${source}`

@@ -51,6 +51,10 @@ ElevenLabs costs Happy about a cent a minute. The subscription in the app pays f
 
 **Settings → Voice → Bring your own agent** takes the ID of an agent in your own ElevenLabs account. The app then connects to ElevenLabs directly with that agent and never calls Happy's server for voice: no minutes counted, no paywall, your ElevenLabs bill. Once an agent ID is set, the app shows a prompt guide for configuring that agent.
 
+## GPT-Live on Happy Desktop
+
+Happy Desktop has experimental voice calls of its own, on OpenAI's GPT-Live instead of ElevenLabs. Turn on **Settings → General → Enable experimental features**, then **Settings → Experimental → Voice calls**, and pick the account: a Codex subscription, which uses `gpt-live-1-codex` on your ChatGPT plan, or an OpenAI API key, which uses `gpt-live-1` and bills that API account. A phone button appears beside Settings. The call runs from the Happy Agent on your machine with that account, so Happy's minutes and paywall do not apply. It steers the Desktop window rather than a coding agent: it navigates and stages a message, and you press Send. Sources in Happy Desktop and Happy Agent: [the setting](https://github.com/slopus/happy-desktop/blob/main/packages/happy-desktop-ui/src/GptLiveSettings.tsx), [the model and endpoints](https://github.com/slopus/happy-agent/blob/main/packages/happy-agent-modules/sources/live/impl/liveProviderTransport.ts), and [what we learned](https://github.com/slopus/happy-agent/blob/main/packages/happy-agent-modules/sources/live/LEARNINGS.md).
+
 ## Why ElevenLabs
 
 A voice agent that listens continuously, handles interruptions, and speaks back without a pause is a product in itself. ElevenAgents gives us that, with per-conversation tokens so our agent accepts only what Happy's server minted, and conversation records we can count from without a database of our own. Thank you, ElevenLabs.

@@ -321,9 +321,13 @@ for (const { route, title, description } of pluginPages) {
   sitemapPages.push({ route: canonicalPath, sources: [policySources[route] ?? 'src/PluginPages.tsx'] })
 }
 
-// The Vision essay was published at /thesis/, which is in routes.txt, so it redirects to /vision/.
-// /blog/ redirected there too, until it became the Blog group's index (src/documents.ts).
+// The Vision essay was published at /thesis/, and the blog index lived at /blog/
+// briefly with it as its only post. Both are in routes.txt, so both redirect to /vision/.
 await writeRoute('thesis', redirectHtml('/vision/'))
+await writeRoute('blog', redirectHtml('/vision/'))
+
+// The WorkOS post was first published at /team-sign-in-workos/; the Blog uses short URLs.
+await writeRoute('team-sign-in-workos', redirectHtml('/workos/'))
 
 // The Remote Agents guide became the remote server guide; its URLs, old prefixes included, redirect.
 for (const route of ['guides/remote-agents', 'desktop/docs/guides/remote-agents', 'happy2/docs/guides/remote-agents']) {
@@ -484,4 +488,4 @@ if (brokenLinks.length > 0) {
   throw new Error(`Broken internal links in the built site:\n  ${[...new Set(brokenLinks)].join('\n  ')}`)
 }
 
-console.log(`Generated ${documentRoutes + 8 + pluginPages.length} static routes, a ${sitemapPages.length}-URL sitemap, and llms.txt.`)
+console.log(`Generated ${documentRoutes + 10 + pluginPages.length} static routes, a ${sitemapPages.length}-URL sitemap, and llms.txt.`)

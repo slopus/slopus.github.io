@@ -30,7 +30,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(24)
+    expect(documentsForProduct('desktop')).toHaveLength(23)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -177,7 +177,7 @@ describe('static document pages', () => {
     unmount()
 
     render(<Router pathname="/vs/claude-code-remote-control/" />)
-    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/all posts/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/team sign-in with workos/i)
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/claude code on your phone/i)
   })
 
@@ -200,7 +200,7 @@ describe('static document pages', () => {
     expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
     for (const document of documents.filter((entry) => entry.group === 'Blog')) {
       expect(document.product).toBe('desktop')
-      expect(['blog', 'team-sign-in-workos', 'tailcat', 'voice']).toContain(document.path)
+      expect(['workos', 'tailcat', 'voice']).toContain(document.path)
       expect(document.pageTitle?.length).toBeLessThanOrEqual(65)
       expect(document.description.length).toBeLessThanOrEqual(155)
       // No narration: nothing on the page points at the diagram's files or announces what follows.
@@ -346,27 +346,27 @@ describe('static document pages', () => {
     expect(documents.filter((document) => document.path === 'team')).toHaveLength(1)
   })
 
-  it('lists the Blog group last, its index at /blog/ listing every post, and /thesis/ opening the Vision essay', () => {
-    const { container } = render(<Router pathname="/blog/" />)
+  it('lists the Blog group last with no list page, at short URLs; /blog/ and /thesis/ open the Vision essay', () => {
+    render(<Router pathname="/workos/" />)
 
     const [sidebar] = screen.getAllByRole('navigation', { name: 'Documentation navigation' })
-    expect(within(sidebar).getAllByRole('heading', { level: 2 }).at(-1)?.textContent).toBe('Blog')
-    expect(screen.getByRole('heading', { level: 1, name: /^blog/i })).toBeTruthy()
-    const posts = documentsForProduct('desktop').filter((document) => document.group === 'Blog' && document.path !== 'blog')
-    expect(posts.map((post) => post.path)).toContain('team-sign-in-workos')
-    for (const post of posts) {
-      const link = container.querySelector(`.document-content h2 a[href="/${post.path}/"]`)
-      expect(link).not.toBeNull()
-      expect(link?.closest('h2')?.nextElementSibling?.textContent).toBe(post.description)
-    }
+    const groups = within(sidebar).getAllByRole('heading', { level: 2 })
+    expect(groups.at(-1)?.textContent).toBe('Blog')
+    const posts = within(groups.at(-1)!.closest('section')!).getAllByRole('link').map((link) => link.getAttribute('href'))
+    expect(posts).toEqual(['/workos/', '/tailcat/', '/voice/'])
+    expect(screen.getByRole('heading', { level: 1, name: /team sign-in with workos/i })).toBeTruthy()
     // Server markup: the landing pages' effects need browser APIs jsdom lacks.
-    expect(renderPath('/welcome/')).not.toMatch(/>Blog<\/a>/)
+    const header = renderPath('/welcome/').match(/<nav[^>]*aria-label="Primary navigation"[\s\S]*?<\/nav>/)?.[0]
+    expect(header).not.toMatch(/>Blog</)
+    // The WorkOS post was first published at /team-sign-in-workos/.
+    expect(renderPath('/team-sign-in-workos/')).toMatch(/<h1 id="team-sign-in-with-workos"/)
+    expect(metadataForPath('/team-sign-in-workos/').canonicalPath).toBe('/workos/')
+    expect(renderPath('/blog/')).toMatch(/<h1 id="vision"/)
     expect(renderPath('/thesis/')).toMatch(/<h1 id="vision"/)
     expect(prerenderedPaths).toContain('/vision/')
-    expect(prerenderedPaths).toContain('/blog/')
-    expect(prerenderedPaths).not.toContain('/thesis/')
+    expect(prerenderedPaths).toContain('/workos/')
+    for (const moved of ['/thesis/', '/blog/', '/team-sign-in-workos/']) expect(prerenderedPaths).not.toContain(moved)
     expect(thesisMetadata.robots).toBeUndefined()
-    expect(metadataForPath('/blog/').title).toBe('Blog — Happy')
   })
 
   it('renders privacy and terms as site pages', () => {

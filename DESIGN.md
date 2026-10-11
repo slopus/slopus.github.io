@@ -55,8 +55,8 @@ These rules cover the docs, guides, comparisons, and blog. The homepage has rule
   - a 44px tap target;
   - its chevron at the right end, no taller than the text's capitals.
 - **Metadata.** Each page's title, search title, and description (160 characters at most) live in `src/documents.ts`.
-- **The Blog** is the last sidebar group. Posts use top-level slugs like every desktop doc, and `/blog/` lists them with their descriptions.
-- **URLs don't break.** `routes.txt` only grows. A shared URL keeps working even when its page moves to another group, as `/team-sign-in-workos/` did.
+- **The Blog** is the last sidebar group, with no list page. Each post gets a one-word slug you can type from memory: `/workos/`, `/tailcat/`, `/voice/`.
+- **URLs don't break.** `routes.txt` only grows. A shared URL keeps working when its page moves: `/team-sign-in-workos/` redirects to `/workos/`.
 
 ## Landing page
 
