@@ -30,7 +30,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(23)
+    expect(documentsForProduct('desktop')).toHaveLength(24)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -344,6 +344,39 @@ describe('static document pages', () => {
     // Nobody's level of involvement, in either direction.
     expect(container.querySelector('.document-content')?.textContent).not.toMatch(/full[- ]time|part[- ]time|day job|side project|spare time/i)
     expect(documents.filter((document) => document.path === 'team')).toHaveLength(1)
+  })
+
+  it('lists Secrets under Features after Permissions, sourced, with a search title and description that fit', () => {
+    render(<Router pathname="/secrets/" />)
+
+    expect(screen.getAllByRole('heading', { level: 1 }).map((heading) => heading.id)).toEqual(['secrets'])
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/permissions & sandbox/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/projects & workspaces/i)
+    const secrets = getDocument('desktop', 'secrets')!
+    expect(secrets.group).toBe('Features')
+    expect(secrets.pageTitle?.length).toBeLessThanOrEqual(65)
+    expect(secrets.description.length).toBeLessThanOrEqual(155)
+    expect(metadataForPath('/secrets/').title).toBe(secrets.pageTitle)
+    const markup = renderPath('/secrets/')
+    // Every section the page promises, and the comparison's claims each link to the other project's own docs.
+    for (const heading of ['One catalog per installation', 'Creating and updating', 'What the model sees', 'Attaching', 'One command at a time', 'The sandbox and Auto review', 'At rest', 'In Happy Desktop', 'In team mode', 'Compared with Hermes Agent and OpenClaw']) {
+      expect(markup).toContain(`>${heading}<`)
+    }
+    for (const href of [
+      'https://github.com/slopus/happy-agent/blob/main/packages/happy-agent-modules/sources/secrets/README.md',
+      'https://github.com/slopus/happy-agent/blob/main/packages/happy-agent-modules/sources/compute/impl/createAttachedSecretsHostShell.ts',
+      'https://github.com/slopus/happy-desktop/blob/main/packages/happy-desktop-ui/src/pages/settings/HappyAgentSecretSettings.tsx',
+      'https://hermes-agent.nousresearch.com/docs/user-guide/secrets/',
+      'https://docs.openclaw.ai/gateway/secrets/secret-store-and-egress',
+      'https://docs.openclaw.ai/tools/secrets',
+    ]) {
+      expect(markup).toContain(`href="${href}"`)
+    }
+    // The diagram, with no narration about it; and the sandbox page points here.
+    expect(markup).toContain('src="/img/secrets.svg"')
+    expect(markup).not.toMatch(/The diagram as|below is|this page explains/i)
+    expect(renderPath('/permissions/')).toContain('href="/secrets/"')
+    expect(documents.filter((document) => document.path === 'secrets')).toHaveLength(1)
   })
 
   it('lists the Blog group last with no list page, at short URLs; /blog/ and /thesis/ open the Vision essay', () => {

@@ -76,6 +76,7 @@
 /plugins/terms/
 /privacy/
 /quick-start/
+/secrets/
 /tailcat/
 /team-sign-in-workos/
 /team/
