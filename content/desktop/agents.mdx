@@ -1,12 +1,16 @@
 # Agents That Never Die
 
-A conversation is a durable session. A subagent that finished is not gone; send it a follow-up and it resumes with its full context. A question asked while you were away is still waiting when you return.
+Every conversation in Happy is a durable session that survives a closed window and a restart. A subagent that finished is not gone; send it a follow-up and it resumes with its full context. A question asked while you were away is still waiting when you return.
 
-## Sessions
+```chief-of-staff
+Tomorrow at 9am, remind me to review the open pull requests on acme/api
+```
+
+## What a session is
 
 A session has a working directory, a model, an effort, a permission mode, and a transcript. It lives in the runtime, not the window. Every session has an unguessable **agent ID**; that is how agents reach each other and how a teammate joins. There is no directory of agents to browse.
 
-## Subagents
+## Subagents: delegate work to other models
 
 An agent delegates bounded work to subagents, background by default. Depth is capped at three; a tree holds at most five, finished ones included.
 
@@ -16,15 +20,15 @@ An agent delegates bounded work to subagents, background by default. Depth is ca
 - A finished child takes follow-ups instead of being respawned.
 - A background child notifies its parent when done, even while the parent is idle. Parents keep working or end their turn; they do not wait or poll.
 
-## Reaching any agent
+## How agents message each other
 
 Messaging reaches an agent's creator and its own collaborators. For anything else (a subtask, another project, another machine) an agent sends to the exact ID it was given; unknown IDs are refused. The receiver learns who wrote.
 
-## Time
+## Durable waits and scheduled messages
 
 Every agent can **wait** durably, for a duration or until a time up to a day away; a restart in between changes nothing, and a new message ends the wait early. Primary sessions can **schedule a message** to any agent whose ID they know, including themselves, hours or days ahead. An agent can list and cancel its scheduled messages.
 
-## Inbox and presence
+## The Inbox and presence
 
 A question from an agent appears in the conversation and, with experimental features on, in the **Inbox** as one state. Answer in either place, on any device, and it closes in both.
 
@@ -35,6 +39,6 @@ A question from an agent appears in the conversation and, with experimental feat
 
 Custom states, with a wait budget and instructions, can be defined in configuration. A presence change mid-run reaches the agent as a notice.
 
-## What the app shows
+## What Happy Desktop shows for each session
 
 Per session: phase, running tools, background processes, subagents, waiting state, token usage for the whole tree, changed files. Terminals an agent opens can be attached to from the app.

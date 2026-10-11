@@ -1,5 +1,11 @@
 # Skills & MCP
 
+Add to what every agent in Happy knows and can do: skills are instructions a model loads when a task matches, and MCP servers add tools from another process or service. Both work the same for Claude, Codex, and Grok.
+
+```chief-of-staff
+Add ~/team-skills as a skill folder for every agent
+```
+
 | Surface | What it adds | Written as |
 | --- | --- | --- |
 | **Skills** | Instructions a model loads on demand | A `SKILL.md` file |
@@ -7,7 +13,7 @@
 
 An agent inside Happy can write both when asked.
 
-## Skills
+## Skills: instructions loaded on demand
 
 ```markdown
 ---
@@ -21,9 +27,9 @@ description: Use when asked to draft release notes from merged pull requests.
 2. Group them by area.
 ```
 
-Discovered in `~/.agents/skills` and `.agents/skills` from the project root down to the working directory; a project skill overrides a user skill of the same name. Names and descriptions go into the system prompt; the model reads the whole file when a task matches. Frontmatter asking for hooks, shell execution, or permission changes is ignored.
+Discovered in `~/.agents/skills` and `.agents/skills` from the project root down to the working directory; a project skill overrides a user skill of the same name. Names and descriptions go into the system prompt; the model reads the whole file when a task matches. Frontmatter asking for hooks, shell execution, or permission changes is ignored. The Chief of Staff can add more skill folders for the whole installation; every agent then loads the skills in their subfolders.
 
-## MCP servers
+## MCP servers: tools from other processes
 
 `mcp.toml` in `~/Happy/Config` (macOS) or `~/happy/config` (Linux), or at a workspace root:
 

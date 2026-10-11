@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { metadataForPath, Router } from './Router'
 import {
@@ -360,7 +360,7 @@ describe('static document pages', () => {
     expect(metadataForPath('/secrets/').title).toBe(secrets.pageTitle)
     const markup = renderPath('/secrets/')
     // Every section the page promises; the comparison links each other project's own docs, and no source list closes the page.
-    for (const heading of ['One catalog per installation', 'Creating and updating', 'What the model sees', 'Attaching', 'One command at a time', 'The sandbox and Auto review', 'At rest', 'In Happy Desktop', 'In team mode', 'Compared with Hermes Agent and OpenClaw']) {
+    for (const heading of ['One secret catalog per installation', 'Create and update a secret', 'What the model sees, and never sees', 'Attach a secret to an agent, workspace, or project', 'How a command receives a secret', 'Secrets, the sandbox, and Auto review', 'Where secrets are stored on disk', 'Secrets in Happy Desktop', 'What team members can do with secrets', 'How Happy compares with Hermes Agent and OpenClaw']) {
       expect(markup).toContain(`>${heading}<`)
     }
     for (const href of [
@@ -402,6 +402,43 @@ describe('static document pages', () => {
     expect(prerenderedPaths).toContain('/workos/')
     for (const moved of ['/thesis/', '/blog/', '/team-sign-in-workos/']) expect(prerenderedPaths).not.toContain(moved)
     expect(thesisMetadata.robots).toBeUndefined()
+  })
+
+  it('puts a copyable Chief of Staff prompt right after the intro of every page it can help with', () => {
+    const withPrompt = ['quick-start', 'chief-of-staff', 'models', 'permissions', 'secrets', 'workspaces', 'agents', 'mobile', 'multiplayer', 'extending', 'guides/configuration', 'guides/remote-server', 'workos', 'tailcat']
+    for (const document of documentsForProduct('desktop')) {
+      const markup = renderPath(`/${document.path}/`)
+      const block = markup.indexOf('<aside class="cos-prompt"')
+      if (!withPrompt.includes(document.path)) {
+        expect(block, document.path).toBe(-1)
+        continue
+      }
+      // The prompt is plain text in the served page, before the reference sections; quick-start's sits in its First project step.
+      expect(block, document.path).toBeGreaterThan(markup.indexOf('<h1'))
+      if (document.path !== 'quick-start') {
+        expect(block, document.path).toBeLessThan(markup.indexOf('<h2', markup.indexOf('<h1')))
+      }
+      expect(markup).toMatch(/<p class="cos-prompt-text">[^<]+<\/p><button type="button" class="cos-prompt-copy" aria-label="Copy prompt: /)
+      // The block replaces the old prose section.
+      expect(markup).not.toMatch(/<h2[^>]*>Ask the Chief of Staff</)
+    }
+    expect(withPrompt.filter((path) => !getDocument('desktop', path))).toEqual([])
+    // The Chief of Staff page shows the real sidebar, where it is the first bot.
+    expect(renderPath('/chief-of-staff/')).toContain('src="/img/chief-of-staff-sidebar.png"')
+  }, 30_000)
+
+  it('copies a Chief of Staff prompt and says so', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } })
+    render(<Router pathname="/mobile/" />)
+
+    const block = screen.getByRole('complementary', { name: 'Ask the Chief of Staff' })
+    fireEvent.click(within(block).getByRole('button', { name: 'Copy prompt: Pair my phone' }))
+
+    await waitFor(() => expect(within(block).getByRole('button', { name: 'Copied: Pair my phone' })).toBeTruthy())
+    expect(writeText).toHaveBeenCalledWith('Pair my phone')
+    expect(within(block).getByRole('status').textContent).toBe('Copied.')
+    Reflect.deleteProperty(navigator, 'clipboard')
   })
 
   it('renders privacy and terms as site pages', () => {

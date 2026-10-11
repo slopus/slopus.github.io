@@ -1,24 +1,63 @@
 # Chief of Staff
 
-The Chief of Staff is a built-in agent with administrative tools. It is the conversational way to configure Happy: say what you want, and it runs the recipe, asking only for the choices and approvals that are genuinely yours.
+The Chief of Staff is the first bot you get when you start Happy Desktop, and the one that sets Happy up. Tell it what you want: it adds model accounts and providers, imports your first project, pairs your phone, and deploys servers, asking only for the choices and sign-ins that are yours.
 
-## What it does today
+![The Bots section of the Happy Desktop sidebar on a new install, with one bot: Chief of Staff](/img/chief-of-staff-sidebar.png)
+
+```chief-of-staff
+Help me get started with Happy
+Add my work Claude account and rotate between it and my personal one
+Make Codex the default for new sessions
+Pair my phone
+Put Happy Agent on my server ubuntu@203.0.113.10
+Create a bot called Release Notes that drafts our weekly release notes
+```
+
+## What happens the first time you open Happy Desktop
+
+1. You sign in to at least one model subscription: Claude, Codex, or Grok. Happy Agent needs one provider before it starts.
+2. You pair your phone, or skip it.
+3. Happy Desktop opens the Chief of Staff with a draft in the message box: "Help me get started with Happy. Let's choose one project or create a new one, then make one small change together. Ask before looking for local projects or changing anything." Nothing is sent until you send it.
+
+Once you send it, the Chief of Staff offers up to three folders you recently used with Claude Code or Codex. It reads only their paths, never the conversations. You pick one, name another folder, or start a new project, and it agrees one small first change with you.
+
+Happy Agent creates the Chief of Staff the first time it starts, on every installation, so a server you deploy has one too.
+
+## Set up models and providers
+
+After onboarding, the Chief of Staff changes your model setup by editing `happy.toml`:
+
+- **Add another account** of a provider: a Claude account through `claude setup-token`, a Codex account signed in under its own `CODEX_HOME`, a Grok auth file, or an AWS profile for Bedrock.
+- **Pool accounts** of one provider so new sessions rotate between them, and move to the next account on a quota or sign-in error. See [several accounts of one provider](/models/#use-several-accounts-of-one-provider).
+- **Hide an account or limit models** in the model picker, including the models offered to subagents.
+- **Set the defaults** for new sessions: provider, model, effort, and service tier.
+- **Move existing sessions** to another provider.
+
+It backs up the file before editing and never prints, copies, or sends a credential. The file is outside the workspace, so in Auto the edit goes through review.
+
+## What you can ask it
 
 | Ask it to | What happens |
 | --- | --- |
-| Set up my first project | Finds recent Claude Code and Codex folders (paths only), imports the one you pick or creates a new project, agrees one small first change |
-| Pair my phone, or fix mobile access | Runs the Mobile Access flow, reuses an existing link, diagnoses without resetting `~/.happy` |
-| Put an agent on my server | Installs Happy Agent as a service on a machine you SSH to, with the provider credentials and Git identity you approve, and registers the connection |
-| Create a team | Happy Social sign-in, team creation, team-mode deployment, a verified connection, then email invitations |
-| Expose this machine | Turns Tailcat on or off; reviewed in Auto because it is an internet-exposure action |
+| Set up my first project | Suggests recent Claude Code and Codex folders (paths only), imports the one you pick or creates a new project, and agrees one small first change |
+| Add an account, change models | Edits the accounts, pools, and defaults in `happy.toml`, as above |
+| Pair my phone, or fix mobile access | Runs the mobile access flow, reuses an existing pairing, and diagnoses without resetting `~/.happy` |
+| Put an agent on my server | Installs Happy Agent as a service on a machine you SSH to, with the provider credentials and Git identity you approve, and connects it to your Happy Desktop |
+| Create a team | Happy Social sign-in, team creation, a team-mode deployment, a verified connection, then email invitations |
+| Create a bot | A persistent bot with its own name, folder, and one continuous conversation |
+| Expose this machine | Turns Tailcat on or off; reviewed in Auto because it exposes the machine to the internet |
 | Upgrade Happy Agent | Release check, graceful shutdown, private backup, binary replacement, verification |
 
 It reuses choices you already made and does not turn setup into a questionnaire. It pauses for browser, device-login, SSH, and Keychain approvals, then continues.
 
-## Boundaries
+## What only the Chief of Staff can do
+
+The Chief of Staff is an admin bot. Other bots cannot create bots, manage connections to other Happy Agents, create or administer Happy teams, add skill folders for the whole installation, or turn Tailcat on or off.
+
+## What the Chief of Staff won't do
 
 - It runs under the same permission modes and sandbox as any session. A denied review is final.
 - Opening onboarding is not consent. It inspects nothing until you send a request.
-- Project discovery reads folder metadata only. It never imports conversation text or credentials.
-- It never deletes or resets `~/.happy`, and never transfers an account's credentials you did not name.
+- Project discovery reads folder paths only. It never imports conversation text or credentials.
+- It never deletes or resets `~/.happy`, and never moves credentials for an account you did not name.
 - It does not commit, push, publish, deploy, or release unless you ask.

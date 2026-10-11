@@ -1,6 +1,12 @@
 # Configuration
 
-Two TOML files. Neither is required.
+Happy reads two optional TOML files, one for the machine and one per repository. They set the default permission mode, the network allowlist, protected paths, workspace setup, providers, and Docker.
+
+```chief-of-staff
+Let sandboxed commands reach api.github.com and registry.npmjs.org
+```
+
+## Where the files live
 
 | Scope | File |
 | --- | --- |
@@ -11,16 +17,16 @@ The machine file is written with comments on first start and never overwritten. 
 
 MCP servers go in `mcp.toml` in the same two places. See [Skills & MCP](/extending/).
 
-## Defaults
+## Default permission mode
 
 ```toml
 [defaults]
 permission_mode = "workspace_write"   # read_only | workspace_write | auto | full_access
 ```
 
-## Network
+## Network allowlist for sandboxed commands
 
-Sandboxed commands have no network unless listed here. An agent cannot add domains for itself.
+Sandboxed commands have no network unless listed here. An agent cannot add domains for itself; the Chief of Staff edits this file only when you ask, and in Auto that edit is reviewed.
 
 ```toml
 [network]
@@ -40,7 +46,7 @@ Read-only without Full access, even inside the workspace. Machine and repository
 protected_paths = ["master-plans", ".env.production"]
 ```
 
-## Workspaces
+## Workspace setup commands and synced files
 
 ```toml
 [workspace]
@@ -51,7 +57,7 @@ protected_sync = [".env.production"]
 
 Setup commands run with full access as trusted project code. A failed command is logged; the workspace stays usable.
 
-## Providers
+## Providers and accounts
 
 ```toml
 [providers.grok]
@@ -64,9 +70,9 @@ auth_file = "/Users/me/.codex-work/auth.json"
 include_models = ["openai/gpt-5.6-sol"]
 ```
 
-Built-in providers are on when credentials exist. `include_models` and `exclude_models` trim the picker. `hidden = true` is display-only: it removes an account from direct selection, and a smart provider (`type = "smart"`, `strategy = "round_robin"`) still routes to it. See [Multiple accounts](/models/#multiple-accounts).
+Built-in providers are on when credentials exist. `include_models` and `exclude_models` trim the picker. `hidden = true` is display-only: it removes an account from direct selection, and a smart provider (`type = "smart"`, `strategy = "round_robin"`) still routes to it. See [several accounts of one provider](/models/#use-several-accounts-of-one-provider).
 
-## Docker
+## Docker sessions
 
 ```toml
 [docker]
@@ -77,6 +83,6 @@ mounts = [{ source = ".", target = "/workspace" }]
 
 Same permission model inside the container. Happy mounts its own sandbox into the container; no extra packages are needed. Happy never pulls an image on its own.
 
-## The rest
+## Everything else in happy.toml
 
 The generated `happy.toml` documents everything else inline: presence states, Tailcat, team mode, provider transports, Bedrock, terminal theme, crash diagnostics, feature toggles.

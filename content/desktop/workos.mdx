@@ -4,6 +4,10 @@ A Happy Agent [team server](/multiplayer/) is powered by [WorkOS](https://workos
 
 ![How a team member signs in. Happy Desktop signs in with WorkOS through AuthKit with PKCE, and gets back an access token for the team. Every request to the team server carries that token. The team server fetches WorkOS's public signing keys once and caches them, then checks each token locally: the RS256 signature, the issuer, the client, and the org_id, and maps the user to a team member. Or, with authentication set to jwt, the server verifies tokens from your own OAuth server instead.](/img/team-sign-in-workos.svg)
 
+```chief-of-staff
+Create a team called Acme on my server ubuntu@203.0.113.10
+```
+
 ## What WorkOS does
 
 - **Accounts and sign-in: AuthKit.** Your Happy Social account is a WorkOS user. Desktop signs it in with [AuthKit](https://workos.com/docs/authkit) in your browser, using the public-client PKCE flow, so the app ships no client secret. The rotating refresh token stays on your machine.
@@ -37,6 +41,6 @@ It is the part of a team product nobody wants to build twice: accounts, organiza
 
 Set `authentication = "jwt"` and members sign in with your organization's own OAuth 2.0 server instead, such as Okta, Entra ID, Google Workspace, or Keycloak. The app runs the authorization code flow with PKCE against that server directly. The team server only verifies the JWT access tokens it is sent; it never receives the sign-in code or a refresh token. Sign-in then involves no WorkOS account. [Set up enterprise JWT sign-in](https://github.com/slopus/happy-agent/blob/main/docs/recipe/enterprise-jwt-authentication.md) walks through it.
 
-## Set it up
+## How the Chief of Staff sets up a team
 
-Ask the [Chief of Staff](/chief-of-staff/), "Create a team called Acme on my server". It follows the public recipe, [Create and deploy a Happy team](https://github.com/slopus/happy-agent/blob/main/docs/recipe/deploy-happy-team.md): your account, the name and endpoint, the team, team mode, a verified connection, then invitations.
+The [Chief of Staff](/chief-of-staff/) follows the public recipe, [Create and deploy a Happy team](https://github.com/slopus/happy-agent/blob/main/docs/recipe/deploy-happy-team.md): your account, the name and endpoint, the team, team mode, a verified connection, then invitations.

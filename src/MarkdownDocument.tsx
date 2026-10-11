@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { ChiefOfStaffPrompt, CHIEF_OF_STAFF_LANGUAGE } from './ChiefOfStaffPrompt'
 import { slugifyHeading } from './documents'
 
 function textFromNode(node: ReactNode): string {
@@ -167,6 +168,16 @@ export function MarkdownDocument({
         <table {...props}>{children}</table>
       </div>
     ),
+    // A ```chief-of-staff fence is a copyable request for the Chief of Staff, one per line.
+    pre: ({ children, node, ...props }) => {
+      const code = (node as HastNode | undefined)?.children?.find((child) => child.tagName === 'code')
+      const className = code?.properties?.className
+      if (code && Array.isArray(className) && className.includes(`language-${CHIEF_OF_STAFF_LANGUAGE}`)) {
+        const prompts = hastText(code).split('\n').map((line) => line.trim()).filter(Boolean)
+        return <ChiefOfStaffPrompt prompts={prompts} />
+      }
+      return <pre {...props}>{children}</pre>
+    },
     img: ({ alt, src, node: _node, ...props }) => {
       if (typeof src === 'string' && /\.(mp4|webm)$/.test(src)) {
         return (

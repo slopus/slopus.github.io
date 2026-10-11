@@ -1,8 +1,12 @@
 # Permissions & Sandbox
 
-One permission model for every provider. Claude, Codex, Grok, and MCP tools run through the same filesystem boundary and the same OS sandbox. The boundary is enforced on the process, not by reading the command text.
+Every agent in Happy runs under one permission model: Claude, Codex, Grok, and MCP tools share the same filesystem boundary and the same OS sandbox. In Auto, the default, an action that would cross the boundary is reviewed by a separate agent instead of prompting you.
 
-## Four modes
+```chief-of-staff
+Make Workspace write the default permission mode for new sessions
+```
+
+## The four permission modes
 
 | Mode | Files | Shell writes | Network |
 | --- | --- | --- | --- |
@@ -15,7 +19,7 @@ New sessions start in **Auto** unless configured otherwise. Change the mode any 
 
 Auto is Workspace write plus automatic review. Reads and workspace edits are never reviewed. A tool that needs to cross the boundary describes one exact action; if allowed, that single execution runs with Full access and the session drops back to Auto.
 
-## Auto review
+## How Auto review decides
 
 A separate read-only agent reviews the described action against the conversation and answers **allow** or **deny**. You are not prompted.
 
@@ -23,9 +27,9 @@ A separate read-only agent reviews the described action against the conversation
 - A denial is final for that action. The agent may not split it up or route around it. Repeated refusals end the turn with an explanation, and your approval in your own words lets the next review allow it.
 - A review that times out or cannot run reports the action as unproven. Auto never falls back to silent execution.
 
-## What the sandbox enforces
+## What the OS sandbox enforces
 
-Seatbelt on macOS; on Linux, Happy's own supervisor using kernel namespaces and seccomp.
+Seatbelt on macOS; on Linux, Happy's own supervisor using kernel namespaces and seccomp. The boundary is enforced on the process, not by reading the command text.
 
 - Writes: working directory and temporary directories; Git control paths are read-only.
 - Shell reads: the rest of the machine is readable, except credential folders such as `~/.ssh`, `~/.aws`, `~/.claude`, `~/.codex`, `~/.docker`, `~/.gnupg`, `~/.config/gh`, and shell histories. The file tools are not blocked from those folders on macOS and Linux.
@@ -37,15 +41,15 @@ Seatbelt on macOS; on Linux, Happy's own supervisor using kernel namespaces and 
 
 Docker-backed sessions nest the same sandbox inside the container.
 
-## MCP tools
+## MCP tools and the sandbox
 
 MCP servers run outside the sandbox, so every MCP tool needs Auto or Full access and every call in Auto is reviewed. A server's own "read-only" annotation is not evidence.
 
-## Secrets
+## Secrets and the sandbox
 
 Register a secret once and grant it to an agent, a workspace, or a project. A command receives it only when the agent names the bundle, and the value never appears in prompt text or tool results. [How secrets work](/secrets/).
 
-## Configuration
+## Permission settings in happy.toml
 
 ```toml
 [defaults]

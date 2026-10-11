@@ -305,6 +305,19 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content blockquote p:last-child { margin-bottom: 0; }
 .document-content pre { background: #14352f; border: 1px solid #24463f; border-radius: 12px; color: #eef0e8; font-family: 'DM Mono', monospace; font-size: .76rem; line-height: 1.65; margin: 1.6rem 0; overflow-x: auto; padding: 1.15rem 1.25rem; }
 .document-content pre code { background: none; color: inherit; font: inherit; padding: 0; }
+/* "Ask the Chief of Staff" (ChiefOfStaffPrompt): ready-to-paste requests, each with its own Copy
+   button. A light tint and an accent rule, no border box; the prompt wraps, never scrolls. */
+.document-content .cos-prompt { background: #e3efe9; border-left: 3px solid #e6522c; border-radius: 10px; margin: 1.8rem 0 2.2rem; padding: .85rem 1rem .9rem 1.15rem; }
+.document-content .cos-prompt-label { color: #557068; font-family: 'DM Mono', monospace; font-size: .7rem; letter-spacing: .06em; margin: 0 0 .35rem; text-transform: uppercase; }
+.document-content .cos-prompt-label a { color: inherit; text-decoration-color: rgba(85, 112, 104, .4); }
+.document-content .cos-prompt ul { list-style: none; margin: 0; padding: 0; }
+.document-content .cos-prompt-line { align-items: center; display: flex; gap: .75rem; margin: 0; padding: .35rem 0; }
+.document-content .cos-prompt-line + .cos-prompt-line { border-top: 1px solid rgba(24, 63, 56, .12); }
+.document-content .cos-prompt-text { color: #183f38; flex: 1 1 auto; font-size: 1.02rem; font-weight: 500; line-height: 1.5; margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.document-content .cos-prompt-copy { align-items: center; appearance: none; background: #fffdf8; border: 1px solid rgba(24, 63, 56, .18); border-radius: 8px; color: #183f38; cursor: pointer; display: inline-flex; flex: none; font: 600 .82rem 'DM Sans', sans-serif; gap: .4rem; justify-content: center; min-height: 44px; min-width: 88px; padding: 0 .85rem; }
+.document-content .cos-prompt-copy:hover { border-color: #e6522c; color: #d94725; }
+.document-content .cos-prompt-copy:focus-visible { outline: 2px solid #e6522c; outline-offset: 2px; }
+.document-content .cos-prompt-status { clip: rect(0 0 0 0); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
 /* A long path or command in running text wraps rather than spilling out of a phone column. */
 .document-content :not(pre) > code { hyphens: manual; overflow-wrap: anywhere; }
 /* Sideways scrollbars inside code blocks and wide tables: the same thin, trackless bar the docs sidebar
@@ -327,6 +340,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content img[src="/img/tailcat.svg"] { aspect-ratio: 520 / 590; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content img[src="/img/voice.svg"] { aspect-ratio: 520 / 676; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content img[src="/img/secrets.svg"] { aspect-ratio: 520 / 548; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
+.document-content img[src="/img/chief-of-staff-sidebar.png"] { aspect-ratio: 440 / 94; border: 0; border-radius: 14px; box-shadow: none; display: block; filter: drop-shadow(0 10px 22px rgba(24, 63, 56, .2)); margin: 1.6rem 0 1.4rem; width: min(100%, 440px); }
 .document-content video { border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); height: auto; margin: 1.2rem 0; max-width: 100%; width: 100%; }
 .document-content hr { border: 0; border-top: 1px solid #d9d3c5; margin: 3rem 0; }
 .document-table-wrap { border: 1px solid #d5cebf; border-radius: 10px; margin: 1.6rem 0; overflow-x: auto; }

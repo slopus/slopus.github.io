@@ -4,7 +4,11 @@ Run one Happy Agent for your whole team: a self-hosted coding agent server with 
 
 ![Three members, Ana, Ben, and Chi, each with a laptop and a phone. Their Desktop apps reach the team server through Tailcat, an encrypted tunnel with no open ports. Their phones go through Happy's relay instead, end-to-end encrypted, so they can read chats even while the server is offline. The team server, one Happy Agent, lets in only this team's sign-ins. All members share its projects, sessions, and tasks. Three permission modes run inside the OS sandbox: Read only, Workspace write, and Auto, which reviews each action that would cross the sandbox. Full access sits outside the sandbox.](/multiplayer/team-server.svg)
 
-## How it works
+```chief-of-staff
+Create a team called Acme on my server ubuntu@203.0.113.10 and invite alice@example.com
+```
+
+## How a Happy team server works
 
 - **Sign-in.** Each member connects their Happy Social account in Desktop (**Settings → Account → Connect account**), which signs in through WorkOS. Their Desktop then gets a short-lived WorkOS token for the team. The server checks it on every request, health included: right signature, right team, not expired. Anything else gets the same `401`. [How team sign-in works](/workos/), and how to use your own identity provider instead.
 - **Transport.** Tailcat is WireGuard without a Tailscale account: no open port, traffic encrypted end to end, and Tailscale's free relays see addresses and timing, not content. The address carries a pre-shared key, so keep it private; even with it, a stranger gets only as far as the sign-in check. See [how Happy uses Tailcat](/tailcat/).
@@ -14,19 +18,15 @@ Run one Happy Agent for your whole team: a self-hosted coding agent server with 
 - **Sandbox and review.** The rules are the ones on your own machine. Read only, Workspace write, and Auto, the default, run every command inside the OS sandbox; in Auto, an action that would cross it is reviewed first, one action at a time. Full access removes the sandbox, and any member can switch a session to it. On Ubuntu 24.04, an administrator first grants the daemon executable an AppArmor namespace allowance.
 - **Owner.** The person who created the team is its owner. Only the owner can rename the installation, turn global skills on and off, or archive another member's task. Otherwise members have the same access.
 
-## Set up a team
+## How a team is set up, joined, and left
 
-Ask the [Chief of Staff](/chief-of-staff/):
-
-> Create a team called Acme on my server `ubuntu@203.0.113.10`.
-
-It confirms your Happy Social account, installs Happy Agent on the server as in [the remote server guide](/guides/remote-server/), creates the team, switches the server to team mode, and runs a real task from your Desktop. Only then does it ask whom to invite. In team mode the server accepts only Happy Social sign-ins for that team, listens only through Tailcat, and keeps no local socket or token. Every step is in the public recipe, [Create and deploy a Happy team](https://github.com/slopus/happy-agent/blob/main/docs/recipe/deploy-happy-team.md).
+**Setting up.** The Chief of Staff confirms your Happy Social account, installs Happy Agent on the server as in [the remote server guide](/guides/remote-server/), creates the team, switches the server to team mode, and runs a real task from your Desktop. Only then does it ask whom to invite. In team mode the server accepts only Happy Social sign-ins for that team, listens only through Tailcat, and keeps no local socket or token. Every step is in the public recipe, [Create and deploy a Happy team](https://github.com/slopus/happy-agent/blob/main/docs/recipe/deploy-happy-team.md).
 
 **Joining.** Accept the email invitation, connect Happy Social in Desktop with that email, then ask your Chief of Staff to connect to the team.
 
 **Leaving.** We haven't built a remove-member action yet. Stopping the server cuts everyone off at once.
 
-## Share your own computer
+## Share your own computer with someone
 
 You can let someone use the Happy Agent on your own machine. You probably shouldn't, unless it is family or someone you would hand your unlocked laptop to.
 
@@ -42,7 +42,7 @@ There is no per-session invite. Team mode on your own machine gives each person 
 
 **To revoke:** ask the Chief of Staff to turn off Tailcat, which closes the connection at once. Then set a new `[api] token` in your `happy.toml` and restart Happy Agent; the old token stops working. Turning Tailcat back on restores the same address, so rotate the token before you do.
 
-## Status
+## What we haven't built yet
 
 Team setup is deliberate and multi-step today. We haven't built adding or removing a teammate from the sidebar yet.
 

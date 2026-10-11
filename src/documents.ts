@@ -200,7 +200,8 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'chief-of-staff',
     sourcePath: '/content/desktop/chief-of-staff.mdx',
     title: 'Chief of Staff',
-    description: 'The built-in agent that configures your setup in conversation, and what it will not do.',
+    pageTitle: 'Chief of Staff: The Built-In Bot That Sets Up Happy Desktop',
+    description: 'The first bot in Happy Desktop: it walks you through setup, adds model accounts and providers, pairs your phone, and deploys servers, in conversation.',
     group: 'Start here',
   },
   {
@@ -260,7 +261,7 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'agents',
     sourcePath: '/content/desktop/agents.mdx',
     title: 'Agents That Never Die',
-    description: 'Durable sessions, subagents, scheduling, the Inbox, and presence.',
+    description: 'Agent sessions that survive restarts: subagents on other models, agent-to-agent messages, scheduled messages, the Inbox, and presence.',
     group: 'Features',
   },
   {
@@ -282,7 +283,7 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'extending',
     sourcePath: '/content/desktop/extending.mdx',
     title: 'Skills & MCP',
-    description: 'Add instructions with skills and tools over MCP.',
+    description: 'Give coding agents skills, Markdown instructions loaded on demand, and tools from MCP servers, the same for Claude, Codex, and Grok.',
     group: 'Features',
   },
   {
@@ -296,7 +297,7 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'guides/configuration',
     sourcePath: '/content/desktop/guides/configuration.mdx',
     title: 'Configuration',
-    description: 'Where happy.toml lives and the settings worth knowing about.',
+    description: 'Configure Happy in happy.toml: default permission mode, network allowlist, workspace setup commands, provider accounts, and Docker sessions.',
     group: 'Guides',
   },
   {

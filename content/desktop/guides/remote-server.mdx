@@ -2,7 +2,11 @@
 
 Install Happy Agent on a server, a VPS, or a Mac mini, and it runs Claude Code and Codex work there itself: one agent harness for Claude, Codex, and Grok, on the subscriptions you already pay for. It keeps working while your laptop sleeps, and you control it from Happy Desktop or the Happy phone app, alone or [with your team](#share-it-with-your-team).
 
-## The problem
+```chief-of-staff
+Put Happy Agent on my server ubuntu@203.0.113.10. Call it Build box. Use my Codex and Claude accounts, and set up GitHub for acme/api.
+```
+
+## Why a coding agent stops when your laptop sleeps
 
 A coding agent runs where you start it. Start Claude Code or Codex on your laptop, and the work stops when the lid closes. The usual workarounds each solve part of that:
 
@@ -33,7 +37,7 @@ It runs on the subscriptions you already have:
 
 We started Happy as the Happy CLI, `happy` on npm. It runs Claude Code, Codex, and other ACP-compatible agents in your terminal, unchanged, and lets you control them from the Happy app. It is still the way to keep the exact original CLIs and the terminal on your own machine, and its [legacy docs](/docs/) are still here, in maintenance mode. Happy Agent and Happy Desktop are the current iteration, where Happy runs the harness itself, on your computer or a server.
 
-## Alternatives
+## Alternatives to a Happy Agent server
 
 | | tmux + SSH or Mosh + Tailscale + Termius | Claude Code Remote Control | A VM with its own agent (exe.dev and Shelley) | T3 Code | Happy Agent on a server |
 | --- | --- | --- | --- | --- | --- |
@@ -69,7 +73,7 @@ To set it up, ask the Chief of Staff, "Create a team called Acme on my server". 
 
 ![Three members, Ana, Ben, and Chi, each with a laptop and a phone. Their Desktop apps reach the server through Tailcat, an encrypted tunnel with no open ports. Their phones go through Happy's relay instead, end-to-end encrypted, so they can read chats even while the server is offline. The team server, one Happy Agent, lets in only this team's sign-ins. All members share its projects, sessions, and tasks. Three permission modes run inside the OS sandbox: Read only, Workspace write, and Auto, which reviews each action that would cross the sandbox. Full access sits outside the sandbox.](/multiplayer/team-server.svg)
 
-## How the connection works
+## How Desktop connects to the server
 
 Desktop reaches the server through **Tailcat**, an encrypted tunnel built into every release. Tailcat is [Tailscale's open source data plane without its control plane](https://github.com/tailscale/tailcat): no account, no open port, no public IP. SSH is used only to install.
 
@@ -80,13 +84,9 @@ Desktop reaches the server through **Tailcat**, an encrypted tunnel built into e
 
 Your phone does not use Tailcat. It goes through Happy's own relay: the server publishes its sessions to your Happy account, end-to-end encrypted, so the phone can read them even while the server is offline. A newly published session brings at most its latest 50 messages, without tool output or the model's reasoning.
 
-## Ask the Chief of Staff
+## What the Chief of Staff asks you during deployment
 
-Get a Linux machine you can SSH into ([providers](#providers)), then tell the [Chief of Staff](/chief-of-staff/) in Desktop:
-
-> Put Happy Agent on my server `ubuntu@203.0.113.10`. Call it Build box. Use my Codex and Claude accounts, and set up GitHub for acme/api.
-
-It runs the deployment end to end and stops only for what is yours to decide:
+You need a Linux machine you can SSH into ([providers](#providers)). The [Chief of Staff](/chief-of-staff/) runs the deployment end to end and stops only for what is yours to decide:
 
 - **SSH**: the account to use and the host key.
 - **Provider accounts**: which ones the server may use. A copied credential gives that machine your account and its limits, so it prefers a fresh sign-in on the server where it can.
@@ -99,7 +99,7 @@ It copies your profile name and email, installs the service, registers the conne
 
 Later: "Upgrade Happy Agent on Build box."
 
-## The recipes
+## The deployment recipes
 
 The Chief of Staff follows public recipes from the Happy Agent repository. Read them to see exactly what it will do on your server:
 
@@ -143,6 +143,6 @@ A Mac works too, on Apple silicon or Intel. Happy Agent uses macOS's own sandbox
 
 A 64-bit OS is required: `uname -m` must print `aarch64`. A 32-bit OS (`armv7l`) is not supported.
 
-## Status
+## What we haven't built yet
 
 Remotes connect over Tailcat only. Desktop has no "add remote" button yet; register one with the Chief of Staff or `happy.toml`.

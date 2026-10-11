@@ -1,6 +1,12 @@
 # Models & Subscriptions
 
-No Happy plan for model access, no key to paste. Sign in to Claude Code, Codex, or the Grok CLI on the machine and Happy uses those credentials.
+Happy runs Claude, Codex, and Grok on the subscriptions you already pay for. Sign in to Claude Code, Codex, or the Grok CLI on the machine and Happy uses those credentials: no Happy plan for model access, no key to paste.
+
+```chief-of-staff
+Add my work Codex account and rotate between it and my personal one
+```
+
+## Supported providers and where their credentials come from
 
 | Provider | Models | Credentials from |
 | --- | --- | --- |
@@ -11,19 +17,21 @@ No Happy plan for model access, no key to paste. Sign in to Claude Code, Codex, 
 
 Availability is machine-wide, because the daemon owns the catalog. Requests go to the vendor with your credentials; Happy never proxies them.
 
-## Switching mid-session
+## Switch models in the middle of a session
 
 Change a session's model or reasoning effort at any time, from the app or the phone. The transcript stays. Each provider's opaque data (reasoning, response items) is stored verbatim and handed back unchanged, so a switch does not corrupt history. The new model gets its own vendor's prompts and tools; permission mode, sandbox, and workspace do not change.
 
-## Several models in one task
+## Use several models in one task
 
 Subagents each pick their own model and effort; nothing is inherited. One session can plan on one provider, implement on another, review on a third. See [Agents That Never Die](/agents/).
 
-## Compaction
+## How compaction works
 
-Happy decides when; the provider decides how, using its native compaction or its own compaction prompt. The result is a visible message in the transcript naming what it replaced.
+Happy decides when to compact; the provider decides how, using its native compaction or its own compaction prompt. The result is a visible message in the transcript naming what it replaced.
 
-## Multiple accounts
+## Use several accounts of one provider
+
+Add an account as a named provider in `happy.toml`:
 
 ```toml
 [providers.work_codex]
@@ -53,6 +61,6 @@ enabled = true
 
 A new agent or subagent starts on a random member and stays there; an auth or quota-exhaustion error moves it to the next one. `hidden = true` only removes an account from the picker, and a pool still routes to it. See [Configuration](/guides/configuration/).
 
-## Usage
+## Provider usage and quotas
 
 Provider quotas are polled about every fifteen minutes and shown in the app. They are observations, not billing records.

@@ -2,11 +2,15 @@
 
 A **project** is a folder you pointed Happy at. A **workspace** is a folder an agent works in. Usually they are the same folder. When two pieces of work would touch the same repository at once, each gets its own workspace: a Git worktree on its own branch, cut from the remote's trunk.
 
-## Projects
+```chief-of-staff
+Clone github.com/acme/api as a new project and set it up
+```
+
+## Add a project
 
 Importing registers the folder. Happy does not move it, copy it, or initialize Git. `AGENTS.md` files anywhere in the tree are read by every agent working there and re-read when they change. Your global `AGENTS.md` applies to every project.
 
-## Creating a workspace
+## How Happy creates a workspace
 
 1. Fetch `origin` and fork the remote trunk. The project folder's checkout, `HEAD`, and branches are not touched.
 2. Reserve a name, a folder under `~/Happy/Workspaces` (macOS) or `~/happy/workspaces` (Linux), and a branch `worktree/<name>`.
@@ -18,11 +22,11 @@ A workspace is ready once the checkout and file sync succeed; a failed setup com
 
 A new workspace takes the name of its first conversation, and the branch follows. A workspace you named is never renamed by an agent.
 
-## Archiving
+## Archive a workspace
 
 Immediate and irreversible: the workspace leaves the list, the worktree and folder are removed in the background, the branch stays in Git. Archive when the work is finished or abandoned. Archiving from an agent is reviewed in Auto.
 
-## Agents in another workspace
+## How agents work in another workspace
 
 An agent never edits another workspace by path. Work runs from inside the workspace:
 
@@ -30,11 +34,11 @@ An agent never edits another workspace by path. Work runs from inside the worksp
 
 Only the creating session may archive a workspace.
 
-## When to create one
+## When to create a workspace
 
 When work will run alongside other work and their changes could collide. That is the only reason. A subtask of what you are already doing, however many subagents help, stays in the current workspace.
 
-## Changes
+## Which changes a workspace shows
 
 Measured against the branch's merge base with the remote default branch (`origin/main`), falling back to the local one only when there is no remote. Desktop shows changed files beside the conversation.
 

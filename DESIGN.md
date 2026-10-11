@@ -54,11 +54,23 @@ These rules cover the docs, guides, comparisons, and blog. The homepage has rule
 
 ## Docs pages
 
+- **Two layers.** Most people read the top of a page and act on it. That top is, in order:
+  1. the h1;
+  2. a lede of one or two sentences that says what the feature does;
+  3. the visual, if the page has one;
+  4. the Chief of Staff block.
+
+  Everything below is the reference layer. It is for readers who want to know how the feature works, and for search engines and AI assistants working out what Happy can do. Each h2 names its question in the words people search with: "Use several accounts of one provider", not "Accounts". Each section stands on its own and states concrete facts. No keyword stuffing.
+- **The Chief of Staff block.** Every feature page, and every guide whose task the [Chief of Staff](/chief-of-staff/) can do, has a `chief-of-staff` fence right after its intro, with one prompt per line. Each line renders with a Copy button.
+  - Use prompts the Chief of Staff can carry out today with its tools and recipes. Check before adding one.
+  - Make them copyable as written. Use example names such as `acme/api`, `ubuntu@203.0.113.10`, and `alice@example.com`.
+  - Leave the block off pages where it can't help: Voice, Using the Terminal, How It Works, comparisons, Vision, Team.
+  - Don't repeat the prompt in a prose "Ask the Chief of Staff" section.
 - **One h1 per page.** The build fails otherwise. Sections are h2.
 - **Nothing above the h1 on desktop.** No eyebrow, breadcrumb, or product label, because the sidebar already shows where you are. On a phone, the docs navigation is the group-and-page trail:
   - a 44px tap target;
   - its chevron at the right end, no taller than the text's capitals.
-- **Metadata.** Each page's title, search title, and description (160 characters at most) live in `src/documents.ts`.
+- **Metadata.** Each page's title, search title, and description (160 characters at most) live in `src/documents.ts`. The description also becomes the page's line in `llms.txt`, so it states the capability plainly.
 - **The Blog** is the last sidebar group, with no list page. Each post gets a one-word slug you can type from memory: `/workos/`, `/tailcat/`, `/voice/`.
 - **URLs don't break.** `routes.txt` only grows. A shared URL keeps working when its page moves: `/team-sign-in-workos/` redirects to `/workos/`.
 
