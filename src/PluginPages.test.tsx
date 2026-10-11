@@ -33,6 +33,19 @@ afterAll(() => {
   vi.unstubAllGlobals()
 })
 
+// jsdom's userAgent names the host OS, so the homepage's download block would follow the machine
+// running the tests. Pin the browser instead: a Mac keeps the prerendered layout as served.
+const MAC = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36'
+const LINUX = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36'
+function useUserAgent(userAgent: string) {
+  Object.defineProperty(window.navigator, 'userAgent', { configurable: true, get: () => userAgent })
+  Object.defineProperty(window.navigator, 'platform', { configurable: true, get: () => (userAgent === MAC ? 'MacIntel' : 'Linux x86_64') })
+}
+function restoreUserAgent() {
+  Reflect.deleteProperty(window.navigator, 'userAgent')
+  Reflect.deleteProperty(window.navigator, 'platform')
+}
+
 describe('plugin pages', () => {
   afterEach(() => {
     cleanup()
@@ -154,6 +167,7 @@ describe('plugin pages', () => {
   // One hydration per prerendered page: it grows with every docs page and outran the 5s default on CI.
   it('hydrates every prerendered page (homepage, plugins, docs, thesis) without replacing or duplicating it', async () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    useUserAgent(MAC)
 
     // The old desktop docs prefixes serve the top-level page's markup at their own URL.
     const servedAt = [...prerenderedPaths.map((pathname) => [pathname, pathname]), ['/desktop/docs/models/', '/models/'], ['/happy2/docs/', '/welcome/']]
@@ -181,6 +195,34 @@ describe('plugin pages', () => {
 
     expect(consoleError).not.toHaveBeenCalled()
     consoleError.mockRestore()
+    restoreUserAgent()
     window.history.replaceState({}, '', '/')
   }, 30_000)
+
+  it('hydrates the homepage on Linux, then swaps the Mac download for the Linux one', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    useUserAgent(LINUX)
+    const container = document.createElement('div')
+    container.innerHTML = renderPath('/')
+    document.body.append(container)
+    const servedHeading = container.querySelector('h1')
+    expect(container.querySelector('.one-download-actions')?.getAttribute('data-platform')).toBe('desktop')
+    window.history.replaceState({}, '', '/')
+    const recoverableErrors: unknown[] = []
+
+    const root = hydrateRoot(container, <StrictMode><Router /></StrictMode>, {
+      onRecoverableError: (error) => recoverableErrors.push(error),
+    })
+    await act(async () => {})
+
+    expect(recoverableErrors).toEqual([])
+    expect(consoleError).not.toHaveBeenCalled()
+    expect(container.querySelector('h1')).toBe(servedHeading)
+    expect([...container.querySelectorAll('.one-download-actions')].map((block) => block.getAttribute('data-platform'))).toEqual(['linux', 'linux'])
+    expect(container.querySelector('.one-brew-command')).toBeNull()
+    act(() => root.unmount())
+    container.remove()
+    consoleError.mockRestore()
+    restoreUserAgent()
+  })
 })
