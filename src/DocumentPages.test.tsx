@@ -111,7 +111,7 @@ describe('static document pages', () => {
   })
 
   it('serves the desktop docs as top-level pages whose slugs no other route owns', () => {
-    const fixedRoutes = ['', 'docs', 'llms.txt', 'sitemap.xml', 'thesis', 'plugins', 'privacy', 'terms', 'tos', 'model-benchmarks', 'desktop', 'happy2', 'tmp', 'assets', 'img', 'og', 'notes']
+    const fixedRoutes = ['', 'docs', 'sitemap.xml', 'thesis', 'plugins', 'privacy', 'terms', 'tos', 'model-benchmarks', 'desktop', 'happy2', 'tmp', 'assets', 'img', 'og', 'notes']
     for (const document of documentsForProduct('desktop')) {
       expect(document.path).not.toBe('')
       expect(fixedRoutes).not.toContain(document.path.split('/')[0])

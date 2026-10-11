@@ -208,7 +208,8 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id }
     void latestDesktopDownloads().then(value => { if (active) setDownloads(value) })
     return () => { active = false }
   }, [])
-  const platform = desktopPlatform()
+  // The prerendered homepage has no platform; hydration settles on this device's.
+  const platform = useSyncExternalStore(NO_SUBSCRIPTION, desktopPlatform, () => 'desktop' as const)
   // Phones and unknown platforms default to macOS, with the other installers
   // linked below its Homebrew command.
   const primaryPlatform = platform === 'desktop' ? 'macos' : platform

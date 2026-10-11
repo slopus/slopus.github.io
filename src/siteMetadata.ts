@@ -56,14 +56,14 @@ export const homepageMetadata: PageMetadata = {
 
 /** The original Happy CLI docs. Kept at their URLs, in maintenance mode. */
 export const docsMetadata: PageMetadata = {
-  title: 'Original Happy CLI Docs (Happy Coder): Claude Code on Your Phone',
+  title: 'Original Happy CLI Docs (Happy Coder) — Maintenance Mode',
   description:
     'Docs for the original Happy CLI (Happy Coder), a phone remote for Claude Code and Codex in your terminal. In maintenance mode; Happy today is a desktop harness.',
   canonicalPath: '/docs/',
 }
 
 export const desktopDocsMetadata: PageMetadata = {
-  title: 'Happy Docs — The Open-Source Harness for Orchestrating Coding Agents',
+  title: 'Happy Docs: Orchestrate Claude, Codex and Grok in One App',
   description:
     'Happy is an open-source harness for orchestrating Claude, Codex, and Grok agents in one desktop app, reusing your subscriptions: what you get, where to start.',
   canonicalPath: '/welcome/',

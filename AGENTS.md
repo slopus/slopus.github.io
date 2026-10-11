@@ -85,7 +85,8 @@ and read the diff before committing; don't edit them in place.
 
 - `seo-audit`: technical and on-page SEO audit.
   [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills)
-- `ai-seo`: citations in AI answers, crawler access, `llms.txt`.
+- `ai-seo`: citations in AI answers and crawler access. We don't ship
+  `llms.txt`; assistants read the prerendered pages.
   [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills)
 - `seo-geo`: AI Overviews and answer engines, weighed against Google's own
   guidance. [AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo);

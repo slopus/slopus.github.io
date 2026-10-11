@@ -32,6 +32,10 @@ export function HappyOneDemo() {
   useEffect(() => {
     const main = desktop.current!
     const companion = phone.current!
+    // Muted here, not as a prop: the prerendered markup cannot carry it, and hydration would
+    // leave both movies unmuted, which blocks autoplay.
+    main.muted = true
+    companion.muted = true
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
     const connection = dataConnection()
     let autoplay = !reducedMotion.matches && !connection?.saveData
@@ -156,7 +160,7 @@ export function HappyOneDemo() {
         <div className="one-demo-desktop">
           <div className="one-demo-window">
             <video ref={desktop} poster={`${MEDIA}/desktop-poster.webp`} width="1950" height="1660"
-              controls={controlsEnabled} muted playsInline preload="none" disablePictureInPicture tabIndex={0}
+              controls={controlsEnabled} playsInline preload="none" disablePictureInPicture tabIndex={0}
               onPointerMove={event => { if (event.pointerType === 'mouse') setControlsEnabled(true) }}
               onPointerDown={() => setControlsEnabled(true)} onFocus={() => setControlsEnabled(true)}
               controlsList="nodownload noremoteplayback"

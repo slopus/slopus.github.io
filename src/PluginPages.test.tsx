@@ -20,6 +20,13 @@ const pluginMetadata = [pluginsMetadata, memesPluginMetadata, pluginPrivacyMetad
 // jsdom has no ResizeObserver; the painted page scrollbar only observes with it.
 beforeAll(() => {
   vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} })
+  // The homepage's demo reads these once it hydrates; its download lookup falls back without a request.
+  vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false, addEventListener() {}, removeEventListener() {} }))
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }))
+  vi.stubGlobal('IntersectionObserver', class { observe() {} unobserve() {} disconnect() {} })
+  vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {})
+  vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined)
+  vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => {})
 })
 
 afterAll(() => {
@@ -145,7 +152,7 @@ describe('plugin pages', () => {
   })
 
   // One hydration per prerendered page: it grows with every docs page and outran the 5s default on CI.
-  it('hydrates every prerendered page (plugins, docs, thesis) without replacing or duplicating it', async () => {
+  it('hydrates every prerendered page (homepage, plugins, docs, thesis) without replacing or duplicating it', async () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
 
     // The old desktop docs prefixes serve the top-level page's markup at their own URL.

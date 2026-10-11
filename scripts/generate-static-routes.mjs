@@ -17,12 +17,10 @@ const siteUrl = 'https://happy.engineering'
 // Pages that ship their rendered markup, and the app's own docs registry and page
 // metadata, so the served head matches what the client sets. Built by `vite build --ssr`.
 const {
-  APP_STORE_LINK,
   defaultSocialImage,
   documentHeading,
   documentHref,
   documents,
-  GOOGLE_PLAY_LINK,
   HAPPY,
   HAPPY_DESKTOP,
   metadataForPath,
@@ -212,10 +210,72 @@ async function assertSocialCard(route, html, document) {
   }
 }
 
+// Structured data for every desktop doc: a TechArticle, an Article for the Vision essay, a
+// BlogPosting for each Blog post with its dates from git, and the Team page's two people with
+// the links under their bios. The homepage keeps its SoftwareApplication from index.html.
+const publisher = { '@type': 'Organization', name: 'Happy Engineering', url: `${siteUrl}/` }
+function firstCommitted(source) {
+  return (historyAvailable && git('log', '--diff-filter=A', '--follow', '--format=%cs', '--', source).split('\n').pop()) || buildDate
+}
+async function teamPeople(source) {
+  const sections = (await readFile(path.join(projectRoot, source), 'utf8')).split(/^## /m).slice(1)
+  return sections.map((section) => ({
+    '@type': 'Person',
+    name: section.split('\n')[0].trim(),
+    image: new URL(section.match(/!\[[^\]]*\]\(([^)]+)\)/)[1], siteUrl).toString(),
+    // The line of links that ends each bio: site · X · GitHub.
+    sameAs: [...section.trim().split('\n').pop().matchAll(/\]\((https:[^)]+)\)/g)].map(([, url]) => url),
+    worksFor: publisher,
+  }))
+}
+async function documentJsonLd(document, canonicalPath) {
+  const metadata = metadataForPath(canonicalPath)
+  const source = document.sourcePath.slice(1)
+  const page = {
+    '@type': document.group === 'Blog' ? 'BlogPosting' : document.essay ? 'Article' : 'TechArticle',
+    headline: documentHeading(document),
+    description: metadata.description,
+    url: new URL(canonicalPath, siteUrl).toString(),
+    image: socialImageUrl(metadata.socialImage),
+    inLanguage: 'en',
+    dateModified: lastModified([source]),
+    publisher,
+  }
+  if (document.group === 'Blog') {
+    Object.assign(page, { datePublished: firstCommitted(source), author: publisher, mainEntityOfPage: page.url })
+  }
+  if (document.path === 'team') {
+    return { '@context': 'https://schema.org', '@graph': [{ ...page, '@type': 'AboutPage' }, ...(await teamPeople(source))] }
+  }
+  return { '@context': 'https://schema.org', ...page }
+}
+function withJsonLd(html, data) {
+  const json = JSON.stringify(data).replace(/</g, '\\u003c')
+  return html.replace('</head>', () => `  <script type="application/ld+json">${json}</script>\n  </head>`)
+}
+function assertJsonLd(route, html) {
+  const blocks = [...html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
+  if (blocks.length !== 1) throw new Error(`${route} should have exactly one JSON-LD block, not ${blocks.length}`)
+  let data
+  try {
+    data = JSON.parse(blocks[0][1])
+  } catch (error) {
+    throw new Error(`${route} has JSON-LD that does not parse: ${error.message}`)
+  }
+  const nodes = data['@graph'] ?? [data]
+  if (data['@context'] !== 'https://schema.org' || nodes.some((node) => !node['@type'])) {
+    throw new Error(`${route} JSON-LD needs @context https://schema.org and an @type on every node`)
+  }
+}
+
 for (const document of documents) {
   const product = document.product === HAPPY_DESKTOP.key ? HAPPY_DESKTOP : HAPPY
   const canonicalPath = documentHref(product, document.path)
-  const html = withAppMarkup(htmlForPage(metadataForPath(canonicalPath)), prerendered(canonicalPath))
+  let html = withAppMarkup(htmlForPage(metadataForPath(canonicalPath)), prerendered(canonicalPath))
+  if (product === HAPPY_DESKTOP) {
+    html = withJsonLd(html, await documentJsonLd(document, canonicalPath))
+    assertJsonLd(canonicalPath, html)
+  }
   assertDocumentServed(canonicalPath, html, documentHeading(document))
   await assertSocialCard(canonicalPath, html, document)
 
@@ -236,6 +296,14 @@ for (const document of documents) {
     }
   }
 }
+
+// The homepage ships its markup too, under index.html's own head. The other pages are built
+// from baseHtml, the empty-root copy read at the start, so overwriting the file is safe.
+const homepage = withAppMarkup(baseHtml, prerendered('/'))
+if (textOfHtml(homepage.match(/<h1[\s>][\s\S]*?<\/h1>/)?.[0] ?? '').trim() !== 'Any Model. Your Subscription. Happy Harness.') {
+  throw new Error('dist/index.html should render the homepage heading "Any Model. Your Subscription. Happy Harness."')
+}
+await writeFile(path.join(distRoot, 'index.html'), homepage)
 
 // The desktop page is the homepage now (dist/index.html, built from index.html).
 // Its old URLs redirect there without JavaScript, so GitHub Pages serves a real
@@ -421,39 +489,6 @@ ${sitemapPages.map(({ route, sources }) => `  <url><loc>${escapeHtml(new URL(rou
 `,
 )
 
-// llms.txt (https://llmstxt.org): what Happy is and where its docs are, for language models.
-const absoluteUrl = (route) => new URL(route, siteUrl).toString()
-function docsLinks(product) {
-  return documents
-    .filter((document) => document.product === product.key && !document.hidden)
-    .map((document) => `- [${document.title}](${absoluteUrl(documentHref(product, document.path))}): ${document.description}`)
-}
-await writeFile(path.join(distRoot, 'llms.txt'), `# Happy
-
-> ${metadataForPath('/').description}
-
-Happy orchestrates coding agents. Happy Desktop runs Happy Agent, its own agent runtime, on your machine: Claude, Codex, and Grok each get their vendor's own prompts and tools, share one permission model and OS sandbox, and hand work to each other as subagents. Sessions survive restarts, and a built-in Chief of Staff bot sets Happy up in conversation. It is free, MIT licensed, and runs on macOS, Windows, and Linux. The Happy phone app for iOS and Android is one part of it: the same sessions, end-to-end encrypted. Happy Agent also runs on a server, alone or for a team.
-
-The original Happy CLI (Happy Coder, \`happy\` on npm) was a phone remote for Claude Code and Codex in your terminal. It is in maintenance mode: it keeps working and gets critical fixes, but new features ship in Happy Desktop. Its docs at ${absoluteUrl(HAPPY.docsHome)} describe that CLI, not Happy today.
-
-## Happy Desktop docs
-
-${docsLinks(HAPPY_DESKTOP).join('\n')}
-
-## Download
-
-- [Happy Desktop for macOS, Windows, and Linux](https://github.com/slopus/happy-desktop/releases/latest): the latest release. Also on ${absoluteUrl('/#download')}.
-- [Happy for iPhone and iPad](${APP_STORE_LINK}): App Store.
-- [Happy for Android](${GOOGLE_PLAY_LINK}): Google Play.
-- [Happy](${HAPPY.repository}): the original Happy, with the mobile app, CLI, and server. MIT licensed.
-- [Happy Desktop](${HAPPY_DESKTOP.repository}): the new iteration, the desktop app. MIT licensed.
-- [Happy Agent](https://github.com/slopus/happy-agent): the agent runtime. MIT licensed.
-
-## Optional
-
-${docsLinks(HAPPY).map((line) => line.replace(/^- \[/, '- [Original Happy CLI: ')).join('\n')}
-`)
-
 // Every URL the site serves, as a directory with an index.html, plus the homepage.
 async function servedRoutes() {
   const routes = new Set()
@@ -542,4 +577,4 @@ if (brokenLinks.length > 0) {
   throw new Error(`Broken internal links in the built site:\n  ${[...new Set(brokenLinks)].join('\n  ')}`)
 }
 
-console.log(`Generated ${documentRoutes + 10 + pluginPages.length} static routes, a ${sitemapPages.length}-URL sitemap, and llms.txt.`)
+console.log(`Generated ${documentRoutes + 10 + pluginPages.length} static routes and a ${sitemapPages.length}-URL sitemap.`)

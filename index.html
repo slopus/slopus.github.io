@@ -67,6 +67,14 @@
         ]
       }
     </script>
+    <script>
+      // The prerendered homepage offers the Mac download; on Windows and Linux it stays hidden
+      // until the app replaces it with this platform's, and Android lists Google Play first from
+      // the start (src/DownloadOptions.tsx, src/happy-one.css).
+      if (/Android/i.test(navigator.userAgent)) document.documentElement.dataset.mobileStore = 'googlePlay'
+      if (!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) && !(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+        && /Windows|Linux/i.test(navigator.userAgent)) document.documentElement.dataset.desktopPlatform = 'other'
+    </script>
   </head>
   <body>
     <div id="app"></div>

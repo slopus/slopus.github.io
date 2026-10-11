@@ -6,7 +6,7 @@ These rules cover the docs, guides, comparisons, and blog. The homepage has rule
 
 > Happy is an open-source harness for orchestrating coding agents: Claude, Codex, and Grok in one desktop app, reusing the subscriptions you already pay for.
 
-Use this sentence, or a shortening of it, wherever a page says what Happy is: the homepage metadata, `llms.txt`, Welcome, and every lede that introduces Happy.
+Use this sentence, or a shortening of it, wherever a page says what Happy is: the homepage metadata, Welcome, and every lede that introduces Happy.
 
 The short descriptor is **Orchestrate Claude, Codex and Grok in one app** (`HAPPY_DESCRIPTOR` in `src/products.ts`). It sits under the homepage heading, under the footer wordmark, under the wordmark on every link-preview card and posted diagram, and opens the homepage descriptions.
 
@@ -85,7 +85,7 @@ The short descriptor is **Orchestrate Claude, Codex and Grok in one app** (`HAPP
   - a 44px tap target;
   - its chevron at the right end, no taller than the text's capitals.
 - **Metadata.** Each page's title, search title, and description (160 characters at most) live in `src/documents.ts`.
-- **Link preview.** Each desktop doc has its own card, `public/og/<path with dashes>.png`: its title, description, and first figure. After adding a page or changing its title, description, or figure, run `python3 notes/og/cards.py <slug>` and commit the PNG; the build fails without it. The original CLI docs under `/docs/` keep the homepage's card. The description also becomes the page's line in `llms.txt`, so it states the capability plainly.
+- **Link preview.** Each desktop doc has its own card, `public/og/<path with dashes>.png`: its title, description, and first figure. After adding a page or changing its title, description, or figure, run `python3 notes/og/cards.py <slug>` and commit the PNG; the build fails without it. The original CLI docs under `/docs/` keep the homepage's card. The description is also the page's meta description and preview text, so it states the capability plainly.
 - **The Blog** is the last sidebar group, with no list page. Each post gets a one-word slug you can type from memory: `/workos/`, `/tailcat/`, `/voice/`.
 - **URLs don't break.** `routes.txt` only grows. A shared URL keeps working when its page moves: `/team-sign-in-workos/` redirects to `/workos/`.
 

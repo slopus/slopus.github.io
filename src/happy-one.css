@@ -34,6 +34,8 @@
 .one-download-actions { position: relative; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%; margin: .5rem auto 0; padding-block: .5rem; }
 .one-desktop-downloads, .one-mobile-downloads { display: flex; flex-direction: column; align-items: center; gap: .75rem; min-width: 0; }
 .one-desktop-downloads { max-width: 100%; }
+/* Windows and Linux (index.html): no Mac download flashes before this platform's appears. */
+html[data-desktop-platform] .one-download-actions[data-platform='desktop'] .one-desktop-downloads { visibility: hidden; }
 .one-primary-download { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .one-mac-architecture { height: 20px; padding: 0; border: 0; border-radius: 0; background: transparent; color: #47645e; font: inherit; font-size: .82rem; line-height: 20px; cursor: pointer; }
 .one-mac-architecture:focus-visible { outline: 2px solid #183f38; outline-offset: 3px; border-radius: 2px; }
@@ -120,7 +122,8 @@
   .one-hero .one-demo { margin-top: 0; }
   .one-hero .one-download-actions { margin-top: 0; }
   .one-hero .one-mobile-downloads { order: -1; flex-direction: column; align-items: center; gap: 1.5rem; }
-  .one-hero [data-mobile-store='googlePlay'] [data-store='googlePlay'] { order: -1; }
+  .one-hero [data-mobile-store='googlePlay'] [data-store='googlePlay'],
+  html[data-mobile-store='googlePlay'] .one-hero [data-store='googlePlay'] { order: -1; }
   .one-benefits-section { position: relative; }
   .one-benefit-number, .one-benefit-title { font-size: 1.06rem; }
   .one-benefit-body { font-size: .92rem; min-height: 0; }

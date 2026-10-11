@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { GITHUB_HAPPY, GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
 import { HAPPY_DESCRIPTOR, HAPPY_DESKTOP } from './products'
 import { HappyOneDemo } from './HappyOneDemo'
@@ -84,9 +84,13 @@ function Downloads(props: DownloadOptionsProps) {
   )
 }
 
+const NO_SUBSCRIPTION = () => () => {}
+const socialPreviewRequested = () => new URLSearchParams(window.location.search).get('preview') === 'og'
+
 /** The homepage: the recorded harness demo, the pitch, and every download. */
 export default function DesktopApp() {
-  const ogPreview = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('preview') === 'og'
+  // Read after hydration: the prerendered homepage is the ordinary page.
+  const ogPreview = useSyncExternalStore(NO_SUBSCRIPTION, socialPreviewRequested, () => false)
   // The hero and footer downloads share one architecture choice.
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   return (
