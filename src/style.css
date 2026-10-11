@@ -305,18 +305,23 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content blockquote p:last-child { margin-bottom: 0; }
 .document-content pre { background: #14352f; border: 1px solid #24463f; border-radius: 12px; color: #eef0e8; font-family: 'DM Mono', monospace; font-size: .76rem; line-height: 1.65; margin: 1.6rem 0; overflow-x: auto; padding: 1.15rem 1.25rem; }
 .document-content pre code { background: none; color: inherit; font: inherit; padding: 0; }
-/* "Ask the Chief of Staff" (ChiefOfStaffPrompt): ready-to-paste requests, each with its own Copy
-   button. A light tint and an accent rule, no border box; the prompt wraps, never scrolls. */
-.document-content .cos-prompt { background: #e3efe9; border-left: 3px solid #e6522c; border-radius: 10px; margin: 1.8rem 0 2.2rem; padding: .85rem 1rem .9rem 1.15rem; }
-.document-content .cos-prompt-label { color: #557068; font-family: 'DM Mono', monospace; font-size: .7rem; letter-spacing: .06em; margin: 0 0 .35rem; text-transform: uppercase; }
-.document-content .cos-prompt-label a { color: inherit; text-decoration-color: rgba(85, 112, 104, .4); }
+/* The Chief of Staff prompt: part of the page, not a card. Each prompt is a line you would type,
+   its "›" flush with the article text, and its quiet Copy control follows the last
+   word in the same line of text, so it never takes a column from the prompt. */
+.document-content .cos-prompt { margin: 1.6rem 0 2.2rem; }
+.document-content .cos-prompt-label { color: #6b7f78; font-size: .82rem; font-weight: 600; line-height: 1.4; margin: 0 0 .3rem; }
+.document-content .cos-prompt-label a { color: inherit; text-decoration-color: rgba(107, 127, 120, .45); }
 .document-content .cos-prompt ul { list-style: none; margin: 0; padding: 0; }
-.document-content .cos-prompt-line { align-items: center; display: flex; gap: .75rem; margin: 0; padding: .35rem 0; }
-.document-content .cos-prompt-line + .cos-prompt-line { border-top: 1px solid rgba(24, 63, 56, .12); }
-.document-content .cos-prompt-text { color: #183f38; flex: 1 1 auto; font-size: 1.02rem; font-weight: 500; line-height: 1.5; margin: 0; min-width: 0; overflow-wrap: anywhere; }
-.document-content .cos-prompt-copy { align-items: center; appearance: none; background: #fffdf8; border: 1px solid rgba(24, 63, 56, .18); border-radius: 8px; color: #183f38; cursor: pointer; display: inline-flex; flex: none; font: 600 .82rem 'DM Sans', sans-serif; gap: .4rem; justify-content: center; min-height: 44px; min-width: 88px; padding: 0 .85rem; }
-.document-content .cos-prompt-copy:hover { border-color: #e6522c; color: #d94725; }
-.document-content .cos-prompt-copy:focus-visible { outline: 2px solid #e6522c; outline-offset: 2px; }
+.document-content .cos-prompt-line { margin: 0; padding: .45rem 0 .45rem 1.1rem; position: relative; }
+.document-content .cos-prompt-line + .cos-prompt-line { border-top: 1px solid rgba(24, 63, 56, .1); }
+.document-content .cos-prompt-line::before { color: #e6522c; content: '›'; font-size: 1.15rem; font-weight: 600; left: 0; line-height: 1.5; position: absolute; top: .45rem; }
+.document-content .cos-prompt-text { color: #183f38; font-size: 1.08rem; font-weight: 500; line-height: 1.5; overflow-wrap: anywhere; }
+.document-content .cos-prompt-copy { align-items: center; appearance: none; background: none; border: 0; border-radius: 6px; color: #6b7f78; cursor: pointer; display: inline-flex; font: 600 .78rem/1 'DM Sans', sans-serif; gap: .3rem; margin-left: .55rem; padding: .3rem .4rem; position: relative; user-select: none; white-space: nowrap; }
+/* A 44px hit area around the small control. */
+.document-content .cos-prompt-copy::after { content: ''; inset: 50% auto auto 50%; min-height: 44px; min-width: 64px; position: absolute; transform: translate(-50%, -50%); }
+.document-content .cos-prompt-copy svg { height: 14px; width: 14px; }
+.document-content .cos-prompt-copy:hover, .document-content .cos-prompt-copy[data-state='copied'] { color: #d94725; }
+.document-content .cos-prompt-copy:focus-visible { outline: 2px solid #e6522c; outline-offset: 1px; }
 .document-content .cos-prompt-status { clip: rect(0 0 0 0); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
 /* A long path or command in running text wraps rather than spilling out of a phone column. */
 .document-content :not(pre) > code { hyphens: manual; overflow-wrap: anywhere; }

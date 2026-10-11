@@ -52,10 +52,11 @@ function PromptLine({ prompt }: { prompt: string }) {
 
   return (
     <li className="cos-prompt-line">
-      <p className="cos-prompt-text">{prompt}</p>
-      <button type="button" className="cos-prompt-copy" onClick={copy} aria-label={state === 'copied' ? `Copied: ${prompt}` : `Copy prompt: ${prompt}`}>
+      {/* The button follows the prompt in the same line of text, so it never takes a column from it. */}
+      <span className="cos-prompt-text">{prompt}</span>
+      <button type="button" className="cos-prompt-copy" data-state={state} onClick={copy} aria-label={state === 'copied' ? `Copied: ${prompt}` : `Copy prompt: ${prompt}`}>
         {state === 'copied'
-          ? <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+          ? <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
           : <CopyIcon />}
         <span aria-hidden="true">{state === 'copied' ? 'Copied' : 'Copy'}</span>
       </button>
@@ -72,7 +73,7 @@ function PromptLine({ prompt }: { prompt: string }) {
 export function ChiefOfStaffPrompt({ prompts }: { prompts: string[] }) {
   return (
     <aside className="cos-prompt" aria-label="Ask the Chief of Staff">
-      <p className="cos-prompt-label">Ask the <a href="/chief-of-staff/">Chief of Staff</a> in Happy Desktop</p>
+      <p className="cos-prompt-label">Ask the <a href="/chief-of-staff/">Chief of Staff</a></p>
       <ul>
         {prompts.map((prompt) => <PromptLine key={prompt} prompt={prompt} />)}
       </ul>

@@ -324,26 +324,42 @@ describe('static document pages', () => {
     expect(documents.filter((document) => document.path === 'vision')).toHaveLength(1)
   })
 
-  it('lists Team right after Vision, with each founder\'s site and X handle, and says nothing about anyone\'s hours', () => {
+  it('lists Team right after Vision, Steve first, each bio in its own first person, with site and X handle, and nothing about anyone\'s hours', () => {
     const { container } = render(<Router pathname="/team/" />)
 
     expect(screen.getByRole('heading', { level: 1, name: /^team/i })).toBeTruthy()
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/vision/i)
     expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/models & subscriptions/i)
-    const people = [...container.querySelectorAll('.document-content h2')].map((heading) => heading.firstChild?.textContent)
-    expect(people).toEqual(['Kirill Dubovitskiy', 'Steve Korshakov'])
-    for (const href of [
-      'https://bra1ndump.com', 'https://x.com/bra1n_dump', 'https://github.com/bra1nDump',
-      'https://korshakov.com', 'https://x.com/ex3ndr', 'https://github.com/ex3ndr',
-    ]) {
-      expect(container.querySelector(`.document-content a[href="${href}"]`)).not.toBeNull()
+    const content = container.querySelector('.document-content')!
+    expect(content.querySelector('h1 + p')?.textContent).toBe('Happy is currently built by the two of us, with help from contributors on GitHub.')
+    const people = [...content.querySelectorAll('h2')]
+    expect(people.map((heading) => heading.firstChild?.textContent)).toEqual(['Steve Korshakov', 'Kirill Dubovitskiy'])
+    for (const heading of people) {
+      // Photo, then the bio: written by its subject, never about them.
+      const photo = heading.nextElementSibling!
+      expect(photo.querySelector('img')).not.toBeNull()
+      const bio = photo.nextElementSibling!.textContent!
+      expect(bio).toMatch(/\bI\b/)
+      expect(bio).not.toContain(heading.firstChild!.textContent!.split(' ')[0])
     }
-    expect([...container.querySelectorAll('.document-content img')].map((image) => image.getAttribute('src'))).toEqual([
-      '/img/team/kirill-dubovitskiy.jpg',
+    expect(content.textContent).toContain('I build the desktop app')
+    expect(content.textContent).toMatch(/Before Happy I built/)
+    expect(content.textContent).not.toMatch(/YC interview|continue\.dev|Fizz|architected|bootstrapped/i)
+    for (const href of [
+      'https://korshakov.com', 'https://x.com/ex3ndr', 'https://github.com/ex3ndr',
+      'https://bra1ndump.com', 'https://x.com/bra1n_dump', 'https://github.com/bra1nDump',
+      // The Amazon security work, from Steve's own talk, and the Show Me plugin's source.
+      'https://www.youtube.com/watch?v=IvE8n-ylFYY',
+      'https://github.com/bra1nDump/show-me-chatgpt-plugin',
+    ]) {
+      expect(content.querySelector(`a[href="${href}"]`)).not.toBeNull()
+    }
+    expect([...content.querySelectorAll('img')].map((image) => image.getAttribute('src'))).toEqual([
       '/img/team/steve-korshakov.jpg',
+      '/img/team/kirill-dubovitskiy.jpg',
     ])
     // Nobody's level of involvement, in either direction.
-    expect(container.querySelector('.document-content')?.textContent).not.toMatch(/full[- ]time|part[- ]time|day job|side project|spare time/i)
+    expect(content.textContent).not.toMatch(/full[- ]time|part[- ]time|day job|day to day|side project|spare time/i)
     expect(documents.filter((document) => document.path === 'team')).toHaveLength(1)
   })
 
@@ -418,11 +434,15 @@ describe('static document pages', () => {
       if (document.path !== 'quick-start') {
         expect(block, document.path).toBeLessThan(markup.indexOf('<h2', markup.indexOf('<h1')))
       }
-      expect(markup).toMatch(/<p class="cos-prompt-text">[^<]+<\/p><button type="button" class="cos-prompt-copy" aria-label="Copy prompt: /)
+      expect(markup).toMatch(/<span class="cos-prompt-text">[^<]+<\/span><button type="button" class="cos-prompt-copy" data-state="idle" aria-label="Copy prompt: /)
       // The block replaces the old prose section.
       expect(markup).not.toMatch(/<h2[^>]*>Ask the Chief of Staff</)
     }
     expect(withPrompt.filter((path) => !getDocument('desktop', path))).toEqual([])
+    // The remote-server guide leads with what you get: the harness diagram, then the prompt; the problem waits in the reference layer.
+    const remote = renderPath('/guides/remote-server/')
+    expect(remote.indexOf('src="/img/remote-server-harness.svg"')).toBeLessThan(remote.indexOf('<aside class="cos-prompt"'))
+    expect(remote.slice(0, remote.indexOf('<h2', remote.indexOf('<h1')))).not.toMatch(/lid closes|laptop sleeps<\/h2>|workarounds/i)
     // The Chief of Staff page shows the real sidebar, where it is the first bot.
     expect(renderPath('/chief-of-staff/')).toContain('src="/img/chief-of-staff-sidebar.png"')
   }, 30_000)

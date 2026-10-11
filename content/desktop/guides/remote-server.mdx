@@ -2,24 +2,13 @@
 
 Install Happy Agent on a server, a VPS, or a Mac mini, and it runs Claude Code and Codex work there itself: one agent harness for Claude, Codex, and Grok, on the subscriptions you already pay for. It keeps working while your laptop sleeps, and you control it from Happy Desktop or the Happy phone app, alone or [with your team](#share-it-with-your-team).
 
+![Two ways to work from another device. A remote control, such as Claude Remote Control or the original Happy CLI: the phone reaches a relay, which reaches claude running in a terminal on your laptop, so it works only while your computer stays on. Happy Agent runs the harness: Desktop and the phone reach Happy Agent on your server, which has its own loop, tools, sandbox, and review, and runs Claude through the Claude Agent SDK, Codex, and Grok on the subscriptions you have. It keeps working while your laptop sleeps.](/img/remote-server-harness.svg)
+
 ```chief-of-staff
 Put Happy Agent on my server ubuntu@203.0.113.10. Call it Build box. Use my Codex and Claude accounts, and set up GitHub for acme/api.
 ```
 
-## Why a coding agent stops when your laptop sleeps
-
-A coding agent runs where you start it. Start Claude Code or Codex on your laptop, and the work stops when the lid closes. The usual workarounds each solve part of that:
-
-- **Keep the laptop open.** It has to stay awake, plugged in, and online.
-- **Claude Code Remote Control.** A window into a Claude Code session on your computer, from the Claude app or a browser. While the laptop sleeps, the work pauses until it wakes.
-- **A server with tmux and SSH.** The work keeps going, but you steer it through a terminal, one CLI per provider with its own login, and type approvals on a phone keyboard.
-- **Working with a teammate.** Usually means sharing the machine, a shell account or a VM, rather than the agent's sessions.
-
-Happy Agent takes the server route without the terminal: one runtime on the server, a desktop app and a phone app in front of it, and a team mode for sharing it.
-
 ## A harness, not a remote control
-
-![Two ways to work from another device. A remote control, such as Claude Remote Control or the original Happy CLI: the phone reaches a relay, which reaches claude running in a terminal on your laptop, so it works only while your computer stays on. Happy Agent runs the harness: Desktop and the phone reach Happy Agent on your server, which has its own loop, tools, sandbox, and review, and runs Claude through the Claude Agent SDK, Codex, and Grok on the subscriptions you have. It keeps working while your laptop sleeps.](/img/remote-server-harness.svg)
 
 - **A remote control** forwards a session that runs in the vendor's own CLI on your computer. Claude Code Remote Control works this way, and so does the original Happy CLI. The session lasts as long as that process and that computer.
 - **Happy Agent is the harness.** It runs the agent loop itself, with its own tools, [sandbox](/permissions/), and review, and calls the models directly. Put it on a server and the sessions keep going while your laptop sleeps; Desktop and the phone are windows onto them.
@@ -38,6 +27,8 @@ It runs on the subscriptions you already have:
 We started Happy as the Happy CLI, `happy` on npm. It runs Claude Code, Codex, and other ACP-compatible agents in your terminal, unchanged, and lets you control them from the Happy app. It is still the way to keep the exact original CLIs and the terminal on your own machine, and its [legacy docs](/docs/) are still here, in maintenance mode. Happy Agent and Happy Desktop are the current iteration, where Happy runs the harness itself, on your computer or a server.
 
 ## Alternatives to a Happy Agent server
+
+A coding agent runs on the machine where you start it. To keep one working, keep that machine awake and online, or run the agent somewhere that stays on:
 
 | | tmux + SSH or Mosh + Tailscale + Termius | Claude Code Remote Control | A VM with its own agent (exe.dev and Shelley) | T3 Code | Happy Agent on a server |
 | --- | --- | --- | --- | --- | --- |
