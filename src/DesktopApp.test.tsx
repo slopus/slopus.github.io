@@ -91,7 +91,7 @@ describe('Happy Desktop landing page', () => {
     expect(container.querySelectorAll('#download')).toHaveLength(1)
   })
 
-  it('lists the features with multiplayer last, each keeping its effect', () => {
+  it('lists the features with multiplayer last, as plain text with no icons or art', () => {
     const { container } = render(<DesktopApp />)
     const items = [...container.querySelectorAll('.one-benefits li')]
 
@@ -102,8 +102,7 @@ describe('Happy Desktop landing page', () => {
       'End-to-end encrypted mobile app',
       'Natively multiplayer',
     ])
-    expect(items.map((item) => item.getAttribute('data-effect'))).toEqual(['providers', null, null, 'security', 'multiplayer'])
-    expect(container.querySelector('#one-multiplayer-surprise')).toBeTruthy()
+    expect(container.querySelectorAll('.one-benefits img, .one-benefits picture, .one-benefits svg')).toHaveLength(0)
   })
 
   it('keeps the terminal section short', () => {

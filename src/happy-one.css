@@ -2,23 +2,26 @@
 .happy-one [id] { scroll-margin-top: 82px; }
 .happy-one .button, .happy-one .nav-cta { border-radius: 8px; }
 .happy-one .button { min-height: 48px; justify-content: center; }
-.happy-one h2 { font-size: clamp(2.3rem, 4vw, 3.5rem); }
+/* Section headings match the hero tagline. */
+.happy-one h2 { font-size: var(--one-h1); }
 .happy-one h1, .happy-one h2 { overflow-wrap: anywhere; }
 .happy-one h3 { font: 600 1.15rem/1.3 'Space Grotesk', 'DM Sans', sans-serif; letter-spacing: -.02em; }
-.happy-one { --one-h1: clamp(1.5rem, 3.1vw, 2.85rem); }
+.happy-one { --one-h1: clamp(1.5rem, 3.1vw, 2.85rem); --one-note-gap: .75rem; --one-section-gap: 3.25rem; }
 /* The first screen holds the heading, the note, the whole recording, and the primary
    download. Everything but the recording is a known height, so the stage
    (happy-one-demo.css) sizes the recording from what is left of the viewport:
-   header 60px, hero top 28px, two heading lines at 1.04, heading margin 8px, note 24px,
+   header 60px, hero top 28px, three heading lines at 1.04, heading margin 8px, note 24px,
    movie gap 12px, stage padding 20px, download margin and padding 16px, badge with its
    architecture selector 70px. */
-.one-hero { --one-hero-reserved: calc(238px + 2.08 * var(--one-h1)); padding-top: 1.75rem; text-align: center; }
+.one-hero { --one-hero-reserved: calc(238px + 3.12 * var(--one-h1)); padding-top: 1.75rem; text-align: center; }
 .one-hero h1 { font-size: var(--one-h1); margin-bottom: .5rem; }
+/* Stacked: "Any Model." / "Your Subscription." / "Happy Harness." */
+.one-hero h1 > span, .one-hero h1 > em { display: block; }
 .one-hero-note { margin: 0; }
-.one-hero .one-demo { margin-top: .75rem; }
+.one-hero .one-demo { margin-top: var(--one-note-gap); }
 /* Only phones lay out this wrapper; elsewhere the copy and recording are hero items. */
 .one-hero-fold { display: contents; }
-.one-benefits-section { margin-top: 3.25rem; }
+.one-benefits-section { margin-top: var(--one-section-gap); }
 /* Numbered like a thread: the number hangs, the note keeps a uniform two lines. */
 .one-benefits { display: grid; grid-auto-rows: 1fr; gap: 1.4rem; width: min(100%, 34rem); margin: 0 auto; padding: 0; text-align: left; list-style: none; text-transform: lowercase; }
 .one-benefits li { position: relative; display: grid; grid-template-columns: 1.35rem minmax(0, 1fr); grid-template-rows: max-content 1fr; column-gap: .35em; }
@@ -26,17 +29,7 @@
 .one-benefit-number, .one-benefit-title { color: #183f38; font-size: 1.18rem; font-weight: 500; line-height: 1.55; }
 .one-benefit-heading { grid-column: 2; display: flex; align-items: center; gap: .45rem; }
 .one-benefit-body { grid-column: 2; min-height: 3.2em; margin: .3rem 0 0; color: #47645e; font-size: .98rem; line-height: 1.6; text-wrap: pretty; }
-.one-security-sticker, .one-security-sticker img { display: block; flex: 0 0 26px; width: 26px; height: 26px; }
 .one-mit { text-transform: uppercase; }
-.one-benefit-heading:has(.one-provider-header) { gap: .3rem; }
-.one-provider-header { position: relative; flex: 0 0 20px; width: 20px; height: 20px; }
-.one-provider-header img { display: block; width: 20px; height: 20px; }
-.one-provider-extra { position: absolute; z-index: 2; top: 0; left: 28px; display: flex; gap: 8px; opacity: var(--feature-progress, 0); visibility: hidden; transform: translateX(calc(-8px + 8px * var(--feature-progress, 0))); }
-[data-active] .one-provider-extra { visibility: visible; }
-/* A small teammate at the band edge. The speech bubble stays above the art. */
-.one-teammate { position: absolute; z-index: 50; top: -8px; right: calc((min(100vw - 40px, 34rem) - 100vw) / 2); width: 88px; height: 88px; pointer-events: none; }
-.one-teammate > img { position: absolute; inset: 0; z-index: 1; opacity: var(--feature-progress, 0); transform: translateX(calc(60px - 60px * var(--feature-progress, 0))); }
-.one-teammate-message { position: absolute; z-index: 2; right: 62px; top: 8px; width: max-content; padding: .5rem .7rem; border: 1px solid #bac7ae; border-radius: 12px 12px 0 12px; background: #f5f0e7; color: #47645e; text-transform: none; font-size: .78rem; line-height: 1.4; opacity: var(--feature-progress, 0); }
 .one-download-actions { position: relative; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%; margin: .5rem auto 0; padding-block: .5rem; }
 .one-desktop-downloads, .one-mobile-downloads { display: flex; flex-direction: column; align-items: center; gap: .75rem; min-width: 0; }
 .one-desktop-downloads { max-width: 100%; }
@@ -94,8 +87,12 @@
 .one-terminal-section .terminal { margin-bottom: 1rem; border-radius: 10px; }
 .one-terminal-section .terminal-body { padding: 1.7rem; font-size: 1.07rem; line-height: 1.8; }
 .one-benefits-section { background: #dbe2cd; padding-block: 2.5rem; }
-.one-download { padding-block: 5rem; text-align: center; }
-.one-download h2 { margin-bottom: 1.25rem; }
+/* Spaced like the hero: the note sits as close under the heading, the downloads one
+   note gap below it (their own .5rem padding makes up the rest), and a section gap after. */
+.one-download { padding-block: 5rem var(--one-section-gap); text-align: center; }
+.one-download h2 { margin-bottom: .5rem; }
+.one-download > p { margin: 0; }
+.one-download > .one-download-actions { margin-top: calc(var(--one-note-gap) - .5rem); }
 .one-download > p, .one-hero-note { color: #47645e; font-size: 1rem; }
 /* Enlarged text must reflow inside this page, not be cut off by the shell. */
 .happy-one .footer-inner > * { min-width: 0; overflow-wrap: anywhere; }
@@ -109,7 +106,7 @@
 
 @media (max-width: 700px) {
   .happy-one .page-width { width: calc(100% - 40px); }
-  .happy-one { --one-h1: clamp(1.6rem, 5.2vw, 2.2rem); }
+  .happy-one { --one-h1: clamp(1.6rem, 5.2vw, 2.2rem); --one-section-gap: 2.5rem; }
   /* The first screen ends with this phone's store badge (App Store when unknown);
      the other store and then the desktop download follow just below the fold.
      The copy and recording fill the rest, with the same space above the heading,
@@ -123,7 +120,7 @@
   .one-hero .one-download-actions { margin-top: 0; }
   .one-hero .one-mobile-downloads { order: -1; flex-direction: column; align-items: center; gap: 1.5rem; }
   .one-hero [data-mobile-store='googlePlay'] [data-store='googlePlay'] { order: -1; }
-  .one-benefits-section { position: relative; margin-top: 2.5rem; }
+  .one-benefits-section { position: relative; }
   .one-benefit-number, .one-benefit-title { font-size: 1.06rem; }
   .one-benefit-body { font-size: .92rem; min-height: 0; }
   /* Every row is as tall as its own content. One shared row height padded each
@@ -132,29 +129,10 @@
   /* A fixed number track: sized per row, "1/" is narrower than "2/" and the
      titles no longer start on the same left edge. */
   .one-benefits li { grid-template-columns: 1.2rem minmax(0, 1fr); grid-template-rows: max-content max-content; }
-  /* The provider marks read down the block's right edge, so the heading no
-     longer has to share a horizontal row with all three logos. */
-  .one-benefits li[data-effect='providers'] .one-benefit-heading,
-  .one-benefits li[data-effect='providers'] .one-benefit-body { padding-right: 32px; }
-  .one-provider-header { position: absolute; top: 0; right: 0; z-index: 2; display: flex; flex: none; flex-direction: column; align-items: center; gap: 8px; width: 20px; height: auto; }
-  .one-provider-extra { position: static; flex-direction: column; gap: 8px; transform: translateY(calc(-10px + 10px * var(--feature-progress, 0))); }
-  .one-benefit-heading:has(.one-provider-header) .one-benefit-title { min-width: 0; text-wrap: balance; }
-  /* Clear the teammate art only. Giving the heading its own height left a gap
-     between the title and the paragraph under it. */
-  .one-benefits li[data-effect='multiplayer'] .one-benefit-heading { padding-right: 56px; }
-  /* The art hangs 18px into the first body line and the bubble 6px, so that one
-     line wraps around them and the rest of the paragraph keeps the full width. */
-  .one-benefits li[data-effect='multiplayer'] .one-benefit-body::before {
-    content: ''; float: right; width: 92px; height: 22px;
-    shape-outside: polygon(0 0, 92px 0, 92px 22px, 48px 22px, 48px 8px, 0 8px);
-  }
-  .one-teammate { top: -16px; right: -20px; width: 64px; height: 64px; }
-  .one-teammate > img { width: 64px; height: 64px; }
-  .one-teammate-message { right: 48px; top: 16px; }
   .one-download-actions { width: min(100%, 24rem); margin-top: .5rem; }
   .one-terminal-section { flex-direction: column; align-items: stretch; gap: 1.25rem; padding-block: 4rem 1rem; }
   .one-terminal-section .terminal-body { padding: 1.2rem; font-size: clamp(.82rem, 3.6vw, 1rem); }
-  .one-download { padding-block: 3.5rem; }
+  .one-download { padding-block: 3.5rem var(--one-section-gap); }
 }
 
 @media (max-width: 360px) {
