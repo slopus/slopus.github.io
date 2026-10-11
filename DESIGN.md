@@ -93,6 +93,8 @@ The short descriptor is **Orchestrate Claude, Codex and Grok in one app** (`HAPP
   - its chevron at the right end, no taller than the text's capitals.
 - **Metadata.** Each page's title, search title, and description (160 characters at most) live in `src/documents.ts`.
 - **Link preview.** Each desktop doc has its own card, `public/og/<path with dashes>.png`: its title, description, and first figure. After adding a page or changing its title, description, or figure, run `python3 notes/og/cards.py <slug>` and commit the PNG; the build fails without it. The original CLI docs under `/docs/` keep the homepage's card. The description is also the page's meta description and preview text, so it states the capability plainly.
+  - A page without a figure gets no logo tile in its place. Its card keeps the header and the URL line, gives the title the full width, and swaps the description for the page's `cardLine` in `src/documents.ts`: one line of four to eight words, benefit first, no closing period, true to the page. `cards.py` stops if the line is missing or wraps.
+  - After changing cards that are already shared, bump `SOCIAL_IMAGE_VERSION` in `src/siteMetadata.ts` and the `?v=` on the homepage image in `index.html`, so X, Slack, and LinkedIn fetch them again.
 - **The Blog** is the last sidebar group, with no list page. Each post gets a one-word slug you can type from memory: `/workos/`, `/tailcat/`, `/voice/`.
 - **URLs don't break.** `routes.txt` only grows. A shared URL keeps working when its page moves: `/team-sign-in-workos/` redirects to `/workos/`.
 

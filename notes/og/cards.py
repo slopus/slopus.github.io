@@ -1,7 +1,8 @@
 # Writes public/og/<slug>.png, the 1200x630 link preview of every desktop doc: the
 # Happy Engineering wordmark with the descriptor under it, the page's title and description, its URL, and its
-# figure (the first image on the page) on the right. A page without a figure gets
-# the site's H mark instead. The original CLI docs under /docs/ keep the homepage's card.
+# figure (the first image on the page) on the right. A page without a figure gives the title the
+# full width and puts its cardLine (src/documents.ts) in place of the description. The original
+# CLI docs under /docs/ keep the homepage's card.
 #
 # Run from the repository root after adding or retitling a desktop doc:
 #   python3 notes/og/cards.py            # every desktop doc
@@ -67,7 +68,7 @@ def desktop_documents():
         const markup = m.renderPath(href)
         const article = markup.slice(markup.indexOf('<article'), markup.indexOf('</article>'))
         const figures = [...article.matchAll(/<img [^>]*?src="([^"]+)"[^>]*?alt="([^"]*)"/g)].map(([, src, alt]) => ({ src, alt }))
-        return { href, heading: m.documentHeading(d), description: d.description, card: m.metadataForPath(href).socialImage?.path, figures }
+        return { href, heading: m.documentHeading(d), description: d.description, cardLine: d.cardLine, card: m.metadataForPath(href).socialImage?.path, figures }
       })
       console.log(JSON.stringify(pages))
     """
@@ -94,14 +95,13 @@ def natural_size(path):
 
 
 def figure_markup(page):
-    """The right column: its width and markup. A page without a figure gets the site's H mark."""
+    """The right column: its width and markup, or (0, '') for a page without a figure."""
     figures = page["figures"]
     override = FIGURE_OVERRIDES.get(page["href"])
     if override:
         figures = [f for f in figures if f["src"] == override]
     if not figures:
-        mark = (PUBLIC / "favicon.svg").read_text().replace("<svg ", '<svg width="240" height="240" ', 1)
-        return 240, f'<div class="figure mark">{mark}</div>'
+        return 0, ""
     # Portraits (the Team page): every photo, side by side, with its caption.
     if all(f["src"].endswith(".jpg") for f in figures):
         people = "".join(
@@ -124,7 +124,10 @@ def figure_markup(page):
 
 def card_html(page):
     figure_w, figure = figure_markup(page)
-    copy_w = W - 72 - 56 - 48 - figure_w
+    copy_w = W - 72 - 56 - 48 - figure_w if figure else W - 2 * 72
+    if not figure and not page.get("cardLine"):
+        sys.exit(f"{page['href']} has no figure: give it a cardLine in src/documents.ts")
+    text = page["description"] if figure else page["cardLine"]
     url = f"happy.engineering{page['href']}".rstrip("/")
     wordmark = (PUBLIC / "brand/happy-engineering-inline-light.svg").read_text()
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
@@ -142,11 +145,11 @@ html, body {{ margin: 0; background: {PAPER}; }}
 h1 {{ margin: 0; font: 600 var(--size, 76px)/1.04 'Space Grotesk', sans-serif; letter-spacing: -.025em; text-wrap: balance; }}
 p {{ margin: 24px 0 0; color: {BODY}; font-size: 27px; line-height: 1.4; text-wrap: pretty;
      display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }}
+p.line {{ display: block; white-space: nowrap; }}
 .url {{ display: flex; align-items: center; gap: 12px; color: {MUTED}; font: 500 20px/1 'DM Mono', monospace; white-space: nowrap; }}
 .url::before {{ content: ''; width: 28px; height: 4px; border-radius: 2px; background: {ACCENT}; }}
 .figure {{ position: absolute; top: 44px; bottom: 44px; right: 56px; width: {figure_w:.0f}px; display: flex; align-items: center; justify-content: center; }}
 .figure img, .figure svg {{ display: block; }}
-.mark {{ right: 72px; }}
 .people {{ gap: 30px; }}
 .person {{ margin: 0; display: flex; flex-direction: column; align-items: center; gap: 16px; }}
 .person img {{ width: 220px; height: 220px; border-radius: 50%; object-fit: cover; }}
@@ -154,7 +157,7 @@ p {{ margin: 24px 0 0; color: {BODY}; font-size: 27px; line-height: 1.4; text-wr
 </style></head><body><div class="card">
 <div class="copy">
   <div class="wordmark">{wordmark}<div class="descriptor">{DESCRIPTOR}</div></div>
-  <div class="text"><h1>{html.escape(page['heading'])}</h1><p>{html.escape(page['description'])}</p></div>
+  <div class="text"><h1>{html.escape(page['heading'])}</h1><p{'' if figure else ' class="line"'}>{html.escape(text)}</p></div>
   <div class="url">{html.escape(url)}</div>
 </div>
 {figure}
@@ -205,7 +208,9 @@ def main():
             serve.html = card_html(doc)
             page.goto(f"{SITE}/__card", wait_until="load")
             page.evaluate("document.fonts.ready")
-            page.evaluate(FIT, 88 if 'figure mark' in serve.html else 76)
+            page.evaluate(FIT, 76)
+            if page.evaluate("(p => !!p && p.scrollWidth > p.clientWidth)(document.querySelector('p.line'))"):
+                sys.exit(f"{doc['href']}: its cardLine is longer than one line")
             png = page.screenshot(clip={"x": 0, "y": 0, "width": W, "height": H})
             # Drawn at 2x and reduced, so thin diagram strokes stay smooth.
             image = Image.open(io.BytesIO(png)).convert("RGB").resize((W, H), Image.LANCZOS)

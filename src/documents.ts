@@ -23,6 +23,11 @@ export interface DocumentEntry {
   hidden?: boolean
   /** An essay: rendered with captioned figures, floats, and the pig in its bullet (src/DocumentPages.tsx). */
   essay?: boolean
+  /**
+   * A page without a figure: what its link-preview card says under the title, in place of the
+   * description. Four to eight words, benefit first, no closing period (notes/og/cards.py).
+   */
+  cardLine?: string
 }
 
 const documentSources = import.meta.glob(
@@ -189,6 +194,7 @@ const desktopDocuments: DocumentDefinition[] = [
     sourcePath: '/content/desktop/index.mdx',
     title: 'Welcome',
     description: 'Happy is an open-source harness for orchestrating Claude, Codex, and Grok agents in one desktop app, reusing your subscriptions: what you get, where to start.',
+    cardLine: 'Free, open source, on the subscriptions you have',
     group: 'Start here',
   },
   {
@@ -197,6 +203,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Quick Start',
     pageTitle: 'Quick Start: Install Happy Desktop and Run Your First Agent',
     description: 'Download Happy Desktop, open a project, make one change, and pair your phone.',
+    cardLine: 'From download to your first agent',
     group: 'Start here',
   },
   {
@@ -213,6 +220,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'How It Works',
     pageTitle: 'How Happy Works: One Agent Runtime for Claude, Codex and Grok',
     description: 'How Happy orchestrates agents: Happy Agent runs the loop, tools, and sandbox for Claude, Codex, and Grok, and Desktop and the phone app are its clients.',
+    cardLine: 'One runtime for Claude, Codex and Grok',
     group: 'Start here',
   },
   {
@@ -239,6 +247,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Models & Subscriptions',
     pageTitle: 'Use Claude, Codex and Grok Subscriptions in One App — Happy',
     description: 'Run Claude, Codex, and Grok side by side, reusing the subscriptions you already pay for: subagents on any model, several accounts per provider, and quotas.',
+    cardLine: 'Every subscription you pay for, in one app',
     group: 'Features',
   },
   {
@@ -247,6 +256,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Permissions & Sandbox',
     pageTitle: 'Permissions and OS Sandbox for Claude Code and Codex — Happy',
     description: 'The four permission modes, automatic review in Auto, and what the sandbox enforces.',
+    cardLine: 'One sandbox for every agent and model',
     group: 'Features',
   },
   {
@@ -263,6 +273,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Projects & Workspaces',
     pageTitle: 'Projects and Git Worktree Workspaces for Coding Agents — Happy',
     description: 'Projects are folders, workspaces are Git worktrees, and parallel work stays apart.',
+    cardLine: 'Parallel work, each on its own branch',
     group: 'Features',
   },
   {
@@ -271,6 +282,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Agents That Never Die',
     pageTitle: 'Coding Agents That Survive Restarts — Happy',
     description: 'Agent sessions that survive restarts: subagents on other models, agent-to-agent messages, scheduled messages, the Inbox, and presence.',
+    cardLine: 'Subagents on any model, talking to each other',
     group: 'Features',
   },
   {
@@ -279,6 +291,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Mobile Access',
     pageTitle: 'Check On Your Coding Agents from Your Phone — Happy',
     description: 'Pair your phone once, then watch and steer every session with end-to-end encryption.',
+    cardLine: 'Pair once, then follow every session',
     group: 'Features',
   },
   {
@@ -295,6 +308,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Skills & MCP',
     pageTitle: 'Skills and MCP Servers for Claude, Codex and Grok — Happy',
     description: 'Give coding agents skills, Markdown instructions loaded on demand, and tools from MCP servers, the same for Claude, Codex, and Grok.',
+    cardLine: 'One set of skills for every model',
     group: 'Features',
   },
   {
@@ -303,6 +317,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Using the Terminal',
     pageTitle: 'Happy Without the Desktop App: the CLI and Happy Terminal',
     description: 'Keep Claude Code and Codex in your terminal and reach them from your phone.',
+    cardLine: 'Your agents, without the desktop app',
     group: 'Guides',
   },
   {
@@ -311,6 +326,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Configuration',
     pageTitle: 'Configure Happy with happy.toml: Permissions, Sandbox, Docker',
     description: 'Configure Happy in happy.toml: default permission mode, network allowlist, workspace setup commands, provider accounts, and Docker sessions.',
+    cardLine: 'Set your defaults once, per machine or repo',
     group: 'Guides',
   },
   {
@@ -328,6 +344,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Happy Desktop vs Buzz',
     pageTitle: 'Happy Desktop vs Buzz — Happy',
     description: 'Where Happy Desktop and Block\'s Buzz agree, and where the designs split.',
+    cardLine: 'A harness for agents, or a chat with them',
     group: 'Comparisons',
     hidden: true,
   },
@@ -337,6 +354,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Desktop App for Claude Code & Codex',
     pageTitle: 'Open Source Desktop App for Claude Code, Codex & Grok — Happy',
     description: 'Happy Desktop is a free, MIT-licensed app for orchestrating Claude Code, Codex, and Grok agents on macOS, Windows, and Linux, reusing your subscriptions.',
+    cardLine: 'Free on macOS, Windows and Linux',
     group: 'Comparisons',
   },
   {
@@ -345,6 +363,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Claude Code on Your Phone',
     pageTitle: 'Claude Code & Codex Mobile App for iPhone and Android — Happy',
     description: 'The Happy phone app for iPhone and Android: steer the Claude Code, Codex, and Grok agents Happy runs on your computer, end-to-end encrypted. Free, open source.',
+    cardLine: 'Free on iPhone and Android, end-to-end encrypted',
     group: 'Comparisons',
   },
   {
@@ -353,6 +372,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Happy vs Remote Control',
     pageTitle: 'Claude Code Remote Control vs Happy — An Open Source Alternative',
     description: 'Claude Code Remote Control vs Happy for steering coding agents from your phone: models, encryption, sessions, setup, and where each one is better.',
+    cardLine: 'An open-source harness for every model',
     group: 'Comparisons',
   },
   {
