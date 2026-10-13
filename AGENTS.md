@@ -26,8 +26,15 @@ carrying the homepage's preview tags), and `/desktop/docs/*` and
 `/happy2/docs/*` still serve the desktop docs, each canonical to its top-level
 URL; keep them all resolving. The original Happy CLI docs (`/docs`,
 `content/docs/`) are in maintenance mode: every page opens with the maintenance
-notice, and only a quiet footer link points to them. The Buzz comparison stays
-reachable at `/comparisons/buzz/` but is unlisted (`hidden: true`).
+notice. The CLI is legacy; we push people to Happy Desktop and the phone app.
+Desktop docs never offer the CLI as a way to use Happy and never mention Happy
+Terminal; where the CLI is relevant, they link to `/docs/`, whose notice sends
+readers on. `/guides/terminal/` is the one desktop page about the CLI: what still
+works beside Desktop, a link to `/docs/`, and a DM to Kirill on X for CLI users
+missing something. Desktop doc URLs carry no prefix: the Remote Control
+comparison is `/claude-code-remote-control/` (`/vs/claude-code-remote-control/`
+redirects there). The Buzz comparison stays reachable at `/comparisons/buzz/`
+but is unlisted (`hidden: true`).
 
 The Vision essay (`content/thesis.md`, a plain `.md` whose frontmatter title is
 the h1) is a desktop doc at `/vision/` under Start here, right after How It

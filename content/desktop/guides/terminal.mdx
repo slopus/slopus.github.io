@@ -1,8 +1,8 @@
-# Using the Terminal
+# The Original Happy CLI
 
-Desktop is optional: the `happy` CLI and Happy Terminal both run without it.
+The original Happy CLI (`happy` on npm, formerly `happy-coder`) still works, and the same Happy phone app reaches both it and Happy Desktop. It is in maintenance mode: it gets critical fixes, and new features ship in Happy Desktop.
 
-## The `happy` CLI
+## What the CLI does
 
 ```sh
 npm install -g happy
@@ -11,20 +11,18 @@ happy claude
 happy codex
 ```
 
-`happy` wraps the real `claude` or `codex` with your normal sign-in and arguments, encrypts the session before it leaves the machine, and keeps a background daemon so the phone can start and resume sessions with no terminal attached. Plain `claude` or `codex` is not under Happy's control. First run pairs the machine by QR code. State lives in `~/.happy`.
+`happy` wraps the real `claude` or `codex` with your normal sign-in and arguments, encrypts the session before it leaves the machine, and keeps a background daemon so the phone can start and resume sessions with no terminal attached. The first run pairs the machine by QR code. The full reference is in the [original Happy CLI docs](/docs/).
 
-With Desktop, Mobile Access setup installs this CLI for you and links it to the same account.
+## Use the CLI alongside Happy Desktop
 
-## Happy Terminal
+- Desktop does not need the CLI and does not install it.
+- Your account and sessions keep working. Pair Desktop from **Settings → Mobile Access**, and the phone shows the CLI and Desktop as two machines on the same account.
+- Both keep their state under `~/.happy`. Never delete it to fix a problem.
 
-The same harness as Desktop, as a TUI: every provider, every permission mode, workspaces, subagents, the Inbox. It talks to the Happy Agent that Desktop runs, so a session opened here is the one Desktop shows. Install it with `pnpm add --global @slopus/happy-terminal`.
+## Move to Happy Desktop
 
-Its command line covers the interactive app, headless `exec` for scripted runs, resuming and forking stored sessions, and `happy-terminal daemon start|stop|status`. Sessions are held by the daemon; if the terminal dies, the session keeps running.
+Happy Desktop runs Claude, Codex, and Grok in one app, reusing the subscriptions you already pay for. Sessions belong to a background runtime, so they survive a closed window and a restart, and every one of them reaches your phone. [Download it](/#download), or start at the [Quick Start](/quick-start/).
 
-## Which one
+## Missing something from the CLI?
 
-| You want | Use |
-| --- | --- |
-| Claude Code or Codex as the vendor ships it, plus a phone | `happy claude`, `happy codex` |
-| One harness across providers, in a terminal | Happy Terminal |
-| The same, with files, diffs, and terminals in a window | Happy Desktop |
+If you use the CLI today and Happy Desktop lacks something you rely on, DM Kirill on X, [@bra1n_dump](https://x.com/bra1n_dump), and tell us what it is.

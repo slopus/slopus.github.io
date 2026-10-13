@@ -449,6 +449,9 @@ await writeRoute('blog', redirectHtml('/vision/'))
 // The WorkOS post was first published at /team-sign-in-workos/; the Blog uses short URLs.
 await writeRoute('team-sign-in-workos', redirectHtml('/workos/'))
 
+// The Remote Control comparison was first published at /vs/claude-code-remote-control/; docs URLs have no prefix.
+await writeRoute('vs/claude-code-remote-control', redirectHtml('/claude-code-remote-control/'))
+
 // The Remote Agents guide became the remote server guide; its URLs, old prefixes included, redirect.
 for (const route of ['guides/remote-agents', 'desktop/docs/guides/remote-agents', 'happy2/docs/guides/remote-agents']) {
   await writeRoute(route, redirectHtml('/guides/remote-server/'))

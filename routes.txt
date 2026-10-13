@@ -5,6 +5,7 @@
 /agents/
 /blog/
 /chief-of-staff/
+/claude-code-remote-control/
 /comparisons/buzz/
 /desktop-app/
 /desktop/

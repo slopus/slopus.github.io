@@ -151,10 +151,10 @@ describe('static document pages', () => {
 
   it('lists the comparison pages in the desktop docs, each linking to its sources', () => {
     const welcome = renderPath('/welcome/')
-    for (const pathname of ['/desktop-app/', '/mobile-app/', '/vs/claude-code-remote-control/']) {
+    for (const pathname of ['/desktop-app/', '/mobile-app/', '/claude-code-remote-control/']) {
       expect(welcome).toContain(`href="${pathname}"`)
     }
-    expect(renderPath('/vs/claude-code-remote-control/')).toContain('href="https://code.claude.com/docs/en/remote-control"')
+    expect(renderPath('/claude-code-remote-control/')).toContain('href="https://code.claude.com/docs/en/remote-control"')
     expect(renderPath('/mobile-app/')).toContain('href="https://code.claude.com/docs/en/remote-control"')
     // Desktop docs links stay top-level; only the original CLI docs resolve under /docs.
     expect(renderPath('/models/')).toContain('href="/guides/configuration/"')
@@ -177,7 +177,7 @@ describe('static document pages', () => {
     expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
     unmount()
 
-    render(<Router pathname="/vs/claude-code-remote-control/" />)
+    render(<Router pathname="/claude-code-remote-control/" />)
     expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/team sign-in with workos/i)
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/claude code on your phone/i)
   })

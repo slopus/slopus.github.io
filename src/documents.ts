@@ -315,10 +315,10 @@ const desktopDocuments: DocumentDefinition[] = [
   {
     path: 'guides/terminal',
     sourcePath: '/content/desktop/guides/terminal.mdx',
-    title: 'Using the Terminal',
-    pageTitle: 'Happy Without the Desktop App: the CLI and Happy Terminal',
-    description: 'Keep Claude Code and Codex in your terminal and reach them from your phone.',
-    cardLine: 'Your agents, without the desktop app',
+    title: 'The Original Happy CLI',
+    pageTitle: 'The Original Happy CLI (Happy Coder) with Happy Desktop — Happy',
+    description: 'The original Happy CLI (happy on npm, formerly happy-coder) still works, and the same phone app reaches it and Happy Desktop. New features ship in Happy Desktop.',
+    cardLine: 'Happy Coder still works, beside Happy Desktop',
     group: 'Guides',
   },
   {
@@ -368,8 +368,9 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Comparisons',
   },
   {
-    path: 'vs/claude-code-remote-control',
-    sourcePath: '/content/desktop/vs/claude-code-remote-control.mdx',
+    // First published at /vs/claude-code-remote-control/, which redirects here.
+    path: 'claude-code-remote-control',
+    sourcePath: '/content/desktop/claude-code-remote-control.mdx',
     title: 'Happy vs Remote Control',
     pageTitle: 'Claude Code Remote Control vs Happy — An Open Source Alternative',
     description: 'Claude Code Remote Control vs Happy for steering coding agents from your phone: models, encryption, sessions, setup, and where each one is better.',

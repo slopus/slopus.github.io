@@ -148,7 +148,7 @@ describe('Happy Desktop landing page', () => {
     unmount()
 
     render(<Router pathname="/desktop/docs/guides/terminal/" />)
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/terminal/i)
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/original happy cli/i)
   })
 })
 
