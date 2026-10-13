@@ -101,3 +101,10 @@ and read the diff before committing; don't edit them in place.
 
 Their advice is generic: `DESIGN.md` wins wherever they disagree. Reports go
 in `.context/`, never in the repo or `dist/`.
+
+`scripts/gsc.sh` reads Search Console: `sitemaps` for when Google last fetched
+the sitemap, `inspect` for each sitemap URL's index status, or any API path. It
+uses no key file; it impersonates the SEO service account with your gcloud
+login, which needs Token Creator on it. The Search Console UI lags the API by
+hours, so check the API before acting on a UI error. Request indexing has no
+API: ask the user to click it, about ten URLs a day.
