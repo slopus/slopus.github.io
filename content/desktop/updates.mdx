@@ -6,9 +6,9 @@ Install a Happy Agent update while an agent is mid-turn, and the turn carries on
 
 The agent's replies in the video are scripted. The update, between two published Happy Agent releases, and the restart are real.
 
-## Why an update usually ends the session
+## Why restarting can interrupt a turn
 
-A coding agent runs inside a long-lived process, and an update replaces that process. In many agent tools that ends whatever was running: the session stops, and you resume it by hand or start the task again. So you put updates off until nothing is running.
+A coding agent runs inside a long-lived process, and an update replaces that process. If unfinished work lives only in memory, restarting loses it. Saving the conversation is only part of recovery: the new process also needs to know what work remains and how to handle a tool call interrupted by the restart.
 
 ## How Happy Agent restarts without losing the turn
 
@@ -31,5 +31,11 @@ In the recording, `node check.mjs` was running when the update began. Happy Agen
 A card in the sidebar names each step: Finishing work, Shutting down, Starting, Reconnecting, then Updated with how long it took. While work is finishing, it lists the agents it is waiting on, and **Restart now** skips the wait. That stops what is still running: a shell command or a file edit is recorded as interrupted and not run again after the restart.
 
 Nothing else on screen changes. The window doesn't reload or show a disconnected screen. While Happy Agent is down, background writes such as draft saves are held and sent once it is back, and the layout doesn't jump.
+
+## How this compares with Pi Durable
+
+[Pi Durable](https://earendil.com/posts/pi-durable/) also persists work and resumes unfinished tasks after a process restart. It is a framework for building agent applications. Its [tool replay policy](https://github.com/earendil-works/pi/blob/main/packages/durable/README.md#tools) reruns an interrupted call only if the tool declares `replay: "safe"`; otherwise the model receives an interrupted result. Completed calls stay saved. It also supports replacing extensions in a running process: started calls finish under the old implementation, and later calls use the new one.
+
+Happy's update flow combines saved turns with a planned process replacement: download the release, drain running steps, restart, and reconnect the open window. The command in the video finishes before the old process exits; the next command starts on the new version. If you choose **Restart now**, interrupted commands aren't automatically replayed.
 
 Install updates when they arrive. Your agents carry on after.
