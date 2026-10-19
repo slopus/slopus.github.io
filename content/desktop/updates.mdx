@@ -4,7 +4,7 @@ Install a Happy Agent update while an agent is mid-turn, and the turn carries on
 
 ![A Happy Agent update in the middle of a turn, 18 seconds, no sound. The agent is running node check.mjs when the update starts. The card in the sidebar says Finishing work, offers Restart now, and names the agent it is waiting for. Once the command finishes, the card goes through Shutting down, Starting and Reconnecting to Updated, took 10s. The same turn then runs node verify.mjs on the new version and ends with Completed in 15s.](/video/updates/update.mp4)
 
-The agent's replies in the video are scripted. The update, between two published Happy Agent releases, and the restart are real.
+The agent's replies in the video are scripted, and the two commands run demo check scripts. The update, between two published Happy Agent releases, and the restart are real.
 
 ## Why restarting can interrupt a turn
 
@@ -22,7 +22,7 @@ An update replaces the Happy Agent process and nothing else. Happy Desktop downl
 
 Draining doesn't keep your agent working through the restart. It lets the current step reach a saved edge: the running tool call finishes and its result is written, and an inference in flight completes. New work waits. Then the old process exits, and the next step runs on the new version.
 
-![The update in the video as a timeline, to scale, 0 to 16 seconds from the start of the turn. The card's steps along the top: Finishing work from 2.2s, Shutting down at 5.9s, Starting from 6s, Reconnecting at 11.7s, Updated at 12.3s. The desktop window is open the whole time. The old Happy Agent runs until 6s; the new one starts then and is ready from 11.7s. The agent's turn runs check.mjs from 0.3s to 5.6s. At the drain boundary, 5.9s, the running step has finished and been saved, and the old process exits. The turn waits, saved, until verify.mjs runs on the new version from 13s, and completes in 15s.](/img/updates-drain.svg)
+![The update in the video as a timeline, to scale, 0 to 16 seconds from the start of the turn. The card's steps along the top: Finishing work from 2.2s, Shutting down at 5.9s, Starting from 6s, Reconnecting at 9.4s, Updated at 12.3s. The desktop window is open the whole time. The old Happy Agent runs until 6s; the new one starts then and is ready from 12.3s. The agent's turn runs check.mjs before the drain boundary at 5.9s: the running step has finished and been saved before the old process exits. The turn waits, saved, until verify.mjs runs on the new version from 13s, and completes in 15s.](/img/updates-drain.svg)
 
 In the recording, `node check.mjs` was running when the update began. Happy Agent waited under four seconds for it to finish, and the new version took about six seconds to start and reconnect. Then the same turn ran `node verify.mjs` and finished once: Completed in 15s.
 

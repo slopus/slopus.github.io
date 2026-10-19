@@ -6,9 +6,11 @@
 #   replaced, and the SQLite database carries the turn across.
 # - public/img/updates-drain.svg: the recorded update as a timeline, to scale. Times are seconds from
 #   the start of the turn, read from the demo's evidence file (happy-desktop,
-#   scripts/demo/demos/resume, take square-take-02): the drain began at 2.2s and ended at 5.85s, the
-#   new process was starting from 5.97s, reconnecting at 11.73s, updated at 12.27s ("Took 10s"); the
-#   second tool call appeared at 12.98s and the turn completed at 15.54s ("Completed in 15s").
+#   scripts/demo/demos/resume, take no-logo-take-02): the drain began at 2.235s and ended at 5.871s,
+#   the new process was starting from 5.993s, reconnecting at 9.407s, updated at 12.293s ("Took 10s");
+#   the second tool call appeared around 13.04s and the turn completed at 15.605s ("Completed in 15s").
+#   Native tool.started/tool.completed events (tool-timings.json) bound check.mjs to 0.307–5.582s
+#   and verify.mjs to 13.059–15.122s, measured from the same turn start.
 import math
 import random
 
@@ -112,10 +114,10 @@ def timeline():
     o = []
     L, R, END = 20, 500, 16.0
     x = lambda s: round(L + (R - L) * s / END, 1)
-    DRAIN, STOP, START, RECONNECT, DONE = 2.2, 5.85, 5.97, 11.73, 12.27
-    TOOL1 = (0.3, 5.6)
-    TOOL2 = (12.98, 15.4)
-    COMPLETED = 15.54
+    DRAIN, STOP, START, RECONNECT, DONE = 2.235, 5.871, 5.993, 9.407, 12.293
+    TOOL1 = (0.307, 5.582)
+    TOOL2 = (13.059, 15.122)
+    COMPLETED = 15.605
 
     # The card's steps, as a segmented bar with the step names stacked above it.
     BAR = 112
@@ -136,8 +138,8 @@ def timeline():
     o.append(text(x(STOP) + 12, 161, "open throughout", 18, INK, 600))
     o.append(bar(0, START, 186, None, MUTED, "6 5"))
     o.append(text(x(0) + 10, 207, "old Happy Agent", 18, MUTED, 600))
-    # One process: starting, then ready from the reconnect on.
-    o.append(f'<path d="M{x(RECONNECT):.1f} 233 L{x(END)-1:.1f} 233 L{x(END)-2:.1f} 261 L{x(RECONNECT):.1f} 261 Z" fill="{MINT}"/>')
+    # Reconnecting begins before the runtime is ready; Updated marks readiness.
+    o.append(f'<path d="M{x(DONE):.1f} 233 L{x(END)-1:.1f} 233 L{x(END)-2:.1f} 261 L{x(DONE):.1f} 261 Z" fill="{MINT}"/>')
     o.append(bar(START, END, 232, None))
     o.append(text(x(START) + 10, 253, "new Happy Agent", 18, INK, 600))
 
