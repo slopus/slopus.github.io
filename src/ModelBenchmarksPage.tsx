@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP } from './products'
-import { absoluteDate, benchmarkCatalog, publicationAge, selectSources, TIERS, type BenchmarkCatalog } from './modelBenchmarks'
+import { absoluteDate, benchmarkCatalog, leaderOf, publicationAge, selectSources, shortDate, TIERS, type BenchmarkCatalog } from './modelBenchmarks'
 import { XPostEmbed } from './XPostEmbed'
 import './model-benchmarks.css'
 
@@ -10,6 +10,8 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
   const [dismissedNotes, setDismissedNotes] = useState<string>()
   const [now] = useState(() => Date.now())
   const sources = selectSources(catalog, selected)
+  const leader = leaderOf(catalog)
+  const leadCheck = leader?.leadCheck
 
   function toggleModel(id: string) {
     setSelected(previous => {
@@ -45,9 +47,15 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
                 </button>
                 <div className="benchmark-tooltip" role="tooltip" id={`notes-${model.id.replaceAll('/', '-')}`}>
                   <strong>{model.name}</strong>
-                  <ul>{model.points.map((point, index) => <li key={point} className={index === model.points.length - 1 ? 'benchmark-note-caveat' : undefined}>{point}</li>)}</ul>
+                  <ul>
+                    {model.leadCheck ? <li className="benchmark-note-lead">{model.leadCheck.note}</li> : null}
+                    {model.points.map((point, index) => <li key={point} className={index === model.points.length - 1 ? 'benchmark-note-caveat' : undefined}>{point}</li>)}
+                  </ul>
                 </div>
-              </div>)}</div> : <span className="benchmark-empty-tier">—</span>}</td>
+              </div>)}</div> : <span className="benchmark-empty-tier">—</span>}
+              {leader && leadCheck && leader.tier === tier ? <p className="benchmark-lead-check">
+                {leader.name} still #1 · rechecked vs {leadCheck.heldAgainst.map(id => catalog.models.find(model => model.id === id)?.name ?? id).join(' and ')}, <time dateTime={leadCheck.reconfirmedAt}>{shortDate(leadCheck.reconfirmedAt)}</time>
+              </p> : null}</td>
             </tr>
           })}</tbody>
         </table>

@@ -1,15 +1,22 @@
 {
   "schemaVersion": 1,
-  "revision": "2026-09-23.1",
-  "updatedAt": "2026-09-23T11:15:00Z",
-  "evidenceCutoff": "2026-09-23T11:06:00Z",
-  "reviewNote": "Our current take for everyday agentic coding. Same-tier order is editorial, not a measured quality gap. Luna coverage is still too narrow to rank; empty tiers are intentional.",
+  "revision": "2026-10-20.1",
+  "updatedAt": "2026-10-20T21:40:00Z",
+  "evidenceCutoff": "2026-10-20T21:25:00Z",
+  "reviewNote": "Our current take for everyday agentic coding. Same-tier order is editorial, not a measured quality gap. Luna and Haiku coverage is still too narrow to rank; empty tiers are intentional.",
   "models": [
     {
       "id": "anthropic/opus-5-5", "name": "Opus 5.5", "tier": "S",
-      "points": ["Strong coding and knowledge-work results.", "97% on Rauch’s Next.js eval.", "New release; effort and fallbacks matter."],
-      "sourceIds": ["2102435517165912464", "2102438210798514391", "2102519097770885231"],
-      "rationale": "S for converging provider, independent benchmark, and framework-specific coding evidence. Placed first provisionally for breadth, not a universal win over Astra; rollout evidence is still fresh."
+      "points": ["Most accurate in Rails’ Stage 3 agent tasks.", "Sonnet 5.5 edges it on AA’s coding index."],
+      "sourceIds": ["2102435517165912464", "2105814318294114720", "2102519097770885231", "2110054366707093578"],
+      "rationale": "S and first for the broadest converging evidence: Anthropic’s coding rows, AA’s Coding Agent Index, Rauch’s Next.js eval, and the most accurate result in Rails’ Stage 3. First is not a universal win; Sonnet 5.5 edges it on AA’s index and Terminal-Bench, and effort and fallbacks matter.",
+      "leadCheck": {
+        "reconfirmedAt": "2026-10-20",
+        "heldAgainst": ["openai/gpt-6.1-sol", "anthropic/sonnet-5-5"],
+        "sourceIds": ["2105814318294114720", "2110054366707093578"],
+        "note": "Still #1 after GPT-6.1 Sol and Sonnet 5.5 launched.",
+        "reason": "GPT-6.1 Sol trails Opus 5.5 on AA’s Coding Agent Index (63 at xhigh vs 66 at max), in Rails’ Stage 3 (60.8% vs 65.3%, both xhigh), and in Agent Arena (#5 vs #2); it leads only in Theo’s own Terminal-Bench run in Codex. Sonnet 5.5 leads AA’s Coding Agent Index (68 vs 66) and Terminal-Bench 4.0 (AA 64% vs 60%; Anthropic 70.6% vs 66.4%), but trails in Anthropic’s FrontierCode 1.1 and CursorBench 4.0 rows, Agent Arena (#3 vs #2), AA’s Intelligence Index (56 vs 58), and Epoch’s ECI, at the highest cost per task on AA’s coding index. Neither challenge converges, so the leader holds."
+      }
     },
     {
       "id": "openai/gpt-6-astra", "name": "GPT-6 Astra", "tier": "S",
@@ -22,6 +29,18 @@
       "points": ["Theo’s pick for consistent instruction following.", "97% on Rauch’s Next.js eval.", "Behind Opus 5.5 in Anthropic’s newer chart."],
       "sourceIds": ["2102435517165912464", "2097192907023458473", "2102519097770885231", "2094851231487541376"],
       "rationale": "S for the combination of strong scoped coding results and a credible evaluator’s everyday-use preference. Its placement is not inferred from Fable 5 or a vendor chart alone."
+    },
+    {
+      "id": "anthropic/sonnet-5-5", "name": "Sonnet 5.5", "tier": "S",
+      "points": ["Tops AA’s coding agent index at 68.", "#3 in Agent Arena, behind Opus 5.5.", "Heaviest token use AA has measured."],
+      "sourceIds": ["2104633119412523294", "2104640155843989864", "2105814318294114720", "2106109027923140928"],
+      "rationale": "S for converging exact-version coding results: first on AA’s Coding Agent Index, Terminal-Bench leads in both Anthropic’s and AA’s runs, and #3 in Agent Arena. Placed after the tier’s incumbents because it trails Opus 5.5 in Anthropic’s other coding rows, Agent Arena and AA’s Intelligence Index, and costs the most per task on AA’s coding index."
+    },
+    {
+      "id": "openai/gpt-6.1-sol", "name": "GPT-6.1 Sol", "tier": "S",
+      "points": ["AA coding index: 63, level with GPT-6 Astra.", "Rails’ best overall pick: 60.8% at $0.80 a run.", "Behind Opus 5.5 on AA’s index and Rails."],
+      "sourceIds": ["2104986133004505373", "2105814318294114720", "2110054366707093578", "2105063015712465094"],
+      "rationale": "S for converging Astra-level coding evidence: AA’s Coding Agent Index (63 vs Astra’s 62), Rails’ Stage 3 (60.8% vs 62.3%), OpenAI’s DeepSWE chart, and Theo’s own Terminal-Bench run. Placed last in S because Opus 5.5 and Sonnet 5.5 lead it in the same independent tests. Its much lower cost does not set the tier."
     },
     {
       "id": "anthropic/opus-5", "name": "Opus 5", "tier": "A",
@@ -64,6 +83,12 @@
       "points": ["AA coding index: 43 at max effort.", "Ahead of GPT-6 Luna on that index.", "One independent source is too thin to rank."],
       "sourceIds": ["2102462962758033624"],
       "rationale": "Unranked: exact-version evidence currently comes from a single predecessor comparison. This is insufficient coverage, not a D-tier judgment."
+    },
+    {
+      "id": "anthropic/haiku-5-5", "name": "Haiku 5.5", "tier": "Unranked",
+      "points": ["AA Terminal-Bench 4.0: 33%, up from 0%.", "Ahead of GPT-6 Luna in AA’s and Anthropic’s tests.", "Too little coding evidence to rank."],
+      "sourceIds": ["2107894042235166750", "2107911905822351609"],
+      "rationale": "Unranked: a provider chart and one independent evaluation, neither a coding-agent comparison with ranked models. Built for subagent and high-volume work; this is insufficient coverage, not a D-tier judgment."
     }
   ],
   "sources": [
@@ -78,11 +103,31 @@
       "verification": { "method": "X oEmbed, original post, and direct visual review of the attached chart", "text": "Exact labels, percentages, effort notes, error bars and safeguard footnotes inspected in media HS1ZEbkXAAABmav. Publication timestamp verified on the original X page." }
     },
     {
+      "id": "2105814318294114720", "url": "https://x.com/ArtificialAnlys/status/2105814318294114720", "author": "Artificial Analysis", "handle": "ArtificialAnlys",
+      "publishedAt": "2026-10-02T00:17:12Z", "verifiedAt": "2026-10-20T21:25:00Z", "kind": "independent",
+      "summary": "AA’s Coding Agent Index v1.5: Sonnet 5.5 (max, Claude Code) 68, Opus 5.5 (max, Claude Code) 66, GPT-6.1 Sol (xhigh, Codex) 63, Fable 5.1 (max, with fallback) 62, GPT-6 Astra (max, Codex) 62, Grok 4.7 (xhigh, Grok Build) 56. Sonnet 5.5 has the highest measured cost per task ($14.19); GPT-6.1 Sol costs $1.04.",
+      "caveat": "Agents are model plus harness, so harness differences are part of each score. Effort differs across entries (Sol xhigh, Astra and the Claude models max). A two-point gap is small. Separate from AA’s Intelligence Index.",
+      "modelIds": ["anthropic/opus-5-5", "anthropic/sonnet-5-5", "openai/gpt-6.1-sol"],
+      "comparisonModelIds": ["anthropic/opus-5-5", "anthropic/sonnet-5-5", "openai/gpt-6.1-sol"],
+      "scope": { "task": "AA Coding Agent Index v1.5: DeepSWE v1.1, Terminal-Bench 4.0 and SWE-Atlas-QnA", "harness": "Each lab’s agent: Claude Code, Codex, Grok Build", "effort": "Sonnet 5.5, Opus 5.5 and Astra max; GPT-6.1 Sol xhigh" },
+      "verification": { "method": "X oEmbed, full post text, and direct visual review of the attached chart", "text": "Bar labels, harnesses, efforts and scores transcribed from media HTlak1bbkAI3fIq; the 68/$14.19 and 63/$1.04 figures also appear in the full post text. Publication time from the post ID." }
+    },
+    {
+      "id": "2110054366707093578", "url": "https://x.com/rails/status/2110054366707093578", "author": "Ruby on Rails", "handle": "rails",
+      "publishedAt": "2026-10-13T17:05:38Z", "verifiedAt": "2026-10-20T21:25:00Z", "kind": "independent",
+      "summary": "Agents on Rails Stage 3 (7 multi-step tasks of 3–8 tickets, new apps and legacy codebases): Opus 5.5 is most accurate at 65.3% ($10.53, 54m a run); GPT-6 Astra 62.3%; GPT-6.1 Sol 60.8% at $0.80, named best overall for accuracy, speed and cost; Grok 4.7 50.8%; GPT-6 Luna 43.5%.",
+      "caveat": "Rails-specific. The post text says Opus 5.5 ran at max effort while the attached chart labels it xhigh; Astra and Sol are xhigh and Grok 4.7 high. Sonnet 5.5 was not tested. Cost and speed are context, not tier weights.",
+      "modelIds": ["anthropic/opus-5-5", "openai/gpt-6.1-sol"],
+      "comparisonModelIds": ["anthropic/opus-5-5", "openai/gpt-6.1-sol"],
+      "scope": { "task": "Agents on Rails Stage 3: multi-step Rails app building and legacy maintenance", "harness": "Evil Martians’ Stage 3 runner; see the linked report", "effort": "Opus 5.5 xhigh per chart (max per post text) and medium; Astra xhigh and medium; GPT-6.1 Sol xhigh" },
+      "verification": { "method": "X oEmbed, full post text, and direct visual review of the attached chart", "text": "Scores, effort labels, cost and time per run transcribed from media HUhn7UbWgAANxnm and matched to the post’s highlights. The effort mismatch for Opus 5.5 is recorded, not resolved. Publication time from the post ID." }
+    },
+    {
       "id": "2102438210798514391", "url": "https://x.com/ArtificialAnlys/status/2102438210798514391", "author": "Artificial Analysis", "handle": "ArtificialAnlys",
       "publishedAt": "2026-09-22T16:41:45Z", "verifiedAt": "2026-09-23T11:06:05Z", "kind": "independent",
       "summary": "AA reports Opus 5.5 at 58 on its Intelligence Index, with 59.6% on Terminal-Bench 4.0—level with GPT-6 Astra (xhigh). Its report highlights broad knowledge-work gains and substantially higher output-token use than Astra.",
       "caveat": "Intelligence Index is not the Coding Agent Index. Effort differs across the comparisons; AA reports Anthropic’s default fallback enabled. These results do not establish identical behavior in every coding harness.",
-      "modelIds": ["anthropic/opus-5-5", "openai/gpt-6-astra"], "comparisonModelIds": ["anthropic/opus-5-5", "openai/gpt-6-astra"],
+      "modelIds": ["openai/gpt-6-astra"], "comparisonModelIds": [],
       "scope": { "task": "AA Intelligence Index, Terminal-Bench 4.0, and knowledge-work evaluations", "harness": "AA evaluation suite; Stirrup explicitly named for AA-Briefcase", "effort": "Opus 5.5 max; Astra xhigh for terminal comparison, max for token-use comparison" },
       "verification": { "method": "X oEmbed and full original X post", "text": "Read beyond the truncated embed. The 58 index score, 59.6% terminal score, exact Astra effort, and default-fallback qualification appear in the full post." }
     },
@@ -106,7 +151,7 @@
     },
     {
       "id": "2102519097770885231", "url": "https://x.com/rauchg/status/2102519097770885231", "author": "Guillermo Rauch", "handle": "rauchg",
-      "publishedAt": "2026-09-22T21:52:02Z", "verifiedAt": "2026-09-23T11:06:05Z", "kind": "independent",
+      "publishedAt": "2026-09-22T22:03:10Z", "verifiedAt": "2026-09-23T11:06:05Z", "kind": "independent",
       "summary": "Rauch reports fresh Next.js evals: Opus 5.5, GPT-6 Sol, and Fable 5.1 each reach 97%; Grok 4.7 reaches 94%.",
       "caveat": "Framework-specific evaluation reported by Vercel’s CEO, not a general coding ranking. Effort is unspecified and the leading scores are close to the ceiling. His cost observation is separate from task quality.",
       "modelIds": ["anthropic/opus-5-5", "openai/gpt-6-sol", "anthropic/fable-5-1", "xai/grok-4.7"],
@@ -152,7 +197,52 @@
       "verification": { "method": "X oEmbed and original X post", "text": "ECI 159 and SWE-ECI 161, exact Opus 5 name, comparator version, and publication timestamp verified." }
     },
     {
-      "id": "2102069815225586149", "url": "https://x.com/SpaceXAI/status/2102069815225586149", "author": "SpaceXAI", "handle": "SpaceXAI",
+      "id": "2104633119412523294", "url": "https://x.com/claudeai/status/2104633119412523294", "author": "Claude", "handle": "claudeai",
+      "publishedAt": "2026-09-28T18:03:32Z", "verifiedAt": "2026-10-20T21:25:00Z", "kind": "provider-reported",
+      "summary": "Anthropic’s Sonnet 5.5 table: Terminal-Bench 4.0 70.6% vs Opus 5.5’s 66.4% (xhigh); FrontierCode 1.1 52.1% at xhigh (46.2% at max) vs Opus 5.5’s 54.4%; CursorBench 4.0 55.5% vs 57.8%. The post calls Sonnet 5.5 a faster, lower-cost complement to Opus 5.5.",
+      "caveat": "Provider table. Sonnet 5.5 scores lower at max than xhigh on FrontierCode. Its AA knowledge-work figures came from a pre-release deployment with a structured-output bug. Terminal-Bench is the only coding row where it beats Opus 5.5.",
+      "modelIds": ["anthropic/sonnet-5-5"], "comparisonModelIds": [],
+      "scope": { "task": "Terminal-Bench 4.0, FrontierCode 1.1, CursorBench 4.0 and non-coding rows", "harness": "Anthropic evaluation; see the Sonnet 5.5 system card", "effort": "Mostly unstated; FrontierCode shown at max and xhigh; Opus 5.5 Terminal-Bench at xhigh" },
+      "verification": { "method": "X oEmbed, original thread, and direct visual review of the attached table", "text": "Every row, footnote and effort qualifier transcribed from media HTUlY04XkAAMqSy. Second post of the @claudeai launch thread; publication time from the post ID." }
+    },
+    {
+      "id": "2104640155843989864", "url": "https://x.com/ArtificialAnlys/status/2104640155843989864", "author": "Artificial Analysis", "handle": "ArtificialAnlys",
+      "publishedAt": "2026-09-28T18:31:30Z", "verifiedAt": "2026-10-20T21:25:00Z", "kind": "independent",
+      "summary": "AA scores Sonnet 5.5 (max) 56 on its Intelligence Index, two behind Opus 5.5 (max), with 64% on Terminal-Bench 4.0 against 60% for Opus 5.5 and GPT-6 Astra. It uses ~193k output tokens per task, the most AA has measured.",
+      "caveat": "Intelligence Index, not the Coding Agent Index. Run on a pre-release deployment with a structured-output bug that Anthropic says may slightly understate results. Fallback enabled.",
+      "modelIds": ["anthropic/sonnet-5-5"], "comparisonModelIds": [],
+      "scope": { "task": "AA Intelligence Index v4.3.2, Terminal-Bench 4.0, knowledge work", "harness": "AA evaluation suite", "effort": "All five efforts; headline figures at max with Anthropic’s default fallback" },
+      "verification": { "method": "X oEmbed and full original post text", "text": "Read beyond the truncated embed; 56 vs 58, 64% vs 60%, ~193k tokens and the pre-release bug note verified in text and against the attached chart. Publication time from the post ID." }
+    },
+    {
+      "id": "2106109027923140928", "url": "https://x.com/arena/status/2106109027923140928", "author": "Arena.ai", "handle": "arena",
+      "publishedAt": "2026-10-02T19:48:16Z", "verifiedAt": "2026-10-20T21:25:00Z", "kind": "independent",
+      "summary": "Agent Arena after GPT-6.1 Sol’s debut: Fable 5.1 (Max) #1 +14.3%, Opus 5.5 (High) #2 +13.8%, Sonnet 5.5 (Max) #3 +12.5%, GPT-6 Astra (Max) #4 +12.3%, GPT-6.1 Sol (Max) #5 +11.2%.",
+      "caveat": "Net improvement against a baseline with overlapping confidence intervals across the top five; a close ranking, not a decisive gap. Efforts differ by model. Cost per task is context only.",
+      "modelIds": ["anthropic/sonnet-5-5"], "comparisonModelIds": [],
+      "scope": { "task": "Agent Arena leaderboard", "harness": "Arena’s agent evaluation; see arena.ai/leaderboard/agent", "effort": "As labeled: Fable 5.1 Max, Opus 5.5 High, Sonnet 5.5 Max, Astra Max, GPT-6.1 Sol Max" },
+      "verification": { "method": "X oEmbed, full post text, and direct visual review of the attached chart", "text": "Ranks, effort labels and percentages transcribed from media HTplehXagAEeLl1 and matched to the post’s relative-cost bullets. Publication time from the post ID." }
+    },
+    {
+      "id": "2104986133004505373", "url": "https://x.com/OpenAI/status/2104986133004505373", "author": "OpenAI", "handle": "OpenAI",
+      "publishedAt": "2026-09-29T17:26:17Z", "verifiedAt": "2026-10-20T21:25:00Z", "kind": "provider-reported",
+      "summary": "OpenAI says GPT-6.1 Sol is a significant upgrade over GPT-6 Sol across coding, computer use and professional work, approaching GPT-6 Astra. Its DeepSWE chart puts GPT-6.1 Sol’s best point at about 75%, level with Astra’s best and above GPT-6 Sol’s, at a fraction of Astra’s cost per task.",
+      "caveat": "Provider charts without labeled values or stated harness; scores are read off the plot. The GDP.pdf chart is knowledge work, not coding.",
+      "modelIds": ["openai/gpt-6.1-sol"], "comparisonModelIds": [],
+      "scope": { "task": "DeepSWE, GDP.pdf and OSWorld 2.0 offline set", "harness": "Not specified", "effort": "Effort sweep per model; levels not labeled" },
+      "verification": { "method": "X oEmbed, original thread, and direct visual review of the three attached charts", "text": "Post text verified; DeepSWE values described as approximate plot readings from media HTZooXnbcAA409G, not exact figures. Publication time from the post ID." }
+    },
+    {
+      "id": "2105063015712465094", "url": "https://x.com/theo/status/2105063015712465094", "author": "Theo — t3.gg", "handle": "theo",
+      "publishedAt": "2026-09-29T22:31:47Z", "verifiedAt": "2026-10-20T21:25:00Z", "kind": "independent",
+      "summary": "Theo’s updated Terminal-Bench 4.0 run (63 CPU tasks) in Codex: GPT-6.1 Sol’s best point sits above Opus 5.5, GPT-6 Astra and Fable 5.1 at a far lower cost per task. He says it performs much better in Codex than in the mini-swe harness AA uses.",
+      "caveat": "Self-run subset with unlabeled plot values. AA’s Coding Agent Index also runs GPT-6.1 Sol in Codex and still places it below Opus 5.5. Sonnet 5.5 is not shown.",
+      "modelIds": ["openai/gpt-6.1-sol"], "comparisonModelIds": [],
+      "scope": { "task": "Terminal-Bench 4.0, 63 CPU tasks", "harness": "Codex for GPT-6.1 Sol; others not stated", "effort": "Effort sweep; levels not labeled" },
+      "verification": { "method": "X oEmbed, full post text, and direct visual review of the attached chart", "text": "Model labels and relative positions read from media HTavp4Wa4AANFTD; no exact scores inferred. The quoted post’s ‘better than Opus 5.5 for ~1/30th of the price’ claim verified. Publication time from the post ID." }
+    },
+    {
+      "id": "2102069815225586149", "url": "https://x.com/SpaceXSI/status/2102069815225586149", "author": "SpaceX Super Intelligence", "handle": "SpaceXSI",
       "publishedAt": "2026-09-21T16:17:53Z", "verifiedAt": "2026-09-23T11:06:09Z", "kind": "provider-reported",
       "summary": "The Grok 4.7 launch chart reports CursorBench 4.0 at 46.3% versus Grok 4.6’s 40.4%, and Terminal-Bench 4.0 at 38.0% versus 20.3%.",
       "caveat": "Important mismatch: the chart compares Grok 4.7 xhigh with Grok 4.6 high. Its DeepSWE 4.7 result has a separate high-effort footnote. Prefer AA’s matched-xhigh coding comparison when assessing the generation change.",
@@ -177,6 +267,24 @@
       "modelIds": ["xai/grok-4.7", "xai/grok-4.6"], "comparisonModelIds": ["xai/grok-4.7", "xai/grok-4.6"],
       "scope": { "task": "Real-world engineering, frontend and 3D generation", "harness": "Not specified", "effort": "Not specified" },
       "verification": { "method": "X oEmbed and full original X post", "text": "Read the full original beyond the truncated embed; exact versions, frontend/3D complaints, looping behavior, and positive engineering qualification verified." }
+    },
+    {
+      "id": "2107894042235166750", "url": "https://x.com/claudeai/status/2107894042235166750", "author": "Claude", "handle": "claudeai",
+      "publishedAt": "2026-10-07T18:01:17Z", "verifiedAt": "2026-10-20T21:25:00Z", "kind": "provider-reported",
+      "summary": "Anthropic’s Haiku 5.5 table: Terminal-Bench 4.0 39.2% (Haiku 4.5 0.0%, GPT-6 Luna 16.4%), FrontierCode 1.1 46.4% (Luna 42.4%), OSWorld 2.1 offline 72.4% (Luna 48.9%), with Sonnet 5.5 for reference.",
+      "caveat": "Provider table; effort settings not shown. Compares against small models only.",
+      "modelIds": ["anthropic/haiku-5-5"], "comparisonModelIds": [],
+      "scope": { "task": "Terminal-Bench 4.0, FrontierCode 1.1, OSWorld 2.1 and knowledge-work rows", "harness": "Anthropic evaluation; see the Haiku 5.5 system card", "effort": "Not specified" },
+      "verification": { "method": "X oEmbed, original thread, and direct visual review of the attached table", "text": "Rows transcribed from media HUC6-r6XoAAonZ5. Second post of the @claudeai launch thread; publication time from the post ID." }
+    },
+    {
+      "id": "2107911905822351609", "url": "https://x.com/ArtificialAnlys/status/2107911905822351609", "author": "Artificial Analysis", "handle": "ArtificialAnlys",
+      "publishedAt": "2026-10-07T19:12:16Z", "verifiedAt": "2026-10-20T21:25:00Z", "kind": "independent",
+      "summary": "AA scores Haiku 5.5 (max) 43 on its Intelligence Index, ahead of GPT-6 Luna (38), and 33% on Terminal-Bench 4.0 against Luna’s 13%. It uses ~162k output tokens per task at max, about 3x Luna.",
+      "caveat": "Intelligence Index, not a coding-agent comparison. AutomationBench was understated by a pre-release over-refusal issue; cost figures exclude the tiered price above 100k tokens.",
+      "modelIds": ["anthropic/haiku-5-5"], "comparisonModelIds": [],
+      "scope": { "task": "AA Intelligence Index and Terminal-Bench 4.0", "harness": "AA evaluation suite", "effort": "max for headline figures; high also reported" },
+      "verification": { "method": "X oEmbed and full original post text", "text": "Read beyond the truncated embed; 43 vs 38, 33% vs 13%, token use and caveats verified in text. Publication time from the post ID." }
     }
   ]
 }

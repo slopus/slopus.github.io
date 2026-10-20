@@ -3,6 +3,20 @@ import rawCatalog from './model-benchmarks.json'
 export const TIERS = ['S', 'A', 'B', 'C', 'D', 'Unranked'] as const
 export type Tier = typeof TIERS[number]
 
+/** The leader's record that it was rechecked against challengers and kept the top spot. */
+export interface LeadCheck {
+  /** UTC date (YYYY-MM-DD) of the review that kept the leader first. */
+  reconfirmedAt: string
+  /** Exact IDs of challengers that tried for the top spot; each is ranked on this page. */
+  heldAgainst: string[]
+  /** Head-to-head posts from the leader's own sources that cover every challenger. */
+  sourceIds: string[]
+  /** One terse hover bullet. */
+  note: string
+  /** Provenance only, not rendered: the evidence on both sides. */
+  reason: string
+}
+
 export interface RankedModel {
   id: string
   name: string
@@ -10,6 +24,7 @@ export interface RankedModel {
   points: string[]
   sourceIds: string[]
   rationale: string
+  leadCheck?: LeadCheck
 }
 
 export interface BenchmarkSource {
@@ -48,6 +63,18 @@ export function selectSources(catalog: BenchmarkCatalog, selected: ReadonlySet<s
     .flatMap(model => model.sourceIds))
 
   return catalog.sources.filter(source => selectedSourceIds.has(source.id))
+}
+
+/** The first model of the highest non-empty tier. */
+export function leaderOf(catalog: BenchmarkCatalog) {
+  for (const tier of TIERS.filter(tier => tier !== 'Unranked')) {
+    const leader = catalog.models.find(model => model.tier === tier)
+    if (leader) return leader
+  }
+}
+
+export function shortDate(isoDate: string) {
+  return new Date(isoDate).toLocaleDateString('en', { month: 'short', day: 'numeric', timeZone: 'UTC' })
 }
 
 export function publicationAge(publishedAt: string, now = Date.now()) {

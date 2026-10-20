@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import ModelBenchmarksPage from './ModelBenchmarksPage'
-import { absoluteDate, benchmarkCatalog, publicationAge, selectSources, TIERS, type BenchmarkCatalog, type BenchmarkSource } from './modelBenchmarks'
+import { absoluteDate, benchmarkCatalog, leaderOf, publicationAge, selectSources, TIERS, type BenchmarkCatalog, type BenchmarkSource } from './modelBenchmarks'
 import { Router } from './Router'
 import { modelBenchmarksMetadata } from './siteMetadata'
 
@@ -14,7 +14,8 @@ const source = (id: string, modelIds: string[], comparisonModelIds: string[] = [
 const fixture: BenchmarkCatalog = {
   schemaVersion: 1, revision: 'test.1', updatedAt: '2026-09-23T10:00:00Z', evidenceCutoff: '2026-09-23T10:00:00Z', reviewNote: 'Reviewed fixture.',
   models: [
-    { id: 'test/alpha', name: 'Alpha', tier: 'S', points: ['Strong on coding.', 'Limited evidence elsewhere.'], sourceIds: ['100', '200'], rationale: 'Fixture.' },
+    { id: 'test/alpha', name: 'Alpha', tier: 'S', points: ['Strong on coding.', 'Limited evidence elsewhere.'], sourceIds: ['100', '200'], rationale: 'Fixture.',
+      leadCheck: { reconfirmedAt: '2026-09-23', heldAgainst: ['test/beta'], sourceIds: ['100'], note: 'Still #1 after Beta launched.', reason: 'Fixture head-to-head.' } },
     { id: 'test/beta', name: 'Beta', tier: 'A', points: ['Useful for small tasks.', 'Effort matters.'], sourceIds: ['100', '300'], rationale: 'Fixture.' },
     { id: 'test/gamma', name: 'Gamma', tier: 'Unranked', points: ['No reviewed source.', 'Not a negative judgment.'], sourceIds: [], rationale: 'Insufficient evidence.' },
   ],
@@ -27,17 +28,17 @@ beforeEach(() => { window.twttr = { widgets: { createTweet: vi.fn().mockResolved
 afterEach(() => { cleanup(); delete window.twttr; vi.restoreAllMocks() })
 
 describe('reviewed catalog integrity', () => {
-  it('has ten unique exact models and at most four reviewed posts each', () => {
+  it('has thirteen unique exact models and at most four reviewed posts each', () => {
     expect(benchmarkCatalog.schemaVersion).toBe(1)
-    expect(benchmarkCatalog.models).toHaveLength(10)
-    expect(new Set(benchmarkCatalog.models.map(model => model.id)).size).toBe(10)
+    expect(benchmarkCatalog.models).toHaveLength(13)
+    expect(new Set(benchmarkCatalog.models.map(model => model.id)).size).toBe(13)
     for (const model of benchmarkCatalog.models) {
       expect(model.id).toMatch(/^(openai|anthropic|xai)\/[a-z0-9.-]+$/)
       expect(TIERS).toContain(model.tier)
       expect(model.sourceIds.length).toBeLessThanOrEqual(4)
       expect(new Set(model.sourceIds).size).toBe(model.sourceIds.length)
       expect(model.points.length).toBeGreaterThanOrEqual(2)
-      expect(model.points.length).toBeLessThanOrEqual(3)
+      expect(model.points.length + (model.leadCheck ? 1 : 0)).toBeLessThanOrEqual(3)
       expect(model.rationale.length).toBeGreaterThan(15)
       if (model.tier !== 'Unranked') expect(model.sourceIds.length).toBeGreaterThan(0)
       for (const id of model.sourceIds) expect(benchmarkCatalog.sources.find(entry => entry.id === id)?.modelIds).toContain(model.id)
@@ -59,6 +60,35 @@ describe('reviewed catalog integrity', () => {
       for (const id of entry.modelIds) expect(benchmarkCatalog.models.find(model => model.id === id)?.sourceIds).toContain(entry.id)
       for (const id of entry.comparisonModelIds) expect(entry.modelIds).toContain(id)
     }
+  })
+  it('keeps a lead check only on the leader, dated, against ranked challengers its own head-to-heads cover', () => {
+    const leader = leaderOf(benchmarkCatalog)!
+    for (const model of benchmarkCatalog.models) if (model !== leader) expect(model.leadCheck).toBeUndefined()
+    const check = leader.leadCheck
+    if (!check) return
+    expect(check.reconfirmedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+    const reconfirmed = Date.parse(`${check.reconfirmedAt}T23:59:59Z`)
+    expect(reconfirmed).toBeLessThanOrEqual(Date.now() + 86_400_000)
+    expect(Date.parse(check.reconfirmedAt)).toBeLessThanOrEqual(Date.parse(benchmarkCatalog.updatedAt))
+    expect(check.note.length).toBeGreaterThan(10)
+    expect(check.reason.length).toBeGreaterThan(40)
+    expect(check.heldAgainst.length).toBeGreaterThan(0)
+    expect(new Set(check.heldAgainst).size).toBe(check.heldAgainst.length)
+    expect(check.heldAgainst).not.toContain(leader.id)
+    for (const id of check.heldAgainst) {
+      expect(id).toMatch(/^(openai|anthropic|xai)\/[a-z0-9.-]+$/)
+      expect(benchmarkCatalog.models.find(model => model.id === id)?.tier).not.toBe('Unranked')
+    }
+    expect(check.sourceIds.length).toBeGreaterThan(0)
+    const covered = new Set<string>()
+    for (const id of check.sourceIds) {
+      expect(leader.sourceIds).toContain(id)
+      const entry = benchmarkCatalog.sources.find(source => source.id === id)!
+      expect(entry.comparisonModelIds).toContain(leader.id)
+      expect(Date.parse(entry.publishedAt)).toBeLessThanOrEqual(reconfirmed)
+      for (const challenger of entry.comparisonModelIds) covered.add(challenger)
+    }
+    for (const id of check.heldAgainst) expect(covered).toContain(id)
   })
 })
 
@@ -142,6 +172,20 @@ describe('model benchmarks page', () => {
     expect(screen.getByRole('status').className).toBe('benchmark-sr-only')
     expect(screen.queryByText('Alpha', { selector: 'article *' })).toBeNull()
     expect(screen.getByRole('link', { name: /pipeline/ }).getAttribute('href')).toContain('model-benchmarks-refresh')
+  })
+  it('shows the leader’s lead check as one line and a first hover bullet', () => {
+    render(<ModelBenchmarksPage catalog={fixture} />)
+    const line = screen.getByText(/Alpha still #1/)
+    expect(line.textContent).toBe('Alpha still #1 · rechecked vs Beta, Sep 23')
+    expect(line.closest('tr')?.className).toContain('benchmark-tier-s')
+    const notes = document.getElementById(screen.getByRole('button', { name: 'Alpha' }).getAttribute('aria-describedby')!)!
+    expect(notes.querySelector('li')?.textContent).toBe('Still #1 after Beta launched.')
+    expect(notes.querySelectorAll('li')).toHaveLength(3)
+    expect(screen.getAllByText(/still #1/)).toHaveLength(1)
+  })
+  it('shows no lead line when the leader has no lead check', () => {
+    render(<ModelBenchmarksPage catalog={{ ...fixture, models: fixture.models.map(({ leadCheck: _leadCheck, ...model }) => model) }} />)
+    expect(screen.queryByText(/still #1/)).toBeNull()
   })
   it('explains no matches without adding filler sources', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)

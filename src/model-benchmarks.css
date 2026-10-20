@@ -33,6 +33,7 @@
 .benchmark-tooltip ul { margin: .55rem 0 0; padding-left: 1rem; }
 .benchmark-tooltip li + li { margin-top: .35rem; }
 .benchmark-tooltip .benchmark-note-caveat { color: #e9d8a9; }
+.benchmark-lead-check { margin: .45rem 0 0; color: #557068; font: .64rem/1.4 'DM Mono', monospace; }
 .benchmark-empty-tier { color: #718077; font-size: .8rem; }
 .benchmark-evidence { margin-top: 1.25rem; scroll-margin-top: 105px; }
 .benchmark-filters { display: flex; align-items: center; justify-content: flex-end; max-width: 600px; margin: 0 auto 1.2rem; min-height: 30px; }
