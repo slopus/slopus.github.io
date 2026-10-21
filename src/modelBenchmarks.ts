@@ -1,7 +1,18 @@
 import rawCatalog from './model-benchmarks.json'
 
-export const TIERS = ['S', 'A', 'B', 'C', 'D', 'Unranked'] as const
+export const TIERS = ['S', 'A', 'B', 'F'] as const
 export type Tier = typeof TIERS[number]
+
+/** S splits into two lanes: the most capable models, and the best value for routine work. */
+export const LANES = ['frontier', 'chores'] as const
+export type Lane = typeof LANES[number]
+
+/** Labs whose latest releases every refresh checks; each appears as a shown or not-shown model. */
+export const MAJOR_LABS = ['anthropic', 'openai', 'google', 'xai', 'meta', 'deepseek'] as const
+
+/** At most this many models are shown; S holds at most three across both lanes. */
+export const MAX_SHOWN_MODELS = 7
+export const MAX_S_MODELS = 3
 
 /** The leader's record that it was rechecked against challengers and kept the top spot. */
 export interface LeadCheck {
@@ -21,10 +32,22 @@ export interface RankedModel {
   id: string
   name: string
   tier: Tier
+  /** Set on S models only. */
+  lane?: Lane
   points: string[]
   sourceIds: string[]
   rationale: string
   leadCheck?: LeadCheck
+}
+
+/** A reviewed model that the page does not show, and why. Provenance only, not rendered. */
+export interface HiddenModel {
+  id: string
+  name: string
+  reason: 'superseded' | 'outranked' | 'over-limit' | 'thin-evidence'
+  /** The newer model of the same line (superseded) or the shown model that beats it (outranked). */
+  by?: string
+  note: string
 }
 
 export interface BenchmarkSource {
@@ -51,6 +74,7 @@ export interface BenchmarkCatalog {
   evidenceCutoff: string
   reviewNote: string
   models: RankedModel[]
+  notShown: HiddenModel[]
   sources: BenchmarkSource[]
 }
 
@@ -65,12 +89,14 @@ export function selectSources(catalog: BenchmarkCatalog, selected: ReadonlySet<s
   return catalog.sources.filter(source => selectedSourceIds.has(source.id))
 }
 
-/** The first model of the highest non-empty tier. */
+/** The first S Frontier model. */
 export function leaderOf(catalog: BenchmarkCatalog) {
-  for (const tier of TIERS.filter(tier => tier !== 'Unranked')) {
-    const leader = catalog.models.find(model => model.tier === tier)
-    if (leader) return leader
-  }
+  return catalog.models.find(model => model.tier === 'S' && model.lane === 'frontier')
+}
+
+/** The lab prefix of a `<lab>/<model>` ID. */
+export function labOf(id: string) {
+  return id.split('/')[0]
 }
 
 export function shortDate(isoDate: string) {

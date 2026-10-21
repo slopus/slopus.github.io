@@ -9,15 +9,15 @@
 .benchmark-table { border-collapse: separate; border-spacing: 0; width: 100%; max-width: 600px; margin-inline: auto; text-align: left; border: 1px solid #c9cabe; border-radius: 8px; }
 .benchmark-table tbody th { width: 95px; font-family: 'Space Grotesk', sans-serif; font-size: 1.45rem; padding: .65rem 1rem; border-right: 1px solid #c9cabe; }
 .benchmark-table td { padding: .6rem .8rem; height: 58px; }
-.benchmark-tier[data-empty='true'] td { height: 34px; padding-block: .2rem; }
-.benchmark-tier[data-empty='true'] th { padding-block: .15rem; }
 .benchmark-table tbody tr:not(:last-child) > * { border-bottom: 1px solid #c9cabe; }
 .benchmark-tier-s th { background: #f1d5c4; border-radius: 7px 0 0 0; }
 .benchmark-tier-a th { background: #efe0b3; }
 .benchmark-tier-b th { background: #e2e3bd; }
-.benchmark-tier-c th { background: #d8e0ce; }
-.benchmark-tier-d th { background: #d8e2dc; }
-.benchmark-tier-unranked th { background: #e8e5dd; font-size: .72rem !important; border-radius: 0 0 0 7px; }
+.benchmark-tier-f th { background: #ead6d0; }
+.benchmark-table tbody tr:last-child th { border-bottom-left-radius: 7px; }
+.benchmark-lane { vertical-align: top; width: 50%; }
+.benchmark-lane-frontier { border-right: 1px solid #deded4; }
+.benchmark-lane-label { display: block; margin-bottom: .4rem; color: #557068; font: .6rem 'DM Mono', monospace; letter-spacing: .08em; text-transform: uppercase; }
 .benchmark-models { display: flex; flex-wrap: wrap; gap: .45rem; }
 .benchmark-model-wrap { position: relative; }
 .benchmark-model { display: flex; align-items: center; gap: .65rem; background: #fcfaf5; color: #183f38; border: 1px solid #c9cabe; border-radius: 5px; padding: .52rem .7rem; font: 500 .83rem 'DM Sans', sans-serif; cursor: pointer; }
@@ -34,7 +34,6 @@
 .benchmark-tooltip li + li { margin-top: .35rem; }
 .benchmark-tooltip .benchmark-note-caveat { color: #e9d8a9; }
 .benchmark-lead-check { margin: .45rem 0 0; color: #557068; font: .64rem/1.4 'DM Mono', monospace; }
-.benchmark-empty-tier { color: #718077; font-size: .8rem; }
 .benchmark-evidence { margin-top: 1.25rem; scroll-margin-top: 105px; }
 .benchmark-filters { display: flex; align-items: center; justify-content: flex-end; max-width: 600px; margin: 0 auto 1.2rem; min-height: 30px; }
 .benchmark-text-button { border: 0; border-bottom: 1px solid #557068; padding: 0; font: inherit; font-size: .76rem; color: #183f38; background: none; cursor: pointer; }

@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import ModelBenchmarksPage from './ModelBenchmarksPage'
-import { absoluteDate, benchmarkCatalog, leaderOf, publicationAge, selectSources, TIERS, type BenchmarkCatalog, type BenchmarkSource } from './modelBenchmarks'
+import { absoluteDate, benchmarkCatalog, labOf, LANES, leaderOf, MAJOR_LABS, MAX_S_MODELS, MAX_SHOWN_MODELS, publicationAge, selectSources, TIERS, type BenchmarkCatalog, type BenchmarkSource } from './modelBenchmarks'
 import { Router } from './Router'
 import { modelBenchmarksMetadata } from './siteMetadata'
 
@@ -12,13 +12,14 @@ const source = (id: string, modelIds: string[], comparisonModelIds: string[] = [
   scope: { task: 'Coding', harness: 'Declared harness', effort: 'high' }, verification: { method: 'X oEmbed', text: 'Exact text verified.' },
 })
 const fixture: BenchmarkCatalog = {
-  schemaVersion: 1, revision: 'test.1', updatedAt: '2026-09-23T10:00:00Z', evidenceCutoff: '2026-09-23T10:00:00Z', reviewNote: 'Reviewed fixture.',
+  schemaVersion: 2, revision: 'test.1', updatedAt: '2026-09-23T10:00:00Z', evidenceCutoff: '2026-09-23T10:00:00Z', reviewNote: 'Reviewed fixture.',
   models: [
-    { id: 'test/alpha', name: 'Alpha', tier: 'S', points: ['Strong on coding.', 'Limited evidence elsewhere.'], sourceIds: ['100', '200'], rationale: 'Fixture.',
+    { id: 'test/alpha', name: 'Alpha', tier: 'S', lane: 'frontier', points: ['Strong on coding.', 'Limited evidence elsewhere.'], sourceIds: ['100', '200'], rationale: 'Fixture.',
       leadCheck: { reconfirmedAt: '2026-09-23', heldAgainst: ['test/beta'], sourceIds: ['100'], note: 'Still #1 after Beta launched.', reason: 'Fixture head-to-head.' } },
-    { id: 'test/beta', name: 'Beta', tier: 'A', points: ['Useful for small tasks.', 'Effort matters.'], sourceIds: ['100', '300'], rationale: 'Fixture.' },
-    { id: 'test/gamma', name: 'Gamma', tier: 'Unranked', points: ['No reviewed source.', 'Not a negative judgment.'], sourceIds: [], rationale: 'Insufficient evidence.' },
+    { id: 'test/beta', name: 'Beta', tier: 'S', lane: 'chores', points: ['Useful for small tasks.', 'Effort matters.'], sourceIds: ['100', '300'], rationale: 'Fixture.' },
+    { id: 'test/gamma', name: 'Gamma', tier: 'B', points: ['Narrow evidence.', 'Fixture caveat.'], sourceIds: [], rationale: 'Fixture without posts.' },
   ],
+  notShown: [],
   sources: [source('300', ['test/beta']), source('100', ['test/alpha', 'test/beta'], ['test/alpha', 'test/beta']), { ...source('200', ['test/alpha']), kind: 'provider-reported' }],
 }
 // jsdom has no ResizeObserver; the painted page scrollbar only observes with it.
@@ -28,21 +29,54 @@ beforeEach(() => { window.twttr = { widgets: { createTweet: vi.fn().mockResolved
 afterEach(() => { cleanup(); delete window.twttr; vi.restoreAllMocks() })
 
 describe('reviewed catalog integrity', () => {
-  it('has thirteen unique exact models and at most four reviewed posts each', () => {
-    expect(benchmarkCatalog.schemaVersion).toBe(1)
-    expect(benchmarkCatalog.models).toHaveLength(13)
-    expect(new Set(benchmarkCatalog.models.map(model => model.id)).size).toBe(13)
+  it('has unique exact models with at most four reviewed posts each', () => {
+    expect(benchmarkCatalog.schemaVersion).toBe(2)
+    expect(new Set(benchmarkCatalog.models.map(model => model.id)).size).toBe(benchmarkCatalog.models.length)
     for (const model of benchmarkCatalog.models) {
-      expect(model.id).toMatch(/^(openai|anthropic|xai)\/[a-z0-9.-]+$/)
+      expect(model.id).toMatch(/^[a-z0-9]+\/[a-z0-9.-]+$/)
       expect(TIERS).toContain(model.tier)
+      expect(model.sourceIds.length).toBeGreaterThan(0)
       expect(model.sourceIds.length).toBeLessThanOrEqual(4)
       expect(new Set(model.sourceIds).size).toBe(model.sourceIds.length)
       expect(model.points.length).toBeGreaterThanOrEqual(2)
       expect(model.points.length + (model.leadCheck ? 1 : 0)).toBeLessThanOrEqual(3)
       expect(model.rationale.length).toBeGreaterThan(15)
-      if (model.tier !== 'Unranked') expect(model.sourceIds.length).toBeGreaterThan(0)
       for (const id of model.sourceIds) expect(benchmarkCatalog.sources.find(entry => entry.id === id)?.modelIds).toContain(model.id)
     }
+  })
+  it('shows a short chart: S holds one to three models split into lanes, nothing else has a lane', () => {
+    const models = benchmarkCatalog.models
+    expect(models.length).toBeLessThanOrEqual(MAX_SHOWN_MODELS)
+    const s = models.filter(model => model.tier === 'S')
+    expect(s.length).toBeGreaterThanOrEqual(1)
+    expect(s.length).toBeLessThanOrEqual(MAX_S_MODELS)
+    for (const model of models) {
+      if (model.tier === 'S') expect(LANES).toContain(model.lane)
+      else expect(model.lane).toBeUndefined()
+    }
+    expect(s.some(model => model.lane === 'frontier')).toBe(true)
+    // Models are grouped by tier in tier order, so the JSON reads like the page.
+    const tierIndexes = models.map(model => TIERS.indexOf(model.tier))
+    expect(tierIndexes).toEqual([...tierIndexes].sort((a, b) => a - b))
+  })
+  it('covers every major lab and records why reviewed models are not shown', () => {
+    const shown = new Set(benchmarkCatalog.models.map(model => model.id))
+    const hidden = benchmarkCatalog.notShown
+    expect(new Set(hidden.map(model => model.id)).size).toBe(hidden.length)
+    for (const lab of MAJOR_LABS) expect([...shown, ...hidden.map(model => model.id)].some(id => labOf(id) === lab)).toBe(true)
+    for (const model of hidden) {
+      expect(model.id).toMatch(/^[a-z0-9]+\/[a-z0-9.-]+$/)
+      expect(shown.has(model.id)).toBe(false)
+      expect(model.note.length).toBeGreaterThan(30)
+      if (model.reason === 'superseded') {
+        expect(labOf(model.by!)).toBe(labOf(model.id))
+        expect([...shown, ...hidden.map(entry => entry.id)]).toContain(model.by)
+      }
+      if (model.reason === 'outranked') expect(shown.has(model.by!)).toBe(true)
+    }
+    // A superseded model never appears beside its successor.
+    for (const model of hidden.filter(entry => entry.reason === 'superseded')) expect(shown.has(model.id)).toBe(false)
+    for (const source of benchmarkCatalog.sources) for (const id of source.modelIds) expect(shown.has(id)).toBe(true)
   })
   it('validates source identity, dates, attribution and reciprocal membership', () => {
     expect(new Set(benchmarkCatalog.sources.map(entry => entry.id)).size).toBe(benchmarkCatalog.sources.length)
@@ -76,8 +110,7 @@ describe('reviewed catalog integrity', () => {
     expect(new Set(check.heldAgainst).size).toBe(check.heldAgainst.length)
     expect(check.heldAgainst).not.toContain(leader.id)
     for (const id of check.heldAgainst) {
-      expect(id).toMatch(/^(openai|anthropic|xai)\/[a-z0-9.-]+$/)
-      expect(benchmarkCatalog.models.find(model => model.id === id)?.tier).not.toBe('Unranked')
+      expect(benchmarkCatalog.models.map(model => model.id)).toContain(id)
     }
     expect(check.sourceIds.length).toBeGreaterThan(0)
     const covered = new Set<string>()
@@ -100,7 +133,7 @@ describe('stable filtering', () => {
     expect(selectSources(fixture, new Set(['test/alpha'])).map(entry => entry.id)).toEqual(['100', '200'])
     expect(selectSources(fixture, new Set(['test/beta', 'test/alpha'])).map(entry => entry.id)).toEqual(['300', '100', '200'])
   })
-  it('does not show unrelated evidence for an uncovered model', () => {
+  it('does not show unrelated evidence for a model without posts', () => {
     expect(selectSources(fixture, new Set(['test/gamma']))).toEqual([])
   })
 })
@@ -177,11 +210,32 @@ describe('model benchmarks page', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
     const line = screen.getByText(/Alpha still #1/)
     expect(line.textContent).toBe('Alpha still #1 · rechecked vs Beta, Sep 23')
-    expect(line.closest('tr')?.className).toContain('benchmark-tier-s')
+    expect(line.closest('td')?.className).toContain('benchmark-lane-frontier')
     const notes = document.getElementById(screen.getByRole('button', { name: 'Alpha' }).getAttribute('aria-describedby')!)!
     expect(notes.querySelector('li')?.textContent).toBe('Still #1 after Beta launched.')
     expect(notes.querySelectorAll('li')).toHaveLength(3)
     expect(screen.getAllByText(/still #1/)).toHaveLength(1)
+  })
+  it('splits S into Frontier and Chores and never renders an empty tier', () => {
+    render(<ModelBenchmarksPage catalog={fixture} />)
+    const rows = screen.getAllByRole('row')
+    expect(rows.map(row => row.querySelector('th')?.textContent)).toEqual(['S', 'B'])
+    const [frontier, chores] = rows[0].querySelectorAll('td')
+    expect(frontier.textContent).toContain('Frontier')
+    expect(frontier.textContent).toContain('Alpha')
+    expect(chores.textContent).toContain('Chores')
+    expect(chores.textContent).toContain('Beta')
+    expect(rows[1].querySelector('td')?.getAttribute('colspan')).toBe('2')
+    expect(screen.queryByText('—')).toBeNull()
+    expect(screen.queryByText(/Unranked/)).toBeNull()
+  })
+  it('renders a single S lane across the row when the other is empty', () => {
+    render(<ModelBenchmarksPage catalog={{ ...fixture, models: fixture.models.map(model => model.id === 'test/beta' ? { ...model, tier: 'A' as const, lane: undefined } : model) }} />)
+    const s = screen.getAllByRole('row')[0]
+    expect(s.querySelectorAll('td')).toHaveLength(1)
+    expect(s.querySelector('td')?.getAttribute('colspan')).toBe('2')
+    expect(s.textContent).toContain('Frontier')
+    expect(s.textContent).not.toContain('Chores')
   })
   it('shows no lead line when the leader has no lead check', () => {
     render(<ModelBenchmarksPage catalog={{ ...fixture, models: fixture.models.map(({ leadCheck: _leadCheck, ...model }) => model) }} />)
