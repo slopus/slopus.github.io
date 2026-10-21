@@ -75,6 +75,7 @@ The short descriptor is **Orchestrate Claude, Codex and Grok in one app** (`HAPP
   Everything below is the reference layer. It is for readers who want to know how the feature works, and for search engines and AI assistants working out what Happy can do. Each h2 names its question in the words people search with: "Use several accounts of one provider", not "Accounts". Each section stands on its own and states concrete facts. No keyword stuffing.
 
   Lead with what you get, never with the problem. The problem and the workarounds belong in the reference layer, beside the alternatives.
+- **Operational recipes are source quotations for agents.** The `/recepies/` pages preserve the full Happy Agent source text byte for byte. Do not rewrite them into human tutorials or add prompt blocks. The sync script and provenance manifest record their source revision. Their sidebar group, **Recipes (for agents)**, comes last after Comparisons and starts collapsed.
 - **The Chief of Staff block.** Every feature page, and every guide whose task the [Chief of Staff](/chief-of-staff/) can do, has a `chief-of-staff` fence right after its intro, with one prompt per line. Every page renders it the same way (`src/ChiefOfStaffPrompt.tsx`):
   - One line naming what the prompts do, from the fence's first line: ```` ```chief-of-staff add skills ```` renders "To add skills, simply ask the Chief of Staff:". Keep the task short and specific to the page.
   - Each prompt in its own quote-style box: the accent at 7% as its fill and a 3px accent left edge. No card: no full border, no shadow, no heavy fill.
@@ -96,7 +97,7 @@ The short descriptor is **Orchestrate Claude, Codex and Grok in one app** (`HAPP
   - A page without a figure gets no logo tile in its place. Its card keeps the header and the URL line, gives the title the full width, and swaps the description for the page's `cardLine` in `src/documents.ts`: one line of four to eight words, benefit first, no closing period, true to the page. `cards.py` stops if the line is missing or wraps. A page with a figure may have a `cardLine` too.
   - A screenshot too small to carry a card gets a larger cutout of the same UI in `notes/og/figures/`, named in `CARD_FIGURES` in `cards.py`. It fills the right side the way a diagram does.
   - After changing cards that are already shared, bump `SOCIAL_IMAGE_VERSION` in `src/siteMetadata.ts` and the `?v=` on the homepage image in `index.html`, so X, Slack, and LinkedIn fetch them again.
-- **The Blog** is the last sidebar group, with no list page. Each post gets a one-word slug you can type from memory: `/workos/`, `/tailcat/`, `/voice/`.
+- **The Blog** follows Guides and precedes Comparisons in the sidebar, with no list page. Each post gets a one-word slug you can type from memory: `/workos/`, `/tailcat/`, `/voice/`.
 - **URLs don't break.** `routes.txt` only grows. A shared URL keeps working when its page moves: `/team-sign-in-workos/` redirects to `/workos/`.
 
 ## Landing page

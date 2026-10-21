@@ -3,6 +3,7 @@ import type { ProductKey } from './products'
 export type DocumentGroup =
   | 'Start here'
   | 'Guides'
+  | 'Recipes'
   | 'Features'
   | 'Use cases'
   | 'Comparisons'
@@ -340,6 +341,126 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Guides',
   },
   {
+    path: 'recepies',
+    sourcePath: '/content/desktop/recepies/index.mdx',
+    title: "Operational recipes",
+    description: "These documents are step-by-step instructions for recurring Happy Agent tasks. The recipe table in the documentation index lists each recipe and when to use...",
+    cardLine: 'Ask once, get a verified setup',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/first-project',
+    sourcePath: '/content/desktop/recepies/first-project.mdx',
+    title: "Start with one project",
+    description: "Use this recipe when someone asks the Chief of Staff to help set up Happy, discover recent projects, or import their first project. Recommend starting...",
+    cardLine: 'One project, one useful first change',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/mobile-access',
+    sourcePath: '/content/desktop/recepies/mobile-access.mdx',
+    title: "Set up or repair Mobile Access",
+    description: "Use this recipe when someone wants to control Happy Desktop from Happy Coder on their phone, or control terminal Claude Code/Codex sessions remotely. Mobile...",
+    cardLine: 'Your agents, reachable from your phone',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/accounts-and-models',
+    sourcePath: '/content/desktop/recepies/accounts-and-models.mdx',
+    title: "Accounts, models, effort, and service tier",
+    description: "Use this recipe when the user wants to add or pool provider accounts, limit or change models, set the default effort or service tier, or move existing...",
+    cardLine: 'Your accounts, with the defaults you choose',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/wsl',
+    sourcePath: '/content/desktop/recepies/wsl.mdx',
+    title: "Set up WSL projects from Windows",
+    description: "Use this recipe when a Windows 11 user wants Linux projects in Happy Desktop. Chief of Staff performs the setup and verification within the user's...",
+    cardLine: 'Linux projects beside your Windows bots',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/telegram',
+    sourcePath: '/content/desktop/recepies/telegram.mdx',
+    title: "Export a bot to Telegram",
+    description: "Use this recipe when the user wants people, themselves included, to talk to a bot from Telegram, or wants to change who may. Exporting a bot makes it...",
+    cardLine: 'A dedicated bot, in your Telegram chats',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/chat-bridge',
+    sourcePath: '/content/desktop/recepies/chat-bridge.mdx',
+    title: "Export a bot to any chat service",
+    description: "Use this recipe when the user wants people to talk to a bot from a chat service Happy Agent does not have built in, such as Slack, Discord, Matrix, or their...",
+    cardLine: 'Your bot, connected through a chat bridge',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/bot-settings',
+    sourcePath: '/content/desktop/recepies/bot-settings.mdx',
+    title: "Restrict a bot with bot settings",
+    description: "Use this recipe when the user wants one bot to see only certain secrets, to stay away from other projects, workspaces, tasks, bots, and agents, or to run...",
+    cardLine: 'Choose each bot’s secrets and reach',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/shared-app',
+    sourcePath: '/content/desktop/recepies/shared-app.mdx',
+    title: "Build a live, shared HTML artifact",
+    description: "Use this recipe when an html artifact should remember things or be shared: a to-do list, a poll, a sign-up sheet, a scoreboard, a small game, or a dashboard...",
+    cardLine: 'Saved data, shared live with everyone viewing',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/remote-agent',
+    sourcePath: '/content/desktop/recepies/remote-agent.mdx',
+    title: "Deploy a standalone remote agent",
+    description: "Use this recipe when the user wants a personal, non-team Happy Agent on another machine, ready to run coding tasks from their existing Happy installation...",
+    cardLine: 'A personal server, connected and verified',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/team',
+    sourcePath: '/content/desktop/recepies/team.mdx',
+    title: "Create and deploy a Happy team",
+    description: "Use this recipe when the user wants a shared Happy Agent server for a named team. The outcome is a WorkOS-backed Happy team, a working team-mode deployment,...",
+    cardLine: 'Your team’s server, verified before invitations',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/runner',
+    sourcePath: '/content/desktop/recepies/runner.mdx',
+    title: "Add a dedicated runner",
+    description: "Use this recipe to give a deployed Happy Agent node — standalone or team — a separate machine that does its work. It is strongly recommended for every...",
+    cardLine: 'Project commands apart from your node’s credentials',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/hardening',
+    sourcePath: '/content/desktop/recepies/hardening.mdx',
+    title: "Harden a node with separate Linux users",
+    description: "Use this recipe to split one Linux machine that runs Happy Agent into two kinds of account. The service user (here happy-agent) runs the daemon, and only it...",
+    cardLine: 'Private daemon files, separate workload users',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/enterprise-sign-in',
+    sourcePath: '/content/desktop/recepies/enterprise-sign-in.mdx',
+    title: "Set up enterprise JWT sign-in",
+    description: "Use this recipe when an organization wants its members to sign in to a team-mode Happy Agent with the organization's own identity provider (Okta, Entra ID,...",
+    cardLine: 'Your identity provider, your team’s sign-in',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/upgrade',
+    sourcePath: '/content/desktop/recepies/upgrade.mdx',
+    title: "Upgrade Happy Agent",
+    description: "Use this recipe to upgrade an existing Happy Agent installation, especially a standalone remote created with the deployment recipe. An upgrade replaces the...",
+    cardLine: 'A checked upgrade, with your state preserved',
+    group: 'Recipes',
+  },
+  {
     path: 'comparisons/buzz',
     sourcePath: '/content/desktop/comparisons/buzz.mdx',
     title: 'Happy Desktop vs Buzz',
@@ -420,7 +541,7 @@ export const documents: DocumentEntry[] = [
 
 const productDocumentGroups: Record<ProductKey, DocumentGroup[]> = {
   happy: ['Start here', 'Guides', 'Features', 'Use cases', 'Comparisons', 'Releases', 'Resources'],
-  desktop: ['Start here', 'Features', 'Guides', 'Comparisons', 'Blog'],
+  desktop: ['Start here', 'Features', 'Guides', 'Blog', 'Comparisons', 'Recipes'],
 }
 
 export function documentsForProduct(product: ProductKey) {
@@ -429,7 +550,9 @@ export function documentsForProduct(product: ProductKey) {
 
 /** The documents a reader is shown: everything except pages kept reachable but unlisted. */
 export function listedDocumentsForProduct(product: ProductKey) {
+  const groups = productDocumentGroups[product]
   return documentsForProduct(product).filter((document) => !document.hidden)
+    .sort((a, b) => groups.indexOf(a.group) - groups.indexOf(b.group))
 }
 
 export function documentGroupsForProduct(product: ProductKey) {

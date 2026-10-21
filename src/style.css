@@ -277,7 +277,13 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .docs-layout { grid-template-columns: 190px minmax(0, 1fr); }
 }
 .docs-navigation { display: grid; gap: 1.5rem; }
-.docs-nav-group h2 { color: #183f38; font-family: 'DM Sans', sans-serif; font-size: .77rem; font-weight: 700; letter-spacing: 0; margin: 0 0 .5rem; }
+.docs-nav-group h2, .docs-nav-fold summary { color: #183f38; font-family: 'DM Sans', sans-serif; font-size: .77rem; font-weight: 700; letter-spacing: 0; margin: 0 0 .5rem; }
+.docs-nav-fold summary { align-items: center; cursor: pointer; display: flex; justify-content: space-between; list-style: none; margin: 0; min-height: 32px; }
+.docs-nav-fold summary::-webkit-details-marker { display: none; }
+.docs-nav-fold summary::after { border-bottom: 1.5px solid currentColor; border-right: 1.5px solid currentColor; content: ''; height: 5px; margin-right: .5rem; transform: rotate(-45deg); width: 5px; }
+.docs-nav-fold[open] summary::after { transform: rotate(45deg); }
+.docs-nav-fold[open] summary { margin-bottom: .5rem; }
+.docs-nav-fold summary:focus-visible { border-radius: 4px; outline: 2px solid #e6522c; outline-offset: 3px; }
 .docs-nav-group ul { display: grid; gap: .2rem; list-style: none; margin: 0; padding: 0; }
 .docs-nav-group a { border-radius: 7px; color: #557068; display: block; font-size: .78rem; line-height: 1.35; padding: .38rem .5rem; }
 .docs-nav-group a:hover { background: #ebe5d9; color: #183f38; }

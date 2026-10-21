@@ -13,6 +13,8 @@ import {
 import { prerenderedPaths, renderPath } from './prerender'
 import { desktopDocsMetadata, docsMetadata, thesisMetadata } from './siteMetadata'
 import { documentHref, HAPPY, HAPPY_DESKTOP } from './products'
+import { createHash } from 'node:crypto'
+import { recipeHref, recipeSources } from './recipeSources'
 
 // jsdom has no ResizeObserver; the painted page scrollbar only observes with it.
 beforeAll(() => {
@@ -30,7 +32,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(25)
+    expect(documentsForProduct('desktop')).toHaveLength(40)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -63,7 +65,7 @@ describe('static document pages', () => {
     expect(trail.getAttribute('aria-expanded')).toBe('true')
     expect(menu.hidden).toBe(false)
     expect(within(menu).getByRole('link', { name: 'Chief of Staff' }).getAttribute('aria-current')).toBe('page')
-    expect(within(menu).getAllByRole('heading', { level: 2 }).map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Comparisons', 'Blog'])
+    expect([...menu.querySelectorAll('.docs-nav-group > h2, .docs-nav-fold > summary')].map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Blog', 'Comparisons', 'Recipes (for agents)'])
 
     fireEvent.click(trail)
     expect(menu.hidden).toBe(true)
@@ -129,7 +131,8 @@ describe('static document pages', () => {
       expect(prerenderedPaths).toContain(pathname)
       const markup = renderPath(pathname)
       expect(markup.match(/<h1[\s>]/g)).toHaveLength(1)
-      expect(markup).toContain(documentHeading(document).replace(/&/g, '&amp;'))
+      const heading = new DOMParser().parseFromString(markup, 'text/html').querySelector('h1')
+      expect(heading?.firstChild?.textContent).toBe(documentHeading(document))
 
       // Index pages keep their section titles and descriptions; checked below.
       if (pathname === HAPPY.docsHome || pathname === HAPPY_DESKTOP.docsHome) continue
@@ -178,11 +181,11 @@ describe('static document pages', () => {
     unmount()
 
     render(<Router pathname="/claude-code-remote-control/" />)
-    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/team sign-in with workos/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/operational recipes/i)
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/claude code on your phone/i)
   })
 
-  it('lists the Blog last, at short URLs, each post with its diagram and its sources', () => {
+  it('lists Blog posts at short URLs, each with its diagram and its sources', () => {
     const { container, unmount } = render(<Router pathname="/tailcat/" />)
 
     expect(screen.getByRole('heading', { level: 1, name: /no open ports: how happy reaches your server/i })).toBeTruthy()
@@ -203,7 +206,7 @@ describe('static document pages', () => {
 
     const updates = render(<Router pathname="/updates/" />)
     expect(screen.getByRole('heading', { level: 1, name: /updates that pick up where they left off/i })).toBeTruthy()
-    expect(screen.queryByRole('link', { name: /^next/i })).toBeNull()
+    expect(screen.getByRole('link', { name: /^next/i }).getAttribute('href')).toBe('/desktop-app/')
     const video = updates.container.querySelector('.document-content video')
     expect(video?.getAttribute('src')).toBe('/video/updates/update.mp4')
     expect(video?.getAttribute('poster')).toBe('/video/updates/update-poster.webp')
@@ -407,13 +410,13 @@ describe('static document pages', () => {
     expect(documents.filter((document) => document.path === 'secrets')).toHaveLength(1)
   })
 
-  it('lists the Blog group last with no list page, at short URLs; /blog/ and /thesis/ open the Vision essay', () => {
+  it('lists Blog before Comparisons and collapsed Recipes last; keeps the old Blog URLs', () => {
     render(<Router pathname="/workos/" />)
 
     const [sidebar] = screen.getAllByRole('navigation', { name: 'Documentation navigation' })
-    const groups = within(sidebar).getAllByRole('heading', { level: 2 })
-    expect(groups.at(-1)?.textContent).toBe('Blog')
-    const posts = within(groups.at(-1)!.closest('section')!).getAllByRole('link').map((link) => link.getAttribute('href'))
+    const groups = [...sidebar.querySelectorAll('.docs-nav-group > h2, .docs-nav-fold > summary')]
+    expect(groups.map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Blog', 'Comparisons', 'Recipes (for agents)'])
+    const posts = within(groups.find((heading) => heading.textContent === 'Blog')!.closest('section')!).getAllByRole('link').map((link) => link.getAttribute('href'))
     expect(posts).toEqual(['/workos/', '/tailcat/', '/voice/', '/updates/'])
     expect(screen.getByRole('heading', { level: 1, name: /team sign-in with workos/i })).toBeTruthy()
     // Server markup: the landing pages' effects need browser APIs jsdom lacks.
@@ -429,6 +432,35 @@ describe('static document pages', () => {
     for (const moved of ['/thesis/', '/blog/', '/team-sign-in-workos/']) expect(prerenderedPaths).not.toContain(moved)
     expect(thesisMetadata.robots).toBeUndefined()
   })
+
+  it('keeps the full recipe link list in served HTML but folds it by default', () => {
+    const markup = renderPath('/recepies/')
+    const parsed = new DOMParser().parseFromString(markup, 'text/html')
+    const folds = parsed.querySelectorAll('details.docs-nav-fold')
+    expect(folds).toHaveLength(2)
+    for (const fold of folds) {
+      expect(fold.hasAttribute('open')).toBe(false)
+      expect(fold.querySelector('summary')?.textContent).toBe('Recipes (for agents)')
+      expect(fold.querySelectorAll('a')).toHaveLength(15)
+    }
+  })
+
+  it('publishes complete, unmodified recipe sources with source-relative links', () => {
+    expect(recipeSources.files).toHaveLength(15)
+    for (const file of recipeSources.files) {
+      const document = getDocument('desktop', file.route)!
+      const source = getDocumentSource(document)
+      expect(createHash('sha256').update(source).digest('hex')).toBe(file.sha256)
+      const markup = renderPath(`/${file.route}/`)
+      expect(markup).not.toContain('class="cos-prompt"')
+      expect(markup).not.toMatch(/href="(?:\.\.?\/|[^"/#:]+\.md)/)
+    }
+    expect(recipeHref('recepies/runner', 'README.md#testing-a-deployed-node')).toBe('/recepies/#testing-a-deployed-node')
+    expect(recipeHref('recepies', 'exported-bot-telegram.md')).toBe('/recepies/telegram/')
+    expect(recipeHref('recepies/runner', '../configuration.md#runners')).toBe(`${recipeSources.repository}/blob/${recipeSources.revision}/docs/configuration.md#runners`)
+    expect(recipeHref('recepies/runner', '#local')).toBe('#local')
+    expect(recipeHref('recepies/runner', 'https://example.com/')).toBe('https://example.com/')
+  }, 30_000)
 
   it('puts a copyable Chief of Staff prompt right after the intro of every page it can help with', () => {
     const withPrompt = ['quick-start', 'chief-of-staff', 'models', 'permissions', 'secrets', 'workspaces', 'agents', 'mobile', 'multiplayer', 'extending', 'guides/configuration', 'guides/remote-server']

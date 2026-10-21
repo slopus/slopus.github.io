@@ -449,6 +449,11 @@ await writeRoute('blog', redirectHtml('/vision/'))
 // The WorkOS post was first published at /team-sign-in-workos/; the Blog uses short URLs.
 await writeRoute('team-sign-in-workos', redirectHtml('/workos/'))
 
+// The requested recipe URLs use /recepies/; the usual spelling works too.
+for (const document of documents.filter((entry) => entry.product === HAPPY_DESKTOP.key && (entry.path === 'recepies' || entry.path.startsWith('recepies/')))) {
+  await writeRoute(document.path.replace(/^recepies/, 'recipes'), redirectHtml(`/${document.path}/`))
+}
+
 // The Remote Control comparison was first published at /vs/claude-code-remote-control/; docs URLs have no prefix.
 await writeRoute('vs/claude-code-remote-control', redirectHtml('/claude-code-remote-control/'))
 

@@ -57,11 +57,19 @@ two or three lines of specific, sourced wins taken from their own sites, talks
 and public profiles, with their X handles and the photos in `public/img/team/`.
 It never states or hints at anyone's level of involvement, in either direction.
 
-The Blog is the last group in the desktop docs sidebar, with no list page.
+The Blog follows Guides and precedes Comparisons in the desktop docs sidebar, with no list page.
 Posts are desktop docs (`group: 'Blog'` in `src/documents.ts`) at one-word
 URLs you can type from memory: `/workos/`, `/tailcat/`, `/voice/`.
 `/team-sign-in-workos/`, where the WorkOS post was first shared, redirects to
 `/workos/`; `/blog/` still redirects to `/vision/`.
+
+Recipes comes last, after Comparisons, in a disclosure labeled **Recipes (for agents)**,
+collapsed by default on desktop and phones, including on recipe pages. The `/recepies/`
+pages reproduce Happy Agent's operational instructions byte for byte, rather than adapting
+them for people or adding Chief of Staff prompt blocks. `/recipes/` aliases those URLs.
+Refresh them with `node scripts/sync-agent-recipes.mjs /path/to/happy-agent`; the source
+revision, paths, and content hashes are recorded in `content/desktop/recepies/sources.json`.
+Keep source-relative link resolution in the renderer so the copied Markdown stays unchanged.
 
 `routes.txt` records every URL the site has ever served. The build appends new
 URLs and fails if a listed URL is no longer served; dropping one means

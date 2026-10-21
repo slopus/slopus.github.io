@@ -101,12 +101,15 @@ export function MarkdownDocument({
   markdown,
   components: overrides,
   originalDocsLinks = false,
+  resolveHref,
 }: {
   markdown: string
   /** Replaces the default renderer for these elements. */
   components?: Components
   /** Resolve the original CLI docs' unprefixed links under /docs. */
   originalDocsLinks?: boolean
+  /** Resolve links relative to an unmodified upstream document. */
+  resolveHref?: (href: string | undefined) => string | undefined
 }) {
   const usedHeadingIds = new Map<string, number>()
   // Keyed by source offset so a repeat render of a heading (StrictMode, hydration) keeps its id.
@@ -151,7 +154,7 @@ export function MarkdownDocument({
     h3: heading(3),
     // `node` is react-markdown's syntax tree, not an HTML attribute; keep it out of the markup.
     a: ({ href, children, node: _node, ...props }) => {
-      const normalizedHref = normalizeHref(href, originalDocsLinks)
+      const normalizedHref = resolveHref ? resolveHref(href) : normalizeHref(href, originalDocsLinks)
       const external = normalizedHref?.startsWith('http')
 
       return (

@@ -1,0 +1,96 @@
+{
+  "repository": "https://github.com/slopus/happy-agent",
+  "revision": "528d1eab24c4657f5cb43f25a50a8dc3b97be70a",
+  "files": [
+    {
+      "route": "recepies",
+      "source": "docs/recipe/README.md",
+      "target": "content/desktop/recepies/index.mdx",
+      "sha256": "ac2bd98d81dc509c3cb58664c535df6eda3d57b3afdb57bc5cbe774f285245a9"
+    },
+    {
+      "route": "recepies/first-project",
+      "source": "docs/recipe/first-project.md",
+      "target": "content/desktop/recepies/first-project.mdx",
+      "sha256": "7f7cbe2a8e072826cc638cff96faa83490ac175935b1a0d48a405d7949348fc3"
+    },
+    {
+      "route": "recepies/mobile-access",
+      "source": "docs/recipe/mobile-access.md",
+      "target": "content/desktop/recepies/mobile-access.mdx",
+      "sha256": "174d0c0c2a84ccf746a559f9a9dfc366f44bf4656edec2f1fe64cd5129444095"
+    },
+    {
+      "route": "recepies/accounts-and-models",
+      "source": "docs/recipe/accounts-and-models.md",
+      "target": "content/desktop/recepies/accounts-and-models.mdx",
+      "sha256": "8d1eaf34d906a6b2cfc5ea140ddce620d6931de015e938b5b88e479c9e796271"
+    },
+    {
+      "route": "recepies/wsl",
+      "source": "docs/recipe/setup-wsl-agent.md",
+      "target": "content/desktop/recepies/wsl.mdx",
+      "sha256": "c9c7c11fef51b2a4c04b0269c6acdb5922da86621d396decc8721b8e388fca7d"
+    },
+    {
+      "route": "recepies/telegram",
+      "source": "docs/recipe/exported-bot-telegram.md",
+      "target": "content/desktop/recepies/telegram.mdx",
+      "sha256": "522061cc1fefde4621514de2e3995ebe9a23f94e1cafac2ce8d1011b0202758f"
+    },
+    {
+      "route": "recepies/chat-bridge",
+      "source": "docs/recipe/exported-bot-bridge.md",
+      "target": "content/desktop/recepies/chat-bridge.mdx",
+      "sha256": "74ef92ba1ac570fa888092998e94b7c1005c17959fc715220cc7527e2ff0bb17"
+    },
+    {
+      "route": "recepies/bot-settings",
+      "source": "docs/recipe/bot-settings.md",
+      "target": "content/desktop/recepies/bot-settings.mdx",
+      "sha256": "356427233f453ad9b9184e7bca24e1551704fee6270ce5b1546cae8fc650daa0"
+    },
+    {
+      "route": "recepies/shared-app",
+      "source": "docs/recipe/artifact-apps.md",
+      "target": "content/desktop/recepies/shared-app.mdx",
+      "sha256": "50a304fa2502b5ac2028cd5ec2437375cb35dfa471122d8d73c1532e048ccefd"
+    },
+    {
+      "route": "recepies/remote-agent",
+      "source": "docs/recipe/deploy-standalone-remote.md",
+      "target": "content/desktop/recepies/remote-agent.mdx",
+      "sha256": "7bd38bc94ed75cfd659f6cb9a2e44cb7d8fe8688a27918c6a4bdd0aeb28249cb"
+    },
+    {
+      "route": "recepies/team",
+      "source": "docs/recipe/deploy-happy-team.md",
+      "target": "content/desktop/recepies/team.mdx",
+      "sha256": "3460f21f28cf58b5907bc3e692eb3154445623d2be06d735eaecb57b2900ed10"
+    },
+    {
+      "route": "recepies/runner",
+      "source": "docs/recipe/add-runner.md",
+      "target": "content/desktop/recepies/runner.mdx",
+      "sha256": "c37681e9e2790f4af1dfeef46b399c3764fabf95dbdd2e622245bc7e70d1a157"
+    },
+    {
+      "route": "recepies/hardening",
+      "source": "docs/recipe/harden-node.md",
+      "target": "content/desktop/recepies/hardening.mdx",
+      "sha256": "2f02e541f7bcc0df80eaa49db7d65c52c6d5a985e5d19d5a073b36079b23d0db"
+    },
+    {
+      "route": "recepies/enterprise-sign-in",
+      "source": "docs/recipe/enterprise-jwt-authentication.md",
+      "target": "content/desktop/recepies/enterprise-sign-in.mdx",
+      "sha256": "4a566217c5e56a27ddefacf3743accfa5d6887e8d0ad9917cebee125ad990b4f"
+    },
+    {
+      "route": "recepies/upgrade",
+      "source": "docs/recipe/upgrade-happy-agent.md",
+      "target": "content/desktop/recepies/upgrade.mdx",
+      "sha256": "f0cc3abb2701d971d91a91919ca9e0923c511c1c8da5cbe2fe57f1cc1a86c584"
+    }
+  ]
+}

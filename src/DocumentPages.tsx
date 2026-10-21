@@ -14,6 +14,7 @@ import {
 } from './documents'
 import { documentHref, HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import { SiteFooter, SiteHeader } from './SiteChrome'
+import { recipeHref } from './recipeSources'
 
 function DocsNavigation({
   product,
@@ -34,21 +35,32 @@ function DocsNavigation({
           return null
         }
 
-        return (
+        const links = (
+          <ul>
+            {groupDocuments.map((document) => (
+              <li key={document.path}>
+                <a
+                  href={documentHref(product, document.path)}
+                  aria-current={document.path === activeDocument.path ? 'page' : undefined}
+                >
+                  {document.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+
+        return group === 'Recipes' ? (
+          <section className="docs-nav-group" key={group}>
+            <details className="docs-nav-fold">
+              <summary>Recipes (for agents)</summary>
+              {links}
+            </details>
+          </section>
+        ) : (
           <section className="docs-nav-group" key={group}>
             <h2>{group}</h2>
-            <ul>
-              {groupDocuments.map((document) => (
-                <li key={document.path}>
-                  <a
-                    href={documentHref(product, document.path)}
-                    aria-current={document.path === activeDocument.path ? 'page' : undefined}
-                  >
-                    {document.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            {links}
           </section>
         )
       })}
@@ -78,7 +90,7 @@ function DocsMobileNavigation({
         aria-controls="docs-mobile-menu"
         onClick={() => setIsOpen((open) => !open)}
       >
-        <span className="docs-mobile-trail-group">{activeDocument.group}</span>
+        <span className="docs-mobile-trail-group">{activeDocument.group === 'Recipes' ? 'Recipes (for agents)' : activeDocument.group}</span>
         <span aria-hidden="true">/</span>
         <span className="docs-mobile-trail-page">{activeDocument.title}</span>
       </button>
@@ -135,7 +147,9 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
   }
 
   const productDocuments = listedDocumentsForProduct(product.key)
-  const markdown = prepareMarkdown(getDocumentSource(activeDocument))
+  const markdown = activeDocument.group === 'Recipes'
+    ? getDocumentSource(activeDocument)
+    : prepareMarkdown(getDocumentSource(activeDocument))
   // An unlisted page sits outside the reading order, so it gets no previous or next.
   const activeIndex = productDocuments.indexOf(activeDocument)
   const previousDocument = activeIndex === -1 ? undefined : productDocuments[activeIndex - 1]
@@ -159,7 +173,7 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
           data-document={activeDocument.path || undefined}
         >
           {product.key === 'happy' && <LegacyNotice />}
-          <MarkdownDocument markdown={markdown} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} />
+          <MarkdownDocument markdown={markdown} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} resolveHref={activeDocument.group === 'Recipes' ? (href) => recipeHref(activeDocument.path, href) : undefined} />
 
           <nav className="document-pagination" aria-label="Previous and next documentation pages">
             {previousDocument ? (

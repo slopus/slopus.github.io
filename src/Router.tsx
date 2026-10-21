@@ -32,6 +32,7 @@ const pluginsBack = { href: '/plugins/', label: 'Back to plugins' }
 
 /** Pages that moved. Keep the old URLs working. */
 const movedPaths: Record<string, string> = {
+  '/recipes': '/recepies',
   '/docs/comparisons/happy-2-vs-buzz': '/comparisons/buzz',
   // The desktop docs lived under /desktop/docs/ (and /happy2/docs/) before they
   // became top-level pages; their index is /welcome/.
@@ -51,6 +52,7 @@ const movedPaths: Record<string, string> = {
 
 /** Sections that moved wholesale. The old prefix keeps resolving, path and all. */
 const movedPrefixes: Array<[string, string]> = [
+  ['/recipes', '/recepies'],
   ['/happy2/docs', ''],
   ['/desktop/docs', ''],
 ]
