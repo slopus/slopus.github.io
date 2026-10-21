@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP } from './products'
-import { absoluteDate, benchmarkCatalog, publicationAge, selectSources, TIERS, type BenchmarkCatalog } from './modelBenchmarks'
+import { absoluteDate, benchmarkCatalog, LANES, leaderOf, publicationAge, selectSources, shortDate, TIERS, type BenchmarkCatalog } from './modelBenchmarks'
 import { XPostEmbed } from './XPostEmbed'
 import './model-benchmarks.css'
 
@@ -10,6 +10,8 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
   const [dismissedNotes, setDismissedNotes] = useState<string>()
   const [now] = useState(() => Date.now())
   const sources = selectSources(catalog, selected)
+  const leader = leaderOf(catalog)
+  const leadCheck = leader?.leadCheck
 
   function toggleModel(id: string) {
     setSelected(previous => {
@@ -34,20 +36,33 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
         </header>
 
         <table className="benchmark-table">
-          <caption className="benchmark-sr-only">Select models to filter posts. Hover or focus for notes. Unranked means insufficient evidence.</caption>
+          <caption className="benchmark-sr-only">Select models to filter posts. Hover or focus for notes. S splits into Frontier, for hard work, and Chores, the best value for routine work.</caption>
           <tbody>{TIERS.map(tier => {
             const models = catalog.models.filter(model => model.tier === tier)
-            return <tr key={tier} className={`benchmark-tier benchmark-tier-${tier.toLowerCase()}`} data-empty={models.length === 0}>
+            if (!models.length) return null
+            const cells = tier === 'S'
+              ? LANES.map(lane => ({ lane, models: models.filter(model => model.lane === lane) })).filter(cell => cell.models.length)
+              : [{ lane: undefined, models }]
+            return <tr key={tier} className={`benchmark-tier benchmark-tier-${tier.toLowerCase()}`}>
               <th scope="row"><span>{tier}</span></th>
-              <td>{models.length ? <div className="benchmark-models">{models.map(model => <div className="benchmark-model-wrap" key={model.id} data-notes-hidden={dismissedNotes === model.id} onMouseEnter={() => setDismissedNotes(undefined)}>
-                <button type="button" className="benchmark-model" aria-pressed={selected.has(model.id)} aria-describedby={`notes-${model.id.replaceAll('/', '-')}`} onFocus={() => setDismissedNotes(undefined)} onKeyDown={event => { if (event.key === 'Escape') setDismissedNotes(model.id) }} onClick={() => toggleModel(model.id)}>
-                  {model.name}<span aria-hidden="true">{selected.has(model.id) ? '−' : '+'}</span>
-                </button>
-                <div className="benchmark-tooltip" role="tooltip" id={`notes-${model.id.replaceAll('/', '-')}`}>
-                  <strong>{model.name}</strong>
-                  <ul>{model.points.map((point, index) => <li key={point} className={index === model.points.length - 1 ? 'benchmark-note-caveat' : undefined}>{point}</li>)}</ul>
-                </div>
-              </div>)}</div> : <span className="benchmark-empty-tier">—</span>}</td>
+              {cells.map(cell => <td key={cell.lane ?? tier} colSpan={cells.length === 1 ? 2 : undefined} className={cell.lane ? `benchmark-lane benchmark-lane-${cell.lane}` : undefined}>
+                {cell.lane ? <span className="benchmark-lane-label">{cell.lane === 'frontier' ? 'Frontier' : 'Chores'}</span> : null}
+                <div className="benchmark-models">{cell.models.map(model => <div className="benchmark-model-wrap" key={model.id} data-notes-hidden={dismissedNotes === model.id} onMouseEnter={() => setDismissedNotes(undefined)}>
+                  <button type="button" className="benchmark-model" aria-pressed={selected.has(model.id)} aria-describedby={`notes-${model.id.replaceAll('/', '-')}`} onFocus={() => setDismissedNotes(undefined)} onKeyDown={event => { if (event.key === 'Escape') setDismissedNotes(model.id) }} onClick={() => toggleModel(model.id)}>
+                    {model.name}<span aria-hidden="true">{selected.has(model.id) ? '−' : '+'}</span>
+                  </button>
+                  <div className="benchmark-tooltip" role="tooltip" id={`notes-${model.id.replaceAll('/', '-')}`}>
+                    <strong>{model.name}</strong>
+                    <ul>
+                      {model.leadCheck ? <li className="benchmark-note-lead">{model.leadCheck.note}</li> : null}
+                      {model.points.map((point, index) => <li key={point} className={index === model.points.length - 1 ? 'benchmark-note-caveat' : undefined}>{point}</li>)}
+                    </ul>
+                  </div>
+                </div>)}</div>
+                {leader && leadCheck && cell.models.includes(leader) ? <p className="benchmark-lead-check">
+                  {leader.name} still #1 · rechecked vs {leadCheck.heldAgainst.map(id => catalog.models.find(model => model.id === id)?.name ?? id).join(' and ')}, <time dateTime={leadCheck.reconfirmedAt}>{shortDate(leadCheck.reconfirmedAt)}</time>
+                </p> : null}
+              </td>)}
             </tr>
           })}</tbody>
         </table>
