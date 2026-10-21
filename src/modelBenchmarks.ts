@@ -14,6 +14,9 @@ export const MAJOR_LABS = ['anthropic', 'openai', 'google', 'xai', 'meta', 'deep
 export const MAX_SHOWN_MODELS = 7
 export const MAX_S_MODELS = 3
 
+/** A model released this many days ago or fewer carries the new-model badge. */
+export const NEW_MODEL_DAYS = 14
+
 /** The leader's record that it was rechecked against challengers and kept the top spot. */
 export interface LeadCheck {
   /** UTC date (YYYY-MM-DD) of the review that kept the leader first. */
@@ -22,10 +25,17 @@ export interface LeadCheck {
   heldAgainst: string[]
   /** Head-to-head posts from the leader's own sources that cover every challenger. */
   sourceIds: string[]
-  /** One terse hover bullet. */
+  /** The first bullet on the leader's card, linked to the first of `sourceIds`. */
   note: string
   /** Provenance only, not rendered: the evidence on both sides. */
   reason: string
+}
+
+/** One claim on a model card, linked to the post that supports it. */
+export interface ModelPoint {
+  text: string
+  /** One of the model's own `sourceIds`. */
+  sourceId: string
 }
 
 export interface RankedModel {
@@ -34,7 +44,13 @@ export interface RankedModel {
   tier: Tier
   /** Set on S models only. */
   lane?: Lane
-  points: string[]
+  /** UTC time of the lab's post announcing general availability; drives the new-model badge. */
+  releasedAt: string
+  releaseUrl: string
+  /** The card's headline score, e.g. `+20.9%` and `Agent Arena #1`. */
+  headline: { value: string; label: string; sourceId: string }
+  /** The last point is the caveat. */
+  points: ModelPoint[]
   sourceIds: string[]
   rationale: string
   leadCheck?: LeadCheck
@@ -87,6 +103,23 @@ export function selectSources(catalog: BenchmarkCatalog, selected: ReadonlySet<s
     .flatMap(model => model.sourceIds))
 
   return catalog.sources.filter(source => selectedSourceIds.has(source.id))
+}
+
+/** Each post under the highest tier among the models citing it (the selected ones, when there is a selection), in editorial order within a tier. */
+export function groupSourcesByTier(catalog: BenchmarkCatalog, sources: BenchmarkSource[], selected: ReadonlySet<string>) {
+  const rank = new Map(catalog.models.map(model => [model.id, TIERS.indexOf(model.tier)]))
+  const tierOf = (source: BenchmarkSource) => TIERS[Math.min(...source.modelIds
+    .filter(id => selected.size === 0 || selected.has(id))
+    .map(id => rank.get(id) ?? TIERS.length))]
+  return TIERS
+    .map(tier => ({ tier, sources: sources.filter(source => tierOf(source) === tier) }))
+    .filter(group => group.sources.length)
+}
+
+/** Whole days since release, or undefined once the model is no longer new. */
+export function newModelAge(releasedAt: string, now = Date.now()) {
+  const days = Math.floor(Math.max(0, now - Date.parse(releasedAt)) / 86_400_000)
+  return days <= NEW_MODEL_DAYS ? days : undefined
 }
 
 /** The first S Frontier model. */

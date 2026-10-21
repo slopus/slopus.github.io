@@ -1,56 +1,97 @@
 {
-  "schemaVersion": 2,
-  "revision": "2026-10-21.1",
-  "updatedAt": "2026-10-21T10:00:00Z",
+  "schemaVersion": 3,
+  "revision": "2026-10-21.2",
+  "updatedAt": "2026-10-21T10:35:00Z",
   "evidenceCutoff": "2026-10-21T09:30:00Z",
   "reviewNote": "Our current take for agentic coding across the major labs. S splits into Frontier, the most capable models for hard work, and Chores, the best value for routine work. Same-tier order is editorial, not a measured gap. Models reviewed but not shown are listed in notShown with the reason.",
   "models": [
     {
       "id": "anthropic/opus-5-5", "name": "Opus 5.5", "tier": "S", "lane": "frontier",
-      "points": ["#1 in Agent Arena, FrontierCode, Rails and Theo’s audit.", "Priciest per task: $10.53 a Rails run."],
+      "releasedAt": "2026-09-22T16:31:47Z", "releaseUrl": "https://x.com/AnthropicAI/status/2102435703535939725",
+      "headline": {"value": "+20.9%", "label": "Agent Arena #1", "sourceId": "2112639437482176693"},
+      "points": [
+        {"text": "#1 on FrontierCode at 52.2%.", "sourceId": "2109703511843979391"},
+        {"text": "Priciest per task: $10.53 a Rails run.", "sourceId": "2110870675342725607"}
+      ],
       "sourceIds": ["2112639437482176693", "2109703511843979391", "2110870675342725607", "2110461356935983257"],
       "rationale": "S Frontier and the leader: first in Agent Arena (+20.9% against +14.7% for the next model), AA’s FrontierCode 1.1 (52.2%), Agents on Rails (65.3%) and Theo’s blind architecture audit (8.40). It is not first everywhere: Sonnet 5.5 and Muse Wonder Full score 68 to its 66 on AA’s Coding Agent Index, and it costs the most per Rails run. Kirill’s view that it leads almost every metric holds against this evidence.",
       "leadCheck": {
         "reconfirmedAt": "2026-10-21",
         "heldAgainst": ["meta/muse-wonder-full", "google/gemini-4-argon"],
         "sourceIds": ["2112639437482176693", "2110461356935983257"],
-        "note": "Still #1 after Muse Wonder Full and Gemini 4 Argon launched.",
+        "note": "Still #1 after Muse Wonder Full and Gemini 4 Argon.",
         "reason": "Muse Wonder Full scores 68 on AA’s Coding Agent Index, above Opus 5.5’s 66, but trails it in Agent Arena (+11.3% vs +20.9%), Code Arena WebDev (1726 vs 1806) and Theo’s audit (7.04 vs 8.40). Google’s Gemini 4 Argon launch chart leads Opus 5.5 on DeepSWE (77.9 vs 74.2), but Argon trails in Agent Arena (+12.0%), Agents on Rails (60.6% vs 65.3%), Epoch’s ECI (165 vs 167) and Theo’s audit (3.95). Neither challenge converges, so the leader holds."
       }
     },
     {
       "id": "openai/gpt-6.1-sol", "name": "GPT-6.1 Sol", "tier": "S", "lane": "chores",
-      "points": ["49% on FrontierCode at $0.81 a task, under a tenth of Opus 5.5’s cost.", "Rails’ best value: 60.8% at $0.80 a run.", "Behind Opus 5.5 on the hardest work."],
+      "releasedAt": "2026-09-29T17:26:16Z", "releaseUrl": "https://x.com/OpenAI/status/2104986129686741046",
+      "headline": {"value": "+13.7%", "label": "Agent Arena, max", "sourceId": "2112600237491810662"},
+      "points": [
+        {"text": "49.1% on FrontierCode at under a tenth of Opus 5.5’s cost.", "sourceId": "2109703511843979391"},
+        {"text": "Rails’ best value: 60.8% at $0.80 a run.", "sourceId": "2110870675342725607"},
+        {"text": "AA coding index: 63, behind Opus 5.5’s 66.", "sourceId": "2105814318294114720"}
+      ],
       "sourceIds": ["2105814318294114720", "2110870675342725607", "2109703511843979391", "2112600237491810662"],
       "rationale": "S Chores, the clearest value pick: 49.1% on AA’s FrontierCode at $0.81 a task (level with Fable 5.1 at under a tenth of the cost), Rails’ best bang for the buck (60.8% at $0.80), Agent Arena’s cost frontier from $0.22 to $0.65 a task, and 63 on AA’s Coding Agent Index at $1.04 against Sonnet 5.5’s $14.19. Chosen over Sonnet 5.5, which is not cheap per task, and DeepSeek V4.1 Flash 1017, which AA finds less capable than GPT-6.1 Sol at medium effort for a higher cost per task. Not Frontier: Opus 5.5 leads it in the same tests."
     },
     {
       "id": "openai/gpt-6-astra", "name": "GPT-6 Astra", "tier": "A",
-      "points": ["#2 in Agent Arena at +14.7%.", "AA: terminal parity with Opus 5.5.", "Theo: impressive but inconsistent."],
+      "releasedAt": "2026-09-03T19:32:13Z", "releaseUrl": "https://x.com/OpenAI/status/2095595741528125780",
+      "headline": {"value": "+14.7%", "label": "Agent Arena #2", "sourceId": "2112639437482176693"},
+      "points": [
+        {"text": "AA: level with Opus 5.5 on Terminal-Bench.", "sourceId": "2102438210798514391"},
+        {"text": "62.3% on Rails at $4.71 a run, about six times GPT-6.1 Sol’s cost.", "sourceId": "2110870675342725607"},
+        {"text": "Theo: impressive but inconsistent.", "sourceId": "2097192907023458473"}
+      ],
       "sourceIds": ["2112639437482176693", "2110870675342725607", "2102438210798514391", "2097192907023458473"],
       "rationale": "A, first: #2 in Agent Arena and second in Agents on Rails, but behind Opus 5.5 in every reviewed head-to-head and about six times GPT-6.1 Sol’s Rails cost for a similar score. Moved from S when S was limited to the clear best in each lane. It takes the one slot left after each major lab’s best, edging Fable 5.1 in Agent Arena (+14.7% vs +14.2%), Code Arena WebDev and AA’s cost per task. The Rails post replaces OpenAI’s launch thread, which had no scores. Theo’s reliability warning still applies."
     },
     {
       "id": "meta/muse-wonder-full", "name": "Muse Wonder Full", "tier": "A",
-      "points": ["AA coding index: 68, level with Sonnet 5.5.", "#7 in Agent Arena, #6 in Code Arena WebDev.", "Only in Meta’s Muse Code; no public API."],
+      "releasedAt": "2026-10-12T17:02:20Z", "releaseUrl": "https://x.com/AIatMeta/status/2109691148943999167",
+      "headline": {"value": "+11.3%", "label": "Agent Arena #7", "sourceId": "2112639437482176693"},
+      "points": [
+        {"text": "AA coding index: 68, level with Sonnet 5.5.", "sourceId": "2109697083519447118"},
+        {"text": "#6 in Code Arena WebDev.", "sourceId": "2112215825944117361"},
+        {"text": "Only in Meta’s Muse Code; no public API.", "sourceId": "2109697083519447118"}
+      ],
       "sourceIds": ["2109697083519447118", "2112639437482176693", "2112215825944117361", "2110461356935983257"],
       "rationale": "A: converging independent results from AA (Coding Agent Index 68 in Muse Code, Intelligence Index 56), Agent Arena (#7, +11.3%), Code Arena WebDev (#6, 1726) and Theo’s audit (7.04, level with GPT-6 Astra). Behind Opus 5.5 everywhere except AA’s coding index. Usable only through Muse Code, with no per-token price yet."
     },
     {
       "id": "google/gemini-4-argon", "name": "Gemini 4 Argon", "tier": "A",
-      "points": ["#6 in Agent Arena; 60.6% on Rails, level with GPT-6.1 Sol.", "AA: 53, level with GPT-6 Astra; fewest hallucinations.", "Theo: 47 of 92 claims false in his audit."],
+      "releasedAt": "2026-10-13T16:05:40Z", "releaseUrl": "https://x.com/GoogleDeepMind/status/2110039274922131792",
+      "headline": {"value": "+12.0%", "label": "Agent Arena #6", "sourceId": "2112639437482176693"},
+      "points": [
+        {"text": "60.6% on Rails, level with GPT-6.1 Sol.", "sourceId": "2110870675342725607"},
+        {"text": "AA: 53, level with GPT-6 Astra; fewest hallucinations.", "sourceId": "2105392625788637299"},
+        {"text": "Theo: 47 of 92 claims false in his audit.", "sourceId": "2110461356935983257"}
+      ],
       "sourceIds": ["2105392625788637299", "2110870675342725607", "2112639437482176693", "2110461356935983257"],
       "rationale": "A, last: Agent Arena (#6, +12.0%) and Agents on Rails (60.6% vs GPT-6.1 Sol’s 60.8%) put it with the tier, and AA scores it level with GPT-6 Astra. Held at the bottom of A by Theo’s blind audit (3.95, with half its checked claims false), #10 in Code Arena WebDev and Epoch’s 6th place on software engineering. Its cost per task doubles when the launch discount ends on Nov 30."
     },
     {
       "id": "deepseek/deepseek-v4.1-flash-1017", "name": "DeepSeek V4.1 Flash 1017", "tier": "B",
-      "points": ["#1 open model in Agent Arena, #11 overall.", "AA: 45 at $0.26 a task; MIT license.", "GPT-6.1 Sol at medium is cheaper and stronger."],
+      "releasedAt": "2026-10-17T08:35:54Z", "releaseUrl": "https://x.com/deepseek_ai/status/2111375640717033777",
+      "headline": {"value": "+5.1%", "label": "Agent Arena debut #11", "sourceId": "2112247114944360666"},
+      "points": [
+        {"text": "#1 open model in Agent Arena.", "sourceId": "2112247114944360666"},
+        {"text": "AA: 45 at $0.26 a task; MIT license.", "sourceId": "2112218661432000694"},
+        {"text": "GPT-6.1 Sol at medium is cheaper and stronger.", "sourceId": "2112218661432000694"}
+      ],
       "sourceIds": ["2111375640717033777", "2112218661432000694", "2112247114944360666"],
       "rationale": "B: the strongest open-weights model in both Arena boards (Agent Arena #11 at +5.1% for $0.20 a task) and 45 on AA’s Intelligence Index for $0.26 a task. Not S Chores: AA finds GPT-6.1 Sol at medium effort more capable for less ($0.21, 48), and Arena puts it at about 37% of Sol’s improvement for 27% of the cost. DeepSeek’s own DeepSWE chart is provider-run. FrontierCode and Rails tested the earlier V4.1 Flash, not this build."
     },
     {
       "id": "xai/grok-4.7", "name": "Grok 4.7", "tier": "F",
-      "points": ["AA coding index: 56, up from 47 for Grok 4.6.", "#18 in Agent Arena; 33.8% on FrontierCode.", "Theo reports weak frontend work and loops."],
+      "releasedAt": "2026-09-21T16:17:53Z", "releaseUrl": "https://x.com/SpaceXSI/status/2102069815225586149",
+      "headline": {"value": "+3.2%", "label": "Agent Arena #18", "sourceId": "2112639437482176693"},
+      "points": [
+        {"text": "AA coding index: 56, up from 47 for Grok 4.6.", "sourceId": "2102074909623271513"},
+        {"text": "33.8% on FrontierCode, against 49.1% for GPT-6.1 Sol.", "sourceId": "2109703511843979391"},
+        {"text": "Theo reports weak frontend work and loops.", "sourceId": "2102259624313549130"}
+      ],
       "sourceIds": ["2102074909623271513", "2102259624313549130", "2112639437482176693", "2109703511843979391"],
       "rationale": "F: shown because it is xAI’s latest model, but cheaper shown models beat it on converging independent evidence. GPT-6.1 Sol leads it in Agent Arena (+13.5% vs +3.2%) and FrontierCode (49.1% vs 33.8%), and DeepSeek V4.1 Flash 1017 leads it in Agent Arena (+4.7%) at a fraction of the cost. AA’s matched-effort gains over Grok 4.6 are real but do not close that gap. FrontierCode replaces xAI’s launch chart, which compared mismatched efforts."
     }
@@ -84,6 +125,15 @@
       "verification": {"method": "X oEmbed, full post text, and direct visual review of the attached chart", "text": "All 25 ranks, effort labels and percentages transcribed from media HVGaK7ebAAAtII6; the Muse figures also appear in the post text. Publication time from the post ID."}
     },
     {
+      "id": "2110461356935983257", "url": "https://x.com/theo/status/2110461356935983257", "author": "Theo — t3.gg", "handle": "theo",
+      "publishedAt": "2026-10-14T20:02:52Z", "verifiedAt": "2026-10-21T09:30:00Z", "kind": "independent",
+      "summary": "Theo’s blind, read-only architecture audit of one T3 Code commit, scored by four model judges: Opus 5.5 8.40 (2 of 42 claims false), Sonnet 5.5 7.88, GPT-6.1 Sol 7.66, GPT-6 Astra 7.11, Muse Wonder Full 7.04, Gemini 4 Argon 3.95 with 47 of 92 claims false. He calls Argon unusable for real code work in his codebases.",
+      "caveat": "One codebase and one task, judged by models that include Opus 5.5 and Muse Wonder Full. Argon ran in Antigravity at high, its highest effort; the others at max in their own agents.",
+      "modelIds": ["anthropic/opus-5-5", "meta/muse-wonder-full", "google/gemini-4-argon"], "comparisonModelIds": ["anthropic/opus-5-5", "meta/muse-wonder-full", "google/gemini-4-argon"],
+      "scope": {"task": "Blind architectural audit of a single T3 Code commit", "harness": "Claude Code, Codex, Muse and Antigravity; no subagents", "effort": "max; Gemini 4 Argon high"},
+      "verification": {"method": "X oEmbed, full post text, and direct visual review of the attached table", "text": "Every score, false-claim count, effort and harness transcribed from media HUndMffaIAAkrkS. Publication time from the post ID."}
+    },
+    {
       "id": "2109703511843979391", "url": "https://x.com/ArtificialAnlys/status/2109703511843979391", "author": "Artificial Analysis", "handle": "ArtificialAnlys",
       "publishedAt": "2026-10-12T17:51:28Z", "verifiedAt": "2026-10-21T09:30:00Z", "kind": "independent",
       "summary": "AA’s FrontierCode 1.1 leaderboard (Cognition’s private, maintainer-graded coding tasks): Opus 5.5 52.2%, GPT-6.1 Sol 49.1%, Fable 5.1 49.0%, GPT-6 Astra 47.0%, Sonnet 5.5 45.8%, Grok 4.7 33.8%. AA calls GPT-6.1 Sol the strongest for its cost: 49% at $0.81 a task, under a tenth of the leading Anthropic models.",
@@ -100,15 +150,6 @@
       "modelIds": ["anthropic/opus-5-5", "openai/gpt-6.1-sol", "openai/gpt-6-astra", "google/gemini-4-argon"], "comparisonModelIds": ["anthropic/opus-5-5", "openai/gpt-6.1-sol", "openai/gpt-6-astra", "google/gemini-4-argon"],
       "scope": {"task": "Agents on Rails: multi-step Rails app building and legacy maintenance", "harness": "Evil Martians’ runner; see rubyonrails.org/ai", "effort": "As labeled per model: Opus 5.5, Astra and Sol xhigh; Argon and Grok 4.7 high"},
       "verification": {"method": "X oEmbed, full post text, and direct visual review of the attached chart", "text": "Scores, effort labels, cost and time per run transcribed from media HUtPpLDXcAEhQIt. Replaces the Oct 13 Stage 3 post, whose results this chart repeats, because it adds Gemini 4 Argon. Publication time from the post ID."}
-    },
-    {
-      "id": "2110461356935983257", "url": "https://x.com/theo/status/2110461356935983257", "author": "Theo — t3.gg", "handle": "theo",
-      "publishedAt": "2026-10-14T20:02:52Z", "verifiedAt": "2026-10-21T09:30:00Z", "kind": "independent",
-      "summary": "Theo’s blind, read-only architecture audit of one T3 Code commit, scored by four model judges: Opus 5.5 8.40 (2 of 42 claims false), Sonnet 5.5 7.88, GPT-6.1 Sol 7.66, GPT-6 Astra 7.11, Muse Wonder Full 7.04, Gemini 4 Argon 3.95 with 47 of 92 claims false. He calls Argon unusable for real code work in his codebases.",
-      "caveat": "One codebase and one task, judged by models that include Opus 5.5 and Muse Wonder Full. Argon ran in Antigravity at high, its highest effort; the others at max in their own agents.",
-      "modelIds": ["anthropic/opus-5-5", "meta/muse-wonder-full", "google/gemini-4-argon"], "comparisonModelIds": ["anthropic/opus-5-5", "meta/muse-wonder-full", "google/gemini-4-argon"],
-      "scope": {"task": "Blind architectural audit of a single T3 Code commit", "harness": "Claude Code, Codex, Muse and Antigravity; no subagents", "effort": "max; Gemini 4 Argon high"},
-      "verification": {"method": "X oEmbed, full post text, and direct visual review of the attached table", "text": "Every score, false-claim count, effort and harness transcribed from media HUndMffaIAAkrkS. Publication time from the post ID."}
     },
     {
       "id": "2105814318294114720", "url": "https://x.com/ArtificialAnlys/status/2105814318294114720", "author": "Artificial Analysis", "handle": "ArtificialAnlys",

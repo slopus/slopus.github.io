@@ -6,37 +6,59 @@
 .benchmark-meta { display: flex; justify-content: center; gap: .6rem; color: #557068; font: .68rem 'DM Mono', monospace; }
 .benchmark-meta a { text-decoration: underline; text-underline-offset: 3px; }
 .benchmark-meta a:hover { color: #e6522c; }
-.benchmark-table { border-collapse: separate; border-spacing: 0; width: 100%; max-width: 600px; margin-inline: auto; text-align: left; border: 1px solid #c9cabe; border-radius: 8px; }
-.benchmark-table tbody th { width: 95px; font-family: 'Space Grotesk', sans-serif; font-size: 1.45rem; padding: .65rem 1rem; border-right: 1px solid #c9cabe; }
-.benchmark-table td { padding: .6rem .8rem; height: 58px; }
+.benchmark-text-button:focus-visible, .benchmark-meta a:focus-visible { outline: 2px solid #e6522c; outline-offset: 3px; }
+.benchmark-table { border-collapse: separate; border-spacing: 0; width: max-content; max-width: 100%; margin-inline: auto; text-align: left; border: 1px solid #c9cabe; border-radius: 8px; }
+.benchmark-table tbody th { width: 72px; font-family: 'Space Grotesk', sans-serif; font-size: 1.45rem; text-align: center; padding: .65rem .8rem; border-right: 1px solid #c9cabe; }
+.benchmark-table td { padding: .75rem; vertical-align: top; }
 .benchmark-table tbody tr:not(:last-child) > * { border-bottom: 1px solid #c9cabe; }
 .benchmark-tier-s th { background: #f1d5c4; border-radius: 7px 0 0 0; }
 .benchmark-tier-a th { background: #efe0b3; }
 .benchmark-tier-b th { background: #e2e3bd; }
 .benchmark-tier-f th { background: #ead6d0; }
 .benchmark-table tbody tr:last-child th { border-bottom-left-radius: 7px; }
-.benchmark-lane { vertical-align: top; width: 50%; }
-.benchmark-lane-frontier { border-right: 1px solid #deded4; }
-.benchmark-lane-label { display: block; margin-bottom: .4rem; color: #557068; font: .6rem 'DM Mono', monospace; letter-spacing: .08em; text-transform: uppercase; }
-.benchmark-models { display: flex; flex-wrap: wrap; gap: .45rem; }
-.benchmark-model-wrap { position: relative; }
-.benchmark-model { display: flex; align-items: center; gap: .65rem; background: #fcfaf5; color: #183f38; border: 1px solid #c9cabe; border-radius: 5px; padding: .52rem .7rem; font: 500 .83rem 'DM Sans', sans-serif; cursor: pointer; }
-.benchmark-model > span { color: #73857d; }
-.benchmark-model:hover { border-color: #557068; }
-.benchmark-model:focus-visible, .benchmark-text-button:focus-visible, .benchmark-meta a:focus-visible { outline: 2px solid #e6522c; outline-offset: 3px; }
-.benchmark-model[aria-pressed='true'] { background: #183f38; color: #fcfaf5; border-color: #183f38; }
-.benchmark-model[aria-pressed='true'] > span { color: #d9d9b9; }
-.benchmark-tooltip { visibility: hidden; opacity: 0; position: absolute; z-index: 45; bottom: calc(100% + 8px); left: 0; width: 250px; max-width: calc(100vw - 150px); border: 1px solid #31564f; border-radius: 7px; padding: .85rem; background: #183f38; color: #fcfaf5; box-shadow: 0 9px 24px #183f3826; font-size: .77rem; line-height: 1.5; pointer-events: none; }
-.benchmark-model-wrap:hover .benchmark-tooltip, .benchmark-model:focus-visible + .benchmark-tooltip { visibility: visible; opacity: 1; }
-.benchmark-model-wrap[data-notes-hidden='true'] .benchmark-tooltip { visibility: hidden; opacity: 0; }
-.benchmark-model-wrap:nth-child(n+4) .benchmark-tooltip { left: auto; right: 0; }
-.benchmark-tooltip ul { margin: .55rem 0 0; padding-left: 1rem; }
-.benchmark-tooltip li + li { margin-top: .35rem; }
-.benchmark-tooltip .benchmark-note-caveat { color: #e9d8a9; }
-.benchmark-lead-check { margin: .45rem 0 0; color: #557068; font: .64rem/1.4 'DM Mono', monospace; }
+/* S reads: S | Frontier | cards | Chores | cards, each label turned to read bottom to top. */
+.benchmark-table td.benchmark-lane-label { width: 30px; padding: .75rem 0; vertical-align: middle; text-align: center; background: #f8e7dc; color: #b4462a; border-right: 1px solid #c9cabe; }
+.benchmark-lane-label span { writing-mode: vertical-rl; transform: rotate(180deg); font: 500 .62rem 'DM Mono', monospace; letter-spacing: .14em; text-transform: uppercase; }
+.benchmark-lane-label-chores { border-left: 1px solid #c9cabe; }
+/* Frontier is exactly as wide as its cards, so the Chores label follows them and Chores takes the rest of the row. */
+.benchmark-table td.benchmark-lane-frontier { width: calc(var(--cards) * var(--card-width) + (var(--cards) - 1) * .6rem); }
+.benchmark-models { display: flex; flex-wrap: wrap; gap: 1rem .6rem; }
+/* Every card has the same size; claims are written to fit two lines each. */
+.benchmark-table { --card-width: 244px; }
+.benchmark-card { position: relative; box-sizing: border-box; width: var(--card-width); height: 180px; display: flex; flex-direction: column; background: #fcfaf5; color: #183f38; border: 1px solid #c9cabe; border-radius: 6px; padding: .7rem .8rem; }
+.benchmark-card:hover { border-color: #557068; }
+.benchmark-card[data-selected='true'] { border-color: #183f38; box-shadow: inset 0 0 0 1px #183f38; background: #f3f0e4; }
+.benchmark-card:has(.benchmark-model:focus-visible) { outline: 2px solid #e6522c; outline-offset: 2px; }
+.benchmark-model { align-self: flex-start; border: 0; padding: 0; background: none; color: inherit; font: 600 .9rem/1.25 'DM Sans', sans-serif; text-align: left; cursor: pointer; }
+/* The whole card toggles the filter; its links sit above this. */
+.benchmark-model::after { content: ''; position: absolute; inset: 0; border-radius: 6px; }
+.benchmark-model:focus-visible { outline: none; }
+.benchmark-claim { position: relative; z-index: 1; color: inherit; text-decoration: none; }
+.benchmark-claim:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.benchmark-claim:focus-visible { outline: 2px solid #e6522c; outline-offset: 1px; border-radius: 2px; }
+.benchmark-claim-end { white-space: nowrap; }
+.benchmark-claim-arrow { display: inline-block; font-family: 'DM Mono', monospace; margin-left: .12em; font-size: .72em; line-height: 0; vertical-align: .55em; color: #73857d; }
+.benchmark-claim:hover .benchmark-claim-arrow { color: #e6522c; }
+.benchmark-headline { align-self: flex-start; margin-top: .3rem; color: #557068; font: .62rem 'DM Mono', monospace; white-space: nowrap; }
+.benchmark-headline strong { margin-right: .3rem; color: #183f38; font: 600 1.25rem/1.1 'Space Grotesk', sans-serif; }
+.benchmark-card ul { margin: .5rem 0 0; padding-left: .85rem; font-size: .72rem; line-height: 1.38; }
+.benchmark-card li + li { margin-top: .22rem; }
+.benchmark-card li::marker { color: #9aa79f; }
+.benchmark-card .benchmark-note-lead { color: #557068; }
+.benchmark-card .benchmark-note-lead .benchmark-claim { color: #183f38; }
+.benchmark-card .benchmark-note-caveat { color: #8a5a35; }
+.benchmark-new { position: absolute; z-index: 2; top: -9px; right: 10px; display: inline-flex; align-items: center; gap: .25rem; padding: .12rem .4rem .12rem .32rem; border: 1px solid #e9b49b; border-radius: 999px; background: #fdeee6; color: #b4462a; font: 500 .62rem/1.2 'DM Mono', monospace; pointer-events: none; }
+.benchmark-new-icon { width: 12px; height: 12px; }
 .benchmark-evidence { margin-top: 1.25rem; scroll-margin-top: 105px; }
-.benchmark-filters { display: flex; align-items: center; justify-content: flex-end; max-width: 600px; margin: 0 auto 1.2rem; min-height: 30px; }
+.benchmark-filters { display: flex; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 1.2rem; min-height: 30px; }
 .benchmark-text-button { border: 0; border-bottom: 1px solid #557068; padding: 0; font: inherit; font-size: .76rem; color: #183f38; background: none; cursor: pointer; }
+.benchmark-source-group + .benchmark-source-group { margin-top: 2.6rem; }
+.benchmark-group-heading { display: flex; align-items: center; gap: .7rem; margin: 0 0 1.1rem; color: #557068; font: 500 .82rem 'DM Sans', sans-serif; }
+.benchmark-group-tier { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 6px; color: #183f38; font: 600 1rem 'Space Grotesk', sans-serif; }
+.benchmark-source-group-s .benchmark-group-tier { background: #f1d5c4; }
+.benchmark-source-group-a .benchmark-group-tier { background: #efe0b3; }
+.benchmark-source-group-b .benchmark-group-tier { background: #e2e3bd; }
+.benchmark-source-group-f .benchmark-group-tier { background: #ead6d0; }
 .benchmark-no-evidence { padding: 2rem 0; color: #557068; font-size: .85rem; }
 .benchmark-source-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 1.8rem 1rem; }
 .benchmark-source { min-width: 0; width: 100%; max-width: 350px; justify-self: center; }
@@ -58,9 +80,20 @@
   .benchmark-main { width: calc(100% - 32px); padding-top: 1.4rem; }
   .benchmark-heading h1 { max-width: 330px; margin-inline: auto; }
   .benchmark-meta { font-size: .6rem; }
-  .benchmark-table tbody th { width: 75px; padding: .5rem .6rem; }
-  .benchmark-table td { padding: .5rem; }
-  .benchmark-model { font-size: .75rem; padding: .5rem; gap: .5rem; }
-  .benchmark-model-wrap:nth-child(n) .benchmark-tooltip { position: fixed; bottom: 16px; left: 16px; right: 16px; width: auto; max-width: none; }
+  /* Each row is a grid: the tier letter on the left, lanes stacked on the right with plain labels. */
+  .benchmark-table, .benchmark-table tbody { display: block; }
+  .benchmark-table tr { display: grid; grid-template-columns: 44px minmax(0, 1fr); }
+  .benchmark-table tbody tr:not(:last-child) { border-bottom: 1px solid #c9cabe; }
+  .benchmark-table tbody tr:not(:last-child) > * { border-bottom: 0; }
+  .benchmark-table tbody th { grid-row: span 4; width: auto; padding: .5rem 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+  .benchmark-tier-s th { border-top-left-radius: 7px; }
+  .benchmark-table td { grid-column: 2; padding: .55rem; }
+  .benchmark-table td.benchmark-lane-label { width: auto; padding: .6rem .55rem 0; text-align: left; border: 0; }
+  .benchmark-lane-label span { writing-mode: horizontal-tb; transform: none; }
+  .benchmark-table td.benchmark-lane-label-chores { border-top: 1px solid #c9cabe; }
+  .benchmark-table td.benchmark-lane { padding-top: .6rem; }
+  .benchmark-table td.benchmark-lane-frontier { width: auto; }
+  .benchmark-models { flex-direction: column; gap: .7rem; }
+  .benchmark-card { width: 100%; height: auto; min-height: 0; }
   .benchmark-source-list { grid-template-columns: 1fr; }
 }
