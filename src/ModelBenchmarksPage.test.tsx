@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import ModelBenchmarksPage from './ModelBenchmarksPage'
-import { absoluteDate, benchmarkCatalog, groupSourcesByTier, labOf, LANES, leaderOf, MAJOR_LABS, MAX_S_MODELS, MAX_SHOWN_MODELS, NEW_MODEL_DAYS, newModelAge, publicationAge, selectSources, TIERS, type BenchmarkCatalog, type BenchmarkSource, type RankedModel } from './modelBenchmarks'
+import { absoluteDate, arenaGap, benchmarkCatalog, groupSourcesByTier, labOf, LANES, leaderOf, MAJOR_LABS, MAX_S_MODELS, MAX_SHOWN_MODELS, NEW_MODEL_DAYS, newModelAge, publicationAge, selectSources, TIERS, type BenchmarkCatalog, type BenchmarkSource, type RankedModel } from './modelBenchmarks'
 import { Router } from './Router'
 import { modelBenchmarksMetadata } from './siteMetadata'
 
@@ -13,16 +13,16 @@ const source = (id: string, modelIds: string[], comparisonModelIds: string[] = [
 })
 const model = (id: string, name: string, tier: RankedModel['tier'], points: [string, string][], extra: Partial<RankedModel> = {}): RankedModel => ({
   id, name, tier, releasedAt: '2026-08-01T12:00:00Z', releaseUrl: `https://x.com/lab/status/1${id.length}`,
-  headline: { value: '+1.0%', label: 'Agent Arena #9', sourceId: points[0]?.[1] ?? '100' },
   points: points.map(([text, sourceId]) => ({ text, sourceId })), sourceIds: [...new Set(points.map(([, sourceId]) => sourceId))], rationale: 'Fixture.', ...extra,
 })
 const fixture: BenchmarkCatalog = {
-  schemaVersion: 3, revision: 'test.1', updatedAt: '2026-09-23T10:00:00Z', evidenceCutoff: '2026-09-23T10:00:00Z', reviewNote: 'Reviewed fixture.',
+  schemaVersion: 4, revision: 'test.1', updatedAt: '2026-09-23T10:00:00Z', evidenceCutoff: '2026-09-23T10:00:00Z', reviewNote: 'Reviewed fixture.',
+  arenaBoard: { sourceId: '100', top: [{ name: 'Alpha', effort: 'Max', score: 20 }, { name: 'Fable', effort: 'High', score: 15.5 }] },
   models: [
     model('test/alpha', 'Alpha', 'S', [['Strong on coding.', '100'], ['Limited evidence elsewhere.', '200']], { lane: 'frontier',
-      headline: { value: '+20.0%', label: 'Agent Arena #1', sourceId: '100' },
+      arena: { rank: 1, effort: 'Max', score: 20 },
       leadCheck: { reconfirmedAt: '2026-09-23', heldAgainst: ['test/beta'], sourceIds: ['100'], note: 'Still #1 after Beta launched.', reason: 'Fixture head-to-head.' } }),
-    model('test/beta', 'Beta', 'S', [['Useful for small tasks.', '300'], ['Effort matters.', '100']], { lane: 'chores', releasedAt: '2026-09-20T12:00:00Z' }),
+    model('test/beta', 'Beta', 'S', [['Useful for small tasks.', '300'], ['Effort matters.', '100']], { lane: 'chores', releasedAt: '2026-09-20T12:00:00Z', arena: { rank: 4, effort: 'xHigh', score: 13.4 } }),
     { ...model('test/gamma', 'Gamma', 'B', [['Narrow evidence.', '100'], ['Fixture caveat.', '100']]), sourceIds: [], rationale: 'Fixture without posts.' },
   ],
   notShown: [],
@@ -36,7 +36,7 @@ afterEach(() => { cleanup(); delete window.twttr; vi.restoreAllMocks() })
 
 describe('reviewed catalog integrity', () => {
   it('has unique exact models with at most four reviewed posts each', () => {
-    expect(benchmarkCatalog.schemaVersion).toBe(3)
+    expect(benchmarkCatalog.schemaVersion).toBe(4)
     expect(new Set(benchmarkCatalog.models.map(model => model.id)).size).toBe(benchmarkCatalog.models.length)
     for (const model of benchmarkCatalog.models) {
       expect(model.id).toMatch(/^[a-z0-9]+\/[a-z0-9.-]+$/)
@@ -52,9 +52,6 @@ describe('reviewed catalog integrity', () => {
         expect(model.sourceIds).toContain(point.sourceId)
         expect(point.text.length).toBeLessThanOrEqual(66)
       }
-      expect(model.sourceIds).toContain(model.headline.sourceId)
-      expect(model.headline.value).toMatch(/^[+−-]?\d/)
-      expect(model.headline.label.length).toBeLessThanOrEqual(22)
       // The release time comes from the lab's own post, by its snowflake, and drives the new-model badge.
       const release = model.releaseUrl.match(/^https:\/\/x\.com\/\w+\/status\/(\d+)$/)
       expect(release).toBeTruthy()
@@ -146,6 +143,50 @@ describe('reviewed catalog integrity', () => {
   })
 })
 
+describe('Agent Arena headline', () => {
+  it('comes from one board for every card, each entry checked against the board post', () => {
+    const board = benchmarkCatalog.arenaBoard
+    const post = benchmarkCatalog.sources.find(source => source.id === board.sourceId)!
+    expect(post.handle).toBe('arena')
+    const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const entry = (rank: number, name: string, effort: string, score: number) => new RegExp(`#${rank} ${escape(name)} \\(${escape(effort)}\\) \\+${score.toFixed(1)}%`)
+    const [first, second] = board.top
+    expect(first.score).toBeGreaterThanOrEqual(second.score)
+    expect(post.summary).toMatch(entry(1, first.name, first.effort, first.score))
+    expect(post.summary).toMatch(entry(2, second.name, second.effort, second.score))
+    const ranked = benchmarkCatalog.models.filter(model => model.arena)
+    // Every shown model is on the current board; a model not ranked yet would show "Not on Agent Arena yet".
+    expect(ranked).toHaveLength(benchmarkCatalog.models.length)
+    expect(new Set(ranked.map(model => model.arena!.rank)).size).toBe(ranked.length)
+    for (const model of ranked) {
+      const { rank, effort, score } = model.arena!
+      expect(model.sourceIds).toContain(board.sourceId)
+      expect(['Low', 'Medium', 'High', 'xHigh', 'Max']).toContain(effort)
+      expect(post.summary).toMatch(new RegExp(`#${rank} [^,#]+ \\(${effort}\\) \\+${score.toFixed(1)}%`))
+      expect(score).toBeLessThanOrEqual(first.score)
+      if (rank === 1) expect([model.name, effort, score]).toEqual([first.name, first.effort, first.score])
+      if (rank === 2) expect([model.name, effort, score]).toEqual([second.name, second.effort, second.score])
+    }
+    const byRank = [...ranked].sort((a, b) => a.arena!.rank - b.arena!.rank)
+    for (let index = 1; index < byRank.length; index++) expect(byRank[index].arena!.score).toBeLessThanOrEqual(byRank[index - 1].arena!.score)
+  })
+  it('gives #1 its lead over #2 and everyone else their gap to #1, in points with efforts named', () => {
+    const board = fixture.arenaBoard
+    expect(arenaGap(board, { rank: 1, effort: 'Max', score: 20 })).toBe('+4.5 pts over #2 Fable (High)')
+    expect(arenaGap(board, { rank: 4, effort: 'xHigh', score: 13.4 })).toBe('6.6 pts behind #1 Alpha (Max)')
+    expect(arenaGap(benchmarkCatalog.arenaBoard, leaderOf(benchmarkCatalog)!.arena!)).toBe('+6.2 pts over #2 GPT-6 Astra (Max)')
+  })
+  it('shows rank, board, effort and gap on each card and explains the metric once', () => {
+    render(<ModelBenchmarksPage catalog={fixture} />)
+    const headlines = [...document.querySelectorAll('.benchmark-headline')].map(element => element.textContent)
+    expect(headlines).toEqual(['#1 Agent Arena, Max effort+4.5 pts over #2 Fable (High)↗', '#4 Agent Arena, xHigh effort6.6 pts behind #1 Alpha (Max)↗', 'Not on Agent Arena yet'])
+    const legend = document.querySelector('.benchmark-legend')!
+    expect(legend.textContent).toContain('than with the average model')
+    expect(legend.textContent).toContain('percentage points')
+    expect(legend.querySelector('a')?.getAttribute('href')).toBe('https://x.com/researcher/status/100')
+  })
+})
+
 describe('post order', () => {
   it('lists posts in tier order of their best citing model, the leader’s lead-check posts first', () => {
     const rank = (source: BenchmarkSource) => Math.min(...source.modelIds.map(id => benchmarkCatalog.models.findIndex(model => model.id === id)))
@@ -223,7 +264,7 @@ describe('model benchmarks page', () => {
     expect(document.querySelector('[role="tooltip"]')).toBeNull()
     expect(alpha.textContent).toBe('Alpha')
     const links = [...card.querySelectorAll('a')]
-    expect(links.map(link => link.textContent)).toEqual(['+20.0% Agent Arena #1↗', 'Still #1 after Beta launched.↗', 'Strong on coding.↗', 'Limited evidence elsewhere.↗'])
+    expect(links.map(link => link.textContent)).toEqual(['#1 Agent Arena, Max effort+4.5 pts over #2 Fable (High)↗', 'Still #1 after Beta launched.↗', 'Strong on coding.↗', 'Limited evidence elsewhere.↗'])
     expect(links.map(link => link.getAttribute('href'))).toEqual(['100', '100', '100', '200'].map(id => `https://x.com/researcher/status/${id}`))
     for (const link of links) {
       expect(link.getAttribute('target')).toBe('_blank')

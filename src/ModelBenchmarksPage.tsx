@@ -1,9 +1,15 @@
 import { Fragment, useState, type CSSProperties, type ReactNode } from 'react'
 import { SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP } from './products'
-import { absoluteDate, benchmarkCatalog, groupSourcesByTier, LANES, leaderOf, newModelAge, publicationAge, selectSources, shortDate, TIERS, type BenchmarkCatalog, type RankedModel } from './modelBenchmarks'
+import { absoluteDate, arenaGap, benchmarkCatalog, groupSourcesByTier, LANES, leaderOf, newModelAge, publicationAge, selectSources, shortDate, TIERS, type BenchmarkCatalog, type RankedModel } from './modelBenchmarks'
 import { XPostEmbed } from './XPostEmbed'
 import './model-benchmarks.css'
+
+/** Text whose last word carries the raised link arrow, never wrapped onto a line of its own. */
+function withArrow(text: string) {
+  const lastWord = text.lastIndexOf(' ') + 1
+  return <>{text.slice(0, lastWord)}<span className="benchmark-claim-end">{text.slice(lastWord)}<span className="benchmark-claim-arrow" aria-hidden="true">↗</span></span></>
+}
 
 /** Lucide's `baby` icon (ISC license). */
 function BabyIcon() {
@@ -22,6 +28,7 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
   const sources = selectSources(catalog, selected)
   const groups = groupSourcesByTier(catalog, sources, selected)
   const leader = leaderOf(catalog)
+  const board = catalog.sources.find(source => source.id === catalog.arenaBoard.sourceId)
   const sourceUrl = (id: string) => catalog.sources.find(source => source.id === id)?.url ?? `https://x.com/i/status/${id}`
 
   function toggleModel(id: string) {
@@ -35,9 +42,8 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
 
   /** A claim linked to its post. The arrow stays on the line of the claim's last word. */
   function claim(sourceId: string, text: string, lead?: ReactNode) {
-    const lastWord = text.lastIndexOf(' ') + 1
     return <a className={lead ? 'benchmark-claim benchmark-headline' : 'benchmark-claim'} href={sourceUrl(sourceId)} target="_blank" rel="noopener noreferrer">
-      {lead}{text.slice(0, lastWord)}<span className="benchmark-claim-end">{text.slice(lastWord)}<span className="benchmark-claim-arrow" aria-hidden="true">↗</span></span>
+      {lead}{lead ? <span className="benchmark-headline-gap">{withArrow(text)}</span> : withArrow(text)}
     </a>
   }
 
@@ -50,7 +56,11 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
         <BabyIcon />{age}d<span className="benchmark-sr-only"> since release</span>
       </span>}
       <button type="button" className="benchmark-model" aria-pressed={selected.has(model.id)} aria-describedby={notesId} onClick={() => toggleModel(model.id)}>{model.name}</button>
-      {claim(model.headline.sourceId, model.headline.label, <><strong>{model.headline.value}</strong> </>)}
+      {model.arena
+        ? claim(catalog.arenaBoard.sourceId, arenaGap(catalog.arenaBoard, model.arena), <span className="benchmark-headline-rank">
+          <strong>#{model.arena.rank}</strong> Agent Arena, {model.arena.effort} effort
+        </span>)
+        : <p className="benchmark-headline benchmark-headline-missing">Not on Agent Arena yet</p>}
       <ul id={notesId}>
         {leadCheck ? <li className="benchmark-note-lead">
           {claim(leadCheck.sourceIds[0], leadCheck.note)} Rechecked <time dateTime={leadCheck.reconfirmedAt}>{shortDate(leadCheck.reconfirmedAt)}</time>.
@@ -94,6 +104,9 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
             </tr>
           })}</tbody>
         </table>
+        {board ? <p className="benchmark-legend">
+          Headline: rank on <a className="benchmark-claim" href={board.url} target="_blank" rel="noopener noreferrer">{withArrow(`Arena’s Agent Arena board of ${shortDate(board.publishedAt)}`)}</a>, at the effort shown. Arena scores how much better real users’ agent sessions go with a model than with the average model; gaps are percentage points (pts) of that score.
+        </p> : null}
 
         <section className="benchmark-evidence" aria-label="Source posts" id="benchmark-evidence">
           <div className="benchmark-filters">

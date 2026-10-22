@@ -38,6 +38,28 @@ export interface ModelPoint {
   sourceId: string
 }
 
+/**
+ * One entry on Arena's Agent Arena board. `score` is Arena's net improvement: how much better
+ * real users' agent sessions go with the model than with the average model, in percent.
+ * Gaps between scores are percentage points.
+ */
+export interface ArenaEntry {
+  rank: number
+  /** Reasoning effort as Arena labels the entry, e.g. `Max`, `High`, `xHigh`. */
+  effort: string
+  score: number
+}
+
+/** The one Agent Arena board every card's headline comes from. */
+export interface ArenaBoard {
+  /** The board's post; every model with an `arena` entry cites it. */
+  sourceId: string
+  /** The board's #1 and #2, shown or not, for the leader's lead and everyone's gap to #1. */
+  top: [ArenaBoardEntry, ArenaBoardEntry]
+}
+
+export interface ArenaBoardEntry { name: string; effort: string; score: number }
+
 export interface RankedModel {
   id: string
   name: string
@@ -47,8 +69,8 @@ export interface RankedModel {
   /** UTC time of the lab's post announcing general availability; drives the new-model badge. */
   releasedAt: string
   releaseUrl: string
-  /** The card's headline score, e.g. `+20.9%` and `Agent Arena #1`. */
-  headline: { value: string; label: string; sourceId: string }
+  /** The model's entry on `arenaBoard`; omitted while it is not on the board yet. */
+  arena?: ArenaEntry
   /** The last point is the caveat. */
   points: ModelPoint[]
   sourceIds: string[]
@@ -89,6 +111,7 @@ export interface BenchmarkCatalog {
   updatedAt: string
   evidenceCutoff: string
   reviewNote: string
+  arenaBoard: ArenaBoard
   models: RankedModel[]
   notShown: HiddenModel[]
   sources: BenchmarkSource[]
@@ -114,6 +137,19 @@ export function groupSourcesByTier(catalog: BenchmarkCatalog, sources: Benchmark
   return TIERS
     .map(tier => ({ tier, sources: sources.filter(source => tierOf(source) === tier) }))
     .filter(group => group.sources.length)
+}
+
+/** Gap in percentage points, from one decimal place scores. */
+function points(a: number, b: number) {
+  return (Math.round((a - b) * 10) / 10).toFixed(1)
+}
+
+/** The card headline's second line: #1's lead over #2, or everyone else's gap to #1. */
+export function arenaGap(board: ArenaBoard, entry: ArenaEntry) {
+  const [first, second] = board.top
+  return entry.rank === 1
+    ? `+${points(entry.score, second.score)} pts over #2 ${second.name} (${second.effort})`
+    : `${points(first.score, entry.score)} pts behind #1 ${first.name} (${first.effort})`
 }
 
 /** Whole days since release, or undefined once the model is no longer new. */

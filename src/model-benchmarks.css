@@ -25,7 +25,7 @@
 .benchmark-models { display: flex; flex-wrap: wrap; gap: 1rem .6rem; }
 /* Every card has the same size; claims are written to fit two lines each. */
 .benchmark-table { --card-width: 244px; }
-.benchmark-card { position: relative; box-sizing: border-box; width: var(--card-width); height: 180px; display: flex; flex-direction: column; background: #fcfaf5; color: #183f38; border: 1px solid #c9cabe; border-radius: 6px; padding: .7rem .8rem; }
+.benchmark-card { position: relative; box-sizing: border-box; width: var(--card-width); height: 200px; display: flex; flex-direction: column; background: #fcfaf5; color: #183f38; border: 1px solid #c9cabe; border-radius: 6px; padding: .7rem .8rem; }
 .benchmark-card:hover { border-color: #557068; }
 .benchmark-card[data-selected='true'] { border-color: #183f38; box-shadow: inset 0 0 0 1px #183f38; background: #f3f0e4; }
 .benchmark-card:has(.benchmark-model:focus-visible) { outline: 2px solid #e6522c; outline-offset: 2px; }
@@ -39,8 +39,12 @@
 .benchmark-claim-end { white-space: nowrap; }
 .benchmark-claim-arrow { display: inline-block; font-family: 'DM Mono', monospace; margin-left: .12em; font-size: .72em; line-height: 0; vertical-align: .55em; color: #73857d; }
 .benchmark-claim:hover .benchmark-claim-arrow { color: #e6522c; }
-.benchmark-headline { align-self: flex-start; margin-top: .3rem; color: #557068; font: .62rem 'DM Mono', monospace; white-space: nowrap; }
-.benchmark-headline strong { margin-right: .3rem; color: #183f38; font: 600 1.25rem/1.1 'Space Grotesk', sans-serif; }
+.benchmark-headline { align-self: flex-start; display: flex; flex-direction: column; margin: .3rem 0 0; color: #183f38; font-size: .72rem; line-height: 1.35; }
+.benchmark-headline-rank { margin-bottom: .1rem; color: #557068; font: .62rem 'DM Mono', monospace; white-space: nowrap; }
+.benchmark-headline-rank strong { margin-right: .3rem; color: #183f38; font: 600 1.25rem/1.1 'Space Grotesk', sans-serif; }
+.benchmark-headline-missing { color: #557068; }
+.benchmark-legend { max-width: 640px; margin: .7rem auto 0; color: #557068; font-size: .72rem; line-height: 1.5; text-align: center; text-wrap: balance; }
+.benchmark-legend .benchmark-claim { color: #183f38; }
 .benchmark-card ul { margin: .5rem 0 0; padding-left: .85rem; font-size: .72rem; line-height: 1.38; }
 .benchmark-card li + li { margin-top: .22rem; }
 .benchmark-card li::marker { color: #9aa79f; }
