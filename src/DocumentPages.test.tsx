@@ -32,7 +32,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(40)
+    expect(documentsForProduct('desktop')).toHaveLength(43)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -441,12 +441,12 @@ describe('static document pages', () => {
     for (const fold of folds) {
       expect(fold.hasAttribute('open')).toBe(false)
       expect(fold.querySelector('summary')?.textContent).toBe('Recipes (for agents)')
-      expect(fold.querySelectorAll('a')).toHaveLength(15)
+      expect(fold.querySelectorAll('a')).toHaveLength(18)
     }
   })
 
   it('publishes complete, unmodified recipe sources with source-relative links', () => {
-    expect(recipeSources.files).toHaveLength(15)
+    expect(recipeSources.files).toHaveLength(18)
     for (const file of recipeSources.files) {
       const document = getDocument('desktop', file.route)!
       const source = getDocumentSource(document)
@@ -454,6 +454,7 @@ describe('static document pages', () => {
       const markup = renderPath(`/${file.route}/`)
       expect(markup).not.toContain('class="cos-prompt"')
       expect(markup).not.toMatch(/href="(?:\.\.?\/|[^"/#:]+\.md)/)
+      expect(markup).toContain(`<p class="recipe-source">Synced from happy-agent <a href="${recipeSources.repository}/blob/${recipeSources.revision}/${file.source}"><code>${file.source}</code> @ <code>${recipeSources.revision.slice(0, 9)}</code></a></p>`)
     }
     expect(recipeHref('recepies/runner', 'README.md#testing-a-deployed-node')).toBe('/recepies/#testing-a-deployed-node')
     expect(recipeHref('recepies', 'exported-bot-telegram.md')).toBe('/recepies/telegram/')

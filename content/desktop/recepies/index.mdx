@@ -44,6 +44,14 @@ Keep tests bounded and within the user's authorized task; inference may incur pr
 Inspect existing projects read-only when checking that their state survived an upgrade, but never
 send them test messages or run test commands in them.
 
+## Peer messaging
+
+Read [Connect two Happy Agents over one WebSocket](peer-messaging.md) when agents on
+two installations need to exchange text using known Agent IDs. The Chief of Staff
+configures both ends over existing administration access, then checks the
+same authenticated session in both directions. The desktop initiates outbound;
+only the reachable installation listens.
+
 ## Windows and WSL
 
 Read [Set up WSL projects](setup-wsl-agent.md) when adding Linux projects to a Windows installation.

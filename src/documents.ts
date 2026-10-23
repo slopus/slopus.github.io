@@ -373,6 +373,14 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Recipes',
   },
   {
+    path: 'recepies/harnesses',
+    sourcePath: '/content/desktop/recepies/harnesses.mdx',
+    title: "Harnesses: Claude Code, Codex CLI, Antigravity, OpenCode, and ACP agents",
+    description: "Use this recipe when the user wants a Happy agent to run on another vendor's whole agent rather than on Happy's own loop: Claude Code itself, Codex CLI...",
+    cardLine: 'Claude Code, Codex, and ACP agents as harnesses',
+    group: 'Recipes',
+  },
+  {
     path: 'recepies/wsl',
     sourcePath: '/content/desktop/recepies/wsl.mdx',
     title: "Set up WSL projects from Windows",
@@ -410,6 +418,22 @@ const desktopDocuments: DocumentDefinition[] = [
     title: "Build a live, shared HTML artifact",
     description: "Use this recipe when an html artifact should remember things or be shared: a to-do list, a poll, a sign-up sheet, a scoreboard, a small game, or a dashboard...",
     cardLine: 'Saved data, shared live with everyone viewing',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/peer-messaging',
+    sourcePath: '/content/desktop/recepies/peer-messaging.mdx',
+    title: "Connect two Happy Agents over one WebSocket",
+    description: "Use this recipe when a desktop or private machine should initiate one outbound connection to a reachable Happy Agent, then exchange messages in both...",
+    cardLine: 'Two installations, one outbound connection',
+    group: 'Recipes',
+  },
+  {
+    path: 'recepies/rest-api',
+    sourcePath: '/content/desktop/recepies/rest-api.mdx',
+    title: "Drive a Happy Agent over its REST API",
+    description: "Use this recipe when a script or another agent should message a Happy agent directly and read its reply. It shows the shortest working path. The installed...",
+    cardLine: 'Message any agent from a script',
     group: 'Recipes',
   },
   {

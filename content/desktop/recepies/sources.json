@@ -1,12 +1,12 @@
 {
   "repository": "https://github.com/slopus/happy-agent",
-  "revision": "528d1eab24c4657f5cb43f25a50a8dc3b97be70a",
+  "revision": "a78dfd0e1b09f4f73658b7dfaa1b3494605fa21b",
   "files": [
     {
       "route": "recepies",
       "source": "docs/recipe/README.md",
       "target": "content/desktop/recepies/index.mdx",
-      "sha256": "ac2bd98d81dc509c3cb58664c535df6eda3d57b3afdb57bc5cbe774f285245a9"
+      "sha256": "814e1462e6bfa31483b0793d0f0fe86fcd6484912053193089c22c207c2408ce"
     },
     {
       "route": "recepies/first-project",
@@ -24,7 +24,13 @@
       "route": "recepies/accounts-and-models",
       "source": "docs/recipe/accounts-and-models.md",
       "target": "content/desktop/recepies/accounts-and-models.mdx",
-      "sha256": "8d1eaf34d906a6b2cfc5ea140ddce620d6931de015e938b5b88e479c9e796271"
+      "sha256": "c7ec65b40d5c35cf798bed3f4b760151cf82384461a4d1881e5c90352ab68459"
+    },
+    {
+      "route": "recepies/harnesses",
+      "source": "docs/recipe/harnesses.md",
+      "target": "content/desktop/recepies/harnesses.mdx",
+      "sha256": "d6ecc3b975625bdeecfae175f5f4f8568549b3b02a59b2ff3d30a28ea7a82dd6"
     },
     {
       "route": "recepies/wsl",
@@ -36,13 +42,13 @@
       "route": "recepies/telegram",
       "source": "docs/recipe/exported-bot-telegram.md",
       "target": "content/desktop/recepies/telegram.mdx",
-      "sha256": "522061cc1fefde4621514de2e3995ebe9a23f94e1cafac2ce8d1011b0202758f"
+      "sha256": "c81df1feeacfad79392a3b643be73c9ff768802a30ae0bedb3034cc2f1e44dff"
     },
     {
       "route": "recepies/chat-bridge",
       "source": "docs/recipe/exported-bot-bridge.md",
       "target": "content/desktop/recepies/chat-bridge.mdx",
-      "sha256": "74ef92ba1ac570fa888092998e94b7c1005c17959fc715220cc7527e2ff0bb17"
+      "sha256": "1c06fb321bdc85fe593f20f9fa171d078f545b7dc082686d51c2d76e6dfe5b8c"
     },
     {
       "route": "recepies/bot-settings",
@@ -54,7 +60,19 @@
       "route": "recepies/shared-app",
       "source": "docs/recipe/artifact-apps.md",
       "target": "content/desktop/recepies/shared-app.mdx",
-      "sha256": "50a304fa2502b5ac2028cd5ec2437375cb35dfa471122d8d73c1532e048ccefd"
+      "sha256": "fcc2b9249cfafbee1e48ec86769566ee29edd6b2a4ea2c4133095e3aa5f9658b"
+    },
+    {
+      "route": "recepies/peer-messaging",
+      "source": "docs/recipe/peer-messaging.md",
+      "target": "content/desktop/recepies/peer-messaging.mdx",
+      "sha256": "1a15fd167e2c51b8f08dc0bc521355c0b132ef438672f9a9dfa0b61f1f8ee4a5"
+    },
+    {
+      "route": "recepies/rest-api",
+      "source": "docs/recipe/happy-rest-api.md",
+      "target": "content/desktop/recepies/rest-api.mdx",
+      "sha256": "a6074ed1e5666982303b1e4389a83f491cb1f8fe6f247fc9319969d2e41521ae"
     },
     {
       "route": "recepies/remote-agent",
@@ -66,7 +84,7 @@
       "route": "recepies/team",
       "source": "docs/recipe/deploy-happy-team.md",
       "target": "content/desktop/recepies/team.mdx",
-      "sha256": "3460f21f28cf58b5907bc3e692eb3154445623d2be06d735eaecb57b2900ed10"
+      "sha256": "889a0065e3bfe06a841d47884db9394717d655d3952ced5971f2b7ee2aa8651a"
     },
     {
       "route": "recepies/runner",
@@ -78,7 +96,7 @@
       "route": "recepies/hardening",
       "source": "docs/recipe/harden-node.md",
       "target": "content/desktop/recepies/hardening.mdx",
-      "sha256": "2f02e541f7bcc0df80eaa49db7d65c52c6d5a985e5d19d5a073b36079b23d0db"
+      "sha256": "344ed5fa65ebcb1854b16ba787b75fe44fbcfcbf5ead5aaa7e639d90e6c2425d"
     },
     {
       "route": "recepies/enterprise-sign-in",

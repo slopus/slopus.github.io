@@ -377,8 +377,9 @@ it again (`/token` in @BotFather). Delete `telegram-sync` afterwards.
 - Each person sees only their own conversation. Their subtask works in the bot's folder, which is
   why the export has a bot of its own.
 - Nothing a stranger writes reaches any bot before they are approved; you see only who they are.
-- Replies are plain text. Only the bot's final answer to each message is sent, not its working
-  notes, and long answers arrive in several messages. Images the bot generates or shows with
+- Replies are plain text. Everything the bot writes is sent, including short notes on its
+  progress while it works, and long answers arrive in several messages. The bot shows as typing
+  for as long as it works. Images the bot generates or shows with
   `present_files` arrive as photos, and other files it shows arrive as documents, up to Telegram's
   50 MB limit.
 - Photos people send are shown to the bot. Voice notes, videos, and files are not read yet; the

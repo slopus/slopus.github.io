@@ -173,4 +173,5 @@ bot.
   why the export has a bot of its own. A bridge's user IDs belong to that bridge, so the same
   person on two bridges is two guests.
 - Replies wait in Happy until the bridge confirms them, so a bridge that was offline catches up
-  when it reconnects. Only the bot's final answer to each message is sent, not its working notes.
+  when it reconnects. Everything the bot writes is sent, including short notes on its progress
+  while it works, and the files it shows arrive with its last reply to each message.

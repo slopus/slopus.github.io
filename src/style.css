@@ -266,7 +266,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .docs-sidebar { align-self: stretch; height: 100%; max-height: none; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 1.75rem 2px 3rem; position: static; }
   .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 1.75rem 0 0; position: relative; scrollbar-width: none; }
   .docs-shell .document-article::-webkit-scrollbar { width: 0; height: 0; }
-  .docs-shell .document-article > .legacy-notice { margin-right: 2rem; }
+  .docs-shell .document-article > .legacy-notice,
+  .docs-shell .document-article > .recipe-source { margin-right: 2rem; }
   .docs-shell .document-article > .document-content,
   .docs-shell .document-article > .document-pagination { max-width: 760px; padding-right: 2rem; }
   .docs-shell .site-footer { margin-top: 4.5rem; }
@@ -295,6 +296,10 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .legacy-notice p { margin: 0; }
 .legacy-notice code { font-family: 'DM Mono', monospace; font-size: .88em; }
 .legacy-notice a { color: #183f38; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.recipe-source { color: #6b7f78; font-size: .82rem; margin: 0 0 1.25rem; max-width: 760px; overflow-wrap: anywhere; }
+.recipe-source a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.recipe-source a:hover { color: #e6522c; }
+.recipe-source code { font-family: 'DM Mono', monospace; font-size: .95em; }
 .document-content { color: #294c45; font-size: 1rem; line-height: 1.75; }
 .document-content h1, .document-content h2, .document-content h3 { color: #183f38; font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-weight: 600; letter-spacing: -.025em; text-wrap: balance; }
 .document-content h1[id], .document-content h2[id], .document-content h3[id] { scroll-margin-top: 2rem; }

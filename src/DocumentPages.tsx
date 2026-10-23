@@ -14,7 +14,7 @@ import {
 } from './documents'
 import { documentHref, HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import { SiteFooter, SiteHeader } from './SiteChrome'
-import { recipeHref } from './recipeSources'
+import { recipeHref, recipeSource } from './recipeSources'
 
 function DocsNavigation({
   product,
@@ -109,6 +109,17 @@ function DocsMobileNavigation({
 }
 
 /** Brief section 6, verbatim: every original Happy CLI docs page opens with it. */
+/** Where a recipe page's text comes from; shown by the renderer, so the copy stays byte for byte. */
+function RecipeSourceLine({ route }: { route: string }) {
+  const source = recipeSource(route)
+  if (!source) return null
+  return (
+    <p className="recipe-source">
+      Synced from happy-agent <a href={source.href}><code>{source.path}</code> @ <code>{source.revision}</code></a>
+    </p>
+  )
+}
+
 function LegacyNotice() {
   return (
     <aside className="legacy-notice" aria-label="The original Happy CLI is in maintenance mode">
@@ -173,6 +184,7 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
           data-document={activeDocument.path || undefined}
         >
           {product.key === 'happy' && <LegacyNotice />}
+          {activeDocument.group === 'Recipes' && <RecipeSourceLine route={activeDocument.path} />}
           <MarkdownDocument markdown={markdown} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} resolveHref={activeDocument.group === 'Recipes' ? (href) => recipeHref(activeDocument.path, href) : undefined} />
 
           <nav className="document-pagination" aria-label="Previous and next documentation pages">

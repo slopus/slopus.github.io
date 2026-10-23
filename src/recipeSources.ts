@@ -9,6 +9,17 @@ export const recipeSources = Object.values(import.meta.glob('/content/desktop/re
   import: 'default',
 }))[0] as RecipeManifest
 
+/** The happy-agent file a recipe page is copied from, at the pinned revision. */
+export function recipeSource(route: string) {
+  const recipe = recipeSources.files.find((file) => file.route === route)
+  if (!recipe) return undefined
+  return {
+    path: recipe.source,
+    revision: recipeSources.revision.slice(0, 9),
+    href: `${recipeSources.repository}/blob/${recipeSources.revision}/${recipe.source}`,
+  }
+}
+
 /** Resolve source-relative links without rewriting the quoted recipe's Markdown. */
 export function recipeHref(route: string, href: string | undefined) {
   if (!href || href.startsWith('#') || href.startsWith('/') || /^[a-z][a-z\d+.-]*:/i.test(href)) return href

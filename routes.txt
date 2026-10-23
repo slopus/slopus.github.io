@@ -84,8 +84,11 @@
 /recepies/enterprise-sign-in/
 /recepies/first-project/
 /recepies/hardening/
+/recepies/harnesses/
 /recepies/mobile-access/
+/recepies/peer-messaging/
 /recepies/remote-agent/
+/recepies/rest-api/
 /recepies/runner/
 /recepies/shared-app/
 /recepies/team/
@@ -99,8 +102,11 @@
 /recipes/enterprise-sign-in/
 /recipes/first-project/
 /recipes/hardening/
+/recipes/harnesses/
 /recipes/mobile-access/
+/recipes/peer-messaging/
 /recipes/remote-agent/
+/recipes/rest-api/
 /recipes/runner/
 /recipes/shared-app/
 /recipes/team/

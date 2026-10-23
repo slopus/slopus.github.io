@@ -9,6 +9,11 @@ routine work within the user's authorized task; ask only for missing material ch
 interactive sign-in. This recipe does not authorize buying infrastructure, exposing an unrelated
 machine, transferring provider credentials, or sending unsolicited invitations.
 
+When adding a connection to an already deployed team, reuse its verified team ID and endpoint.
+Verify the running service as described in step 4, then follow step 5, including the current
+member's profile and Desktop readiness checks. Creating a team or redeploying its server is not
+required to add a connection.
+
 ## 1. Confirm the user's account
 
 Use an active admin bot on the user's local standalone installation for this workflow. First call
@@ -206,8 +211,44 @@ Social sign-in, organization membership, and the exact WorkOS configuration. If 
 startup and onboarding status. Never disable authentication or substitute a standalone token to
 make a failed check pass.
 
-Then verify the experience through that local connection in Happy: open the team server and
-complete any owner profile onboarding. Follow [Testing a deployed node](README.md#testing-a-deployed-node):
+Finish the authenticated member's profile onboarding as part of setup. Use the profile,
+onboarding, and bootstrap contracts in the running release's `API.md`:
+
+1. Read the remote `GET /v0/profile` and `GET /v0/onboarding` as the connected user. Preserve every
+   populated remote profile field and existing photo; do not replace them with local values or
+   change another member's profile. Fill only missing fields needed for the authorized setup.
+2. For a new profile or missing fields needed for setup, reuse the user's existing local profile
+   automatically. Call `get_local_profile` on the local standalone installation for the name and
+   email; this tool does not return photo data. Read local `GET /v0/profile` and, when it has a
+   photo, `GET /v0/profile/photo` for the image bytes. Reuse known values for missing remote
+   fields unless the user requested different ones. Ask only for genuinely missing required
+   identity information or an interactive requirement; do not hand routine profile setup back
+   to the user.
+3. Send remote `PATCH /v0/profile` with only the missing name and/or known email, using the
+   remote profile's latest `version` in `If-Match`. A new profile requires a non-null name.
+   Omit unknown optional values and skip the update if no fields need filling. If the remote
+   photo is missing and copying the local photo is part of setup, send its image bytes with
+   `Content-Type: image/png`, `image/jpeg`, or `image/webp` as appropriate to remote
+   `PUT /v0/profile/photo`, using the latest profile version after any patch in `If-Match`.
+   A photo is optional.
+   Never copy local profile IDs, versions, private identity, or database files. On a version
+   conflict, inspect the returned current profile and preserve concurrent edits rather than
+   replaying the old update.
+4. Re-read remote `GET /v0/onboarding` after saving. On an already onboarded installation, saving
+   the member's profile completes onboarding automatically. Only if `completed` remains `false`
+   because installation setup is unfinished and completing that installation is within the user's
+   authorized task, call `POST /v0/onboarding/complete` after the profile is saved, then re-read
+   onboarding. Adding a connection alone does not authorize changing installation onboarding
+   state. Resolve or report any remaining setup requirement.
+5. Through the saved local connection, require `GET /v0/bootstrap/desktop` to succeed with
+   `onboarding.completed: true` and the documented `config` and current-member `profile` objects.
+   Health alone does not prove that Desktop can open the team. `steps.project.done: false` is an
+   observation that no project exists, not the completion flag; it can coexist with
+   `completed: true`. Do not create a fake permanent project or change administrator privileges
+   or credentials to bypass onboarding.
+
+Then verify the experience through that local connection in Happy. For a new deployment, follow
+[Testing a deployed node](README.md#testing-a-deployed-node):
 create a new temporary project, workspace, and agent, never reuse an existing project, and run a
 small inference task with a harmless shell/file check using the configured provider. Confirm a
 response and working tools; health alone does not verify model inference or shell sandbox startup.
@@ -251,7 +292,10 @@ join Happy Social, and bind an email to their account before connecting to the t
 ## Completion
 
 Give a concise handoff: team name and ID, deployment location and version, local connection name,
-verification results, and invitation results or the pending request for recipients. Do not include
-credentials, private identity keys, or invitation links in a general handoff. Keep infrastructure,
-connection, inference, and invitation outcomes distinct so a partially completed setup is never
+the current member's profile and Desktop bootstrap onboarding results, any inference verification,
+and invitation results or the pending request for recipients. Report setup complete only after
+`GET /v0/bootstrap/desktop` returns `onboarding.completed: true`; do not claim completion while
+Desktop is gated or leave routine profile setup to the user. Do not include credentials, private
+identity keys, or invitation links in a general handoff. Keep infrastructure, connection,
+onboarding, inference, and invitation outcomes distinct so a partially completed setup is never
 reported as fully working.
