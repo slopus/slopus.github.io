@@ -14,6 +14,9 @@ export const MAJOR_LABS = ['anthropic', 'openai', 'google', 'xai', 'meta', 'deep
 export const MAX_SHOWN_MODELS = 7
 export const MAX_S_MODELS = 3
 
+/** The posts wall shows at most this many posts. */
+export const MAX_WALL_POSTS = 8
+
 /** A model released this many days ago or fewer carries the new-model badge. */
 export const NEW_MODEL_DAYS = 14
 
@@ -58,6 +61,21 @@ export interface ArenaBoard {
   top: [ArenaBoardEntry, ArenaBoardEntry]
 }
 
+/** One model's price from `catalog.pricing`, read from its AA page. */
+export interface ModelPrice {
+  usd: number | null
+  /** The model's page slug: `https://artificialanalysis.ai/models/<page>`. */
+  page: string
+}
+
+/** The one price source every priced card reads. */
+export interface Pricing {
+  source: string
+  url: string
+  verifiedAt: string
+  note: string
+}
+
 export interface ArenaBoardEntry { name: string; effort: string; score: number }
 
 export interface RankedModel {
@@ -71,6 +89,8 @@ export interface RankedModel {
   releaseUrl: string
   /** The model's entry on `arenaBoard`; omitted while it is not on the board yet. */
   arena?: ArenaEntry
+  /** AA's cost per Intelligence Index task; `usd: null` when AA prices no API for it. Never set on Frontier models. */
+  price?: ModelPrice
   /** The last point is the caveat. */
   points: ModelPoint[]
   sourceIds: string[]
@@ -101,6 +121,10 @@ export interface BenchmarkSource {
   modelIds: string[]
   /** Provenance only, not rendered: actual reviewed head-to-head claims; mere co-mentions do not qualify. */
   comparisonModelIds: string[]
+  /** The post this one quotes; its embed shows that post inside it. */
+  quotes?: string
+  /** The post this one replies to; embeds hide it with `conversation: 'none'`. */
+  replyTo?: string
   scope: { task: string; harness: string; effort: string }
   verification: { method: string; text: string }
 }
@@ -112,6 +136,9 @@ export interface BenchmarkCatalog {
   evidenceCutoff: string
   reviewNote: string
   arenaBoard: ArenaBoard
+  pricing: Pricing
+  /** Post IDs on the wall, at most `MAX_WALL_POSTS`, picked in order of value to S; the page shows them newest first. */
+  wall: string[]
   models: RankedModel[]
   notShown: HiddenModel[]
   sources: BenchmarkSource[]
@@ -119,24 +146,22 @@ export interface BenchmarkCatalog {
 
 export const benchmarkCatalog = rawCatalog as BenchmarkCatalog
 
-/** Preserve editorial order. Filtering never scores, reorders, or fetches sources. */
-export function selectSources(catalog: BenchmarkCatalog, selected: ReadonlySet<string>) {
-  const selectedSourceIds = new Set(catalog.models
-    .filter(model => selected.size === 0 || selected.has(model.id))
-    .flatMap(model => model.sourceIds))
-
-  return catalog.sources.filter(source => selectedSourceIds.has(source.id))
+/** The wall's posts, newest first; ties keep the order they were picked in. */
+export function wallSources(catalog: BenchmarkCatalog) {
+  return [...new Set(catalog.wall)]
+    .map(id => catalog.sources.find(source => source.id === id))
+    .filter(source => source !== undefined)
+    .slice(0, MAX_WALL_POSTS)
+    .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))
 }
 
-/** Each post under the highest tier among the models citing it (the selected ones, when there is a selection), in editorial order within a tier. */
-export function groupSourcesByTier(catalog: BenchmarkCatalog, sources: BenchmarkSource[], selected: ReadonlySet<string>) {
-  const rank = new Map(catalog.models.map(model => [model.id, TIERS.indexOf(model.tier)]))
-  const tierOf = (source: BenchmarkSource) => TIERS[Math.min(...source.modelIds
-    .filter(id => selected.size === 0 || selected.has(id))
-    .map(id => rank.get(id) ?? TIERS.length))]
-  return TIERS
-    .map(tier => ({ tier, sources: sources.filter(source => tierOf(source) === tier) }))
-    .filter(group => group.sources.length)
+export function priceUrl(catalog: BenchmarkCatalog, price: ModelPrice) {
+  return `${catalog.pricing.url}${price.page}`
+}
+
+/** `$0.72`, or `$0.007` below a cent. */
+export function formatPrice(usd: number) {
+  return `$${usd < 0.01 ? usd.toFixed(3) : usd.toFixed(2)}`
 }
 
 /** Gap in percentage points, from one decimal place scores. */

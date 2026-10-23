@@ -6,7 +6,7 @@
 .benchmark-meta { display: flex; justify-content: center; gap: .6rem; color: #557068; font: .68rem 'DM Mono', monospace; }
 .benchmark-meta a { text-decoration: underline; text-underline-offset: 3px; }
 .benchmark-meta a:hover { color: #e6522c; }
-.benchmark-text-button:focus-visible, .benchmark-meta a:focus-visible { outline: 2px solid #e6522c; outline-offset: 3px; }
+.benchmark-meta a:focus-visible { outline: 2px solid #e6522c; outline-offset: 3px; }
 .benchmark-table { border-collapse: separate; border-spacing: 0; width: max-content; max-width: 100%; margin-inline: auto; text-align: left; border: 1px solid #c9cabe; border-radius: 8px; }
 .benchmark-table tbody th { width: 72px; font-family: 'Space Grotesk', sans-serif; font-size: 1.45rem; text-align: center; padding: .65rem .8rem; border-right: 1px solid #c9cabe; }
 .benchmark-table td { padding: .75rem; vertical-align: top; }
@@ -26,14 +26,14 @@
 /* Every card has the same size; claims are written to fit two lines each. */
 .benchmark-table { --card-width: 244px; }
 .benchmark-card { position: relative; box-sizing: border-box; width: var(--card-width); height: 200px; display: flex; flex-direction: column; background: #fcfaf5; color: #183f38; border: 1px solid #c9cabe; border-radius: 6px; padding: .7rem .8rem; }
-.benchmark-card:hover { border-color: #557068; }
-.benchmark-card[data-selected='true'] { border-color: #183f38; box-shadow: inset 0 0 0 1px #183f38; background: #f3f0e4; }
-.benchmark-card:has(.benchmark-model:focus-visible) { outline: 2px solid #e6522c; outline-offset: 2px; }
-.benchmark-model { align-self: flex-start; border: 0; padding: 0; background: none; color: inherit; font: 600 .9rem/1.25 'DM Sans', sans-serif; text-align: left; cursor: pointer; }
-/* The whole card toggles the filter; its links sit above this. */
-.benchmark-model::after { content: ''; position: absolute; inset: 0; border-radius: 6px; }
-.benchmark-model:focus-visible { outline: none; }
-.benchmark-claim { position: relative; z-index: 1; color: inherit; text-decoration: none; }
+.benchmark-card-title { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; min-height: 1.75rem; }
+.benchmark-model { font: 600 .9rem/1.25 'DM Sans', sans-serif; }
+/* Price per task, on every card but Frontier: the one number to compare cheap and expensive by. */
+.benchmark-price { flex: none; padding: .1rem .4rem; border: 1px solid #c9cabe; border-radius: 4px; background: #f3f0e4; color: #183f38; font: 600 .78rem/1.3 'Space Grotesk', sans-serif; white-space: nowrap; }
+.benchmark-price small { margin-left: .1rem; color: #557068; font: .58rem 'DM Mono', monospace; }
+.benchmark-price.benchmark-claim:hover { text-decoration: none; border-color: #557068; }
+.benchmark-price-none { background: none; color: #73857d; font: .58rem/1.6 'DM Mono', monospace; }
+.benchmark-claim { color: inherit; text-decoration: none; }
 .benchmark-claim:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
 .benchmark-claim:focus-visible { outline: 2px solid #e6522c; outline-offset: 1px; border-radius: 2px; }
 .benchmark-claim-end { white-space: nowrap; }
@@ -53,19 +53,10 @@
 .benchmark-card .benchmark-note-caveat { color: #8a5a35; }
 .benchmark-new { position: absolute; z-index: 2; top: -9px; right: 10px; display: inline-flex; align-items: center; gap: .25rem; padding: .12rem .4rem .12rem .32rem; border: 1px solid #e9b49b; border-radius: 999px; background: #fdeee6; color: #b4462a; font: 500 .62rem/1.2 'DM Mono', monospace; pointer-events: none; }
 .benchmark-new-icon { width: 12px; height: 12px; }
-.benchmark-evidence { margin-top: 1.25rem; scroll-margin-top: 105px; }
-.benchmark-filters { display: flex; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 1.2rem; min-height: 30px; }
-.benchmark-text-button { border: 0; border-bottom: 1px solid #557068; padding: 0; font: inherit; font-size: .76rem; color: #183f38; background: none; cursor: pointer; }
-.benchmark-source-group + .benchmark-source-group { margin-top: 2.6rem; }
-.benchmark-group-heading { display: flex; align-items: center; gap: .7rem; margin: 0 0 1.1rem; color: #557068; font: 500 .82rem 'DM Sans', sans-serif; }
-.benchmark-group-tier { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 6px; color: #183f38; font: 600 1rem 'Space Grotesk', sans-serif; }
-.benchmark-source-group-s .benchmark-group-tier { background: #f1d5c4; }
-.benchmark-source-group-a .benchmark-group-tier { background: #efe0b3; }
-.benchmark-source-group-b .benchmark-group-tier { background: #e2e3bd; }
-.benchmark-source-group-f .benchmark-group-tier { background: #ead6d0; }
-.benchmark-no-evidence { padding: 2rem 0; color: #557068; font-size: .85rem; }
-.benchmark-source-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 1.8rem 1rem; }
-.benchmark-source { min-width: 0; width: 100%; max-width: 350px; justify-self: center; }
+.benchmark-evidence { margin-top: 2.6rem; }
+/* Two columns of whole posts. Each post spans as many 4px rows as it is tall (set from ModelBenchmarksPage), so no post is split across columns. */
+.benchmark-source-list { display: grid; grid-template-columns: repeat(2, minmax(0, 350px)); grid-auto-rows: 4px; justify-content: center; column-gap: 1.2rem; }
+.benchmark-source { min-width: 0; }
 .benchmark-source footer { padding-top: .4rem; }
 .benchmark-source time { display: block; color: #7b887e; font-size: .67rem; }
 .benchmark-embed > div { min-width: 0; display: flow-root; }
@@ -77,9 +68,6 @@
 .benchmark-fallback p { margin: 1rem 0; }
 .benchmark-fallback-link { color: #557068; font-size: .75rem; text-decoration: underline; text-underline-offset: 3px; }
 .benchmark-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-@media (min-width: 641px) and (max-width: 1000px) {
-  .benchmark-source-list { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 720px; margin-inline: auto; }
-}
 @media (max-width: 640px) {
   .benchmark-main { width: calc(100% - 32px); padding-top: 1.4rem; }
   .benchmark-heading h1 { max-width: 330px; margin-inline: auto; }
@@ -99,5 +87,5 @@
   .benchmark-table td.benchmark-lane-frontier { width: auto; }
   .benchmark-models { flex-direction: column; gap: .7rem; }
   .benchmark-card { width: 100%; height: auto; min-height: 0; }
-  .benchmark-source-list { grid-template-columns: 1fr; }
+  .benchmark-source-list { grid-template-columns: minmax(0, 1fr); }
 }

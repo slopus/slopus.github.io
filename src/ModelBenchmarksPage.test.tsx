@@ -1,7 +1,7 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, render, screen } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import ModelBenchmarksPage from './ModelBenchmarksPage'
-import { absoluteDate, arenaGap, benchmarkCatalog, groupSourcesByTier, labOf, LANES, leaderOf, MAJOR_LABS, MAX_S_MODELS, MAX_SHOWN_MODELS, NEW_MODEL_DAYS, newModelAge, publicationAge, selectSources, TIERS, type BenchmarkCatalog, type BenchmarkSource, type RankedModel } from './modelBenchmarks'
+import { absoluteDate, arenaGap, benchmarkCatalog, labOf, LANES, leaderOf, MAJOR_LABS, MAX_S_MODELS, MAX_SHOWN_MODELS, MAX_WALL_POSTS, NEW_MODEL_DAYS, newModelAge, publicationAge, TIERS, wallSources, type BenchmarkCatalog, type BenchmarkSource, type RankedModel } from './modelBenchmarks'
 import { Router } from './Router'
 import { modelBenchmarksMetadata } from './siteMetadata'
 
@@ -16,18 +16,22 @@ const model = (id: string, name: string, tier: RankedModel['tier'], points: [str
   points: points.map(([text, sourceId]) => ({ text, sourceId })), sourceIds: [...new Set(points.map(([, sourceId]) => sourceId))], rationale: 'Fixture.', ...extra,
 })
 const fixture: BenchmarkCatalog = {
-  schemaVersion: 4, revision: 'test.1', updatedAt: '2026-09-23T10:00:00Z', evidenceCutoff: '2026-09-23T10:00:00Z', reviewNote: 'Reviewed fixture.',
+  schemaVersion: 5, revision: 'test.1', updatedAt: '2026-09-23T10:00:00Z', evidenceCutoff: '2026-09-23T10:00:00Z', reviewNote: 'Reviewed fixture.',
   arenaBoard: { sourceId: '100', top: [{ name: 'Alpha', effort: 'Max', score: 20 }, { name: 'Fable', effort: 'High', score: 15.5 }] },
+  pricing: { source: 'Fixture cost per task', url: 'https://prices.test/models/', verifiedAt: '2026-09-23T10:00:00Z', note: 'Fixture.' },
+  wall: ['100', '200', '300'],
   models: [
     model('test/alpha', 'Alpha', 'S', [['Strong on coding.', '100'], ['Limited evidence elsewhere.', '200']], { lane: 'frontier',
       arena: { rank: 1, effort: 'Max', score: 20 },
       leadCheck: { reconfirmedAt: '2026-09-23', heldAgainst: ['test/beta'], sourceIds: ['100'], note: 'Still #1 after Beta launched.', reason: 'Fixture head-to-head.' } }),
-    model('test/beta', 'Beta', 'S', [['Useful for small tasks.', '300'], ['Effort matters.', '100']], { lane: 'chores', releasedAt: '2026-09-20T12:00:00Z', arena: { rank: 4, effort: 'xHigh', score: 13.4 } }),
-    { ...model('test/gamma', 'Gamma', 'B', [['Narrow evidence.', '100'], ['Fixture caveat.', '100']]), sourceIds: [], rationale: 'Fixture without posts.' },
+    model('test/beta', 'Beta', 'S', [['Useful for small tasks.', '300'], ['Effort matters.', '100']], { lane: 'chores', releasedAt: '2026-09-20T12:00:00Z', arena: { rank: 4, effort: 'xHigh', score: 13.4 }, price: { usd: 0.72, page: 'beta' } }),
+    { ...model('test/gamma', 'Gamma', 'B', [['Narrow evidence.', '100'], ['Fixture caveat.', '100']]), price: { usd: null, page: 'gamma' }, sourceIds: [], rationale: 'Fixture without posts.' },
   ],
   notShown: [],
-  sources: [source('300', ['test/beta']), source('100', ['test/alpha', 'test/beta'], ['test/alpha', 'test/beta']), { ...source('200', ['test/alpha']), kind: 'provider-reported' }],
+  sources: [{ ...source('300', ['test/beta']), publishedAt: '2026-09-21T12:00:00Z' }, source('100', ['test/alpha', 'test/beta'], ['test/alpha', 'test/beta']), { ...source('200', ['test/alpha']), kind: 'provider-reported', publishedAt: '2026-09-22T18:00:00Z' }],
 }
+const cardOf = (name: string) => screen.getByText(name, { selector: '.benchmark-model' }).closest('.benchmark-card')!
+const notesOf = (name: string) => cardOf(name).querySelector('ul')!
 // jsdom has no ResizeObserver; the painted page scrollbar only observes with it.
 beforeAll(() => { vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} }) })
 afterAll(() => { vi.unstubAllGlobals() })
@@ -36,7 +40,7 @@ afterEach(() => { cleanup(); delete window.twttr; vi.restoreAllMocks() })
 
 describe('reviewed catalog integrity', () => {
   it('has unique exact models with at most four reviewed posts each', () => {
-    expect(benchmarkCatalog.schemaVersion).toBe(4)
+    expect(benchmarkCatalog.schemaVersion).toBe(5)
     expect(new Set(benchmarkCatalog.models.map(model => model.id)).size).toBe(benchmarkCatalog.models.length)
     for (const model of benchmarkCatalog.models) {
       expect(model.id).toMatch(/^[a-z0-9]+\/[a-z0-9.-]+$/)
@@ -187,19 +191,67 @@ describe('Agent Arena headline', () => {
   })
 })
 
-describe('post order', () => {
-  it('lists posts in tier order of their best citing model, the leader’s lead-check posts first', () => {
-    const rank = (source: BenchmarkSource) => Math.min(...source.modelIds.map(id => benchmarkCatalog.models.findIndex(model => model.id === id)))
-    const tiers = benchmarkCatalog.sources.map(source => TIERS.indexOf(benchmarkCatalog.models[rank(source)].tier))
-    expect(tiers).toEqual([...tiers].sort((a, b) => a - b))
-    const check = leaderOf(benchmarkCatalog)!.leadCheck
-    if (check) expect(benchmarkCatalog.sources.slice(0, check.sourceIds.length).map(source => source.id).sort()).toEqual([...check.sourceIds].sort())
+describe('posts wall', () => {
+  it('holds at most eight unique standalone posts, none showing another wall post inside it', () => {
+    const wall = benchmarkCatalog.wall
+    expect(wall.length).toBeLessThanOrEqual(MAX_WALL_POSTS)
+    expect(MAX_WALL_POSTS).toBe(8)
+    expect(new Set(wall).size).toBe(wall.length)
+    for (const id of wall) {
+      const post = benchmarkCatalog.sources.find(source => source.id === id)!
+      expect(post).toBeTruthy()
+      // A quote embeds the quoted post as a second block; prefer posts that stand alone.
+      expect(post.quotes).toBeUndefined()
+      expect(post.replyTo).toBeUndefined()
+    }
+    const quoted = benchmarkCatalog.sources.map(source => source.quotes).filter(Boolean)
+    for (const id of wall) expect(quoted).not.toContain(id)
   })
-  it('groups posts under the best tier among the models citing them, or among the selected ones', () => {
-    const all = selectSources(fixture, new Set())
-    expect(groupSourcesByTier(fixture, all, new Set()).map(group => [group.tier, group.sources.map(source => source.id)])).toEqual([['S', ['300', '100', '200']]])
-    const onlyGamma = { ...fixture, models: fixture.models.map(entry => entry.id === 'test/gamma' ? { ...entry, sourceIds: ['300'] } : entry), sources: fixture.sources.map(source => source.id === '300' ? { ...source, modelIds: ['test/beta', 'test/gamma'] } : source) }
-    expect(groupSourcesByTier(onlyGamma, selectSources(onlyGamma, new Set(['test/gamma'])), new Set(['test/gamma'])).map(group => group.tier)).toEqual(['B'])
+  it('is picked for S first: the lead check and the Chores pick’s value lead the list', () => {
+    const leader = leaderOf(benchmarkCatalog)!
+    const chores = benchmarkCatalog.models.find(model => model.lane === 'chores')!
+    const wall = benchmarkCatalog.wall
+    expect(leader.leadCheck!.sourceIds.some(id => wall.slice(0, 2).includes(id))).toBe(true)
+    expect(wall.slice(0, 4).filter(id => chores.sourceIds.includes(id)).length).toBeGreaterThanOrEqual(2)
+    // Every shown model has at least one post on the wall.
+    for (const model of benchmarkCatalog.models) expect(model.sourceIds.some(id => wall.includes(id))).toBe(true)
+  })
+  it('renders newest first, once each, whatever order the posts were picked in', () => {
+    expect(wallSources(fixture).map(source => source.id)).toEqual(['200', '100', '300'])
+    expect(wallSources({ ...fixture, wall: ['300', '100', '300', '200'] }).map(source => source.id)).toEqual(['200', '100', '300'])
+    const dates = wallSources(benchmarkCatalog).map(source => Date.parse(source.publishedAt))
+    expect(dates).toEqual([...dates].sort((a, b) => b - a))
+    render(<ModelBenchmarksPage catalog={fixture} />)
+    expect(screen.getAllByRole('article').map(article => article.getAttribute('aria-label'))).toEqual(['Post by Researcher 200', 'Post by Researcher 100', 'Post by Researcher 300'])
+  })
+  it('never cites Agents on Rails on the page', () => {
+    for (const source of benchmarkCatalog.sources) expect(source.handle.toLowerCase()).not.toBe('rails')
+    for (const model of benchmarkCatalog.models) for (const point of model.points) expect(point.text).not.toMatch(/Rails/)
+  })
+})
+
+describe('price per task', () => {
+  it('comes from one source, AA’s cost per Intelligence Index task, and never sits on a Frontier card', () => {
+    expect(benchmarkCatalog.pricing.url).toBe('https://artificialanalysis.ai/models/')
+    expect(benchmarkCatalog.pricing.source).toMatch(/Artificial Analysis cost per Intelligence Index task/)
+    for (const model of benchmarkCatalog.models) {
+      if (model.lane === 'frontier') expect(model.price).toBeUndefined()
+      else expect(model.price).toBeTruthy()
+      if (model.price) {
+        expect(model.price.page).toMatch(/^[a-z0-9-]+$/)
+        if (model.price.usd !== null) expect(model.price.usd).toBeGreaterThan(0)
+      }
+    }
+    expect(benchmarkCatalog.models.find(model => model.lane === 'chores')!.price!.usd).toBeTypeOf('number')
+  })
+  it('shows the price on the Chores card and other non-Frontier cards, linked to its page', () => {
+    render(<ModelBenchmarksPage catalog={fixture} />)
+    const price = cardOf('Beta').querySelector('.benchmark-price')!
+    expect(price.textContent).toBe('$0.72/task↗')
+    expect(price.getAttribute('href')).toBe('https://prices.test/models/beta')
+    expect(cardOf('Alpha').querySelector('.benchmark-price')).toBeNull()
+    expect(cardOf('Gamma').querySelector('.benchmark-price')?.textContent).toBe('No API price')
+    expect(document.querySelector('.benchmark-legend')?.textContent).toContain('cost per task')
   })
 })
 
@@ -217,22 +269,9 @@ describe('new-model badge', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
     const badges = document.querySelectorAll('.benchmark-new')
     expect(badges).toHaveLength(1)
-    expect(badges[0].closest('.benchmark-card')?.querySelector('button')?.textContent).toBe('Beta')
+    expect(badges[0].closest('.benchmark-card')?.querySelector('.benchmark-model')?.textContent).toBe('Beta')
     expect(badges[0].textContent).toBe('3d since release')
     expect(badges[0].querySelector('svg')).toBeTruthy()
-  })
-})
-
-describe('stable filtering', () => {
-  it('shows all sources in editorial order without a selection', () => {
-    expect(selectSources(fixture, new Set()).map(entry => entry.id)).toEqual(['300', '100', '200'])
-  })
-  it('returns a deduplicated union independent of click order', () => {
-    expect(selectSources(fixture, new Set(['test/alpha'])).map(entry => entry.id)).toEqual(['100', '200'])
-    expect(selectSources(fixture, new Set(['test/beta', 'test/alpha'])).map(entry => entry.id)).toEqual(['300', '100', '200'])
-  })
-  it('does not show unrelated evidence for a model without posts', () => {
-    expect(selectSources(fixture, new Set(['test/gamma']))).toEqual([])
   })
 })
 
@@ -258,11 +297,9 @@ describe('model benchmarks page', () => {
   })
   it('shows each model’s facts on its card, every claim linked to its post, with no popover', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
-    const alpha = screen.getByRole('button', { name: 'Alpha' })
-    const card = alpha.closest('.benchmark-card')!
-    expect(document.getElementById(alpha.getAttribute('aria-describedby')!)?.closest('.benchmark-card')).toBe(card)
+    const card = cardOf('Alpha')
     expect(document.querySelector('[role="tooltip"]')).toBeNull()
-    expect(alpha.textContent).toBe('Alpha')
+    expect(card.querySelector('button')).toBeNull()
     const links = [...card.querySelectorAll('a')]
     expect(links.map(link => link.textContent)).toEqual(['#1 Agent Arena, Max effort+4.5 pts over #2 Fable (High)↗', 'Still #1 after Beta launched.↗', 'Strong on coding.↗', 'Limited evidence elsewhere.↗'])
     expect(links.map(link => link.getAttribute('href'))).toEqual(['100', '100', '100', '200'].map(id => `https://x.com/researcher/status/${id}`))
@@ -271,27 +308,11 @@ describe('model benchmarks page', () => {
       expect(link.querySelector('[aria-hidden="true"]')?.textContent).toBe('↗')
     }
   })
-  it('supports multi-selection and clearing', () => {
-    render(<ModelBenchmarksPage catalog={fixture} />)
-    const alpha = screen.getByRole('button', { name: 'Alpha' })
-    fireEvent.click(alpha)
-    expect(alpha.getAttribute('aria-pressed')).toBe('true')
-    expect(alpha.closest('.benchmark-card')?.getAttribute('data-selected')).toBe('true')
-    expect(screen.getByRole('status').textContent).toBe('2 posts')
-    expect(screen.getAllByRole('article')).toHaveLength(2)
-    fireEvent.click(screen.getByRole('button', { name: 'Beta' }))
-    expect(screen.getAllByRole('article')).toHaveLength(3)
-    fireEvent.click(screen.getByRole('button', { name: 'Alpha' }))
-    expect(screen.getByRole('status').textContent).toBe('2 posts')
-    fireEvent.click(screen.getByRole('button', { name: 'Clear selection' }))
-    expect(screen.getByRole('status').textContent).toBe('3 posts')
-    expect(screen.queryByRole('button', { name: 'Clear selection' })).toBeNull()
-  })
   it('keeps first-party fallback and accessible publication times when embeds fail', async () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
     expect(await screen.findByText('Reviewed finding 100')).toBeTruthy()
     expect(screen.getAllByRole('link', { name: /Read post on X/ })).toHaveLength(3)
-    expect(screen.getAllByLabelText(/Published September 22, 2026/)).toHaveLength(3)
+    expect(screen.getAllByLabelText(/Published September 2[12], 2026/)).toHaveLength(3)
   })
   it('automatically requests compact official embeds with privacy options', async () => {
     const createTweet = vi.fn().mockResolvedValue(undefined)
@@ -311,13 +332,12 @@ describe('model benchmarks page', () => {
     expect(screen.queryByText('How we curate this')).toBeNull()
     expect(screen.queryByText(/provider-reported/i)).toBeNull()
     expect(screen.queryByRole('checkbox')).toBeNull()
-    expect(screen.getByRole('status').className).toBe('benchmark-sr-only')
     expect(screen.queryByText('Alpha', { selector: 'article *' })).toBeNull()
     expect(screen.getByRole('link', { name: /pipeline/ }).getAttribute('href')).toContain('model-benchmarks-refresh')
   })
   it('shows the leader’s lead check once, as the first bullet on its card with the recheck date', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
-    const notes = document.getElementById(screen.getByRole('button', { name: 'Alpha' }).getAttribute('aria-describedby')!)!
+    const notes = notesOf('Alpha')
     expect(notes.querySelector('li')?.textContent).toBe('Still #1 after Beta launched.↗ Rechecked Sep 23.')
     expect(notes.querySelectorAll('li')).toHaveLength(3)
     expect(screen.getAllByText(/still #1/i)).toHaveLength(1)
@@ -328,7 +348,7 @@ describe('model benchmarks page', () => {
     expect(rows.map(row => row.querySelector('th')?.textContent)).toEqual(['S', 'B'])
     const cells = [...rows[0].querySelectorAll('td')]
     expect(cells.map(cell => cell.className)).toEqual(['benchmark-lane-label benchmark-lane-label-frontier', 'benchmark-lane benchmark-lane-frontier', 'benchmark-lane-label benchmark-lane-label-chores', 'benchmark-lane benchmark-lane-chores'])
-    expect(cells.map(cell => cell.querySelector('button')?.textContent ?? cell.textContent)).toEqual(['Frontier', 'Alpha', 'Chores', 'Beta'])
+    expect(cells.map(cell => cell.querySelector('.benchmark-model')?.textContent ?? cell.textContent)).toEqual(['Frontier', 'Alpha', 'Chores', 'Beta'])
     expect(rows[1].querySelectorAll('td')).toHaveLength(1)
     expect(rows[1].querySelector('td')?.getAttribute('colspan')).toBe('4')
     expect(screen.queryByText('—')).toBeNull()
@@ -347,16 +367,10 @@ describe('model benchmarks page', () => {
     expect(screen.queryByText(/still #1/i)).toBeNull()
     expect(document.querySelector('.benchmark-note-lead')).toBeNull()
   })
-  it('heads each group of posts with its tier and that tier’s models', () => {
+  it('has no filter: no toggles, no selection, no tier headings over the posts', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
-    expect(screen.getAllByRole('heading', { level: 2 }).map(heading => heading.textContent)).toEqual(['S tier: Alpha · Beta'])
-    fireEvent.click(screen.getByRole('button', { name: 'Beta' }))
-    expect(screen.getAllByRole('heading', { level: 2 }).map(heading => heading.textContent)).toEqual(['S tier: Beta'])
-  })
-  it('explains no matches without adding filler sources', () => {
-    render(<ModelBenchmarksPage catalog={fixture} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Gamma' }))
-    expect(screen.queryAllByRole('article')).toHaveLength(0)
-    expect(screen.getByText('No reviewed posts match this selection.')).toBeTruthy()
+    expect(screen.queryAllByRole('button')).toHaveLength(0)
+    expect(screen.queryByText('Clear selection')).toBeNull()
+    expect(screen.getAllByRole('heading', { level: 2 }).map(heading => heading.textContent)).toEqual(['Posts, newest first'])
   })
 })

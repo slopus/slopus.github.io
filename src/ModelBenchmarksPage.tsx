@@ -1,7 +1,7 @@
-import { Fragment, useState, type CSSProperties, type ReactNode } from 'react'
+import { Fragment, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP } from './products'
-import { absoluteDate, arenaGap, benchmarkCatalog, groupSourcesByTier, LANES, leaderOf, newModelAge, publicationAge, selectSources, shortDate, TIERS, type BenchmarkCatalog, type RankedModel } from './modelBenchmarks'
+import { absoluteDate, arenaGap, benchmarkCatalog, formatPrice, LANES, leaderOf, newModelAge, priceUrl, publicationAge, shortDate, TIERS, wallSources, type BenchmarkCatalog, type RankedModel } from './modelBenchmarks'
 import { XPostEmbed } from './XPostEmbed'
 import './model-benchmarks.css'
 
@@ -21,24 +21,36 @@ function BabyIcon() {
   </svg>
 }
 
+/**
+ * Two-column masonry that never splits a post: each post spans as many 4px grid rows as it is
+ * tall, measured as its embed loads, so grid auto-placement keeps date order across the columns.
+ */
+function useMasonry() {
+  const list = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const element = list.current
+    if (!element || typeof ResizeObserver === 'undefined') return
+    const fit = (item: HTMLElement) => {
+      const content = item.firstElementChild as HTMLElement | null
+      if (content) item.style.gridRowEnd = `span ${Math.ceil(content.getBoundingClientRect().height / 4) + 7}`
+    }
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) fit((entry.target as HTMLElement).parentElement!)
+    })
+    for (const item of element.children) observer.observe((item as HTMLElement).firstElementChild!)
+    return () => observer.disconnect()
+  }, [])
+  return list
+}
+
 export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { catalog?: BenchmarkCatalog }) {
-  const [selected, setSelected] = useState<Set<string>>(new Set())
   // Read once at page load, so badge ages and post ages stay current without a redeploy.
   const [now] = useState(() => Date.now())
-  const sources = selectSources(catalog, selected)
-  const groups = groupSourcesByTier(catalog, sources, selected)
+  const wall = wallSources(catalog)
+  const masonry = useMasonry()
   const leader = leaderOf(catalog)
   const board = catalog.sources.find(source => source.id === catalog.arenaBoard.sourceId)
   const sourceUrl = (id: string) => catalog.sources.find(source => source.id === id)?.url ?? `https://x.com/i/status/${id}`
-
-  function toggleModel(id: string) {
-    setSelected(previous => {
-      const next = new Set(previous)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }
 
   /** A claim linked to its post. The arrow stays on the line of the claim's last word. */
   function claim(sourceId: string, text: string, lead?: ReactNode) {
@@ -51,17 +63,25 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
     const notesId = `notes-${model.id.replaceAll('/', '-')}`
     const age = newModelAge(model.releasedAt, now)
     const leadCheck = model === leader ? model.leadCheck : undefined
-    return <div className="benchmark-card" key={model.id} data-selected={selected.has(model.id)}>
+    const price = model.lane === 'frontier' ? undefined : model.price
+    return <div className="benchmark-card" key={model.id}>
       {age === undefined ? null : <span className="benchmark-new" title={`Released ${absoluteDate(model.releasedAt)}`}>
         <BabyIcon />{age}d<span className="benchmark-sr-only"> since release</span>
       </span>}
-      <button type="button" className="benchmark-model" aria-pressed={selected.has(model.id)} aria-describedby={notesId} onClick={() => toggleModel(model.id)}>{model.name}</button>
+      <div className="benchmark-card-title">
+        <strong className="benchmark-model" id={`${notesId}-name`}>{model.name}</strong>
+        {price ? price.usd === null
+          ? <span className="benchmark-price benchmark-price-none">No API price</span>
+          : <a className="benchmark-claim benchmark-price" href={priceUrl(catalog, price)} target="_blank" rel="noopener noreferrer" aria-label={`${formatPrice(price.usd)} per task, Artificial Analysis`}>
+            {formatPrice(price.usd)}<small>/task</small><span className="benchmark-claim-arrow" aria-hidden="true">↗</span>
+          </a> : null}
+      </div>
       {model.arena
         ? claim(catalog.arenaBoard.sourceId, arenaGap(catalog.arenaBoard, model.arena), <span className="benchmark-headline-rank">
           <strong>#{model.arena.rank}</strong> Agent Arena, {model.arena.effort} effort
         </span>)
         : <p className="benchmark-headline benchmark-headline-missing">Not on Agent Arena yet</p>}
-      <ul id={notesId}>
+      <ul id={notesId} aria-labelledby={`${notesId}-name`}>
         {leadCheck ? <li className="benchmark-note-lead">
           {claim(leadCheck.sourceIds[0], leadCheck.note)} Rechecked <time dateTime={leadCheck.reconfirmedAt}>{shortDate(leadCheck.reconfirmedAt)}</time>.
         </li> : null}
@@ -84,7 +104,7 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
         </header>
 
         <table className="benchmark-table">
-          <caption className="benchmark-sr-only">Select models to filter posts. S splits into Frontier, for hard work, and Chores, the best value for routine work.</caption>
+          <caption className="benchmark-sr-only">S splits into Frontier, for hard work, and Chores, the best value for routine work.</caption>
           <tbody>{TIERS.map(tier => {
             const models = catalog.models.filter(model => model.tier === tier)
             if (!models.length) return null
@@ -105,21 +125,13 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
           })}</tbody>
         </table>
         {board ? <p className="benchmark-legend">
-          Headline: rank on <a className="benchmark-claim" href={board.url} target="_blank" rel="noopener noreferrer">{withArrow(`Arena’s Agent Arena board of ${shortDate(board.publishedAt)}`)}</a>, at the effort shown. Arena scores how much better real users’ agent sessions go with a model than with the average model; gaps are percentage points (pts) of that score.
+          Headline: rank on <a className="benchmark-claim" href={board.url} target="_blank" rel="noopener noreferrer">{withArrow(`Arena’s Agent Arena board of ${shortDate(board.publishedAt)}`)}</a>, at the effort shown. Arena scores how much better real users’ agent sessions go with a model than with the average model; gaps are percentage points (pts) of that score. Price: <a className="benchmark-claim" href={catalog.pricing.url} target="_blank" rel="noopener noreferrer">{withArrow('Artificial Analysis’s cost per task')}</a> on its Intelligence Index, at the same effort; Frontier shows none.
         </p> : null}
 
         <section className="benchmark-evidence" aria-label="Source posts" id="benchmark-evidence">
-          <div className="benchmark-filters">
-            <p role="status" className="benchmark-sr-only">{sources.length} {sources.length === 1 ? 'post' : 'posts'}</p>
-            {selected.size ? <button type="button" className="benchmark-text-button" onClick={() => setSelected(new Set())}>Clear selection</button> : null}
-          </div>
-          {groups.length ? groups.map(group => <section className={`benchmark-source-group benchmark-source-group-${group.tier.toLowerCase()}`} key={group.tier} aria-labelledby={`posts-${group.tier}`}>
-            <h2 id={`posts-${group.tier}`} className="benchmark-group-heading">
-              <span className="benchmark-group-tier">{group.tier}</span>
-              <span className="benchmark-sr-only">{' tier: '}</span>
-              {catalog.models.filter(model => model.tier === group.tier && (selected.size === 0 || selected.has(model.id))).map(model => model.name).join(' · ')}
-            </h2>
-            <div className="benchmark-source-list">{group.sources.map(source => <article className="benchmark-source" key={source.id} aria-label={`Post by ${source.author}`}>
+          <h2 className="benchmark-sr-only">Posts, newest first</h2>
+          <div className="benchmark-source-list" ref={masonry}>{wall.map(source => <article className="benchmark-source" key={source.id} aria-label={`Post by ${source.author}`}>
+            <div>
               <XPostEmbed postId={source.id} fallback={<div className="benchmark-fallback">
                 <a href={source.url} target="_blank" rel="noopener noreferrer"><strong>{source.author}</strong><span>@{source.handle}</span></a>
                 <p>{source.summary}</p>
@@ -128,8 +140,8 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
               <footer>
                 <time dateTime={source.publishedAt} title={absoluteDate(source.publishedAt)} aria-label={`Published ${absoluteDate(source.publishedAt)}`}>{publicationAge(source.publishedAt, now)}</time>
               </footer>
-            </article>)}</div>
-          </section>) : <p className="benchmark-no-evidence">No reviewed posts match this selection.</p>}
+            </div>
+          </article>)}</div>
         </section>
       </main>
     </div>
