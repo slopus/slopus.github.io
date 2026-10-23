@@ -51,8 +51,8 @@ that contract and is the right choice for almost every page.
 7. Unconfirmed writes live only in the page's memory and are dropped if the page closes; the
    daemon's store is the source of truth.
 8. Start the page with `<link rel="stylesheet" href="/api/v1/style.css">` and leave `html` and
-   `body` without a background, so the page sits on the surface of whatever shows it, in light and
-   dark. An app shown inline is drawn at its full height in the reply, so give it no fixed height
+   `body` without a background, margin, or padding, so the page sits on the surface of whatever
+   shows it, in light and dark. An app shown inline is drawn at its full height in the reply, so give it no fixed height
    and nothing that scrolls inside it. Keep the layout flat: no card inside a card, no stack of
    rounded cards, and no coloured stripe down a card's left edge. The Happy design system in
    `../DESIGN.md` has the rest.
@@ -64,15 +64,19 @@ that contract and is the right choice for almost every page.
 Every artifact page can load two more files the daemon serves beside the SDK, so they upgrade
 with Happy Agent too:
 
-- `/api/v1/style.css`, first. It sets the chat's typeface and sizes, a transparent page that
-  follows light and dark, and plain styles for text, links, code, tables, and rules. The body is
-  inset by `--happy-page-inset` beside the chat, and by nothing inline, where the page lines up
-  with the reply, so give the page no margin of its own. Every rule has zero specificity, so your
-  own CSS always wins. Use its colour variables instead of fixed colours:
-  `--happy-text`, `--happy-muted`, `--happy-faint`, `--happy-border`, `--happy-surface`,
-  `--happy-accent`, `--happy-added`, `--happy-removed`, `--happy-diff-added`,
-  `--happy-diff-removed`, and `--happy-chart-1` to `--happy-chart-6`, with `--happy-font` and
-  `--happy-mono` for type.
+- `/api/v1/style.css`, first. With nothing else, the page looks like part of the app: the app's
+  typeface and sizes, its colours in light and dark, its scrollbars, and plain styles for text,
+  links, code, tables, and rules on a transparent page. Every rule has zero specificity, so your
+  own CSS always wins; override on purpose, not by habit. Use its variables instead of fixed
+  colours, and they carry the app's values: `--happy-text`, `--happy-muted`, `--happy-faint`,
+  `--happy-border`, `--happy-surface`, `--happy-accent`, `--happy-added`, `--happy-removed`,
+  `--happy-diff-added`, `--happy-diff-removed`, and `--happy-chart-1` to `--happy-chart-6`;
+  `--happy-font`, `--happy-mono`, `--happy-font-size`, and `--happy-line-height` for type; and
+  `--happy-scrollbar-thumb`, `--happy-scrollbar-thumb-hover`, and `--happy-scrollbar-size` for a
+  scrollbar you draw yourself.
+- The body is inset by `--happy-page-inset`: the app's content inset beside the chat or on a page
+  of its own, and nothing inline, where the page lines up with the reply. So one page fits all
+  three; give it no outer margin of its own.
 - `/api/v1/components.js`, last. It defines five elements that read what they show from the page.
   In Happy Desktop, diffs and code are drawn with the renderer and styling it uses for them;
   elsewhere they are plain numbered lines without highlighting:

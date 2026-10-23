@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/slopus/happy-agent",
-  "revision": "672470747658f602f0c8d50f9935824430a028c6",
+  "revision": "cb93f28df979a525a59edfeff4734153313aa32b",
   "files": [
     {
       "route": "recepies",
@@ -60,7 +60,7 @@
       "route": "recepies/shared-app",
       "source": "docs/recipe/artifact-apps.md",
       "target": "content/desktop/recepies/shared-app.mdx",
-      "sha256": "fcc2b9249cfafbee1e48ec86769566ee29edd6b2a4ea2c4133095e3aa5f9658b"
+      "sha256": "737f8bec2ed0c91347425dc31680f6abfc57b34419e39ff65269f37e85f660af"
     },
     {
       "route": "recepies/peer-messaging",
