@@ -173,8 +173,8 @@ function points(a: number, b: number) {
 export function arenaGap(board: ArenaBoard, entry: ArenaEntry) {
   const [first, second] = board.top
   return entry.rank === 1
-    ? `+${points(entry.score, second.score)} pts over #2 ${second.name} (${second.effort})`
-    : `${points(first.score, entry.score)} pts behind #1 ${first.name} (${first.effort})`
+    ? `${points(entry.score, second.score)} points ahead of #2 ${second.name} (${second.effort}) in real users’ agent sessions`
+    : `${points(first.score, entry.score)} points behind #1 ${first.name} (${first.effort}) in real users’ agent sessions`
 }
 
 /** Whole days since release, or undefined once the model is no longer new. */

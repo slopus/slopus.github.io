@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { cleanup, render, screen } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import ModelBenchmarksPage from './ModelBenchmarksPage'
@@ -54,7 +55,7 @@ describe('reviewed catalog integrity', () => {
       expect(new Set(model.points.map(point => point.text)).size).toBe(model.points.length)
       for (const point of model.points) {
         expect(model.sourceIds).toContain(point.sourceId)
-        expect(point.text.length).toBeLessThanOrEqual(66)
+        expect(point.text.length).toBeLessThanOrEqual(72)
       }
       // The release time comes from the lab's own post, by its snowflake, and drives the new-model badge.
       const release = model.releaseUrl.match(/^https:\/\/x\.com\/\w+\/status\/(\d+)$/)
@@ -147,6 +148,27 @@ describe('reviewed catalog integrity', () => {
   })
 })
 
+describe('numbers in context', () => {
+  // Every number names its metric, its source and its scale, in words a reader new to the source follows.
+  const METRIC = /FrontierCode|Intelligence Index|coding-agent index|Terminal-Bench|Agent Arena|Code Arena|audit|a task|cost/
+  const texts = () => benchmarkCatalog.models.flatMap(model => [...model.points.map(point => point.text), ...(model.leadCheck ? [model.leadCheck.note] : [])])
+  it('names a metric beside every number on a card', () => {
+    for (const text of texts().filter(text => /\d/.test(text.replace(/\b(GPT|Opus|Sonnet|Fable|Haiku|Gemini|Grok|DeepSeek|Muse|V)[\s-]?[\d.]+(\s(Sol|Astra|Argon|Flash|1017))*/g, '')))) {
+      expect(text, text).toMatch(METRIC)
+    }
+  })
+  it('spells out sources and never leaves a bare score or fraction', () => {
+    for (const text of texts()) {
+      expect(text, text).not.toMatch(/\bAA\b/)
+      expect(text, text).not.toMatch(/\bTheo\b(?! Browne)/)
+      // "47 of 92" must say 92 what.
+      expect(text, text).not.toMatch(/\d+\s*(\/|of)\s*(its\s+)?\d+(?![\d.])(?!\s+[a-z])/)
+      // A bullet is a sentence, not just a number with a label.
+      expect(text.replace(/[^A-Za-z]/g, '').length, text).toBeGreaterThan(20)
+    }
+  })
+})
+
 describe('Agent Arena headline', () => {
   it('comes from one board for every card, each entry checked against the board post', () => {
     const board = benchmarkCatalog.arenaBoard
@@ -176,14 +198,14 @@ describe('Agent Arena headline', () => {
   })
   it('gives #1 its lead over #2 and everyone else their gap to #1, in points with efforts named', () => {
     const board = fixture.arenaBoard
-    expect(arenaGap(board, { rank: 1, effort: 'Max', score: 20 })).toBe('+4.5 pts over #2 Fable (High)')
-    expect(arenaGap(board, { rank: 4, effort: 'xHigh', score: 13.4 })).toBe('6.6 pts behind #1 Alpha (Max)')
-    expect(arenaGap(benchmarkCatalog.arenaBoard, leaderOf(benchmarkCatalog)!.arena!)).toBe('+6.2 pts over #2 GPT-6 Astra (Max)')
+    expect(arenaGap(board, { rank: 1, effort: 'Max', score: 20 })).toBe('4.5 points ahead of #2 Fable (High) in real users’ agent sessions')
+    expect(arenaGap(board, { rank: 4, effort: 'xHigh', score: 13.4 })).toBe('6.6 points behind #1 Alpha (Max) in real users’ agent sessions')
+    expect(arenaGap(benchmarkCatalog.arenaBoard, leaderOf(benchmarkCatalog)!.arena!)).toBe('6.2 points ahead of #2 GPT-6 Astra (Max) in real users’ agent sessions')
   })
   it('shows rank, board, effort and gap on each card and explains the metric once', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
     const headlines = [...document.querySelectorAll('.benchmark-headline')].map(element => element.textContent)
-    expect(headlines).toEqual(['#1 Agent Arena, Max effort+4.5 pts over #2 Fable (High)↗', '#4 Agent Arena, xHigh effort6.6 pts behind #1 Alpha (Max)↗', 'Not on Agent Arena yet'])
+    expect(headlines).toEqual(['#1 Agent Arena, Max effort4.5 points ahead of #2 Fable (High) in real users’ agent sessions↗', '#4 Agent Arena, xHigh effort6.6 points behind #1 Alpha (Max) in real users’ agent sessions↗', 'Not on Agent Arena yet'])
     const legend = document.querySelector('.benchmark-legend')!
     expect(legend.textContent).toContain('than with the average model')
     expect(legend.textContent).toContain('percentage points')
@@ -247,7 +269,7 @@ describe('price per task', () => {
   it('shows the price on the Chores card and other non-Frontier cards, linked to its page', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
     const price = cardOf('Beta').querySelector('.benchmark-price')!
-    expect(price.textContent).toBe('$0.72/task↗')
+    expect(price.textContent).toBe('$0.72 a task↗Artificial Analysis')
     expect(price.getAttribute('href')).toBe('https://prices.test/models/beta')
     expect(cardOf('Alpha').querySelector('.benchmark-price')).toBeNull()
     expect(cardOf('Gamma').querySelector('.benchmark-price')?.textContent).toBe('No API price')
@@ -270,7 +292,7 @@ describe('new-model badge', () => {
     const badges = document.querySelectorAll('.benchmark-new')
     expect(badges).toHaveLength(1)
     expect(badges[0].closest('.benchmark-card')?.querySelector('.benchmark-model')?.textContent).toBe('Beta')
-    expect(badges[0].textContent).toBe('3d since release')
+    expect(badges[0].textContent).toBe('3 days old')
     expect(badges[0].querySelector('svg')).toBeTruthy()
   })
 })
@@ -292,7 +314,7 @@ describe('model benchmarks page', () => {
     const { rerender } = render(<Router pathname="/model-benchmarks" />)
     expect(screen.getByRole('heading', { level: 1 }).textContent).toContain('trust me bro')
     rerender(<Router pathname="/model-benchmarks/" />)
-    expect(screen.getByRole('table')).toBeTruthy()
+    expect(document.querySelector('.benchmark-table')).toBeTruthy()
     expect(modelBenchmarksMetadata.canonicalPath).toBe('/model-benchmarks/')
   })
   it('shows each model’s facts on its card, every claim linked to its post, with no popover', () => {
@@ -301,7 +323,7 @@ describe('model benchmarks page', () => {
     expect(document.querySelector('[role="tooltip"]')).toBeNull()
     expect(card.querySelector('button')).toBeNull()
     const links = [...card.querySelectorAll('a')]
-    expect(links.map(link => link.textContent)).toEqual(['#1 Agent Arena, Max effort+4.5 pts over #2 Fable (High)↗', 'Still #1 after Beta launched.↗', 'Strong on coding.↗', 'Limited evidence elsewhere.↗'])
+    expect(links.map(link => link.textContent)).toEqual(['#1 Agent Arena, Max effort4.5 points ahead of #2 Fable (High) in real users’ agent sessions↗', 'Still #1 after Beta launched.↗', 'Strong on coding.↗', 'Limited evidence elsewhere.↗'])
     expect(links.map(link => link.getAttribute('href'))).toEqual(['100', '100', '100', '200'].map(id => `https://x.com/researcher/status/${id}`))
     for (const link of links) {
       expect(link.getAttribute('target')).toBe('_blank')
@@ -342,25 +364,38 @@ describe('model benchmarks page', () => {
     expect(notes.querySelectorAll('li')).toHaveLength(3)
     expect(screen.getAllByText(/still #1/i)).toHaveLength(1)
   })
-  it('lays S out as S | Frontier | cards | Chores | cards and never renders an empty tier', () => {
+  it('nests S in a one-row table, a labelled column per lane, and never renders an empty tier', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
-    const rows = screen.getAllByRole('row')
-    expect(rows.map(row => row.querySelector('th')?.textContent)).toEqual(['S', 'B'])
-    const cells = [...rows[0].querySelectorAll('td')]
-    expect(cells.map(cell => cell.className)).toEqual(['benchmark-lane-label benchmark-lane-label-frontier', 'benchmark-lane benchmark-lane-frontier', 'benchmark-lane-label benchmark-lane-label-chores', 'benchmark-lane benchmark-lane-chores'])
-    expect(cells.map(cell => cell.querySelector('.benchmark-model')?.textContent ?? cell.textContent)).toEqual(['Frontier', 'Alpha', 'Chores', 'Beta'])
-    expect(rows[1].querySelectorAll('td')).toHaveLength(1)
-    expect(rows[1].querySelector('td')?.getAttribute('colspan')).toBe('4')
+    const rows = [...document.querySelectorAll('.benchmark-table > tbody > tr')]
+    expect(rows.map(row => row.querySelector(':scope > th')?.textContent)).toEqual(['S', 'B'])
+    // Every row is a tier letter and one cell, so the letter column is one width for all tiers.
+    for (const row of rows) expect(row.querySelectorAll(':scope > td')).toHaveLength(1)
+    const lanes = rows[0].querySelector(':scope > td > table.benchmark-lane-table')!
+    expect([...lanes.querySelectorAll('thead th')].map(th => [th.textContent, th.getAttribute('scope')])).toEqual([['Frontier', 'col'], ['Chores', 'col']])
+    expect(lanes.querySelectorAll(':scope > tbody > tr')).toHaveLength(1)
+    expect([...lanes.querySelectorAll('tbody td')].map(cell => [cell.className, [...cell.querySelectorAll('.benchmark-model')].map(name => name.textContent)]))
+      .toEqual([['benchmark-lane benchmark-lane-frontier', ['Alpha']], ['benchmark-lane benchmark-lane-chores', ['Beta']]])
+    expect((lanes.querySelector('thead th') as HTMLElement).style.getPropertyValue('--cards')).toBe('1')
+    expect(document.querySelector('[style*="writing-mode"], .benchmark-lane-label span')).toBeNull()
     expect(screen.queryByText('—')).toBeNull()
     expect(screen.queryByText(/Unranked/)).toBeNull()
   })
   it('renders a single S lane across the row when the other is empty', () => {
     render(<ModelBenchmarksPage catalog={{ ...fixture, models: fixture.models.map(model => model.id === 'test/beta' ? { ...model, tier: 'A' as const, lane: undefined } : model) }} />)
-    const s = screen.getAllByRole('row')[0]
-    expect(s.querySelectorAll('td')).toHaveLength(2)
-    expect(s.querySelectorAll('td')[1].getAttribute('colspan')).toBe('3')
-    expect(s.textContent).toContain('Frontier')
-    expect(s.textContent).not.toContain('Chores')
+    const lanes = document.querySelector('.benchmark-tier-s .benchmark-lane-table')!
+    expect([...lanes.querySelectorAll('thead th')].map(th => th.textContent)).toEqual(['Frontier'])
+    expect(lanes.querySelectorAll('tbody td')).toHaveLength(1)
+  })
+  it('puts S cards on the card columns of the rows below: lane rules fall in the card gaps', () => {
+    // jsdom has no layout; the screenshot check measures the x positions. This pins the arithmetic:
+    // a gap is a cell's padding, the 1px rule and the next cell's padding, and the Frontier
+    // column spans whole card columns, so Chores starts on the next card column.
+    const css = readFileSync('src/model-benchmarks.css', 'utf8')
+    expect(css).toContain('--card-gap: calc(2 * var(--cell-pad) + 1px)')
+    expect(css).toMatch(/\.benchmark-models \{[^}]*gap: [^;]* var\(--card-gap\)/)
+    expect(css).toMatch(/th\.benchmark-lane-label-frontier \{ box-sizing: border-box; width: calc\(var\(--cards\) \* \(var\(--card-width\) \+ var\(--card-gap\)\)\); \}/)
+    expect(css).toMatch(/\.benchmark-table td \{ padding: var\(--cell-pad\);/)
+    expect(css).toMatch(/\.benchmark-table td\.benchmark-lanes \{ padding: 0; \}/)
   })
   it('shows no lead bullet when the leader has no lead check', () => {
     render(<ModelBenchmarksPage catalog={{ ...fixture, models: fixture.models.map(({ leadCheck: _leadCheck, ...model }) => model) }} />)

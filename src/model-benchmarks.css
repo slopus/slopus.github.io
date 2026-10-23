@@ -7,30 +7,35 @@
 .benchmark-meta a { text-decoration: underline; text-underline-offset: 3px; }
 .benchmark-meta a:hover { color: #e6522c; }
 .benchmark-meta a:focus-visible { outline: 2px solid #e6522c; outline-offset: 3px; }
-.benchmark-table { border-collapse: separate; border-spacing: 0; width: max-content; max-width: 100%; margin-inline: auto; text-align: left; border: 1px solid #c9cabe; border-radius: 8px; }
-.benchmark-table tbody th { width: 72px; font-family: 'Space Grotesk', sans-serif; font-size: 1.45rem; text-align: center; padding: .65rem .8rem; border-right: 1px solid #c9cabe; }
-.benchmark-table td { padding: .75rem; vertical-align: top; }
-.benchmark-table tbody tr:not(:last-child) > * { border-bottom: 1px solid #c9cabe; }
-.benchmark-tier-s th { background: #f1d5c4; border-radius: 7px 0 0 0; }
-.benchmark-tier-a th { background: #efe0b3; }
-.benchmark-tier-b th { background: #e2e3bd; }
-.benchmark-tier-f th { background: #ead6d0; }
-.benchmark-table tbody tr:last-child th { border-bottom-left-radius: 7px; }
-/* S reads: S | Frontier | cards | Chores | cards, each label turned to read bottom to top. */
-.benchmark-table td.benchmark-lane-label { width: 30px; padding: .75rem 0; vertical-align: middle; text-align: center; background: #f8e7dc; color: #b4462a; border-right: 1px solid #c9cabe; }
-.benchmark-lane-label span { writing-mode: vertical-rl; transform: rotate(180deg); font: 500 .62rem 'DM Mono', monospace; letter-spacing: .14em; text-transform: uppercase; }
-.benchmark-lane-label-chores { border-left: 1px solid #c9cabe; }
-/* Frontier is exactly as wide as its cards, so the Chores label follows them and Chores takes the rest of the row. */
-.benchmark-table td.benchmark-lane-frontier { width: calc(var(--cards) * var(--card-width) + (var(--cards) - 1) * .6rem); }
-.benchmark-models { display: flex; flex-wrap: wrap; gap: 1rem .6rem; }
+.benchmark-table { --card-width: 244px; --cell-pad: .75rem; --card-gap: calc(2 * var(--cell-pad) + 1px); border-collapse: separate; border-spacing: 0; width: max-content; max-width: 100%; margin-inline: auto; text-align: left; border: 1px solid #c9cabe; border-radius: 8px; }
+.benchmark-table > tbody > tr > th { width: 72px; font-family: 'Space Grotesk', sans-serif; font-size: 1.45rem; text-align: center; padding: .65rem .8rem; border-right: 1px solid #c9cabe; }
+.benchmark-table td { padding: var(--cell-pad); vertical-align: top; }
+.benchmark-table > tbody > tr:not(:last-child) > * { border-bottom: 1px solid #c9cabe; }
+.benchmark-tier-s > th { background: #f1d5c4; border-radius: 7px 0 0 0; }
+.benchmark-tier-a > th { background: #efe0b3; }
+.benchmark-tier-b > th { background: #e2e3bd; }
+.benchmark-tier-f > th { background: #ead6d0; }
+.benchmark-table > tbody > tr:last-child > th { border-bottom-left-radius: 7px; }
+/*
+ * S holds a one-row table: a Frontier column and a Chores column, each headed by its label.
+ * Cards are --card-gap apart in every row, a 1px rule with a cell's padding on each side, so a
+ * lane's rule falls in a gap between card columns and every S card sits over a card of the A row.
+ */
+.benchmark-table td.benchmark-lanes { padding: 0; }
+.benchmark-lane-table { border-collapse: separate; border-spacing: 0; min-width: 100%; }
+.benchmark-lane-table th.benchmark-lane-label { padding: .3rem var(--cell-pad); background: #f8e7dc; color: #b4462a; border-bottom: 1px solid #c9cabe; font: 500 .62rem/1.4 'DM Mono', monospace; letter-spacing: .14em; text-align: left; text-transform: uppercase; }
+.benchmark-lane-table th.benchmark-lane-label-frontier { box-sizing: border-box; width: calc(var(--cards) * (var(--card-width) + var(--card-gap))); }
+.benchmark-lane-table th.benchmark-lane-label-frontier, .benchmark-lane-table td.benchmark-lane-frontier { border-right: 1px solid #c9cabe; }
+.benchmark-models { display: flex; flex-wrap: wrap; gap: 1rem var(--card-gap); }
 /* Every card has the same size; claims are written to fit two lines each. */
-.benchmark-table { --card-width: 244px; }
-.benchmark-card { position: relative; box-sizing: border-box; width: var(--card-width); height: 200px; display: flex; flex-direction: column; background: #fcfaf5; color: #183f38; border: 1px solid #c9cabe; border-radius: 6px; padding: .7rem .8rem; }
+.benchmark-card { position: relative; box-sizing: border-box; width: var(--card-width); height: 236px; display: flex; flex-direction: column; background: #fcfaf5; color: #183f38; border: 1px solid #c9cabe; border-radius: 6px; padding: .7rem .8rem; }
 .benchmark-card-title { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; min-height: 1.75rem; }
 .benchmark-model { font: 600 .9rem/1.25 'DM Sans', sans-serif; }
 /* Price per task, on every card but Frontier: the one number to compare cheap and expensive by. */
-.benchmark-price { flex: none; padding: .1rem .4rem; border: 1px solid #c9cabe; border-radius: 4px; background: #f3f0e4; color: #183f38; font: 600 .78rem/1.3 'Space Grotesk', sans-serif; white-space: nowrap; }
-.benchmark-price small { margin-left: .1rem; color: #557068; font: .58rem 'DM Mono', monospace; }
+.benchmark-price { flex: none; display: flex; flex-direction: column; align-items: flex-end; padding: .1rem .4rem .15rem; border: 1px solid #c9cabe; border-radius: 4px; background: #f3f0e4; color: #183f38; font: 600 .78rem/1.3 'Space Grotesk', sans-serif; white-space: nowrap; }
+.benchmark-price small { color: #557068; font: .58rem 'DM Mono', monospace; }
+/* Who measured the price, under it, so the chip reads on its own. */
+.benchmark-price .benchmark-price-source { font-size: .5rem; line-height: 1.2; letter-spacing: -.01em; }
 .benchmark-price.benchmark-claim:hover { text-decoration: none; border-color: #557068; }
 .benchmark-price-none { background: none; color: #73857d; font: .58rem/1.6 'DM Mono', monospace; }
 .benchmark-claim { color: inherit; text-decoration: none; }
@@ -72,19 +77,23 @@
   .benchmark-main { width: calc(100% - 32px); padding-top: 1.4rem; }
   .benchmark-heading h1 { max-width: 330px; margin-inline: auto; }
   .benchmark-meta { font-size: .6rem; }
-  /* Each row is a grid: the tier letter on the left, lanes stacked on the right with plain labels. */
-  .benchmark-table, .benchmark-table tbody { display: block; }
-  .benchmark-table tr { display: grid; grid-template-columns: 44px minmax(0, 1fr); }
-  .benchmark-table tbody tr:not(:last-child) { border-bottom: 1px solid #c9cabe; }
-  .benchmark-table tbody tr:not(:last-child) > * { border-bottom: 0; }
-  .benchmark-table tbody th { grid-row: span 4; width: auto; padding: .5rem 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
-  .benchmark-tier-s th { border-top-left-radius: 7px; }
-  .benchmark-table td { grid-column: 2; padding: .55rem; }
-  .benchmark-table td.benchmark-lane-label { width: auto; padding: .6rem .55rem 0; text-align: left; border: 0; }
-  .benchmark-lane-label span { writing-mode: horizontal-tb; transform: none; }
-  .benchmark-table td.benchmark-lane-label-chores { border-top: 1px solid #c9cabe; }
-  .benchmark-table td.benchmark-lane { padding-top: .6rem; }
-  .benchmark-table td.benchmark-lane-frontier { width: auto; }
+  /* Each row is a grid: the tier letter on the left, cards stacked on the right; S stacks Frontier over Chores. */
+  .benchmark-table, .benchmark-table > tbody { display: block; }
+  .benchmark-table > tbody > tr { display: grid; grid-template-columns: 44px minmax(0, 1fr); }
+  .benchmark-table > tbody > tr:not(:last-child) { border-bottom: 1px solid #c9cabe; }
+  .benchmark-table > tbody > tr:not(:last-child) > * { border-bottom: 0; }
+  .benchmark-table > tbody > tr > th { width: auto; padding: .5rem 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+  .benchmark-tier-s > th { border-top-left-radius: 7px; }
+  .benchmark-table td { padding: .55rem; }
+  .benchmark-lane-table, .benchmark-lane-table thead, .benchmark-lane-table tbody { display: contents; }
+  .benchmark-lane-table tr { display: contents; }
+  .benchmark-table td.benchmark-lanes { display: flex; flex-direction: column; }
+  .benchmark-lane-table th.benchmark-lane-label, .benchmark-lane-table td.benchmark-lane { display: block; width: auto; border-right: 0; }
+  .benchmark-lane-table th.benchmark-lane-label { padding: .3rem .55rem; }
+  .benchmark-lane-label-frontier { order: 1; }
+  .benchmark-lane-frontier { order: 2; }
+  .benchmark-lane-label-chores { order: 3; border-top: 1px solid #c9cabe; }
+  .benchmark-lane-chores { order: 4; }
   .benchmark-models { flex-direction: column; gap: .7rem; }
   .benchmark-card { width: 100%; height: auto; min-height: 0; }
   .benchmark-source-list { grid-template-columns: minmax(0, 1fr); }

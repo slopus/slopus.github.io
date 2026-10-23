@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP } from './products'
 import { absoluteDate, arenaGap, benchmarkCatalog, formatPrice, LANES, leaderOf, newModelAge, priceUrl, publicationAge, shortDate, TIERS, wallSources, type BenchmarkCatalog, type RankedModel } from './modelBenchmarks'
@@ -66,14 +66,15 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
     const price = model.lane === 'frontier' ? undefined : model.price
     return <div className="benchmark-card" key={model.id}>
       {age === undefined ? null : <span className="benchmark-new" title={`Released ${absoluteDate(model.releasedAt)}`}>
-        <BabyIcon />{age}d<span className="benchmark-sr-only"> since release</span>
+        <BabyIcon />{age} {age === 1 ? 'day' : 'days'} old
       </span>}
       <div className="benchmark-card-title">
         <strong className="benchmark-model" id={`${notesId}-name`}>{model.name}</strong>
         {price ? price.usd === null
           ? <span className="benchmark-price benchmark-price-none">No API price</span>
-          : <a className="benchmark-claim benchmark-price" href={priceUrl(catalog, price)} target="_blank" rel="noopener noreferrer" aria-label={`${formatPrice(price.usd)} per task, Artificial Analysis`}>
-            {formatPrice(price.usd)}<small>/task</small><span className="benchmark-claim-arrow" aria-hidden="true">↗</span>
+          : <a className="benchmark-claim benchmark-price" href={priceUrl(catalog, price)} target="_blank" rel="noopener noreferrer">
+            <span>{formatPrice(price.usd)}<small> a task</small><span className="benchmark-claim-arrow" aria-hidden="true">↗</span></span>
+            <small className="benchmark-price-source">Artificial Analysis</small>
           </a> : null}
       </div>
       {model.arena
@@ -114,18 +115,21 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
             return <tr key={tier} className={`benchmark-tier benchmark-tier-${tier.toLowerCase()}`}>
               <th scope="row"><span>{tier}</span></th>
               {lanes.length
-                ? lanes.map(cell => <Fragment key={cell.lane}>
-                  <td className={`benchmark-lane-label benchmark-lane-label-${cell.lane}`}><span>{cell.lane === 'frontier' ? 'Frontier' : 'Chores'}</span></td>
-                  <td colSpan={lanes.length === 1 ? 3 : undefined} className={`benchmark-lane benchmark-lane-${cell.lane}`} style={{ '--cards': cell.models.length } as CSSProperties}>
-                    <div className="benchmark-models">{cell.models.map(card)}</div>
-                  </td>
-                </Fragment>)
-                : <td colSpan={4}><div className="benchmark-models">{models.map(card)}</div></td>}
+                ? <td className="benchmark-lanes">
+                  {/* One row, one column per lane; each lane's cards start on a card column of the rows below. */}
+                  <table className="benchmark-lane-table">
+                    <thead><tr>{lanes.map(cell => <th key={cell.lane} scope="col" className={`benchmark-lane-label benchmark-lane-label-${cell.lane}`} style={{ '--cards': cell.models.length } as CSSProperties}>{cell.lane === 'frontier' ? 'Frontier' : 'Chores'}</th>)}</tr></thead>
+                    <tbody><tr>{lanes.map(cell => <td key={cell.lane} className={`benchmark-lane benchmark-lane-${cell.lane}`}>
+                      <div className="benchmark-models">{cell.models.map(card)}</div>
+                    </td>)}</tr></tbody>
+                  </table>
+                </td>
+                : <td><div className="benchmark-models">{models.map(card)}</div></td>}
             </tr>
           })}</tbody>
         </table>
         {board ? <p className="benchmark-legend">
-          Headline: rank on <a className="benchmark-claim" href={board.url} target="_blank" rel="noopener noreferrer">{withArrow(`Arena’s Agent Arena board of ${shortDate(board.publishedAt)}`)}</a>, at the effort shown. Arena scores how much better real users’ agent sessions go with a model than with the average model; gaps are percentage points (pts) of that score. Price: <a className="benchmark-claim" href={catalog.pricing.url} target="_blank" rel="noopener noreferrer">{withArrow('Artificial Analysis’s cost per task')}</a> on its Intelligence Index, at the same effort; Frontier shows none.
+          Big number: rank on <a className="benchmark-claim" href={board.url} target="_blank" rel="noopener noreferrer">{withArrow(`Arena’s Agent Arena board of ${shortDate(board.publishedAt)}`)}</a>, at the effort shown. Arena scores how much better real users’ agent sessions go with a model than with the average model; the line below is the gap in percentage points of that score. Price: <a className="benchmark-claim" href={catalog.pricing.url} target="_blank" rel="noopener noreferrer">{withArrow('Artificial Analysis’s cost per task')}</a> of its Intelligence Index, ten tests of reasoning, knowledge and agent work, at current prices; Frontier shows none. Its coding-agent index scores each model in its own coding agent on three agentic coding tests.
         </p> : null}
 
         <section className="benchmark-evidence" aria-label="Source posts" id="benchmark-evidence">
