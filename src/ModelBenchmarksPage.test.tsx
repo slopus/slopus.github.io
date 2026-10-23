@@ -22,7 +22,7 @@ const fixture: BenchmarkCatalog = {
   pricing: { source: 'Fixture cost per task', url: 'https://prices.test/models/', verifiedAt: '2026-09-23T10:00:00Z', note: 'Fixture.' },
   wall: ['100', '200', '300'],
   models: [
-    model('test/alpha', 'Alpha', 'S', [['Strong on coding.', '100'], ['Limited evidence elsewhere.', '200']], { lane: 'frontier',
+    model('test/alpha', 'Alpha', 'S', [['Strong on coding.', '100'], ['Limited evidence elsewhere.', '200']], { lane: 'frontier', price: { usd: 5.98, page: 'alpha' },
       arena: { rank: 1, effort: 'Max', score: 20 },
       leadCheck: { reconfirmedAt: '2026-09-23', heldAgainst: ['test/beta'], sourceIds: ['100'], note: 'Still #1 after Beta launched.', reason: 'Fixture head-to-head.' } }),
     model('test/beta', 'Beta', 'S', [['Useful for small tasks.', '300'], ['Effort matters.', '100']], { lane: 'chores', releasedAt: '2026-09-20T12:00:00Z', arena: { rank: 4, effort: 'xHigh', score: 13.4 }, price: { usd: 0.72, page: 'beta' } }),
@@ -149,18 +149,18 @@ describe('reviewed catalog integrity', () => {
 })
 
 describe('numbers in context', () => {
-  // Every number names its metric, its source and its scale, in words a reader new to the source follows.
-  const METRIC = /FrontierCode|Intelligence Index|coding-agent index|Terminal-Bench|Agent Arena|Code Arena|audit|a task|cost/
+  // Every number names its metric and its scale, in words a reader new to the source follows; the source is the link.
+  const METRIC = /FrontierCode|Intelligence Index|coding-agent index|Terminal-Bench|Agent Arena|Code Arena|audit|a task|cost/i
   const texts = () => benchmarkCatalog.models.flatMap(model => [...model.points.map(point => point.text), ...(model.leadCheck ? [model.leadCheck.note] : [])])
   it('names a metric beside every number on a card', () => {
     for (const text of texts().filter(text => /\d/.test(text.replace(/\b(GPT|Opus|Sonnet|Fable|Haiku|Gemini|Grok|DeepSeek|Muse|V)[\s-]?[\d.]+(\s(Sol|Astra|Argon|Flash|1017))*/g, '')))) {
       expect(text, text).toMatch(METRIC)
     }
   })
-  it('spells out sources and never leaves a bare score or fraction', () => {
+  it('leaves the source to the link and never leaves a bare score or fraction', () => {
     for (const text of texts()) {
-      expect(text, text).not.toMatch(/\bAA\b/)
-      expect(text, text).not.toMatch(/\bTheo\b(?! Browne)/)
+      // No publisher prefix or abbreviation; a person is named only where they are the point, briefly.
+      expect(text, text).not.toMatch(/\bAA\b|Artificial Analysis|Theo Browne|Cognition/)
       // "47 of 92" must say 92 what.
       expect(text, text).not.toMatch(/\d+\s*(\/|of)\s*(its\s+)?\d+(?![\d.])(?!\s+[a-z])/)
       // A bullet is a sentence, not just a number with a label.
@@ -253,27 +253,27 @@ describe('posts wall', () => {
 })
 
 describe('price per task', () => {
-  it('comes from one source, AA’s cost per Intelligence Index task, and never sits on a Frontier card', () => {
+  it('comes from one source, AA’s API cost per Intelligence Index task, on every card', () => {
     expect(benchmarkCatalog.pricing.url).toBe('https://artificialanalysis.ai/models/')
     expect(benchmarkCatalog.pricing.source).toMatch(/Artificial Analysis cost per Intelligence Index task/)
     for (const model of benchmarkCatalog.models) {
-      if (model.lane === 'frontier') expect(model.price).toBeUndefined()
-      else expect(model.price).toBeTruthy()
-      if (model.price) {
-        expect(model.price.page).toMatch(/^[a-z0-9-]+$/)
-        if (model.price.usd !== null) expect(model.price.usd).toBeGreaterThan(0)
-      }
+      expect(model.price, model.name).toBeTruthy()
+      expect(model.price!.page).toMatch(/^[a-z0-9-]+$/)
+      if (model.price!.usd !== null) expect(model.price!.usd).toBeGreaterThan(0)
     }
-    expect(benchmarkCatalog.models.find(model => model.lane === 'chores')!.price!.usd).toBeTypeOf('number')
+    for (const lane of LANES) expect(benchmarkCatalog.models.find(model => model.lane === lane)!.price!.usd).toBeTypeOf('number')
   })
-  it('shows the price on the Chores card and other non-Frontier cards, linked to its page', () => {
+  it('shows one kind of price on every card, labelled API and linked to its page', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
-    const price = cardOf('Beta').querySelector('.benchmark-price')!
-    expect(price.textContent).toBe('$0.72 a task↗Artificial Analysis')
-    expect(price.getAttribute('href')).toBe('https://prices.test/models/beta')
-    expect(cardOf('Alpha').querySelector('.benchmark-price')).toBeNull()
+    for (const [name, text, page] of [['Alpha', '$5.98 a task↗API price', 'alpha'], ['Beta', '$0.72 a task↗API price', 'beta']]) {
+      const price = cardOf(name).querySelector('.benchmark-price')!
+      expect(price.textContent).toBe(text)
+      expect(price.querySelector('.benchmark-price-kind')?.textContent).toBe('API price')
+      expect(price.getAttribute('href')).toBe(`https://prices.test/models/${page}`)
+    }
     expect(cardOf('Gamma').querySelector('.benchmark-price')?.textContent).toBe('No API price')
-    expect(document.querySelector('.benchmark-legend')?.textContent).toContain('cost per task')
+    expect(document.querySelector('.benchmark-legend')?.textContent).toContain('API cost per task')
+    expect(document.querySelector('.benchmark-legend')?.textContent).toContain('not a subscription')
   })
 })
 
@@ -322,7 +322,7 @@ describe('model benchmarks page', () => {
     const card = cardOf('Alpha')
     expect(document.querySelector('[role="tooltip"]')).toBeNull()
     expect(card.querySelector('button')).toBeNull()
-    const links = [...card.querySelectorAll('a')]
+    const links = [...card.querySelectorAll('a:not(.benchmark-price)')]
     expect(links.map(link => link.textContent)).toEqual(['#1 Agent Arena, Max effort4.5 points ahead of #2 Fable (High) in real users’ agent sessions↗', 'Still #1 after Beta launched.↗', 'Strong on coding.↗', 'Limited evidence elsewhere.↗'])
     expect(links.map(link => link.getAttribute('href'))).toEqual(['100', '100', '100', '200'].map(id => `https://x.com/researcher/status/${id}`))
     for (const link of links) {

@@ -89,7 +89,7 @@ export interface RankedModel {
   releaseUrl: string
   /** The model's entry on `arenaBoard`; omitted while it is not on the board yet. */
   arena?: ArenaEntry
-  /** AA's cost per Intelligence Index task; `usd: null` when AA prices no API for it. Never set on Frontier models. */
+  /** AA's API cost per Intelligence Index task; `usd: null` when AA prices no API for it. */
   price?: ModelPrice
   /** The last point is the caveat. */
   points: ModelPoint[]

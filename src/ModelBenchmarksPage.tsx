@@ -5,10 +5,15 @@ import { absoluteDate, arenaGap, benchmarkCatalog, formatPrice, LANES, leaderOf,
 import { XPostEmbed } from './XPostEmbed'
 import './model-benchmarks.css'
 
+/** Hyphenated words ("GPT-6", "Coding-agent") never break at the hyphen. */
+function keepHyphens(text: string) {
+  return text.split(/(\S+-\S+)/).map((part, index) => index % 2 ? <span key={index} className="benchmark-claim-end">{part}</span> : part)
+}
+
 /** Text whose last word carries the raised link arrow, never wrapped onto a line of its own. */
 function withArrow(text: string) {
   const lastWord = text.lastIndexOf(' ') + 1
-  return <>{text.slice(0, lastWord)}<span className="benchmark-claim-end">{text.slice(lastWord)}<span className="benchmark-claim-arrow" aria-hidden="true">↗</span></span></>
+  return <>{keepHyphens(text.slice(0, lastWord))}<span className="benchmark-claim-end">{text.slice(lastWord)}<span className="benchmark-claim-arrow" aria-hidden="true">↗</span></span></>
 }
 
 /** Lucide's `baby` icon (ISC license). */
@@ -63,7 +68,7 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
     const notesId = `notes-${model.id.replaceAll('/', '-')}`
     const age = newModelAge(model.releasedAt, now)
     const leadCheck = model === leader ? model.leadCheck : undefined
-    const price = model.lane === 'frontier' ? undefined : model.price
+    const price = model.price
     return <div className="benchmark-card" key={model.id}>
       {age === undefined ? null : <span className="benchmark-new" title={`Released ${absoluteDate(model.releasedAt)}`}>
         <BabyIcon />{age} {age === 1 ? 'day' : 'days'} old
@@ -74,7 +79,7 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
           ? <span className="benchmark-price benchmark-price-none">No API price</span>
           : <a className="benchmark-claim benchmark-price" href={priceUrl(catalog, price)} target="_blank" rel="noopener noreferrer">
             <span>{formatPrice(price.usd)}<small> a task</small><span className="benchmark-claim-arrow" aria-hidden="true">↗</span></span>
-            <small className="benchmark-price-source">Artificial Analysis</small>
+            <small className="benchmark-price-kind">API price</small>
           </a> : null}
       </div>
       {model.arena
@@ -129,7 +134,7 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
           })}</tbody>
         </table>
         {board ? <p className="benchmark-legend">
-          Big number: rank on <a className="benchmark-claim" href={board.url} target="_blank" rel="noopener noreferrer">{withArrow(`Arena’s Agent Arena board of ${shortDate(board.publishedAt)}`)}</a>, at the effort shown. Arena scores how much better real users’ agent sessions go with a model than with the average model; the line below is the gap in percentage points of that score. Price: <a className="benchmark-claim" href={catalog.pricing.url} target="_blank" rel="noopener noreferrer">{withArrow('Artificial Analysis’s cost per task')}</a> of its Intelligence Index, ten tests of reasoning, knowledge and agent work, at current prices; Frontier shows none. Its coding-agent index scores each model in its own coding agent on three agentic coding tests.
+          Big number: rank on <a className="benchmark-claim" href={board.url} target="_blank" rel="noopener noreferrer">{withArrow(`Arena’s Agent Arena board of ${shortDate(board.publishedAt)}`)}</a>, at the effort shown. Arena scores how much better real users’ agent sessions go with a model than with the average model; the line below is the gap in percentage points of that score. Price: <a className="benchmark-claim" href={catalog.pricing.url} target="_blank" rel="noopener noreferrer">{withArrow('Artificial Analysis’s API cost per task')}</a> on its Intelligence Index, ten tests of reasoning, knowledge and agent work, at current API prices, not a subscription. Its coding-agent index scores each model in its own coding agent on three agentic coding tests; FrontierCode is Cognition’s test of merge-ready code.
         </p> : null}
 
         <section className="benchmark-evidence" aria-label="Source posts" id="benchmark-evidence">
