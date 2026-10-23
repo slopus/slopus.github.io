@@ -31,13 +31,6 @@
 .benchmark-card { position: relative; box-sizing: border-box; width: var(--card-width); height: 236px; display: flex; flex-direction: column; background: #fcfaf5; color: #183f38; border: 1px solid #c9cabe; border-radius: 6px; padding: .7rem .8rem; }
 .benchmark-card-title { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; min-height: 1.75rem; }
 .benchmark-model { font: 600 .9rem/1.25 'DM Sans', sans-serif; }
-/* API price per task, on every card: the one number to compare cheap and expensive by. */
-.benchmark-price { flex: none; display: flex; flex-direction: column; align-items: flex-end; padding: .1rem .4rem .15rem; border: 1px solid #c9cabe; border-radius: 4px; background: #f3f0e4; color: #183f38; font: 600 .78rem/1.3 'Space Grotesk', sans-serif; white-space: nowrap; }
-.benchmark-price small { color: #557068; font: .58rem 'DM Mono', monospace; }
-/* The kind of price, under it, so it is never read as a subscription price. */
-.benchmark-price .benchmark-price-kind { font-size: .5rem; line-height: 1.2; }
-.benchmark-price.benchmark-claim:hover { text-decoration: none; border-color: #557068; }
-.benchmark-price-none { background: none; color: #73857d; font: .58rem/1.6 'DM Mono', monospace; }
 .benchmark-claim { color: inherit; text-decoration: none; }
 .benchmark-claim:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
 .benchmark-claim:focus-visible { outline: 2px solid #e6522c; outline-offset: 1px; border-radius: 2px; }

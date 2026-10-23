@@ -61,21 +61,6 @@ export interface ArenaBoard {
   top: [ArenaBoardEntry, ArenaBoardEntry]
 }
 
-/** One model's price from `catalog.pricing`, read from its AA page. */
-export interface ModelPrice {
-  usd: number | null
-  /** The model's page slug: `https://artificialanalysis.ai/models/<page>`. */
-  page: string
-}
-
-/** The one price source every priced card reads. */
-export interface Pricing {
-  source: string
-  url: string
-  verifiedAt: string
-  note: string
-}
-
 export interface ArenaBoardEntry { name: string; effort: string; score: number }
 
 export interface RankedModel {
@@ -89,8 +74,6 @@ export interface RankedModel {
   releaseUrl: string
   /** The model's entry on `arenaBoard`; omitted while it is not on the board yet. */
   arena?: ArenaEntry
-  /** AA's API cost per Intelligence Index task; `usd: null` when AA prices no API for it. */
-  price?: ModelPrice
   /** The last point is the caveat. */
   points: ModelPoint[]
   sourceIds: string[]
@@ -136,7 +119,6 @@ export interface BenchmarkCatalog {
   evidenceCutoff: string
   reviewNote: string
   arenaBoard: ArenaBoard
-  pricing: Pricing
   /** Post IDs on the wall, at most `MAX_WALL_POSTS`, picked in order of value to S; the page shows them newest first. */
   wall: string[]
   models: RankedModel[]
@@ -153,15 +135,6 @@ export function wallSources(catalog: BenchmarkCatalog) {
     .filter(source => source !== undefined)
     .slice(0, MAX_WALL_POSTS)
     .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))
-}
-
-export function priceUrl(catalog: BenchmarkCatalog, price: ModelPrice) {
-  return `${catalog.pricing.url}${price.page}`
-}
-
-/** `$0.72`, or `$0.007` below a cent. */
-export function formatPrice(usd: number) {
-  return `$${usd < 0.01 ? usd.toFixed(3) : usd.toFixed(2)}`
 }
 
 /** Gap in percentage points, from one decimal place scores. */

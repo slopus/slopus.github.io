@@ -19,14 +19,13 @@ const model = (id: string, name: string, tier: RankedModel['tier'], points: [str
 const fixture: BenchmarkCatalog = {
   schemaVersion: 5, revision: 'test.1', updatedAt: '2026-09-23T10:00:00Z', evidenceCutoff: '2026-09-23T10:00:00Z', reviewNote: 'Reviewed fixture.',
   arenaBoard: { sourceId: '100', top: [{ name: 'Alpha', effort: 'Max', score: 20 }, { name: 'Fable', effort: 'High', score: 15.5 }] },
-  pricing: { source: 'Fixture cost per task', url: 'https://prices.test/models/', verifiedAt: '2026-09-23T10:00:00Z', note: 'Fixture.' },
   wall: ['100', '200', '300'],
   models: [
-    model('test/alpha', 'Alpha', 'S', [['Strong on coding.', '100'], ['Limited evidence elsewhere.', '200']], { lane: 'frontier', price: { usd: 5.98, page: 'alpha' },
+    model('test/alpha', 'Alpha', 'S', [['Strong on coding.', '100'], ['Limited evidence elsewhere.', '200']], { lane: 'frontier',
       arena: { rank: 1, effort: 'Max', score: 20 },
       leadCheck: { reconfirmedAt: '2026-09-23', heldAgainst: ['test/beta'], sourceIds: ['100'], note: 'Still #1 after Beta launched.', reason: 'Fixture head-to-head.' } }),
-    model('test/beta', 'Beta', 'S', [['Useful for small tasks.', '300'], ['Effort matters.', '100']], { lane: 'chores', releasedAt: '2026-09-20T12:00:00Z', arena: { rank: 4, effort: 'xHigh', score: 13.4 }, price: { usd: 0.72, page: 'beta' } }),
-    { ...model('test/gamma', 'Gamma', 'B', [['Narrow evidence.', '100'], ['Fixture caveat.', '100']]), price: { usd: null, page: 'gamma' }, sourceIds: [], rationale: 'Fixture without posts.' },
+    model('test/beta', 'Beta', 'S', [['Useful for small tasks.', '300'], ['Effort matters.', '100']], { lane: 'chores', releasedAt: '2026-09-20T12:00:00Z', arena: { rank: 4, effort: 'xHigh', score: 13.4 } }),
+    { ...model('test/gamma', 'Gamma', 'B', [['Narrow evidence.', '100'], ['Fixture caveat.', '100']]), sourceIds: [], rationale: 'Fixture without posts.' },
   ],
   notShown: [],
   sources: [{ ...source('300', ['test/beta']), publishedAt: '2026-09-21T12:00:00Z' }, source('100', ['test/alpha', 'test/beta'], ['test/alpha', 'test/beta']), { ...source('200', ['test/alpha']), kind: 'provider-reported', publishedAt: '2026-09-22T18:00:00Z' }],
@@ -150,7 +149,7 @@ describe('reviewed catalog integrity', () => {
 
 describe('numbers in context', () => {
   // Every number names its metric and its scale, in words a reader new to the source follows; the source is the link.
-  const METRIC = /FrontierCode|Intelligence Index|coding-agent index|Terminal-Bench|Agent Arena|Code Arena|audit|a task|cost/i
+  const METRIC = /FrontierCode|Intelligence Index|coding-agent index|Terminal-Bench|Agent Arena|Code Arena|audit|hallucination rate|a task|cost/i
   const texts = () => benchmarkCatalog.models.flatMap(model => [...model.points.map(point => point.text), ...(model.leadCheck ? [model.leadCheck.note] : [])])
   it('names a metric beside every number on a card', () => {
     for (const text of texts().filter(text => /\d/.test(text.replace(/\b(GPT|Opus|Sonnet|Fable|Haiku|Gemini|Grok|DeepSeek|Muse|V)[\s-]?[\d.]+(\s(Sol|Astra|Argon|Flash|1017))*/g, '')))) {
@@ -256,28 +255,14 @@ describe('posts wall', () => {
   })
 })
 
-describe('price per task', () => {
-  it('comes from one source, AA’s API cost per Intelligence Index task, on every card', () => {
-    expect(benchmarkCatalog.pricing.url).toBe('https://artificialanalysis.ai/models/')
-    expect(benchmarkCatalog.pricing.source).toMatch(/Artificial Analysis cost per Intelligence Index task/)
-    for (const model of benchmarkCatalog.models) {
-      expect(model.price, model.name).toBeTruthy()
-      expect(model.price!.page).toMatch(/^[a-z0-9-]+$/)
-      if (model.price!.usd !== null) expect(model.price!.usd).toBeGreaterThan(0)
-    }
-    for (const lane of LANES) expect(benchmarkCatalog.models.find(model => model.lane === lane)!.price!.usd).toBeTypeOf('number')
-  })
-  it('shows one kind of price on every card, labelled API and linked to its page', () => {
+describe('no prices', () => {
+  // Kirill, Oct 23: API prices mislead subscription users, and no source publishes subscription-adjusted ones.
+  it('shows no price chip, price label or price legend', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
-    for (const [name, text, page] of [['Alpha', '$5.98 a task↗API price', 'alpha'], ['Beta', '$0.72 a task↗API price', 'beta']]) {
-      const price = cardOf(name).querySelector('.benchmark-price')!
-      expect(price.textContent).toBe(text)
-      expect(price.querySelector('.benchmark-price-kind')?.textContent).toBe('API price')
-      expect(price.getAttribute('href')).toBe(`https://prices.test/models/${page}`)
-    }
-    expect(cardOf('Gamma').querySelector('.benchmark-price')?.textContent).toBe('No API price')
-    expect(document.querySelector('.benchmark-legend')?.textContent).toContain('API cost per task')
-    expect(document.querySelector('.benchmark-legend')?.textContent).toContain('not a subscription')
+    expect(document.querySelector('.benchmark-price')).toBeNull()
+    expect(document.body.textContent).not.toMatch(/API price|a task↗|cost per task/)
+    expect('pricing' in benchmarkCatalog).toBe(false)
+    for (const model of benchmarkCatalog.models) expect('price' in model, model.name).toBe(false)
   })
 })
 
@@ -326,7 +311,7 @@ describe('model benchmarks page', () => {
     const card = cardOf('Alpha')
     expect(document.querySelector('[role="tooltip"]')).toBeNull()
     expect(card.querySelector('button')).toBeNull()
-    const links = [...card.querySelectorAll('a:not(.benchmark-price)')]
+    const links = [...card.querySelectorAll('a')]
     expect(links.map(link => link.textContent)).toEqual(['#1 Agent Arena, Max effort4.5 points ahead of #2 Fable (High) in real users’ agent sessions↗', 'Still #1 after Beta launched.↗', 'Strong on coding.↗', 'Limited evidence elsewhere.↗'])
     expect(links.map(link => link.getAttribute('href'))).toEqual(['100', '100', '100', '200'].map(id => `https://x.com/researcher/status/${id}`))
     for (const link of links) {

@@ -1,18 +1,12 @@
 {
   "schemaVersion": 5,
-  "revision": "2026-10-23.4",
-  "updatedAt": "2026-10-23T09:48:00Z",
+  "revision": "2026-10-23.5",
+  "updatedAt": "2026-10-23T10:46:00Z",
   "evidenceCutoff": "2026-10-21T09:30:00Z",
   "reviewNote": "Our current take for agentic coding across the major labs. S splits into Frontier, the most capable models for hard work, and Chores, the best value for routine work. Same-tier order is editorial, not a measured gap. Models reviewed but not shown are listed in notShown with the reason.",
   "arenaBoard": {
     "sourceId": "2112639437482176693",
     "top": [{"name": "Opus 5.5", "effort": "Max", "score": 20.9}, {"name": "GPT-6 Astra", "effort": "Max", "score": 14.7}]
-  },
-  "pricing": {
-    "source": "Artificial Analysis cost per Intelligence Index task",
-    "url": "https://artificialanalysis.ai/models/",
-    "verifiedAt": "2026-10-23T06:20:00Z",
-    "note": "Each price is AA’s weighted average cost to run one Intelligence Index task at the model’s list (or current promotional) API prices, at the effort AA labels, read from the model’s AA page. Every card shows one, labelled API. AA prices no model without per-token API pricing (Muse Wonder Full). No reviewed source publishes a subscription-adjusted cost per task for the shown models (checked Oct 23: Arena, AA, aiandtractors.com, FinOps LLM, TokenPost/SemiAnalysis)."
   },
   "wall": ["2110461356935983257", "2109703511843979391", "2105025585332605357", "2113424551396934134", "2105392625788637299", "2109697083519447118", "2112218661432000694", "2102259624313549130"],
   "models": [
@@ -20,7 +14,6 @@
       "id": "anthropic/opus-5-5", "name": "Opus 5.5", "tier": "S", "lane": "frontier",
       "releasedAt": "2026-09-22T16:31:47Z", "releaseUrl": "https://x.com/AnthropicAI/status/2102435703535939725",
       "arena": {"rank": 1, "effort": "Max", "score": 20.9},
-      "price": {"usd": 5.98, "page": "claude-opus-5-5"},
       "points": [
         {"text": "Best on FrontierCode, a test of merge-ready code: 52.2%.", "sourceId": "2109703511843979391"},
         {"text": "Over 10× GPT-6.1 Sol’s cost per FrontierCode task.", "sourceId": "2109703511843979391"}
@@ -38,7 +31,6 @@
     {
       "id": "openai/gpt-6.1-sol", "name": "GPT-6.1 Sol", "tier": "S", "lane": "chores",
       "releasedAt": "2026-09-29T17:26:16Z", "releaseUrl": "https://x.com/OpenAI/status/2104986129686741046",
-      "price": {"usd": 0.72, "page": "gpt-6-1-sol"},
       "arena": {"rank": 4, "effort": "Max", "score": 13.5},
       "points": [
         {"text": "FrontierCode coding test: 49.1%, at under a tenth of Opus 5.5’s cost.", "sourceId": "2109703511843979391"},
@@ -51,7 +43,6 @@
     {
       "id": "openai/gpt-6-astra", "name": "GPT-6 Astra", "tier": "A",
       "releasedAt": "2026-09-03T19:32:13Z", "releaseUrl": "https://x.com/OpenAI/status/2095595741528125780",
-      "price": {"usd": 3.26, "page": "gpt-6-astra"},
       "arena": {"rank": 2, "effort": "Max", "score": 14.7},
       "points": [
         {"text": "At xhigh, ties Opus 5.5 at 59.6% on the Terminal-Bench shell test.", "sourceId": "2102438210798514391"},
@@ -64,7 +55,6 @@
     {
       "id": "meta/muse-wonder-full", "name": "Muse Wonder Full", "tier": "A",
       "releasedAt": "2026-10-12T17:02:20Z", "releaseUrl": "https://x.com/AIatMeta/status/2109691148943999167",
-      "price": {"usd": null, "page": "muse-wonder-full"},
       "arena": {"rank": 7, "effort": "Max", "score": 11.3},
       "points": [
         {"text": "Coding-agent index: 59, to Opus 5.5’s 62 and GPT-6 Astra’s 55.", "sourceId": "2113424551396934134"},
@@ -77,10 +67,9 @@
     {
       "id": "google/gemini-4-argon", "name": "Gemini 4 Argon", "tier": "A",
       "releasedAt": "2026-10-13T16:05:40Z", "releaseUrl": "https://x.com/GoogleDeepMind/status/2110039274922131792",
-      "price": {"usd": 1.99, "page": "gemini-4-argon"},
       "arena": {"rank": 6, "effort": "High", "score": 12.0},
       "points": [
-        {"text": "$1.99 a task is a launch discount; $3.98 once it ends.", "sourceId": "2105392625788637299"},
+        {"text": "Hallucination rate: 15%, lowest of top models; GPT-6 Astra’s is 51%.", "sourceId": "2105392625788637299"},
         {"text": "Intelligence Index: 53, level with GPT-6 Astra.", "sourceId": "2105392625788637299"},
         {"text": "Theo’s blind code audit: 47 of its 92 claims were false.", "sourceId": "2110461356935983257"}
       ],
@@ -90,7 +79,6 @@
     {
       "id": "deepseek/deepseek-v4.1-flash-1017", "name": "DeepSeek V4.1 Flash 1017", "tier": "B",
       "releasedAt": "2026-10-17T08:35:54Z", "releaseUrl": "https://x.com/deepseek_ai/status/2111375640717033777",
-      "price": {"usd": 0.26, "page": "deepseek-v4-1-flash-1017"},
       "arena": {"rank": 12, "effort": "Max", "score": 4.7},
       "points": [
         {"text": "Best open-weights model in Agent Arena, rated on real users’ sessions.", "sourceId": "2112247114944360666"},
@@ -103,7 +91,6 @@
     {
       "id": "xai/grok-4.7", "name": "Grok 4.7", "tier": "F",
       "releasedAt": "2026-09-21T16:17:53Z", "releaseUrl": "https://x.com/SpaceXSI/status/2102069815225586149",
-      "price": {"usd": 3.74, "page": "grok-4-7"},
       "arena": {"rank": 18, "effort": "xHigh", "score": 3.2},
       "points": [
         {"text": "Coding-agent index: 47, to GPT-6.1 Sol’s 54.", "sourceId": "2113424551396934134"},
@@ -217,7 +204,7 @@
     {
       "id": "2105392625788637299", "url": "https://x.com/ArtificialAnlys/status/2105392625788637299", "author": "Artificial Analysis", "handle": "ArtificialAnlys",
       "publishedAt": "2026-09-30T20:21:32Z", "verifiedAt": "2026-10-21T09:30:00Z", "kind": "independent",
-      "summary": "AA scores Gemini 4 Argon (high) 53 on its Intelligence Index, level with GPT-6 Astra (max) and one ahead of GPT-6.1 Sol (max). It reaches 57% on Terminal-Bench 4.0, behind Sonnet 5.5 (64%), Opus 5.5 (60%) and Astra (59%), and has the lowest hallucination rate of any model scoring 45+.",
+      "summary": "AA scores Gemini 4 Argon (high) 53 on its Intelligence Index, level with GPT-6 Astra (max) and one ahead of GPT-6.1 Sol (max). It reaches 57% on Terminal-Bench 4.0, behind Sonnet 5.5 (64%), Opus 5.5 (60%) and Astra (59%), and has the lowest hallucination rate of any model scoring 45+ (15% on AA-Omniscience, against 51% for GPT-6 Astra and 54% for GPT-6.1 Sol).",
       "caveat": "Intelligence Index, not a coding-agent comparison. Cost per task ($1.99) uses a 50% launch discount that ends Nov 30; at list price it is $3.98.",
       "modelIds": ["google/gemini-4-argon"], "comparisonModelIds": [],
       "scope": {"task": "AA Intelligence Index v4.3, Terminal-Bench 4.0, AA-Omniscience", "harness": "AA evaluation suite", "effort": "high, Argon’s highest"},

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP } from './products'
-import { absoluteDate, arenaGap, benchmarkCatalog, formatPrice, LANES, leaderOf, newModelAge, priceUrl, publicationAge, shortDate, TIERS, wallSources, type BenchmarkCatalog, type RankedModel } from './modelBenchmarks'
+import { absoluteDate, arenaGap, benchmarkCatalog, LANES, leaderOf, newModelAge, publicationAge, shortDate, TIERS, wallSources, type BenchmarkCatalog, type RankedModel } from './modelBenchmarks'
 import { XPostEmbed } from './XPostEmbed'
 import './model-benchmarks.css'
 
@@ -68,19 +68,12 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
     const notesId = `notes-${model.id.replaceAll('/', '-')}`
     const age = newModelAge(model.releasedAt, now)
     const leadCheck = model === leader ? model.leadCheck : undefined
-    const price = model.price
     return <div className="benchmark-card" key={model.id}>
       {age === undefined ? null : <span className="benchmark-new" title={`Released ${absoluteDate(model.releasedAt)}`}>
         <BabyIcon />{age} {age === 1 ? 'day' : 'days'} old
       </span>}
       <div className="benchmark-card-title">
         <strong className="benchmark-model" id={`${notesId}-name`}>{model.name}</strong>
-        {price ? price.usd === null
-          ? <span className="benchmark-price benchmark-price-none">No API price</span>
-          : <a className="benchmark-claim benchmark-price" href={priceUrl(catalog, price)} target="_blank" rel="noopener noreferrer">
-            <span>{formatPrice(price.usd)}<small> a task</small><span className="benchmark-claim-arrow" aria-hidden="true">↗</span></span>
-            <small className="benchmark-price-kind">API price</small>
-          </a> : null}
       </div>
       {model.arena
         ? claim(catalog.arenaBoard.sourceId, arenaGap(catalog.arenaBoard, model.arena), <span className="benchmark-headline-rank">
@@ -134,7 +127,7 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
           })}</tbody>
         </table>
         {board ? <p className="benchmark-legend">
-          Big number: rank on <a className="benchmark-claim" href={board.url} target="_blank" rel="noopener noreferrer">{withArrow(`Arena’s Agent Arena board of ${shortDate(board.publishedAt)}`)}</a>, at the effort shown. Arena scores how much better real users’ agent sessions go with a model than with the average model; the line below is the gap in percentage points of that score. Price: <a className="benchmark-claim" href={catalog.pricing.url} target="_blank" rel="noopener noreferrer">{withArrow('Artificial Analysis’s API cost per task')}</a> on its Intelligence Index, ten tests of reasoning, knowledge and agent work, at current API prices, not a subscription. Its coding-agent index scores each model in its own coding agent on three agentic coding tests; FrontierCode is Cognition’s test of merge-ready code.
+          Big number: rank on <a className="benchmark-claim" href={board.url} target="_blank" rel="noopener noreferrer">{withArrow(`Arena’s Agent Arena board of ${shortDate(board.publishedAt)}`)}</a>, at the effort shown. Arena scores how much better real users’ agent sessions go with a model than with the average model; the line below is the gap in percentage points of that score. Intelligence Index: Artificial Analysis’s ten tests of reasoning, knowledge and agent work. Its coding-agent index scores each model in its own coding agent on three agentic coding tests; FrontierCode is Cognition’s test of merge-ready code.
         </p> : null}
 
         <section className="benchmark-evidence" aria-label="Source posts" id="benchmark-evidence">
