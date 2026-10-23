@@ -157,6 +157,10 @@ describe('numbers in context', () => {
       expect(text, text).toMatch(METRIC)
     }
   })
+  it('quotes every coding-agent index score from one post, so versions never mix', () => {
+    const cited = new Set(benchmarkCatalog.models.flatMap(model => model.points.filter(point => /coding-agent index/i.test(point.text)).map(point => point.sourceId)))
+    expect(cited.size).toBeLessThanOrEqual(1)
+  })
   it('leaves the source to the link and never leaves a bare score or fraction', () => {
     for (const text of texts()) {
       // No publisher prefix or abbreviation; a person is named only where they are the point, briefly.
