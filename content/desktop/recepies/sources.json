@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/slopus/happy-agent",
-  "revision": "a78dfd0e1b09f4f73658b7dfaa1b3494605fa21b",
+  "revision": "672470747658f602f0c8d50f9935824430a028c6",
   "files": [
     {
       "route": "recepies",
@@ -72,7 +72,7 @@
       "route": "recepies/rest-api",
       "source": "docs/recipe/happy-rest-api.md",
       "target": "content/desktop/recepies/rest-api.mdx",
-      "sha256": "a6074ed1e5666982303b1e4389a83f491cb1f8fe6f247fc9319969d2e41521ae"
+      "sha256": "d15370eb041dd8b3638130bb8caa216d2c8b0180401daf0927fbe489cce623c3"
     },
     {
       "route": "recepies/remote-agent",

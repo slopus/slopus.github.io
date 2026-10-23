@@ -431,9 +431,9 @@ const desktopDocuments: DocumentDefinition[] = [
   {
     path: 'recepies/rest-api',
     sourcePath: '/content/desktop/recepies/rest-api.mdx',
-    title: "Drive a Happy Agent over its REST API",
-    description: "Use this recipe when a script or another agent should message a Happy agent directly and read its reply. It shows the shortest working path. The installed...",
-    cardLine: 'Message any agent from a script',
+    title: "Drive Happy Agent over its REST API",
+    description: "Use this recipe when a script or an agent with only a shell should set up, use, or debug Happy Agent: find and message agents, create bots, tasks, projects,...",
+    cardLine: 'Set up, use, and debug Happy from a shell',
     group: 'Recipes',
   },
   {
