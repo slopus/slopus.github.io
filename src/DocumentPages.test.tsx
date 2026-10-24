@@ -214,13 +214,18 @@ describe('static document pages', () => {
     expect(updates.container.querySelector('.document-content img[src="/img/updates-drain.svg"]')).not.toBeNull()
     updates.unmount()
 
-    // Its link preview plays the same video (src/siteMetadata.test.ts).
+    // The whole promo is only its link preview (src/siteMetadata.test.ts); the page plays its
+    // fragments on hover, quotes posts as cards, and ends, like every post, on the downloads.
     const stemCell = render(<Router pathname="/stem-cell/" />)
     expect(screen.getByRole('heading', { level: 1, name: /new work starts as a stem cell/i })).toBeTruthy()
     expect(screen.getByRole('link', { name: /^next/i }).getAttribute('href')).toBe('/desktop-app/')
-    const growth = stemCell.container.querySelector('.document-content video')
-    expect(growth?.getAttribute('src')).toBe('/video/stem-cell.mp4')
-    expect(growth?.getAttribute('poster')).toBe('/video/stem-cell-poster.webp')
+    expect(stemCell.container.querySelector('video[src="/video/stem-cell.mp4"]')).toBeNull()
+    const clips = [...stemCell.container.querySelectorAll('.document-content video.hover-clip')]
+    expect(clips.map((clip) => clip.getAttribute('poster'))).toEqual(['/video/stem-cell/one/poster.png', '/video/stem-cell/grow/poster.png'])
+    expect([...clips[0].querySelectorAll('source')].map((source) => source.getAttribute('src'))).toEqual(['/video/stem-cell/one/clip.webm', '/video/stem-cell/one/clip.mov'])
+    expect(stemCell.container.querySelectorAll('.document-content blockquote.quote-card')).toHaveLength(3)
+    expect(stemCell.container.querySelector('.quote-card-byline strong')?.textContent).toBe('Richard Wu')
+    expect(stemCell.container.querySelector('.blog-download .one-download-actions')).not.toBeNull()
     for (const document of documents.filter((entry) => entry.group === 'Blog')) {
       expect(document.product).toBe('desktop')
       expect(['workos', 'tailcat', 'voice', 'updates', 'stem-cell']).toContain(document.path)

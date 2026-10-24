@@ -98,7 +98,7 @@ The short descriptor is **Orchestrate Claude, Codex and Grok in one app** (`HAPP
   - A screenshot too small to carry a card gets a larger cutout of the same UI in `notes/og/figures/`, named in `CARD_FIGURES` in `cards.py`. It fills the right side the way a diagram does.
   - A post whose preview should play a video sets `video` in `src/documents.ts`. Its card is a frame of the video, the one that carries its hook, 1200 wide at the video's aspect ratio, not a `cards.py` card; iMessage and Discord play the MP4, everything else shows the frame. `docs/og-video.md` has the tags, the per-platform limits, and how to replace the video.
   - After changing cards that are already shared, bump `SOCIAL_IMAGE_VERSION` in `src/siteMetadata.ts` and the `?v=` on the homepage image in `index.html`, so X, Slack, and LinkedIn fetch them again.
-- **The Blog** follows Guides and precedes Comparisons in the sidebar, with no list page. Each post gets a one-word slug you can type from memory: `/workos/`, `/tailcat/`, `/voice/`.
+- **The Blog** follows Guides and precedes Comparisons in the sidebar, with no list page. Each post gets a one-word slug you can type from memory: `/workos/`, `/tailcat/`, `/voice/`. Every post ends on the homepage's download options, added by the page layout (`src/DocumentPages.tsx`), never by the post.
 - **URLs don't break.** `routes.txt` only grows. A shared URL keeps working when its page moves: `/team-sign-in-workos/` redirects to `/workos/`.
 
 ## Landing page

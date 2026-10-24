@@ -1,89 +1,61 @@
 # New Work Starts as a Stem Cell
 
-Every AI app keeps adding front doors: a new chat, a project, an assistant, a mode. Each one asks you to decide what the work is before you've started it. In Happy Desktop we're trying one door instead: new work starts as a stem cell, and you just say what it is.
-
-![Twenty-five seconds, no sound, one line at a time. Too many ways to start: New task, +, New tab, New window, New chat, New bot, New todo list, New document. What if there was one? The buttons contract into cells and flow into one stem cell. Enter Stem Cell Mode: the stem cell waits, labelled New. Just say what it is: ping me on serious posthog alerts is typed and sent. It names itself: the cell divides into the alerting clay icon, a red beacon, and New becomes PostHog alerts. And becomes a bot: a bot face settles on the icon's corner. Your interface needs one button to start work and one input box. That's it.](/video/stem-cell.mp4)
+Every AI app keeps adding **front doors**: a new chat, a project, an assistant, a mode. Each one asks you to **decide what the work is before you've started it**. In Happy Desktop we're trying **one door** instead: new work starts as a **stem cell**, and you **just say what it is**.
 
 ## Every AI app keeps adding ways to start
 
-Chat apps started with one box. Then came a new chat, and a project to put it in. A custom assistant. A canvas. An agent mode, a research mode, a model picker, tabs and windows. Each one is useful on its own. Together they mean that before you type a word, you answer a question you can't answer yet: what kind of thing is this?
-
 ![A Create button with its Create new menu open, listing Page, Slides, Sheet (coming soon), Site, Image, Folder, Space, Start from template, Upload files and Connect a plugin.](/img/stem-cell-create-menu.webp)
 
-*The Create menu in one AI workspace: ten ways to start, before you've said what the work is.*
+*The Create menu in one AI workspace.*
 
-People who use these apps all day do the multiplication out loud:
+Ten ways to start, and you haven't said a word yet. You rarely know what the work is until you're in it: the quick question turns into a week of work, and the project turns out to be one question. Pick wrong, and the work stays wherever you started it.
 
-> I like choices... but now I have:\
-> 2x modes (Codex vs. Work mode)\
-> 3x GPT-5.6 models (Sol, Terra, Luna)\
-> 5x effort levels (Light, Medium, High, Extra High, Ultra)\
+> The ChatGPT app is now such a clusterf\*\*k.
+>
+> There's now 4 ways to do similar things!!!
+>
+> — Richard Wu, @0xrwu, [30 Sep 2026](https://x.com/0xrwu/status/2105329822125707394)
+
+> I like choices... but now I have:
+>
+> 2x modes (Codex vs. Work mode)
+> 3x GPT-5.6 models (Sol, Terra, Luna)
+> 5x effort levels (Light, Medium, High, Extra High, Ultra)
+>
 > That's 2 x 3 x 5 = 30 possible configurations for a query 🤯
 >
 > — Sebastian Raschka, @rasbt, [9 Jul 2026](https://x.com/rasbt/status/2075369179817902176)
 
-> …between Dot and Spaces and Pages and local/cloud ChatGPT Work and Scheduled Tasks in the Cloud and Scheduled Tasks on your computer, everything is getting quite confusing and overlapping again.
->
-> — Ethan Mollick, @emollick, [30 Sep 2026](https://x.com/emollick/status/2105184972537528538)
-
-You usually don't know what the work is when you start. "Look into why signups dropped" might be a quick question, a week of work, or something that should keep watching the numbers every morning. You find out by starting. But every button asks you to commit first, and a wrong guess costs you.
-
-Say you open a quick chat to make sense of one stack trace. Forty messages later it's a migration, and it sits outside every project, so moving it means starting a new chat and pasting the context back in. Or you want to hand over a link and one sentence, and the new-assistant form wants a name, an icon and instructions first.
-
-> so there is no good default. chat is often too limited for real tasks. work is too slow & cumbersome for normal queries. constantly switching between them makes the entire product infinitely more complex.
->
-> — signüll, @signulll, [9 Aug 2026](https://x.com/signulll/status/2086586335838842972)
-
-So you pick the nearest button. The sidebar fills with chats called "New chat", work stays wherever it was started, and the sorting is left for later, which means never. What people ask for is the opposite: let the app do the sorting.
-
-> what i would love is if they auto clustered + categorized old chats and surfaced collections like "project ideas" or "career decisions"…
->
-> — Tenobrus, @tenobrus, [21 Aug 2025](https://x.com/tenobrus/status/1958668863664791804)
-
-> TODO: one verified quote from Reddit, credited and linked (research/reddit.md), if it adds something the four above don't.
-
-Our own app is no better. Happy Desktop has New task, a + for a new tab, New bot, and a create menu with a todo list, a document, a calendar, a system monitor and a shared chat: each a different kind of thing, each a decision made at the door.
-
-![The two-buttons meme: a hand hovers between buttons labelled New task and New bot. In the panel below, a sea otter floats on its back in grey water, holding its face in its paws.](/video/stem-cell-meme.mp4)
-
-*Two-buttons meme by [Jake Clark](https://jake-clark.tumblr.com/). Otter footage by Magda Ehlers on [Pexels](https://www.pexels.com/video/an-otter-swimming-2554576/).*
-
 ## One button, one input box
 
-Almost nobody is asking for more modes. Rabi Shanker Guha put the frustration with today's apps like this:
+![Eight create buttons, New task, +, New tab, New window, New chat, New bot, New todo list and New document, contract into cells and flow into one stem cell, labelled New. Then ping me on serious posthog alerts is typed into the input box below it.](/video/stem-cell/one/)
 
-> Somehow, the smartest software we’ve ever built took us back to a textbox
+So start with something that isn't anything yet. **Create, ⌘N and ⌘T** all make the same thing: a row called **New**, with an empty chat that says "Say what it is — it'll find its place." You don't pick a kind, a project or a mode. You type what you want.
+
+## It becomes what you meant
+
+![The stem cell divides into the colours of a red beacon clay icon and settles into its shape, while its label changes from New to PostHog alerts.](/video/stem-cell/grow/)
+
+Send `ping me on serious posthog alerts`. Within a minute the row **names itself**, PostHog alerts, and the cell **grows into its icon**, picked from 136 clay icons. Call it something else and your name sticks.
+
+That's the part we've shipped. Next, a stem cell becomes **the right kind of thing**, opens **the right repositories** to work in, and **loops in the right people**: whoever last worked on that area, or the teammate who already started another take on it.
+
+## The sidebar is the new task tracker
+
+Working with agents feels like throwing boomerangs. You send a bunch out, it's great fun, they fly far, and at some point they all start coming back at you. The sidebar is where they land, so it has to work like a task tracker, not a chat history.
+
+![Happy Desktop's sidebar before: Search, Create, Happy, then four new rows right below Happy, PostHog alerts, Signup funnel, Fix login bug and Q4 board deck, then the Engineering section with Auth refactor and the Board section with Q3 board deck.](/img/stem-cell-sidebar-before.webp "Before") ![The same sidebar after: Search, Create, Happy; Engineering with Auth refactor and Fix login bug; Board with Q3 board deck and Q4 board deck; a new Analytics section with PostHog alerts and Signup funnel; and Distractions with Rewrite the website in Rust.](/img/stem-cell-sidebar-after.webp "After")
+
+A stem cell **puts itself where it belongs**: in the section for its subject, next to related work, the way you've organised things. When several rows share a subject no section fits, a new section appears. And whatever you don't want right now goes into **Distractions**: drop it there, and it waits until you're ready. Happy has a **dedicated focus agent**, Prioritizing, that keeps the sidebar in that shape.
+
+> I kinda gave up and am waiting until a new model gets enough capability to just go sort through old chats and organise them for me
 >
-> — Rabi Shanker Guha, @rabi_guha, [15 Oct 2026](https://x.com/rabi_guha/status/2110737805823672518)
+> — u/mesamaryk, r/ClaudeAI, [16 Jun 2026](https://www.reddit.com/r/ClaudeAI/comments/1u7j7au/the_most_annoying_part_of_claude_is_losing_a/os114du/)
 
-He means it as a complaint. We think the box is the right way in. The trouble is the row of doors in front of it, each asking what the work is before you've said. So stop asking at the door: start with something that isn't anything yet, let the person say what they want, and let the work decide what it is from that.
+## Try it
 
-## How a stem cell works in Happy
-
-### It waits for you
-
-Create in the sidebar, ⌘N and ⌘T all make the same thing: a row labelled "New", right below Happy, with an empty chat. Underneath, it's a fresh task in its own folder, with no project. Its chat says "Say what it is — it'll find its place." Nothing names it, gives it an icon or moves it until you send your first message.
-
-### It names itself and grows its icon
-
-Your first message is the whole setup. Within a minute, the chat's own model names the row by its subject in one to three words: send `ping me on serious posthog alerts`, and the row becomes "PostHog alerts". Your second message gets one more look, and the name changes only if the conversation plainly contradicts it. A name you give it by hand is final.
-
-At the same time, Prioritizing, the agent that keeps your sidebar, picks the row's icon from 136 clay icons. The cell divides into the icon's colours and settles into its shape over 2.5 seconds, unless "Animate new work's icon" is off or your system asks for reduced motion.
-
-### It files itself later
-
-New work waits right below Happy while you're using it. Once you've stepped away or the app is out of sight, Prioritizing moves each new row next to related work, into the section for its subject. It adds a section only when several rows share a subject that no section fits. Nothing moves while you're working.
-
-![Filing, before and after. Left, New work lands here: Happy, then four named rows right below it, PostHog alerts, Signup funnel, Fix login bug and Q4 board deck, above the Engineering section with Auth refactor and the Board section with Q3 board deck. Right, once you step away: Happy; Engineering with Auth refactor and Fix login bug; Board with Q3 board deck and Q4 board deck; and a new Analytics section with PostHog alerts and Signup funnel. A new section only when rows share a subject.](/img/stem-cell-filing.svg)
-
-## What we don't know yet
-
-Stem cells are experimental and off by default. A stem cell is always a task, and it stays one: its agent can message bots but can't create one, so it never turns itself into a bot. When you want a bot, with its own face and one conversation that keeps going, choose New bot under the stem cell's line, or ask the [Chief of Staff](/chief-of-staff/) to make one. A todo list, a document and the other kinds are under the same line. Whether one door is enough for everything is what we're finding out.
-
-## Turn it on
-
-In [Happy Desktop](/#download), open Settings, then Experimental, and turn on Spaces sidebar and Stem cells.
+Stem cells are experimental and off by default. In Happy Desktop, open Settings, then Experimental, and turn on **Spaces sidebar** and **Stem cells**. It guesses, and you can always correct it.
 
 > Your interface needs one button to start work and one input box. That's it.
 
-*Bot face in the video: [Adventurer Neutral](https://www.figma.com/community/file/1184595184137881796) by [Lisa Wischofsky](https://www.instagram.com/lischi_art/) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)), recoloured.*
+*Bot face on the New bot button: [Adventurer Neutral](https://www.figma.com/community/file/1184595184137881796) by [Lisa Wischofsky](https://www.instagram.com/lischi_art/) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)), recoloured.*

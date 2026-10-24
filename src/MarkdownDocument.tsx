@@ -1,7 +1,8 @@
-import { type ReactNode } from 'react'
+import { Children, isValidElement, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ChiefOfStaffPrompt, CHIEF_OF_STAFF_LANGUAGE } from './ChiefOfStaffPrompt'
+import { HoverClip } from './HoverClip'
 import { slugifyHeading } from './documents'
 
 function textFromNode(node: ReactNode): string {
@@ -184,13 +185,48 @@ export function MarkdownDocument({
       }
       return <pre {...props}>{children}</pre>
     },
-    img: ({ alt, src, node: _node, ...props }) => {
+    // A quote that ends on "— Name, @handle, [date](link)" is a post someone made: drawn as a card
+    // with the author on top, the way it looked where it was posted.
+    blockquote: ({ children, node, ...props }) => {
+      const paragraphs = ((node as HastNode | undefined)?.children ?? []).filter((child) => child.tagName === 'p')
+      const byline = paragraphs.at(-1)
+      const lead = byline?.children?.[0]
+      const link = byline?.children?.find((child) => child.tagName === 'a')
+      if (paragraphs.length < 2 || lead?.type !== 'text' || !lead.value?.startsWith('— ') || !link) {
+        return <blockquote {...props}>{children}</blockquote>
+      }
+      const [author, ...where] = lead.value.slice(2).split(',').map((part) => part.trim()).filter(Boolean)
+      const body = Children.toArray(children).filter(isValidElement)
+      return (
+        <blockquote {...props} className="quote-card">
+          <p className="quote-card-byline">
+            <strong>{author}</strong> <span>{where.join(', ')}</span> <span aria-hidden="true">·</span>{' '}
+            <a href={String(link.properties?.href)} target="_blank" rel="noreferrer">{hastText(link)}</a>
+          </p>
+          {body.slice(0, -1)}
+        </blockquote>
+      )
+    },
+    img: ({ alt, src, title, node: _node, ...props }) => {
+      // An image whose src is a folder is a clip that plays on hover (src/HoverClip.tsx).
+      if (typeof src === 'string' && src.endsWith('/')) {
+        return <HoverClip folder={src} label={alt ?? ''} />
+      }
       // A video shows its poster, `<name>-poster.webp` beside it, until it plays. The served
       // markup carries `muted`, so it autoplays before hydration; a DOM that doesn't turn that
       // attribute into the `muted` property (jsdom) would otherwise report a mismatch.
       if (typeof src === 'string' && /\.(mp4|webm)$/.test(src)) {
         return (
           <video src={src} poster={src.replace(/\.(mp4|webm)$/, '-poster.webp')} controls muted autoPlay loop playsInline aria-label={alt ?? ''} suppressHydrationWarning />
+        )
+      }
+      // A title labels the image under it, as Before and After do side by side.
+      if (title) {
+        return (
+          <span className="labelled-image">
+            <img {...props} src={src} alt={alt ?? ''} loading="lazy" />
+            <span className="labelled-image-label">{title}</span>
+          </span>
         )
       }
       return <img {...props} src={src} alt={alt ?? ''} loading="lazy" />

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Components } from 'react-markdown'
+import { DownloadOptions } from './DownloadOptions'
+import type { MacArchitecture } from './desktopDownloads'
 import { MarkdownDocument } from './MarkdownDocument'
 import {
   documentGroupsForProduct,
@@ -186,6 +188,7 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
           {product.key === 'happy' && <LegacyNotice />}
           {activeDocument.group === 'Recipes' && <RecipeSourceLine route={activeDocument.path} />}
           <MarkdownDocument markdown={markdown} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} resolveHref={activeDocument.group === 'Recipes' ? (href) => recipeHref(activeDocument.path, href) : undefined} />
+          {activeDocument.group === 'Blog' && <BlogDownload />}
 
           <nav className="document-pagination" aria-label="Previous and next documentation pages">
             {previousDocument ? (
@@ -207,6 +210,18 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
 
       </main>
     </div>
+  )
+}
+
+/** Every Blog post ends on the homepage's download options. */
+function BlogDownload() {
+  const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
+  return (
+    <section className="one-download blog-download" aria-labelledby="blog-download-heading">
+      <h2 id="blog-download-heading">Download Happy.</h2>
+      <p>Free and open source</p>
+      <DownloadOptions macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
+    </section>
   )
 }
 

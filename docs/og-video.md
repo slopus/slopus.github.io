@@ -47,8 +47,7 @@ under iMessage's 10 MB.
   `.mp4` as `video/mp4` with range requests.
 - The card is a frame of the video at the video's aspect ratio. Slack, X, LinkedIn and WhatsApp
   show only the card, so take the frame that carries the hook: for the stem cell video, 1.4 s,
-  once "What if… there was one?" is in. The page's own poster stays frame 0, so autoplay doesn't
-  jump. X crops a 16:9 card to 1.91:1, about 22 px off the top and bottom at 1200.
+  once "What if… there was one?" is in. X crops a 16:9 card to 1.91:1, about 22 px off the top and bottom at 1200.
 - Smaller is better: iMessage downloads the whole file before it plays. Short seamless loops do
   well; keep it silent.
 - Previews are cached by URL: a new cut of a video that was already shared gets a new file name
@@ -56,14 +55,27 @@ under iMessage's 10 MB.
 
 ## Replacing the video
 
-Keep the names; the page, the preview and the build read them:
+The page doesn't show this video; it is only the preview. Keep the names; the preview and the
+build read them:
 
 ```sh
 cp final.mp4 public/video/stem-cell.mp4      # H.264, yuv420p, faststart, no audio
-ffmpeg -y -i public/video/stem-cell.mp4 -frames:v 1 -c:v libwebp -quality 82 public/video/stem-cell-poster.webp
 ffmpeg -y -ss 1.4 -i public/video/stem-cell.mp4 -frames:v 1 -vf scale=1200:-1 public/og/stem-cell.png
 ```
 
-If the new file isn't 1280×720, change `video` in `src/documents.ts` and the `aspect-ratio` in
-`src/style.css`; the card must then be 1200 × round(1200 × height / width). To make an existing
+If the new file isn't 1280×720, change `video` in `src/documents.ts`; the card must then be 1200 × round(1200 × height / width). To make an existing
 MP4 fast-start without re-encoding: `ffmpeg -i in.mp4 -c copy -movflags +faststart out.mp4`.
+
+## The fragments on the page
+
+The post plays captionless pieces of the promo in their sections instead (`src/HoverClip.tsx`).
+An image whose src is a folder, `![alt](/video/stem-cell/one/)`, is one: `clip.webm` (VP9 with
+alpha), `clip.mov` (HEVC with alpha, for Safari) and `poster.png`, its last frame. It rests on the
+poster, plays once when the reader hovers the clip or its section, holds its last frame, and plays
+again on the next hover; on a touch screen it plays when it scrolls into view.
+
+```sh
+ffmpeg -i frames/%04d.png -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 0 -crf 34 -an clip.webm
+ffmpeg -i frames/%04d.png -c:v hevc_videotoolbox -alpha_quality 0.8 -tag:v hvc1 -an clip.mov
+ffmpeg -sseof -0.1 -i clip.webm -frames:v 1 -update 1 poster.png
+```
