@@ -396,6 +396,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 /* A recording that loops while on screen (src/AutoplayClip.tsx): its background is the page's, so no frame;
    its caption sits under it, left, like a side figure's. */
 .document-content video.autoplay-clip { aspect-ratio: 1; background: #f5f0e7; border: 0; border-radius: 0; box-shadow: none; display: block; margin: 1.4rem 0 0; }
+/* Chrome draws the recording's beige 2-3 levels lighter than the page; its outer 20px fade out, so no edge shows. */
+.document-content video.autoplay-clip { mask-composite: intersect; mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent), linear-gradient(to bottom, transparent, #000 20px, #000 calc(100% - 20px), transparent); }
 .document-content p:has(> video.autoplay-clip) + p:has(> em:only-child) { margin-top: -1.1rem; text-align: left; }
 @media (max-width: 640px) {
   .document-content .side-figure { gap: 1rem; grid-template-columns: minmax(0, 1fr); }
