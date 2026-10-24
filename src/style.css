@@ -426,7 +426,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content p:has(> video, > img) + p:has(> em:only-child),
 .document-content blockquote + p:has(> em:only-child) { color: #6b7f78; font-size: .78rem; line-height: 1.4; margin-top: -1rem; text-align: center; }
 .document-content p:has(> video, > img) + p > em:only-child, .document-content blockquote + p > em:only-child { font-style: normal; }
-.document-content hr { border: 0; border-top: 1px solid #d9d3c5; margin: 3rem 0; }
+/* A rule between sections: the line and the space an h2 draws above itself. */
+.document-content hr { border: 0; border-top: 1px solid #ddd6c8; margin: 4rem 0 2.2rem; }
 .document-table-wrap { border: 1px solid #d5cebf; border-radius: 10px; margin: 1.6rem 0; overflow-x: auto; }
 .document-content table { border-collapse: collapse; font-size: .82rem; line-height: 1.45; min-width: 620px; width: 100%; }
 .document-content th { background: #e7e4d8; color: #183f38; font-weight: 700; text-align: left; }
@@ -598,7 +599,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   /* The sticky header covers the top 53px of a phone screen; land anchors below it. */
   .document-content h1[id], .document-content h2[id], .document-content h3[id] { scroll-margin-top: 72px; }
   .document-content pre { font-size: 13px; line-height: 1.65; padding: 16px; }
-  .document-content h2 { margin-top: 3.2rem; }
+  .document-content h2, .document-content hr { margin-top: 3.2rem; }
   .legal-layout { padding-bottom: 5rem; padding-top: 2rem; }
   .document-back-link { margin-bottom: 2rem; }
 }

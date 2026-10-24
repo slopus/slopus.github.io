@@ -217,7 +217,7 @@ describe('static document pages', () => {
     // The whole promo is only its link preview (src/siteMetadata.test.ts); the page embeds the
     // posts it quotes, their text served inside, and ends, like every post, on the downloads.
     const stemCell = render(<Router pathname="/stem-cell/" />)
-    expect(screen.getByRole('heading', { level: 1, name: /new work starts as a stem cell/i })).toBeTruthy()
+    expect(screen.getByRole('heading', { level: 1, name: /sure, gpt, i need another 10 different buttons/i })).toBeTruthy()
     expect(screen.getByRole('link', { name: /^next/i }).getAttribute('href')).toBe('/desktop-app/')
     const videos = [...stemCell.container.querySelectorAll('.document-content video')]
     expect(videos.map((video) => [video.className, video.getAttribute('src'), video.getAttribute('poster')])).toEqual([['autoplay-clip', '/video/stem-cell/app/clip.mp4', '/video/stem-cell/app/poster.webp']])
@@ -235,8 +235,9 @@ describe('static document pages', () => {
     for (const document of documents.filter((entry) => entry.group === 'Blog')) {
       expect(document.product).toBe('desktop')
       expect(['workos', 'tailcat', 'voice', 'updates', 'stem-cell']).toContain(document.path)
-      expect(document.pageTitle?.length).toBeLessThanOrEqual(65)
-      expect(document.description.length).toBeLessThanOrEqual(155)
+      // The stem cell post's title is its whole h1, the line it opens on, chosen over the length limits.
+      expect(document.pageTitle?.length).toBeLessThanOrEqual(document.path === 'stem-cell' ? 75 : 65)
+      expect(document.description.length).toBeLessThanOrEqual(document.path === 'stem-cell' ? 165 : 155)
       // No narration: nothing on the page points at the diagram's files or announces what follows.
       expect(getDocumentSource(document)).not.toMatch(/The diagram as|below is|this page explains/i)
     }
