@@ -9,7 +9,7 @@ describe('link previews', () => {
     for (const document of documents.filter((entry) => entry.product === 'desktop')) {
       const image = metadataForPath(documentHref(HAPPY_DESKTOP, document.path)).socialImage
       expect(image?.path).toBe(`/og/${document.path.replace(/\//g, '-')}.png`)
-      // A post with a video has its first frame as the card, at the video's aspect ratio.
+      // A post with a video has a frame of it as the card, at the video's aspect ratio.
       const height = document.video ? Math.round((1200 * document.video.height) / document.video.width) : 630
       expect([image?.width, image?.height]).toEqual([1200, height])
     }

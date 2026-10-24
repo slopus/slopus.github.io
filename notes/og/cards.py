@@ -214,9 +214,9 @@ def main():
     only = set(sys.argv[1:])
     fetch_fonts()
     pages = [p for p in desktop_documents() if not only or p["card"].split("/")[-1][:-4] in only]
-    # A post with a video previews as the video; its card is the video's first frame, not drawn here.
+    # A post with a video previews as the video; its card is a frame of the video, not drawn here.
     for p in [p for p in pages if p["video"]]:
-        print(f"{p['href']:40} -> skipped: its card is its video's first frame (docs/og-video.md)")
+        print(f"{p['href']:40} -> skipped: its card is a frame of its video (docs/og-video.md)")
     pages = [p for p in pages if not p["video"]]
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(executable_path=os.environ.get("CHROMIUM") or None)

@@ -36,7 +36,7 @@ export function socialImageUrl(image: Readonly<{ path: string }>) {
 /**
  * A desktop doc's own card: its title beside its figure, at /og/<path with dashes>.png.
  * notes/og/cards.py draws them; the build fails if one is missing. A post with a video
- * has the video's first frame there instead, 1200 wide at the video's aspect ratio.
+ * has a frame of the video there instead, 1200 wide at the video's aspect ratio.
  */
 export function documentSocialImage(
   path: string,

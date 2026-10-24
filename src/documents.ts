@@ -31,7 +31,7 @@ export interface DocumentEntry {
   cardLine?: string
   /**
    * A post whose link preview plays a video: an H.264 MP4 under public/, at its pixel size. Its
-   * card is the video's first frame, /og/<path>.png, 1200 wide at the video's aspect ratio.
+   * card is a frame of the video, /og/<path>.png, 1200 wide at the video's aspect ratio.
    */
   video?: Readonly<{ path: string; width: number; height: number }>
 }

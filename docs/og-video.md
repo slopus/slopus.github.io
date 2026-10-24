@@ -45,8 +45,10 @@ under iMessage's 10 MB.
   MP4 with no audio track and the moov box first, the same size as its `og:image`.
 - Same origin is not required by any of these; HTTPS and a direct file are. GitHub Pages serves
   `.mp4` as `video/mp4` with range requests.
-- Make the poster the video's first frame at the video's aspect ratio, so the preview doesn't jump
-  when playback starts. X crops a 16:9 card to 1.91:1, about 22 px off the top and bottom at 1200.
+- The card is a frame of the video at the video's aspect ratio. Slack, X, LinkedIn and WhatsApp
+  show only the card, so take the frame that carries the hook: for the stem cell video, 1.4 s,
+  once "What if… there was one?" is in. The page's own poster stays frame 0, so autoplay doesn't
+  jump. X crops a 16:9 card to 1.91:1, about 22 px off the top and bottom at 1200.
 - Smaller is better: iMessage downloads the whole file before it plays. Short seamless loops do
   well; keep it silent.
 - Previews are cached by URL: a new cut of a video that was already shared gets a new file name
@@ -59,7 +61,7 @@ Keep the names; the page, the preview and the build read them:
 ```sh
 cp final.mp4 public/video/stem-cell.mp4      # H.264, yuv420p, faststart, no audio
 ffmpeg -y -i public/video/stem-cell.mp4 -frames:v 1 -c:v libwebp -quality 82 public/video/stem-cell-poster.webp
-ffmpeg -y -i public/video/stem-cell.mp4 -frames:v 1 -vf scale=1200:-1 public/og/stem-cell.png
+ffmpeg -y -ss 1.4 -i public/video/stem-cell.mp4 -frames:v 1 -vf scale=1200:-1 public/og/stem-cell.png
 ```
 
 If the new file isn't 1280×720, change `video` in `src/documents.ts` and the `aspect-ratio` in

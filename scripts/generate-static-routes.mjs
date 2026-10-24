@@ -176,7 +176,7 @@ function metaContent(html, attribute, name) {
 
 // Link previews: every desktop doc shows its own 1200x630 card, public/og/<path with
 // dashes>.png, drawn by notes/og/cards.py; the original CLI docs keep the homepage's. A post
-// with a video (src/documents.ts) has the video's first frame there, at the video's aspect ratio.
+// with a video (src/documents.ts) has a frame of the video there, at the video's aspect ratio.
 // Every image URL carries ?v=SOCIAL_IMAGE_VERSION (src/siteMetadata.ts), so previews refetch.
 const homepageSocialImage = socialImageUrl(defaultSocialImage)
 for (const tag of ['property="og:image"', 'name="twitter:image"']) {
@@ -188,7 +188,7 @@ for (const tag of ['property="og:image"', 'name="twitter:image"']) {
 async function assertSocialCard(route, html, document) {
   const desktop = document.product === HAPPY_DESKTOP.key
   const expected = desktop ? socialImageUrl({ path: `/og/${document.path.replaceAll('/', '-')}.png` }) : homepageSocialImage
-  // A post with a video: its card is the video's first frame, at the video's aspect ratio.
+  // A post with a video: its card is a frame of the video, at the video's aspect ratio.
   const cardHeight = String(metadataForPath(route).socialImage?.height ?? 630)
   const tags = {
     'og:image': metaContent(html, 'property', 'og:image'),
