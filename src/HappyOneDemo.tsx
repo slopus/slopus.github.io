@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { HappyOnePhone } from './HappyOnePhone'
 import { happyOneDemoMediaSelect } from './happyOneDemoMedia'
+import { useRevealedControls } from './revealedControls'
 import './happy-one-demo.css'
 
 const MEDIA = '/video/happy-one/v22'
@@ -27,7 +28,7 @@ export function HappyOneDemo() {
   const phone = useRef<HTMLVideoElement>(null)
   const [phoneFocused, setPhoneFocused] = useState(false)
   const [error, setError] = useState(false)
-  const [controlsEnabled, setControlsEnabled] = useState(false)
+  const { revealControls, videoProps } = useRevealedControls()
 
   useEffect(() => {
     const main = desktop.current!
@@ -39,7 +40,7 @@ export function HappyOneDemo() {
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
     const connection = dataConnection()
     let autoplay = !reducedMotion.matches && !connection?.saveData
-    if (!autoplay) setControlsEnabled(true)
+    if (!autoplay) revealControls()
     let visible = false
     let loaded = false
     let disposed = false
@@ -78,11 +79,11 @@ export function HappyOneDemo() {
     const start = () => {
       if (!autoplay || !visible || document.hidden || main.readyState < 3 || companion.readyState < 3) return
       autoplay = false
-      void main.play().catch(() => { if (!disposed) setControlsEnabled(true) })
+      void main.play().catch(() => { if (!disposed) revealControls() })
     }
     const onPlay = () => { align(true); companion.playbackRate = main.playbackRate; follow() }
     const onPause = () => companion.pause()
-    const onEnded = () => { companion.pause(); setControlsEnabled(true) }
+    const onEnded = () => { companion.pause(); revealControls() }
     const onSeeking = () => { companion.pause(); align(true); focus() }
     const onRate = () => { companion.playbackRate = main.playbackRate }
     const onTime = () => { focus(); align() }
@@ -95,7 +96,7 @@ export function HappyOneDemo() {
         if (visible) void main.play().catch(() => undefined)
       } else start()
     }
-    const onMotion = () => { if (reducedMotion.matches || connection?.saveData) { autoplay = false; main.pause(); setControlsEnabled(true) } }
+    const onMotion = () => { if (reducedMotion.matches || connection?.saveData) { autoplay = false; main.pause(); revealControls() } }
     main.addEventListener('play', onPlay)
     main.addEventListener('playing', follow)
     main.addEventListener('pause', onPause)
@@ -160,10 +161,7 @@ export function HappyOneDemo() {
         <div className="one-demo-desktop">
           <div className="one-demo-window">
             <video ref={desktop} poster={`${MEDIA}/desktop-poster.webp`} width="1950" height="1660"
-              controls={controlsEnabled} playsInline preload="none" disablePictureInPicture tabIndex={0}
-              onPointerMove={event => { if (event.pointerType === 'mouse') setControlsEnabled(true) }}
-              onPointerDown={() => setControlsEnabled(true)} onFocus={() => setControlsEnabled(true)}
-              controlsList="nodownload noremoteplayback"
+              {...videoProps} playsInline preload="none"
               aria-label="Switch from Astra to Fable, edit the waveform, spawn Astra, then Steve ships it from iPhone" />
           </div>
         </div>
