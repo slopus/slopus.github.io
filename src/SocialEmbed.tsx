@@ -25,19 +25,11 @@ IMO, the ideal hierarchy should be:
 
 Pls fix @thsottiaux.`,
   },
-  'https://x.com/rasbt/status/2075369179817902176': {
-    author: 'Sebastian Raschka',
-    handle: '@rasbt',
-    date: 'July 9, 2026',
-    text: `I like choices... but now I have:
-
-2x modes (Codex vs. Work mode)
-3x GPT-5.6 models (Sol, Terra, Luna)
-5x effort levels (Light, Medium, High, Extra High, Ultra)
-
-That's 2 x 3 x 5 = 30 possible configurations for a query 🤯
-
-What happened to "Auto" mode?`,
+  'https://x.com/emollick/status/2105184972537528538': {
+    author: 'Ethan Mollick',
+    handle: '@emollick',
+    date: 'September 30, 2026',
+    text: 'After a brief period where OpenAI seemed to be unifying work around the ChatGPT app, between Dot and Spaces and Pages and local/cloud ChatGPT Work and Scheduled Tasks in the Cloud and Scheduled Tasks on your computer, everything is getting quite confusing and overlapping again.',
   },
   'https://www.reddit.com/r/ClaudeAI/comments/1u7j7au/the_most_annoying_part_of_claude_is_losing_a/os114du/': {
     author: 'u/mesamaryk',
@@ -83,7 +75,7 @@ const SocialEmbed = memo(function SocialEmbed({ kind, url }: { kind: 'tweet' | '
   return (
     <div ref={box} className={`social-embed social-embed-${kind}`}>
       {kind === 'tweet' ? (
-        <blockquote className="twitter-tweet" data-dnt="true" data-align="center">
+        <blockquote className="twitter-tweet" data-dnt="true" data-align="center" data-cards="hidden" data-conversation="none" data-width="340">
           {post && <p lang="en" dir="ltr">{post.text}</p>}
           {byline ?? <a href={url}>{url}</a>}
         </blockquote>

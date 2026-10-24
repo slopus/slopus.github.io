@@ -219,14 +219,18 @@ describe('static document pages', () => {
     const stemCell = render(<Router pathname="/stem-cell/" />)
     expect(screen.getByRole('heading', { level: 1, name: /new work starts as a stem cell/i })).toBeTruthy()
     expect(screen.getByRole('link', { name: /^next/i }).getAttribute('href')).toBe('/desktop-app/')
-    expect(stemCell.container.querySelector('video')).toBeNull()
-    const tweets = [...stemCell.container.querySelectorAll('.social-embed-tweet blockquote.twitter-tweet')]
-    expect(tweets.map((tweet) => tweet.querySelector('a')?.getAttribute('href'))).toEqual(['https://x.com/0xrwu/status/2105329822125707394', 'https://x.com/rasbt/status/2075369179817902176'])
-    expect(tweets[1].textContent).toContain('2 x 3 x 5 = 30 possible configurations')
+    const videos = [...stemCell.container.querySelectorAll('.document-content video')]
+    expect(videos.map((video) => [video.className, video.getAttribute('src'), video.getAttribute('poster')])).toEqual([['autoplay-clip', '/video/stem-cell/app/clip.mp4', '/video/stem-cell/app/poster.webp']])
+    expect(stemCell.container.querySelector('.side-figure > img')?.getAttribute('src')).toBe('/img/stem-cell-create-menu.webp')
+    expect(stemCell.container.querySelector('.side-figure figcaption')?.textContent).toBe('The Create menu in Codex.')
+    expect(stemCell.container.querySelector('.side-figure p')?.textContent).toMatch(/^Ten ways to start/)
+    const tweets = [...stemCell.container.querySelectorAll('.social-embed-row > .social-embed-tweet blockquote.twitter-tweet')]
+    expect(tweets.map((tweet) => tweet.querySelector('a')?.getAttribute('href'))).toEqual(['https://x.com/0xrwu/status/2105329822125707394', 'https://x.com/emollick/status/2105184972537528538'])
+    expect(tweets[1].textContent).toContain('everything is getting quite confusing and overlapping again')
     const reddit = stemCell.container.querySelector('.social-embed-reddit blockquote.reddit-embed-bq')
     expect(reddit?.textContent).toContain('sort through old chats and organise them for me')
-    expect(reddit?.closest('.document-content > *')?.previousElementSibling?.textContent).toBe('If this sounds like you,')
-    expect(stemCell.container.querySelector('.document-content img.small-image')?.getAttribute('src')).toBe('/img/stem-cell.png')
+    expect(reddit?.closest('.document-content > *')?.previousElementSibling?.textContent).toBe('If this sounds like you:')
+    expect(stemCell.container.querySelector('.document-content img.row-image')?.getAttribute('src')).toBe('/img/stem-cell-new-row.png')
     expect(stemCell.container.querySelector('.blog-download .one-download-actions')).not.toBeNull()
     for (const document of documents.filter((entry) => entry.group === 'Blog')) {
       expect(document.product).toBe('desktop')

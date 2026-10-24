@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { AutoplayClip } from './AutoplayClip'
 import { ChiefOfStaffPrompt, CHIEF_OF_STAFF_LANGUAGE } from './ChiefOfStaffPrompt'
 import { HoverClip } from './HoverClip'
 import { RedditEmbed, Tweet } from './SocialEmbed'
@@ -106,8 +107,12 @@ interface MdastNode {
   data?: { hName?: string; hProperties?: Record<string, string> }
 }
 
-/** `<Tweet url="…" />` and `<RedditEmbed url="…" />` on a line of their own embed that post. */
+/**
+ * `<Tweet url="…" />` and `<RedditEmbed url="…" />` on a line of their own embed that post.
+ * Tweets that follow one another share a row.
+ */
 function remarkEmbeds() {
+  const isTweet = (node: MdastNode | undefined) => node?.type === 'embed' && node.data?.hName === 'tweet-embed'
   const visit = (node: MdastNode) => {
     for (const child of node.children ?? []) {
       const embed = child.type === 'html' && child.value?.trim().match(/^<(Tweet|RedditEmbed)\s+url="([^"]+)"\s*\/>$/)
@@ -118,8 +123,41 @@ function remarkEmbeds() {
         visit(child)
       }
     }
+    const children: MdastNode[] = []
+    for (const child of node.children ?? []) {
+      const row = children.at(-1)
+      if (isTweet(child) && isTweet(row)) children.splice(-1, 1, { type: 'embedRow', data: { hName: 'div', hProperties: { className: 'social-embed-row' } }, children: [row!, child] })
+      else if (isTweet(child) && row?.type === 'embedRow') row.children!.push(child)
+      else children.push(child)
+    }
+    if (node.children) node.children = children
   }
   return (tree: MdastNode) => visit(tree)
+}
+
+/** Screenshots drawn beside their caption and the paragraph after it, rather than above them. */
+const SIDE_FIGURES = new Set(['/img/stem-cell-create-menu.webp'])
+
+function rehypeSideFigures() {
+  const isElement = (node: HastNode) => node.type === 'element'
+  return (tree: HastNode) => {
+    const children = tree.children ?? []
+    for (let index = 0; index < children.length; index++) {
+      const image = children[index]
+      const lone = image.tagName === 'p' ? (image.children ?? []).filter((child) => child.type !== 'text' || child.value?.trim()) : []
+      if (lone.length !== 1 || lone[0].tagName !== 'img' || !SIDE_FIGURES.has(String(lone[0].properties?.src))) continue
+      const following = children.slice(index + 1).filter(isElement)
+      const [caption, paragraph] = following
+      if (caption?.tagName !== 'p' || caption.children?.length !== 1 || caption.children[0].tagName !== 'em' || paragraph?.tagName !== 'p') continue
+      const end = children.indexOf(paragraph)
+      children.splice(index, end - index + 1, {
+        type: 'element',
+        tagName: 'figure',
+        properties: { className: ['side-figure'] },
+        children: [lone[0], { type: 'element', tagName: 'div', properties: {}, children: [{ ...caption, tagName: 'figcaption' }, paragraph] }],
+      })
+    }
+  }
 }
 
 const EMBEDS = {
@@ -215,8 +253,10 @@ export function MarkdownDocument({
       return <pre {...props}>{children}</pre>
     },
     img: ({ alt, src, title, node: _node, ...props }) => {
-      // An image whose src is a folder is a clip that plays on hover (src/HoverClip.tsx).
+      // An image whose src is a folder is a clip: titled "autoplay", a recording that loops while
+      // on screen (src/AutoplayClip.tsx); otherwise one that plays on hover (src/HoverClip.tsx).
       if (typeof src === 'string' && src.endsWith('/')) {
+        if (title === 'autoplay') return <AutoplayClip folder={src} label={alt ?? ''} />
         return <HoverClip folder={src} label={alt ?? ''} />
       }
       // A video shows its poster, `<name>-poster.webp` beside it, until it plays. The served
@@ -227,9 +267,9 @@ export function MarkdownDocument({
           <video src={src} poster={src.replace(/\.(mp4|webm)$/, '-poster.webp')} controls muted autoPlay loop playsInline aria-label={alt ?? ''} suppressHydrationWarning />
         )
       }
-      // The title "small" draws the image small and centred, as a mark rather than a figure.
-      if (title === 'small') {
-        return <img {...props} className="small-image" src={src} alt={alt ?? ''} loading="lazy" />
+      // The title "row" draws a cut-out of the app at its own size, sitting on the page with no frame.
+      if (title === 'row') {
+        return <img {...props} className="row-image" src={src} alt={alt ?? ''} loading="lazy" />
       }
       // A title labels the image under it, as Before and After do side by side.
       if (title) {
@@ -246,7 +286,7 @@ export function MarkdownDocument({
 
   return (
     <div className="document-content">
-      <ReactMarkdown remarkPlugins={[remarkGfm, remarkEmbeds]} rehypePlugins={[rehypeTableCards]} components={{ ...components, ...EMBEDS, ...overrides }}>
+      <ReactMarkdown remarkPlugins={[remarkGfm, remarkEmbeds]} rehypePlugins={[rehypeTableCards, rehypeSideFigures]} components={{ ...components, ...EMBEDS, ...overrides }}>
         {markdown}
       </ReactMarkdown>
     </div>
