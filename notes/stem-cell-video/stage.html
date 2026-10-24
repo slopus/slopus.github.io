@@ -49,10 +49,17 @@ body { font-family: "Figtree", system-ui, sans-serif; color: #18171c; -webkit-fo
    pill's border. */
 .goo { position: absolute; inset: 0; }
 .blob { position: absolute; border-radius: 999px; }
+.target { border-radius: 50%; }
 #goo-edge .blob { background: #e2dcd3; }
 #goo-fill .blob { background: #ffffff; }
 
-#hero { position: absolute; width: 176px; height: 176px; transform-origin: 50% 50%; }
+#cell, #hero { position: absolute; width: 176px; height: 176px; transform-origin: 50% 50%; }
+/* The pointer that presses Create: the system arrow, at promo scale. */
+#cursor {
+    position: absolute; left: 0; top: 0; width: 46px; height: 46px; transform-origin: 9.6px 4.8px;
+    fill: #18171c; stroke: #ffffff; stroke-width: 1.4; stroke-linejoin: round;
+    filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.22));
+}
 
 /* The row the cell becomes, drawn like the sidebar's, at promo scale. */
 #group { position: absolute; left: 0; top: 0; width: 960px; height: 540px; }
@@ -129,7 +136,7 @@ body { font-family: "Figtree", system-ui, sans-serif; color: #18171c; -webkit-fo
 
     <div id="buttons"></div>
     <div class="goo" id="goo-edge"></div>
-    <div class="goo" id="goo-fill"></div>
+    <div class="goo" id="goo-fill"><canvas id="cell" width="352" height="352"></canvas></div>
     <div class="btn" id="create"><div class="content"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg><span>Create</span></div></div>
 
     <!-- The sidebar it settles into. -->
@@ -154,11 +161,12 @@ body { font-family: "Figtree", system-ui, sans-serif; color: #18171c; -webkit-fo
     <canvas id="hero" width="352" height="352"></canvas>
 
     <div id="composer">
-        <div id="placeholder">Say what it is — it’ll find its place.</div>
+        <div id="placeholder">What would you like to create?</div>
         <div id="draft"></div>
         <div id="caret"></div>
         <div id="enter">↵</div>
     </div>
+    <svg id="cursor" viewBox="0 0 24 24"><path d="M5 2.5v17.2l4.6-4.3 2.9 6.6 2.9-1.3-2.9-6.5h6.3z" /></svg>
 </div>
 <script src="engine.js"></script>
 <script>
@@ -203,7 +211,10 @@ const TITLE = "PostHog alerts";
 const ID = "posthog-alerts";
 const HERO_CSS = 176;
 const HERO_PX = HERO_CSS * 2;
-const BUD = 0.6;                    // the cell's scale as it shows inside the contracted button
+const SEED = 0.45;                  // the cell's scale as it first shows inside the gathering mass
+const MEMBRANE = 0.62 * HERO_CSS;   // about the waiting cell's diameter
+const CREATE_Y = 401;               // Create, then the input box it opens into, under the cell
+const COMPOSER_W = 548, COMPOSER_H = 70;
 
 // The sidebar, in its settled place. Until it organizes itself the group sits LIFT higher.
 const ICON = 52;
@@ -248,17 +259,19 @@ T.manyOut = [2.3, 2.55];
 T.oneIn = [2.55, 2.85];
 T.fuse = 3.05;                              // buttons start contracting into cells
 T.gathered = T.fuse + 17 * 0.035 + 1.05;    // the last of the eighteen is taken in
-T.createIn = [T.gathered - 0.1, T.gathered + 0.25];
-T.oneOut = [T.createIn[1] + 0.75, T.createIn[1] + 1.0];
+T.settled = [T.gathered, T.gathered + 0.3];   // the merged cell hands over to the unmerged one
+T.oneOut = [T.gathered + 0.3, T.gathered + 0.55];
 T.modeIn = [T.oneOut[1], T.oneOut[1] + 0.3];
-// The one button is pressed, and the stem cell comes out of it.
-T.press = [T.modeIn[1] + 0.1, T.modeIn[1] + 0.3];
-T.bud = [T.press[1], T.press[1] + 0.45];    // the button contracts into a pink cell
-T.cellIn = [T.bud[1] - 0.08, T.bud[1] + 0.1];
-T.cellGrow = [T.bud[1] - 0.08, T.bud[1] + 0.7];
-T.modeOut = [T.cellGrow[1] + 0.9, T.cellGrow[1] + 1.15];
+// The one button shows under the cell; the pointer comes to it and presses it, and it opens into the
+// one input box.
+T.createIn = [T.modeIn[1] + 1.0, T.modeIn[1] + 1.35];
+T.point = [T.createIn[1] + 0.1, T.createIn[1] + 1.2];
+T.press = [T.point[1] + 0.1, T.point[1] + 0.3];
+T.open = [T.press[1] + 0.05, T.press[1] + 0.5];
+T.pointerOut = [T.open[0] + 0.1, T.open[1]];
+T.composerIn = [T.open[1] - 0.1, T.open[1] + 0.15];
+T.modeOut = [T.open[0] + 0.15, T.open[0] + 0.4];
 T.sayIn = [T.modeOut[1], T.modeOut[1] + 0.3];
-T.composerIn = T.sayIn;
 T.type = T.sayIn[1] + 0.3;
 const typed = typing(PROMPT, T.type, 11, 0.038, 0.026, "posthog");
 T.typed = typed.done;
@@ -294,7 +307,7 @@ T.quoteOut = [T.quote[3] + 0.35 + 4.0, T.quote[3] + 0.35 + 4.4];
 T.reset = [T.quoteOut[1] + 0.05, T.quoteOut[1] + 0.4];
 T.end = T.reset[1] + 2 / 30;   // the last frame is the first one, fully back
 
-let buttons = [], engine, heroCtx, engineCanvas, createW;
+let buttons = [], engine, cellCtx, heroCtx, engineCanvas, createW;
 
 function place(el, left, top) { el.style.left = left + "px"; el.style.top = top + "px"; }
 function size(el, w, h) { el.style.width = w + "px"; el.style.height = h + "px"; }
@@ -319,24 +332,25 @@ function build() {
             const edge = document.createElement("div"), fill = document.createElement("div");
             edge.className = fill.className = "blob";
             $("goo-edge").appendChild(edge);
-            $("goo-fill").appendChild(fill);
+            $("goo-fill").insertBefore(fill, $("cell"));
             const cx = x + widths[i] / 2, cy = y + H / 2;
             buttons.push({ el, content: el.querySelector(".content"), edge, fill, w: widths[i], cx, cy, index: index++, dist: Math.hypot(cx - ANCHOR.x, cy - ANCHOR.y) });
             x += widths[i] + GAP;
         });
     }
-    // Nearest first, so the one button gathers from the middle out.
+    // Nearest first, so the cell gathers from the middle out.
     [...buttons].sort((a, b) => a.dist - b.dist).forEach((b, rank) => (b.rank = rank));
-    // The one goo target, as each merged layer draws it: the edge a border's width larger.
+    // The one mass they gather into, as each merged layer draws it: the edge a border's width larger.
     for (const layer of ["goo-edge", "goo-fill"]) {
         const target = document.createElement("div");
         target.className = "blob target";
-        $(layer).appendChild(target);
+        $(layer).insertBefore(target, $(layer).querySelector("canvas"));
     }
     createW = Math.ceil($("create").querySelector(".content").getBoundingClientRect().width) + 3;
 
+    place($("cell"), ANCHOR.x - HERO_CSS / 2, ANCHOR.y - HERO_CSS / 2);
     place($("hero"), ANCHOR.x - HERO_CSS / 2, ANCHOR.y - HERO_CSS / 2);
-    place($("composer"), RX - 274, 366);
+    place($("composer"), RX - COMPOSER_W / 2, CREATE_Y - COMPOSER_H / 2);
 
     // The row and its children, at their settled place; the group is drawn LIFT higher until it organizes.
     const rowTop = (y) => y - 29;
@@ -407,9 +421,12 @@ async function renderAt(t) {
     });
 
     // The wall cascades in, a button at a time, each in its own place. Then each contracts into a cell
-    // where it stands, and the cells flow into the one button, which grows as it takes them in.
+    // where it stands, and the cells flow into one mass at the anchor, which grows as it takes them in
+    // and turns into the stem cell.
     let mass = 0;
-    const merging = t >= T.fuse && t < T.createIn[1];
+    const settled = smooth(seg(t, ...T.settled));
+    const merging = t >= T.fuse && settled < 1;
+    const massPink = smooth(seg(buttons.reduce((sum, b) => sum + absorbed(b, t), 0) / buttons.length, 0.3, 0.85));
     for (const b of buttons) {
         const appear = b.index * 0.045 + T.cascade;
         const s = start(b);
@@ -439,48 +456,64 @@ async function renderAt(t) {
         const live = merging && handover > 0;
         blob(b.edge, x, y, d, d, live);
         blob(b.fill, x, y, d - 3, d - 3, live);
+        // A cell being taken in loses its outline and takes on the mass's colour.
+        b.edge.style.backgroundColor = mix(BORDER, WHITE, smooth(clamp01(taken * 2)));
+        b.fill.style.backgroundColor = mix(WHITE, PINK, taken * massPink);
     }
     mass /= buttons.length;
-    // The one button grows by area with every cell it takes in.
-    const k = Math.sqrt(mass);
+    // The mass grows by area with every cell it takes in. Past a third of the way it blushes pink and the
+    // stem cell shows inside it, nucleus and all, and grows with it; the round mass sinks inside the
+    // membrane, so what is left is the cell.
+    const pink = massPink;
+    const k = Math.sqrt(mass) * lerp(1, 0.8, pink);
     const [edgeT, fillT] = document.querySelectorAll(".target");
-    blob(edgeT, ANCHOR.x, ANCHOR.y, createW * k, CREATE_H * k, merging);
-    blob(fillT, ANCHOR.x, ANCHOR.y, createW * k - 3, CREATE_H * k - 3, merging);
+    blob(edgeT, ANCHOR.x, ANCHOR.y, MEMBRANE * k, MEMBRANE * k, merging);
+    blob(fillT, ANCHOR.x, ANCHOR.y, MEMBRANE * k - 3, MEMBRANE * k - 3, merging);
+    edgeT.style.backgroundColor = mix(BORDER, PINK, pink);
+    fillT.style.backgroundColor = mix(WHITE, PINK, pink);
     for (const id of ["goo-edge", "goo-fill"]) $(id).style.filter = merging ? "url(#goo-filter)" : "none";
+    $("cell").style.transform = `scale(${Math.sqrt(lerp(SEED * SEED, 1, mass))})`;
+    show($("cell"), merging ? pink : 0);
 
-    // "+ Create": the merged shape hands over to the crisp button. Pressed, it contracts into a pink cell.
+    // "+ Create" shows under the cell. Pressed, it opens into the input box, in the same place.
     const create = $("create");
-    const bud = easeInOut(seg(t, ...T.bud));
-    const cw = lerp(createW, CREATE_H, bud);
-    create.style.left = ANCHOR.x - cw / 2 + "px";
-    create.style.top = ANCHOR.y - CREATE_H / 2 + "px";
-    size(create, cw, CREATE_H);
-    create.style.borderRadius = lerp(17, CREATE_H / 2, bud) + "px";
+    const open = easeInOut(seg(t, ...T.open));
+    const cw = lerp(createW, COMPOSER_W, open), ch = lerp(CREATE_H, COMPOSER_H, open);
+    create.style.left = RX - cw / 2 + "px";
+    create.style.top = CREATE_Y - ch / 2 + "px";
+    size(create, cw, ch);
+    create.style.borderRadius = lerp(17, 20, open) + "px";
     const pressed = Math.sin(Math.PI * seg(t, ...T.press));
-    create.style.transform = `scale(${lerp(1, 0.95, pressed) * lerp(1, BUD * 0.62 * HERO_CSS / CREATE_H, easeInOut(seg(t, T.bud[0] + 0.2, T.bud[1])))})`;
-    create.style.backgroundColor = bud > 0 ? mix(WHITE, PINK, bud) : mix(WHITE, PRESSED, pressed);
-    create.style.borderColor = mix(BORDER, PINK, bud);
-    create.style.boxShadow = bud > 0 ? "none" : "";
-    create.querySelector(".content").style.opacity = String(1 - seg(t, T.bud[0], T.bud[0] + 0.18));
+    create.style.transform = `scale(${lerp(1, 0.95, pressed)})`;
+    create.style.backgroundColor = mix(WHITE, PRESSED, pressed);
+    create.querySelector(".content").style.opacity = String(1 - seg(t, T.open[0], T.open[0] + 0.15));
     create.querySelector(".content").style.left = (cw - createW) / 2 + "px";
-    show(create, smooth(seg(t, ...T.createIn)) * (1 - seg(t, T.cellIn[1], T.cellIn[1] + 0.12)));
+    create.style.boxShadow = open > 0 ? `0 8px 24px rgb(40 30 20 / ${0.07 * open}), 0 1px 2px rgb(0 0 0 / 0.04)` : "";
+    show(create, smooth(seg(t, ...T.createIn)) * (1 - seg(t, T.composerIn[1], T.composerIn[1] + 0.05)));
+
+    // The pointer comes in from the lower right, settles on Create, and clicks.
+    const point = easeInOut(seg(t, ...T.point));
+    const px = lerp(780, RX + 18, point), py = lerp(520, CREATE_Y + 8, point) + Math.sin(Math.PI * point) * -26;
+    $("cursor").style.transform = `translate(${px - 9.6}px, ${py - 4.8}px) scale(${lerp(1, 0.88, pressed)})`;
+    show($("cursor"), smooth(seg(t, T.point[0] - 0.1, T.point[0] + 0.2)) * (1 - smooth(seg(t, ...T.pointerOut))));
 
     // The cell: waiting, then dividing into its icon on the shipped engine as it moves into its row.
-    const cellIn = smooth(seg(t, ...T.cellIn));
+    const cellIn = settled;
     const growMs = (t - T.grow) * 1000;
     // The plain picture takes over once the icon has formed, as the app does.
     const iconIn = seg(growMs, T.growMs - 80, T.growMs + 40);
     const move = sine(seg(t, ...T.move)), drop = sine(seg(t, ...T.drop));
     const hx = lerp(ANCHOR.x, ICON_C.x, move), hy = lerp(ANCHOR.y, ICON_C.y, drop);
-    const grown = lerp(BUD, 1, pop(t, ...T.cellGrow));
-    const hs = grown * lerp(1, ICON / HERO_CSS, easeOut(seg(t, ...T.move)));
+    const hs = lerp(1, ICON / HERO_CSS, easeOut(seg(t, ...T.move)));
     $("hero").style.transform = `translate(${hx - ANCHOR.x}px, ${hy - ANCHOR.y}px) scale(${hs})`;
     show($("hero"), iconIn >= 1 ? 0 : cellIn);
-    if (cellIn > 0 && iconIn < 1) {
+    if (((merging && pink > 0) || cellIn > 0) && iconIn < 1) {
         if (growMs < 0) engine.renderWaiting(growMs);   // a slow drift, in phase with the growth at 0
         else engine.render(Math.min(growMs, T.growMs));
-        heroCtx.clearRect(0, 0, HERO_PX, HERO_PX);
-        heroCtx.drawImage(engineCanvas, 0, 0);
+        for (const ctx of [cellCtx, heroCtx]) {
+            ctx.clearRect(0, 0, HERO_PX, HERO_PX);
+            ctx.drawImage(engineCanvas, 0, 0);
+        }
     }
 
     // The row: its icon, its name typing in under a working shimmer, its children, its section.
@@ -546,6 +579,7 @@ async function init() {
         variant: Stem.stemCellVariantFor(HERO_CSS),
     });
     console.log("assign", JSON.stringify(engine.assign($("icon"))));
+    cellCtx = $("cell").getContext("2d");
     heroCtx = $("hero").getContext("2d");
     await renderAt(0);
     return { duration: T.end, renderer: engine.acceleration.renderer, T };
