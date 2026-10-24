@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+@font-face {
+    font-family: "Figtree";
+    src: url("assets/figtree.woff2") format("woff2-variations");
+    font-weight: 300 900;
+}
+html, body { margin: 0; width: 960px; height: 540px; overflow: hidden; background: #f7f4ef; }
+body { font-family: "Figtree", system-ui, sans-serif; color: #18171c; -webkit-font-smoothing: antialiased; }
+#stage { position: relative; width: 960px; height: 540px; overflow: hidden; }
+
+/* One line of narration per step, always in the same place. */
+.caption {
+    position: absolute; left: 0; width: 960px; top: 44px; height: 60px; line-height: 60px;
+    text-align: center; font-size: 44px; font-weight: 740; letter-spacing: -0.03em; white-space: nowrap;
+}
+.caption em { font-style: normal; color: #d65f9c; }
+
+/* The last word, alone on the page, held long enough to read twice. */
+#quote {
+    position: absolute; left: 0; width: 960px; top: 128px; text-align: center;
+    font-size: 56px; font-weight: 760; letter-spacing: -0.035em; line-height: 66px; white-space: nowrap;
+}
+#quote div { position: relative; }
+#quote em { font-style: normal; color: #d65f9c; }
+#quote .last { margin-top: 26px; }
+
+/* Create affordances, drawn like the desktop's secondary buttons, at promo scale. */
+.btn {
+    position: absolute; height: 66px; box-sizing: border-box; overflow: hidden;
+    border-radius: 16px; background: #ffffff; border: 1.5px solid #e2dcd3;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+.btn .content {
+    position: absolute; left: 0; top: 0; bottom: 0; display: flex; align-items: center; gap: 10px;
+    padding: 0 22px; white-space: nowrap; font-size: 27px; font-weight: 580; letter-spacing: -0.01em;
+}
+.btn.icon-only .content { padding: 0; width: 63px; justify-content: center; }
+.btn svg { width: 28px; height: 28px; stroke: #18171c; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.btn img { width: 30px; height: 30px; flex: none; }
+
+/* Cells that touch merge here. The crisp source is laid back over the merged shape, so the waiting
+   cell keeps its nucleus while the button cells flow into it. */
+#goo { position: absolute; inset: 0; filter: url(#goo-filter); }
+.blob { position: absolute; background: #f6cfe3; border-radius: 50%; }
+
+#cell, #hero, #icon { position: absolute; width: 176px; height: 176px; }
+#cell { transform-origin: 50% 50%; }
+#badge { position: absolute; width: 84px; height: 84px; transform-origin: 50% 50%; filter: drop-shadow(0 2px 4px rgb(40 30 20 / 0.12)); }
+#label { position: absolute; width: 560px; height: 52px; font-size: 40px; font-weight: 680; letter-spacing: -0.02em; }
+#label span { position: absolute; left: 0; right: 0; top: 0; text-align: center; }
+#label .new { color: #8c8791; --shine: #d3cfd6; }
+#label .title { --shine: #8c8791; }
+.shimmer {
+    background-image: linear-gradient(100deg, currentColor 0%, currentColor 42%, var(--shine) 50%, currentColor 58%, currentColor 100%);
+    background-size: 300% 100%; background-repeat: no-repeat;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+#composer {
+    position: absolute; width: 548px; height: 70px; box-sizing: border-box;
+    border-radius: 20px; background: #ffffff; border: 1.5px solid #e2dcd3;
+    box-shadow: 0 8px 24px rgb(40 30 20 / 0.07), 0 1px 2px rgb(0 0 0 / 0.04);
+}
+#draft, #placeholder { position: absolute; left: 22px; top: 0; height: 67px; line-height: 67px; font-size: 26px; font-weight: 540; letter-spacing: -0.015em; white-space: pre; }
+#placeholder { color: #78737e; }
+#caret { position: absolute; top: 18px; width: 2.5px; height: 31px; background: #18171c; border-radius: 1px; }
+/* The Return key: one fixed 44 × 40 cap that darkens while it is pressed. */
+#enter {
+    position: absolute; right: 12px; top: 13px; width: 44px; height: 40px; box-sizing: border-box;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; border: 1.5px solid #d6d0c6; border-bottom-width: 3.5px; background: #faf8f5;
+    font-size: 24px; font-weight: 700; color: #4a4650; line-height: 1;
+}
+#enter.down { transform: translateY(2px); border-bottom-width: 1.5px; border-color: #18171c; background: #18171c; color: #ffffff; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+    <filter id="goo-filter" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -12" result="goo" />
+        <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+    </filter>
+</svg>
+<div id="stage">
+    <div class="caption" id="cap-many">Too many ways to start.</div>
+    <div class="caption" id="cap-one">What if there was <em>one</em>?</div>
+    <div class="caption" id="cap-mode">Enter <em>Stem Cell Mode</em>.</div>
+    <div class="caption" id="cap-say">Just say what it is.</div>
+    <div class="caption" id="cap-name">It names itself.</div>
+    <div class="caption" id="cap-bot">And becomes a bot.</div>
+    <div id="quote">
+        <div>Your interface needs</div>
+        <div><em>one</em> button to start work</div>
+        <div>and <em>one</em> input box.</div>
+        <div class="last">That’s it.</div>
+    </div>
+
+    <div id="buttons"></div>
+    <div id="goo"><canvas id="cell" width="352" height="352"></canvas></div>
+    <canvas id="hero" width="352" height="352"></canvas>
+    <img id="icon" src="assets/alerting@64.png" alt="" />
+    <img id="badge" src="assets/bot-face-badge.svg" alt="" />
+    <div id="label"><span class="new">New</span><span class="title">PostHog alerts</span></div>
+    <div id="composer">
+        <div id="placeholder">Say what it is — it’ll find its place.</div>
+        <div id="draft"></div>
+        <div id="caret"></div>
+        <div id="enter">↵</div>
+    </div>
+</div>
+<script src="engine.js"></script>
+<script>
+"use strict";
+const ICONS = {
+    pen: '<path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.4 2.6a1 1 0 0 1 3 3l-9 9a2 2 0 0 1-.85.5l-2.87.84a.5.5 0 0 1-.62-.62l.84-2.87a2 2 0 0 1 .5-.85z"/>',
+    plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+    tab: '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/>',
+    window: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 4v4"/><path d="M2 8h20"/><path d="M6 4v4"/>',
+    todo: '<path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/>',
+    chat: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+    doc: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/>',
+};
+// The ways to start something that Happy actually has. A new bot wears the face new bots are given.
+const BUTTONS = [
+    [{ icon: "pen", label: "New task" }, { icon: "plus" }, { icon: "tab", label: "New tab" }],
+    [{ icon: "window", label: "New window" }, { icon: "chat", label: "New chat" }, { img: "assets/bot-face.svg", label: "New bot" }],
+    [{ icon: "todo", label: "New todo list" }, { icon: "doc", label: "New document" }],
+];
+const RX = 480;
+const H = 66;
+const GAP = 14;
+const ANCHOR = { x: RX, y: 250 };
+const ROW_Y = BUTTONS.map((_, r) => ANCHOR.y - (BUTTONS.length * H + (BUTTONS.length - 1) * GAP) / 2 + r * (H + GAP));
+const CELL = 48;          // a button contracted into a cell
+const PROMPT = "ping me on serious posthog alerts";
+const ID = "posthog-alerts";
+const HERO_CSS = 176;
+const HERO_PX = HERO_CSS * 2;
+const SEED_SCALE = 0.45;  // the waiting cell as it first shows inside the middle button's cell
+
+const $ = (id) => document.getElementById(id);
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const seg = (t, a, b) => clamp01((t - a) / (b - a));
+const lerp = (a, b, p) => a + (b - a) * p;
+const easeInOut = (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+const smooth = (p) => p * p * (3 - 2 * p);
+const mix = (a, b, p) => `rgb(${a.map((v, i) => Math.round(lerp(v, b[i], p))).join(",")})`;
+/** Up from 0 at a, a little past 1, settling at 1 by b. */
+const pop = (t, a, b) => { const p = seg(t, a, b); return p >= 1 ? 1 : 1 + 2.2 * Math.pow(p - 1, 3) + 1.2 * Math.pow(p - 1, 2); };
+
+// Timeline, in seconds: one step per caption, each with time to read it and to watch it happen.
+const T = {};
+T.manyOut = [2.2, 2.45];                    // "Too many ways to start." is there from the first frame
+T.oneIn = [2.45, 2.75];
+T.fuse = 3.15;                              // buttons start contracting into cells
+T.cellIn = [T.fuse + 0.3, T.fuse + 0.55];   // the waiting cell shows inside the middle one
+T.gathered = T.fuse + 7 * 0.045 + 1.05;   // the last of the eight cells is taken in
+T.newIn = [T.fuse + 1.45, T.fuse + 1.75];
+// Once the cell and its "New" are there, the mode gets its name, and a moment to sink in.
+T.oneOut = [T.newIn[1] + 0.25, T.newIn[1] + 0.5];
+T.modeIn = [T.oneOut[1], T.oneOut[1] + 0.3];
+T.modeOut = [T.modeIn[1] + 1.8, T.modeIn[1] + 2.05];
+T.sayIn = [T.modeOut[1], T.modeOut[1] + 0.3];
+T.composerIn = T.sayIn;
+T.type = T.sayIn[1] + 0.4;
+
+// Seeded, human typing: quicker inside words, a beat before "posthog".
+const typed = [];
+{
+    let s = 11, at = T.type;
+    const rand = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < PROMPT.length; i++) {
+        typed.push(at);
+        const ch = PROMPT[i];
+        let dt = 0.045 + rand() * 0.03;
+        if (ch === " ") dt += 0.035;
+        if (PROMPT.slice(i + 1).startsWith("posthog")) dt += 0.18;
+        at += dt;
+    }
+    T.typed = at;
+}
+T.enter = T.typed + 0.45;
+T.grow = T.enter + 0.35;
+T.growMs = 2500;
+T.sayOut = [T.grow - 0.25, T.grow];
+T.nameIn = [T.grow, T.grow + 0.3];
+T.newOut = [T.grow + 1.0, T.grow + 1.2];
+T.titleIn = [T.grow + 1.2, T.grow + 1.45];
+T.formed = T.grow + T.growMs / 1000;
+T.nameOut = [T.formed + 0.9, T.formed + 1.15];
+T.botIn = [T.formed + 1.15, T.formed + 1.45];
+T.badgeIn = [T.formed + 1.3, T.formed + 1.75];
+// Hold the bot, let it go, and leave the page to the last word: a line at a time, a beat before
+// "That's it.", then four seconds to sit with it. Then the opening comes back so the clip loops without a cut.
+T.resultOut = [T.botIn[1] + 2.0, T.botIn[1] + 2.3];
+T.quote = [0, 0.5, 1.0, 1.9].map((at) => T.resultOut[1] + 0.3 + at);
+T.quoteOut = [T.quote[3] + 0.35 + 4.0, T.quote[3] + 0.35 + 4.4];
+T.reset = [T.quoteOut[1] + 0.05, T.quoteOut[1] + 0.4];
+T.end = T.reset[1] + 2 / 30;   // the last frame is the first one, fully back
+
+let buttons = [], engine, cellCtx, heroCtx, engineCanvas;
+
+function place(el, left, top) { el.style.left = left + "px"; el.style.top = top + "px"; }
+
+function build() {
+    place($("cell"), RX - HERO_CSS / 2, ANCHOR.y - HERO_CSS / 2);
+    place($("hero"), RX - HERO_CSS / 2, ANCHOR.y - HERO_CSS / 2);
+    place($("icon"), RX - HERO_CSS / 2, ANCHOR.y - HERO_CSS / 2);
+    place($("badge"), RX + 28, ANCHOR.y + 6);
+    place($("label"), RX - 280, ANCHOR.y + HERO_CSS / 2 + 8);
+    place($("composer"), RX - 274, 440);
+
+    const host = $("buttons"), goo = $("goo");
+    let index = 0;
+    for (const [r, row] of BUTTONS.entries()) {
+        const els = row.map((b) => {
+            const el = document.createElement("div");
+            el.className = "btn" + (b.label ? "" : " icon-only");
+            const glyph = b.img ? `<img src="${b.img}" alt="" />` : `<svg viewBox="0 0 24 24">${ICONS[b.icon]}</svg>`;
+            el.innerHTML = `<div class="content">${glyph}` + (b.label ? `<span>${b.label}</span>` : "") + "</div>";
+            host.appendChild(el);
+            return el;
+        });
+        const widths = els.map((el) => (el.classList.contains("icon-only") ? H : Math.ceil(el.querySelector(".content").getBoundingClientRect().width) + 3));
+        const total = widths.reduce((a, b) => a + b, 0) + GAP * (els.length - 1);
+        let x = Math.round(ANCHOR.x - total / 2);
+        els.forEach((el, i) => {
+            const rect = { x, y: ROW_Y[r], w: widths[i], h: H };
+            const blob = document.createElement("div");
+            blob.className = "blob";
+            goo.insertBefore(blob, $("cell"));
+            const cx = x + widths[i] / 2, cy = ROW_Y[r] + H / 2;
+            buttons.push({ el, content: el.querySelector(".content"), blob, rect, cx, cy, index: index++, dist: Math.hypot(cx - ANCHOR.x, cy - ANCHOR.y) });
+            x += widths[i] + GAP;
+        });
+    }
+    // Nearest first, so the cell gathers from the middle out.
+    [...buttons].sort((a, b) => a.dist - b.dist).forEach((b, rank) => (b.rank = rank));
+}
+
+function show(el, v) { el.style.opacity = String(v); el.style.visibility = v <= 0.001 ? "hidden" : "visible"; }
+
+const WHITE = [255, 255, 255], PINK = [246, 207, 227], BORDER = [226, 220, 211];
+
+/** When a button's cell starts each part of its trip. */
+const start = (b) => T.fuse + b.rank * 0.045;
+const travel = (b, t) => easeInOut(seg(t, start(b) + 0.32, start(b) + 1.05));
+/** How much of a travelling cell the waiting cell has taken in. */
+const absorbed = (b, t) => smooth(seg(travel(b, t), 0.55, 1));
+
+async function renderAt(t) {
+    // The narration: one line at a time, in one place.
+    const after = 1 - smooth(seg(t, ...T.resultOut));
+    const reset = smooth(seg(t, ...T.reset));
+    show($("cap-many"), 1 - smooth(seg(t, ...T.manyOut)) + reset);
+    show($("cap-one"), smooth(seg(t, ...T.oneIn)) * (1 - smooth(seg(t, ...T.oneOut))));
+    show($("cap-mode"), smooth(seg(t, ...T.modeIn)) * (1 - smooth(seg(t, ...T.modeOut))));
+    show($("cap-say"), smooth(seg(t, ...T.sayIn)) * (1 - smooth(seg(t, ...T.sayOut))));
+    show($("cap-name"), smooth(seg(t, ...T.nameIn)) * (1 - smooth(seg(t, ...T.nameOut))));
+    show($("cap-bot"), smooth(seg(t, ...T.botIn)) * after);
+    const quoteOut = 1 - smooth(seg(t, ...T.quoteOut));
+    [...$("quote").children].forEach((line, i) => {
+        const p = smooth(seg(t, T.quote[i], T.quote[i] + 0.35));
+        line.style.top = lerp(8, 0, p) + "px";
+        show(line, p * quoteOut);
+    });
+
+    // Each button contracts into a cell in place; the cells flow into the waiting cell, which grows as it
+    // takes them in.
+    let mass = 0;
+    for (const b of buttons) {
+        const s = start(b);
+        const contract = reset > 0 ? 0 : easeInOut(seg(t, s, s + 0.34));
+        const w = lerp(b.rect.w, CELL, contract), h = lerp(H, CELL, contract);
+        b.el.style.left = b.cx - w / 2 + "px";
+        b.el.style.top = b.cy - h / 2 + "px";
+        b.el.style.width = w + "px";
+        b.el.style.height = h + "px";
+        b.el.style.borderRadius = lerp(16, CELL / 2, contract) + "px";
+        b.el.style.backgroundColor = mix(WHITE, PINK, contract);
+        b.el.style.borderColor = mix(BORDER, PINK, contract);
+        b.el.style.boxShadow = contract > 0 ? "none" : "";
+        b.content.style.opacity = String(reset > 0 ? 1 : 1 - seg(t, s, s + 0.14));
+        b.content.style.left = (b.el.classList.contains("icon-only") ? 0 : (w - b.rect.w) / 2) + "px";
+
+        // The contracted cell hands over to its twin in the goo layer, which can merge.
+        const handover = reset > 0 ? 0 : seg(t, s + 0.3, s + 0.36);
+        show(b.el, reset > 0 ? reset : 1 - handover);
+        const go = travel(b, t);
+        const bend = Math.sin(Math.PI * go) * 22 * (b.index % 2 ? 1 : -1);
+        const dx = ANCHOR.x - b.cx, dy = ANCHOR.y - b.cy, len = Math.hypot(dx, dy) || 1;
+        const x = lerp(b.cx, ANCHOR.x, go) + (-dy / len) * bend;
+        const y = lerp(b.cy, ANCHOR.y, go) + (dx / len) * bend;
+        const taken = absorbed(b, t);
+        mass += taken;
+        const d = CELL * (1 - taken);
+        b.blob.style.left = x - d / 2 + "px";
+        b.blob.style.top = y - d / 2 + "px";
+        b.blob.style.width = b.blob.style.height = d + "px";
+        show(b.blob, d < 0.5 ? 0 : handover);
+    }
+    mass /= buttons.length;
+
+    // The waiting cell shows inside the middle button's cell and grows by area with every cell it takes in.
+    const cellIn = smooth(seg(t, ...T.cellIn)) * (1 - reset);
+    const scale = Math.sqrt(lerp(SEED_SCALE * SEED_SCALE, 1, mass));
+    $("cell").style.transform = `scale(${scale})`;
+    // Merging happens only while cells flow in. Then the same cell, unmerged, is laid over it, so the
+    // divisions after are the engine's own; a short fade hides the merge's one-pixel softer edge.
+    const settled = smooth(seg(t, T.gathered, T.gathered + 0.3));
+    const merging = cellIn > 0 && settled < 1;
+    $("goo").style.filter = merging ? "url(#goo-filter)" : "none";
+    show($("cell"), merging ? cellIn : 0);
+
+    // The cell: waiting, then growing into its icon on the shipped engine.
+    const growMs = (t - T.grow) * 1000;
+    // The plain picture takes over once the icon has formed, as the app does.
+    const iconIn = seg(growMs, T.growMs - 80, T.growMs + 40);
+    show($("hero"), iconIn >= 1 ? 0 : cellIn * settled);
+    if (cellIn > 0 && iconIn < 1) {
+        if (growMs < 0) engine.renderWaiting(growMs);   // a slow drift, in phase with the growth at 0
+        else engine.render(Math.min(growMs, T.growMs));
+        for (const ctx of [cellCtx, heroCtx]) {
+            ctx.clearRect(0, 0, HERO_PX, HERO_PX);
+            ctx.drawImage(engineCanvas, 0, 0);
+        }
+    }
+    show($("icon"), iconIn * after);
+
+    // It is a bot: the face new bots are given settles on its corner.
+    const badge = pop(t, ...T.badgeIn);
+    $("badge").style.transform = `scale(${badge}) rotate(${lerp(-14, 0, smooth(seg(t, ...T.badgeIn)))}deg)`;
+    show($("badge"), smooth(seg(t, T.badgeIn[0], T.badgeIn[0] + 0.12)) * after);
+
+    // Its name: "New" until the chat names it, then the subject.
+    const newEl = $("label").querySelector(".new"), titleEl = $("label").querySelector(".title");
+    show(newEl, smooth(seg(t, ...T.newIn)) * (1 - seg(t, ...T.newOut)));
+    show(titleEl, smooth(seg(t, ...T.titleIn)) * after);
+    const sweep = (u) => `${lerp(100, 0, u)}% 0`;
+    newEl.classList.toggle("shimmer", t >= T.enter);
+    newEl.style.backgroundPosition = sweep(((t - T.enter) / 0.9) % 1);
+    const titleShimmer = t >= T.titleIn[0] && t < T.titleIn[1] + 0.8;
+    titleEl.classList.toggle("shimmer", titleShimmer);
+    titleEl.style.backgroundPosition = sweep(seg(t, T.titleIn[0], T.titleIn[1] + 0.8));
+
+    // The composer, where the person says what it is.
+    show($("composer"), smooth(seg(t, ...T.composerIn)) * after);
+    let n = 0;
+    while (n < typed.length && typed[n] <= t) n++;
+    $("draft").textContent = PROMPT.slice(0, n);
+    show($("placeholder"), n === 0 ? 1 : 0);
+    $("caret").style.left = 22 + (n === 0 ? 0 : $("draft").getBoundingClientRect().width + 1) + "px";
+    const typing = t >= T.type - 0.05 && t < T.typed + 0.25;
+    const blink = Math.floor((t - T.composerIn[1]) / 0.53) % 2 === 0;
+    show($("caret"), t < T.enter && (typing || blink) ? 1 : 0);
+    // Return is pressed for a quarter second, then the sent message stays readable.
+    $("enter").classList.toggle("down", t >= T.enter && t < T.enter + 0.25);
+    show($("enter"), 1 - seg(t, T.enter + 0.3, T.enter + 0.55));
+    // Sent: the field settles from white to the page's grey and its shadow lifts, over a fifth of a second.
+    const sent = smooth(seg(t, T.enter + 0.25, T.enter + 0.45));
+    $("composer").style.backgroundColor = mix(WHITE, [241, 236, 228], sent);
+    $("composer").style.boxShadow = `0 8px 24px rgb(40 30 20 / ${0.07 * (1 - sent)}), 0 1px 2px rgb(0 0 0 / ${0.04 * (1 - sent)})`;
+    show($("draft"), t < T.enter + 0.25 ? 1 : lerp(1, 0.72, seg(t, T.enter + 0.25, T.enter + 0.5)));
+}
+
+async function init() {
+    await document.fonts.load('580 19px "Figtree"');
+    await document.fonts.ready;
+    build();
+    await Promise.all([...document.images].map((im) => im.decode()));
+    engineCanvas = document.createElement("canvas");
+    engine = Stem.createStemCellEngine(engineCanvas, {
+        id: ID,
+        size: HERO_PX,
+        palette: { membrane: [246, 207, 227], core: [238, 159, 203] },
+        variant: Stem.stemCellVariantFor(HERO_CSS),
+    });
+    console.log("assign", JSON.stringify(engine.assign($("icon"))));
+    cellCtx = $("cell").getContext("2d");
+    heroCtx = $("hero").getContext("2d");
+    await renderAt(0);
+    return { duration: T.end, renderer: engine.acceleration.renderer, T };
+}
+window.renderAt = renderAt;
+window.ready = init();
+</script>
+</body>
+</html>

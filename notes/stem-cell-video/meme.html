@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+/* The Two Buttons meme for the post, at the template's own size (600 × 908), cropped above the artist's
+   signature: the post credits him under the clip instead. A live otter takes the sweating man's panel. */
+html, body { margin: 0; width: 600px; height: 874px; overflow: hidden; background: #ffffff; }
+#meme { position: relative; width: 600px; height: 874px; overflow: hidden; }
+#meme > .template { position: absolute; left: 0; top: 0; width: 600px; height: 908px; }
+.plate { position: absolute; font: 700 30px/1 Arial, Helvetica, sans-serif; color: #111; white-space: nowrap; transform: rotate(-10deg); }
+#otter { position: absolute; left: 24px; top: 462px; width: 551px; height: 405px; object-fit: cover; }
+#otter-border { position: absolute; left: 18px; top: 457px; width: 561px; height: 415px; box-sizing: border-box; border: 6.5px solid #121212; }
+</style>
+</head>
+<body>
+<div id="meme">
+    <img class="template" src="assets/two-buttons.jpg" alt="" />
+    <div class="plate" style="left: 92px; top: 128px">New task</div>
+    <div class="plate" style="left: 282px; top: 88px">New bot</div>
+    <img id="otter" alt="" />
+    <div id="otter-border"></div>
+</div>
+<script>
+"use strict";
+// The otter's frames, played forward and back once per loop:
+// meme.html?otter=assets/otter-sea-slate&ext=jpg&frames=118&fps=25&speed=1
+const Q = new URLSearchParams(location.search);
+const OTTER_DIR = Q.get("otter") ?? "assets/otter-sea-slate";
+const OTTER_EXT = Q.get("ext") ?? "jpg";
+const OTTER_FRAMES = Number(Q.get("frames") ?? 118);
+const OTTER_FPS = Number(Q.get("fps") ?? 25);
+const SPEED = Number(Q.get("speed") ?? 1);
+const span = OTTER_FRAMES - 1;
+const T = { end: (2 * span) / OTTER_FPS / SPEED };
+const otterSrc = (frame) => `${OTTER_DIR}/${String(frame).padStart(4, "0")}.${OTTER_EXT}`;
+let shown = -1;
+
+async function renderAt(t) {
+    const f = (t * SPEED * OTTER_FPS) % (2 * span);
+    const frame = Math.round(f <= span ? f : 2 * span - f);
+    if (frame === shown) return;
+    shown = frame;
+    const img = document.getElementById("otter");
+    img.src = otterSrc(frame);
+    await img.decode();
+}
+
+async function init() {
+    await document.images[0].decode();
+    await renderAt(0);
+    return { duration: T.end, renderer: "none", T };
+}
+window.renderAt = renderAt;
+window.ready = init();
+</script>
+</body>
+</html>
