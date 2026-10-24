@@ -4,8 +4,8 @@ import { useEffect, useRef } from 'react'
  * A short captionless clip that rests on its last frame and plays once, to the end, when the
  * reader hovers it or anywhere in its section; hovering again replays it. Where nothing hovers
  * (a phone), it plays each time it scrolls into view. A docs image whose src is a folder is one:
- * `![alt](/video/stem-cell/one/)` plays clip.webm (VP9 with alpha), or clip.mov (HEVC with alpha),
- * over poster.png, its last frame, on the page itself.
+ * `![alt](/video/stem-cell/one/)` plays clip.mov (HEVC with alpha) in Safari or clip.webm (VP9 with
+ * alpha) elsewhere, over poster.png, its last frame, on the page itself.
  */
 export function HoverClip({ folder, label }: { folder: string; label: string }) {
   const video = useRef<HTMLVideoElement>(null)
@@ -58,8 +58,10 @@ export function HoverClip({ folder, label }: { folder: string; label: string }) 
   // would otherwise report a mismatch.
   return (
     <video ref={video} className="hover-clip" poster={`${folder}poster.png`} muted playsInline preload="metadata" aria-label={label} suppressHydrationWarning>
-      <source src={`${folder}clip.webm`} type="video/webm" />
+      {/* Safari first: it also plays the WebM, but drops its alpha and draws a black box.
+          Chrome and Firefox play no QuickTime, so they skip to the WebM. */}
       <source src={`${folder}clip.mov`} type='video/quicktime; codecs="hvc1"' />
+      <source src={`${folder}clip.webm`} type="video/webm" />
     </video>
   )
 }

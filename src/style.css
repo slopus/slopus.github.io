@@ -378,6 +378,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content video[src="/video/updates/update.mp4"] { aspect-ratio: 1; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 /* A clip that plays on hover (src/HoverClip.tsx): drawn straight on the page, no frame. */
 .document-content video.hover-clip { aspect-ratio: 16 / 9; background: none; border: 0; border-radius: 0; box-shadow: none; display: block; margin: 1.4rem 0; width: 100%; }
+.document-content video.hover-clip[poster="/video/stem-cell/one/poster.png"] { aspect-ratio: 1358 / 830; margin-inline: auto; width: min(100%, 679px); }
+.document-content video.hover-clip[poster="/video/stem-cell/grow/poster.png"] { aspect-ratio: 534 / 472; margin-inline: auto; width: min(100%, 267px); }
 /* An image with a title: the title labels it. Two in one paragraph sit side by side. */
 .document-content .labelled-image { display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
 .document-content .labelled-image img { border: 1px solid #ddd6c8; border-radius: 12px; box-shadow: none; margin: 0; width: 100%; }

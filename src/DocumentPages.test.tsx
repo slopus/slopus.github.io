@@ -222,7 +222,7 @@ describe('static document pages', () => {
     expect(stemCell.container.querySelector('video[src="/video/stem-cell.mp4"]')).toBeNull()
     const clips = [...stemCell.container.querySelectorAll('.document-content video.hover-clip')]
     expect(clips.map((clip) => clip.getAttribute('poster'))).toEqual(['/video/stem-cell/one/poster.png', '/video/stem-cell/grow/poster.png'])
-    expect([...clips[0].querySelectorAll('source')].map((source) => source.getAttribute('src'))).toEqual(['/video/stem-cell/one/clip.webm', '/video/stem-cell/one/clip.mov'])
+    expect([...clips[0].querySelectorAll('source')].map((source) => source.getAttribute('src'))).toEqual(['/video/stem-cell/one/clip.mov', '/video/stem-cell/one/clip.webm'])
     expect(stemCell.container.querySelectorAll('.document-content blockquote.quote-card')).toHaveLength(3)
     expect(stemCell.container.querySelector('.quote-card-byline strong')?.textContent).toBe('Richard Wu')
     expect(stemCell.container.querySelector('.blog-download .one-download-actions')).not.toBeNull()

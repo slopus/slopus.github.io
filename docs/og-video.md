@@ -69,8 +69,10 @@ MP4 fast-start without re-encoding: `ffmpeg -i in.mp4 -c copy -movflags +faststa
 ## The fragments on the page
 
 The post plays captionless pieces of the promo in their sections instead (`src/HoverClip.tsx`).
-An image whose src is a folder, `![alt](/video/stem-cell/one/)`, is one: `clip.webm` (VP9 with
-alpha), `clip.mov` (HEVC with alpha, for Safari) and `poster.png`, its last frame. It rests on the
+An image whose src is a folder, `![alt](/video/stem-cell/one/)`, is one: `clip.mov` (HEVC with
+alpha, listed first for Safari, which plays WebM but drops its alpha into a black box), `clip.webm`
+(VP9 with alpha, for the rest) and `poster.png`, its last frame. Copy a .mov with `cp`: even an
+`ffmpeg -c copy` remux makes WebKit draw it blank. It rests on the
 poster, plays once when the reader hovers the clip or its section, holds its last frame, and plays
 again on the next hover; on a touch screen it plays when it scrolls into view.
 
