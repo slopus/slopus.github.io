@@ -203,7 +203,7 @@ describe('Agent Arena headline', () => {
     const board = fixture.arenaBoard
     expect(arenaGap(board, { rank: 1, effort: 'Max', score: 20 })).toBe('4.5 points ahead of #2 Fable (High) in real users’ agent sessions')
     expect(arenaGap(board, { rank: 4, effort: 'xHigh', score: 13.4 })).toBe('6.6 points behind #1 Alpha (Max) in real users’ agent sessions')
-    expect(arenaGap(benchmarkCatalog.arenaBoard, leaderOf(benchmarkCatalog)!.arena!)).toBe('6.2 points ahead of #2 GPT-6 Astra (Max) in real users’ agent sessions')
+    expect(arenaGap(benchmarkCatalog.arenaBoard, leaderOf(benchmarkCatalog)!.arena!)).toBe('6.8 points ahead of #2 Sonnet 5.5 (Max) in real users’ agent sessions')
   })
   it('shows rank, board, effort and gap on each card and explains the metric once', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)
