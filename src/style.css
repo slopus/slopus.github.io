@@ -266,6 +266,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .docs-sidebar { align-self: stretch; height: 100%; max-height: none; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 1.75rem 2px 3rem; position: static; }
   .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 1.75rem 0 0; position: relative; scrollbar-width: none; }
   .docs-shell .document-article::-webkit-scrollbar { width: 0; height: 0; }
+  /* The article reaches 24px into the gap before it, content unmoved, so a figure's shadow isn't cut at its left edge. */
+  .docs-shell .document-article { margin-left: -24px; padding-left: 24px; }
   .docs-shell .document-article > .legacy-notice,
   .docs-shell .document-article > .recipe-source { margin-right: 2rem; }
   .docs-shell .document-article > .document-content,
@@ -393,12 +395,10 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content .side-figure figcaption { color: #6b7f78; font-size: .78rem; line-height: 1.4; margin: 8px 0 .75rem; }
 .document-content .side-figure p { margin: 0; }
 .document-article[data-document="stem-cell"] .document-content h2 { clear: both; }
-/* A recording that loops while on screen (src/AutoplayClip.tsx): its background is the page's, so no frame;
-   its caption sits under it, left, like a side figure's. */
-.document-content video.autoplay-clip { aspect-ratio: 1; background: #f5f0e7; border: 0; border-radius: 0; box-shadow: none; display: block; margin: 1.4rem 0 0; }
-/* Chrome draws the recording's beige 2-3 levels lighter than the page; its outer 20px fade out, so no edge shows. */
-.document-content video.autoplay-clip { mask-composite: intersect; mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent), linear-gradient(to bottom, transparent, #000 20px, #000 calc(100% - 20px), transparent); }
-.document-content p:has(> video.autoplay-clip) + p:has(> em:only-child) { margin-top: -1.1rem; text-align: left; }
+/* A recording that loops while on screen (src/AutoplayClip.tsx): the app window alone, framed here like a
+   macOS window; its caption sits under it, left, like a side figure's. */
+.document-content video.autoplay-clip { aspect-ratio: 1; background: #fff; border: 0; border-radius: 10px; box-shadow: 0 0 0 .5px rgba(0, 0, 0, .18), 0 1px 2px rgba(0, 0, 0, .08), 0 8px 24px rgba(0, 0, 0, .12); display: block; margin: 1.4rem 0 .6rem; overflow: hidden; }
+.document-content p:has(> video.autoplay-clip) + p:has(> em:only-child) { margin-top: -.4rem; text-align: left; }
 @media (max-width: 640px) {
   .document-content .side-figure { gap: 1rem; grid-template-columns: minmax(0, 1fr); }
   .document-content .side-figure > img { margin-inline: auto; max-width: 280px; }
