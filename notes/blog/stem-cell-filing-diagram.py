@@ -1,14 +1,15 @@
-# Writes public/img/stem-cell-doors.svg, the before-and-after diagram on /stem-cell/: six ways
-# to start, each asking what the work is first, against one stem cell that finds out from what
-# you say. Hand-drawn primitives from notes/guides/workos-diagram.py; transparent, no frame.
-# Run from the repository root: python3 notes/blog/stem-cell-diagram.py
+# Writes public/img/stem-cell-filing.svg, the filing diagram on /stem-cell/: named rows wait right
+# below Happy; once you step away, Prioritizing moves each next to related work and adds a section
+# only where several rows share a subject no section fits. Hand-drawn primitives from
+# notes/guides/workos-diagram.py; transparent, no frame.
+# Run from the repository root: python3 notes/blog/stem-cell-filing-diagram.py
 import math
 import random
 
 random.seed(23)
 INK = "#183f38"; MUTED = "#6b7f78"; ACC = "#e6522c"
 SAND = "#f6eadf"; MINT = "#e3efe9"; PINK = "#f6d3e4"
-W, H = 520, 520
+W, H = 520, 470
 j = lambda a=1.2: random.uniform(-a, a)
 
 
@@ -58,35 +59,55 @@ def arrow(x1, y1, x2, y2, c=INK, w=1.6):
     return line(x1, y1, x2, y2, w, c, .6) + line(l[0], l[1], x2, y2, w, c, .2) + line(r[0], r[1], x2, y2, w, c, .2)
 
 
+
 o = []
 # Text is at least 18 units: about 12px when a phone shrinks this to 350px.
-# Before: six doors, each one a decision made before a word is said.
-o.append(text(8, 26, "Before: decide what it is, then start", 20, INK, 700))
-doors = ["New task", "New tab", "New chat", "New bot", "New document", "New todo list"]
-for i, label in enumerate(doors):
-    x, y = 8 + (i % 3) * 172, 50 + (i // 3) * 74
-    o.append(rect(x, y, 160, 52, 1.5, INK, SAND))
-    o.append(text(x + 80, y + 33, label, 18, INK, 400, "middle"))
-o.append(text(8, 222, "Each one is a kind of thing. You pick before", 18, MUTED))
-o.append(text(8, 248, "you have said a word about the work.", 18, MUTED))
+CLAY = ["#d9806b", "#8fb7a6", "#e3b35c", "#9aa7d6", "#c99ad0", "#7fa9c9", "#d6a07c"]
+LEFT, RIGHT = 8, 290
 
-o.append(line(8, 280, 512, 280, 1.2, MUTED, .4, "3 7"))
 
-# Now: one cell, a sentence, and the work becomes what it is.
-o.append(text(8, 320, "Now: start, then say what it is", 20, INK, 700))
-o.append(blob(52, 384, 30, INK, 1.6, PINK))
-o.append(blob(52, 384, 9, INK, 1.2, "#e9a2c2"))
-o.append(text(52, 440, "New", 18, MUTED, 700, "middle"))
-o.append(arrow(98, 384, 186, 384, INK))
-o.append(text(142, 366, "say it", 18, ACC, 700, "middle"))
-o.append(rect(198, 356, 314, 56, 1.5, INK, MINT))
-o.append(blob(228, 384, 15, INK, 1.4, "#d9806b"))
-o.append(text(254, 391, "PostHog alerts", 20, INK, 700))
-o.append(text(198, 440, "named, with an icon, filed later", 18, MUTED))
-o.append(text(8, 484, "One button and one input box. The work", 18, MUTED))
-o.append(text(8, 510, "takes its name, icon and place from you.", 18, MUTED))
+def section(x, y, label, c=INK):
+    return text(x, y, label, 18, c, 700)
+
+
+def row(x, y, label, k, moved=False):
+    out = [blob(x + 9, y - 6, 8, INK, 1.2, CLAY[k % len(CLAY)]), text(x + 26, y, label, 18, INK)]
+    if moved:
+        out.append(line(x - 10, y - 14, x - 10, y + 2, 2.4, ACC, .2))
+    return "\n".join(out)
+
+
+o.append(text(LEFT, 24, "New work lands here", 20, INK, 700))
+o.append(text(RIGHT, 24, "Once you step away", 20, INK, 700))
+
+# Before: four named rows waiting right below Happy, at its level, above the sections.
+o.append(row(LEFT, 70, "Happy", 1))
+for i, label in enumerate(["PostHog alerts", "Signup funnel", "Fix login bug", "Q4 board deck"]):
+    o.append(row(LEFT, 104 + i * 32, label, i + 2))
+o.append(section(LEFT, 256, "Engineering"))
+o.append(row(LEFT + 14, 288, "Auth refactor", 0))
+o.append(section(LEFT, 330, "Board"))
+o.append(row(LEFT + 14, 362, "Q3 board deck", 6))
+
+o.append(arrow(236, 200, 278, 200, ACC, 1.8))
+
+# After: each row beside related work; one new section for the two analytics rows.
+o.append(row(RIGHT, 70, "Happy", 1))
+o.append(section(RIGHT, 112, "Engineering"))
+o.append(row(RIGHT + 14, 144, "Auth refactor", 0))
+o.append(row(RIGHT + 14, 176, "Fix login bug", 4, True))
+o.append(section(RIGHT, 218, "Board"))
+o.append(row(RIGHT + 14, 250, "Q3 board deck", 6))
+o.append(row(RIGHT + 14, 282, "Q4 board deck", 5, True))
+o.append(section(RIGHT, 324, "Analytics"))
+o.append(text(RIGHT + 96, 324, "new", 18, ACC, 700))
+o.append(row(RIGHT + 14, 356, "PostHog alerts", 2, True))
+o.append(row(RIGHT + 14, 388, "Signup funnel", 3, True))
+
+o.append(line(8, 418, 512, 418, 1.2, MUTED, .4, "3 7"))
+o.append(text(8, 448, "A new section only when rows share a subject", 18, MUTED))
 
 svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
        "font-family=\"'Shantell Sans', 'Comic Sans MS', 'Chalkboard SE', 'Segoe Print', cursive\" role=\"img\">\n"
        + "\n".join(o) + "\n</svg>\n")
-open("public/img/stem-cell-doors.svg", "w").write(svg)
+open("public/img/stem-cell-filing.svg", "w").write(svg)
