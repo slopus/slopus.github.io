@@ -270,7 +270,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .document-article > .recipe-source { margin-right: 2rem; }
   .docs-shell .document-article > .document-content,
   .docs-shell .document-article > .document-pagination { max-width: 760px; padding-right: 2rem; }
-  /* The same column as the prose, its rule ending where theirs do. */
+  /* The prose column, so the download options centre on it. */
   .docs-shell .document-article > .blog-download { margin-right: 2rem; max-width: calc(760px - 2rem); }
   .docs-shell .site-footer { margin-top: 4.5rem; }
   .docs-shell .site-footer .footer-inner { margin: 0; max-width: none; padding: 0 3rem 0 2.5rem; width: auto; }
@@ -305,7 +305,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content { color: #294c45; font-size: 1rem; line-height: 1.75; }
 .document-content h1, .document-content h2, .document-content h3 { color: #183f38; font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-weight: 600; letter-spacing: -.025em; text-wrap: balance; }
 .document-content h1[id], .document-content h2[id], .document-content h3[id] { scroll-margin-top: 2rem; }
-.document-content h1 { font-size: clamp(2.7rem, 5vw, 4.35rem); line-height: 1.02; margin: 0 0 2rem; }
+/* A page's title is set like its section headings, so the page starts reading straight away. */
+.document-content h1 { font-size: clamp(1.75rem, 3vw, 2.25rem); line-height: 1.15; margin: 0 0 1.2rem; }
 .document-content h2 { border-top: 1px solid #ddd6c8; font-size: clamp(1.75rem, 3vw, 2.25rem); line-height: 1.15; margin: 4rem 0 1.2rem; padding-top: 2.2rem; }
 .document-content h3 { font-size: 1.3rem; line-height: 1.25; margin: 2.4rem 0 .8rem; }
 .document-content .heading-anchor { color: #e6522c; font-size: .7em; margin-left: .35em; opacity: 0; text-decoration: none; }
@@ -402,20 +403,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .document-content p:has(> video.autoplay-clip) + p:has(> em:only-child) { text-align: center; }
   .document-content p:has(> .labelled-image) { grid-template-columns: 1fr; max-width: 320px; }
 }
-/* Every Blog post ends on the homepage's download options: a card exactly as wide as the prose column,
-   its contents centred, the Mac download and its Homebrew command on one row past phone width. */
-.blog-download { background: #fffdf8; border: 1px solid #ddd6c8; border-radius: 16px; margin-top: 4rem; padding: 2rem 2rem 2.2rem; text-align: center; }
-.blog-download h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); margin-bottom: .5rem; }
-.blog-download .one-download-actions { margin-inline: auto; width: 100%; }
-@media (min-width: 641px) {
-  .blog-download .one-desktop-downloads { align-items: flex-start; column-gap: 1rem; flex-flow: row wrap; justify-content: center; }
-  .blog-download .one-desktop-downloads > :is(.one-smartscreen, .one-platform-links) { flex-basis: 100%; }
-  .blog-download .one-brew-command { margin-top: 0; }
-}
-@media (max-width: 480px) {
-  /* Narrow sides, so the Homebrew command fits without scrolling. */
-  .blog-download { padding: 1.5rem .75rem 1.75rem; }
-}
+/* Every Blog post ends on the homepage's download section, drawn exactly as there (src/happy-one.css);
+   only its column is the prose's. */
 /* An official X or Reddit embed (src/SocialEmbed.tsx), centred; until its script runs, the post's
    text as a plain card. */
 .document-content .social-embed { clear: both; display: flex; justify-content: center; margin: 1.4rem 0; }
@@ -606,12 +595,9 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .document-article > * { min-width: 0; }
   .docs-shell .document-pagination { margin-bottom: 4rem; }
   .docs-shell .site-footer { margin: auto calc(50% - 50vw) 0; }
-  .document-content h1 { font-size: clamp(2.45rem, 12vw, 3.6rem); }
   /* The sticky header covers the top 53px of a phone screen; land anchors below it. */
   .document-content h1[id], .document-content h2[id], .document-content h3[id] { scroll-margin-top: 72px; }
   .document-content pre { font-size: 13px; line-height: 1.65; padding: 16px; }
-  /* The remote server guide's first screen: the setup is long, so its title stays short. */
-  [data-document="guides/remote-server"] .document-content h1 { font-size: 32px; line-height: 1.1; margin-bottom: 24px; }
   .document-content h2 { margin-top: 3.2rem; }
   .legal-layout { padding-bottom: 5rem; padding-top: 2rem; }
   .document-back-link { margin-bottom: 2rem; }

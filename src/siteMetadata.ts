@@ -26,7 +26,7 @@ export const defaultSocialImage = {
  * X, Slack and iMessage cache a preview by its image URL. Bump this after redrawing the
  * cards, so links shared before show the new ones.
  */
-export const SOCIAL_IMAGE_VERSION = 3
+export const SOCIAL_IMAGE_VERSION = 4
 
 /** The absolute og:image and twitter:image URL of a card, with its cache-busting version. */
 export function socialImageUrl(image: Readonly<{ path: string }>) {

@@ -213,15 +213,17 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
   )
 }
 
-/** Every Blog post ends on the homepage's download options. */
+/** Every Blog post ends on the homepage's download section, inside the homepage's scope so it looks the same. */
 function BlogDownload() {
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   return (
-    <section className="one-download blog-download" aria-labelledby="blog-download-heading">
-      <h2 id="blog-download-heading">Download Happy.</h2>
-      <p>Free and open source</p>
-      <DownloadOptions macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
-    </section>
+    <div className="happy-one blog-download">
+      <section className="one-download" aria-labelledby="blog-download-heading">
+        <h2 id="blog-download-heading">Download Happy.</h2>
+        <p>Free and open source</p>
+        <DownloadOptions macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
+      </section>
+    </div>
   )
 }
 
