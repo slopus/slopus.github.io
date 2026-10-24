@@ -9,7 +9,7 @@ import { Router } from './Router'
 export { documentHeading, documents } from './documents'
 export { documentHref, HAPPY, HAPPY_DESKTOP } from './products'
 export { metadataForPath } from './Router'
-export { defaultSocialImage, socialImageUrl } from './siteMetadata'
+export { defaultSocialImage, socialImageUrl, socialVideoTags } from './siteMetadata'
 
 /**
  * Pages whose full text must be in the served HTML, not only after the app

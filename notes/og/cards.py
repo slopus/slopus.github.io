@@ -73,7 +73,7 @@ def desktop_documents():
         const markup = m.renderPath(href)
         const article = markup.slice(markup.indexOf('<article'), markup.indexOf('</article>'))
         const figures = [...article.matchAll(/<img [^>]*?src="([^"]+)"[^>]*?alt="([^"]*)"/g)].map(([, src, alt]) => ({ src, alt }))
-        return { href, heading: m.documentHeading(d), description: d.description, cardLine: d.cardLine, card: m.metadataForPath(href).socialImage?.path, figures }
+        return { href, heading: m.documentHeading(d), description: d.description, cardLine: d.cardLine, card: m.metadataForPath(href).socialImage?.path, video: !!d.video, figures }
       })
       console.log(JSON.stringify(pages))
     """
@@ -214,6 +214,10 @@ def main():
     only = set(sys.argv[1:])
     fetch_fonts()
     pages = [p for p in desktop_documents() if not only or p["card"].split("/")[-1][:-4] in only]
+    # A post with a video previews as the video; its card is the video's first frame, not drawn here.
+    for p in [p for p in pages if p["video"]]:
+        print(f"{p['href']:40} -> skipped: its card is its video's first frame (docs/og-video.md)")
+    pages = [p for p in pages if not p["video"]]
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(executable_path=os.environ.get("CHROMIUM") or None)
         page = browser.new_page(viewport={"width": W, "height": H}, device_scale_factor=2)

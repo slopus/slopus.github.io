@@ -9,6 +9,8 @@ export interface PageMetadata {
   twitterDescription?: string
   robots?: string
   socialImage?: Readonly<{ path: string; width: number; height: number; alt: string }>
+  /** An MP4 that iMessage, Discord and Telegram play in the link preview, over socialImage as its poster. */
+  socialVideo?: Readonly<{ path: string; width: number; height: number }>
 }
 
 /**
@@ -33,13 +35,39 @@ export function socialImageUrl(image: Readonly<{ path: string }>) {
 
 /**
  * A desktop doc's own card: its title beside its figure, at /og/<path with dashes>.png.
- * notes/og/cards.py draws them; the build fails if one is missing.
+ * notes/og/cards.py draws them; the build fails if one is missing. A post with a video
+ * has the video's first frame there instead, 1200 wide at the video's aspect ratio.
  */
-export function documentSocialImage(path: string, heading: string): NonNullable<PageMetadata['socialImage']> {
+export function documentSocialImage(
+  path: string,
+  heading: string,
+  video?: PageMetadata['socialVideo'],
+): NonNullable<PageMetadata['socialImage']> {
   return {
-    path: `/og/${path.replace(/\//g, '-')}.png`, width: 1200, height: 630,
+    path: `/og/${path.replace(/\//g, '-')}.png`, width: 1200,
+    height: video ? Math.round((1200 * video.height) / video.width) : 630,
     alt: `${heading} — Happy Engineering`,
   }
+}
+
+/** A video's absolute URL. Previews fetch it by its path, so a new cut gets a new file name. */
+export function socialVideoUrl(video: Readonly<{ path: string }>) {
+  return `https://happy.engineering${video.path}`
+}
+
+/**
+ * The og:video tags, after og:image: iMessage downloads and loops the file, and Discord plays it
+ * because og:type is video.other. Served as MP4 over HTTPS; see docs/og-video.md.
+ */
+export function socialVideoTags(video: NonNullable<PageMetadata['socialVideo']>): [string, string][] {
+  const url = socialVideoUrl(video)
+  return [
+    ['og:video', url],
+    ['og:video:secure_url', url],
+    ['og:video:type', 'video/mp4'],
+    ['og:video:width', String(video.width)],
+    ['og:video:height', String(video.height)],
+  ]
 }
 
 /**
@@ -152,4 +180,16 @@ export function applyPageMetadata(metadata: PageMetadata) {
     'meta[name="twitter:description"]',
     metadata.twitterDescription ?? socialDescription,
   )
+  // The served HTML has the video tags only on a page with a video; keep the head matching it.
+  setMetaContent('meta[property="og:type"]', metadata.socialVideo ? 'video.other' : 'website')
+  document.querySelectorAll('meta[property^="og:video"]').forEach((tag) => tag.remove())
+  let previous = document.querySelector('meta[property="og:image:alt"]')
+  for (const [property, content] of metadata.socialVideo ? socialVideoTags(metadata.socialVideo) : []) {
+    const tag = document.createElement('meta')
+    tag.setAttribute('property', property)
+    tag.setAttribute('content', content)
+    if (previous) previous.after(tag)
+    else document.head.append(tag)
+    previous = tag
+  }
 }

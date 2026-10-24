@@ -100,7 +100,7 @@ function documentForPath(normalizedPath: string): { product: Product; path: stri
 /** A desktop doc's own link preview. The original CLI docs keep the default one. */
 function desktopDocumentCard(path: string) {
   const document = getDocument(HAPPY_DESKTOP.key, path)
-  return document && documentSocialImage(document.path, documentHeading(document))
+  return document && documentSocialImage(document.path, documentHeading(document), document.video)
 }
 
 export function metadataForPath(pathname: string): PageMetadata {
@@ -157,6 +157,7 @@ export function metadataForPath(pathname: string): PageMetadata {
       // An unlisted page stays reachable, but out of search results.
       robots: document.hidden ? 'noindex, follow' : undefined,
       socialImage,
+      socialVideo: located.product === HAPPY_DESKTOP ? document.video : undefined,
     }
   }
 

@@ -29,6 +29,11 @@ export interface DocumentEntry {
    * words, benefit first, no closing period. Required on a page without a figure (notes/og/cards.py).
    */
   cardLine?: string
+  /**
+   * A post whose link preview plays a video: an H.264 MP4 under public/, at its pixel size. Its
+   * card is the video's first frame, /og/<path>.png, 1200 wide at the video's aspect ratio.
+   */
+  video?: Readonly<{ path: string; width: number; height: number }>
 }
 
 const documentSources = import.meta.glob(
@@ -555,6 +560,15 @@ const desktopDocuments: DocumentDefinition[] = [
     pageTitle: 'Updates That Pick Up Where They Left Off — Happy',
     description: 'Update Happy Agent mid-turn: the running step finishes and is saved, the new version starts, and the same turn continues. The window never reloads.',
     group: 'Blog',
+  },
+  {
+    path: 'stem-cell',
+    sourcePath: '/content/desktop/stem-cell.mdx',
+    title: 'Stem Cells',
+    pageTitle: 'New Work Starts as a Stem Cell — Happy',
+    description: 'New work in Happy Desktop starts as one stem cell. Say what it is, and it names itself and grows into one of 136 clay icons.',
+    group: 'Blog',
+    video: { path: '/video/stem-cell.mp4', width: 1280, height: 720 },
   },
 ]
 

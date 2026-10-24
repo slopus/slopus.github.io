@@ -32,7 +32,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(43)
+    expect(documentsForProduct('desktop')).toHaveLength(44)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -206,15 +206,24 @@ describe('static document pages', () => {
 
     const updates = render(<Router pathname="/updates/" />)
     expect(screen.getByRole('heading', { level: 1, name: /updates that pick up where they left off/i })).toBeTruthy()
-    expect(screen.getByRole('link', { name: /^next/i }).getAttribute('href')).toBe('/desktop-app/')
+    expect(screen.getByRole('link', { name: /^next/i }).getAttribute('href')).toBe('/stem-cell/')
     const video = updates.container.querySelector('.document-content video')
     expect(video?.getAttribute('src')).toBe('/video/updates/update.mp4')
     expect(video?.getAttribute('poster')).toBe('/video/updates/update-poster.webp')
     expect(updates.container.querySelector('.document-content img[src="/img/updates.svg"]')).not.toBeNull()
     expect(updates.container.querySelector('.document-content img[src="/img/updates-drain.svg"]')).not.toBeNull()
+    updates.unmount()
+
+    // Its link preview plays the same video (src/siteMetadata.test.ts).
+    const stemCell = render(<Router pathname="/stem-cell/" />)
+    expect(screen.getByRole('heading', { level: 1, name: /new work starts as a stem cell/i })).toBeTruthy()
+    expect(screen.getByRole('link', { name: /^next/i }).getAttribute('href')).toBe('/desktop-app/')
+    const growth = stemCell.container.querySelector('.document-content video')
+    expect(growth?.getAttribute('src')).toBe('/video/stem-cell.mp4')
+    expect(growth?.getAttribute('poster')).toBe('/video/stem-cell-poster.webp')
     for (const document of documents.filter((entry) => entry.group === 'Blog')) {
       expect(document.product).toBe('desktop')
-      expect(['workos', 'tailcat', 'voice', 'updates']).toContain(document.path)
+      expect(['workos', 'tailcat', 'voice', 'updates', 'stem-cell']).toContain(document.path)
       expect(document.pageTitle?.length).toBeLessThanOrEqual(65)
       expect(document.description.length).toBeLessThanOrEqual(155)
       // No narration: nothing on the page points at the diagram's files or announces what follows.
@@ -417,7 +426,7 @@ describe('static document pages', () => {
     const groups = [...sidebar.querySelectorAll('.docs-nav-group > h2, .docs-nav-fold > summary')]
     expect(groups.map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Blog', 'Comparisons', 'Recipes (for agents)'])
     const posts = within(groups.find((heading) => heading.textContent === 'Blog')!.closest('section')!).getAllByRole('link').map((link) => link.getAttribute('href'))
-    expect(posts).toEqual(['/workos/', '/tailcat/', '/voice/', '/updates/'])
+    expect(posts).toEqual(['/workos/', '/tailcat/', '/voice/', '/updates/', '/stem-cell/'])
     expect(screen.getByRole('heading', { level: 1, name: /team sign-in with workos/i })).toBeTruthy()
     // Server markup: the landing pages' effects need browser APIs jsdom lacks.
     const header = renderPath('/welcome/').match(/<nav[^>]*aria-label="Primary navigation"[\s\S]*?<\/nav>/)?.[0]

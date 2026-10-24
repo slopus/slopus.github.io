@@ -114,6 +114,7 @@
 /recipes/upgrade/
 /recipes/wsl/
 /secrets/
+/stem-cell/
 /tailcat/
 /team-sign-in-workos/
 /team/

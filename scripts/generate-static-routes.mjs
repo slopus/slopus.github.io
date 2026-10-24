@@ -27,6 +27,7 @@ const {
   prerenderedPaths,
   renderPath,
   socialImageUrl,
+  socialVideoTags,
 } = await import(pathToFileURL(path.join(projectRoot, 'dist-ssr', 'prerender.js')).href)
 
 // routes.txt is the committed record of every URL this site has ever served; see the check at the end.
@@ -59,6 +60,7 @@ function htmlForPage({
   twitterDescription = socialDescription,
   robots = 'index, follow',
   socialImage,
+  socialVideo,
 }) {
   const canonicalUrl = new URL(canonicalPath, siteUrl).toString()
   let html = baseHtml
@@ -84,6 +86,13 @@ function htmlForPage({
     html = replaceMeta(html, 'property', 'og:image:alt', socialImage.alt)
     html = replaceMeta(html, 'name', 'twitter:image', imageUrl)
     html = replaceMeta(html, 'name', 'twitter:image:alt', socialImage.alt)
+  }
+  // A page with a video plays it in iMessage, Discord and Telegram previews; see docs/og-video.md.
+  if (socialVideo) {
+    html = replaceMeta(html, 'property', 'og:type', 'video.other')
+    const tags = socialVideoTags(socialVideo).map(([property, content]) => `<meta property="${property}" content="${escapeHtml(content)}" />`)
+    html = html.replace(/( *)(<meta property="og:image:alt"[^>]*\/>)/, (_line, indent, tag) => [tag, ...tags].map((line) => `${indent}${line}`).join('\n'))
+    if (!html.includes('<meta property="og:video" ')) throw new Error('index.html has no one-line og:image:alt tag to put og:video after.')
   }
   return html
 }
@@ -166,7 +175,8 @@ function metaContent(html, attribute, name) {
 }
 
 // Link previews: every desktop doc shows its own 1200x630 card, public/og/<path with
-// dashes>.png, drawn by notes/og/cards.py; the original CLI docs keep the homepage's.
+// dashes>.png, drawn by notes/og/cards.py; the original CLI docs keep the homepage's. A post
+// with a video (src/documents.ts) has the video's first frame there, at the video's aspect ratio.
 // Every image URL carries ?v=SOCIAL_IMAGE_VERSION (src/siteMetadata.ts), so previews refetch.
 const homepageSocialImage = socialImageUrl(defaultSocialImage)
 for (const tag of ['property="og:image"', 'name="twitter:image"']) {
@@ -178,6 +188,8 @@ for (const tag of ['property="og:image"', 'name="twitter:image"']) {
 async function assertSocialCard(route, html, document) {
   const desktop = document.product === HAPPY_DESKTOP.key
   const expected = desktop ? socialImageUrl({ path: `/og/${document.path.replaceAll('/', '-')}.png` }) : homepageSocialImage
+  // A post with a video: its card is the video's first frame, at the video's aspect ratio.
+  const cardHeight = String(metadataForPath(route).socialImage?.height ?? 630)
   const tags = {
     'og:image': metaContent(html, 'property', 'og:image'),
     'twitter:image': metaContent(html, 'name', 'twitter:image'),
@@ -192,7 +204,7 @@ async function assertSocialCard(route, html, document) {
     'twitter:card': 'summary_large_image',
     'og:url': new URL(route, siteUrl).toString(),
     'og:image:width': '1200',
-    'og:image:height': '630',
+    'og:image:height': cardHeight,
   }
   for (const [tag, value] of Object.entries(wanted)) {
     if (tags[tag] !== value) {
@@ -206,7 +218,41 @@ async function assertSocialCard(route, html, document) {
     const png = await readFile(path.join(distRoot, new URL(expected).pathname)).catch(() => null)
     if (!png) throw new Error(`${route} has no card at public${new URL(expected).pathname}; run python3 notes/og/cards.py`)
     const size = png.toString('latin1', 1, 4) === 'PNG' ? `${png.readUInt32BE(16)}x${png.readUInt32BE(20)}` : 'not a PNG'
-    if (size !== '1200x630') throw new Error(`public${new URL(expected).pathname} should be a 1200x630 PNG, not ${size}`)
+    if (size !== `1200x${cardHeight}`) throw new Error(`public${new URL(expected).pathname} should be a 1200x${cardHeight} PNG, not ${size}`)
+    if (document.video) await assertSocialVideo(route, html, document.video, png.length)
+  }
+}
+
+// iMessage downloads og:video and loops it in the bubble; Discord plays it inline. Both need a
+// direct MP4 over HTTPS, and iMessage drops a preview whose files pass 10 MB together. H.264
+// plays everywhere; moov before mdat lets a player start before the download finishes.
+async function assertSocialVideo(route, html, video, cardBytes) {
+  const url = new URL(video.path, siteUrl).toString()
+  if (metaContent(html, 'property', 'og:video') !== url || metaContent(html, 'property', 'og:video:secure_url') !== url) {
+    throw new Error(`${route} should have og:video and og:video:secure_url ${url}`)
+  }
+  if (metaContent(html, 'property', 'og:type') !== 'video.other' || metaContent(html, 'property', 'og:video:type') !== 'video/mp4') {
+    throw new Error(`${route} should have og:type video.other and og:video:type video/mp4`)
+  }
+  const mp4 = await readFile(path.join(distRoot, video.path)).catch(() => null)
+  if (!mp4) throw new Error(`${route} has no video at public${video.path}`)
+  const box = (name) => mp4.indexOf(name, 0, 'latin1')
+  if (box('avc1') < 0) throw new Error(`public${video.path} should be H.264 (avc1)`)
+  if (box('moov') < 0 || box('moov') > box('mdat')) {
+    throw new Error(`public${video.path} should have moov before mdat: re-encode it with ffmpeg -movflags +faststart`)
+  }
+  // The first track header with a size: its last 8 bytes are the width and height, 16.16 fixed point.
+  let size = ''
+  for (let at = box('tkhd'); at > 0 && !size; at = mp4.indexOf('tkhd', at + 4, 'latin1')) {
+    const end = at - 4 + mp4.readUInt32BE(at - 4)
+    const [width, height] = [mp4.readUInt32BE(end - 8) >>> 16, mp4.readUInt32BE(end - 4) >>> 16]
+    if (width && height) size = `${width}x${height}`
+  }
+  if (size !== `${video.width}x${video.height}`) {
+    throw new Error(`public${video.path} is ${size || 'unreadable'}, but src/documents.ts says ${video.width}x${video.height}`)
+  }
+  if (mp4.length + cardBytes > 10 * 1024 * 1024) {
+    throw new Error(`public${video.path} and its card pass the 10 MB iMessage loads for one preview`)
   }
 }
 
