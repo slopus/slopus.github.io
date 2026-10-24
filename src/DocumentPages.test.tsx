@@ -220,7 +220,7 @@ describe('static document pages', () => {
     expect(screen.getByRole('heading', { level: 1, name: /sure, gpt, i need another 10 different buttons/i })).toBeTruthy()
     expect(screen.getByRole('link', { name: /^next/i }).getAttribute('href')).toBe('/desktop-app/')
     const videos = [...stemCell.container.querySelectorAll('.document-content video')]
-    expect(videos.map((video) => [video.className, video.getAttribute('src'), video.getAttribute('poster')])).toEqual(['one', 'next'].map((clip) => ['autoplay-clip', `/video/stem-cell/${clip}/clip.mp4`, `/video/stem-cell/${clip}/poster.webp`]))
+    expect(videos.map((video) => [video.className, video.getAttribute('src'), video.getAttribute('poster')])).toEqual([['autoplay-clip', '/video/stem-cell/app/clip.mp4', '/video/stem-cell/app/poster.webp']])
     expect(stemCell.container.querySelector('.side-figure > img')?.getAttribute('src')).toBe('/img/stem-cell-create-menu.webp')
     expect(stemCell.container.querySelector('.side-figure figcaption')?.textContent).toBe('The Create menu in Codex.')
     expect(stemCell.container.querySelector('.side-figure p')?.textContent).toMatch(/^Ten ways to start/)
@@ -230,6 +230,7 @@ describe('static document pages', () => {
     const reddit = stemCell.container.querySelector('.social-embed-reddit blockquote.reddit-embed-bq')
     expect(reddit?.textContent).toContain('managing my conversations has become an absolute nightmare')
     expect(reddit?.closest('.document-content > *')?.previousElementSibling?.textContent).toBe('If this sounds like you:')
+    expect(stemCell.container.querySelector('.document-content img.row-image')?.getAttribute('src')).toBe('/img/stem-cell-new-row.png')
     expect(stemCell.container.querySelector('.blog-download .one-download-actions')).not.toBeNull()
     for (const document of documents.filter((entry) => entry.group === 'Blog')) {
       expect(document.product).toBe('desktop')
