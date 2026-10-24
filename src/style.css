@@ -379,9 +379,10 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content video[src="/video/stem-cell.mp4"] { aspect-ratio: 16 / 9; display: block; margin: 1.6rem 0; }
 .document-content video[src="/video/stem-cell-meme.mp4"] { aspect-ratio: 600 / 874; display: block; margin: 1.6rem auto; width: min(100%, 300px); }
 .document-content img[src="/img/stem-cell-doors.svg"] { aspect-ratio: 520 / 520; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
-/* A line in italics right under a video is its caption, such as a credit; it may hold links, which an essay figcaption can't. */
-.document-content p:has(> video) + p:has(> em:only-child) { color: #6b7f78; font-size: .78rem; line-height: 1.4; margin-top: -1rem; text-align: center; }
-.document-content p:has(> video) + p > em:only-child { font-style: normal; }
+.document-content img[src="/img/stem-cell-create-menu.webp"] { aspect-ratio: 670 / 852; border: 0; border-radius: 14px; box-shadow: 0 18px 40px -26px rgba(24, 63, 56, .55); display: block; margin: 1.6rem auto; width: min(100%, 335px); }
+/* A line in italics right under a video or an image is its caption, such as a credit; it may hold links, which an essay figcaption can't. */
+.document-content p:has(> video, > img) + p:has(> em:only-child) { color: #6b7f78; font-size: .78rem; line-height: 1.4; margin-top: -1rem; text-align: center; }
+.document-content p:has(> video, > img) + p > em:only-child { font-style: normal; }
 .document-content hr { border: 0; border-top: 1px solid #d9d3c5; margin: 3rem 0; }
 .document-table-wrap { border: 1px solid #d5cebf; border-radius: 10px; margin: 1.6rem 0; overflow-x: auto; }
 .document-content table { border-collapse: collapse; font-size: .82rem; line-height: 1.45; min-width: 620px; width: 100%; }
