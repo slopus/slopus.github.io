@@ -3,7 +3,7 @@
 The link-preview video for `/stem-cell/` and the meme clip in the post, with everything needed to
 render them again frame for frame.
 
-The shipped link-preview cut is v14 (9 s, 1280 × 720), rendered from this `stage.html`.
+The shipped link-preview cut is v17 (25 s, 1280 × 720), rendered from this `stage.html`.
 
 - `stage.html`: the promo (960 × 540, rendered at 2× for 1080p). `renderAt(t)` draws any moment
   deterministically; nothing depends on wall-clock time.
@@ -22,7 +22,7 @@ Needs Node 22+, ffmpeg, and `playwright-core` with its Chromium. Use a machine w
 stem cell is the shipped WebGL2 shader, and Chromium runs it on ANGLE Metal on a Mac.
 
 ```sh
-# The promo: out/stem-cell-1080p.mp4, out/stem-cell-720p.mp4 (the og:video), out/poster.png (1.4 s)
+# The promo: out/stem-cell-1080p.mp4, out/stem-cell-720p.mp4 (the og:video), out/poster.png (POSTER_T; the shipped card uses 3.8 s)
 PLAYWRIGHT_CORE=/path/to/playwright-core/index.mjs node record.mjs video out
 
 # Review stills at chosen moments, in seconds
@@ -81,7 +81,7 @@ model tried. The cell growth is the shipped engine at the shipped 2.5 s.
 - **og:video** plays inline in iMessage (muted, looping, from a direct MP4) and Discord (needs
   `og:type` `video.*`); Telegram reportedly too. Slack, WhatsApp, LinkedIn and Facebook show
   `og:image`; X never plays it, so on X attach the MP4 to the post and put the link in the text.
-  The card is the 1.4 s frame, where the first line and every button are on screen.
+  The card is the 3.8 s frame, where the headline and every button are on screen.
 - **The meme** (Two Buttons, Jake Clark) moved to the post: in the promo it competed with the
   story. It is cropped above the artist's signature, and the post credits him under the clip.
 - **Otter.** Real footage: Pexels 2554576, "An Otter Swimming" by Magda Ehlers (Pexels License),

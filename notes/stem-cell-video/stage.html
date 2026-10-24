@@ -19,15 +19,6 @@ body { font-family: "Figtree", system-ui, sans-serif; color: #18171c; -webkit-fo
 }
 .caption em { font-style: normal; color: #d65f9c; }
 
-/* The last word, alone on the page, held long enough to read twice. */
-#quote {
-    position: absolute; left: 0; width: 960px; top: 128px; text-align: center;
-    font-size: 56px; font-weight: 760; letter-spacing: -0.035em; line-height: 66px; white-space: nowrap;
-}
-#quote div { position: relative; }
-#quote em { font-style: normal; color: #d65f9c; }
-#quote .last { margin-top: 26px; }
-
 /* Create affordances, drawn like the desktop's secondary buttons, at promo scale. */
 .btn {
     position: absolute; height: 58px; box-sizing: border-box; overflow: hidden;
@@ -90,6 +81,10 @@ body { font-family: "Figtree", system-ui, sans-serif; color: #18171c; -webkit-fo
     font-size: 17px; font-weight: 700; letter-spacing: 0.14em; color: #625d67;
 }
 .faded .t { color: #18171c; }
+/* The sidebar around the row, faded out toward the caption above and the bottom edge below. */
+.context { position: absolute; inset: 0; }
+#above { -webkit-mask-image: linear-gradient(to bottom, transparent 128px, #000 200px); mask-image: linear-gradient(to bottom, transparent 128px, #000 200px); }
+#below { -webkit-mask-image: linear-gradient(to bottom, #000 436px, transparent 528px); mask-image: linear-gradient(to bottom, #000 436px, transparent 528px); }
 
 #composer {
     position: absolute; width: 548px; height: 70px; box-sizing: border-box;
@@ -119,7 +114,7 @@ body { font-family: "Figtree", system-ui, sans-serif; color: #18171c; -webkit-fo
     </filter>
 </svg>
 <div id="stage">
-    <div class="caption" id="cap-many">Too many ways to start</div>
+    <div class="caption" id="cap-many">AI assistants have <em>too many ways to start</em></div>
     <div class="caption" id="cap-one">What if there was <em>one</em>?</div>
     <div class="caption" id="cap-mode">Enter <em>Stem Cell Mode</em></div>
     <div class="caption" id="cap-say">Just start</div>
@@ -127,12 +122,6 @@ body { font-family: "Figtree", system-ui, sans-serif; color: #18171c; -webkit-fo
     <div class="caption" id="cap-repo">Finds the right repository to work in</div>
     <div class="caption" id="cap-people">Loops in the people who need to know</div>
     <div class="caption" id="cap-org">And self-organizes in your sidebar</div>
-    <div id="quote">
-        <div>Your interface needs</div>
-        <div><em>one</em> button to start work</div>
-        <div>and <em>one</em> input box.</div>
-        <div class="last">That’s it.</div>
-    </div>
 
     <div id="buttons"></div>
     <div class="goo" id="goo-edge"></div>
@@ -141,10 +130,16 @@ body { font-family: "Figtree", system-ui, sans-serif; color: #18171c; -webkit-fo
 
     <!-- The sidebar it settles into. -->
     <div id="sections">
-        <div class="section" id="sec-eng">ENGINEERING</div>
-        <div class="row top faded" id="eng-1"><img class="mark" src="assets/refactor@64.png" alt="" /><span class="t">Auth refactor</span></div>
-        <div class="row top faded" id="eng-2"><img class="mark" src="assets/login@64.png" alt="" /><span class="t">Fix login bug</span></div>
+        <div class="context" id="above">
+            <div class="section" id="sec-eng">ENGINEERING</div>
+            <div class="row top faded" id="eng-1"><img class="mark" src="assets/refactor@64.png" alt="" /><span class="t">Auth refactor</span></div>
+            <div class="row top faded" id="eng-2"><img class="mark" src="assets/login@64.png" alt="" /><span class="t">Fix login bug</span></div>
+        </div>
         <div class="section" id="sec-analytics">ANALYTICS</div>
+        <div class="context" id="below">
+            <div class="row top faded" id="ana-1"><img class="mark" src="assets/trend-up@64.png" alt="" /><span class="t">Signup funnel</span></div>
+            <div class="row top faded" id="ana-2"><img class="mark" src="assets/presentation-report@64.png" alt="" /><span class="t">Weekly metrics</span></div>
+        </div>
     </div>
     <div id="group">
         <div id="highlight"></div>
@@ -216,13 +211,15 @@ const MEMBRANE = 0.62 * HERO_CSS;   // about the waiting cell's diameter
 const CREATE_Y = 401;               // Create, then the input box it opens into, under the cell
 const COMPOSER_W = 548, COMPOSER_H = 70;
 
-// The sidebar, in its settled place. Until it organizes itself the group sits LIFT higher.
+// The sidebar row. The group stays centred under the caption: the row starts at CENTRE and rises half a
+// row as each child inserts under it, so with both it sits at ROW_F.
 const ICON = 52;
 const LEFT = 290;                   // the icon lane's left edge
-const ROW = 350;                    // the row's centre line
+const CENTRE = 322;                 // midway between the caption and the bottom edge
+const ROW = CENTRE;                 // the row's centre line, alone
 const PITCH = 56;                   // child rows
-const LIFT = 10;
-const ICON_C = { x: LEFT + ICON / 2, y: ROW - LIFT };
+const ROW_F = ROW - PITCH;          // with both children
+const ICON_C = { x: LEFT + ICON / 2, y: ROW };
 
 const $ = (id) => document.getElementById(id);
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
@@ -253,23 +250,32 @@ function typing(text, at, seed, base, spread, pause) {
 }
 
 // Timeline, in seconds: one step per caption, each with time to read it and to watch it happen.
-// stage.html?cut=short is the preview: the wall, the gather into the cell, "+ Create" under it, and a long
-// held last frame. Nothing after happens, and it does not loop back.
-const SHORT = new URLSearchParams(location.search).get("cut") === "short";
-const NEVER = [1e6, 1e6 + 1];
 const T = {};
-T.cascade = 0.15;                           // "Too many ways to start" is there from the first frame
-T.manyOut = [1.8, 2.05];
+// The wall builds up faster and faster: New chat, New project and New task one at a time, then the
+// rest with the gaps shrinking geometrically to 40 ms.
+T.appear = [0.3];
+{
+    const gaps = [0.5, 0.4, 0.3];
+    const first = 0.18, last = 0.04, n = BUTTONS.flat().length - 1 - gaps.length;
+    const r = Math.pow(last / first, 1 / (n - 1));
+    for (let i = 0; i < n; i++) gaps.push(first * Math.pow(r, i));
+    for (const gap of gaps) T.appear.push(T.appear.at(-1) + gap);
+}
+T.wall = T.appear.at(-1) + 0.38;            // the last button has landed
+T.manyOut = [T.wall + 1.2, T.wall + 1.45];
 T.oneIn = [T.manyOut[1], T.manyOut[1] + 0.3];
-T.fuse = T.oneIn[1] + 0.2;                            // buttons start contracting into cells
+T.fuse = T.oneIn[1] + 0.2;                  // buttons start contracting into cells
 T.gathered = T.fuse + 17 * 0.035 + 1.05;    // the last of the eighteen is taken in
-T.settled = [T.gathered, T.gathered + 0.3];   // the merged cell hands over to the unmerged one
-T.oneOut = SHORT ? NEVER : [T.gathered + 0.3, T.gathered + 0.55];
+T.settled = [T.gathered, T.gathered + 0.3]; // the merged cell hands over to the unmerged one
+T.oneOut = [T.gathered + 0.3, T.gathered + 0.55];
 T.modeIn = [T.oneOut[1], T.oneOut[1] + 0.3];
 // The one button shows under the cell; the pointer comes to it and presses it, and it opens into the
 // one input box.
-T.createIn = SHORT ? [T.settled[1] + 0.7, T.settled[1] + 1.05] : [T.modeIn[1] + 0.4, T.modeIn[1] + 0.75];
-T.point = SHORT ? NEVER : [T.createIn[1] + 0.1, T.createIn[1] + 0.8];
+T.createIn = [T.modeIn[1] + 0.4, T.modeIn[1] + 0.75];
+// stage.html?cut=short ends here: the master's own frames up to the frame where Create is fully in,
+// then that frame held.
+T.cut = Math.ceil(T.createIn[1] * 30) / 30;
+T.point = [T.createIn[1] + 0.1, T.createIn[1] + 0.8];
 T.press = [T.point[1] + 0.1, T.point[1] + 0.3];
 T.open = [T.press[1] + 0.05, T.press[1] + 0.5];
 T.pointerOut = [T.open[0] + 0.1, T.open[1]];
@@ -296,22 +302,18 @@ T.morphIn = [T.sayOut[0] + 0.18, T.sayOut[0] + 0.45];   // each line comes in as
 T.morphOut = [T.formed + 0.7, T.formed + 0.95];
 T.repoIn = [T.morphOut[0] + 0.18, T.morphOut[0] + 0.45];
 T.repoRow = [T.repoIn[1] + 0.2, T.repoIn[1] + 0.65];
-T.repoOut = [T.repoRow[1] + 1.1, T.repoRow[1] + 1.35];
+T.repoOut = [T.repoRow[1] + 1.4, T.repoRow[1] + 1.65];
 T.peopleIn = [T.repoOut[0] + 0.18, T.repoOut[0] + 0.45];
 T.steveRow = [T.peopleIn[1] + 0.2, T.peopleIn[1] + 0.65];
-T.peopleOut = [T.steveRow[1] + 1.1, T.steveRow[1] + 1.35];
+T.peopleOut = [T.steveRow[1] + 1.4, T.steveRow[1] + 1.65];
 T.orgIn = [T.peopleOut[0] + 0.18, T.peopleOut[0] + 0.45];
 T.glide = [T.orgIn[1] + 0.15, T.orgIn[1] + 1.15];
-// Hold the organized sidebar, let it go, and leave the page to the last word: a line at a time, a
-// beat before "That's it.", then a moment to sit with it. Then the opening comes back so the clip loops
-// without a cut.
-T.resultOut = [T.glide[1] + 1.2, T.glide[1] + 1.5];
-T.quote = [0, 0.5, 1.0, 1.9].map((at) => T.resultOut[1] + 0.3 + at);
-T.quoteOut = [T.quote[3] + 0.35 + 1.2, T.quote[3] + 0.35 + 1.6];
-T.reset = [T.quoteOut[1] + 0.05, T.quoteOut[1] + 0.4];
-T.end = SHORT
-    ? T.createIn[1] + 3.5           // the cell and its one button, held: the last frame is the message
-    : T.reset[1] + 2 / 30;          // the last frame is the first one, fully back
+// Hold the organized sidebar, then let it go as the opening comes back, so the clip loops without a cut.
+T.resultOut = [T.glide[1] + 2.0, T.glide[1] + 2.3];
+T.reset = [T.resultOut[0] + 0.18, T.resultOut[0] + 0.45];
+T.end = T.reset[1] + 2 / 30;   // the last frame is the first one, fully back
+const CUT = new URLSearchParams(location.search).get("cut") === "short";
+const DURATION = CUT ? T.cut + 3 : T.end;
 
 let buttons = [], engine, cellCtx, heroCtx, engineCanvas, createW;
 
@@ -358,7 +360,7 @@ function build() {
     place($("hero"), ANCHOR.x - HERO_CSS / 2, ANCHOR.y - HERO_CSS / 2);
     place($("composer"), RX - COMPOSER_W / 2, CREATE_Y - COMPOSER_H / 2);
 
-    // The row and its children, at their settled place; the group is drawn LIFT higher until it organizes.
+    // The row and its children, laid out from the row alone; the group rises as they insert.
     const rowTop = (y) => y - 29;
     place($("row"), 0, rowTop(ROW));
     place($("icon"), LEFT, 3);
@@ -379,15 +381,18 @@ function build() {
     place(diff, LEFT + 392 - Math.ceil(diff.getBoundingClientRect().width), 0);
     place($("guide"), ICON_C.x - 0.75, ROW + 30);
 
-    // The sidebar's other sections, above.
-    place($("sec-eng"), LEFT - 2, 122);
-    for (const [i, id] of ["eng-1", "eng-2"].entries()) {
-        place($(id), 0, rowTop(180 + i * PITCH));
+    // The sidebar around it, laid out from the group's settled place: ANALYTICS over it, ENGINEERING
+    // above that, more analytics below.
+    const header = ROW_F - 29 - 34;
+    place($("sec-analytics"), LEFT - 2, header);
+    place($("sec-eng"), LEFT - 2, header - 14 - 2 * PITCH - 34);
+    for (const [i, id] of ["eng-1", "eng-2", "ana-1", "ana-2"].entries()) {
+        const y = i < 2 ? header - 14 - 29 - (1 - i) * PITCH : ROW_F + (i + 1) * PITCH;
+        place($(id), 0, rowTop(y));
         place($(id).querySelector(".mark"), LEFT, 3);
         size($(id).querySelector(".mark"), ICON, ICON);
         place($(id).querySelector(".t"), LEFT + ICON + 20, 0);
     }
-    place($("sec-analytics"), LEFT - 2, ROW - 29 - 34);
 }
 
 function show(el, v) { el.style.opacity = String(v); el.style.visibility = v <= 0.001 ? "hidden" : "visible"; }
@@ -408,6 +413,7 @@ function blob(el, cx, cy, w, h, visible) {
 }
 
 async function renderAt(t) {
+    if (CUT) t = Math.min(t, T.cut);   // the short cut: the master's frames, then its last one held
     // The narration: one line at a time, in one place.
     const after = 1 - smooth(seg(t, ...T.resultOut));
     const reset = smooth(seg(t, ...T.reset));
@@ -419,12 +425,6 @@ async function renderAt(t) {
     show($("cap-repo"), fade(t, T.repoIn, T.repoOut));
     show($("cap-people"), fade(t, T.peopleIn, T.peopleOut));
     show($("cap-org"), smooth(seg(t, ...T.orgIn)) * after);
-    const quoteOut = 1 - smooth(seg(t, ...T.quoteOut));
-    [...$("quote").children].forEach((line, i) => {
-        const p = smooth(seg(t, T.quote[i], T.quote[i] + 0.35));
-        line.style.top = lerp(8, 0, p) + "px";
-        show(line, p * quoteOut);
-    });
 
     // The wall cascades in, a button at a time, each in its own place. Then each contracts into a cell
     // where it stands, and the cells flow into one mass at the anchor, which grows as it takes them in
@@ -434,7 +434,7 @@ async function renderAt(t) {
     const merging = t >= T.fuse && settled < 1;
     const massPink = smooth(seg(buttons.reduce((sum, b) => sum + absorbed(b, t), 0) / buttons.length, 0.3, 0.85));
     for (const b of buttons) {
-        const appear = b.index * 0.045 + T.cascade;
+        const appear = T.appear[b.index];
         const s = start(b);
         const contract = easeInOut(seg(t, s, s + 0.34));
         const w = lerp(b.w, CELL, contract), h = lerp(H, CELL, contract);
@@ -523,8 +523,8 @@ async function renderAt(t) {
     }
 
     // The row: its icon, its name typing in under a working shimmer, its children, its section.
-    const glide = easeInOut(seg(t, ...T.glide));
-    $("group").style.transform = `translateY(${lerp(-LIFT, 0, glide)}px)`;
+    const repo = smooth(seg(t, ...T.repoRow)), steve = smooth(seg(t, ...T.steveRow));
+    $("group").style.transform = `translateY(${-(PITCH / 2) * (repo + steve)}px)`;
     show($("group"), after);
     show($("icon"), iconIn);
     show($("highlight"), smooth(seg(t, ...T.highlight)));
@@ -536,7 +536,6 @@ async function renderAt(t) {
     title.classList.toggle("shimmer", working);
     title.style.backgroundPosition = `${lerp(100, 0, ((t - T.shimmer[0]) / 1.0) % 1)}% 0`;
 
-    const repo = smooth(seg(t, ...T.repoRow)), steve = smooth(seg(t, ...T.steveRow));
     for (const [el, p] of [[$("repo"), repo], [$("steve"), steve]]) {
         el.style.transform = `translateY(${lerp(-10, 0, p)}px)`;
         show(el, p);
@@ -549,8 +548,8 @@ async function renderAt(t) {
 
     // It settles into its section: the sidebar around it fades up, then its header.
     const sideIn = smooth(seg(t, T.glide[0] + 0.2, T.glide[1]));
-    for (const id of ["sec-eng", "eng-1", "eng-2"]) {
-        $(id).style.transform = `translateY(${lerp(-8, 0, sideIn)}px)`;
+    for (const id of ["sec-eng", "eng-1", "eng-2", "ana-1", "ana-2"]) {
+        $(id).style.transform = `translateY(${lerp(id.startsWith("ana") ? 8 : -8, 0, sideIn)}px)`;
         show($(id), sideIn * (id === "sec-eng" ? 0.55 : 0.32) * after);
     }
     const headerIn = smooth(seg(t, T.glide[0] + 0.75, T.glide[1] + 0.2));
@@ -588,7 +587,7 @@ async function init() {
     cellCtx = $("cell").getContext("2d");
     heroCtx = $("hero").getContext("2d");
     await renderAt(0);
-    return { duration: T.end, renderer: engine.acceleration.renderer, T };
+    return { duration: DURATION, renderer: engine.acceleration.renderer, T };
 }
 window.renderAt = renderAt;
 window.ready = init();

@@ -7,17 +7,19 @@
 //   POSTER_T=1.4                                                             (the poster's moment, in seconds)
 //   PLAYWRIGHT_CORE=/path/to/playwright-core/index.mjs                      (any playwright-core 1.4x+)
 import { execFileSync } from "node:child_process";
-import { mkdirSync, rmSync } from "node:fs";
+import { copyFileSync, mkdirSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const { chromium } = await import(
     process.env.PLAYWRIGHT_CORE ??
-        "playwright-core"
+        "/Users/kirilldubovitskiy/Developer/happy-desktop/node_modules/.pnpm/playwright-core@1.61.1/node_modules/playwright-core/index.mjs"
 );
 const here = dirname(fileURLToPath(import.meta.url));
 const [mode = "stills", arg = "0", outArg] = process.argv.slice(2);
 const out = join(here, mode === "video" ? (arg !== "0" ? arg : "out") : (outArg ?? "stills"));
+// OUT_PREFIX=master names the videos master-1080p.mp4 and master-720p.mp4 and keeps their frames in master-frames.
+const PREFIX = process.env.OUT_PREFIX;
 const FPS = 30;
 const PAGE = process.env.STAGE_PAGE ?? "stage.html";
 const W = Number(process.env.STAGE_W ?? 960), H = Number(process.env.STAGE_H ?? 540);
@@ -40,13 +42,22 @@ if (mode === "stills") {
         await page.screenshot({ path: join(out, `t${t.toFixed(2).padStart(5, "0")}.png`) });
     }
 } else {
-    const frames = join(out, "frames");
+    const frames = join(out, PREFIX ? `${PREFIX}-frames` : "frames");
     rmSync(frames, { recursive: true, force: true });
     mkdirSync(frames, { recursive: true });
     const count = Math.round(info.duration * FPS);
+    // CUT_FROM=master-frames (with STAGE_QUERY="cut=short") takes the short cut's frames from the master's, so
+    // they are the same files up to the cut, then its frame held. Rendered again they can differ by a few
+    // pixels: Chromium's compositing remembers the frames before.
+    const cutFrame = Math.round(info.T.cut * FPS);
     for (let i = 0; i < count; i++) {
+        const name = `${String(i).padStart(5, "0")}.png`;
+        if (process.env.CUT_FROM) {
+            copyFileSync(join(out, process.env.CUT_FROM, `${String(Math.min(i, cutFrame)).padStart(5, "0")}.png`), join(frames, name));
+            continue;
+        }
         await page.evaluate((time) => window.renderAt(time), i / FPS);
-        await page.screenshot({ path: join(frames, `${String(i).padStart(5, "0")}.png`) });
+        await page.screenshot({ path: join(frames, name) });
         if (i % 60 === 0) console.log(`frame ${i}/${count}`);
     }
     const enc = (args) => execFileSync("ffmpeg", ["-loglevel", "error", "-y", ...args], { stdio: "inherit" });
@@ -55,12 +66,12 @@ if (mode === "stills") {
     if (process.env.OUT_NAME) {
         enc([...input, ...h264, "-crf", "20", join(out, `${process.env.OUT_NAME}.mp4`)]);
     } else {
-        enc([...input, ...h264, "-crf", "16", join(out, "stem-cell-1080p.mp4")]);
-        enc([...input, "-vf", "scale=1280:720:flags=lanczos", ...h264, "-crf", "22", join(out, "stem-cell-720p.mp4")]);
+        enc([...input, ...h264, "-crf", process.env.CRF_1080 ?? "16", join(out, `${PREFIX ?? "stem-cell"}-1080p.mp4`)]);
+        enc([...input, "-vf", "scale=1280:720:flags=lanczos", ...h264, "-crf", "22", join(out, `${PREFIX ?? "stem-cell"}-720p.mp4`)]);
     }
     // The poster is the hook: every button and the first line (POSTER_T, default 1.4 s).
     const posterFrame = String(Math.min(count - 1, Math.round(Number(process.env.POSTER_T ?? 1.4) * FPS))).padStart(5, "0");
-    enc(["-i", join(frames, `${posterFrame}.png`), "-vf", "scale=1200:-2:flags=lanczos", join(out, "poster.png")]);
+    if (!process.env.NO_POSTER) enc(["-i", join(frames, `${posterFrame}.png`), "-vf", "scale=1200:-2:flags=lanczos", join(out, "poster.png")]);
     console.log("wrote", out);
 }
 await browser.close();
