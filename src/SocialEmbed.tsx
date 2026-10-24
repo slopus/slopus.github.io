@@ -5,7 +5,7 @@ import { loadWidgets } from './XPostEmbed'
  * What a post said, keyed by its URL. The served page carries it inside the embed's blockquote,
  * so it reads before X's or Reddit's script swaps in the real post (or if that script never runs).
  */
-const POSTS: Record<string, { author: string; handle: string; date: string; text: string }> = {
+const POSTS: Record<string, { author: string; handle: string; date: string; title?: string; text: string }> = {
   'https://x.com/0xrwu/status/2105329822125707394': {
     author: 'Richard Wu',
     handle: '@0xrwu',
@@ -31,11 +31,12 @@ Pls fix @thsottiaux.`,
     date: 'September 30, 2026',
     text: 'After a brief period where OpenAI seemed to be unifying work around the ChatGPT app, between Dot and Spaces and Pages and local/cloud ChatGPT Work and Scheduled Tasks in the Cloud and Scheduled Tasks on your computer, everything is getting quite confusing and overlapping again.',
   },
-  'https://www.reddit.com/r/ClaudeAI/comments/1u7j7au/the_most_annoying_part_of_claude_is_losing_a/os114du/': {
-    author: 'u/mesamaryk',
-    handle: 'r/ClaudeAI',
-    date: 'June 16, 2026',
-    text: 'I kinda gave up and am waiting until a new model gets enough capability to just go sort through old chats and organise them for me',
+  'https://www.reddit.com/r/ChatGPT/comments/1x9s0pr/chatgpts_conversation_management_is_becoming_a/': {
+    author: 'u/intentazera',
+    handle: 'r/ChatGPT',
+    date: 'October 19, 2026',
+    title: "ChatGPT's conversation management is becoming a complete nightmare for long-term users",
+    text: 'Lately, managing my conversations has become an absolute nightmare.',
   },
 }
 
@@ -80,7 +81,8 @@ const SocialEmbed = memo(function SocialEmbed({ kind, url }: { kind: 'tweet' | '
           {byline ?? <a href={url}>{url}</a>}
         </blockquote>
       ) : (
-        <blockquote className="reddit-embed-bq" data-embed-height="180" data-embed-showtitle="false">
+        <blockquote className="reddit-embed-bq" data-embed-height="420">
+          {post?.title && <p><strong>{post.title}</strong></p>}
           {post && <p>{post.text}</p>}
           {byline ?? <a href={url}>{url}</a>}
         </blockquote>

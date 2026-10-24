@@ -228,16 +228,16 @@ describe('static document pages', () => {
     expect(tweets.map((tweet) => tweet.querySelector('a')?.getAttribute('href'))).toEqual(['https://x.com/0xrwu/status/2105329822125707394', 'https://x.com/emollick/status/2105184972537528538'])
     expect(tweets[1].textContent).toContain('everything is getting quite confusing and overlapping again')
     const reddit = stemCell.container.querySelector('.social-embed-reddit blockquote.reddit-embed-bq')
-    expect(reddit?.textContent).toContain('sort through old chats and organise them for me')
+    expect(reddit?.textContent).toContain('managing my conversations has become an absolute nightmare')
     expect(reddit?.closest('.document-content > *')?.previousElementSibling?.textContent).toBe('If this sounds like you:')
     expect(stemCell.container.querySelector('.document-content img.row-image')?.getAttribute('src')).toBe('/img/stem-cell-new-row.png')
     expect(stemCell.container.querySelector('.blog-download .one-download-actions')).not.toBeNull()
     for (const document of documents.filter((entry) => entry.group === 'Blog')) {
       expect(document.product).toBe('desktop')
       expect(['workos', 'tailcat', 'voice', 'updates', 'stem-cell']).toContain(document.path)
-      // The stem cell post's title is its whole h1, the line it opens on, chosen over the length limits.
+      // The stem cell post's title is its whole h1, the line it opens on, chosen over the length limit.
       expect(document.pageTitle?.length).toBeLessThanOrEqual(document.path === 'stem-cell' ? 75 : 65)
-      expect(document.description.length).toBeLessThanOrEqual(document.path === 'stem-cell' ? 165 : 155)
+      expect(document.description.length).toBeLessThanOrEqual(155)
       // No narration: nothing on the page points at the diagram's files or announces what follows.
       expect(getDocumentSource(document)).not.toMatch(/The diagram as|below is|this page explains/i)
     }

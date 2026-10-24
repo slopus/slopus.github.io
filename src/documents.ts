@@ -566,7 +566,7 @@ const desktopDocuments: DocumentDefinition[] = [
     sourcePath: '/content/desktop/stem-cell.mdx',
     title: 'Stem Cells',
     pageTitle: 'Sure, GPT, I need another 10 different buttons to start my work! — Happy',
-    description: 'Every AI app keeps adding ways to start. In Happy, all new work starts as one stem cell: say what it is, and it names itself, grows its own icon and finds its place.',
+    description: 'Every AI app keeps adding ways to start. In Happy, new work starts as a stem cell: say what it is, and it names itself, grows its icon and finds its place.',
     group: 'Blog',
     video: { path: '/video/stem-cell.mp4', width: 1280, height: 720 },
   },
