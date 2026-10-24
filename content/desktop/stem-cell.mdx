@@ -1,55 +1,75 @@
 # New Work Starts as a Stem Cell
 
-New work in Happy Desktop starts as one stem cell. Say what it is, and it names itself and grows into its icon.
+New work in Happy Desktop starts as one stem cell. Say what it is, and it names itself, picks its icon and finds its place in the sidebar.
 
 ![Twenty-five seconds, no sound, one line at a time. Too many ways to start: New task, +, New tab, New window, New chat, New bot, New todo list, New document. What if there was one? The buttons contract into cells and flow into one stem cell. Enter Stem Cell Mode: the stem cell waits, labelled New. Just say what it is: ping me on serious posthog alerts is typed and sent. It names itself: the cell divides into the alerting clay icon, a red beacon, and New becomes PostHog alerts. And becomes a bot: a bot face settles on the icon's corner. Your interface needs one button to start work and one input box. That's it.](/video/stem-cell.mp4)
 
 *Bot face: [Adventurer Neutral](https://www.figma.com/community/file/1184595184137881796) by [Lisa Wischofsky](https://www.instagram.com/lischi_art/) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)), recoloured.*
 
-## Too many ways to start
+## Every AI app keeps adding ways to start
 
-![Too many ways to start: eight buttons in three rows. New task, +, New tab; New window, New chat, New bot; New todo list, New document.](/img/stem-cell/01-too-many-ways.webp)
+Chat apps started with one box. Then came a new chat, and a project to put it in. A custom assistant. A canvas. An agent mode, a research mode, a model picker, tabs and windows. Each one is useful on its own. Together they mean that before you type a word, you answer a question you can't answer yet: what kind of thing is this?
 
-New task, +, New tab, New window, New chat, New bot, New todo list, New document. Each one asks what the thing is before you have said a word about it.
+You usually don't know. "Look into why signups dropped" might be a quick question, a week of work, or something that should keep watching the numbers every morning. You find out by starting. But every button asks you to commit first, and a wrong guess costs you: the chat that should have been a project, the project that turned out to be one question, the assistant you set up for a job you did once.
+
+So you pick the nearest button. The sidebar fills with chats called "New chat", work stays wherever it was started, and the sorting is left for later, which means never.
 
 ![The two-buttons meme: a hand hovers between buttons labelled New task and New bot. In the panel below, a sea otter floats on its back in grey water, holding its face in its paws.](/video/stem-cell-meme.mp4)
 
 *Two-buttons meme by [Jake Clark](https://jake-clark.tumblr.com/). Otter footage by Magda Ehlers on [Pexels](https://www.pexels.com/video/an-otter-swimming-2554576/).*
 
-## What if there was one?
+Our own app is no better. Happy Desktop has New task, a + for a new tab, New bot, and a create menu with a todo list, a document, a calendar, a system monitor and a shared chat: each a different kind of thing, each a decision made at the door.
 
-![What if there was one? The eight buttons, contracting into pink cells where they stand.](/img/stem-cell/02-what-if-one.webp)
+## What people say about it
 
-Create in the sidebar, ⌘N and ⌘T all make the same thing: a stem cell.
+> TODO: a verified quote from Reddit, credited and linked (research/reddit.md).
 
-## Enter Stem Cell Mode
+> TODO: a verified quote from Reddit, credited and linked (research/reddit.md).
 
-![Enter Stem Cell Mode: one pink stem cell, labelled New.](/img/stem-cell/03-stem-cell-mode.webp)
+> TODO: a verified quote from X, credited and linked (research/x.md).
 
-A stem cell is a row labelled "New", right below Happy in the sidebar, with an empty chat. Underneath, it's a fresh task in its own folder, with no project. Its chat says "Say what it is — it'll find its place." Nothing names it, gives it an icon or moves it until you send your first message.
+> TODO: a verified quote from X, credited and linked (research/x.md).
 
-## Just say what it is
+## One button, one input box
 
-![Just say what it is: ping me on serious posthog alerts in the composer, under the stem cell labelled New.](/img/stem-cell/04-say-what-it-is.webp)
+The fix is to stop asking at the door. Start with something that isn't anything yet, let the person say what they want, and let the work decide what it is from that.
 
-Type `ping me on serious posthog alerts` and send it.
+![Before and after. Before: decide what it is, then start. Six boxes: New task, New tab, New chat, New bot, New document, New todo list. Each one is a kind of thing, and you pick before you have said a word about the work. Now: start, then say what it is. A pink stem cell labelled New, an arrow marked say it, and a row titled PostHog alerts with its icon: named, with an icon, filed later. One button and one input box; the work takes its name, icon and place from you.](/img/stem-cell-doors.svg)
 
-## It names itself
+In Happy Desktop that something is a stem cell: an unnamed row in the sidebar with an empty chat. Create in the sidebar, ⌘N and ⌘T all make one.
 
-![It names itself: the stem cell dividing into the colours of the alerting icon, already titled PostHog alerts.](/img/stem-cell/05-names-itself-dividing.webp)
+## How a stem cell works in Happy
 
-The chat's own model names the row by its subject in one to three words, at the model's default effort, within a minute: "PostHog alerts". With your first message, Prioritizing, the agent that keeps your sidebar, picks the row's icon from 136 clay icons and sets it right away. It moves the row next to related work later, once you've stepped away.
+### It waits for you
 
-When the icon arrives, the cell divides into the icon's colours and converges onto its silhouette over 2.5 seconds, drawn by a WebGL2 shader in a worker, then hands over to the plain image. Turn off "Animate new work's icon", or ask your system for reduced motion, and the icon appears at once.
+A stem cell is a row labelled "New", right below Happy in the sidebar. Underneath, it's a fresh task in its own folder, with no project. Its chat says "Say what it is — it'll find its place." Nothing names it, gives it an icon or moves it before your first message.
 
-## Or start a bot
+### You say what it is
 
-A stem cell stays a task. Its agent can message bots but can't create one, so it never turns itself into a bot. When you want a bot, with its own face and one conversation that keeps going, choose New bot under the stem cell's line and pick a face, or ask the [Chief of Staff](/chief-of-staff/) to make one.
+Type what you want, the way you'd say it: `ping me on serious posthog alerts`. That message is the whole setup.
 
-## That's it
+### It names itself
+
+The chat's own model reads your first message and names the row by its subject, in one to three words, at the model's default effort, within a minute. For that message, Opus 5.5 and Sonnet 5.5 both named it "PostHog alerts". Your second message gets one more look, and the name changes only if the conversation plainly contradicts it. A name you give it by hand is final.
+
+### It picks its icon
+
+At the same moment, Prioritizing, the agent that keeps your sidebar, picks the row's icon from 136 clay icons and sets it right away. For PostHog alerts it picks `alerting`, a red beacon. On screen, the cell divides into the icon's colours and converges onto its shape over 2.5 seconds, drawn by a WebGL2 shader in a worker. Turn off "Animate new work's icon", or ask your system for reduced motion, and the icon appears at once.
+
+### It finds its place
+
+Prioritizing then moves the row next to related work: into the section for its subject, or a new section when several rows share a subject no section fits. It waits until you've stepped away or the app is out of sight, so nothing moves while you're working.
+
+### A bot is still a separate thing
+
+A stem cell stays a task. Its agent can message bots but can't create one, so it never turns itself into a bot. When you want a bot, with its own face and one conversation that keeps going, choose New bot under the stem cell's line and pick a face, or ask the [Chief of Staff](/chief-of-staff/) to make one. The other kinds, such as a todo list or a document, are under the same line.
+
+## What we don't know yet
+
+Stem cells are experimental and off by default. Today a stem cell is always a task, and the other kinds still have their own buttons under its line. Whether one door is enough for everything is what we're finding out.
 
 > Your interface needs one button to start work and one input box. That's it.
 
 ## Turn it on
 
-Stem cells are experimental. In [Happy Desktop](/#download), open Settings → Experimental and turn on Spaces sidebar and Stem cells.
+In [Happy Desktop](/#download), open Settings → Experimental and turn on Spaces sidebar and Stem cells.
