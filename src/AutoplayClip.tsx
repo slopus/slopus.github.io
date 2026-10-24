@@ -5,7 +5,7 @@ import { useRevealedControls } from './revealedControls'
  * A silent recording that loops while it is on screen, scrubbable like the homepage demo: the
  * browser's controls appear once the reader reaches for it (src/revealedControls.ts). It plays
  * once 30% of it is in view and pauses only when less than 10% is, resuming where it was, unless
- * the reader paused it. A docs image whose src is a folder and whose title is "autoplay" is one:
+ * the reader paused it themselves. A docs image whose src is a folder and whose title is "autoplay" is one:
  * `![alt](/video/<name>/ "autoplay")` plays clip.mp4 over poster.webp, its first frame.
  *
  * It has no autoplay attribute: Chrome pauses such a video by itself when it scrolls away or the
@@ -22,17 +22,24 @@ export function AutoplayClip({ folder, label }: { folder: string; label: string 
     let ratio = 0
     let ownPause = false
     let readerPaused = false
+    // The reader's last click, tap or key on the clip or its controls.
+    let touched = -Infinity
     const play = () => { if (!readerPaused && !document.hidden && ratio >= 0.3 && clip.paused) void clip.play().catch(revealControls) }
-    // Only a pause while the clip is in view, in a visible tab, and not this component's, is the reader's.
-    // The pause event comes a task after pause(), so it clears ownPause itself.
+    // A pause is the reader's only right after they reached for the clip; any other pause in view
+    // (the browser's, a focus change) is undone. The pause event comes a task after pause(), so it
+    // clears ownPause itself.
     const onPause = () => {
       if (ownPause) ownPause = false
-      else if (!document.hidden && ratio >= 0.1) readerPaused = true
+      else if (performance.now() - touched < 1000) readerPaused = true
+      else play()
     }
     const onPlay = () => { readerPaused = false }
+    const onTouch = () => { touched = performance.now() }
     const onVisibility = () => { if (!document.hidden) play() }
     clip.addEventListener('pause', onPause)
     clip.addEventListener('play', onPlay)
+    clip.addEventListener('pointerdown', onTouch)
+    clip.addEventListener('keydown', onTouch)
     document.addEventListener('visibilitychange', onVisibility)
     const observer = new IntersectionObserver(([entry]) => {
       ratio = entry.isIntersecting ? entry.intersectionRatio : 0
@@ -44,6 +51,8 @@ export function AutoplayClip({ folder, label }: { folder: string; label: string 
       observer.disconnect()
       clip.removeEventListener('pause', onPause)
       clip.removeEventListener('play', onPlay)
+      clip.removeEventListener('pointerdown', onTouch)
+      clip.removeEventListener('keydown', onTouch)
       document.removeEventListener('visibilitychange', onVisibility)
     }
   }, [revealControls])
