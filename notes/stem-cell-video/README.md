@@ -3,6 +3,8 @@
 The link-preview video for `/stem-cell/` and the meme clip in the post, with everything needed to
 render them again frame for frame.
 
+The shipped link-preview cut is v11 (32 s, 1280 × 720), rendered from this `stage.html`.
+
 - `stage.html`: the promo (960 × 540, rendered at 2× for 1080p). `renderAt(t)` draws any moment
   deterministically; nothing depends on wall-clock time.
 - `meme.html`: the Two Buttons meme with a live otter in the bottom panel, for the post (600 × 874).

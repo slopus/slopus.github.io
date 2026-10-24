@@ -17,7 +17,7 @@ var Stem = (() => {
   };
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-  // engine/engine-entry.ts
+  // engine-entry.ts
   var engine_entry_exports = {};
   __export(engine_entry_exports, {
     STEM_CELL_VARIANTS: () => STEM_CELL_VARIANTS,
@@ -27,7 +27,7 @@ var Stem = (() => {
     stemCellVariantFor: () => stemCellVariantFor
   });
 
-  // engine/stemCellEngine.ts
+  // ../engine/stemCellEngine.ts
   var TAU = Math.PI * 2;
   function hash(text) {
     let h = 2166136261;
@@ -899,7 +899,7 @@ void main() {
     };
   }
 
-  // engine/stemCellGeometry.ts
+  // ../engine/stemCellGeometry.ts
   var TAU2 = Math.PI * 2;
   function hash2(text) {
     let h = 2166136261;
