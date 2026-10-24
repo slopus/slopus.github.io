@@ -214,17 +214,19 @@ describe('static document pages', () => {
     expect(updates.container.querySelector('.document-content img[src="/img/updates-drain.svg"]')).not.toBeNull()
     updates.unmount()
 
-    // The whole promo is only its link preview (src/siteMetadata.test.ts); the page plays its
-    // fragments on hover, quotes posts as cards, and ends, like every post, on the downloads.
+    // The whole promo is only its link preview (src/siteMetadata.test.ts); the page embeds the
+    // posts it quotes, their text served inside, and ends, like every post, on the downloads.
     const stemCell = render(<Router pathname="/stem-cell/" />)
     expect(screen.getByRole('heading', { level: 1, name: /new work starts as a stem cell/i })).toBeTruthy()
     expect(screen.getByRole('link', { name: /^next/i }).getAttribute('href')).toBe('/desktop-app/')
-    expect(stemCell.container.querySelector('video[src="/video/stem-cell.mp4"]')).toBeNull()
-    const clips = [...stemCell.container.querySelectorAll('.document-content video.hover-clip')]
-    expect(clips.map((clip) => clip.getAttribute('poster'))).toEqual(['/video/stem-cell/one/poster.png', '/video/stem-cell/grow/poster.png'])
-    expect([...clips[0].querySelectorAll('source')].map((source) => source.getAttribute('src'))).toEqual(['/video/stem-cell/one/clip.mov', '/video/stem-cell/one/clip.webm'])
-    expect(stemCell.container.querySelectorAll('.document-content blockquote.quote-card')).toHaveLength(3)
-    expect(stemCell.container.querySelector('.quote-card-byline strong')?.textContent).toBe('Richard Wu')
+    expect(stemCell.container.querySelector('video')).toBeNull()
+    const tweets = [...stemCell.container.querySelectorAll('.social-embed-tweet blockquote.twitter-tweet')]
+    expect(tweets.map((tweet) => tweet.querySelector('a')?.getAttribute('href'))).toEqual(['https://x.com/0xrwu/status/2105329822125707394', 'https://x.com/rasbt/status/2075369179817902176'])
+    expect(tweets[1].textContent).toContain('2 x 3 x 5 = 30 possible configurations')
+    const reddit = stemCell.container.querySelector('.social-embed-reddit blockquote.reddit-embed-bq')
+    expect(reddit?.textContent).toContain('sort through old chats and organise them for me')
+    expect(reddit?.closest('.document-content > *')?.previousElementSibling?.textContent).toBe('If this sounds like you,')
+    expect(stemCell.container.querySelector('.document-content img.small-image')?.getAttribute('src')).toBe('/img/stem-cell.png')
     expect(stemCell.container.querySelector('.blog-download .one-download-actions')).not.toBeNull()
     for (const document of documents.filter((entry) => entry.group === 'Blog')) {
       expect(document.product).toBe('desktop')

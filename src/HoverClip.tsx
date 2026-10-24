@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
  * A short captionless clip that rests on its last frame and plays once, to the end, when the
  * reader hovers it or anywhere in its section; hovering again replays it. Where nothing hovers
  * (a phone), it plays each time it scrolls into view. A docs image whose src is a folder is one:
- * `![alt](/video/stem-cell/one/)` plays clip.mov (HEVC with alpha) in Safari or clip.webm (VP9 with
+ * `![alt](/video/<name>/)` plays clip.mov (HEVC with alpha) in Safari or clip.webm (VP9 with
  * alpha) elsewhere, over poster.png, its last frame, on the page itself.
  */
 export function HoverClip({ folder, label }: { folder: string; label: string }) {

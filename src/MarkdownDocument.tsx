@@ -1,8 +1,9 @@
-import { Children, isValidElement, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ChiefOfStaffPrompt, CHIEF_OF_STAFF_LANGUAGE } from './ChiefOfStaffPrompt'
 import { HoverClip } from './HoverClip'
+import { RedditEmbed, Tweet } from './SocialEmbed'
 import { slugifyHeading } from './documents'
 
 function textFromNode(node: ReactNode): string {
@@ -98,6 +99,34 @@ function rehypeTableCards() {
   return (tree: HastNode) => visit(tree)
 }
 
+interface MdastNode {
+  type: string
+  value?: string
+  children?: MdastNode[]
+  data?: { hName?: string; hProperties?: Record<string, string> }
+}
+
+/** `<Tweet url="…" />` and `<RedditEmbed url="…" />` on a line of their own embed that post. */
+function remarkEmbeds() {
+  const visit = (node: MdastNode) => {
+    for (const child of node.children ?? []) {
+      const embed = child.type === 'html' && child.value?.trim().match(/^<(Tweet|RedditEmbed)\s+url="([^"]+)"\s*\/>$/)
+      if (embed) {
+        child.type = 'embed'
+        child.data = { hName: embed[1] === 'Tweet' ? 'tweet-embed' : 'reddit-embed', hProperties: { url: embed[2] } }
+      } else {
+        visit(child)
+      }
+    }
+  }
+  return (tree: MdastNode) => visit(tree)
+}
+
+const EMBEDS = {
+  'tweet-embed': ({ url }: { url: string }) => <Tweet url={url} />,
+  'reddit-embed': ({ url }: { url: string }) => <RedditEmbed url={url} />,
+} as Components
+
 export function MarkdownDocument({
   markdown,
   components: overrides,
@@ -185,28 +214,6 @@ export function MarkdownDocument({
       }
       return <pre {...props}>{children}</pre>
     },
-    // A quote that ends on "— Name, @handle, [date](link)" is a post someone made: drawn as a card
-    // with the author on top, the way it looked where it was posted.
-    blockquote: ({ children, node, ...props }) => {
-      const paragraphs = ((node as HastNode | undefined)?.children ?? []).filter((child) => child.tagName === 'p')
-      const byline = paragraphs.at(-1)
-      const lead = byline?.children?.[0]
-      const link = byline?.children?.find((child) => child.tagName === 'a')
-      if (paragraphs.length < 2 || lead?.type !== 'text' || !lead.value?.startsWith('— ') || !link) {
-        return <blockquote {...props}>{children}</blockquote>
-      }
-      const [author, ...where] = lead.value.slice(2).split(',').map((part) => part.trim()).filter(Boolean)
-      const body = Children.toArray(children).filter(isValidElement)
-      return (
-        <blockquote {...props} className="quote-card">
-          <p className="quote-card-byline">
-            <strong>{author}</strong> <span>{where.join(', ')}</span> <span aria-hidden="true">·</span>{' '}
-            <a href={String(link.properties?.href)} target="_blank" rel="noreferrer">{hastText(link)}</a>
-          </p>
-          {body.slice(0, -1)}
-        </blockquote>
-      )
-    },
     img: ({ alt, src, title, node: _node, ...props }) => {
       // An image whose src is a folder is a clip that plays on hover (src/HoverClip.tsx).
       if (typeof src === 'string' && src.endsWith('/')) {
@@ -219,6 +226,10 @@ export function MarkdownDocument({
         return (
           <video src={src} poster={src.replace(/\.(mp4|webm)$/, '-poster.webp')} controls muted autoPlay loop playsInline aria-label={alt ?? ''} suppressHydrationWarning />
         )
+      }
+      // The title "small" draws the image small and centred, as a mark rather than a figure.
+      if (title === 'small') {
+        return <img {...props} className="small-image" src={src} alt={alt ?? ''} loading="lazy" />
       }
       // A title labels the image under it, as Before and After do side by side.
       if (title) {
@@ -235,7 +246,7 @@ export function MarkdownDocument({
 
   return (
     <div className="document-content">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeTableCards]} components={{ ...components, ...overrides }}>
+      <ReactMarkdown remarkPlugins={[remarkGfm, remarkEmbeds]} rehypePlugins={[rehypeTableCards]} components={{ ...components, ...EMBEDS, ...overrides }}>
         {markdown}
       </ReactMarkdown>
     </div>

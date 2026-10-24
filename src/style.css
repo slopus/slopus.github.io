@@ -270,6 +270,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .document-article > .recipe-source { margin-right: 2rem; }
   .docs-shell .document-article > .document-content,
   .docs-shell .document-article > .document-pagination { max-width: 760px; padding-right: 2rem; }
+  /* The same column as the prose, its rule ending where theirs do. */
+  .docs-shell .document-article > .blog-download { margin-right: 2rem; max-width: calc(760px - 2rem); }
   .docs-shell .site-footer { margin-top: 4.5rem; }
   .docs-shell .site-footer .footer-inner { margin: 0; max-width: none; padding: 0 3rem 0 2.5rem; width: auto; }
 }
@@ -378,22 +380,12 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content video[src="/video/updates/update.mp4"] { aspect-ratio: 1; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 /* A clip that plays on hover (src/HoverClip.tsx): drawn straight on the page, no frame. */
 .document-content video.hover-clip { aspect-ratio: 16 / 9; background: none; border: 0; border-radius: 0; box-shadow: none; display: block; margin: 1.4rem 0; width: 100%; }
-.document-content video.hover-clip[poster="/video/stem-cell/one/poster.png"] { aspect-ratio: 1358 / 830; margin-inline: auto; width: min(100%, 679px); }
-.document-content video.hover-clip[poster="/video/stem-cell/grow/poster.png"] { aspect-ratio: 534 / 472; margin-inline: auto; width: min(100%, 267px); }
 /* An image with a title: the title labels it. Two in one paragraph sit side by side. */
 .document-content .labelled-image { display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
 .document-content .labelled-image img { border: 1px solid #ddd6c8; border-radius: 12px; box-shadow: none; margin: 0; width: 100%; }
 .document-content img[src^="/img/stem-cell-sidebar-"] { aspect-ratio: 640 / 1040; }
 .document-content .labelled-image-label { color: #6b7f78; font-size: .78rem; font-weight: 600; letter-spacing: .08em; order: -1; text-transform: uppercase; }
 .document-content p:has(> .labelled-image) { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); margin: 1.6rem auto; max-width: 680px; }
-/* A post someone made, quoted with its byline (src/MarkdownDocument.tsx): a card, author on top. */
-.document-content blockquote.quote-card { background: #fffdf8; border: 1px solid #ddd6c8; border-radius: 14px; box-shadow: 0 12px 28px -24px rgba(24, 63, 56, .5); display: flow-root; margin: 1.2rem 0; padding: .95rem 1.15rem 1rem; }
-.document-content .quote-card p { margin-bottom: .55rem; white-space: pre-line; }
-.document-content .quote-card p:last-child { margin-bottom: 0; }
-.document-content .quote-card-byline { color: #6b7f78; font-size: .88rem; white-space: normal; }
-.document-content .quote-card-byline strong { color: #183f38; font-weight: 700; }
-.document-content .quote-card-byline a { color: inherit; text-decoration: none; }
-.document-content .quote-card-byline a:hover { text-decoration: underline; }
 /* The stem cell post: the Create menu sits left of the paragraph after it, its caption under it. */
 .document-content p:has(> img[src="/img/stem-cell-create-menu.webp"]), .document-content p:has(> img[src="/img/stem-cell-create-menu.webp"]) + p { clear: left; float: left; margin-right: 1.75rem; width: 300px; }
 .document-content p:has(> img[src="/img/stem-cell-create-menu.webp"]) { margin-bottom: 1rem; }
@@ -403,9 +395,28 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .document-content p:has(> img[src="/img/stem-cell-create-menu.webp"]), .document-content p:has(> img[src="/img/stem-cell-create-menu.webp"]) + p { float: none; margin-inline: auto; max-width: 300px; width: auto; }
   .document-content p:has(> .labelled-image) { grid-template-columns: 1fr; max-width: 320px; }
 }
-/* Every Blog post ends on the homepage's download options. */
-.blog-download { border-top: 1px solid #ddd6c8; margin-top: 4rem; padding-block: 2.6rem 0; }
+/* Every Blog post ends on the homepage's download options, left-aligned in the prose column. */
+.blog-download { border-top: 1px solid #ddd6c8; margin-top: 4rem; padding-block: 2.6rem 0; text-align: left; }
 .blog-download h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); margin-bottom: .5rem; }
+.blog-download .one-download-actions,
+.blog-download .one-desktop-downloads,
+.blog-download .one-primary-download,
+.blog-download .one-store-download { align-items: flex-start; }
+.blog-download .one-download-actions { margin-inline: 0; }
+.blog-download :is(.one-mobile-downloads, .one-platform-links, .store-rating) { justify-content: flex-start; }
+@media (max-width: 480px) {
+  .blog-download .one-mobile-downloads { align-items: flex-start; }
+}
+/* An official X or Reddit embed (src/SocialEmbed.tsx), centred; until its script runs, the post's
+   text as a plain card. */
+.document-content .social-embed { clear: both; display: flex; justify-content: center; margin: 1.4rem 0; }
+.document-content .social-embed > * { margin-block: 0 !important; }
+.document-content .social-embed blockquote { background: #fffdf8; border: 1px solid #ddd6c8; border-radius: 12px; color: #294c45; margin: 0; max-width: 550px; padding: .9rem 1.1rem; white-space: pre-line; width: 100%; }
+/* Reddit sizes its iframe inline; match the tweets above. */
+.document-content .social-embed-reddit iframe { max-width: min(100%, 550px) !important; width: 100% !important; }
+.document-content .social-embed-byline { color: #6b7f78; font-size: .88rem; margin: .5rem 0 0; white-space: normal; }
+/* An image titled "small" in a doc: a mark, not a figure. */
+.document-content img.small-image { border: 0; border-radius: 0; box-shadow: none; display: block; height: auto; margin: 1.2rem auto; width: 112px; }
 .blog-download + .document-pagination { margin-top: 3rem; }
 /* A line in italics right under a video, an image or a closing quote is a caption or credit; it may hold links, which an essay figcaption can't. */
 .document-content p:has(> video, > img) + p:has(> em:only-child),

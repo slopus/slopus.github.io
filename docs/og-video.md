@@ -66,10 +66,10 @@ ffmpeg -y -ss 1.4 -i public/video/stem-cell.mp4 -frames:v 1 -vf scale=1200:-1 pu
 If the new file isn't 1280×720, change `video` in `src/documents.ts`; the card must then be 1200 × round(1200 × height / width). To make an existing
 MP4 fast-start without re-encoding: `ffmpeg -i in.mp4 -c copy -movflags +faststart out.mp4`.
 
-## The fragments on the page
+## Clips on the page
 
-The post plays captionless pieces of the promo in their sections instead (`src/HoverClip.tsx`).
-An image whose src is a folder, `![alt](/video/stem-cell/one/)`, is one: `clip.mov` (HEVC with
+A post can play captionless clips in its sections instead (`src/HoverClip.tsx`). An image whose
+src is a folder, `![alt](/video/<name>/)`, is one: `clip.mov` (HEVC with
 alpha, listed first for Safari, which plays WebM but drops its alpha into a black box), `clip.webm`
 (VP9 with alpha, for the rest) and `poster.png`, its last frame. Copy a .mov with `cp`: even an
 `ffmpeg -c copy` remux makes WebKit draw it blank. It rests on the

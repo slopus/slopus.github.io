@@ -1,61 +1,43 @@
 # New Work Starts as a Stem Cell
 
-Every AI app keeps adding **front doors**: a new chat, a project, an assistant, a mode. Each one asks you to **decide what the work is before you've started it**. In Happy Desktop we're trying **one door** instead: new work starts as a **stem cell**, and you **just say what it is**.
+Every AI app keeps adding **front doors**: a new chat, a project, an assistant, a mode. Each one asks you to **decide what the work is before you've started it**.
 
 ## Every AI app keeps adding ways to start
 
 ![A Create button with its Create new menu open, listing Page, Slides, Sheet (coming soon), Site, Image, Folder, Space, Start from template, Upload files and Connect a plugin.](/img/stem-cell-create-menu.webp)
 
-*The Create menu in one AI workspace.*
+*The Create menu in Codex.*
 
 Ten ways to start, and you haven't said a word yet. You rarely know what the work is until you're in it: the quick question turns into a week of work, and the project turns out to be one question. Pick wrong, and the work stays wherever you started it.
 
-> The ChatGPT app is now such a clusterf\*\*k.
->
-> There's now 4 ways to do similar things!!!
->
-> — Richard Wu, @0xrwu, [30 Sep 2026](https://x.com/0xrwu/status/2105329822125707394)
+<Tweet url="https://x.com/0xrwu/status/2105329822125707394" />
 
-> I like choices... but now I have:
->
-> 2x modes (Codex vs. Work mode)
-> 3x GPT-5.6 models (Sol, Terra, Luna)
-> 5x effort levels (Light, Medium, High, Extra High, Ultra)
->
-> That's 2 x 3 x 5 = 30 possible configurations for a query 🤯
->
-> — Sebastian Raschka, @rasbt, [9 Jul 2026](https://x.com/rasbt/status/2075369179817902176)
+<Tweet url="https://x.com/rasbt/status/2075369179817902176" />
 
-## One button, one input box
+## What if you hit one button?
 
-![Eight create buttons, New task, +, New tab, New window, New chat, New bot, New todo list and New document, contract into cells and flow into one stem cell, labelled New. Then ping me on serious posthog alerts is typed into the input box below it.](/video/stem-cell/one/)
+In Happy Desktop we're trying **one door** instead: all new work starts as a **stem cell**.
 
-So start with something that isn't anything yet. **Create, ⌘N and ⌘T** all make the same thing: a row called **New**, with an empty chat that says "Say what it is — it'll find its place." You don't pick a kind, a project or a mode. You type what you want.
+![A pink stem cell: a soft, irregular membrane around a darker nucleus.](/img/stem-cell.png "small")
 
-## It becomes what you meant
+Create, ⌘N and ⌘T all make one: a row called **New**, with an empty chat. You say what it is, and it **names itself** and **grows into its icon**.
 
-![The stem cell divides into the colours of a red beacon clay icon and settles into its shape, while its label changes from New to PostHog alerts.](/video/stem-cell/grow/)
-
-Send `ping me on serious posthog alerts`. Within a minute the row **names itself**, PostHog alerts, and the cell **grows into its icon**, picked from 136 clay icons. Call it something else and your name sticks.
-
-That's the part we've shipped. Next, a stem cell becomes **the right kind of thing**, opens **the right repositories** to work in, and **loops in the right people**: whoever last worked on that area, or the teammate who already started another take on it.
+Next, the stem cell **morphs into the right thing**, finds **the right repositories** to work in, and finds **the people to loop in**: whoever worked on this area before, or the teammate who already started another take on it.
 
 ## The sidebar is the new task tracker
 
-Working with agents feels like throwing boomerangs. You send a bunch out, it's great fun, they fly far, and at some point they all start coming back at you. The sidebar is where they land, so it has to work like a task tracker, not a chat history.
+{/* MEDIA app-recording: a full recording of Happy Desktop (macOS window with traffic lights): click Create, say what it is,
+    the agent answers with an inline PostHog-style chart, and the row names itself and files itself in the sidebar.
+    Until it lands, the real before/after sidebar renders stand in. */}
 
 ![Happy Desktop's sidebar before: Search, Create, Happy, then four new rows right below Happy, PostHog alerts, Signup funnel, Fix login bug and Q4 board deck, then the Engineering section with Auth refactor and the Board section with Q3 board deck.](/img/stem-cell-sidebar-before.webp "Before") ![The same sidebar after: Search, Create, Happy; Engineering with Auth refactor and Fix login bug; Board with Q3 board deck and Q4 board deck; a new Analytics section with PostHog alerts and Signup funnel; and Distractions with Rewrite the website in Rust.](/img/stem-cell-sidebar-after.webp "After")
 
-A stem cell **puts itself where it belongs**: in the section for its subject, next to related work, the way you've organised things. When several rows share a subject no section fits, a new section appears. And whatever you don't want right now goes into **Distractions**: drop it there, and it waits until you're ready. Happy has a **dedicated focus agent**, Prioritizing, that keeps the sidebar in that shape.
-
-> I kinda gave up and am waiting until a new model gets enough capability to just go sort through old chats and organise them for me
->
-> — u/mesamaryk, r/ClaudeAI, [16 Jun 2026](https://www.reddit.com/r/ClaudeAI/comments/1u7j7au/the_most_annoying_part_of_claude_is_losing_a/os114du/)
+New work puts itself where it belongs, next to related work, and Happy's **focus agent** keeps the sidebar in that shape.
 
 ## Try it
 
-Stem cells are experimental and off by default. In Happy Desktop, open Settings, then Experimental, and turn on **Spaces sidebar** and **Stem cells**. It guesses, and you can always correct it.
+If this sounds like you,
 
-> Your interface needs one button to start work and one input box. That's it.
+<RedditEmbed url="https://www.reddit.com/r/ClaudeAI/comments/1u7j7au/the_most_annoying_part_of_claude_is_losing_a/os114du/" />
 
-*Bot face on the New bot button: [Adventurer Neutral](https://www.figma.com/community/file/1184595184137881796) by [Lisa Wischofsky](https://www.instagram.com/lischi_art/) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)), recoloured.*
+give Happy's stem cells a try. They're experimental and off by default: in Happy Desktop, open Settings, then Experimental, and turn on **Spaces sidebar** and **Stem cells**.
