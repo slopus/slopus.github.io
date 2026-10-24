@@ -22,24 +22,29 @@ export function AutoplayClip({ folder, label }: { folder: string; label: string 
     let ratio = 0
     let ownPause = false
     let readerPaused = false
-    // The reader's last click, tap or key on the clip or its controls.
+    // The reader's last press, tap or key on the clip. Chrome's native controls send the page no
+    // pointer events at all, only the pause, so a pointer resting on the clip (:hover covers its
+    // controls) or keyboard focus on it also count as the reader reaching for it.
     let touched = -Infinity
+    let settle: ReturnType<typeof setTimeout> | undefined
     const play = () => { if (!readerPaused && !document.hidden && ratio >= 0.3 && clip.paused) void clip.play().catch(revealControls) }
-    // A pause is the reader's only right after they reached for the clip; any other pause in view
-    // (the browser's, a focus change) is undone. The pause event comes a task after pause(), so it
-    // clears ownPause itself.
+    const touchedRecently = () => performance.now() - touched < 1500 || clip.matches(':hover') || document.activeElement === clip
+    // A pause is the reader's if they're on the clip or reached for it within 1.5 s either side, so it sticks;
+    // any other pause in view (the browser's, a focus change) is undone. The pause event comes a task
+    // after pause(), so it clears ownPause itself.
     const onPause = () => {
-      if (ownPause) ownPause = false
-      else if (performance.now() - touched < 1000) readerPaused = true
-      else play()
+      if (ownPause) { ownPause = false; return }
+      if (touchedRecently()) { readerPaused = true; return }
+      clearTimeout(settle)
+      settle = setTimeout(() => { if (touchedRecently()) readerPaused = true; else play() }, 400)
     }
-    const onPlay = () => { readerPaused = false }
+    const onPlay = () => { readerPaused = false; clearTimeout(settle) }
     const onTouch = () => { touched = performance.now() }
     const onVisibility = () => { if (!document.hidden) play() }
+    const gestures = ['pointerdown', 'pointerup', 'mousedown', 'click', 'touchstart', 'touchend', 'keydown'] as const
     clip.addEventListener('pause', onPause)
     clip.addEventListener('play', onPlay)
-    clip.addEventListener('pointerdown', onTouch)
-    clip.addEventListener('keydown', onTouch)
+    for (const type of gestures) clip.addEventListener(type, onTouch, { capture: true, passive: true })
     document.addEventListener('visibilitychange', onVisibility)
     const observer = new IntersectionObserver(([entry]) => {
       ratio = entry.isIntersecting ? entry.intersectionRatio : 0
@@ -51,8 +56,8 @@ export function AutoplayClip({ folder, label }: { folder: string; label: string 
       observer.disconnect()
       clip.removeEventListener('pause', onPause)
       clip.removeEventListener('play', onPlay)
-      clip.removeEventListener('pointerdown', onTouch)
-      clip.removeEventListener('keydown', onTouch)
+      for (const type of gestures) clip.removeEventListener(type, onTouch, { capture: true })
+      clearTimeout(settle)
       document.removeEventListener('visibilitychange', onVisibility)
     }
   }, [revealControls])

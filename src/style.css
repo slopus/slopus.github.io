@@ -266,8 +266,10 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .docs-sidebar { align-self: stretch; height: 100%; max-height: none; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 1.75rem 2px 3rem; position: static; }
   .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 1.75rem 0 0; position: relative; scrollbar-width: none; }
   .docs-shell .document-article::-webkit-scrollbar { width: 0; height: 0; }
-  /* The article reaches 24px into the gap before it, content unmoved, so a figure's shadow isn't cut at its left edge. */
-  .docs-shell .document-article { margin-left: -24px; padding-left: 24px; }
+  /* The column gap is the article's own left padding, so the scrolling article starts at the sidebar's
+     edge: a wheel over the gap scrolls it, and a figure's shadow isn't cut at its left edge. */
+  .docs-shell .docs-layout { column-gap: 0; }
+  .docs-shell .document-article { padding-left: 4rem; }
   .docs-shell .document-article > .legacy-notice,
   .docs-shell .document-article > .recipe-source { margin-right: 2rem; }
   .docs-shell .document-article > .document-content,
@@ -280,6 +282,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 
 @media (min-width: 761px) and (max-width: 900px) {
   .docs-shell .docs-layout { grid-template-columns: 190px minmax(0, 1fr); }
+  .docs-shell .document-article { padding-left: 2.5rem; }
 }
 .docs-navigation { display: grid; gap: 1.5rem; }
 .docs-nav-group h2, .docs-nav-fold summary { color: #183f38; font-family: 'DM Sans', sans-serif; font-size: .77rem; font-weight: 700; letter-spacing: 0; margin: 0 0 .5rem; }
