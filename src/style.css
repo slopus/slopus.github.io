@@ -431,7 +431,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content .social-embed-reddit iframe { max-width: min(100%, 550px) !important; width: 100% !important; }
 .document-content .social-embed-byline { color: #6b7f78; font-size: .88rem; margin: .5rem 0 0; white-space: normal; }
 /* An image titled "row" in a doc: a cut-out of the app at its own size, on the page with no frame. */
-.document-content img.row-image { border: 0; border-radius: 0; box-shadow: none; display: block; height: auto; margin: 1.2rem 0; max-width: 100%; width: 260px; }
+.document-content img.row-image { border: 0; border-radius: 0; box-shadow: none; display: block; height: auto; margin: 1.2rem 0; max-width: 100%; width: 272px; }
 .blog-download + .document-pagination { margin-top: 3rem; }
 /* A line in italics right under a video, an image or a closing quote is a caption or credit; it may hold links, which an essay figcaption can't. */
 .document-content p:has(> video, > img) + p:has(> em:only-child),
