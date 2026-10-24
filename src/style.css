@@ -411,12 +411,11 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 /* An official X or Reddit embed (src/SocialEmbed.tsx), centred; until its script runs, the post's
    text as a plain card. */
 .document-content .social-embed { clear: both; display: flex; justify-content: center; margin: 1.4rem 0; }
-/* Tweets in a row: side by side past phone width. */
-.document-content .social-embed-row { align-items: start; clear: both; display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 340px)); justify-content: center; margin: 1.4rem 0; }
+/* Tweets in a row: side by side only where the column holds two at X's full 340px, stacked otherwise.
+   X never draws a tweet narrower than about 300px, so a narrower track would let them overlap. */
+.document-content .social-embed-row { align-items: start; clear: both; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, min(100%, 340px)); justify-content: center; margin: 1.4rem 0; }
 .document-content .social-embed-row > .social-embed { margin: 0; min-width: 0; }
-@media (max-width: 640px) {
-  .document-content .social-embed-row { grid-template-columns: minmax(0, 1fr); }
-}
+.document-content .social-embed-row iframe { max-width: 100% !important; }
 .document-content .social-embed > * { margin-block: 0 !important; }
 .document-content .social-embed blockquote { background: #fffdf8; border: 1px solid #ddd6c8; border-radius: 12px; color: #294c45; margin: 0; max-width: 550px; padding: .9rem 1.1rem; white-space: pre-line; width: 100%; }
 /* Reddit sizes its iframe inline; match the tweets above. */
