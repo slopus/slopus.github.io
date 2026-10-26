@@ -46,7 +46,7 @@ under iMessage's 10 MB.
 - Same origin is not required by any of these; HTTPS and a direct file are. GitHub Pages serves
   `.mp4` as `video/mp4` with range requests.
 - The card is a frame of the video at the video's aspect ratio. Slack, X, LinkedIn and WhatsApp
-  show only the card, so take the frame that carries the hook: for the stem cell video, 3.8 s,
+  show only the card, so take the frame that carries the hook: for the stem cell video, 3.1 s,
   once the headline and the whole wall of buttons are on screen. X crops a 16:9 card to 1.91:1, about 22 px off the top and bottom at 1200.
 - Smaller is better: iMessage downloads the whole file before it plays. Short seamless loops do
   well; keep it silent.
@@ -60,7 +60,7 @@ build read them:
 
 ```sh
 cp final.mp4 public/video/stem-cell.mp4      # H.264, yuv420p, faststart, no audio
-ffmpeg -y -ss 3.8 -i public/video/stem-cell.mp4 -frames:v 1 -vf scale=1200:-1 public/og/stem-cell.png
+ffmpeg -y -ss 3.1 -i public/video/stem-cell.mp4 -frames:v 1 -vf scale=1200:-1 public/og/stem-cell.png
 ```
 
 If the new file isn't 1280×720, change `video` in `src/documents.ts`; the card must then be 1200 × round(1200 × height / width). To make an existing

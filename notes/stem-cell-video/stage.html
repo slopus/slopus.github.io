@@ -251,9 +251,9 @@ function typing(text, at, seed, base, spread, pause) {
 
 // Timeline, in seconds: one step per caption, each with time to read it and to watch it happen.
 const T = {};
-// The wall builds up faster and faster: New chat, New project and New task one at a time, then the
-// rest with the gaps shrinking geometrically to 40 ms.
-T.appear = [0.3];
+// The wall builds up faster and faster: New chat is there with the caption, then New project and New
+// task one at a time, then the rest with the gaps shrinking geometrically to 40 ms.
+T.appear = [-0.38];                    // New chat has landed by the first frame
 {
     const gaps = [0.5, 0.4, 0.3];
     const first = 0.18, last = 0.04, n = BUTTONS.flat().length - 1 - gaps.length;
@@ -434,23 +434,26 @@ async function renderAt(t) {
     const merging = t >= T.fuse && settled < 1;
     const massPink = smooth(seg(buttons.reduce((sum, b) => sum + absorbed(b, t), 0) / buttons.length, 0.3, 0.85));
     for (const b of buttons) {
+        // New chat comes back with the caption at the end, as it is in the first frame.
+        const back = reset > 0 && b.index === 0;
+        const bt = back ? 0 : t;
         const appear = T.appear[b.index];
         const s = start(b);
-        const contract = easeInOut(seg(t, s, s + 0.34));
+        const contract = easeInOut(seg(bt, s, s + 0.34));
         const w = lerp(b.w, CELL, contract), h = lerp(H, CELL, contract);
-        const rise = smooth(seg(t, appear, appear + 0.3));
+        const rise = smooth(seg(bt, appear, appear + 0.3));
         b.el.style.left = b.cx - w / 2 + "px";
         b.el.style.top = b.cy - h / 2 + lerp(6, 0, rise) + "px";
         size(b.el, w, h);
         b.el.style.borderRadius = lerp(15, CELL / 2, contract) + "px";
-        b.el.style.transform = `scale(${lerp(0.94, 1, pop(t, appear, appear + 0.38))})`;
+        b.el.style.transform = `scale(${lerp(0.94, 1, pop(bt, appear, appear + 0.38))})`;
         b.el.style.boxShadow = contract > 0 ? "none" : "";
-        b.content.style.opacity = String(1 - seg(t, s, s + 0.14));
+        b.content.style.opacity = String(1 - seg(bt, s, s + 0.14));
         b.content.style.left = (w - b.w) / 2 + "px";
 
         // The contracted cell hands over to its twin in the goo layers, which can merge.
         const handover = seg(t, s + 0.3, s + 0.36);
-        show(b.el, rise * (1 - handover));
+        show(b.el, back ? reset : rise * (1 - handover));
         const go = travel(b, t);
         const bend = Math.sin(Math.PI * go) * 22 * (b.index % 2 ? 1 : -1);
         const dx = ANCHOR.x - b.cx, dy = ANCHOR.y - b.cy, len = Math.hypot(dx, dy) || 1;
