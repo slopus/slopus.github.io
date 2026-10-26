@@ -6,6 +6,7 @@ import { DocsPage, LegalPage, NotFoundPage } from './DocumentPages'
 import { MemesPluginPage, PluginsPage } from './PluginPages'
 import { documentHeading, getDocument, normalizeDocumentPath } from './documents'
 import { documentHref, HAPPY, HAPPY_DESKTOP, type Product } from './products'
+import { changelogEntryForPath, changelogEntryMetadata } from './changelog'
 import {
   applyPageMetadata,
   docsMetadataForProduct,
@@ -104,6 +105,8 @@ function desktopDocumentCard(path: string) {
 }
 
 export function metadataForPath(pathname: string): PageMetadata {
+  const changelogEntry = changelogEntryForPath(pathname)
+  if (changelogEntry) return changelogEntryMetadata(changelogEntry)
   const normalizedPath = normalizedPathname(pathname)
 
   if (normalizedPath === '/') {
@@ -306,6 +309,11 @@ export function Router({ pathname }: { pathname?: string }) {
 
   if (normalizedPath === '/terms' || normalizedPath === '/tos') {
     return <LegalPage name="terms" />
+  }
+
+  const changelogEntry = changelogEntryForPath(normalizedPath)
+  if (changelogEntry) {
+    return <DocsPage product={HAPPY_DESKTOP} path="changelog" changelogPath={normalizedPath} />
   }
 
   const located = documentForPath(normalizedPath)

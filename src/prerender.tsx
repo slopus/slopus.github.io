@@ -3,6 +3,7 @@ import { renderToString } from 'react-dom/server'
 import { documents } from './documents'
 import { documentHref, HAPPY, HAPPY_DESKTOP } from './products'
 import { Router } from './Router'
+import { productionChangelogEntries, changelogSharePath } from './changelog'
 
 // scripts/generate-static-routes.mjs reads the docs registry and the page metadata
 // from this bundle instead of keeping its own copies.
@@ -10,6 +11,7 @@ export { documentHeading, documents } from './documents'
 export { documentHref, HAPPY, HAPPY_DESKTOP } from './products'
 export { metadataForPath } from './Router'
 export { defaultSocialImage, socialImageUrl, socialVideoTags } from './siteMetadata'
+export { productionChangelogEntries, changelogSharePath, changelogEntryMetadata } from './changelog'
 
 /**
  * Pages whose full text must be in the served HTML, not only after the app
@@ -22,6 +24,7 @@ export { defaultSocialImage, socialImageUrl, socialVideoTags } from './siteMetad
 export const prerenderedPaths = [
   '/', '/plugins/', '/plugins/memes/', '/plugins/privacy/', '/plugins/terms/',
   ...documents.map((document) => documentHref(document.product === 'desktop' ? HAPPY_DESKTOP : HAPPY, document.path)),
+  ...productionChangelogEntries.map(changelogSharePath),
 ]
 
 export function renderPath(pathname: string) {

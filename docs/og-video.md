@@ -1,8 +1,14 @@
 # Link previews that play a video (og:video)
 
-A desktop doc with `video` in `src/documents.ts` (`/stem-cell/` and `/terra/`) previews as that
-video. Checked October 26, 2026. The Terra promo also plays in its changelog entry;
-its deterministic source and regeneration instructions live in `notes/terra-video/`.
+A desktop doc with `video` in `src/documents.ts` (`/stem-cell/`), or a production changelog
+entry with `video` in `src/changelog.ts` (`/changelog/gpt-6-1-terra/`), previews as that video.
+Checked October 26, 2026. The Terra promo also plays in its changelog entry; its deterministic
+source and regeneration instructions live in `notes/terra-video/`.
+
+Changelog permalinks are complete prerendered pages, each with its own og:url and canonical.
+They put the selected entry first and keep normal navigation and the rest of the changelog.
+GitHub Pages serves the same HTML for every query string, so `?v=` cannot select an entry's
+preview. `/changelog/` keeps generic tags; its entry links use human paths, not query strings.
 
 ## What the served HTML carries
 

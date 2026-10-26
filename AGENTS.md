@@ -57,17 +57,23 @@ two or three lines of specific, sourced wins taken from their own sites, talks
 and public profiles, with their X handles and the photos in `public/img/team/`.
 It never states or hints at anyone's level of involvement, in either direction.
 
-Changelog follows Guides in the desktop docs sidebar. Its dated entries use short top-level
-URLs; `/terra/` announces GPT-6.1 Terra with an embedded promo and video link preview.
-Video sources and regeneration instructions live in `notes/terra-video/`.
+Changelog is a disclosure directly above Recipes, after Comparisons, collapsed by default
+on desktop and phones, including on changelog pages. `/changelog/` lists production releases
+newest first; previews never get entries. Each entry has a feature title, with its product,
+stable version and publication date in a small line below it. Human permalinks such as
+`/changelog/gpt-6-1-terra/` are complete prerendered pages with that entry first and their own
+canonical URL, og:url and link-preview tags; GitHub Pages cannot vary HTML by query string.
+Entries and share metadata live in `src/changelog.ts`, copy in `content/changelog/`.
+Terra is keyed to the Happy Agent release that supplies the model catalog; video sources
+and regeneration instructions live in `notes/terra-video/`. `/terra/` was deliberately removed.
 
-The Blog follows Changelog and precedes Comparisons in the desktop docs sidebar, with no list page.
+The Blog follows Guides and precedes Comparisons in the desktop docs sidebar, with no list page.
 Posts are desktop docs (`group: 'Blog'` in `src/documents.ts`) at one-word
 URLs you can type from memory: `/workos/`, `/tailcat/`, `/voice/`.
 `/team-sign-in-workos/`, where the WorkOS post was first shared, redirects to
 `/workos/`; `/blog/` still redirects to `/vision/`.
 
-Recipes comes last, after Comparisons, in a disclosure labeled **Recipes (for agents)**,
+Recipes comes last, after Changelog, in a disclosure labeled **Recipes (for agents)**,
 collapsed by default on desktop and phones, including on recipe pages. The `/recepies/`
 pages reproduce Happy Agent's operational instructions byte for byte, rather than adapting
 them for people or adding Chief of Staff prompt blocks. `/recipes/` aliases those URLs.

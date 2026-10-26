@@ -1,6 +1,6 @@
 # GPT-6.1 Terra promo
 
-The 11-second announcement for `/terra/`: a 1280 × 720 link-preview MP4 and a
+The 11-second announcement for `/changelog/gpt-6-1-terra/`: a 1280 × 720 link-preview MP4 and a
 1920 × 1080 MP4 for attaching to X. Both are silent H.264 High, yuv420p, 30 fps,
 with `moov` before `mdat`. The poster is the first frame, 1200 × 675.
 
@@ -51,7 +51,7 @@ pnpm build
 
 Output arguments resolve relative to this directory. Rendered frames and review
 stills stay in ignored `.context/`, not in the source directory. The changelog
-embeds `terra.mp4`; its `video` entry in `src/documents.ts` adds the preview tags.
+embeds `terra.mp4`; its `video` entry in `src/changelog.ts` adds the permalink's preview tags.
 Follow `docs/og-video.md` when replacing a previously shared cut: give it a new
 file name so preview caches fetch it again.
 

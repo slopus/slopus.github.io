@@ -170,6 +170,7 @@ export function MarkdownDocument({
   components: overrides,
   originalDocsLinks = false,
   resolveHref,
+  headingId,
 }: {
   markdown: string
   /** Replaces the default renderer for these elements. */
@@ -178,6 +179,8 @@ export function MarkdownDocument({
   originalDocsLinks?: boolean
   /** Resolve links relative to an unmodified upstream document. */
   resolveHref?: (href: string | undefined) => string | undefined
+  /** Permanent entry anchors independent of their current feature titles. */
+  headingId?: (text: string, depth: 1 | 2 | 3) => string | undefined
 }) {
   const usedHeadingIds = new Map<string, number>()
   // Keyed by source offset so a repeat render of a heading (StrictMode, hydration) keeps its id.
@@ -198,7 +201,7 @@ export function MarkdownDocument({
       let id = offset === undefined ? undefined : headingIdsByOffset.get(offset)
 
       if (id === undefined) {
-        const baseId = slugifyHeading(text)
+        const baseId = headingId?.(text, depth) ?? slugifyHeading(text)
         const count = usedHeadingIds.get(baseId) ?? 0
         id = count === 0 ? baseId : `${baseId}-${count}`
         usedHeadingIds.set(baseId, count + 1)

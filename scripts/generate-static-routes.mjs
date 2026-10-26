@@ -28,6 +28,9 @@ const {
   renderPath,
   socialImageUrl,
   socialVideoTags,
+  productionChangelogEntries,
+  changelogSharePath,
+  changelogEntryMetadata,
 } = await import(pathToFileURL(path.join(projectRoot, 'dist-ssr', 'prerender.js')).href)
 
 // routes.txt is the committed record of every URL this site has ever served; see the check at the end.
@@ -329,7 +332,9 @@ for (const document of documents) {
   documentRoutes += 1
   // Unlisted pages (hidden: true) are noindex and stay out of the sitemap.
   if (!document.hidden) {
-    sitemapPages.push({ route: canonicalPath, sources: [document.sourcePath.slice(1)] })
+    const sources = [document.sourcePath.slice(1)]
+    if (document.group === 'Changelog') sources.push('src/changelog.ts', ...productionChangelogEntries.map((entry) => entry.sourcePath.slice(1)))
+    sitemapPages.push({ route: canonicalPath, sources })
   }
 
   if (product === HAPPY_DESKTOP) {
@@ -341,6 +346,30 @@ for (const document of documents) {
       }
     }
   }
+}
+
+// Each production entry is a complete, shareable page. GitHub Pages cannot vary
+// HTML by ?query; crawlers must read the entry's own tags without JavaScript.
+for (const entry of productionChangelogEntries) {
+  const route = changelogSharePath(entry)
+  const metadata = changelogEntryMetadata(entry)
+  const html = withAppMarkup(htmlForPage(metadata), prerendered(route))
+  assertDocumentServed(route, html, entry.title)
+  for (const [tag, expected] of Object.entries({
+    'og:url': new URL(route, siteUrl).toString(),
+    'og:title': entry.title,
+    'og:image': socialImageUrl(entry.image),
+    'og:image:width': String(entry.image.width),
+    'og:image:height': String(entry.image.height),
+  })) {
+    if (metaContent(html, 'property', tag) !== escapeHtml(expected)) throw new Error(`${route} should carry ${tag} ${expected}`)
+  }
+  const png = await readFile(path.join(distRoot, entry.image.path))
+  if (png.readUInt32BE(16) !== entry.image.width || png.readUInt32BE(20) !== entry.image.height) throw new Error(`${route} has a poster with the wrong dimensions`)
+  if (entry.video) await assertSocialVideo(route, html, entry.video, png.length)
+  await writeRoute(route, html)
+  documentRoutes += 1
+  sitemapPages.push({ route, sources: [entry.sourcePath.slice(1), 'src/changelog.ts'] })
 }
 
 // The homepage ships its markup too, under index.html's own head. The other pages are built

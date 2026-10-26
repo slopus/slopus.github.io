@@ -65,7 +65,7 @@ describe('static document pages', () => {
     expect(trail.getAttribute('aria-expanded')).toBe('true')
     expect(menu.hidden).toBe(false)
     expect(within(menu).getByRole('link', { name: 'Chief of Staff' }).getAttribute('aria-current')).toBe('page')
-    expect([...menu.querySelectorAll('.docs-nav-group > h2, .docs-nav-fold > summary')].map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Changelog', 'Blog', 'Comparisons', 'Recipes (for agents)'])
+    expect([...menu.querySelectorAll('.docs-nav-group > h2, .docs-nav-fold > summary')].map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Blog', 'Comparisons', 'Changelog', 'Recipes (for agents)'])
 
     fireEvent.click(trail)
     expect(menu.hidden).toBe(true)
@@ -181,7 +181,7 @@ describe('static document pages', () => {
     unmount()
 
     render(<Router pathname="/claude-code-remote-control/" />)
-    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/operational recipes/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/changelog/i)
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/claude code on your phone/i)
   })
 
@@ -431,12 +431,12 @@ describe('static document pages', () => {
     expect(documents.filter((document) => document.path === 'secrets')).toHaveLength(1)
   })
 
-  it('lists Changelog above Blog, Blog before Comparisons and collapsed Recipes last; keeps the old Blog URLs', () => {
+  it('lists Blog before Comparisons, collapsed Changelog next and collapsed Recipes last; keeps the old Blog URLs', () => {
     render(<Router pathname="/workos/" />)
 
     const [sidebar] = screen.getAllByRole('navigation', { name: 'Documentation navigation' })
     const groups = [...sidebar.querySelectorAll('.docs-nav-group > h2, .docs-nav-fold > summary')]
-    expect(groups.map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Changelog', 'Blog', 'Comparisons', 'Recipes (for agents)'])
+    expect(groups.map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Blog', 'Comparisons', 'Changelog', 'Recipes (for agents)'])
     const posts = within(groups.find((heading) => heading.textContent === 'Blog')!.closest('section')!).getAllByRole('link').map((link) => link.getAttribute('href'))
     expect(posts).toEqual(['/workos/', '/tailcat/', '/voice/', '/updates/', '/stem-cell/'])
     expect(screen.getByRole('heading', { level: 1, name: /team sign-in with workos/i })).toBeTruthy()
@@ -454,15 +454,16 @@ describe('static document pages', () => {
     expect(thesisMetadata.robots).toBeUndefined()
   })
 
-  it('keeps the full recipe link list in served HTML but folds it by default', () => {
+  it('keeps changelog and recipe links in served HTML but folds both by default', () => {
     const markup = renderPath('/recepies/')
     const parsed = new DOMParser().parseFromString(markup, 'text/html')
     const folds = parsed.querySelectorAll('details.docs-nav-fold')
-    expect(folds).toHaveLength(2)
+    expect(folds).toHaveLength(4)
     for (const fold of folds) {
       expect(fold.hasAttribute('open')).toBe(false)
-      expect(fold.querySelector('summary')?.textContent).toBe('Recipes (for agents)')
-      expect(fold.querySelectorAll('a')).toHaveLength(18)
+      const summary = fold.querySelector('summary')?.textContent
+      expect(['Changelog', 'Recipes (for agents)']).toContain(summary)
+      expect(fold.querySelectorAll('a')).toHaveLength(summary === 'Changelog' ? 1 : 18)
     }
   })
 
@@ -483,6 +484,28 @@ describe('static document pages', () => {
     expect(recipeHref('recepies/runner', '#local')).toBe('#local')
     expect(recipeHref('recepies/runner', 'https://example.com/')).toBe('https://example.com/')
   }, 30_000)
+
+  it('prerenders a feature-titled changelog permalink with its own video preview and normal navigation', () => {
+    const path = '/changelog/gpt-6-1-terra/'
+    const page = new DOMParser().parseFromString(renderPath(path), 'text/html')
+    expect(page.querySelector('article h1')?.textContent).toContain('GPT-6.1 Terra')
+    expect(page.querySelector('article h1')?.textContent).not.toContain('v0.4.108')
+    expect(page.querySelector('article h1 + p')?.textContent).toContain('Happy Agent v0.4.108')
+    expect(page.querySelector('article video')?.getAttribute('src')).toBe('/video/terra.mp4')
+    expect(page.querySelector('article a[href="/changelog/"]')?.textContent).toBe('All releases')
+    expect(page.querySelectorAll('details.docs-nav-fold[open]')).toHaveLength(0)
+    expect(page.querySelectorAll('details.docs-nav-fold')).toHaveLength(4)
+    expect(metadataForPath(path)).toMatchObject({
+      canonicalPath: path,
+      socialImage: { path: '/og/terra.png', width: 1200, height: 675 },
+      socialVideo: { path: '/video/terra.mp4', width: 1280, height: 720 },
+    })
+    expect(prerenderedPaths).toContain(path)
+    expect(renderPath('/changelog/')).toContain('id="gpt-6-1-terra"')
+    expect(metadataForPath('/changelog/').socialVideo).toBeUndefined()
+    expect(metadataForPath('/changelog/').title).toMatch(/^Changelog/)
+    expect(prerenderedPaths).not.toContain('/terra/')
+  })
 
   it('puts a copyable Chief of Staff prompt right after the intro of every page it can help with', () => {
     const withPrompt = ['quick-start', 'chief-of-staff', 'models', 'permissions', 'secrets', 'workspaces', 'agents', 'mobile', 'multiplayer', 'extending', 'guides/configuration', 'guides/remote-server']

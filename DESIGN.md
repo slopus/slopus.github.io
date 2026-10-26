@@ -98,8 +98,8 @@ The short descriptor is **Orchestrate Claude, Codex and Grok in one app** (`HAPP
   - A screenshot too small to carry a card gets a larger cutout of the same UI in `notes/og/figures/`, named in `CARD_FIGURES` in `cards.py`. It fills the right side the way a diagram does.
   - A post whose preview should play a video sets `video` in `src/documents.ts`. Its card is a frame of the video, the one that carries its hook, 1200 wide at the video's aspect ratio, not a `cards.py` card; iMessage and Discord play the MP4, everything else shows the frame. `docs/og-video.md` has the tags, the per-platform limits, and how to replace the video.
   - After changing cards that are already shared, bump `SOCIAL_IMAGE_VERSION` in `src/siteMetadata.ts` and the `?v=` on the homepage image in `index.html`, so X, Slack, and LinkedIn fetch them again.
-- **Changelog** follows Guides; dated entries use short top-level URLs and state shipped changes.
-- **The Blog** follows Changelog and precedes Comparisons in the sidebar, with no list page. Each post gets a one-word slug you can type from memory: `/workos/`, `/tailcat/`, `/voice/`. Every post ends on the homepage's download options, added by the page layout (`src/DocumentPages.tsx`), never by the post.
+- **Changelog** is collapsed by default, directly above Recipes, after Comparisons. `/changelog/` lists production releases newest first, never previews. Entry titles name their core features; product, stable version and date sit in a small line below. Each human permalink (`/changelog/gpt-6-1-terra/`) is a complete prerendered page with that entry first and its own canonical, og:url and preview. GitHub Pages cannot vary HTML by query string.
+- **The Blog** follows Guides and precedes Comparisons in the sidebar, with no list page. Each post gets a one-word slug you can type from memory: `/workos/`, `/tailcat/`, `/voice/`. Every post ends on the homepage's download options, added by the page layout (`src/DocumentPages.tsx`), never by the post.
 - **URLs don't break.** `routes.txt` only grows. A shared URL keeps working when its page moves: `/team-sign-in-workos/` redirects to `/workos/`.
 
 ## Landing page

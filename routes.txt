@@ -4,6 +4,8 @@
 /
 /agents/
 /blog/
+/changelog/
+/changelog/gpt-6-1-terra/
 /chief-of-staff/
 /claude-code-remote-control/
 /comparisons/buzz/
@@ -119,7 +121,6 @@
 /team-sign-in-workos/
 /team/
 /terms/
-/terra/
 /thesis/
 /tmp/happy-one/
 /tos/

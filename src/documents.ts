@@ -1,4 +1,5 @@
 import type { ProductKey } from './products'
+import { changelogMarkdown } from './changelog'
 
 export type DocumentGroup =
   | 'Start here'
@@ -529,13 +530,13 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Comparisons',
   },
   {
-    path: 'terra',
-    sourcePath: '/content/desktop/terra.mdx',
-    title: 'GPT-6.1 Terra',
-    pageTitle: 'GPT-6.1 Terra Is in Happy — Changelog, October 26, 2026',
-    description: 'GPT-6.1 Terra is available in Happy’s model picker. Newest generations come first. GPT-5.6 models were removed; switch chats using them to another model.',
+    path: 'changelog',
+    sourcePath: '/content/desktop/changelog.mdx',
+    title: 'Changelog',
+    pageTitle: 'Changelog — Happy Agent and Happy Desktop Production Releases',
+    description: 'Production releases of Happy Agent and Happy Desktop: new models, features and fixes, with a version and date for each release.',
+    cardLine: 'Production updates to Happy Agent and Desktop',
     group: 'Changelog',
-    video: { path: '/video/terra.mp4', width: 1280, height: 720 },
   },
   {
     // Blog: short URLs to type from memory; the titles stay long.
@@ -589,7 +590,7 @@ export const documents: DocumentEntry[] = [
 
 const productDocumentGroups: Record<ProductKey, DocumentGroup[]> = {
   happy: ['Start here', 'Guides', 'Features', 'Use cases', 'Comparisons', 'Releases', 'Resources'],
-  desktop: ['Start here', 'Features', 'Guides', 'Changelog', 'Blog', 'Comparisons', 'Recipes'],
+  desktop: ['Start here', 'Features', 'Guides', 'Blog', 'Comparisons', 'Changelog', 'Recipes'],
 }
 
 export function documentsForProduct(product: ProductKey) {
@@ -623,7 +624,10 @@ export function getDocumentSource(document: DocumentEntry): string {
     return getThesisMarkdown()
   }
 
-  const source = documentSources[document.sourcePath] ?? ''
+  const intro = documentSources[document.sourcePath] ?? ''
+  const source = document.product === 'desktop' && document.path === 'changelog'
+    ? `${intro.trim()}\n\n${changelogMarkdown()}`
+    : intro
 
   if (source.trim()) {
     return /^#\s+/m.test(source) ? source : `# ${document.title}\n\n${source}`

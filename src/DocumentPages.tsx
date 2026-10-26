@@ -17,6 +17,7 @@ import {
 import { documentHref, HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import { SiteFooter, SiteHeader } from './SiteChrome'
 import { recipeHref, recipeSource } from './recipeSources'
+import { changelogAnchor, changelogEntryForPath, changelogMarkdown, productionChangelogEntries } from './changelog'
 
 function DocsNavigation({
   product,
@@ -52,10 +53,10 @@ function DocsNavigation({
           </ul>
         )
 
-        return group === 'Recipes' ? (
+        return group === 'Recipes' || group === 'Changelog' ? (
           <section className="docs-nav-group" key={group}>
             <details className="docs-nav-fold">
-              <summary>Recipes (for agents)</summary>
+              <summary>{group === 'Recipes' ? 'Recipes (for agents)' : 'Changelog'}</summary>
               {links}
             </details>
           </section>
@@ -136,7 +137,7 @@ function LegacyNotice() {
   )
 }
 
-export function DocsPage({ product = HAPPY, path }: { product?: Product; path: string }) {
+export function DocsPage({ product = HAPPY, path, changelogPath }: { product?: Product; path: string; changelogPath?: string }) {
   const [isSidebarScrollbarVisible, setIsSidebarScrollbarVisible] = useState(false)
   const sidebarScrollbarTimer = useRef<number | null>(null)
   const normalizedPath = normalizeDocumentPath(path)
@@ -160,7 +161,8 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
   }
 
   const productDocuments = listedDocumentsForProduct(product.key)
-  const markdown = activeDocument.group === 'Recipes'
+  const changelogEntry = changelogPath ? changelogEntryForPath(changelogPath) : undefined
+  const markdown = changelogEntry ? changelogMarkdown(changelogEntry) : activeDocument.group === 'Recipes'
     ? getDocumentSource(activeDocument)
     : prepareMarkdown(getDocumentSource(activeDocument))
   // An unlisted page sits outside the reading order, so it gets no previous or next.
@@ -171,7 +173,7 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
   return (
     <div className="site-shell document-site-shell docs-shell">
       <SiteHeader product={product} docsActive />
-      <DocsMobileNavigation key={activeDocument.path} product={product} activeDocument={activeDocument} />
+      <DocsMobileNavigation key={changelogPath ?? activeDocument.path} product={product} activeDocument={changelogEntry ? { ...activeDocument, title: changelogEntry.title } : activeDocument} />
       <main className="docs-layout page-width">
         <aside
           className={`docs-sidebar${isSidebarScrollbarVisible ? ' is-scrollbar-active' : ''}`}
@@ -184,10 +186,14 @@ export function DocsPage({ product = HAPPY, path }: { product?: Product; path: s
         <article
           className={activeDocument.essay ? 'document-article essay-article' : 'document-article'}
           data-document={activeDocument.path || undefined}
+          data-changelog-entry={changelogEntry?.slug}
         >
           {product.key === 'happy' && <LegacyNotice />}
           {activeDocument.group === 'Recipes' && <RecipeSourceLine route={activeDocument.path} />}
-          <MarkdownDocument markdown={markdown} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} resolveHref={activeDocument.group === 'Recipes' ? (href) => recipeHref(activeDocument.path, href) : undefined} />
+          <MarkdownDocument markdown={markdown} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} resolveHref={activeDocument.group === 'Recipes' ? (href) => recipeHref(activeDocument.path, href) : undefined} headingId={activeDocument.group === 'Changelog' ? (text, depth) => {
+            const entry = depth < 3 ? productionChangelogEntries.find((entry) => entry.title === text) : undefined
+            return entry ? changelogAnchor(entry) : undefined
+          } : undefined} />
           {activeDocument.group === 'Blog' && <BlogDownload />}
 
           <nav className="document-pagination" aria-label="Previous and next documentation pages">
