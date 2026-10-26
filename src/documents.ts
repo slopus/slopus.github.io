@@ -9,6 +9,7 @@ export type DocumentGroup =
   | 'Comparisons'
   | 'Releases'
   | 'Resources'
+  | 'Changelog'
   | 'Blog'
 
 export interface DocumentEntry {
@@ -528,6 +529,15 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Comparisons',
   },
   {
+    path: 'terra',
+    sourcePath: '/content/desktop/terra.mdx',
+    title: 'GPT-6.1 Terra',
+    pageTitle: 'GPT-6.1 Terra Is in Happy — Changelog, October 26, 2026',
+    description: 'GPT-6.1 Terra is available in Happy’s model picker. Newest generations come first. GPT-5.6 models were removed; switch chats using them to another model.',
+    group: 'Changelog',
+    video: { path: '/video/terra.mp4', width: 1280, height: 720 },
+  },
+  {
     // Blog: short URLs to type from memory; the titles stay long.
     // First published at /team-sign-in-workos/, which redirects here.
     path: 'workos',
@@ -579,7 +589,7 @@ export const documents: DocumentEntry[] = [
 
 const productDocumentGroups: Record<ProductKey, DocumentGroup[]> = {
   happy: ['Start here', 'Guides', 'Features', 'Use cases', 'Comparisons', 'Releases', 'Resources'],
-  desktop: ['Start here', 'Features', 'Guides', 'Blog', 'Comparisons', 'Recipes'],
+  desktop: ['Start here', 'Features', 'Guides', 'Changelog', 'Blog', 'Comparisons', 'Recipes'],
 }
 
 export function documentsForProduct(product: ProductKey) {

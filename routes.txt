@@ -119,6 +119,7 @@
 /team-sign-in-workos/
 /team/
 /terms/
+/terra/
 /thesis/
 /tmp/happy-one/
 /tos/

@@ -1,0 +1,67 @@
+/*
+ * Icon — the curated house vocabulary, backed by the font-based vector sets
+ * (Ionicons and Octicons) ported verbatim from Happy's `@expo/vector-icons`
+ * usage. The component renders one Private Use Area glyph in the matching icon
+ * font; this CSS pins the square box and the font per set so an icon never
+ * distorts inside a flex row and always paints on its own layout box. The
+ * @font-face declarations live in styles/vector-icon.css.
+ */
+
+.happy-icon {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: auto;
+    user-select: none;
+}
+
+.happy-icon[data-set="ionicons"] {
+    font-family: "happy Ionicons";
+}
+
+.happy-icon[data-set="octicons"] {
+    font-family: "happy Octicons";
+}
+
+/*
+ * An optically scaled glyph (Icon.tsx, `opticalScale`, and every Octicon) keeps
+ * the box's line box and is scaled about its own centre, which the flex box
+ * above holds on the icon box's centre. A glyph with a minimum size draws at
+ * that size inside a smaller box, centred the same way. Either way the icon box
+ * stays what layout asked for.
+ */
+.happy-icon__glyph {
+    display: block;
+    flex: none;
+}
+
+/*
+ * A mirrored name paints its upstream glyph flipped across the vertical axis, for
+ * an affordance that is the same act at the opposite edge of the window. The box
+ * is square and the glyph is box-centered, so the flip changes what is drawn and
+ * nothing about the layout.
+ */
+.happy-icon[data-mirrored] {
+    transform: scaleX(-1);
+}
+
+/*
+ * The panel affordance is one control at two edges of the window, and the left
+ * one is a 28px chrome button carrying a 16px glyph. A small Button hands its
+ * icon 14, which would set 12.25px of ink against the 14px its twin carries.
+ * So the drawn set keeps 16 inside a button, the same way the
+ * composer pins the ink of its own circular controls.
+ */
+.happy-button__icon .happy-icon[data-set="drawn"] {
+    width: 16px !important;
+    height: 16px !important;
+}

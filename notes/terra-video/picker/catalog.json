@@ -1,0 +1,29 @@
+{
+  "defaultModelId": "openai/gpt-6-astra", "defaultProviderId": "codex", "models": [],
+  "providers": [
+    {"id":"codex","name":"Current CLI","type":"codex","enabled":true,"hidden":false,"models":[
+      {"id":"openai/gpt-6.1-sol","name":"GPT-6.1 Sol","defaultThinkingLevel":"high","thinkingLevels":["low","medium","high","xhigh","max"],"serviceTierOptions":[{"id":"priority","label":"Fast"}]},
+      {"id":"openai/gpt-6.1-terra","name":"GPT-6.1 Terra","defaultThinkingLevel":"medium","thinkingLevels":["low","medium","high","xhigh","max"],"serviceTierOptions":[{"id":"priority","label":"Fast"}],"contextWindow":272000,"autoCompactWindow":244800},
+      {"id":"openai/gpt-6-astra","name":"GPT-6 Astra","defaultThinkingLevel":"high","thinkingLevels":["low","medium","high","xhigh","max"],"serviceTierOptions":[{"id":"priority","label":"Fast"}]},
+      {"id":"openai/gpt-6-sol","name":"GPT-6 Sol","defaultThinkingLevel":"high","thinkingLevels":["low","medium","high","xhigh","max"],"serviceTierOptions":[{"id":"priority","label":"Fast"}]},
+      {"id":"openai/gpt-6-luna","name":"GPT-6 Luna","defaultThinkingLevel":"medium","thinkingLevels":["low","medium","high","xhigh","max"],"serviceTierOptions":[{"id":"priority","label":"Fast"}]}
+    ]},
+    {"id":"claude","name":"Current CLI","type":"claude","enabled":true,"hidden":false,"models":[
+      {"id":"anthropic/opus-5-5","name":"Opus 5.5 1M","defaultThinkingLevel":"medium","thinkingLevels":["low","medium","high","xhigh","max"],"serviceTierOptions":[]},
+      {"id":"anthropic/sonnet-5-5","name":"Sonnet 5.5","defaultThinkingLevel":"medium","thinkingLevels":["low","medium","high","xhigh","max"],"serviceTierOptions":[]},
+      {"id":"anthropic/haiku-5-5","name":"Haiku 5.5","defaultThinkingLevel":"medium","thinkingLevels":["low","medium","high","xhigh","max"],"serviceTierOptions":[]},
+      {"id":"anthropic/fable-5-1","name":"Fable 5.1","defaultThinkingLevel":"medium","thinkingLevels":["off","low","medium","high","xhigh","max"],"serviceTierOptions":[]},
+      {"id":"anthropic/opus-5","name":"Opus 5 1M","defaultThinkingLevel":"medium","thinkingLevels":["off","low","medium","high","xhigh","max"],"serviceTierOptions":[]},
+      {"id":"anthropic/sonnet-5","name":"Sonnet 5","defaultThinkingLevel":"medium","thinkingLevels":["off","low","medium","high","xhigh","max"],"serviceTierOptions":[]},
+      {"id":"anthropic/fable-5","name":"Fable 5","defaultThinkingLevel":"medium","thinkingLevels":["off","low","medium","high","xhigh","max"],"serviceTierOptions":[]},
+      {"id":"anthropic/opus-4-8","name":"Opus 4.8 1M","defaultThinkingLevel":"medium","thinkingLevels":["off","low","medium","high","xhigh","max"],"serviceTierOptions":[]}
+    ]},
+    {"id":"grok","name":"Current CLI","type":"grok","enabled":true,"hidden":false,"models":[
+      {"id":"xai/grok-4.7","name":"Grok 4.7","defaultThinkingLevel":"high","thinkingLevels":["low","medium","high","xhigh"],"serviceTierOptions":[]},
+      {"id":"xai/grok-4.6","name":"Grok 4.6","defaultThinkingLevel":"high","thinkingLevels":["low","medium","high","xhigh"],"serviceTierOptions":[]},
+      {"id":"xai/grok-build","name":"Grok Build","defaultThinkingLevel":"medium","thinkingLevels":["medium"],"serviceTierOptions":[]},
+      {"id":"xai/grok-4.5","name":"Grok 4.5","defaultThinkingLevel":"high","thinkingLevels":["low","medium","high"],"serviceTierOptions":[]},
+      {"id":"xai/grok-composer-2.5-fast","name":"Composer 2.5","defaultThinkingLevel":"off","thinkingLevels":["off"],"serviceTierOptions":[]}
+    ]}
+  ]
+}

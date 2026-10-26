@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" class="happy-theme-scope happy-theme-light" data-scrollbar-visibility="automatic">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="styles/composer-model-control.css">
+<link rel="stylesheet" href="styles/scrollbar.css">
+<link rel="stylesheet" href="styles/vector-icon.css">
+<link rel="stylesheet" href="styles/icon.css">
+<style>
+html, body { margin: 0; width: 400px; height: 320px; overflow: hidden; background: transparent; }
+/* The native panels keep their widths, rows, insets and bottom alignment. Only
+   the viewport height changes, as it does in a shorter app window. The pill
+   is below the crop: this shot focuses on the two open native panels. */
+.happy-composer-model-control { position: absolute; left: 202px; top: 327px; width: 190px; }
+.happy-composer-model-control__models { max-height: 320px !important; height: 320px; }
+* { animation: none !important; transition: none !important; }
+</style>
+</head>
+<body>
+<script>
+window.ready = (async () => {
+    document.body.insertAdjacentHTML('afterbegin', await (await fetch('dom.html')).text());
+    await document.fonts.ready;
+    const viewport = document.querySelector('[data-scrollbar-viewport]');
+    const thumb = document.querySelector('.happy-scrollbar__thumb');
+    const claude = document.querySelector('[aria-label="Claude"]');
+    const grok = document.querySelector('[aria-label="Grok"]');
+    window.renderPicker = ({ scroll, claudeOpacity, grokOpacity }) => {
+        claude.style.opacity = claudeOpacity;
+        grok.style.opacity = grokOpacity;
+        const max = viewport.scrollHeight - viewport.clientHeight;
+        viewport.scrollTop = max * scroll;
+        const height = viewport.clientHeight ** 2 / viewport.scrollHeight;
+        thumb.style.height = `${height}px`;
+        thumb.style.transform = `translateY(${(viewport.clientHeight - height) * scroll}px)`;
+    };
+    window.renderPicker({ scroll: 0, claudeOpacity: .18, grokOpacity: .18 });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "themeClass": "happy-theme-scope happy-theme-light",
+  "metrics": {
+    "picker": {
+      "x": 830,
+      "y": 688,
+      "width": 190,
+      "height": 32
+    },
+    "panel": {
+      "x": 628,
+      "y": 200,
+      "width": 192,
+      "height": 480,
+      "top": 200,
+      "right": 820,
+      "bottom": 680,
+      "left": 628
+    },
+    "viewport": {
+      "clientHeight": 425,
+      "scrollHeight": 678
+    }
+  },
+  "styleTokens": {
+    "font": "16px \"happy Figtree\", system-ui, sans-serif",
+    "color": "rgb(0, 0, 0)"
+  },
+  "selection": "openai/gpt-6.1-terra"
+}

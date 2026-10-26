@@ -1,7 +1,8 @@
 # Link previews that play a video (og:video)
 
-A desktop doc with `video` in `src/documents.ts` (today only `/stem-cell/`) previews as that
-video. Checked October 23, 2026.
+A desktop doc with `video` in `src/documents.ts` (`/stem-cell/` and `/terra/`) previews as that
+video. Checked October 26, 2026. The Terra promo also plays in its changelog entry;
+its deterministic source and regeneration instructions live in `notes/terra-video/`.
 
 ## What the served HTML carries
 

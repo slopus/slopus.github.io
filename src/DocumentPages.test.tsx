@@ -32,7 +32,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(44)
+    expect(documentsForProduct('desktop')).toHaveLength(45)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -65,7 +65,7 @@ describe('static document pages', () => {
     expect(trail.getAttribute('aria-expanded')).toBe('true')
     expect(menu.hidden).toBe(false)
     expect(within(menu).getByRole('link', { name: 'Chief of Staff' }).getAttribute('aria-current')).toBe('page')
-    expect([...menu.querySelectorAll('.docs-nav-group > h2, .docs-nav-fold > summary')].map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Blog', 'Comparisons', 'Recipes (for agents)'])
+    expect([...menu.querySelectorAll('.docs-nav-group > h2, .docs-nav-fold > summary')].map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Changelog', 'Blog', 'Comparisons', 'Recipes (for agents)'])
 
     fireEvent.click(trail)
     expect(menu.hidden).toBe(true)
@@ -431,12 +431,12 @@ describe('static document pages', () => {
     expect(documents.filter((document) => document.path === 'secrets')).toHaveLength(1)
   })
 
-  it('lists Blog before Comparisons and collapsed Recipes last; keeps the old Blog URLs', () => {
+  it('lists Changelog above Blog, Blog before Comparisons and collapsed Recipes last; keeps the old Blog URLs', () => {
     render(<Router pathname="/workos/" />)
 
     const [sidebar] = screen.getAllByRole('navigation', { name: 'Documentation navigation' })
     const groups = [...sidebar.querySelectorAll('.docs-nav-group > h2, .docs-nav-fold > summary')]
-    expect(groups.map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Blog', 'Comparisons', 'Recipes (for agents)'])
+    expect(groups.map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Changelog', 'Blog', 'Comparisons', 'Recipes (for agents)'])
     const posts = within(groups.find((heading) => heading.textContent === 'Blog')!.closest('section')!).getAllByRole('link').map((link) => link.getAttribute('href'))
     expect(posts).toEqual(['/workos/', '/tailcat/', '/voice/', '/updates/', '/stem-cell/'])
     expect(screen.getByRole('heading', { level: 1, name: /team sign-in with workos/i })).toBeTruthy()

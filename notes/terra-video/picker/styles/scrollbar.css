@@ -1,0 +1,209 @@
+/*
+ * One custom-painted scrollbar for every Happy-owned scrollport. The browser
+ * still owns scrolling; only its chrome is hidden. The fixed 8px track overlays
+ * the scrollport's trailing edge, so overflow beginning or ending never changes
+ * the width content lays out in. Text inputs alone keep a stable lane beside
+ * their text, reserved before overflow, so a thumb never covers what is typed.
+ *
+ * Automatic bars answer trusted reader input, hold for two seconds, and fade
+ * for 480ms. Always-visible bars have three deliberately close neutral levels:
+ * quiet, active surface, and direct track interaction. Geometry never changes.
+ */
+
+@property --happy-scrollbar-color {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: transparent;
+}
+
+[data-scrollbar-visibility="automatic"] {
+    --happy-scrollbar-rest-color: transparent;
+    --happy-scrollbar-surface-color: transparent;
+}
+
+[data-scrollbar-visibility="always"] {
+    --happy-scrollbar-rest-color: var(--happy-scrollbar-quiet-color);
+    --happy-scrollbar-surface-color: var(--happy-scrollbar-active-color);
+}
+
+[data-scrollbar-host] {
+    --happy-scrollbar-color: var(--happy-scrollbar-rest-color);
+}
+
+[data-scrollbar-host][data-scrollbar-surface] {
+    --happy-scrollbar-color: var(--happy-scrollbar-surface-color);
+}
+
+[data-scrollbar-host][data-scrollbar-active=""] {
+    --happy-scrollbar-color: var(--happy-scrollbar-active-color);
+    transition: none;
+}
+
+[data-scrollbar-host][data-scrollbar-active="idle"] {
+    --happy-scrollbar-color: var(--happy-scrollbar-rest-color);
+    transition: --happy-scrollbar-color 480ms linear;
+}
+
+[data-scrollbar-visibility="always"] [data-scrollbar-host][data-scrollbar-hover],
+[data-scrollbar-visibility="automatic"]
+    [data-scrollbar-host][data-scrollbar-active][data-scrollbar-hover],
+[data-scrollbar-host][data-scrollbar-dragging] {
+    --happy-scrollbar-color: var(--happy-scrollbar-interaction-color);
+}
+
+/* Explicit surface exceptions keep their overflowing thumb visible in Automatic mode. */
+[data-scrollbar-host][data-scrollbar-always] {
+    --happy-scrollbar-color: var(--happy-scrollbar-quiet-color);
+}
+
+[data-scrollbar-host][data-scrollbar-always][data-scrollbar-surface],
+[data-scrollbar-host][data-scrollbar-always][data-scrollbar-active=""] {
+    --happy-scrollbar-color: var(--happy-scrollbar-active-color);
+}
+
+[data-scrollbar-host][data-scrollbar-always][data-scrollbar-hover],
+[data-scrollbar-host][data-scrollbar-always][data-scrollbar-dragging] {
+    --happy-scrollbar-color: var(--happy-scrollbar-interaction-color);
+}
+
+/* Viewport + two optional tracks + their corner are a genuine 2D control. An
+   overlaid track leaves its grid cell empty, so only a stable lane takes room. */
+[data-scrollbar-host][data-scrollbar-placement] {
+    /* eslint-disable-next-line happy-layout/use-flex-layout -- A scroll viewport and its two perpendicular tracks form a two-dimensional control with a shared corner. */
+    display: grid;
+    position: relative;
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.happy-scroll-area__viewport,
+[data-scrollbar-host] > [data-scrollbar-viewport] {
+    grid-row: 1;
+    grid-column: 1;
+    min-width: 0;
+    min-height: 0;
+}
+
+/* Only registered Happy scrollports lose native chrome. Pierre's internal
+   horizontal code columns retain their documented shadow-DOM fallback. */
+[data-scrollbar-viewport] {
+    scrollbar-width: none;
+}
+
+[data-scrollbar-viewport]::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.happy-scrollbar__track {
+    position: absolute;
+    z-index: 2;
+    display: none;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+    cursor: default;
+    pointer-events: none;
+    touch-action: none;
+}
+
+.happy-scrollbar__track[data-axis="vertical"] {
+    top: 0;
+    right: 0;
+    bottom: var(--happy-scrollbar-end-inset, 0px);
+    width: var(--happy-scrollbar-track);
+}
+
+[data-scrollbar-host][data-scrollbar-overflow-x] > .happy-scrollbar__track[data-axis="vertical"] {
+    bottom: calc(var(--happy-scrollbar-end-inset, 0px) + var(--happy-scrollbar-track));
+}
+
+.happy-scrollbar__track[data-axis="horizontal"] {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: var(--happy-scrollbar-track);
+}
+
+[data-scrollbar-host][data-scrollbar-overflow-y] > .happy-scrollbar__track[data-axis="horizontal"] {
+    right: var(--happy-scrollbar-track);
+}
+
+/* A text input keeps its lane in the adjoining grid cell from the start. */
+[data-scrollbar-host][data-scrollbar-placement="stable-gutter"]
+    > .happy-scrollbar__track[data-axis="vertical"] {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    grid-row: 1;
+    grid-column: 2;
+    margin-bottom: var(--happy-scrollbar-end-inset, 0px);
+}
+
+[data-scrollbar-host][data-scrollbar-placement="stable-gutter"]
+    > .happy-scrollbar__track[data-axis="horizontal"] {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    grid-row: 2;
+    grid-column: 1;
+}
+
+[data-scrollbar-host][data-scrollbar-overflow-y] > .happy-scrollbar__track[data-axis="vertical"],
+[data-scrollbar-host][data-scrollbar-placement="stable-gutter"]
+    > .happy-scrollbar__track[data-axis="vertical"],
+[data-scrollbar-host][data-scrollbar-overflow-x] > .happy-scrollbar__track[data-axis="horizontal"],
+[data-scrollbar-host][data-scrollbar-placement="stable-gutter"]
+    > .happy-scrollbar__track[data-axis="horizontal"] {
+    display: block;
+}
+
+[data-scrollbar-host]:not([data-scrollbar-overflow-y])
+    > .happy-scrollbar__track[data-axis="vertical"]
+    > .happy-scrollbar__thumb,
+[data-scrollbar-host]:not([data-scrollbar-overflow-x])
+    > .happy-scrollbar__track[data-axis="horizontal"]
+    > .happy-scrollbar__thumb {
+    display: none;
+}
+
+[data-scrollbar-visibility="always"] [data-scrollbar-host] > .happy-scrollbar__track,
+[data-scrollbar-host][data-scrollbar-always] > .happy-scrollbar__track,
+[data-scrollbar-host][data-scrollbar-active] > .happy-scrollbar__track {
+    pointer-events: auto;
+}
+
+.happy-scrollbar__thumb {
+    --happy-scrollbar-cap: calc(var(--happy-scrollbar-ink) / 2);
+    --happy-scrollbar-outer-cap: calc(
+        var(--happy-scrollbar-cap) + var(--happy-scrollbar-edge-inset)
+    );
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    background-color: var(--happy-scrollbar-color);
+    background-clip: padding-box;
+    will-change: transform;
+}
+
+.happy-scrollbar__track[data-axis="vertical"] > .happy-scrollbar__thumb {
+    width: 100%;
+    min-height: 24px;
+    border-right: var(--happy-scrollbar-edge-inset) solid transparent;
+    border-radius: var(--happy-scrollbar-cap) var(--happy-scrollbar-outer-cap)
+        var(--happy-scrollbar-outer-cap) var(--happy-scrollbar-cap) / var(--happy-scrollbar-cap);
+}
+
+.happy-scrollbar__track[data-axis="horizontal"] > .happy-scrollbar__thumb {
+    height: 100%;
+    min-width: 24px;
+    border-bottom: var(--happy-scrollbar-edge-inset) solid transparent;
+    border-radius: var(--happy-scrollbar-cap) / var(--happy-scrollbar-cap)
+        var(--happy-scrollbar-cap) var(--happy-scrollbar-outer-cap) var(--happy-scrollbar-outer-cap);
+}

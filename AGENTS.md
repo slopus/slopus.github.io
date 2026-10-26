@@ -57,7 +57,11 @@ two or three lines of specific, sourced wins taken from their own sites, talks
 and public profiles, with their X handles and the photos in `public/img/team/`.
 It never states or hints at anyone's level of involvement, in either direction.
 
-The Blog follows Guides and precedes Comparisons in the desktop docs sidebar, with no list page.
+Changelog follows Guides in the desktop docs sidebar. Its dated entries use short top-level
+URLs; `/terra/` announces GPT-6.1 Terra with an embedded promo and video link preview.
+Video sources and regeneration instructions live in `notes/terra-video/`.
+
+The Blog follows Changelog and precedes Comparisons in the desktop docs sidebar, with no list page.
 Posts are desktop docs (`group: 'Blog'` in `src/documents.ts`) at one-word
 URLs you can type from memory: `/workos/`, `/tailcat/`, `/voice/`.
 `/team-sign-in-workos/`, where the WorkOS post was first shared, redirects to

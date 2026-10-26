@@ -1,0 +1,822 @@
+/*
+ * Happy's desktop theme, flattened for CSS consumers.
+ *
+ * Every colour property below corresponds directly to a property in
+ * packages/happy-app/sources/theme.ts. Do not add aliases, gradients, or
+ * derived palette values here: components should name the Happy role they use.
+ */
+
+@font-face {
+    font-family: "happy Figtree";
+    font-style: normal;
+    font-display: block;
+    font-weight: 300 900;
+    src: url("../assets/figtree.woff2")
+        format("woff2-variations");
+}
+
+@font-face {
+    font-family: "happy Mono";
+    font-style: normal;
+    font-display: block;
+    font-weight: 100 800;
+    src: url("../assets/jetbrains-mono.woff2")
+        format("woff2-variations");
+}
+
+:root,
+.happy-theme-light {
+    color-scheme: light;
+    --happy-brand-logo-source: url("./assets/brand/logo-black.png");
+    --happy-wordmark-source: url("./assets/brand/happy-engineering-stacked-light.svg");
+    /* The picture a todo list is laid over. */
+    --happy-todo-backdrop-source: url("./assets/backdrops/todo-ginkgo.jpg");
+
+    /* File tabs, their mode bars, and the path rows below them are one piece
+       of chrome. Keep the containing row and its inset controls on one shared
+       geometry so adjacent layers cannot drift as components evolve. */
+    --happy-subheader-height: 32px;
+    --happy-subheader-control-height: 24px;
+    --happy-subheader-inset: 4px;
+
+    /* Every scrolling list panel — the sidebar, the file listings, any column
+       of rows — is inset from both of its edges by the same number. The custom
+       scrollbar is laid over the trailing inset rather than beside it, so the
+       promise holds, and rows keep their width, whether or not the panel
+       overflows. Its 6px ink starts 2px inside a row's edge and ends 2px short
+       of the panel's, which keeps it on the row's trailing padding and clear
+       of anything the row draws there.
+
+       A row's own horizontal padding is stated here too, because the two
+       together are what a reader sees on the trailing side: a row's last mark
+       lands `calc(var(--happy-panel-inset) + var(--happy-panel-row-padding))`
+       from the panel edge, and a panel header padded by that same sum stands
+       over the rows it names. The leading side reads that way only in a flat
+       list — a tree puts its disclosure slot and its depth on top of the inset,
+       which is the indent doing its job.
+
+       A sidebar row spaces the marks at its trailing edge by this number too,
+       so the distance between a row's last marks is the distance the row keeps
+       from the panel edge. It states that gap in script rather than reading the
+       token, because the width it reserves there is a sum the script computes
+       (see SIDEBAR_TRAILING_GAP) — so changing this number is a decision to
+       make there as well as here.
+
+       This governs panels, not cards. A rounded modal — the command palette,
+       the command picker — sets its own inset and derives an inner corner from
+       it, because a nested curve is only parallel when the radius drops by the
+       inset it sits inside (see DESIGN.md, "Nested rounded corners"). Those
+       insets happen to be near this one; they are not this one, and pointing
+       them at this token would silently bend the corners derived from them the
+       day it changes. */
+    --happy-panel-inset: 6px;
+    --happy-panel-row-padding: 10px;
+
+    /* The bar every scrollport lays over its trailing edge — see
+       styles/scrollbar.css. It reserves no room, so content never rewraps when
+       overflow begins; only a text input keeps a stable lane for it.
+
+       The ink is the bar the reader sees. The edge inset is clear space on the
+       far side of it alone — between the ink and the scrollport's outer edge — so
+       the track is the sum of those two and nothing more. */
+    --happy-scrollbar-ink: 6px;
+    --happy-scrollbar-edge-inset: 2px;
+    --happy-scrollbar-track: calc(var(--happy-scrollbar-ink) + var(--happy-scrollbar-edge-inset));
+    --happy-scrollbar-color: transparent;
+    --happy-scrollbar-quiet-color: rgb(128 128 128 / 0.32);
+    --happy-scrollbar-active-color: rgb(128 128 128 / 0.5);
+    --happy-scrollbar-interaction-color: rgb(128 128 128 / 0.68);
+    --happy-scrollbar-rest-color: transparent;
+    --happy-scrollbar-surface-color: transparent;
+
+    --text: #000000;
+    --text-destructive: #f44336;
+    --text-secondary: #49454f;
+    --text-link: #2baccc;
+    --delete-action: #ff6b6b;
+    --warning-critical: #ff3b30;
+    --warning: #8e8e93;
+    --success: #34c759;
+    --stem-cell-membrane: #f6cfe3;
+    --stem-cell-core: #ee9fcb;
+    --surface: #ffffff;
+    --surface-ripple: rgb(0 0 0 / 0.08);
+    --surface-pressed: #f0f0f2;
+    --surface-selected: #eaeaea;
+    --surface-pressed-overlay: transparent;
+    --surface-high: #f8f8f8;
+    --surface-highest: #f0f0f0;
+    /* The surface turned inside out: near-black on a light appearance and
+       near-white on a dark one, always the opposite of what surrounds it. It is
+       for the rare band that has to be seen without claiming anything is wrong —
+       a colour would say error or warning, and neutral at full contrast says
+       only "read this". Not a container: it carries one line and no controls. */
+    --surface-inverse: #1c1c1e;
+    --text-inverse: #ffffff;
+    /* The paper a rendered web page sits on. It is the browser's canvas rather
+       than one of our surfaces, so it stays white in both appearances: a page
+       that sets no background of its own was written expecting white, and
+       darkening it under black text would only make the page unreadable. */
+    --page-canvas: #ffffff;
+    /* What names a QR code's destination inside the symbol. A QR code is always
+       dark modules on white paper, so this grey is the same in both
+       appearances: far enough from the modules that a camera and a reader never
+       take it for one of them. */
+    --qr-code-mark: #6e6e73;
+    --divider: #eaeaea;
+    --shadow-color: rgb(0 0 0 / 0.1);
+    --shadow-opacity: 0.1;
+    --shadow-subtle: rgb(0 0 0 / 0.24);
+    --shadow-rail: rgb(0 0 0 / 28%);
+    --shadow-floating: rgb(0 0 0 / 0.45);
+    --shadow-elevated: rgb(0 0 0 / 0.5);
+    --shadow-activity-card: rgb(0 0 0 / 0.08);
+    --overlay-backdrop: rgb(15 15 15 / 0.75);
+    --overlay-panel: rgb(0 0 0 / 0.48);
+    --groupped-background: #f5f5f5;
+    --groupped-chevron: #49454f;
+    --groupped-section-title: #49454f;
+    --header-background: #ffffff;
+    --header-tint: #18171c;
+    --header-tint-secondary: #666666;
+    --switch-track-active: #1976d2;
+    --switch-track-inactive: #dddddd;
+    --switch-thumb-active: #ffffff;
+    --switch-thumb-inactive: #767577;
+    --fab-background: #000000;
+    --fab-background-pressed: #1a1a1a;
+    --fab-icon: #ffffff;
+    --radio-active: #007aff;
+    --radio-inactive: #c0c0c0;
+    --radio-dot: #007aff;
+    --modal-border: rgb(0 0 0 / 0.1);
+    --button-primary-background: #000000;
+    --button-primary-tint: #ffffff;
+    --button-primary-ripple: rgb(255 255 255 / 0.16);
+    --button-primary-disabled: #c0c0c0;
+    --button-secondary-tint: #666666;
+    /* The composer's round send control: one stable disc whose arrow never
+       changes color as the draft becomes sendable; availability is its opacity. */
+    --composer-send-background: #c0c0c0;
+    --composer-send-icon: #000000;
+    --input-background: #f5f5f5;
+    /* The sidebar search sits on the sidebar itself, so it is lifted off it. */
+    --sidebar-search-background: #ffffff;
+    --sidebar-search-border: rgb(0 0 0 / 0.12);
+    --input-text: #000000;
+    --input-placeholder: #999999;
+    --box-warning-background: #fff8f0;
+    --box-warning-border: #ff9500;
+    --box-warning-text: #ff9500;
+    --box-error-background: #fff0f0;
+    --box-error-border: #ff3b30;
+    --box-error-text: #ff3b30;
+    /* A reviewed action is worth noticing, not worth alarming over: a burnt
+       amber, muted well below the warning orange so a transcript full of
+       reviewed calls still reads as prose rather than as a wall of alerts. */
+    --review-accent: #a3690f;
+    /* A whole line of colour is far louder than a two-word mark, so an
+       activity row that turns entirely stays mostly text ink with the accent
+       stirred in: same weight as the prose around it, tinted enough to say
+       which line it is. Written as a mix rather than a pair of hex values so
+       it holds in both themes from the ink each one already defines — and so
+       the row's status dot stays the one full-strength colour. */
+    --activity-elevated-line: color-mix(in srgb, var(--review-accent) 40%, var(--text));
+    --activity-failed-line: color-mix(in srgb, var(--status-error) 40%, var(--text));
+
+    /* A calendar event wears a tint of Happy teal on the surface it sits on,
+       mixed from the ink each theme already defines; chosen and today are the
+       full colour. Declared in every theme block so each mixes its own. */
+    --happy-calendar-event: color-mix(in srgb, var(--text-link) 16%, var(--surface));
+    --happy-calendar-event-hover: color-mix(in srgb, var(--text-link) 24%, var(--surface));
+    --happy-calendar-event-ink: color-mix(in srgb, var(--text-link) 55%, var(--text));
+    --happy-calendar-event-chosen: var(--text-link);
+    --happy-calendar-selection: color-mix(in srgb, var(--text-link) 12%, transparent);
+    --happy-calendar-today: var(--text-link);
+
+    --status-connected: #34c759;
+    --status-connecting: #007aff;
+    --status-disconnected: #999999;
+    --status-error: #ff3b30;
+    --status-default: #8e8e93;
+    --permission-default: #8e8e93;
+    --permission-accept-edits: #007aff;
+    --permission-bypass: #ff9500;
+    --permission-plan: #34c759;
+    --permission-read-only: #8b8b8d;
+    --permission-safe-yolo: #ff6b35;
+    --permission-yolo: #dc143c;
+    --permission-button-allow-background: #34c759;
+    --permission-button-allow-text: #ffffff;
+    --permission-button-deny-background: #ff3b30;
+    --permission-button-deny-text: #ffffff;
+    --permission-button-allow-all-background: #007aff;
+    --permission-button-allow-all-text: #ffffff;
+    --permission-button-inactive-background: #e5e5ea;
+    --permission-button-inactive-border: #d1d1d6;
+    --permission-button-inactive-text: #8e8e93;
+    --permission-button-selected-background: #f2f2f7;
+    --permission-button-selected-border: #d1d1d6;
+    --permission-button-selected-text: #3c3c43;
+
+    --diff-outline: #e0e0e0;
+    --diff-success: #28a745;
+    --diff-error: #dc3545;
+    --diff-added-bg: #e6ffed;
+    --diff-added-border: #34d058;
+    --diff-added-text: #24292e;
+    --diff-removed-bg: #ffeef0;
+    --diff-removed-border: #d73a49;
+    --diff-removed-text: #24292e;
+    /* Code tokens — Pierre's own palette, which is what the file viewer and the
+       working-tree diff tokenize with, so an edited file matches a read one. */
+    --code-comment: #737373;
+    --code-string: #199f43;
+    --code-number: #1ca1c7;
+    --code-keyword: #d32a61;
+    --code-type: #a631be;
+    --code-function: #693acf;
+    --code-variable: #d47628;
+    --code-constant: #d5a910;
+    --code-operator: #08c0ef;
+    --code-punctuation: #636363;
+    --code-gutter: #737373;
+    --code-gutter-active: #525252;
+    --code-caret: #000000;
+    --code-selection: rgb(0 0 0 / 0.14);
+    --code-active-line: rgb(0 0 0 / 0.04);
+    /* The lines a reference pointed at, marked where they are. Tinted with the
+       link colour, because it is the same act as following the link. */
+    --code-reveal: rgb(43 172 204 / 0.16);
+    /* Terminal selection is opaque on purpose. A translucent highlight takes
+       the colour of whatever it lands on, so a cell carrying an ANSI background
+       — the first column of a coloured prompt, the padding beside it — came out
+       a different shade from the plain cells in the same drag. */
+    --terminal-selection: #d4d4d8;
+    --diff-context-bg: #f6f8fa;
+    --diff-context-text: #586069;
+    --diff-line-number-bg: #f6f8fa;
+    --diff-line-number-text: #959da5;
+    --diff-hunk-header-bg: #f1f8ff;
+    --diff-hunk-header-text: #005cc5;
+    --diff-leading-space-dot: #e8e8e8;
+    --diff-inline-added-bg: #acffa6;
+    --diff-inline-added-text: #0a3f0a;
+    --diff-inline-removed-bg: #ffcecb;
+    --diff-inline-removed-text: #5a0a05;
+
+    --user-message-background: #f0eee6;
+    --user-message-text: #000000;
+    --agent-message-text: #000000;
+    --agent-event-text: #666666;
+    --syntax-keyword: #1d4ed8;
+    --syntax-string: #059669;
+    --syntax-comment: #6b7280;
+    --syntax-number: #0891b2;
+    --syntax-function: #9333ea;
+    --syntax-bracket-1: #ff6b6b;
+    --syntax-bracket-2: #4ecdc4;
+    --syntax-bracket-3: #45b7d1;
+    --syntax-bracket-4: #f7b731;
+    --syntax-bracket-5: #5f27cd;
+    --syntax-default: #374151;
+    --git-branch-text: #6b7280;
+    --git-file-count-text: #6b7280;
+    --git-added-text: #22c55e;
+    --git-removed-text: #ef4444;
+    --git-status-new: #2ea043;
+    --git-status-modified: #c2820a;
+    --git-status-renamed: #0969da;
+    --git-status-deleted: #cf222e;
+    --file-code: #2563eb;
+    --file-data: #b45309;
+    --file-style: #7c3aed;
+    --file-image: #0d9488;
+    --file-video: #db2777;
+    --file-audio: #c026d3;
+    --file-shell: #475569;
+    --file-secret: #b91c1c;
+    --file-archive: #a16207;
+    --file-prose: #0e7490;
+    --file-config: #6b7280;
+    --file-directory: #64748b;
+    --file-other: #6b7280;
+    /* The directory printed ahead of a file name. Lighter than ordinary
+       secondary text, because it sits immediately against the name and has to
+       read as its backdrop rather than as a second thing to read. */
+    --file-path-text: #9a969e;
+    --terminal-background: #1e1e1e;
+    --terminal-prompt: #34c759;
+    --terminal-command: #e0e0e0;
+    --terminal-stdout: #e0e0e0;
+    --terminal-stderr: #ffb86c;
+    --terminal-error: #ff5555;
+    --terminal-empty-output: #6272a4;
+
+    --happy-font-ui: "happy Figtree", system-ui, sans-serif;
+    --happy-font-mono: "happy Mono", ui-monospace, monospace;
+    --happy-font-emoji: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    --happy-radius-sm: 6px;
+    --happy-radius-md: 10px;
+    --happy-radius-window: 8px;
+    --happy-radius-shell: 14px;
+    --happy-radius-pill: 999px;
+    /* The one hover shape: a hovered sidebar row's rounded rectangle and fill.
+       Every control with a hover background (toolbar icons, a tab's close,
+       a strip's +, a row's own control) wears exactly this. */
+    --happy-hover-radius: var(--happy-radius-sm);
+    --happy-hover-fill: var(--surface-ripple);
+    --happy-chat-measure: 880px;
+    /* The gutter a document read on a surface of its own keeps from that
+       surface's edges: a Markdown document, and an artifact's page shown beside
+       the chat or on its own, so the two line up wherever they are opened. A
+       padding shorthand, block then inline. Inline in a reply there is none. */
+    --happy-document-inset: 24px 32px;
+    /* The heading over a conversation may run wider than the transcript it names
+       — it is one line of chrome, not prose — but not to the window's full width,
+       where a long name and its path sprawl away from the column beneath them. */
+    --happy-chat-heading-measure: 1120px;
+    --happy-z-overlay: 1000;
+    /* Stories are watched on black in every appearance, as photos are: the
+       viewer and the editor are a dark room, and their ink is white. A story's
+       own marks of the reader's choice (a chosen reaction) are Happy teal. */
+    --story-backdrop: #000000;
+    --story-stage: #111111;
+    --story-ink: #ffffff;
+    --story-ink-secondary: rgb(255 255 255 / 0.72);
+    --story-ink-faint: rgb(255 255 255 / 0.32);
+    --story-control: rgb(255 255 255 / 0.14);
+    --story-control-hover: rgb(255 255 255 / 0.24);
+    --story-scrim: rgb(0 0 0 / 0.56);
+    --story-sheet: #1c1c1e;
+    --story-danger: var(--status-error);
+    --story-ring-unseen: var(--text-link);
+    /* The stories row is drawn to the iOS row's colours, which are Telegram's:
+       an unseen ring runs green to blue from top to bottom in every appearance. */
+    --story-ring-unseen-top: #34c76f;
+    --story-ring-unseen-bottom: #3da1fd;
+    --story-ring-seen: #d8d8e1;
+    --story-avatar-fill: #b8bbc4;
+    /* Window chrome: what the window reports about itself, which has to be
+       legible over whatever the window is showing — including a modal. */
+    --happy-z-window-chrome: 1100;
+
+    --nl-kind-color: var(--text-link);
+    --nl-kind-soft: var(--surface-selected);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+        --happy-brand-logo-source: url("./assets/brand/logo-white.png");
+        --happy-wordmark-source: url("./assets/brand/happy-engineering-stacked-dark.svg");
+        --happy-todo-backdrop-source: url("./assets/backdrops/todo-ginkgo-dark.jpg");
+        --text: #ffffff;
+        --text-destructive: #f48fb1;
+        --text-secondary: #cac4d0;
+        --text-link: #2baccc;
+        --delete-action: #ff6b6b;
+        --warning-critical: #ff453a;
+        --warning: #8e8e93;
+        --success: #32d74b;
+        --stem-cell-membrane: #653c53;
+        --stem-cell-core: #ee9fcb;
+        --surface: #212121;
+        --surface-ripple: rgb(255 255 255 / 0.08);
+        --surface-pressed: #2c2c2e;
+        --surface-selected: #2c2c2e;
+        --surface-pressed-overlay: transparent;
+        --surface-high: #171717;
+        --surface-highest: #292929;
+        --surface-inverse: #f2f2f7;
+        --text-inverse: #1c1c1e;
+        --divider: #292929;
+        --shadow-color: rgb(0 0 0 / 0.1);
+        --shadow-opacity: 0.1;
+        --shadow-subtle: rgb(0 0 0 / 0.24);
+        --shadow-rail: rgb(0 0 0 / 28%);
+        --shadow-floating: rgb(0 0 0 / 0.45);
+        --shadow-elevated: rgb(0 0 0 / 0.5);
+        --shadow-activity-card: rgb(0 0 0 / 0.5);
+        --overlay-backdrop: rgb(15 15 15 / 0.75);
+        --overlay-panel: rgb(0 0 0 / 0.48);
+        --groupped-background: #1e1e1e;
+        --groupped-chevron: #cac4d0;
+        --groupped-section-title: #cac4d0;
+        --header-background: #212121;
+        --header-tint: #ffffff;
+        --header-tint-secondary: #8e8e93;
+        --switch-track-active: #1976d2;
+        --switch-track-inactive: #3a393f;
+        --switch-thumb-active: #ffffff;
+        --switch-thumb-inactive: #767577;
+        --fab-background: #ffffff;
+        --fab-background-pressed: #f0f0f0;
+        --fab-icon: #000000;
+        --radio-active: #0a84ff;
+        --radio-inactive: #48484a;
+        --radio-dot: #0a84ff;
+        --modal-border: rgb(255 255 255 / 0.1);
+        --button-primary-background: #000000;
+        --button-primary-tint: #ffffff;
+        --button-primary-ripple: rgb(255 255 255 / 0.16);
+        --button-primary-disabled: #c0c0c0;
+        --button-secondary-tint: #8e8e93;
+        --composer-send-background: #c0c0c0;
+        --composer-send-icon: #000000;
+        --input-background: #303030;
+        --sidebar-search-background: #303030;
+        --sidebar-search-border: rgb(255 255 255 / 0.1);
+        --input-text: #ffffff;
+        --input-placeholder: #8e8e93;
+        --box-warning-background: rgb(255 159 10 / 0.15);
+        --box-warning-border: #ff9f0a;
+        --box-warning-text: #ffab00;
+        --box-error-background: rgb(255 69 58 / 0.15);
+        --box-error-border: #ff453a;
+        --box-error-text: #ff6b6b;
+        --review-accent: #c8924e;
+        --status-connected: #34c759;
+        --status-connecting: #ffffff;
+        --status-disconnected: #8e8e93;
+        --status-error: #ff453a;
+        --status-default: #8e8e93;
+        --permission-default: #8e8e93;
+        --permission-accept-edits: #0a84ff;
+        --permission-bypass: #ff9f0a;
+        --permission-plan: #32d74b;
+        --permission-read-only: #98989d;
+        --permission-safe-yolo: #ff7a4c;
+        --permission-yolo: #ff453a;
+        --permission-button-allow-background: #32d74b;
+        --permission-button-allow-text: #ffffff;
+        --permission-button-deny-background: #ff453a;
+        --permission-button-deny-text: #ffffff;
+        --permission-button-allow-all-background: #0a84ff;
+        --permission-button-allow-all-text: #ffffff;
+        --permission-button-inactive-background: #2c2c2e;
+        --permission-button-inactive-border: #38383a;
+        --permission-button-inactive-text: #8e8e93;
+        --permission-button-selected-background: #1c1c1e;
+        --permission-button-selected-border: #38383a;
+        --permission-button-selected-text: #ffffff;
+        --diff-outline: #30363d;
+        --diff-success: #3fb950;
+        --diff-error: #f85149;
+        --diff-added-bg: #0d2e1f;
+        --diff-added-border: #3fb950;
+        --diff-added-text: #c9d1d9;
+        --diff-removed-bg: #3f1b23;
+        --diff-removed-border: #f85149;
+        --diff-removed-text: #c9d1d9;
+        --code-comment: #737373;
+        --code-string: #5ecc71;
+        --code-number: #68cdf2;
+        --code-keyword: #ff678d;
+        --code-type: #d568ea;
+        --code-function: #9d6afb;
+        --code-variable: #ffa359;
+        --code-constant: #ffd452;
+        --code-operator: #08c0ef;
+        --code-punctuation: #a3a3a3;
+        --code-gutter: #737373;
+        --code-gutter-active: #a3a3a3;
+        --code-caret: #ffffff;
+        --code-selection: rgb(255 255 255 / 0.18);
+        --code-active-line: rgb(255 255 255 / 0.05);
+        --code-reveal: rgb(43 172 204 / 0.24);
+        --terminal-selection: #45454b;
+        --diff-context-bg: #161b22;
+        --diff-context-text: #8b949e;
+        --diff-line-number-bg: #161b22;
+        --diff-line-number-text: #6e7681;
+        --diff-hunk-header-bg: #161b22;
+        --diff-hunk-header-text: #58a6ff;
+        --diff-leading-space-dot: #2a2a2a;
+        --diff-inline-added-bg: #2a5a2a;
+        --diff-inline-added-text: #7aff7a;
+        --diff-inline-removed-bg: #5a2a2a;
+        --diff-inline-removed-text: #ff7a7a;
+        --user-message-background: #2c2c2e;
+        --user-message-text: #ffffff;
+        --agent-message-text: #ffffff;
+        --agent-event-text: #8e8e93;
+        --syntax-keyword: #569cd6;
+        --syntax-string: #ce9178;
+        --syntax-comment: #6a9955;
+        --syntax-number: #b5cea8;
+        --syntax-function: #dcdcaa;
+        --syntax-bracket-1: #ffd700;
+        --syntax-bracket-2: #da70d6;
+        --syntax-bracket-3: #179fff;
+        --syntax-bracket-4: #ff8c00;
+        --syntax-bracket-5: #00ff00;
+        --syntax-default: #d4d4d4;
+        --git-branch-text: #8e8e93;
+        --git-file-count-text: #8e8e93;
+        --git-added-text: #34c759;
+        --git-removed-text: #ff453a;
+        --git-status-new: #3fb950;
+        --git-status-modified: #e3b341;
+        --git-status-renamed: #58a6ff;
+        --git-status-deleted: #f85149;
+        --file-code: #6ea8fe;
+        --file-data: #e0a458;
+        --file-style: #b794f6;
+        --file-image: #4dd4c0;
+        --file-video: #f472b6;
+        --file-audio: #e879f9;
+        --file-shell: #a3b3c7;
+        --file-secret: #ff7b72;
+        --file-archive: #d9a441;
+        --file-prose: #4cc9d9;
+        --file-config: #9ca3af;
+        --file-directory: #93a4b8;
+        --file-other: #9ca3af;
+        --file-path-text: #79747e;
+        --terminal-background: #1e1e1e;
+        --terminal-prompt: #32d74b;
+        --terminal-command: #e0e0e0;
+        --terminal-stdout: #e0e0e0;
+        --terminal-stderr: #ffb86c;
+        --terminal-error: #ff6b6b;
+        --terminal-empty-output: #7b7b93;
+        /* A calendar event wears a tint of Happy teal on the surface it sits on,
+           mixed from the ink each theme already defines; chosen and today are the
+           full colour. Declared in every theme block so each mixes its own. */
+        --happy-calendar-event: color-mix(in srgb, var(--text-link) 16%, var(--surface));
+        --happy-calendar-event-hover: color-mix(in srgb, var(--text-link) 24%, var(--surface));
+        --happy-calendar-event-ink: color-mix(in srgb, var(--text-link) 55%, var(--text));
+        --happy-calendar-event-chosen: var(--text-link);
+        --happy-calendar-selection: color-mix(in srgb, var(--text-link) 12%, transparent);
+        --happy-calendar-today: var(--text-link);
+        /* Declared again here, so they resolve against the dark palette. */
+        --story-danger: var(--status-error);
+        --story-ring-unseen: var(--text-link);
+        --story-ring-seen: #48484a;
+        --story-avatar-fill: #5a5a5f;
+    }
+}
+
+/* Explicit preview/test override. Midnight starts from the dark palette and
+   deepens it in its own block below. */
+.happy-theme-dark,
+.happy-theme-midnight {
+    color-scheme: dark;
+    --happy-brand-logo-source: url("./assets/brand/logo-white.png");
+    --happy-wordmark-source: url("./assets/brand/happy-engineering-stacked-dark.svg");
+    --happy-todo-backdrop-source: url("./assets/backdrops/todo-ginkgo-dark.jpg");
+    --text: #ffffff;
+    --text-destructive: #f48fb1;
+    --text-secondary: #cac4d0;
+    --text-link: #2baccc;
+    --delete-action: #ff6b6b;
+    --warning-critical: #ff453a;
+    --warning: #8e8e93;
+    --success: #32d74b;
+    --stem-cell-membrane: #653c53;
+    --stem-cell-core: #ee9fcb;
+    --surface: #212121;
+    --surface-ripple: rgb(255 255 255 / 0.08);
+    --surface-pressed: #2c2c2e;
+    --surface-selected: #2c2c2e;
+    --surface-pressed-overlay: transparent;
+    --surface-high: #171717;
+    --surface-highest: #292929;
+    --surface-inverse: #f2f2f7;
+    --text-inverse: #1c1c1e;
+    --divider: #292929;
+    --shadow-color: rgb(0 0 0 / 0.1);
+    --shadow-opacity: 0.1;
+    --shadow-subtle: rgb(0 0 0 / 0.24);
+    --shadow-rail: rgb(0 0 0 / 28%);
+    --shadow-floating: rgb(0 0 0 / 0.45);
+    --shadow-elevated: rgb(0 0 0 / 0.5);
+    --shadow-activity-card: rgb(0 0 0 / 0.5);
+    --overlay-backdrop: rgb(15 15 15 / 0.75);
+    --overlay-panel: rgb(0 0 0 / 0.48);
+    --groupped-background: #1e1e1e;
+    --groupped-chevron: #cac4d0;
+    --groupped-section-title: #cac4d0;
+    --header-background: #212121;
+    --header-tint: #ffffff;
+    --header-tint-secondary: #8e8e93;
+    --switch-track-active: #1976d2;
+    --switch-track-inactive: #3a393f;
+    --switch-thumb-active: #ffffff;
+    --switch-thumb-inactive: #767577;
+    --fab-background: #ffffff;
+    --fab-background-pressed: #f0f0f0;
+    --fab-icon: #000000;
+    --radio-active: #0a84ff;
+    --radio-inactive: #48484a;
+    --radio-dot: #0a84ff;
+    --modal-border: rgb(255 255 255 / 0.1);
+    --button-primary-background: #000000;
+    --button-primary-tint: #ffffff;
+    --button-primary-ripple: rgb(255 255 255 / 0.16);
+    --button-primary-disabled: #c0c0c0;
+    --button-secondary-tint: #8e8e93;
+    --composer-send-background: #c0c0c0;
+    --composer-send-icon: #000000;
+    --input-background: #303030;
+    --sidebar-search-background: #303030;
+    --sidebar-search-border: rgb(255 255 255 / 0.1);
+    --input-text: #ffffff;
+    --input-placeholder: #8e8e93;
+    --box-warning-background: rgb(255 159 10 / 0.15);
+    --box-warning-border: #ff9f0a;
+    --box-warning-text: #ffab00;
+    --box-error-background: rgb(255 69 58 / 0.15);
+    --box-error-border: #ff453a;
+    --box-error-text: #ff6b6b;
+    --review-accent: #c8924e;
+    --status-connected: #34c759;
+    --status-connecting: #ffffff;
+    --status-disconnected: #8e8e93;
+    --status-error: #ff453a;
+    --status-default: #8e8e93;
+    --permission-default: #8e8e93;
+    --permission-accept-edits: #0a84ff;
+    --permission-bypass: #ff9f0a;
+    --permission-plan: #32d74b;
+    --permission-read-only: #98989d;
+    --permission-safe-yolo: #ff7a4c;
+    --permission-yolo: #ff453a;
+    --permission-button-allow-background: #32d74b;
+    --permission-button-allow-text: #ffffff;
+    --permission-button-deny-background: #ff453a;
+    --permission-button-deny-text: #ffffff;
+    --permission-button-allow-all-background: #0a84ff;
+    --permission-button-allow-all-text: #ffffff;
+    --permission-button-inactive-background: #2c2c2e;
+    --permission-button-inactive-border: #38383a;
+    --permission-button-inactive-text: #8e8e93;
+    --permission-button-selected-background: #1c1c1e;
+    --permission-button-selected-border: #38383a;
+    --permission-button-selected-text: #ffffff;
+    --diff-outline: #30363d;
+    --diff-success: #3fb950;
+    --diff-error: #f85149;
+    --diff-added-bg: #0d2e1f;
+    --diff-added-border: #3fb950;
+    --diff-added-text: #c9d1d9;
+    --diff-removed-bg: #3f1b23;
+    --diff-removed-border: #f85149;
+    --diff-removed-text: #c9d1d9;
+    --code-comment: #737373;
+    --code-string: #5ecc71;
+    --code-number: #68cdf2;
+    --code-keyword: #ff678d;
+    --code-type: #d568ea;
+    --code-function: #9d6afb;
+    --code-variable: #ffa359;
+    --code-constant: #ffd452;
+    --code-operator: #08c0ef;
+    --code-punctuation: #a3a3a3;
+    --code-gutter: #737373;
+    --code-gutter-active: #a3a3a3;
+    --code-caret: #ffffff;
+    --code-selection: rgb(255 255 255 / 0.18);
+    --code-active-line: rgb(255 255 255 / 0.05);
+    --code-reveal: rgb(43 172 204 / 0.24);
+    --terminal-selection: #45454b;
+    --diff-context-bg: #161b22;
+    --diff-context-text: #8b949e;
+    --diff-line-number-bg: #161b22;
+    --diff-line-number-text: #6e7681;
+    --diff-hunk-header-bg: #161b22;
+    --diff-hunk-header-text: #58a6ff;
+    --diff-leading-space-dot: #2a2a2a;
+    --diff-inline-added-bg: #2a5a2a;
+    --diff-inline-added-text: #7aff7a;
+    --diff-inline-removed-bg: #5a2a2a;
+    --diff-inline-removed-text: #ff7a7a;
+    --user-message-background: #2c2c2e;
+    --user-message-text: #ffffff;
+    --agent-message-text: #ffffff;
+    --agent-event-text: #8e8e93;
+    --syntax-keyword: #569cd6;
+    --syntax-string: #ce9178;
+    --syntax-comment: #6a9955;
+    --syntax-number: #b5cea8;
+    --syntax-function: #dcdcaa;
+    --syntax-bracket-1: #ffd700;
+    --syntax-bracket-2: #da70d6;
+    --syntax-bracket-3: #179fff;
+    --syntax-bracket-4: #ff8c00;
+    --syntax-bracket-5: #00ff00;
+    --syntax-default: #d4d4d4;
+    --git-branch-text: #8e8e93;
+    --git-file-count-text: #8e8e93;
+    --git-added-text: #34c759;
+    --git-removed-text: #ff453a;
+    --git-status-new: #3fb950;
+    --git-status-modified: #e3b341;
+    --git-status-renamed: #58a6ff;
+    --git-status-deleted: #f85149;
+    --file-code: #6ea8fe;
+    --file-data: #e0a458;
+    --file-style: #b794f6;
+    --file-image: #4dd4c0;
+    --file-video: #f472b6;
+    --file-audio: #e879f9;
+    --file-shell: #a3b3c7;
+    --file-secret: #ff7b72;
+    --file-archive: #d9a441;
+    --file-prose: #4cc9d9;
+    --file-config: #9ca3af;
+    --file-directory: #93a4b8;
+    --file-other: #9ca3af;
+    --file-path-text: #79747e;
+    --terminal-background: #1e1e1e;
+    --terminal-prompt: #32d74b;
+    --terminal-command: #e0e0e0;
+    --terminal-stdout: #e0e0e0;
+    --terminal-stderr: #ffb86c;
+    --terminal-error: #ff6b6b;
+    --terminal-empty-output: #7b7b93;
+
+    /* A calendar event wears a tint of Happy teal on the surface it sits on,
+       mixed from the ink each theme already defines; chosen and today are the
+       full colour. Declared in every theme block so each mixes its own. */
+    --happy-calendar-event: color-mix(in srgb, var(--text-link) 16%, var(--surface));
+    --happy-calendar-event-hover: color-mix(in srgb, var(--text-link) 24%, var(--surface));
+    --happy-calendar-event-ink: color-mix(in srgb, var(--text-link) 55%, var(--text));
+    --happy-calendar-event-chosen: var(--text-link);
+    --happy-calendar-selection: color-mix(in srgb, var(--text-link) 12%, transparent);
+    --happy-calendar-today: var(--text-link);
+    /* Declared again here, so they resolve against the dark palette. */
+    --story-danger: var(--status-error);
+    --story-ring-unseen: var(--text-link);
+    --story-ring-seen: #48484a;
+    --story-avatar-fill: #5a5a5f;
+}
+
+/* Midnight: the dark palette taken down to a neutral near-black. Surfaces step
+   lighter as they rise — app, panel, raised, input — so depth survives without
+   shadows, which barely read this dark. Secondary ink is neutral grey rather
+   than dark's violet-tinted grey, and the primary action turns white because
+   black would vanish into the canvas. Everything not named here is dark's. */
+.happy-theme-midnight {
+    --text: #ececec;
+    --text-secondary: #a3a3a3;
+    --surface: #121212;
+    --surface-ripple: rgb(255 255 255 / 0.06);
+    --surface-pressed: #1c1c1c;
+    --surface-selected: #1f1f1f;
+    --surface-high: #0d0d0d;
+    --surface-highest: #1c1c1c;
+    --divider: #1f1f1f;
+    --shadow-floating: rgb(0 0 0 / 0.6);
+    --shadow-elevated: rgb(0 0 0 / 0.7);
+    --overlay-backdrop: rgb(0 0 0 / 0.72);
+    --groupped-background: #0b0b0b;
+    --groupped-chevron: #8f8f8f;
+    --groupped-section-title: #8f8f8f;
+    --header-background: #121212;
+    --header-tint: #ececec;
+    --header-tint-secondary: #8f8f8f;
+    --switch-track-inactive: #2a2a2a;
+    --radio-inactive: #3a3a3a;
+    --modal-border: rgb(255 255 255 / 0.08);
+    --button-primary-background: #ececec;
+    --button-primary-tint: #0b0b0b;
+    --button-primary-ripple: rgb(0 0 0 / 0.12);
+    --button-secondary-tint: #8f8f8f;
+    --composer-send-background: #ececec;
+    --composer-send-icon: #0b0b0b;
+    --input-background: #1a1a1a;
+    --sidebar-search-background: #1a1a1a;
+    --sidebar-search-border: rgb(255 255 255 / 0.08);
+    --input-text: #ececec;
+    --input-placeholder: #6e6e6e;
+    --permission-button-inactive-background: #1c1c1c;
+    --permission-button-inactive-border: #2a2a2a;
+    --permission-button-selected-background: #141414;
+    --permission-button-selected-border: #2a2a2a;
+    --diff-outline: #262626;
+    --diff-context-bg: #0d0d0d;
+    --diff-line-number-bg: #0d0d0d;
+    --diff-hunk-header-bg: #0d0d0d;
+    --diff-leading-space-dot: #1f1f1f;
+    --user-message-background: #1f1f1f;
+    --user-message-text: #ececec;
+    --agent-message-text: #ececec;
+    --agent-event-text: #8f8f8f;
+    --git-branch-text: #8f8f8f;
+    --git-file-count-text: #8f8f8f;
+    --file-path-text: #6e6e6e;
+    --terminal-background: #0b0b0b;
+    --terminal-selection: #333338;
+}
+
+/* ThemeScope intentionally has no layout box. */
+.happy-theme-scope {
+    display: contents;
+}
+
+.happy-box {
+    display: block;
+    box-sizing: border-box;
+}

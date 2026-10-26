@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GPT-6.1 Terra is in Happy</title>
+<style>
+@font-face { font-family: 'DM Sans'; src: url('assets/dm-sans.ttf'); font-weight: 100 1000; }
+html, body { width: 960px; height: 540px; margin: 0; overflow: hidden; background: #f5f0e7; }
+body { color: #183f38; font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+#stage { position: relative; width: 960px; height: 540px; }
+.caption { position: absolute; top: 31px; left: 0; width: 960px; height: 64px; display: flex; align-items: center; justify-content: center; font-size: 39px; font-weight: 700; letter-spacing: -.04em; white-space: nowrap; }
+.caption em { font-style: normal; color: #e6522c; }
+#picker { position: absolute; left: 230px; top: 118px; width: 400px; height: 320px; border: 0; transform: scale(1.25); transform-origin: 0 0; }
+#brand { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; }
+/* src/style.css .wordmark, at end-card scale. */
+.wordmark { color: #183f38; font-size: 65px; font-weight: 700; letter-spacing: -.04em; white-space: nowrap; }
+.wordmark span { color: #e6522c; margin-left: .28em; }
+</style>
+</head>
+<body>
+<div id="stage">
+    <div id="hook" class="caption"><span><em>GPT-6.1 Terra</em> is in Happy.</span></div>
+    <div id="providers" class="caption" style="opacity:0">Alongside Claude and Grok.</div>
+    <iframe id="picker" src="picker/frame.html" title="Happy's real model picker, GPT-6.1 Terra selected"></iframe>
+    <div id="brand"><div class="wordmark">Happy<span>Engineering</span></div></div>
+</div>
+<script>
+const T = { claude: 2.5, grok: 4.1, return: 5.8, end: 6.9, loop: 9.9 };
+const duration = 11;
+const smooth = (a, b, t) => { const u = Math.max(0, Math.min(1, (t-a)/(b-a))); return u*u*(3-2*u); };
+const picker = document.getElementById('picker');
+window.renderAt = (t) => {
+    const reveal = smooth(2.3, 2.8, t);
+    const end = smooth(6.9, 7.5, t);
+    const loop = smooth(9.9, 10.9, t);
+    const restore = 1-loop;
+    document.getElementById('hook').style.opacity = (1-reveal) * (1-end) + loop;
+    document.getElementById('providers').style.opacity = reveal * (1-end) * restore;
+    picker.style.opacity = 1-end+loop;
+    document.getElementById('brand').style.opacity = end * restore;
+    const scroll = (.48*smooth(2.7, 3.6, t) + .52*smooth(4.1, 5.1, t)) * (1-smooth(5.8, 6.5, t));
+    picker.contentWindow.renderPicker({
+        scroll,
+        claudeOpacity: .18 + .82 * smooth(2.7, 3.7, t) * restore,
+        grokOpacity: .18 + .82 * smooth(4.4, 5.4, t) * restore,
+    });
+};
+window.ready = (async () => {
+    await new Promise(resolve => picker.addEventListener('load', resolve, { once: true }));
+    await picker.contentWindow.ready;
+    await document.fonts.ready;
+    window.renderAt(0);
+    return { renderer: 'Chromium, actual ComposerModelControl DOM in light theme', duration, T };
+})();
+</script>
+</body>
+</html>
