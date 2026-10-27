@@ -74,6 +74,7 @@ const happyDocuments: DocumentDefinition[] = [
   {
     path: 'quick-start',
     sourcePath: '/content/docs/quick-start.mdx',
+    pageTitle: 'Install Happy Coder (npm install -g happy) and Pair Your Phone',
     title: 'Quick Start',
     description: 'Install the original Happy CLI, pair your phone, and start a Claude Code session. For Happy today, see the Happy Desktop Quick Start.',
     group: 'Start here',
@@ -81,6 +82,7 @@ const happyDocuments: DocumentDefinition[] = [
   {
     path: 'how-it-works',
     sourcePath: '/content/docs/how-it-works.mdx',
+    pageTitle: 'How Happy Coder Works: CLI, Phone App and Encrypted Relay',
     title: 'How It Works',
     description: 'Understand the CLI, mobile app, relay server, and encrypted data flow.',
     group: 'Start here',
@@ -95,6 +97,7 @@ const happyDocuments: DocumentDefinition[] = [
   {
     path: 'faq',
     sourcePath: '/content/docs/faq.mdx',
+    pageTitle: 'Happy Coder FAQ: Setup, Privacy and Troubleshooting',
     title: 'FAQ',
     description: 'Answers to common questions about Happy, setup, privacy, and troubleshooting.',
     group: 'Start here',
@@ -102,6 +105,7 @@ const happyDocuments: DocumentDefinition[] = [
   {
     path: 'guides/happy-coder-best-practices',
     sourcePath: '/content/docs/guides/happy-coder-best-practices.mdx',
+    pageTitle: 'Happy Coder Tips: Running Claude Code from Your Phone',
     title: 'Best Practices',
     description: 'Patterns and workflows for getting more from mobile agent sessions.',
     group: 'Guides',
@@ -124,7 +128,7 @@ const happyDocuments: DocumentDefinition[] = [
     path: 'features',
     sourcePath: '/content/docs/features/index.mdx',
     title: 'All Features',
-    pageTitle: 'All Features of Happy Coder — Original Happy CLI Docs',
+    pageTitle: 'Happy Coder Features: Claude Code and Codex from Your Phone',
     description: 'Explore Happy’s core architecture and mobile workflow features.',
     group: 'Features',
   },
@@ -188,6 +192,7 @@ const happyDocuments: DocumentDefinition[] = [
   {
     path: 'distribution',
     sourcePath: '/content/docs/distribution/index.mdx',
+    pageTitle: 'Happy Coder Product Descriptions and Links',
     title: 'Distribution Resources',
     description: 'Product descriptions, feature summaries, and canonical Happy links.',
     group: 'Resources',

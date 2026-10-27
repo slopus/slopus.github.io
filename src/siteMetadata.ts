@@ -87,7 +87,7 @@ export const homepageMetadata: PageMetadata = {
 
 /** The original Happy CLI docs. Kept at their URLs, in maintenance mode. */
 export const docsMetadata: PageMetadata = {
-  title: 'Original Happy CLI Docs (Happy Coder) — Maintenance Mode',
+  title: 'Happy Coder Docs (Original Happy CLI) — Now Happy Desktop',
   description:
     'Docs for the original Happy CLI (Happy Coder), a phone remote for Claude Code and Codex in your terminal. In maintenance mode; Happy today is a desktop harness.',
   canonicalPath: '/docs/',
