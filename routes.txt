@@ -6,6 +6,9 @@
 /blog/
 /changelog/
 /changelog/gpt-6-1-terra/
+/changelog/initial-core-release/
+/changelog/stem-cells/
+/changelog/updates-without-interruption/
 /chief-of-staff/
 /claude-code-remote-control/
 /comparisons/buzz/

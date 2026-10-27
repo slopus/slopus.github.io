@@ -171,6 +171,7 @@ export function MarkdownDocument({
   originalDocsLinks = false,
   resolveHref,
   headingId,
+  headingSuffix,
 }: {
   markdown: string
   /** Replaces the default renderer for these elements. */
@@ -181,6 +182,8 @@ export function MarkdownDocument({
   resolveHref?: (href: string | undefined) => string | undefined
   /** Permanent entry anchors independent of their current feature titles. */
   headingId?: (text: string, depth: 1 | 2 | 3) => string | undefined
+  /** A visible status label beside a heading, kept out of its permanent id. */
+  headingSuffix?: (text: string, depth: 1 | 2 | 3) => ReactNode
 }) {
   const usedHeadingIds = new Map<string, number>()
   // Keyed by source offset so a repeat render of a heading (StrictMode, hydration) keeps its id.
@@ -211,6 +214,7 @@ export function MarkdownDocument({
       return (
         <Heading id={id}>
           {children}
+          {headingSuffix?.(text, depth)}
           <a className="heading-anchor" href={`#${id}`} aria-label={`Link to ${text}`}>
             <span aria-hidden="true">#</span>
           </a>

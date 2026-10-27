@@ -193,6 +193,9 @@ export function DocsPage({ product = HAPPY, path, changelogPath }: { product?: P
           <MarkdownDocument markdown={markdown} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} resolveHref={activeDocument.group === 'Recipes' ? (href) => recipeHref(activeDocument.path, href) : undefined} headingId={activeDocument.group === 'Changelog' ? (text, depth) => {
             const entry = depth < 3 ? productionChangelogEntries.find((entry) => entry.title === text) : undefined
             return entry ? changelogAnchor(entry) : undefined
+          } : undefined} headingSuffix={activeDocument.group === 'Changelog' ? (text, depth) => {
+            const entry = depth < 3 ? productionChangelogEntries.find((entry) => entry.title === text) : undefined
+            return entry?.beta ? <> <span className="changelog-beta">Beta</span></> : undefined
           } : undefined} />
           {activeDocument.group === 'Blog' && <BlogDownload />}
 

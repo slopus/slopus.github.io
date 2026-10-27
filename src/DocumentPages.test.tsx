@@ -507,6 +507,23 @@ describe('static document pages', () => {
     expect(prerenderedPaths).not.toContain('/terra/')
   })
 
+  it('labels experimental releases in the page and share title and keeps the release index newest first', () => {
+    const index = new DOMParser().parseFromString(renderPath('/changelog/'), 'text/html')
+    expect([...index.querySelectorAll('article h2')].map((heading) => heading.id)).toEqual([
+      'gpt-6-1-terra', 'stem-cells', 'updates-without-interruption', 'initial-core-release',
+    ])
+    expect(index.querySelector('#stem-cells .changelog-beta')?.textContent).toBe('Beta')
+    expect(index.querySelector('#gpt-6-1-terra .changelog-beta')).toBeNull()
+    const path = '/changelog/stem-cells/'
+    const page = new DOMParser().parseFromString(renderPath(path), 'text/html')
+    expect(page.querySelector('article h1 .changelog-beta')?.textContent).toBe('Beta')
+    expect(page.querySelector('article')?.textContent).toContain('Settings → Experimental → Stem cells')
+    expect(metadataForPath(path)).toMatchObject({ canonicalPath: path, socialTitle: 'Stem cells (Beta)' })
+    for (const slug of ['stem-cells', 'updates-without-interruption', 'initial-core-release']) {
+      expect(prerenderedPaths).toContain(`/changelog/${slug}/`)
+    }
+  })
+
   it('puts a copyable Chief of Staff prompt right after the intro of every page it can help with', () => {
     const withPrompt = ['quick-start', 'chief-of-staff', 'models', 'permissions', 'secrets', 'workspaces', 'agents', 'mobile', 'multiplayer', 'extending', 'guides/configuration', 'guides/remote-server']
     for (const document of documentsForProduct('desktop')) {

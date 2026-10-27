@@ -64,6 +64,11 @@ stable version and publication date in a small line below it. Human permalinks s
 `/changelog/gpt-6-1-terra/` are complete prerendered pages with that entry first and their own
 canonical URL, og:url and link-preview tags; GitHub Pages cannot vary HTML by query string.
 Entries and share metadata live in `src/changelog.ts`, copy in `content/changelog/`.
+Experimental features in stable releases still need a visible **Beta** label.
+Set `beta: true` when the whole entry is experimental: its heading gets a Beta
+pill and its social title includes Beta. When only part is experimental, label
+that part inline. State the setting or opt-in needed to enable it, using the
+released code as evidence; a stable app version does not make every feature stable.
 Terra is keyed to the Happy Agent release that supplies the model catalog; video sources
 and regeneration instructions live in `notes/terra-video/`. `/terra/` was deliberately removed.
 

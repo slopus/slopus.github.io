@@ -301,6 +301,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-article { min-width: 0; }
 .document-article[data-document='changelog'] .document-content > h2 + p,
 .document-article[data-changelog-entry] .document-content > h1 + p { color: #6b7f78; font-size: .78rem; line-height: 1.6; margin-top: .65rem; }
+.changelog-beta { border: 1px solid #a8b69a; border-radius: 999px; color: #49665d; display: inline-block; font-family: 'DM Sans', sans-serif; font-size: .65rem; font-weight: 600; letter-spacing: 0; line-height: 1.5; margin-left: .65rem; padding: .1em .6em; vertical-align: middle; white-space: nowrap; }
 .legacy-notice { max-width: 760px; margin: 0 0 2rem; padding: .9rem 1.1rem; border: 1px solid #d5cebf; border-left: 3px solid #e6522c; border-radius: 8px; background: #fbf8f2; color: #385950; font-size: .9rem; line-height: 1.6; }
 .legacy-notice p { margin: 0; }
 .legacy-notice code { font-family: 'DM Mono', monospace; font-size: .88em; }

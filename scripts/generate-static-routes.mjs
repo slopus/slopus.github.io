@@ -357,7 +357,7 @@ for (const entry of productionChangelogEntries) {
   assertDocumentServed(route, html, entry.title)
   for (const [tag, expected] of Object.entries({
     'og:url': new URL(route, siteUrl).toString(),
-    'og:title': entry.title,
+    'og:title': metadata.socialTitle ?? entry.title,
     'og:image': socialImageUrl(entry.image),
     'og:image:width': String(entry.image.width),
     'og:image:height': String(entry.image.height),
