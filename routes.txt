@@ -120,6 +120,7 @@
 /recipes/wsl/
 /secrets/
 /stem-cell/
+/t3-code/
 /tailcat/
 /team-sign-in-workos/
 /team/

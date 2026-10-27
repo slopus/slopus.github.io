@@ -535,6 +535,15 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Comparisons',
   },
   {
+    path: 't3-code',
+    sourcePath: '/content/desktop/t3-code.mdx',
+    title: 'Happy vs T3 Code',
+    pageTitle: 'Happy vs T3 Code — A T3 Code Alternative for Teams',
+    description: 'Happy vs T3 Code: two open-source apps for Claude, Codex, and Grok. Where T3 Code is better, and why Happy is the T3 Code alternative for teams.',
+    cardLine: 'A team server and one harness for every model',
+    group: 'Comparisons',
+  },
+  {
     path: 'changelog',
     sourcePath: '/content/desktop/changelog.mdx',
     title: 'Changelog',
