@@ -202,7 +202,7 @@ const desktopDocuments: DocumentDefinition[] = [
     sourcePath: '/content/desktop/index.mdx',
     title: 'Welcome',
     description: 'Happy is an open-source harness for orchestrating Claude, Codex, and Grok agents in one desktop app, reusing your subscriptions: what you get, where to start.',
-    cardLine: 'Free, open source, on the subscriptions you have',
+    cardLine: 'Free, open source, reusing your subscriptions',
     group: 'Start here',
   },
   {

@@ -77,9 +77,12 @@ export function socialVideoTags(video: NonNullable<PageMetadata['socialVideo']>)
 export const homepageMetadata: PageMetadata = {
   title: 'Happy — Open-Source Harness to Orchestrate Claude Code, Codex & Grok',
   description:
-    'Orchestrate Claude, Codex and Grok in one app. Happy is an open-source harness that reuses the subscriptions you already pay for.',
+    'Orchestrate Claude, Codex and Grok in one app, on desktop and phone. Happy, formerly Happy Coder, is an open-source harness that reuses your subscriptions.',
   canonicalPath: '/',
   socialTitle: 'Any Model. Your Subscription. Happy Harness.',
+  // The link preview keeps its own text; the search snippet above adds the old name and the phone.
+  socialDescription:
+    'Orchestrate Claude, Codex and Grok in one app. Happy is an open-source harness that reuses the subscriptions you already pay for.',
 }
 
 /** The original Happy CLI docs. Kept at their URLs, in maintenance mode. */

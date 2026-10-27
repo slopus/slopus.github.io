@@ -49,6 +49,9 @@ const movedPaths: Record<string, string> = {
   '/thesis': '/vision',
   // The WorkOS post was published at /team-sign-in-workos/ before the Blog moved to short URLs.
   '/team-sign-in-workos': '/workos',
+  // The old Claude Code tools directory, still in search results.
+  '/tools': '/',
+  '/tools/agents': '/agents',
 }
 
 /** Sections that moved wholesale. The old prefix keeps resolving, path and all. */

@@ -105,6 +105,8 @@ export function SiteFooter({ product = HAPPY, additionalLinks }: { product?: Pro
         <div className="footer-meta">
           <div className="footer-links" aria-label="Footer navigation">
             <a href={product.docsHome}>Docs</a>
+            <a href="/desktop-app/">Desktop app</a>
+            <a href="/mobile-app/">Phone app</a>
             <a href="/privacy/">Privacy</a>
             <a href="/terms/">Terms</a>
             {additionalLinks}

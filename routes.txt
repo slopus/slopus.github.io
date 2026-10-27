@@ -126,6 +126,8 @@
 /terms/
 /thesis/
 /tmp/happy-one/
+/tools/
+/tools/agents/
 /tos/
 /updates/
 /vision/

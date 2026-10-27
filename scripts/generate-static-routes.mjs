@@ -524,6 +524,10 @@ await writeRoute('blog', redirectHtml('/vision/'))
 // The WorkOS post was first published at /team-sign-in-workos/; the Blog uses short URLs.
 await writeRoute('team-sign-in-workos', redirectHtml('/workos/'))
 
+// The old Claude Code tools directory, gone since the site became Happy Desktop's, still gets search impressions.
+await writeRoute('tools', redirectHtml('/'))
+await writeRoute('tools/agents', redirectHtml('/agents/'))
+
 // The requested recipe URLs use /recepies/; the usual spelling works too.
 for (const document of documents.filter((entry) => entry.product === HAPPY_DESKTOP.key && (entry.path === 'recepies' || entry.path.startsWith('recepies/')))) {
   await writeRoute(document.path.replace(/^recepies/, 'recipes'), redirectHtml(`/${document.path}/`))

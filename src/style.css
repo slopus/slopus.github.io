@@ -235,7 +235,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .footer-meta { text-align: right; }
 .footer-meta p { color: #47645e; font-size: .78rem; margin: .6rem 0 0; }
 .footer-meta .footer-descriptor { color: #183f38; font-size: .9rem; margin-top: .45rem; }
-.footer-links { display: flex; font-size: .8rem; gap: 1.25rem; justify-content: flex-end; margin-bottom: 1.1rem; }
+.footer-links { display: flex; flex-wrap: wrap; font-size: .8rem; gap: .6rem 1.25rem; justify-content: flex-end; margin-bottom: 1.1rem; }
 .footer-links a { border-bottom: 1px solid transparent; }
 .footer-links a:hover { border-color: currentColor; }
 .footer-links .footer-link-quiet { color: #6b7f78; }

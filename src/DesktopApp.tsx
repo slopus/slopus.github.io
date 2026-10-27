@@ -11,7 +11,7 @@ import './happy-one-preview.css'
 const features = [
   {
     title: 'Multi-provider',
-    body: 'Astra, Fable, and Grok in one app, each with its vendor\'s own prompts and tools. Give every task the model that fits, and delegate to subagents on any of them.',
+    body: 'Claude, Codex, and Grok in one app, each with its vendor\'s own prompts and tools. Give every task the model that fits, and delegate to subagents on any of them.',
   },
   {
     title: 'Reuse your subscriptions',
