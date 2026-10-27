@@ -1,6 +1,6 @@
 # Happy vs T3 Code
 
-Happy and T3 Code are both free, MIT-licensed apps for running Claude, Codex, and Grok agents on the subscriptions you already pay for, from a desktop app or a phone. Pick T3 Code for more agents in its UI, a web client, and tools for app work. Pick Happy, the T3 Code alternative for teams, for a self-hosted server where everyone signs in as themselves, and one harness that runs Claude, Codex, and Grok under the same sandbox.
+Happy and T3 Code are both free, MIT-licensed apps for running Claude, Codex, and Grok agents on the subscriptions you already pay for, from a desktop app or a phone. Pick T3 Code for Cursor, Pi, and Muse Code, a web client, and tools for app work. Pick Happy, the T3 Code alternative for teams, for a self-hosted server where everyone signs in as themselves, one harness that runs Claude, Codex, and Grok under the same sandbox, and review on by default.
 
 ## Side by side
 
@@ -8,20 +8,20 @@ Facts about T3 Code come from [its source and docs](https://github.com/pingdotgg
 
 | | Happy | T3 Code |
 | --- | --- | --- |
-| Agents | Claude, Codex, Grok, more as harnesses | Claude, Codex, Grok, Cursor, OpenCode, Antigravity, more |
+| Agents | Claude, Codex, Grok; OpenCode, Antigravity, ACP (beta) | Claude, Codex, Grok, Cursor, OpenCode, Antigravity, more |
 | Apps | Desktop, iOS, Android | Desktop, web, iOS, Android |
-| Default agent loop | Happy's own | Each vendor's own |
+| Agent loop | Happy's own, or the vendor's (beta) | Each vendor's own |
 | Sandbox | One OS sandbox | Each provider's own |
-| Initial default mode | Auto: sandbox plus review | Full access |
+| New sessions start in | Auto: sandbox plus review | Full access |
 | Model switch keeps | The transcript | Short chats whole, long ones a selection |
 | Team server, per-member sign-in | ✓ | ✗ |
 | Scripting | REST API | MCP, `t3 thread` |
 
-Both defaults can be changed in settings. Both run subagents on other providers, steer a running turn, and pick threads back up after a restart.
+Both run subagents on other providers, steer a running turn, and pick threads back up after a restart.
 
 ## Where T3 Code is better
 
-- **More agents in the UI.** Cursor, OpenCode, Google Antigravity, Pi, Muse Code, fx, and agents from the ACP Registry, besides Claude, Codex, and Grok Build, each set up from Settings.
+- **More agents.** Cursor, Pi, Muse Code, and fx, which Happy doesn't run.
 - **A web client.** [app.t3.codes](https://app.t3.codes) reaches a machine over HTTPS or T3 Connect from any browser.
 - **Queued messages you can edit.** They are saved on the server, and you can edit them, remove them, or send one as a steer.
 - **Tools for app work.** A live iOS Simulator or Android Emulator next to the thread, browser tabs you share with the agent, and pull requests on GitHub, GitLab, Bitbucket, and four more hosts.
@@ -43,11 +43,15 @@ By default Happy Agent runs the agent loop itself. Claude gets Claude Code's pro
 
 ![Happy's model picker: Codex, Claude, and Grok accounts, each with its models, beside the Model and Effort menu](/thesis/model-picker.png)
 
-New sessions start in Auto. Commands run in the OS sandbox, and an action that would cross it is reviewed by a separate agent. See [Permissions & Sandbox](/permissions/).
+Happy can also run a vendor's own agent (beta): Claude Code through the Agent SDK, Codex through `codex app-server`, Antigravity, OpenCode, or any ACP agent. There is no settings screen to click through. Ask your agent, and it adds the [harness](/recepies/harnesses/) to `happy.toml` for you. The conversation stays in Happy, and Happy's permission mode is mapped onto the agent's own.
 
-To run a vendor's own agent instead, add Claude Code, Codex CLI, Antigravity, OpenCode, or any ACP agent as a [harness](/recepies/harnesses/) in `happy.toml`. The conversation stays in Happy, and Happy's permission mode is mapped onto the agent's own.
+T3 Code always runs each vendor's agent. When you switch providers, short conversations transfer whole; longer ones become a [budgeted selection](https://github.com/pingdotgg/t3code/blob/main/docs/user/portable-handoffs.md), 16,000 tokens by default, without the old provider's reasoning or tool state. The agent can look up the rest with a tool.
 
-T3 Code always runs each vendor's agent and maps its [permission modes](https://github.com/pingdotgg/t3code/blob/main/docs/user/permission-modes.md) onto that provider's controls. Its Auto uses the provider's automatic review, and falls back to asking on providers without one, such as OpenCode and Antigravity. When you switch providers, short conversations transfer whole; longer ones become a [budgeted selection](https://github.com/pingdotgg/t3code/blob/main/docs/user/portable-handoffs.md), 16,000 tokens by default, without the old provider's reasoning or tool state. The agent can look up the rest with a tool.
+## Auto by default, not Full access
+
+New Happy sessions start in Auto. Commands run in the OS sandbox, and only an action that would cross it goes to review by a separate agent. Reads and workspace edits never wait on review, so it stays out of the way, and we see no reason to start without it. See [Permissions & Sandbox](/permissions/).
+
+New T3 Code threads start in [Full access](https://github.com/pingdotgg/t3code/blob/main/docs/user/permission-modes.md): commands and edits run without approval prompts. You can choose another default in its settings. Its Auto uses each provider's own automatic review, and falls back to asking on providers without one, such as OpenCode and Antigravity.
 
 ## Updates in the middle of a turn
 
@@ -71,5 +75,6 @@ Both are MIT licensed. We take pull requests, bug fixes first. T3 Code's README,
 | A web client for your machine | T3 Code |
 | A team on one agent server, each signed in | Happy |
 | One sandbox and permission model for every model | Happy |
+| Review before anything leaves the sandbox, by default | Happy |
 
 To start with Happy, see the [Quick Start](/quick-start/) or [download it](/#download).
