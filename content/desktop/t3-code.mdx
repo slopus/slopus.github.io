@@ -1,6 +1,6 @@
 # Happy vs T3 Code
 
-Happy and T3 Code are both free, MIT-licensed apps for running Claude, Codex, and Grok agents on the subscriptions you already pay for, from a desktop app or a phone. Pick T3 Code for Cursor, Pi, and Muse Code, a web client, and tools for app work. Pick Happy, the T3 Code alternative for teams, for a self-hosted server where everyone signs in as themselves, one harness that runs Claude, Codex, and Grok under the same sandbox, and review on by default.
+Happy and T3 Code are both free, MIT-licensed apps for running Claude, Codex, and Grok agents on the subscriptions you already pay for, from a desktop app or a phone, and both run other coding agents over the Agent Client Protocol (ACP). Pick T3 Code for a web client, tools for app work, and native Cursor, Pi, and Muse Code integrations. Pick Happy, the T3 Code alternative for teams, for a self-hosted server where everyone signs in as themselves, one harness that runs Claude, Codex, and Grok under the same sandbox, and review on by default.
 
 ## Side by side
 
@@ -8,7 +8,7 @@ Facts about T3 Code come from [its source and docs](https://github.com/pingdotgg
 
 | | Happy | T3 Code |
 | --- | --- | --- |
-| Agents | Claude, Codex, Grok; OpenCode, Antigravity, ACP (beta) | Claude, Codex, Grok, Cursor, OpenCode, Antigravity, more |
+| Agents | Claude, Codex, Grok; any ACP agent (beta) | Claude, Codex, Grok, Cursor, Pi, Muse Code; any ACP agent |
 | Apps | Desktop, iOS, Android | Desktop, web, iOS, Android |
 | Agent loop | Happy's own, or the vendor's (beta) | Each vendor's own |
 | Sandbox | One OS sandbox | Each provider's own |
@@ -21,7 +21,7 @@ Both run subagents on other providers, steer a running turn, and pick threads ba
 
 ## Where T3 Code is better
 
-- **More agents.** Cursor, Pi, Muse Code, and fx, which Happy doesn't run.
+- **Native integrations.** Cursor runs through its SDK, Pi through its RPC mode, and Muse Code through its SDK. Happy reaches them only over ACP.
 - **A web client.** [app.t3.codes](https://app.t3.codes) reaches a machine over HTTPS or T3 Connect from any browser.
 - **Queued messages you can edit.** They are saved on the server, and you can edit them, remove them, or send one as a steer.
 - **Tools for app work.** A live iOS Simulator or Android Emulator next to the thread, browser tabs you share with the agent, and pull requests on GitHub, GitLab, Bitbucket, and four more hosts.
@@ -43,9 +43,9 @@ By default Happy Agent runs the agent loop itself. Claude gets Claude Code's pro
 
 ![Happy's model picker: Codex, Claude, and Grok accounts, each with its models, beside the Model and Effort menu](/thesis/model-picker.png)
 
-Happy can also run a vendor's own agent (beta): Claude Code through the Agent SDK, Codex through `codex app-server`, Antigravity, OpenCode, or any ACP agent. There is no settings screen to click through. Ask your agent, and it adds the [harness](/recepies/harnesses/) to `happy.toml` for you. The conversation stays in Happy, and Happy's permission mode is mapped onto the agent's own.
+Happy can also run a vendor's own agent (beta): Claude Code through the Agent SDK, Codex through `codex app-server`, or any agent that speaks ACP. Most coding agents ship an ACP command or adapter: Cursor has [`agent acp`](https://cursor.com/docs/cli/acp), fx has [`fx acp`](https://github.com/vercel-labs/fx), Pi has [pi-acp](https://github.com/svkozak/pi-acp), Muse Code has [an unofficial adapter](https://github.com/bex-co/muse-code-acp), and Antigravity and OpenCode have their own. There is no settings screen to click through. Ask your agent, and it adds the [harness](/recepies/harnesses/) to `happy.toml` for you. The conversation stays in Happy, and Happy's permission mode is mapped onto the agent's own.
 
-T3 Code always runs each vendor's agent. When you switch providers, short conversations transfer whole; longer ones become a [budgeted selection](https://github.com/pingdotgg/t3code/blob/main/docs/user/portable-handoffs.md), 16,000 tokens by default, without the old provider's reasoning or tool state. The agent can look up the rest with a tool.
+T3 Code always runs each vendor's agent, over ACP for Antigravity, Grok Build, fx, and [Registry agents](https://github.com/pingdotgg/t3code/blob/main/docs/user/providers-acp.md). When you switch providers, short conversations transfer whole; longer ones become a [budgeted selection](https://github.com/pingdotgg/t3code/blob/main/docs/user/portable-handoffs.md), 16,000 tokens by default, without the old provider's reasoning or tool state. The agent can look up the rest with a tool.
 
 ## Auto by default, not Full access
 
@@ -71,7 +71,7 @@ Both are MIT licensed. We take pull requests, bug fixes first. T3 Code's README,
 
 | You want | Use |
 | --- | --- |
-| Cursor, Pi, or Muse Code | T3 Code |
+| Cursor, Pi, or Muse Code without ACP | T3 Code |
 | A web client for your machine | T3 Code |
 | A team on one agent server, each signed in | Happy |
 | One sandbox and permission model for every model | Happy |
