@@ -1,46 +1,20 @@
 .one-demo { margin: 3.5rem 0 0; text-align: left; }
-/* The stage is the container the phone measures itself against (100cqw = stage width).
-   The window owns the page's center axis; the phone stands outside its right edge.
-   The window is at most 70% of the stage, and shrinks (never below 36%) until the
-   heading, note, recording, and primary download fit the viewport height. The hero
-   supplies --one-hero-reserved, the height of everything else on that first screen.
-   The phone is 28% of the stage or 40% of the window, whichever is smaller, so a
-   shrunken window is never shorter than the phone beside it. */
-.one-demo-stage { --desktop-fit: calc((100vh - var(--one-hero-reserved, 0px)) * 1950 / 1660); --desktop-width: clamp(36cqw, var(--desktop-fit), 70cqw); --phone-width: min(28cqw, calc(var(--desktop-width) * .4)); --phone-gap: clamp(6px, 1cqw, 12px); --phone-left: calc(50cqw + var(--desktop-width) / 2 + var(--phone-gap)); position: relative; display: flex; justify-content: center; padding: 0 0 20px; overflow: visible; container-type: inline-size; }
-/*
- * The movie is the recorded Mac window itself: 1950×1660 movie pixels, 780 CSS
- * pixels of the recorded app, no letterbox and no camera. --apx is one CSS pixel
- * of the recorded app, so the window chrome scales with the app.
- */
-.one-demo-desktop { position: relative; flex: none; width: var(--desktop-width); margin-inline: auto; aspect-ratio: 1950 / 1660; container-type: inline-size; --apx: calc(100cqw / 780); }
-/* macOS window: the recorded content's edge is the window edge, so the corner radius,
-   hairline and shadow sit on it. */
-.one-demo-window { position: absolute; inset: 0; overflow: hidden; border-radius: calc(14 * var(--apx)); background: #212121; box-shadow: 0 26px 60px -26px #183f388c, 0 0 0 max(.5px, .5 * var(--apx)) #0000003d; }
-.one-demo-window > video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
-.one-demo-window::after { content: ''; position: absolute; inset: 0; z-index: 2; border-radius: inherit; box-shadow: inset 0 0 0 max(1px, var(--apx)) #ffffff2e; pointer-events: none; }
-/* Park beside the window; the page shell clips decorative viewport overflow.
-   Focus may overlap the desktop, which keeps its exact page-center position. */
-.one-demo-phone { position: absolute; z-index: 2; left: var(--phone-left); bottom: 0; width: var(--phone-width); aspect-ratio: 1406 / 2822; padding: 0; border: 0; background: transparent; transform-origin: bottom left; transform: scale(1); will-change: transform; transition: transform 850ms cubic-bezier(.22,.8,.24,1); }
-.one-phone-flat { position: absolute; display: block; inset: 0; filter: drop-shadow(0 18px 18px #183f3830); }
-.one-phone-flat > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
-/* Exact aperture: 102,100,1206,2622 in the 1406×2822 frame. The masked screen
-   bleeds 0.4% beneath each bezel edge to avoid two anti-aliased edges exposing
-   a hairline during fractional scaling. The frame itself remains untouched. */
-.one-phone-flat > video { position: absolute; left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; transform: scale(1.008); object-fit: fill; background: #000; mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
-/* The focused phone is 1.18× its parked width. Move only the excess beyond the
-   viewport's right gap, using its actual parked position at each size step. */
-.one-demo-stage[data-phone-focus] .one-demo-phone { transform: translateX(min(0px, calc(50vw + 50cqw - var(--phone-left) - var(--phone-width) * 1.18 - var(--phone-gap)))) scale(1.18); }
+/* One composed movie, the Mac window and the phone together: 1618×1000, centered on
+   the page's axis with the download badge. It is at most 84% of the stage, and shrinks
+   (never below 40%) until the heading, note, movie, and primary download fit the
+   viewport height. The hero supplies --one-hero-reserved, the height of everything
+   else on that first screen. */
+.one-demo-stage { --demo-fit: calc((100vh - var(--one-hero-reserved, 0px)) * 1618 / 1000); --demo-width: clamp(40cqw, var(--demo-fit), 84cqw); display: flex; justify-content: center; padding: 0 0 20px; container-type: inline-size; }
+.one-demo-frame { position: relative; flex: none; width: var(--demo-width); aspect-ratio: 1618 / 1000; overflow: hidden; border-radius: 12px; background: #1b2530; box-shadow: 0 26px 60px -26px #183f388c, 0 0 0 .5px #0000003d; }
+.one-demo-frame > video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
 .one-demo-error { margin-top: 1rem; font-size: .85rem; color: #8c3926; }
 @media (min-width: 701px) and (max-width: 1024px) {
-  .one-demo-stage { --desktop-width: clamp(36cqw, var(--desktop-fit), 80cqw); }
+  .one-demo-stage { --demo-width: clamp(40cqw, var(--demo-fit), 92cqw); }
 }
 @media (max-width: 700px) {
   .one-demo { margin-top: 2.5rem; }
-  /* 80% of the screen, not of the already inset page. Keep at least 40% of
-     the phone visible: its full avatars and roughly one title word. A tiny
-     bezel overlap is preferable to clipping those avatars or moving the app. */
-  .one-demo-stage { --desktop-width: 80vw; --phone-left: min(calc(50cqw + 40vw + var(--phone-gap)), calc(50cqw + 50vw - 11.2cqw)); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .one-demo-phone { transition: none; }
+  /* Nearly the full screen, not the already inset page: the movie's captions and the
+     phone stay legible. The page shell clips any overflow. */
+  .one-demo-stage { --demo-width: calc(100vw - 16px); }
+  .one-demo-frame { border-radius: 8px; }
 }

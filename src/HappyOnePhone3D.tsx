@@ -9,7 +9,7 @@ type Props = {
   inspect: () => void
 }
 
-// Retained alternative; the landing page deliberately uses HappyOnePhone instead.
+// Retained alternative; the landing page plays one composed movie instead.
 export function HappyOnePhone3D({ video, focused, inspecting, inspect }: Props) {
   const host = useRef<HTMLButtonElement>(null)
   const scene = useRef<PhoneScene | null>(null)

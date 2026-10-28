@@ -1,8 +1,42 @@
-# Happy One synchronized demo
+# Happy One homepage demo
 
-## Current export: v22, from take v21-r2
+## Current export: v29, from take v29-team-r11
 
-Only the homepage `/` (formerly `/desktop/`, reviewed earlier as `/tmp/happy-one/`) uses this player. Active assets are in
+The homepage `/` plays one composed movie: the recorded Mac window with Steve's
+phone laid over it and the captions baked in. It replaced the synchronized
+desktop/phone pair below. Assets are in `public/video/happy-one/v29/`, copied
+unchanged from the desktop workspace's
+`scripts/demo/demos/stem/artifacts/v29-team-r11/final/web/`:
+
+| Website asset | Source | Encoding | Size |
+| --- | --- | --- | --- |
+| `demo.webm` | `team.webm` | AV1 + Opus, 1618×1000, 60fps, 76.52s | 2,968,611 bytes |
+| `demo.mp4` | `team.mp4` | H.264 High + AAC, 1618×1000, 60fps, 76.52s, fast-start | 6,135,263 bytes |
+| `poster.webp` | `team-poster.webp` | first frame, model list open | 73,746 bytes |
+
+The take opens on the model list and picks Opus; a new chat starts as a stem
+cell, names itself and grows its icon, and the sidebar self-organizes; the agent
+loops in @Steve, and Steve replies from his phone.
+
+`src/HappyOneDemo.tsx` lists the AV1 WebM first and the MP4 as the fallback, with
+`preload="metadata"`, `loop`, and `playsInline`. It plays muted while at least a
+quarter of it is in view, pauses when it leaves the viewport or the tab is
+hidden, and resumes only if it was playing then; a visitor's own pause stays
+paused. Native controls stay hidden until the reader reaches for them
+(`src/revealedControls.ts`); reduced motion, save-data, and blocked autoplay leave
+it paused on the poster with controls shown. The frame is centered on the
+download badge's axis: up to 84% of the stage above 1024px (92% at 701–1024px),
+shrinking to fit the first screen, and the full screen width less 16px at 700px
+and below.
+
+Checked offline in Chrome from the built `dist/`: at 390px and 1440px the WebM
+autoplays muted without controls, loops, and there is no horizontal overflow;
+with the WebM blocked the MP4 plays; with reduced motion it stays paused on the
+poster with controls. This was not checked in Safari.
+
+## Previous export: v22, from take v21-r2
+
+This synchronized player is retired; its files remain in
 `public/video/happy-one/v22/`, from the desktop workspace's
 `scripts/demo/demos/core/artifacts/v21-r2/`. The master contains 3,867 frames at
 60fps, lasting 64.450000 seconds. All six copied exports have verified checksums.
@@ -121,24 +155,18 @@ This is an agent-run screenshot recipe, not a production script. The ordinary
 page uses the requested capitalization, “Any Model. Your Subscription. Happy Harness.”,
 with “Orchestrate Claude, Codex, Grok, Gemini and more in one app” under it. Every route without its own card (all but
 the desktop docs, whose cards come from `notes/og/cards.py`) uses
-`/og/happy-harness-v25.png` as its social image, served with `?v=` and
+`/og/happy-harness-v26.png` as its social image, served with `?v=` and
 `SOCIAL_IMAGE_VERSION` from `src/siteMetadata.ts` so link previews refetch;
-v22–v24 stay for old shares.
+v22–v25 stay for old shares.
 
-The v25 card is a horizontal composition: the three-line headline at 52px, the
-descriptor “Orchestrate Claude, Codex and Grok in one app” on two lines, “Free
-and open source”, and GitHub stars on the left; the full desktop on the right;
-and only 40% of the parked phone peeking in from the right edge. At 1200×630,
-the desktop's visible layout box is 596×507.34375px at (512, 47.328125):
-49.666667% of image width and 39.997470% of image area. The phone's visible
-box is 80×401.421875px at (1120, 181.25): 6.666667% of image width and
-4.247851% of image area. These Chromium measurements exclude shadows and use
-layout rectangles, not alpha-weighted painted pixels. Firefox and WebKit
-match the widths exactly, with less than 0.03px height variation.
+The v26 card is a horizontal composition: the three-line headline at 52px, the
+descriptor on two lines, “Free and open source”, and GitHub stars on the left;
+the v29 movie, 664px wide, on the right, frozen at 2.8 seconds with the model
+list open and Opus hovered.
 
 1. Read the current public `https://api.github.com/repos/slopus/happy` response.
    Update the dated snapshot in `src/happyOneGithubStars.ts` using
-   `stargazers_count` (24,083 / 24k on 2026-10-10). The header and screenshot
+   `stargazers_count` (24,384 / 24k on 2026-10-28). The header and screenshot
    both link to the **original** `https://github.com/slopus/happy` repository.
    Download “All Releases” deliberately still links to `happy-desktop`.
 2. Build the website. Open `/?preview=og` in Chromium at
@@ -151,22 +179,20 @@ match the widths exactly, with less than 0.03px height variation.
    flag, the extra hero line is not mounted and the normal layout is unchanged.
    Keep the headline on three lines: “Any Model.” / “Your Subscription.” / “Happy Harness”.
    The copy starts at x=48px in a 440px column; a 24px gap separates it from
-   the 596px desktop. The 200px phone starts 12px after the desktop, leaving
-   80px visible. Do not stack the desktop below the headline in this mode.
+   the 664px movie. Do not stack the movie below the headline in this mode.
    Wait for **Space Grotesk** and **DM Sans** to load from the existing Google
-   Fonts stylesheet, plus the phone artwork and both videos. Do not capture
+   Fonts stylesheet, plus the video. Do not capture
    fallback fonts, posters, loading indicators, or browser playback controls.
-4. Freeze both `.one-demo video` elements at **7.5 seconds** of the v22 assets:
-   pause them, set `controls = false`, and set `currentTime = 7.5`. The desktop
-   model list is open with Fable hovered; the phone shows its real bot list.
-   Remove `data-phone-focus` from `.one-demo-stage`. Wait until both videos are
-   paused, not seeking, decode-ready, and within 0.01 seconds of the target;
-   then wait two animation frames. Keep the pointer away from the video.
+4. Freeze the `.one-demo video` at **2.8 seconds** of the v29 asset: pause
+   it, set `controls = false`, and set `currentTime = 2.8`. The model list is
+   open with Opus hovered. Wait until it is paused, not seeking, decode-ready,
+   and at the target; then wait two animation frames. Keep the pointer away
+   from the video.
 5. Capture the full 1200×630 viewport at 2× (2400×1260 bitmap), then downsample
    once to **1200×630 PNG**. Save a new versioned filename under `public/og/`
    rather than overwriting a cached social image. Inspect it personally: full
-   headline, “Free and open source”, GitHub count, model list, both bots,
-   baked-in Mac buttons, and phone must be visible, with no playback chrome.
+   headline, “Free and open source”, GitHub count, caption, and model list
+   must be visible, with no playback chrome.
 6. Point both `src/siteMetadata.ts` and `scripts/generate-static-routes.mjs` at
    the new image, keeping the title capitalization above and the existing
    description. `/` is the public page and stays indexable; the `/desktop/`,
@@ -176,7 +202,7 @@ match the widths exactly, with less than 0.03px height variation.
    Graph and Twitter image tags without running JavaScript. Check that normal
    navigation restores other routes' image metadata.
 7. Verify the ordinary page still has no `.one-social-stars`, and the header
-   repository/count, centered downloads, phone layout, and playback still work.
+   repository/count, centered downloads, and playback still work.
    Publish only when requested. After deployment, verify the live HTML and the
    image URL; messaging apps may keep a previously cached preview until they
    re-fetch the page.

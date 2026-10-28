@@ -234,7 +234,7 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'How It Works',
     pageTitle: 'How Happy Works: One Agent Runtime for Claude, Codex, Grok and More',
     description: 'How Happy orchestrates agents: Happy Agent runs Claude, Codex, Grok, Gemini, and ACP agents in one runtime, and Desktop and the phone app are its clients.',
-    cardLine: 'One runtime for Claude, Codex and Grok',
+    cardLine: 'One runtime for Claude, Codex, Grok and more',
     group: 'Start here',
   },
   {

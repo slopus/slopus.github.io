@@ -1,13 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { HappyOnePhone } from './HappyOnePhone'
-import { happyOneDemoMediaSelect } from './happyOneDemoMedia'
 import { useRevealedControls } from './revealedControls'
 import './happy-one-demo.css'
 
-const MEDIA = '/video/happy-one/v22'
-// v21-r2 recording cues on the common 60fps desktop/phone master clock.
-const PHONE_ENTER = 2087 / 60
-const PHONE_EXIT = 2974 / 60
+const MEDIA = '/video/happy-one/v29'
 
 type DataConnection = EventTarget & { saveData?: boolean }
 function dataConnection() {
@@ -15,115 +10,68 @@ function dataConnection() {
 }
 
 /**
- * The recorded Mac window with the browser's own video controls, and the phone
- * that follows it. The desktop movie is the clock: its play, pause, seek, and
- * rate drive the phone movie, so scrubbing keeps the pair on one clock.
- * Autoplay starts without browser chrome covering the opening. Deliberate
+ * The recorded take: the Mac window and Steve's phone, composed into one movie.
+ * It loops muted while in view, without browser chrome covering it. Deliberate
  * pointer/keyboard interaction reveals the ordinary native controls; reduced
- * motion, blocked autoplay, and the ending also make them available.
+ * motion, save-data, and blocked autoplay leave it paused on its poster with them.
  */
 export function HappyOneDemo() {
   const stage = useRef<HTMLElement>(null)
-  const desktop = useRef<HTMLVideoElement>(null)
-  const phone = useRef<HTMLVideoElement>(null)
-  const [phoneFocused, setPhoneFocused] = useState(false)
+  const movie = useRef<HTMLVideoElement>(null)
+  // A failed load reports on the last <source> the browser tried, not on the video.
+  const fallback = useRef<HTMLSourceElement>(null)
   const [error, setError] = useState(false)
   const { revealControls, videoProps } = useRevealedControls()
 
   useEffect(() => {
-    const main = desktop.current!
-    const companion = phone.current!
+    const video = movie.current!
+    const lastSource = fallback.current!
     // Muted here, not as a prop: the prerendered markup cannot carry it, and hydration would
-    // leave both movies unmuted, which blocks autoplay.
-    main.muted = true
-    companion.muted = true
+    // leave the movie unmuted, which blocks autoplay.
+    video.muted = true
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
     const connection = dataConnection()
     let autoplay = !reducedMotion.matches && !connection?.saveData
     if (!autoplay) revealControls()
     let visible = false
-    let loaded = false
     let disposed = false
-    let resumeWhenVisible = false
-    let focused = false
+    // Pausing for the viewport or a hidden tab resumes; a visitor's own pause stays paused.
+    let holding = false
+    let resume = false
 
-    const focus = () => {
-      const now = main.currentTime >= PHONE_ENTER && main.currentTime < PHONE_EXIT
-      if (now !== focused) { focused = now; setPhoneFocused(now) }
+    const play = () => {
+      if (!(autoplay || resume) || !visible || document.hidden) return
+      resume = false
+      void video.play().catch(() => {
+        if (disposed) return
+        autoplay = false
+        revealControls()
+      })
     }
-    const align = (force = false) => {
-      if (companion.readyState < 1) return
-      if (force || Math.abs(companion.currentTime - main.currentTime) > 0.12) companion.currentTime = main.currentTime
+    const hold = () => {
+      if (video.paused) return
+      holding = true
+      video.pause()
     }
-    const follow = () => {
-      if (main.paused || main.seeking || main.ended || main.readyState < 3) companion.pause()
-      else if (companion.paused && companion.readyState >= 2) void companion.play().catch(() => undefined)
+    const onPause = () => {
+      if (holding) resume = true
+      else autoplay = resume = false
+      holding = false
     }
-    const load = async () => {
-      if (loaded) return
-      loaded = true
-      const media = await happyOneDemoMediaSelect()
-      if (disposed) return
-      main.preload = 'auto'
-      companion.preload = 'auto'
-      main.width = media.desktop.width
-      main.height = media.desktop.height
-      companion.width = media.phone.width
-      companion.height = media.phone.height
-      main.src = media.desktop.src
-      companion.src = media.phone.src
-      main.load()
-      companion.load()
+    const onError = () => setError(true)
+    const onVisibility = () => { if (document.hidden) hold(); else play() }
+    const onMotion = () => {
+      if (reducedMotion.matches || connection?.saveData) { autoplay = false; video.pause(); revealControls() }
     }
-    // Once, when the pair can play in view: the muted movie starts by itself.
-    const start = () => {
-      if (!autoplay || !visible || document.hidden || main.readyState < 3 || companion.readyState < 3) return
-      autoplay = false
-      void main.play().catch(() => { if (!disposed) revealControls() })
-    }
-    const onPlay = () => { align(true); companion.playbackRate = main.playbackRate; follow() }
-    const onPause = () => companion.pause()
-    const onEnded = () => { companion.pause(); revealControls() }
-    const onSeeking = () => { companion.pause(); align(true); focus() }
-    const onRate = () => { companion.playbackRate = main.playbackRate }
-    const onTime = () => { focus(); align() }
-    const onError = () => { setError(true) }
-    const onVisibility = () => {
-      if (document.hidden) {
-        if (!main.paused) { resumeWhenVisible = true; main.pause() }
-      } else if (resumeWhenVisible) {
-        resumeWhenVisible = false
-        if (visible) void main.play().catch(() => undefined)
-      } else start()
-    }
-    const onMotion = () => { if (reducedMotion.matches || connection?.saveData) { autoplay = false; main.pause(); revealControls() } }
-    main.addEventListener('play', onPlay)
-    main.addEventListener('playing', follow)
-    main.addEventListener('pause', onPause)
-    main.addEventListener('waiting', onPause)
-    main.addEventListener('seeking', onSeeking)
-    main.addEventListener('seeked', follow)
-    main.addEventListener('ratechange', onRate)
-    main.addEventListener('ended', onEnded)
-    main.addEventListener('timeupdate', onTime)
-    main.addEventListener('canplay', start)
-    companion.addEventListener('canplay', start)
-    companion.addEventListener('canplay', follow)
-    main.addEventListener('error', onError)
-    companion.addEventListener('error', onError)
+    video.addEventListener('pause', onPause)
+    lastSource.addEventListener('error', onError)
     document.addEventListener('visibilitychange', onVisibility)
     reducedMotion.addEventListener('change', onMotion)
     connection?.addEventListener('change', onMotion)
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting && entry.intersectionRatio >= 0.25
-      if (entry.isIntersecting) void load()
-      if (visible) {
-        if (resumeWhenVisible) { resumeWhenVisible = false; void main.play().catch(() => undefined) }
-        else start()
-      } else if (!main.paused) {
-        resumeWhenVisible = true
-        main.pause()
-      }
+      if (visible) play()
+      else hold()
     }, { threshold: [0, 0.25] })
     observer.observe(stage.current!)
     return () => {
@@ -132,42 +80,25 @@ export function HappyOneDemo() {
       document.removeEventListener('visibilitychange', onVisibility)
       reducedMotion.removeEventListener('change', onMotion)
       connection?.removeEventListener('change', onMotion)
-      main.removeEventListener('play', onPlay)
-      main.removeEventListener('playing', follow)
-      main.removeEventListener('pause', onPause)
-      main.removeEventListener('waiting', onPause)
-      main.removeEventListener('seeking', onSeeking)
-      main.removeEventListener('seeked', follow)
-      main.removeEventListener('ratechange', onRate)
-      main.removeEventListener('ended', onEnded)
-      main.removeEventListener('timeupdate', onTime)
-      main.removeEventListener('canplay', start)
-      companion.removeEventListener('canplay', start)
-      companion.removeEventListener('canplay', follow)
-      main.removeEventListener('error', onError)
-      companion.removeEventListener('error', onError)
-      main.pause()
-      companion.pause()
-      main.removeAttribute('src')
-      companion.removeAttribute('src')
-      main.load()
-      companion.load()
+      video.removeEventListener('pause', onPause)
+      lastSource.removeEventListener('error', onError)
+      video.pause()
     }
   }, [])
 
   return (
-    <figure ref={stage} className="one-demo" aria-label="Desktop and iPhone, one synchronized session">
-      <div className="one-demo-stage" data-phone-focus={phoneFocused ? '' : undefined}>
-        <div className="one-demo-desktop">
-          <div className="one-demo-window">
-            <video ref={desktop} poster={`${MEDIA}/desktop-poster.webp`} width="1950" height="1660"
-              {...videoProps} playsInline preload="none"
-              aria-label="Switch from Astra to Fable, edit the waveform, spawn Astra, then Steve ships it from iPhone" />
-          </div>
+    <figure ref={stage} className="one-demo">
+      <div className="one-demo-stage">
+        <div className="one-demo-frame">
+          <video ref={movie} poster={`${MEDIA}/poster.webp`} width="1618" height="1000"
+            {...videoProps} loop playsInline preload="metadata"
+            aria-label="Happy Desktop opens on the model list and picks Opus. A new chat starts as a stem cell, names itself and grows its icon, and the sidebar self-organizes. The agent loops in @Steve, and Steve replies from his phone.">
+            <source src={`${MEDIA}/demo.webm`} type="video/webm; codecs=av01.0.08M.08, opus" />
+            <source ref={fallback} src={`${MEDIA}/demo.mp4`} type="video/mp4" />
+          </video>
         </div>
-        <HappyOnePhone video={phone} />
       </div>
-      {error && <p className="one-demo-error" role="status">The demo couldn’t load. <a href={`${MEDIA}/desktop.mp4`}>Open the video</a>.</p>}
+      {error && <p className="one-demo-error" role="status">The demo couldn’t load. <a href={`${MEDIA}/demo.mp4`}>Open the video</a>.</p>}
     </figure>
   )
 }

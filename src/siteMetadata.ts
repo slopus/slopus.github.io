@@ -18,15 +18,15 @@ export interface PageMetadata {
  * Every page without its own card shares it, the original CLI docs included.
  */
 export const defaultSocialImage = {
-  path: '/og/happy-harness-v25.png', width: 1200, height: 630,
-  alt: 'Happy Harness model picker and paired phone, with Orchestrate Claude, Codex and Grok in one app, Free and open source, and 24k GitHub stars.',
+  path: '/og/happy-harness-v26.png', width: 1200, height: 630,
+  alt: 'Happy Harness with the model list open and Opus hovered, beside Orchestrate Claude, Codex, Grok, Gemini and more in one app, Free and open source, and 24k GitHub stars.',
 } as const
 
 /**
  * X, Slack and iMessage cache a preview by its image URL. Bump this after redrawing the
  * cards, so links shared before show the new ones.
  */
-export const SOCIAL_IMAGE_VERSION = 9
+export const SOCIAL_IMAGE_VERSION = 10
 
 /** The absolute og:image and twitter:image URL of a card, with its cache-busting version. */
 export function socialImageUrl(image: Readonly<{ path: string }>) {

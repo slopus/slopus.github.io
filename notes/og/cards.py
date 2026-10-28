@@ -50,7 +50,7 @@ CARD_FIGURES = {
 
 W, H = 1200, 630
 # Under the wordmark on every card, as on public/img/tailcat-x.png; src/products.ts HAPPY_DESCRIPTOR.
-DESCRIPTOR = "Orchestrate Claude, Codex and Grok in one app"
+DESCRIPTOR = "Orchestrate Claude, Codex, Grok, Gemini and more in one app"
 INK, MUTED, BODY, ACCENT, PAPER = "#183f38", "#6b7f78", "#47645e", "#e6522c", "#f5f0e7"
 
 
@@ -155,7 +155,7 @@ html, body {{ margin: 0; background: {PAPER}; }}
 .card {{ position: relative; width: {W}px; height: {H}px; overflow: hidden; background: {PAPER}; color: {INK}; font-family: 'DM Sans', sans-serif; }}
 .copy {{ position: absolute; left: 72px; top: 62px; bottom: 58px; width: {copy_w}px; display: flex; flex-direction: column; }}
 .wordmark svg {{ display: block; width: auto; height: 30px; }}
-.descriptor {{ margin-top: 10px; color: {MUTED}; font-size: 22px; font-weight: 500; line-height: 1.2; }}
+.descriptor {{ margin-top: 10px; color: {MUTED}; font-size: 22px; font-weight: 500; line-height: 1.2; text-wrap: balance; }}
 .text {{ margin: auto 0; }}
 h1 {{ margin: 0; font: 600 var(--size, 76px)/1.04 'Space Grotesk', sans-serif; letter-spacing: -.025em; text-wrap: balance; }}
 p {{ margin: 24px 0 0; color: {BODY}; font-size: 27px; line-height: 1.4; text-wrap: pretty;
