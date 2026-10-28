@@ -11,11 +11,11 @@ import './happy-one-preview.css'
 const features = [
   {
     title: 'Multi-provider',
-    body: 'Claude, Codex, and Grok in one app, each with its vendor\'s own prompts and tools. Give every task the model that fits, and delegate to subagents on any of them.',
+    body: 'Any model: Claude, Codex, Grok, Gemini, and more in one app, each with its vendor\'s own prompts and tools. Give every task the model that fits, and delegate to subagents across them.',
   },
   {
     title: 'Reuse your subscriptions',
-    body: 'Sign in with the Claude, Codex, and Grok subscriptions you already pay for. Happy adds a harness, not another bill.',
+    body: 'Sign in with the Claude, Codex, and Grok subscriptions you already pay for, and Gemini with your Google sign-in through Antigravity. Happy adds a harness, not another bill.',
   },
   {
     title: 'Open source MIT',

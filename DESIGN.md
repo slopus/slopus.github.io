@@ -4,11 +4,11 @@ These rules cover the docs, guides, comparisons, and blog. The homepage has rule
 
 ## Positioning
 
-> Happy is an open-source harness for orchestrating coding agents: Claude, Codex, and Grok in one desktop app, reusing the subscriptions you already pay for.
+> Happy is an open-source harness for orchestrating coding agents: Claude, Codex, Grok, Gemini, and more in one desktop app, reusing the subscriptions you already pay for.
 
 Use this sentence, or a shortening of it, wherever a page says what Happy is: the homepage metadata, Welcome, and every lede that introduces Happy.
 
-The short descriptor is **Orchestrate Claude, Codex and Grok in one app** (`HAPPY_DESCRIPTOR` in `src/products.ts`). It sits under the homepage heading, under the footer wordmark, under the wordmark on every link-preview card and posted diagram, and opens the homepage descriptions.
+The short descriptor is **Orchestrate Claude, Codex, Grok, Gemini and more in one app** (`HAPPY_DESCRIPTOR` in `src/products.ts`). It sits under the homepage heading, under the footer wordmark, under the wordmark on every link-preview card and posted diagram, and opens the homepage descriptions.
 
 - **Lead with orchestration and multi-provider.** The desktop app comes first. The phone app, servers, and teams are parts of Happy, never the headline. Happy is not a phone remote for Claude Code; that describes only the original Happy CLI.
 - **"Reuse your subscriptions"**, or "the subscriptions you already pay for". Don't mix in "plans", "existing subscriptions", or "the subscriptions you have".

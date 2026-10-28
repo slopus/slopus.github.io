@@ -75,14 +75,14 @@ export function socialVideoTags(video: NonNullable<PageMetadata['socialVideo']>)
  * read for /, and scripts/generate-static-routes.mjs in sync.
  */
 export const homepageMetadata: PageMetadata = {
-  title: 'Happy — Open-Source Harness to Orchestrate Claude Code, Codex & Grok',
+  title: 'Happy — Open-Source Harness for Claude Code, Codex, Grok, Gemini & More',
   description:
-    'Happy Engineering (previously Happy Coder): orchestrate Claude, Codex and Grok in one app, on desktop and phone. Open source, reusing your subscriptions.',
+    'Happy Engineering (previously Happy Coder): orchestrate Claude, Codex, Grok, Gemini and more in one app, on desktop and phone. Open source, reusing your subscriptions.',
   canonicalPath: '/',
   socialTitle: 'Any Model. Your Subscription. Happy Harness.',
   // The link preview keeps its own text; the search snippet above adds the old name and the phone.
   socialDescription:
-    'Orchestrate Claude, Codex and Grok in one app. Happy is an open-source harness that reuses the subscriptions you already pay for.',
+    'Orchestrate Claude, Codex, Grok, Gemini and more in one app. Happy is an open-source harness that reuses the subscriptions you already pay for.',
 }
 
 /** The original Happy CLI docs. Kept at their URLs, in maintenance mode. */
@@ -94,9 +94,9 @@ export const docsMetadata: PageMetadata = {
 }
 
 export const desktopDocsMetadata: PageMetadata = {
-  title: 'Happy Docs: Orchestrate Claude, Codex and Grok in One App',
+  title: 'Happy Docs: Orchestrate Claude, Codex, Grok, Gemini and More',
   description:
-    'Happy is an open-source harness for orchestrating Claude, Codex, and Grok agents in one desktop app, reusing your subscriptions: what you get, where to start.',
+    'Happy is an open-source harness for orchestrating Claude, Codex, Grok, Gemini, and more in one desktop app, reusing your subscriptions: where to start.',
   canonicalPath: '/welcome/',
 }
 

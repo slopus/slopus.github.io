@@ -1,6 +1,6 @@
 # Models & Subscriptions
 
-Happy runs Claude, Codex, and Grok on the subscriptions you already pay for. Sign in to Claude Code, Codex, or the Grok CLI on the machine and Happy uses those credentials: no Happy plan for model access, no key to paste.
+Happy runs Claude, Codex, and Grok on the subscriptions you already pay for. Sign in to Claude Code, Codex, or the Grok CLI on the machine and Happy uses those credentials: no Happy plan for model access, no key to paste. Gemini runs through Google's Antigravity on your Google sign-in, and OpenCode or any Agent Client Protocol (ACP) agent on its own login (beta); see [Harnesses](/recepies/harnesses/).
 
 ```chief-of-staff add an account
 Add my work Codex account and rotate between it and my personal one
@@ -13,6 +13,8 @@ Add my work Codex account and rotate between it and my personal one
 | Claude | Anthropic's Claude family | Claude Code |
 | Codex | OpenAI's GPT family | Codex |
 | Grok | xAI's Grok family | The Grok CLI |
+| Gemini (beta) | Google's Gemini family, through Antigravity | Antigravity's `agy` sign-in |
+| ACP agents (beta) | Whatever the agent offers, such as OpenCode | The agent's own login |
 | Bedrock | Claude and GPT models through Amazon Bedrock | A Bedrock API key, or the standard AWS credential chain |
 
 Availability is machine-wide, because the daemon owns the catalog. Requests go to the vendor with your credentials; Happy never proxies them.

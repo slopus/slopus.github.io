@@ -30,7 +30,7 @@ const entries: ProductionChangelogEntry[] = [
     date: '2026-10-25',
     title: 'Stem cells',
     beta: true,
-    description: 'Start work with Create. It names itself, grows an icon and is filed by a focus agent. Beta: enable Stem cells in Settings → Experimental.',
+    description: 'Start work with Create: just say what you want done. It names itself and the sidebar self-organizes. Beta: enable Stem cells in Settings → Experimental.',
     sourcePath: '/content/changelog/stem-cells.mdx',
     image: { path: '/og/stem-cell.png', width: 1200, height: 675, alt: 'Too many ways to start. Happy gathers its new-work buttons into one stem cell.' },
     video: { path: '/video/stem-cell.mp4', width: 1280, height: 720 },

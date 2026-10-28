@@ -131,7 +131,7 @@ function LegacyNotice() {
         formerly <code>happy-coder</code>) is in maintenance mode: it keeps working and still gets critical
         fixes, but new features ship in the <a href="/">Happy desktop app</a>. The Happy mobile app works
         with both. These docs describe the CLI; for Happy today, an open-source harness for orchestrating
-        Claude, Codex, and Grok, start at <a href="/welcome/">Welcome</a>.
+        Claude, Codex, Grok, Gemini, and more, start at <a href="/welcome/">Welcome</a>.
       </p>
     </aside>
   )
