@@ -1,31 +1,30 @@
 # Happy One homepage demo
 
-## Current export: v40, from take v40-team-r14
+## Current export: v36, from take v36-team-r13
 
 The homepage `/` plays one composed movie: the recorded Mac window with Steve's
 phone laid over it and the captions baked in. It replaced the synchronized
-desktop/phone pair below. Assets are in `public/video/happy-one/v40/`, copied
+desktop/phone pair below. Assets are in `public/video/happy-one/v36/`, copied
 unchanged from the desktop workspace's
-`scripts/demo/demos/stem/artifacts/v40-team-r14/final/web/`:
+`scripts/demo/demos/stem/artifacts/v36-team-r13/final/web/`:
 
 | Website asset | Source | Encoding | Size |
 | --- | --- | --- | --- |
-| `demo.webm` | `team.webm` | AV1 + Opus, 1618×1000, 60fps, 75.96s | 2,973,856 bytes |
-| `demo.mp4` | `team.mp4` | H.264 High + AAC, 1618×1000, 60fps, 75.95s, fast-start | 6,342,865 bytes |
-| `poster.webp` | `team-poster.webp` | first frame, model list open | 77,234 bytes |
+| `demo.webm` | `team.webm` | AV1 + Opus, 1618×1000, 60fps, 79.57s | 2,784,088 bytes |
+| `demo.mp4` | `team.mp4` | H.264 High + AAC, 1618×1000, 60fps, 79.57s, fast-start | 6,001,545 bytes |
+| `poster.webp` | `team-poster.webp` | first frame, model list open | 74,312 bytes |
 
 The take opens on the model list and picks Opus; a new chat starts as a stem
 cell, names itself and grows its icon, and the sidebar self-organizes; the agent
 loops in @Steve, Steve asks from his phone to make it narrower and ship it, and
 the agent fixes it and ships; the finished task archives itself and stays
-readable; Create divides Happy into a new stem cell, then “Stem cells for you
-and your team. Go divide and conquer :D”.
+readable; it ends on a new stem cell: “Stem cells for you and your team. Go
+divide and conquer :D”.
 
-The previous take, v36 from `v36-team-r13` (79.57s), stays in
-`public/video/happy-one/v36/`, and v29 from `v29-team-r11` (76.52s; it ended on
-Steve's reply) in `public/video/happy-one/v29/`. v40's sidebar shows large
-avatar rows from the first frame, with Happy as a pink cell instead of the
-orange bun, so the social card below was recaptured from v40.
+The previous take, v29 from `v29-team-r11` (76.52s; it ended on Steve's reply),
+stays in `public/video/happy-one/v29/`. Its first frame matches v36's apart from
+the sidebar's section chevrons, so the social card below, captured from v29, was
+kept.
 
 `src/HappyOneDemo.tsx` lists the AV1 WebM first and the MP4 as the fallback, with
 `preload="metadata"`, `loop`, and `playsInline`. It plays muted while at least a
@@ -164,18 +163,18 @@ This is an agent-run screenshot recipe, not a production script. The ordinary
 page uses the requested capitalization, “Any Model. Your Subscription. Happy Harness.”,
 with “Orchestrate Claude, Codex, Grok, Gemini and more in one app” under it. Every route without its own card (all but
 the desktop docs, whose cards come from `notes/og/cards.py`) uses
-`/og/happy-harness-v40.png` as its social image, served with `?v=` and
+`/og/happy-harness-v26.png` as its social image, served with `?v=` and
 `SOCIAL_IMAGE_VERSION` from `src/siteMetadata.ts` so link previews refetch;
-v22–v26 stay for old shares.
+v22–v25 stay for old shares.
 
-The v40 card is a horizontal composition: the three-line headline at 52px, the
+The v26 card is a horizontal composition: the three-line headline at 52px, the
 descriptor on two lines, “Free and open source”, and GitHub stars on the left;
-the v40 movie, 664px wide, on the right, frozen at 2.8 seconds with the model
+the v29 movie, 664px wide, on the right, frozen at 2.8 seconds with the model
 list open and Opus hovered.
 
 1. Read the current public `https://api.github.com/repos/slopus/happy` response.
    Update the dated snapshot in `src/happyOneGithubStars.ts` using
-   `stargazers_count` (24,393 / 24k on 2026-10-29). The header and screenshot
+   `stargazers_count` (24,384 / 24k on 2026-10-28). The header and screenshot
    both link to the **original** `https://github.com/slopus/happy` repository.
    Download “All Releases” deliberately still links to `happy-desktop`.
 2. Build the website. Open `/?preview=og` in Chromium at

@@ -218,7 +218,7 @@ describe('site header', () => {
 
       expect(screen.queryByRole('group', { name: 'Choose a product' })).toBeNull()
       expect(within(navigation).getAllByRole('link').map((link) => link.textContent)).toEqual(['Docs', '24k'])
-      expect(within(navigation).getByRole('link', { name: 'Happy on GitHub, 24,393 stars' })).toBeTruthy()
+      expect(within(navigation).getByRole('link', { name: 'Happy on GitHub, 24,384 stars' })).toBeTruthy()
       expect(within(navigation).getByRole('link', { name: 'Docs' }).getAttribute('href')).toBe('/welcome/')
       unmount()
     }
