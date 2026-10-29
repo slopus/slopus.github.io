@@ -1,22 +1,30 @@
 # Happy One homepage demo
 
-## Current export: v29, from take v29-team-r11
+## Current export: v36, from take v36-team-r13
 
 The homepage `/` plays one composed movie: the recorded Mac window with Steve's
 phone laid over it and the captions baked in. It replaced the synchronized
-desktop/phone pair below. Assets are in `public/video/happy-one/v29/`, copied
+desktop/phone pair below. Assets are in `public/video/happy-one/v36/`, copied
 unchanged from the desktop workspace's
-`scripts/demo/demos/stem/artifacts/v29-team-r11/final/web/`:
+`scripts/demo/demos/stem/artifacts/v36-team-r13/final/web/`:
 
 | Website asset | Source | Encoding | Size |
 | --- | --- | --- | --- |
-| `demo.webm` | `team.webm` | AV1 + Opus, 1618×1000, 60fps, 76.52s | 2,968,611 bytes |
-| `demo.mp4` | `team.mp4` | H.264 High + AAC, 1618×1000, 60fps, 76.52s, fast-start | 6,135,263 bytes |
-| `poster.webp` | `team-poster.webp` | first frame, model list open | 73,746 bytes |
+| `demo.webm` | `team.webm` | AV1 + Opus, 1618×1000, 60fps, 79.57s | 2,784,088 bytes |
+| `demo.mp4` | `team.mp4` | H.264 High + AAC, 1618×1000, 60fps, 79.57s, fast-start | 6,001,545 bytes |
+| `poster.webp` | `team-poster.webp` | first frame, model list open | 74,312 bytes |
 
 The take opens on the model list and picks Opus; a new chat starts as a stem
 cell, names itself and grows its icon, and the sidebar self-organizes; the agent
-loops in @Steve, and Steve replies from his phone.
+loops in @Steve, Steve asks from his phone to make it narrower and ship it, and
+the agent fixes it and ships; the finished task archives itself and stays
+readable; it ends on a new stem cell: “Stem cells for you and your team. Go
+divide and conquer :D”.
+
+The previous take, v29 from `v29-team-r11` (76.52s; it ended on Steve's reply),
+stays in `public/video/happy-one/v29/`. Its first frame matches v36's apart from
+the sidebar's section chevrons, so the social card below, captured from v29, was
+kept.
 
 `src/HappyOneDemo.tsx` lists the AV1 WebM first and the MP4 as the fallback, with
 `preload="metadata"`, `loop`, and `playsInline`. It plays muted while at least a
@@ -183,7 +191,7 @@ list open and Opus hovered.
    Wait for **Space Grotesk** and **DM Sans** to load from the existing Google
    Fonts stylesheet, plus the video. Do not capture
    fallback fonts, posters, loading indicators, or browser playback controls.
-4. Freeze the `.one-demo video` at **2.8 seconds** of the v29 asset: pause
+4. Freeze the `.one-demo video` at **2.8 seconds** of the current asset: pause
    it, set `controls = false`, and set `currentTime = 2.8`. The model list is
    open with Opus hovered. Wait until it is paused, not seeking, decode-ready,
    and at the target; then wait two animation frames. Keep the pointer away
