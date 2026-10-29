@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useRevealedControls } from './revealedControls'
 import './happy-one-demo.css'
 
-const MEDIA = '/video/happy-one/v36'
+const MEDIA = '/video/happy-one/v40'
 
 type DataConnection = EventTarget & { saveData?: boolean }
 function dataConnection() {
@@ -92,7 +92,7 @@ export function HappyOneDemo() {
         <div className="one-demo-frame">
           <video ref={movie} poster={`${MEDIA}/poster.webp`} width="1618" height="1000"
             {...videoProps} loop playsInline preload="metadata"
-            aria-label="Happy Desktop opens on the model list and picks Opus. A new chat starts as a stem cell, names itself and grows its icon, and the sidebar self-organizes. The agent loops in @Steve, who asks from his phone to make it narrower and ship it, and the agent fixes it and ships. The finished task archives itself and stays readable. It ends on a new stem cell: “Stem cells for you and your team. Go divide and conquer :D”">
+            aria-label="Happy Desktop opens on the model list and picks Opus. A new chat starts as a stem cell, names itself and grows its icon, and the sidebar self-organizes. The agent loops in @Steve, who asks from his phone to make it narrower and ship it, and the agent fixes it and ships. The finished task archives itself and stays readable. Create divides Happy into a new stem cell, then “Stem cells for you and your team. Go divide and conquer :D”">
             <source src={`${MEDIA}/demo.webm`} type="video/webm; codecs=av01.0.08M.08, opus" />
             <source ref={fallback} src={`${MEDIA}/demo.mp4`} type="video/mp4" />
           </video>
