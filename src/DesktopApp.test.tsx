@@ -25,12 +25,12 @@ describe('Happy Desktop landing page', () => {
     cleanup()
   })
 
-  it('leads with the harness pitch', () => {
+  it('leads with the tagline', () => {
     render(<DesktopApp />)
 
     const heading = screen.getByRole('heading', { level: 1 })
 
-    expect(heading.textContent).toMatch(/any model\.\s*your subscription\.\s*happy harness\./i)
+    expect(heading.textContent).toBe('The fun way of making things :D')
   })
 
   it('offers every desktop platform and both app stores', () => {
@@ -122,20 +122,20 @@ describe('Happy Desktop landing page', () => {
 
   it('is the homepage, and the old /desktop URL still lands on it', () => {
     const { unmount } = render(<Router pathname="/" />)
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/happy harness/i)
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/the fun way of making things/i)
     unmount()
 
     render(<Router pathname="/desktop/" />)
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/happy harness/i)
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/the fun way of making things/i)
   })
 
   it('still answers on the old /happy2 and /tmp/happy-one URLs', () => {
     const { unmount } = render(<Router pathname="/happy2/" />)
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/happy harness/i)
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/the fun way of making things/i)
     unmount()
 
     const second = render(<Router pathname="/tmp/happy-one/" />)
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/happy harness/i)
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/the fun way of making things/i)
     second.unmount()
 
     render(<Router pathname="/happy2/docs/quick-start/" />)

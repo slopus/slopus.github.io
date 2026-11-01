@@ -375,8 +375,8 @@ for (const entry of productionChangelogEntries) {
 // The homepage ships its markup too, under index.html's own head. The other pages are built
 // from baseHtml, the empty-root copy read at the start, so overwriting the file is safe.
 const homepage = withAppMarkup(baseHtml, prerendered('/'))
-if (textOfHtml(homepage.match(/<h1[\s>][\s\S]*?<\/h1>/)?.[0] ?? '').trim() !== 'Any Model. Your Subscription. Happy Harness.') {
-  throw new Error('dist/index.html should render the homepage heading "Any Model. Your Subscription. Happy Harness."')
+if (textOfHtml(homepage.match(/<h1[\s>][\s\S]*?<\/h1>/)?.[0] ?? '').trim() !== 'The fun way of making things :D') {
+  throw new Error('dist/index.html should render the homepage heading "The fun way of making things :D"')
 }
 await writeFile(path.join(distRoot, 'index.html'), homepage)
 

@@ -1,6 +1,6 @@
 import { useState, useSyncExternalStore } from 'react'
 import { GITHUB_HAPPY, GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
-import { HAPPY_DESCRIPTOR, HAPPY_DESKTOP } from './products'
+import { HAPPY_DESKTOP } from './products'
 import { HappyOneDemo } from './HappyOneDemo'
 import { DownloadOptions, type DownloadOptionsProps } from './DownloadOptions'
 import type { MacArchitecture } from './desktopDownloads'
@@ -101,9 +101,9 @@ export default function DesktopApp() {
           {/* On a phone this fills the first screen above the store badges. */}
           <div className="one-hero-fold">
             <div className="one-hero-copy">
-              <h1 id="one-heading"><span>Any Model.</span>{' '}<span>Your Subscription.</span>{' '}<em>Happy Harness{ogPreview ? '' : '.'}</em></h1>
-              <p className="one-hero-tagline">{HAPPY_DESCRIPTOR}</p>
-              <p className="one-hero-note">Free and open source</p>
+              <h1 id="one-heading"><span>The fun way</span>{' '}<span>of making things :D</span></h1>
+              <p className="one-hero-tagline">Orchestrate Claude, Codex, Grok, Gemini and more</p>
+              <p className="one-hero-note">Free, open source, multiplayer, your subscriptions</p>
               {ogPreview && <a className="one-social-stars" href={GITHUB_HAPPY}>
                 <GithubMark /><span>GitHub · {HAPPY_ONE_GITHUB_STARS.compact} stars</span>
               </a>}

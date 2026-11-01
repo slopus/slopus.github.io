@@ -10,16 +10,19 @@
 /* The first screen holds the heading, the note, the whole recording, and the primary
    download. Everything but the recording is a known height, so the stage
    (happy-one-demo.css) sizes the recording from what is left of the viewport:
-   header 60px, hero top 28px, three heading lines at 1.04, heading margin 8px, tagline 27px, note 24px,
-   movie gap 12px, stage padding 20px, download margin and padding 16px, badge with its
-   architecture selector 70px. */
-.one-hero { --one-hero-reserved: calc(265px + 3.12 * var(--one-h1)); padding-top: 1.75rem; text-align: center; }
-.one-hero h1 { font-size: var(--one-h1); margin-bottom: .5rem; }
-/* Stacked: "Any Model." / "Your Subscription." / "Happy Harness." */
-.one-hero h1 > span, .one-hero h1 > em { display: block; }
-.one-hero-tagline, .one-hero-note { margin: 0; }
-.one-hero-tagline { color: #183f38; font-size: 1.125rem; line-height: 1.5; text-wrap: balance; }
-.one-hero .one-demo { margin-top: var(--one-note-gap); }
+   header 60px, hero top 16px, two heading lines at 1.08, heading margin 10px, tagline 24px,
+   4px, note 20px, movie gap 24px, stage padding 12px, download padding 12px, badge with
+   its architecture selector 70px, and 8px under it. */
+.one-hero { --one-hero-reserved: calc(260px + 2.16 * var(--one-h1)); padding-top: 1rem; text-align: center; }
+.one-hero h1 { font-size: var(--one-h1); line-height: 1.08; margin-bottom: .625rem; }
+/* Broken on purpose at every width: "The fun way" / "of making things :D". */
+.one-hero h1 > span { display: block; }
+.one-hero-tagline, .one-hero-note { margin: 0; line-height: 1.35; text-wrap: balance; }
+.one-hero-tagline { color: #183f38; font-size: 1.125rem; }
+.one-hero .one-hero-note { margin-top: .25rem; color: #56736c; font-size: .9375rem; }
+.one-hero .one-demo { margin-top: 1.5rem; }
+/* The recording's shadow already separates it, so the badge sits as close as the copy above. */
+.one-hero .one-download-actions { margin: 0 auto; padding-block: .25rem .5rem; }
 /* Only phones lay out this wrapper; elsewhere the copy and recording are hero items. */
 .one-hero-fold { display: contents; }
 .one-benefits-section { margin-top: var(--one-section-gap); }
@@ -111,19 +114,20 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
 
 @media (max-width: 700px) {
   .happy-one .page-width { width: calc(100% - 40px); }
-  .happy-one { --one-h1: clamp(1.6rem, 5.2vw, 2.2rem); --one-section-gap: 2.5rem; }
-  /* The first screen ends with this phone's store badge (App Store when unknown);
-     the other store and then the desktop download follow just below the fold.
-     The copy and recording fill the rest, with the same space above the heading,
-     between note and recording, and between recording and badge (its stage adds
-     20px under it, the downloads 8px). The fold leaves room for the 53px header,
-     8px download padding, the 67px badge with its rating, and 16px under it; the
-     24px before the next badge keeps that one out of view. */
+  /* As large as "of making things :D" allows on one line of the 40px-narrower column. */
+  .happy-one { --one-h1: clamp(1.4rem, 7.2vw, 2.2rem); --one-section-gap: 2.5rem; }
+  /* The copy sits close under the header so the recording starts high on the first
+     screen; this phone's store badge (App Store when unknown) follows the recording,
+     then the other store and the desktop download. */
   .one-hero { padding-top: 0; }
-  .one-hero-fold { display: flex; flex-direction: column; justify-content: space-evenly; gap: 28px; min-height: calc(100svh - 144px); padding-top: 28px; }
+  .one-hero-fold { display: flex; flex-direction: column; gap: 20px; padding-top: 12px; }
+  /* Each caption wraps to two lines here: keep both well under the heading,
+     and a little space between the two thoughts. */
+  .one-hero-tagline { font-size: 1rem; }
+  .one-hero .one-hero-note { margin-top: .35rem; font-size: .875rem; }
   .one-hero .one-demo { margin-top: 0; }
-  .one-hero .one-download-actions { margin-top: 0; }
-  .one-hero .one-mobile-downloads { order: -1; flex-direction: column; align-items: center; gap: 1.5rem; }
+  .one-hero .one-download-actions { gap: 1.125rem; margin-top: 0; }
+  .one-hero .one-mobile-downloads { order: -1; flex-direction: column; align-items: center; gap: 1rem; }
   .one-hero [data-mobile-store='googlePlay'] [data-store='googlePlay'],
   html[data-mobile-store='googlePlay'] .one-hero [data-store='googlePlay'] { order: -1; }
   .one-benefits-section { position: relative; }

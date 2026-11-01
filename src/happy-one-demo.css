@@ -4,7 +4,7 @@
    (never below 40%) until the heading, note, movie, and primary download fit the
    viewport height. The hero supplies --one-hero-reserved, the height of everything
    else on that first screen. */
-.one-demo-stage { --demo-fit: calc((100vh - var(--one-hero-reserved, 0px)) * 1618 / 1000); --demo-width: clamp(40cqw, var(--demo-fit), 84cqw); display: flex; justify-content: center; padding: 0 0 20px; container-type: inline-size; }
+.one-demo-stage { --demo-fit: calc((100vh - var(--one-hero-reserved, 0px)) * 1618 / 1000); --demo-width: clamp(40cqw, var(--demo-fit), 84cqw); display: flex; justify-content: center; padding: 0 0 12px; container-type: inline-size; }
 .one-demo-frame { position: relative; flex: none; width: var(--demo-width); aspect-ratio: 1618 / 1000; overflow: hidden; border-radius: 12px; background: #1b2530; box-shadow: 0 26px 60px -26px #183f388c, 0 0 0 .5px #0000003d; }
 .one-demo-frame > video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
 .one-demo-error { margin-top: 1rem; font-size: .85rem; color: #8c3926; }
