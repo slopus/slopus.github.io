@@ -1,20 +1,71 @@
 .one-demo { margin: 3.5rem 0 0; text-align: left; }
-/* One composed movie, the Mac window and the phone together: 1618×1000, centered on
-   the page's axis with the download badge. It is at most 84% of the stage, and shrinks
-   (never below 40%) until the heading, note, movie, and primary download fit the
-   viewport height. The hero supplies --one-hero-reserved, the height of everything
-   else on that first screen. */
-.one-demo-stage { --demo-fit: calc((100vh - var(--one-hero-reserved, 0px)) * 1618 / 1000); --demo-width: clamp(40cqw, var(--demo-fit), 84cqw); display: flex; justify-content: center; padding: 0 0 20px; container-type: inline-size; }
-.one-demo-frame { position: relative; flex: none; width: var(--demo-width); aspect-ratio: 1618 / 1000; overflow: hidden; border-radius: 12px; background: #1b2530; box-shadow: 0 26px 60px -26px #183f388c, 0 0 0 .5px #0000003d; }
-.one-demo-frame > video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+/* The stage is the container the phone measures itself against (100cqw = stage width).
+   The window owns the page's center axis, with the caption line above it; the phone
+   parks beside its right edge. The window is as large as the first screen allows: it
+   shrinks (never below 36% of the stage) until the heading, captions, recording, and
+   primary download fit the viewport height. The hero supplies --one-hero-reserved, the
+   height of everything else on that first screen; the caption line adds 31px.
+   It is at most 84% of the stage, and 968px: there the recorded app's text renders at
+   1.1× its own size (16px chat text at 17.6px), just above the page's 16px body. It also
+   leaves room right of it for at least 55% of the parked phone, so the phone never takes
+   width from the window; on a narrow screen it peeks in from the edge instead.
+   The phone is 22% of the window's width, and comes forward 1.35× for Steve's part. */
+.one-demo-stage { --desktop-fit: calc((100vh - var(--one-hero-reserved, 0px) - 31px) * 2200 / 1500); --desktop-width: clamp(36cqw, var(--desktop-fit), min(84cqw, 968px, 80vw - 20px)); --caption-size: 1.125rem; --phone-width: calc(var(--desktop-width) * .22); --phone-gap: clamp(6px, 1cqw, 12px); --phone-left: min(calc(50cqw + var(--desktop-width) / 2 + var(--phone-gap)), calc(50cqw + 50vw - var(--phone-width) * .55)); --phone-focus: 1.35; position: relative; display: flex; flex-direction: column; align-items: center; padding: 0 0 12px; overflow: visible; container-type: inline-size; }
+/* The composed cut's captions, one line at the tagline's size, cross-faded on the movie's
+   clock. All of them share one grid cell, so the line keeps the height of the tallest. */
+.one-demo-caption { display: grid; width: var(--desktop-width); margin: 0 0 .5rem; color: #183f38; font: 600 var(--caption-size) / 1.3 'DM Sans', sans-serif; letter-spacing: -.01em; text-align: center; white-space: nowrap; }
+.one-demo-caption > span { grid-area: 1 / 1; opacity: 0; transition: opacity 300ms ease; }
+.one-demo-caption > [data-shown] { opacity: 1; }
+.one-demo-caption em { color: #e6522c; font-style: normal; }
+/*
+ * The movie is the recorded Mac window itself: 2200×1500 movie pixels, 880 CSS
+ * pixels of the recorded app, no letterbox and no camera. --apx is one CSS pixel
+ * of the recorded app, so the window chrome scales with the app.
+ */
+.one-demo-desktop { position: relative; flex: none; width: var(--desktop-width); aspect-ratio: 2200 / 1500; container-type: inline-size; --apx: calc(100cqw / 880); }
+/* macOS window: the recorded content's edge is the window edge, so the corner radius,
+   hairline and shadow sit on it. */
+.one-demo-window { position: absolute; inset: 0; overflow: hidden; border-radius: calc(12 * var(--apx)); background: #1e1e1e; box-shadow: 0 26px 60px -26px #183f388c, 0 0 0 max(.5px, .5 * var(--apx)) #0000003d; }
+.one-demo-window > video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
+.one-demo-window::after { content: ''; position: absolute; inset: 0; z-index: 2; border-radius: inherit; box-shadow: inset 0 0 0 max(1px, var(--apx)) #ffffff2e; pointer-events: none; }
+/* Park beside the window; the page shell clips decorative viewport overflow.
+   Focus may overlap the desktop, which keeps its exact page-center position.
+   Inside the phone, 1cqw is 1% of its width. */
+.one-demo-phone { position: absolute; z-index: 2; left: var(--phone-left); bottom: 0; width: var(--phone-width); aspect-ratio: 1406 / 2822; padding: 0; border: 0; background: transparent; container-type: inline-size; transform-origin: bottom left; transform: scale(1); will-change: transform; transition: transform 850ms cubic-bezier(.22,.8,.24,1); }
+.one-phone-flat { position: absolute; display: block; inset: 0; filter: drop-shadow(0 18px 18px #183f3830); }
+.one-phone-flat > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+/* Exact aperture: 102,100,1206,2622 in the 1406×2822 frame. The masked screen
+   bleeds 0.4% beneath each bezel edge to avoid two anti-aliased edges exposing
+   a hairline during fractional scaling. The frame itself remains untouched. */
+.one-phone-flat > video { position: absolute; left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; transform: scale(1.008); object-fit: fill; background: #000; mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
+/* The composed cut's label and hint, drawn like its pills. The label names the phone while
+   it is focused; the hint rings the row that just appeared on it (8,186 386×48 points of
+   the 402×874-point screen) and sits under it. */
+.one-phone-label, .one-phone-pill { position: absolute; left: 50%; padding: .4em .75em .45em; border-radius: .55em; background: #161618f2; box-shadow: 0 0 0 1px #ffffff29, 0 6px 18px #0000004d; color: #fff; font: 650 6.4cqw / 1.25 'DM Sans', sans-serif; white-space: nowrap; transform: translateX(-50%); }
+.one-phone-label { bottom: calc(100% + 2cqw); opacity: 0; transition: opacity 300ms ease; }
+.one-phone-label em { color: #e07aae; font-style: normal; }
+.one-demo-stage[data-phone-focus] .one-phone-label { opacity: 1; }
+.one-phone-hint { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 300ms ease; }
+.one-phone-hint[data-shown] { opacity: 1; }
+.one-phone-ring { position: absolute; left: calc(8.962% - 1.2cqw); top: calc(23.317% - 1.2cqw); width: calc(82.361% + 2.4cqw); height: calc(5.103% + 2.4cqw); box-sizing: border-box; border: max(1.5px, .6cqw) solid #e07aae; border-radius: 3cqw; box-shadow: 0 0 3cqw #e07aaeb3; }
+.one-phone-pill { top: 29.48%; font-size: 5.6cqw; }
+/* Focused, the phone grows to --phone-focus × its parked width. Move only the excess beyond
+   the viewport's right gap, using its actual parked position at each size step. */
+.one-demo-stage[data-phone-focus] .one-demo-phone { transform: translateX(min(0px, calc(50vw + 50cqw - var(--phone-left) - var(--phone-width) * var(--phone-focus) - var(--phone-gap)))) scale(var(--phone-focus)); }
 .one-demo-error { margin-top: 1rem; font-size: .85rem; color: #8c3926; }
 @media (min-width: 701px) and (max-width: 1024px) {
-  .one-demo-stage { --demo-width: clamp(40cqw, var(--demo-fit), 92cqw); }
+  .one-demo-stage { --desktop-width: clamp(36cqw, var(--desktop-fit), min(80cqw, 80vw - 20px)); }
 }
 @media (max-width: 700px) {
-  .one-demo { margin-top: 2.5rem; }
-  /* Nearly the full screen, not the already inset page: the movie's captions and the
-     phone stay legible. The page shell clips any overflow. */
-  .one-demo-stage { --demo-width: calc(100vw - 16px); }
-  .one-demo-frame { border-radius: 8px; }
+  /* The whole screen less 8px a side, not the already inset page. Beside it there is no
+     room, so the phone waits off the right edge and slides in over the window's right
+     side for Steve's part, as in the composed cut. Its label and pill would cover the
+     caption or be too small to read; the ring still marks the new row. */
+  .one-demo-stage { --desktop-width: calc(100vw - 16px); --caption-size: .875rem; --phone-width: calc(var(--desktop-width) * .34); --phone-gap: 8px; --phone-left: calc(50cqw + 50vw + 8px); --phone-focus: 1; }
+  .one-demo-caption { width: 100%; white-space: normal; text-wrap: balance; }
+  .one-demo-window { border-radius: calc(16 * var(--apx)); }
+  .one-phone-label, .one-phone-pill { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .one-demo-phone, .one-demo-caption > span, .one-phone-label, .one-phone-hint { transition: none; }
 }

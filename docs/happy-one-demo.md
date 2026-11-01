@@ -1,8 +1,73 @@
 # Happy One homepage demo
 
-## Current export: v36, from take v36-team-r13
+## Current export: v36 split, from take v36-team-r13
 
-The homepage `/` plays one composed movie: the recorded Mac window with Steve's
+The homepage `/` plays the v36 take as the synchronized desktop/phone pair of
+the v22 player below: the recorded Mac window, the composed cut's captions in a
+line above it, and Steve's phone parked beside it, enlarging while he is in the
+story. It is the approved composed cut (`composed/team.mp4`, 79.57s) taken
+apart: the same frames, captions, phone label, and phone hint, minus the
+wallpaper. Assets are in `public/video/happy-one/v36-split/`, encoded with
+ffmpeg from the desktop workspace's
+`scripts/demo/demos/stem/artifacts/v36-team-r13/` `stem.mp4` (2200×1500) and
+`phone-screen.mp4` (1206×2622), both 5,269 frames at 60fps (87.82s):
+
+| Website asset | Encoding | Size |
+| --- | --- | --- |
+| `desktop.mp4` | H.264 High CRF 16 + the cut's AAC, 2200×1500, 60fps, 4,774 frames | 5,125,856 bytes |
+| `desktop.webm` | AV1 (SVT, CRF 30) + the cut's Opus, 2200×1500, 60fps | 5,247,393 bytes |
+| `desktop-30.mp4` | H.264 High CRF 16 + AAC, 1760×1200, 30fps, 2,387 frames | 2,901,499 bytes |
+| `desktop-30.webm` | AV1 CRF 30 + Opus, 1760×1200, 30fps | 2,343,020 bytes |
+| `phone.mp4` | H.264 High CRF 16, 1206×2622, 60fps, 4,774 frames | 2,296,051 bytes |
+| `phone.webm` | AV1 CRF 30, 1206×2622, 60fps | 2,073,128 bytes |
+| `phone-30.mp4` | H.264 High CRF 16, 804×1748, 30fps, 2,387 frames | 956,254 bytes |
+| `phone-30.webm` | AV1 CRF 30, 804×1748, 30fps | 812,105 bytes |
+| `desktop-poster.webp`, `phone-poster.webp` | frame 0, WebP quality 94 | 101,422 / 48,420 bytes |
+
+All are limited-range BT.709 with sRGB transfer tags, fast-start for MP4.
+
+**Timeline.** The team composition plays `phone-typing-feedback`→`phone-sent`
+(source frames 2744–3300) and `changes-cleared`→`deployed` (3934–4368) at 2× by
+keeping every other frame of both takes. The site tracks keep exactly those
+frames (`select='not(between(n,2744,3299)*mod(n-2744,2)+between(n,3934,4367)*mod(n-3934,2))'`),
+so frame i of each track is frame i of the composed cut; checked against
+`team.mp4` frame by frame, offset 0 matches best on both the window and the
+phone. The desktop tracks carry the cut's own remixed soundtrack. The cut's
+macOS traffic lights (12 app px circles at x = 20/40/60, y = 20) are burnt into
+the desktop tracks, as the composer draws them.
+
+**The phone's end.** The phone recording shows the archive: its Voice waveform
+row leaves at source frame 4518, between the desktop's `archiving` (4471) and
+`archived` (4588) cues. From 4521 the recorder tears down into the settings
+screen. The phone tracks keep the real frames through 4519 and hold that frame
+to the end, so the phone never shows settings or blank avatars.
+
+**Player.** `src/HappyOneDemo.tsx` is the v22 player: the desktop movie is the
+clock and drives the phone's play, pause, seek, and rate, correcting drift over
+120ms. It now loops (the loop's seek brings the phone along), and the captions,
+the phone's focus (frames 2343–3644 of the cut, `phone-enter` to `phone-exit`),
+its "Steve's phone" label, and the "New on Steve's phone" hint (2398–2518, ringing
+the row that appeared) follow that clock on every animation frame.
+`src/happyOneDemoMedia.ts` picks one pair before loading, from Media
+Capabilities: 60fps AV1, then 60fps H.264, then 30fps AV1, then 30fps H.264,
+taking the first that decodes supported, smooth, and power-efficient; save-data
+or no Media Capabilities gets the 30fps H.264 pair.
+
+**Layout.** `src/happy-one-demo.css` keeps the v22 geometry for the 2200/1500
+window: at most 70% of the stage above 1024px and 80% at 701–1024px, shrinking
+(never below 36%) until the heading, caption, window, and download fit the
+first screen; 80vw at 700px and below, with the phone peeking past the screen
+edge. The caption line is 1/40 of the window's width (0.82rem on phones, where
+it may wrap). The phone is 28% of the stage or 32% of the window, whichever is
+smaller, enlarging 1.18× while focused, as before. Its mask and bezel are v22's:
+the phone track has the same 1406×2822 frame and 102,100 1206×2622 aperture.
+
+The composed movie this replaced, `public/video/happy-one/v36/`, stays: the
+desktop tracks take its soundtrack, and the social card was captured from v29.
+
+## Previous export: v36 composed movie
+
+Until the split player, the homepage played one composed movie: the recorded Mac window with Steve's
 phone laid over it and the captions baked in. It replaced the synchronized
 desktop/phone pair below. Assets are in `public/video/happy-one/v36/`, copied
 unchanged from the desktop workspace's
@@ -33,9 +98,11 @@ hidden, and resumes only if it was playing then; a visitor's own pause stays
 paused. Native controls stay hidden until the reader reaches for them
 (`src/revealedControls.ts`); reduced motion, save-data, and blocked autoplay leave
 it paused on the poster with controls shown. The frame is centered on the
-download badge's axis: up to 84% of the stage above 1024px (92% at 701–1024px),
-shrinking to fit the first screen, and the full screen width less 16px at 700px
-and below.
+download badge's axis and sized like the old desktop window: up to 70% of the
+stage above 1024px (80% at 701–1024px), shrinking to fit the first screen, and
+the full screen width less 16px at 700px and below. Each band's cap starts where
+the narrower band's ends, so narrowing the window never makes the movie jump
+larger.
 
 Checked offline in Chrome from the built `dist/`: at 390px and 1440px the WebM
 autoplays muted without controls, loops, and there is no horizontal overflow;
