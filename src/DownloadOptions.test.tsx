@@ -225,7 +225,7 @@ describe('desktop and mobile downloads', () => {
     const link = screen.getByRole('link', { name: 'Download Happy Nightly for macOS' })
     await waitFor(() => expect(link.getAttribute('href')).toBe(`${PREVIEW}/Happy-Nightly-0.0.103-preview.17-x64.dmg`))
     expect(fetch).toHaveBeenCalledWith('https://api.github.com/repos/slopus/happy-desktop/releases?per_page=30', expect.anything())
-    expect(screen.getByRole('combobox', { name: 'Mac architecture' })).toBeTruthy()
+    expect(screen.getByRole('combobox', { name: 'Preview Mac architecture' })).toBeTruthy()
     expect(screen.queryByText(BREW)).toBeNull()
     expect(screen.queryByRole('note')).toBeNull()
     expect(screen.queryByRole('link', { name: /Windows|Linux|All Releases/ })).toBeNull()

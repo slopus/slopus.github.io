@@ -1,30 +1,35 @@
-/* /releases/: the homepage's download options under a Stable / Preview switch. */
+/* /releases/: the homepage's download options for Stable and Preview, side by side. */
 .releases-page { display: flex; flex-direction: column; min-height: 100vh; }
 .releases-main { flex: 1; display: flex; flex-direction: column; align-items: center; padding-block: 3.5rem 4.5rem; text-align: center; }
-.releases-main h1 { font-size: var(--one-h1); margin-bottom: 1.75rem; }
+.releases-main h1 { font-size: var(--one-h1); margin-bottom: 2.5rem; }
+.happy-one .releases-main h2 { font-size: clamp(1.5rem, 2.2vw, 1.9rem); margin-bottom: .5rem; }
 
-/* Real radio inputs, laid over their labels so the whole segment is the hit area. */
-.releases-channel { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; width: min(100%, 26rem); margin: 0; padding: 5px; border: 1px solid #d9d3c5; border-radius: 14px; background: #ebe5d8; }
-.releases-channel label { position: relative; display: flex; align-items: center; justify-content: center; min-height: 56px; border-radius: 10px; color: #47645e; font: 600 1.2rem/1 'Space Grotesk', 'DM Sans', sans-serif; letter-spacing: -.01em; cursor: pointer; transition: background-color .15s ease, color .15s ease; }
-.releases-channel input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
-.releases-channel label:hover { color: #183f38; }
-.releases-channel label:has(input:checked) { background: #183f38; color: #f5f0e7; box-shadow: 0 1px 2px #183f3833; }
-.releases-channel label:has(input:focus-visible) { outline: 3px solid #e6522c; outline-offset: 2px; }
-
-.releases-note { max-width: 36rem; margin: 1.25rem 0 0; color: #47645e; font-size: 1rem; line-height: 1.6; text-wrap: balance; }
+/* Two equal columns split by a hairline; each centers its own label and downloads. The
+   columns share their rows (subgrid), so the versions and download badges line up. */
+.releases-channels { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(4, auto); width: min(100%, 56rem); }
+.releases-channel { display: grid; grid-row: span 4; grid-template-rows: subgrid; justify-items: center; align-content: start; min-width: 0; padding: 0 2.5rem; }
+.releases-channel + .releases-channel { border-left: 1px solid #d9d3c5; }
+.releases-note { max-width: 22rem; margin: 0; color: #47645e; font-size: .98rem; line-height: 1.6; text-wrap: balance; }
 /* Reserved while GitHub answers, so the downloads do not jump. */
-.releases-version { min-height: 1.5em; margin: .35rem 0 0; color: #183f38; font: .82rem/1.5 'DM Mono', monospace; }
+.releases-version { min-height: 1.5em; margin: .35rem 0 0; color: #183f38; font: .8rem/1.5 'DM Mono', monospace; }
 .releases-version > span { white-space: nowrap; }
-.releases-main > .one-download-actions { margin-top: 1rem; }
+.releases-channel > .one-download-actions { min-width: 0; max-width: 100%; margin-top: 1rem; }
+/* The Homebrew strip stays narrower than its column; a cut command ends in an ellipsis, and Copy copies all of it. */
+.releases-channel .one-brew-command { max-width: min(100%, 20rem); }
+.releases-channel .one-brew-command code { overflow: hidden; text-overflow: ellipsis; }
+
+.releases-mobile { display: flex; flex-direction: column; align-items: center; width: min(100%, 56rem); margin-top: 4rem; }
+.releases-mobile > .one-mobile-downloads { margin-top: .75rem; }
 
 .releases-github { display: inline-flex; align-items: center; gap: .45em; min-height: 44px; margin-top: 2.5rem; color: #47645e; font-size: .92rem; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #47645e66; }
 .releases-github:hover { color: #183f38; text-decoration-color: currentColor; }
 
+/* Phones: Stable, then Preview, then the phone apps, one after another. */
 @media (max-width: 700px) {
   .releases-main { padding-block: 2rem 3rem; }
-  .releases-channel label { min-height: 52px; font-size: 1.1rem; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .releases-channel label { transition: none; }
+  .releases-main h1 { margin-bottom: 1.75rem; }
+  .releases-channels { grid-template-columns: 1fr; grid-template-rows: none; }
+  .releases-channel { grid-row: auto; grid-template-rows: none; padding: 0; }
+  .releases-channel + .releases-channel { margin-top: 3rem; border-left: 0; }
+  .releases-mobile { margin-top: 3rem; }
 }

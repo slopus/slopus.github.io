@@ -23,6 +23,8 @@ export type DownloadOptionsProps = {
   channel?: ReleaseChannel
   /** Off on the releases page itself. */
   releasesLink?: boolean
+  /** Off where the page shows the phone apps once for both channels. */
+  mobile?: boolean
 }
 type DesktopPlatform = 'desktop' | 'macos' | 'windows' | 'linux'
 
@@ -208,7 +210,17 @@ function HomebrewCommand() {
   )
 }
 
-export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, channel = 'stable', releasesLink = true }: DownloadOptionsProps) {
+/** Both store badges with their ratings. */
+export function MobileDownloads() {
+  return (
+    <div className="one-mobile-downloads">
+      <div className="one-store-download" data-store="appStore"><AppStoreButton /><StoreRating store="appStore" /></div>
+      <div className="one-store-download" data-store="googlePlay"><GooglePlayButton /><StoreRating store="googlePlay" /></div>
+    </div>
+  )
+}
+
+export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, channel = 'stable', releasesLink = true, mobile = true }: DownloadOptionsProps) {
   const [resolved, setResolved] = useState<{ channel: ReleaseChannel; downloads: DesktopDownloads | null } | null>(null)
   useEffect(() => {
     let active = true
@@ -218,6 +230,8 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
   // Never one channel's files under the other's switch while the new lookup runs.
   const downloads = resolved?.channel === channel ? resolved.downloads : null
   const preview = channel === 'preview'
+  // Phones install from the stores; Preview is the desktop app's.
+  const withMobile = mobile && !preview
   // The prerendered homepage has no platform; hydration settles on this device's.
   const platform = useSyncExternalStore(NO_SUBSCRIPTION, desktopPlatform, () => 'desktop' as const)
   // Phones and unknown platforms default to macOS, with the other installers
@@ -234,17 +248,17 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
       className="one-download-actions"
       data-platform={platform}
       data-primary-platform={primaryPlatform}
-      data-mobile-store={store ?? undefined}
+      data-mobile-store={withMobile ? store ?? undefined : undefined}
       data-channel={preview ? 'preview' : undefined}
       role="group"
-      aria-label={preview ? 'Preview downloads' : 'Desktop and mobile downloads'}
+      aria-label={preview ? 'Preview downloads' : withMobile ? 'Desktop and mobile downloads' : 'Desktop downloads'}
     >
       <div className="one-desktop-downloads">
         <div className="one-primary-download">
           <DesktopDownloadLink className="store-button one-desktop-button" platform={primaryPlatform} downloads={downloads} channel={channel} macArchitecture={macArchitecture}>
             <DownloadBadge platform={primaryPlatform} />
           </DesktopDownloadLink>
-          {primaryPlatform === 'macos' && <select className="one-mac-architecture" aria-label="Mac architecture" value={macArchitecture}
+          {primaryPlatform === 'macos' && <select className="one-mac-architecture" aria-label={preview ? 'Preview Mac architecture' : 'Mac architecture'} value={macArchitecture}
             onChange={event => { if (event.target.value === 'arm64' || event.target.value === 'x64') onMacArchitectureChange(event.target.value) }}>
             <option value="arm64">Apple Silicon</option>
             <option value="x64">Intel</option>
@@ -254,11 +268,7 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
         {showBrew && <HomebrewCommand />}
         {!preview && <PlatformLinks current={primaryPlatform} downloads={downloads} macArchitecture={macArchitecture} releasesLink={releasesLink} />}
       </div>
-      {/* Phones install from the stores; Preview is the desktop app's. */}
-      {!preview && <div className="one-mobile-downloads">
-        <div className="one-store-download" data-store="appStore"><AppStoreButton /><StoreRating store="appStore" /></div>
-        <div className="one-store-download" data-store="googlePlay"><GooglePlayButton /><StoreRating store="googlePlay" /></div>
-      </div>}
+      {withMobile && <MobileDownloads />}
     </div>
   )
 }
