@@ -105,13 +105,27 @@ pill). It is 60px tall (52px on phones), pinned while scrolling, and shows a
 hairline only once the page has scrolled, so page shells must not use
 `overflow: hidden` (it breaks `position: sticky`); clip horizontally with
 `overflow-x: clip`. `/#download` is the README "Download" target:
-`id="download"` sits on the download block right under the demo, and the closing
-section is `#download-again`. The router scrolls to the fragment after the first
+`id="download"` sits on the download block right under the demo, the page's
+only download block. The router scrolls to the fragment after the first
 render, and the 82px `scroll-margin-top` must keep the whole block visible under
 the header; change it with the header height. Windows visitors see the SmartScreen
 note; its signer name and profile link are constants in
 `src/DownloadOptions.tsx`. Release links use `releases/latest`, never a pinned
 version.
+
+## Homepage look
+
+The homepage is the phone apps' first screen: the Grain Gradient fixed behind the
+page (`src/grainGradientShader.ts`, copied unchanged from happy-desktop's
+onboarding shader, which ports the native iOS/Android one; Apache-2.0 notice in
+`THIRD_PARTY_NOTICES.md`), the native start-screen palette light or dark with the
+system, IBM Plex Sans, and Bricolage Grotesque for the wordmark (`src/happy-home.css`,
+scoped to `.happy-home` so blog downloads and `/releases/` keep `happy-one.css`).
+Its order is the demo, the downloads, four value sections, the footer; it never
+mentions the CLI, not even in the footer. Each value section's animated emoji is a
+Telegram Lottie under `src/assets/emoji/`, drawn by dotLottie as in happy-desktop,
+and plays once when its section reaches the middle of the viewport or the pointer
+enters it. Keep the four bodies about the same length so the grid stays even.
 
 ## SEO skills
 

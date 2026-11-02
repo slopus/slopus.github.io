@@ -220,7 +220,7 @@ describe('plugin pages', () => {
     expect(recoverableErrors).toEqual([])
     expect(consoleError).not.toHaveBeenCalled()
     expect(container.querySelector('h1')).toBe(servedHeading)
-    expect([...container.querySelectorAll('.one-download-actions')].map((block) => block.getAttribute('data-platform'))).toEqual(['linux', 'linux'])
+    expect([...container.querySelectorAll('.one-download-actions')].map((block) => block.getAttribute('data-platform'))).toEqual(['linux'])
     expect(container.querySelector('.one-brew-command')).toBeNull()
     act(() => root.unmount())
     container.remove()

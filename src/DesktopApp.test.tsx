@@ -63,11 +63,10 @@ describe('Happy Desktop landing page', () => {
     expect(downloads?.querySelector('.one-mobile-downloads')).toBeTruthy()
   })
 
-  it('keeps the terminal path for people who do not want the app', () => {
+  it('never mentions the CLI', () => {
     const { container } = render(<DesktopApp />)
 
-    expect(container.textContent).toMatch(/npm install -g happy/)
-    expect(container.textContent).toMatch(/happy claude/)
+    expect(container.textContent).not.toMatch(/npm install -g happy|happy claude|happy codex|\bCLI\b|terminal/i)
   })
 
   it('uses the shared header with docs and the repository', () => {
@@ -91,26 +90,33 @@ describe('Happy Desktop landing page', () => {
     expect(container.querySelectorAll('#download')).toHaveLength(1)
   })
 
-  it('lists the features with multiplayer last, as plain text with no icons or art', () => {
+  it('has one download block, under the demo', () => {
     const { container } = render(<DesktopApp />)
-    const items = [...container.querySelectorAll('.one-benefits li')]
 
-    expect(items.map((item) => item.querySelector('.one-benefit-title')?.textContent)).toEqual([
-      'Multi-provider',
-      'Reuse your subscriptions',
-      'Open source MIT',
-      'End-to-end encrypted mobile app',
-      'Natively multiplayer',
-    ])
-    expect(container.querySelectorAll('.one-benefits img, .one-benefits picture, .one-benefits svg')).toHaveLength(0)
+    expect(container.querySelectorAll('.one-download-actions')).toHaveLength(1)
+    expect(container.querySelector('#download-again')).toBeNull()
   })
 
-  it('keeps the terminal section short', () => {
+  it('runs demo, downloads, then the four value sections, each with its animated emoji', () => {
     const { container } = render(<DesktopApp />)
-    const text = container.querySelector('.one-terminal-section')?.textContent ?? ''
+    const main = container.querySelector('main')!
 
-    expect(text).toContain('The OG Happy experience (if you know you know)')
-    expect(text).not.toMatch(/Onboarding handles this setup|been around/)
+    expect([...main.children].map((child) => child.className)).toEqual(['one-hero page-width', 'one-values page-width'])
+    const sections = [...main.querySelectorAll('.one-value')]
+    expect(sections.map((section) => section.querySelector('h2')?.textContent)).toEqual([
+      'Use all your subscriptions',
+      'Build it together',
+      'Open source, MIT',
+      'End-to-end encrypted',
+    ])
+    for (const section of sections) expect(section.querySelector('canvas.one-emoji')).toBeTruthy()
+  })
+
+  it('keeps the four value lines about the same length', () => {
+    const { container } = render(<DesktopApp />)
+    const lengths = [...container.querySelectorAll('.one-value p')].map((body) => body.textContent!.length)
+
+    expect(Math.max(...lengths) - Math.min(...lengths)).toBeLessThanOrEqual(12)
   })
 
   it('does not mount the social-preview stars line by default', () => {
@@ -169,12 +175,15 @@ describe('site footer', () => {
     }
   })
 
-  it('keeps a quiet link to the original Happy CLI docs on every page', () => {
-    for (const pathname of ['/', '/docs/', '/welcome/', '/privacy/']) {
+  it('keeps a quiet link to the original Happy CLI docs on every page but the homepage', () => {
+    for (const pathname of ['/docs/', '/welcome/', '/privacy/']) {
       const { unmount } = render(<Router pathname={pathname} />)
       expect(within(screen.getByRole('contentinfo')).getByRole('link', { name: 'Original Happy CLI' }).getAttribute('href')).toBe('/docs/')
       unmount()
     }
+
+    render(<Router pathname="/" />)
+    expect(within(screen.getByRole('contentinfo')).queryByRole('link', { name: 'Original Happy CLI' })).toBeNull()
   })
 
   it('credits the device artwork only where it appears', () => {

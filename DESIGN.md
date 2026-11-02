@@ -108,6 +108,7 @@ The homepage is off-limits without explicit approval for the specific change. Th
 
 - `src/DesktopApp.tsx`
 - `src/DownloadOptions.tsx`
-- `src/happy-one*.css`
+- `src/happy-one*.css`, `src/happy-home.css`
+- `src/GrainGradient.tsx`, `src/grainGradient*.ts`, `src/AnimatedEmoji.tsx`
 - `src/StoreButtons.tsx`
 - `index.html`

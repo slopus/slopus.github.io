@@ -1,85 +1,47 @@
-import { useState, useSyncExternalStore } from 'react'
+import { useRef, useState, useSyncExternalStore } from 'react'
 import { GITHUB_HAPPY, GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
 import { HAPPY_DESCRIPTOR, HAPPY_DESKTOP } from './products'
 import { HappyOneDemo } from './HappyOneDemo'
-import { DownloadOptions, type DownloadOptionsProps } from './DownloadOptions'
+import { GrainGradient } from './GrainGradient'
+import { AnimatedEmoji, type AnimatedEmojiName } from './AnimatedEmoji'
+import { DownloadOptions } from './DownloadOptions'
 import type { MacArchitecture } from './desktopDownloads'
 import { HAPPY_ONE_GITHUB_STARS } from './happyOneGithubStars'
 import './happy-one.css'
 import './happy-one-preview.css'
+import './happy-home.css'
 
-const features = [
+/** Each line is about as long as the others, so the four read as one even grid. */
+const values: readonly { title: string; body: string; emoji: AnimatedEmojiName }[] = [
   {
-    title: 'Multi-provider',
-    body: 'Any model: Claude, Codex, Grok, Gemini, and more in one app. Give every task the model that fits, and delegate to subagents on any of them.',
+    title: 'Use all your subscriptions',
+    body: 'Claude, Codex, Grok, Gemini and more in one app. Reuse the subscriptions you already pay for, give every task the model that fits, and run subagents on any of them.',
+    emoji: 'counterclockwise-arrows',
   },
   {
-    title: 'Reuse your subscriptions',
-    body: 'Sign in with the Claude, Codex, and Grok subscriptions you already pay for, and Gemini with your Google sign-in through Antigravity. Happy adds a harness, not another bill.',
+    title: 'Build it together',
+    body: 'Bring your team into the same projects and sessions, each person as themselves. Split big work into tasks, divide and conquer, then edit and share stories of what you built.',
+    emoji: 'alien-monster',
   },
   {
-    title: 'Open source MIT',
-    body: 'It runs on your own hardware and your projects stay ordinary folders. Read the code, fork it, ship your own build.',
+    title: 'Open source, MIT',
+    body: 'Happy runs on your own hardware, and your projects stay ordinary folders. Every line is MIT licensed: read the code, fork it, change what you need, ship your own build.',
+    emoji: 'open-source',
   },
   {
-    title: 'End-to-end encrypted mobile app',
-    body: 'Left your desk? The same sessions are already on your phone, and what moves between your devices is encrypted.',
+    title: 'End-to-end encrypted',
+    body: 'Left your desk? Your sessions are already on your phone. Everything that moves between your devices is encrypted end to end, so our relay only ever sees ciphertext.',
+    emoji: 'closed-lock',
   },
-  {
-    title: 'Natively multiplayer',
-    body: 'Deploy a team server and work together. Everyone signs in as themselves and shares the same projects and sessions.',
-  },
-] as const
+]
 
-function Features() {
+function ValueProposition({ title, body, emoji }: (typeof values)[number]) {
+  const section = useRef<HTMLElement>(null)
   return (
-    <section className="one-benefits-section" id="product" aria-label="What you get">
-      <div className="page-width">
-        <ol className="one-benefits" role="list">
-          {features.map((feature, index) => (
-            <li key={feature.title}>
-              <span className="one-benefit-number" aria-hidden="true">{index + 1}/</span>
-              <div className="one-benefit-heading">
-                <span className="one-benefit-title">
-                  {feature.title === 'Open source MIT' ? <>
-                    Open source <span className="one-mit">MIT</span>
-                  </> : feature.title}
-                </span>
-              </div>
-              <p className="one-benefit-body">{feature.body}</p>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
-  )
-}
-
-function Terminal() {
-  return (
-    <section className="one-terminal-section page-width" aria-labelledby="terminal-heading">
-      <div>
-        <h2 id="terminal-heading">Love your terminal?<br /><em>Keep it.</em></h2>
-        <p>The OG Happy experience (if you know you know)</p>
-        <p>Start Claude Code or Codex in your terminal. Resume that session or start a new one
-          from your phone. No Desktop app required.</p>
-      </div>
-      <div className="one-terminal-example">
-        <div className="terminal">
-          <div className="terminal-bar"><span /><span /><span /><em>Terminal</em></div>
-          <pre className="terminal-body"><code><span className="code-comment"># Not using Happy Desktop?{'\n'}# Install the CLI here:</span>{'\n'}<span className="terminal-prompt">$</span> npm install -g happy{'\n\n'}<span className="code-comment"># Start Claude Code</span>{'\n'}<span className="terminal-prompt">$</span> happy claude{'\n\n'}<span className="code-comment"># Or start Codex</span>{'\n'}<span className="terminal-prompt">$</span> happy codex</code></pre>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function Downloads(props: DownloadOptionsProps) {
-  return (
-    <section className="one-download page-width" id="download-again" aria-labelledby="download-heading">
-      <h2 id="download-heading">Download Happy.</h2>
-      <p>Free and open source</p>
-      <DownloadOptions {...props} />
+    <section ref={section} className="one-value" aria-label={title}>
+      <div className="one-value-art"><AnimatedEmoji name={emoji} section={section} /></div>
+      <h2>{title}</h2>
+      <p>{body}</p>
     </section>
   )
 }
@@ -87,14 +49,14 @@ function Downloads(props: DownloadOptionsProps) {
 const NO_SUBSCRIPTION = () => () => {}
 const socialPreviewRequested = () => new URLSearchParams(window.location.search).get('preview') === 'og'
 
-/** The homepage: the recorded harness demo, the pitch, and every download. */
+/** The homepage, on the phone apps' Grain Gradient: the recorded demo, the downloads, and what Happy gives you. */
 export default function DesktopApp() {
   // Read after hydration: the prerendered homepage is the ordinary page.
   const ogPreview = useSyncExternalStore(NO_SUBSCRIPTION, socialPreviewRequested, () => false)
-  // The hero and footer downloads share one architecture choice.
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   return (
-    <div className="site-shell happy-one" data-social-preview={ogPreview ? '' : undefined}>
+    <div className="site-shell happy-one happy-home" data-social-preview={ogPreview ? '' : undefined}>
+      <GrainGradient />
       <SiteHeader product={HAPPY_DESKTOP} />
       <main>
         <section className="one-hero page-width" aria-labelledby="one-heading">
@@ -112,11 +74,11 @@ export default function DesktopApp() {
           </div>
           <DownloadOptions id="download" macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
         </section>
-        <Features />
-        <Terminal />
-        <Downloads macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
+        <div className="one-values page-width" id="product">
+          {values.map(value => <ValueProposition key={value.title} {...value} />)}
+        </div>
       </main>
-      <SiteFooter product={HAPPY_DESKTOP} additionalLinks={
+      <SiteFooter product={HAPPY_DESKTOP} cliLink={false} additionalLinks={
         <a href="/video/happy-one/device/CREDITS.txt" target="_blank" rel="noopener noreferrer">Credits</a>
       } />
     </div>

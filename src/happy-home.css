@@ -1,0 +1,108 @@
+/* The homepage on the phone apps' first screen: the Grain Gradient behind everything, its
+   palette and ink, IBM Plex Sans, and Bricolage Grotesque for the wordmark. The palette is
+   copied verbatim from the native start screens (happy-ios StartViewController and
+   StartTokens.swift), light or dark with the system. Blog downloads and /releases/ keep
+   happy-one.css alone. */
+:root:has(.happy-home) {
+  color-scheme: light dark;
+  --grain-back: #f4f2ff;
+  --grain-0: #818cf8;
+  --grain-1: #c4b5fd;
+  --grain-2: #93c5fd;
+  --grain-3: #a78bfa;
+  --home-ink: #14112e;
+  /* The native secondary text: the ink at 87%, AA on every colour of the gradient. */
+  --home-ink-2: #14112ede;
+  --home-line: #14112e1f;
+  --home-accent: #5b21b6;
+  --home-header: #f4f2ffb8;
+  background: var(--grain-back);
+}
+@media (prefers-color-scheme: dark) {
+  :root:has(.happy-home) {
+    --grain-back: #06050f;
+    --grain-0: #4338ca;
+    --grain-1: #7c3aed;
+    --grain-2: #1d4ed8;
+    --grain-3: #2a00ff;
+    --home-ink: #ffffff;
+    --home-ink-2: #ffffffde;
+    --home-line: #ffffff24;
+    --home-accent: #c4b5fd;
+    --home-header: #06050fb8;
+  }
+}
+
+.happy-home { color: var(--home-ink); font-family: 'IBM Plex Sans', system-ui, sans-serif; }
+.happy-home main, .happy-home .site-footer { position: relative; z-index: 1; }
+
+/* Fixed behind the page at the large viewport height, so a phone's collapsing toolbar never
+   resizes it. Until the shader paints, and without WebGL, the native still fallback shows:
+   four corner glows over the same base. */
+.one-grain {
+  position: fixed;
+  z-index: 0;
+  inset: 0 0 auto;
+  height: 100lvh;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 100% 35%, color-mix(in srgb, var(--grain-3) 70%, transparent), transparent 75%),
+    radial-gradient(circle at 0% 60%, color-mix(in srgb, var(--grain-2) 70%, transparent), transparent 75%),
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--grain-1) 70%, transparent), transparent 75%),
+    radial-gradient(circle at 0% 100%, color-mix(in srgb, var(--grain-0) 70%, transparent), transparent 75%),
+    var(--grain-back);
+}
+.one-grain canvas { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity .6s ease; }
+.one-grain canvas[data-painted] { opacity: 1; }
+
+/* Header and footer sit straight on the gradient, like the phone's first screen. */
+.happy-home .site-header-wrap { background: transparent; transition: border-color .2s ease, background-color .2s ease; }
+.happy-home .site-header-wrap[data-scrolled] { border-bottom-color: var(--home-line); background: var(--home-header); -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); }
+.happy-home .wordmark { color: var(--home-ink); font-family: 'Bricolage Grotesque', 'IBM Plex Sans', sans-serif; font-size: 1.12rem; letter-spacing: -.03em; }
+.happy-home .wordmark span { color: var(--home-ink-2); font-weight: 700; }
+.happy-home .nav-github-count { font-family: 'IBM Plex Mono', monospace; }
+.happy-home .nav-github:hover { color: var(--home-accent); }
+.happy-home .site-footer { background: transparent; border-top-color: var(--home-line); }
+.happy-home .footer-statement, .happy-home .footer-people { font-family: inherit; }
+.happy-home .footer-meta p, .happy-home .footer-links .footer-link-quiet { color: var(--home-ink-2); }
+.happy-home .footer-meta .footer-descriptor { color: var(--home-ink); }
+.happy-home a:focus-visible { outline-color: var(--home-accent); }
+.happy-home .one-scrollbar[data-active] .one-scrollbar-thumb { background: color-mix(in srgb, var(--home-ink) 27%, transparent); }
+.happy-home .one-scrollbar:hover .one-scrollbar-thumb { background: color-mix(in srgb, var(--home-ink) 44%, transparent); }
+
+/* The hero, in the start screen's type: Plex Sans SemiBold titles, the line under them at 87%. */
+.happy-home h1, .happy-home h2 { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 600; letter-spacing: -.025em; }
+.happy-home h1 em { color: var(--home-accent); }
+.happy-home .one-hero-tagline { color: var(--home-ink); }
+.happy-home .one-hero-note { color: var(--home-ink-2); }
+.happy-home .one-demo-frame { box-shadow: 0 30px 70px -28px #14112e8c, 0 0 0 .5px #0000003d; }
+
+.happy-home .one-mac-architecture, .happy-home .one-platform-links { color: var(--home-ink-2); }
+.happy-home .one-platform-links a:hover { color: var(--home-ink); }
+.happy-home .one-mac-architecture:focus-visible { outline-color: var(--home-ink); }
+.happy-home .one-mac-architecture option { color: #14112e; background: #ffffff; }
+.happy-home .one-store-download .store-rating strong { color: var(--home-ink); }
+.happy-home .one-store-download .store-count { color: var(--home-ink-2); }
+.happy-home .one-brew-line { font-family: 'IBM Plex Mono', monospace; }
+.happy-home .one-desktop-button:focus-visible, .happy-home .one-brew-command button:focus-visible { outline-color: var(--home-accent); }
+
+/* What you get: four equal sections, each the phone's slide (art over a title over a line),
+   two by two on wide screens. Their lines are written to the same length. */
+.one-values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5.5rem 4rem; width: min(980px, calc(100% - 64px)); padding-block: 6.5rem 8rem; }
+.one-value { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.one-value-art { width: 120px; height: 120px; margin-bottom: 1.5rem; }
+.one-emoji { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity .4s ease; }
+.one-emoji[data-ready] { opacity: 1; }
+.happy-home .one-value h2 { margin: 0 0 .75rem; font-size: 1.75rem; line-height: 1.2; }
+.one-value p { max-width: 25.5rem; margin: 0; color: var(--home-ink-2); font-size: 1.0625rem; line-height: 1.5; text-wrap: balance; }
+
+@media (max-width: 760px) {
+  .one-values { grid-template-columns: minmax(0, 1fr); gap: 4.5rem; width: calc(100% - 40px); padding-block: 4.5rem 5.5rem; }
+  .one-value-art { width: 104px; height: 104px; margin-bottom: 1.25rem; }
+  .happy-home .one-value h2 { font-size: 1.6rem; }
+  .one-value p { max-width: 22rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .one-grain canvas, .one-emoji { transition: none; }
+}

@@ -87,7 +87,8 @@ export function SiteHeader({
   )
 }
 
-export function SiteFooter({ product = HAPPY, additionalLinks }: { product?: Product; additionalLinks?: ReactNode }) {
+/** `cliLink` off drops the quiet link to the original CLI docs: the homepage no longer mentions the CLI. */
+export function SiteFooter({ product = HAPPY, additionalLinks, cliLink = true }: { product?: Product; additionalLinks?: ReactNode; cliLink?: boolean }) {
   const currentYear = new Date().getFullYear()
 
   return (
@@ -110,7 +111,7 @@ export function SiteFooter({ product = HAPPY, additionalLinks }: { product?: Pro
             <a href="/privacy/">Privacy</a>
             <a href="/terms/">Terms</a>
             {additionalLinks}
-            <a className="footer-link-quiet" href={HAPPY.docsHome}>Original Happy CLI</a>
+            {cliLink && <a className="footer-link-quiet" href={HAPPY.docsHome}>Original Happy CLI</a>}
           </div>
           <Wordmark />
           <p className="footer-descriptor">{HAPPY_DESCRIPTOR}</p>
