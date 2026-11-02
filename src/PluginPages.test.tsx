@@ -189,9 +189,8 @@ describe('plugin pages', () => {
       expect(container.querySelector('h1')).toBe(servedHeading)
       expect(container.querySelectorAll('h1')).toHaveLength(1)
       // /releases/ adds its release versions once GitHub answers; everything else stays as served.
-      const hydrated = container.cloneNode(true) as HTMLElement
-      hydrated.querySelectorAll('.releases-version').forEach(line => line.replaceChildren())
-      expect(hydrated.textContent).toBe(servedText)
+      const versions = [...container.querySelectorAll('.releases-version')].map(line => line.textContent ?? '')
+      expect(versions.reduce((text, version) => text.replace(version, ''), container.textContent!)).toBe(servedText)
       act(() => root.unmount())
       container.remove()
     }
