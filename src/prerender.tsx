@@ -16,13 +16,14 @@ export { productionChangelogEntries, changelogSharePath, changelogEntryMetadata 
 /**
  * Pages whose full text must be in the served HTML, not only after the app
  * loads. The homepage ships its hero, features, and downloads; the device's own
- * download platform and the demo videos take over once it hydrates. The plugin directory reads the plugin's website, terms, and privacy
+ * download platform and the demo videos take over once it hydrates. /releases/ ships
+ * the Stable downloads; Preview and the release versions load from GitHub. The plugin directory reads the plugin's website, terms, and privacy
  * URLs without running JavaScript. Every docs page, Vision included, ships its
  * text so shared links and crawlers that do not run JavaScript see it. The
  * client hydrates this markup in place.
  */
 export const prerenderedPaths = [
-  '/', '/plugins/', '/plugins/memes/', '/plugins/privacy/', '/plugins/terms/',
+  '/', '/releases/', '/plugins/', '/plugins/memes/', '/plugins/privacy/', '/plugins/terms/',
   ...documents.map((document) => documentHref(document.product === 'desktop' ? HAPPY_DESKTOP : HAPPY, document.path)),
   ...productionChangelogEntries.map(changelogSharePath),
 ]

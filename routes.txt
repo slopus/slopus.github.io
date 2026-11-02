@@ -118,6 +118,7 @@
 /recipes/telegram/
 /recipes/upgrade/
 /recipes/wsl/
+/releases/
 /secrets/
 /stem-cell/
 /t3-code/

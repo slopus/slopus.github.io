@@ -7,6 +7,23 @@ import { DownloadOptions } from './DownloadOptions'
 
 const BREW = 'brew install --cask slopus/tap/happy'
 const RELEASES = 'https://github.com/slopus/happy-desktop/releases/download/v0.0.90'
+const PREVIEW = 'https://github.com/slopus/happy-desktop/releases/download/v0.0.103-preview.17'
+
+function githubRelease(tag: string, publishedAt: string, names: string[], extra: object = {}) {
+  return {
+    tag_name: tag, draft: false, prerelease: tag.includes('-preview.'), published_at: publishedAt, ...extra,
+    assets: names.map(name => ({ name, browser_download_url: `https://github.com/slopus/happy-desktop/releases/download/${tag}/${name}` })),
+  }
+}
+
+const nightly = (version: string) => [`Happy-${version}-arm64.dmg`, `Happy-Nightly-${version}-arm64.dmg`, `Happy-Nightly-${version}-x64.dmg`]
+// As GitHub lists them: by creation, so preview.9, published first, can follow preview.10.
+const GITHUB_RELEASES = [
+  githubRelease('v0.0.104-preview.1', '2026-11-03T00:00:00Z', nightly('0.0.104-preview.1'), { draft: true }),
+  githubRelease('v0.0.103-preview.16', '2026-11-02T00:26:50Z', nightly('0.0.103-preview.16')),
+  githubRelease('v0.0.103-preview.17', '2026-11-02T02:17:26Z', nightly('0.0.103-preview.17')),
+  githubRelease('v0.0.102', '2026-10-25T04:26:59Z', nightly('0.0.102')),
+]
 
 beforeEach(() => {
   // Exercise the verified direct-download fallback without making live requests.
@@ -194,9 +211,36 @@ describe('desktop and mobile downloads', () => {
     expect(html.indexOf('data-store="appStore"')).toBeLessThan(html.indexOf('data-store="googlePlay"'))
   })
 
-  it('links All Releases to the latest release, never a pinned one', () => {
+  it('links All Releases to the Stable and Preview releases page, not GitHub', () => {
     render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
-    expect(screen.getByRole('link', { name: 'All Releases' }).getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases/latest')
+    expect(screen.getByRole('link', { name: 'All Releases' }).getAttribute('href')).toBe('/releases/')
+  })
+
+  it('offers Preview as the Nightly Mac disk images alone, with no Homebrew, other platforms, or stores', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => GITHUB_RELEASES }))
+    device('Windows NT 10.0')
+    vi.resetModules()
+    const { DownloadOptions: Fresh } = await import('./DownloadOptions')
+    const { container } = render(<Fresh channel="preview" macArchitecture="x64" onMacArchitectureChange={vi.fn()} />)
+    const link = screen.getByRole('link', { name: 'Download Happy Nightly for macOS' })
+    await waitFor(() => expect(link.getAttribute('href')).toBe(`${PREVIEW}/Happy-Nightly-0.0.103-preview.17-x64.dmg`))
+    expect(fetch).toHaveBeenCalledWith('https://api.github.com/repos/slopus/happy-desktop/releases?per_page=30', expect.anything())
+    expect(screen.getByRole('combobox', { name: 'Mac architecture' })).toBeTruthy()
+    expect(screen.queryByText(BREW)).toBeNull()
+    expect(screen.queryByRole('note')).toBeNull()
+    expect(screen.queryByRole('link', { name: /Windows|Linux|All Releases/ })).toBeNull()
+    expect(container.querySelector('.one-mobile-downloads')).toBeNull()
+  })
+
+  it('sends Preview to the GitHub release list when GitHub has no preview to offer', async () => {
+    vi.resetModules()
+    const { DownloadOptions: Fresh } = await import('./DownloadOptions')
+    render(<Fresh channel="preview" macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
+    const link = screen.getByRole('link', { name: 'Download Happy Nightly for macOS' })
+    expect(link.getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases')
+    const { previewDesktopDownloads } = await import('./desktopDownloads')
+    expect(await act(() => previewDesktopDownloads())).toBeNull()
+    expect(link.getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases')
   })
 
   it('links every download to the latest release until the lookup resolves, and still fetches the file on click', async () => {

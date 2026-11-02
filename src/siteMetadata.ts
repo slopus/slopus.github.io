@@ -111,6 +111,13 @@ export const modelBenchmarksMetadata: PageMetadata = {
   canonicalPath: '/model-benchmarks/',
 }
 
+/** Keep the static Pages route in scripts/generate-static-routes.mjs in sync. */
+export const releasesMetadata: PageMetadata = {
+  title: 'Download Happy: Stable and Preview Releases',
+  description: 'Download Happy for macOS, Windows, and Linux, or the macOS Preview that installs as Happy Nightly. Every release is on GitHub.',
+  canonicalPath: '/releases/',
+}
+
 /**
  * The Vision essay, a docs page that keeps its own title. Titled after
  * content/thesis.md's frontmatter and described by its bullets. Keep the

@@ -423,7 +423,11 @@ await writeRoute(
   withAppMarkup(htmlForPage(metadataForPath('/docs/comparisons/happy-2-vs-buzz/')), prerendered('/comparisons/buzz/')),
 )
 
+// Stable and Preview downloads; its markup is the Stable channel, and GitHub fills in the versions.
+await writeRoute('releases', withAppMarkup(htmlForPage(metadataForPath('/releases/')), prerendered('/releases/')))
+
 sitemapPages.push(
+  { route: '/releases/', sources: ['src/ReleasesPage.tsx', 'src/DownloadOptions.tsx'] },
   { route: '/model-benchmarks/', sources: ['src/model-benchmarks.json', 'src/ModelBenchmarksPage.tsx'] },
   { route: '/privacy/', sources: ['content/legal/privacy.md'] },
   { route: '/terms/', sources: ['content/legal/terms.md'] },
@@ -664,4 +668,4 @@ if (brokenLinks.length > 0) {
   throw new Error(`Broken internal links in the built site:\n  ${[...new Set(brokenLinks)].join('\n  ')}`)
 }
 
-console.log(`Generated ${documentRoutes + 10 + pluginPages.length} static routes and a ${sitemapPages.length}-URL sitemap.`)
+console.log(`Generated ${documentRoutes + 11 + pluginPages.length} static routes and a ${sitemapPages.length}-URL sitemap.`)

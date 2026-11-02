@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
 import DesktopApp from './DesktopApp'
 import ModelBenchmarksPage from './ModelBenchmarksPage'
+import ReleasesPage from './ReleasesPage'
 import { DocsPage, LegalPage, NotFoundPage } from './DocumentPages'
 import { MemesPluginPage, PluginsPage } from './PluginPages'
 import { documentHeading, getDocument, normalizeDocumentPath } from './documents'
@@ -17,6 +18,7 @@ import {
   pluginPrivacyMetadata,
   pluginsMetadata,
   pluginTermsMetadata,
+  releasesMetadata,
   thesisMetadata,
   type PageMetadata,
 } from './siteMetadata'
@@ -118,6 +120,10 @@ export function metadataForPath(pathname: string): PageMetadata {
 
   if (normalizedPath === '/model-benchmarks') {
     return modelBenchmarksMetadata
+  }
+
+  if (normalizedPath === '/releases') {
+    return releasesMetadata
   }
 
   // The Vision essay is a docs page (src/documents.ts) that keeps its own title.
@@ -288,6 +294,10 @@ export function Router({ pathname }: { pathname?: string }) {
 
   if (normalizedPath === '/model-benchmarks') {
     return <ModelBenchmarksPage />
+  }
+
+  if (normalizedPath === '/releases') {
+    return <ReleasesPage />
   }
 
   if (normalizedPath === '/plugins') {

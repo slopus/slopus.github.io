@@ -188,7 +188,10 @@ describe('plugin pages', () => {
       expect(recoverableErrors).toEqual([])
       expect(container.querySelector('h1')).toBe(servedHeading)
       expect(container.querySelectorAll('h1')).toHaveLength(1)
-      expect(container.textContent).toBe(servedText)
+      // /releases/ adds its release version once GitHub answers; everything else stays as served.
+      const hydrated = container.cloneNode(true) as HTMLElement
+      hydrated.querySelector('.releases-version')?.replaceChildren()
+      expect(hydrated.textContent).toBe(servedText)
       act(() => root.unmount())
       container.remove()
     }
