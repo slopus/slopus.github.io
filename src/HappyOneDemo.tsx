@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useRevealedControls } from './revealedControls'
 import './happy-one-demo.css'
 
@@ -14,8 +14,9 @@ function dataConnection() {
  * It loops muted while in view, without browser chrome covering it. Deliberate
  * pointer/keyboard interaction reveals the ordinary native controls; reduced
  * motion, save-data, and blocked autoplay leave it paused on its poster with them.
+ * `backdrop` is drawn on the stage behind the movie.
  */
-export function HappyOneDemo() {
+export function HappyOneDemo({ backdrop }: { backdrop?: ReactNode }) {
   const stage = useRef<HTMLElement>(null)
   const movie = useRef<HTMLVideoElement>(null)
   // A failed load reports on the last <source> the browser tried, not on the video.
@@ -89,6 +90,7 @@ export function HappyOneDemo() {
   return (
     <figure ref={stage} className="one-demo">
       <div className="one-demo-stage">
+        {backdrop}
         <div className="one-demo-frame">
           <video ref={movie} poster={`${MEDIA}/poster.webp`} width="1618" height="1000"
             {...videoProps} loop playsInline preload="metadata"

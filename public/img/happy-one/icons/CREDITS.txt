@@ -16,6 +16,10 @@ https://creativecommons.org/licenses/by/4.0/
 Tux was originally created by Larry Ewing using GIMP.
 Original badge attribution: /img/happy-one/badges/NOTICE.md
 
+X and Discord marks on the homepage (src/DesktopApp.tsx): Simple Icons, CC0 1.0
+https://simpleicons.org/ https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md
+Paths unchanged. The marks are trademarks of X Corp. and Discord Inc.
+
 Copyright 2025 OpenAI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of

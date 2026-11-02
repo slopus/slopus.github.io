@@ -3,6 +3,9 @@ export type ProductKey = 'happy' | 'desktop'
 /** What Happy is, in one line: under the homepage heading, in the footer, and first in the homepage descriptions. */
 export const HAPPY_DESCRIPTOR = 'Orchestrate Claude, Codex, Grok, Gemini and more in one app'
 
+/** The community Discord, as linked from the happy and happy-desktop READMEs and the apps' help menus. */
+export const HAPPY_DISCORD = 'https://discord.gg/fX9WBAhyfD'
+
 export interface Product {
   key: ProductKey
   label: string

@@ -1,8 +1,8 @@
-/* The homepage on the phone apps' first screen: the Grain Gradient behind everything, its
-   palette and ink, IBM Plex Sans, and Bricolage Grotesque for the wordmark. The palette is
-   copied verbatim from the native start screens (happy-ios StartViewController and
-   StartTokens.swift), light or dark with the system. Blog downloads and /releases/ keep
-   happy-one.css alone. */
+/* The homepage in the phone apps' first-screen look: their Grain Gradient as designed panels
+   that scroll with the page (behind the demo, beside each value), the words on the calm base
+   colour, IBM Plex Sans, and Bricolage Grotesque for the wordmark. The palette is copied
+   verbatim from the native start screens (happy-ios StartViewController and StartTokens.swift),
+   light or dark with the system. Blog downloads and /releases/ keep happy-one.css alone. */
 :root:has(.happy-home) {
   color-scheme: light dark;
   --grain-back: #f4f2ff;
@@ -11,11 +11,12 @@
   --grain-2: #93c5fd;
   --grain-3: #a78bfa;
   --home-ink: #14112e;
-  /* The native secondary text: the ink at 87%, AA on every colour of the gradient. */
+  /* The native secondary text: the ink at 87%. */
   --home-ink-2: #14112ede;
   --home-line: #14112e1f;
+  --home-surface: #14112e0a;
   --home-accent: #5b21b6;
-  --home-header: #f4f2ffb8;
+  --home-header: #f4f2ffd9;
   background: var(--grain-back);
 }
 @media (prefers-color-scheme: dark) {
@@ -28,23 +29,20 @@
     --home-ink: #ffffff;
     --home-ink-2: #ffffffde;
     --home-line: #ffffff24;
+    --home-surface: #ffffff0d;
     --home-accent: #c4b5fd;
-    --home-header: #06050fb8;
+    --home-header: #06050fd9;
   }
 }
 
 .happy-home { color: var(--home-ink); font-family: 'IBM Plex Sans', system-ui, sans-serif; }
-.happy-home main, .happy-home .site-footer { position: relative; z-index: 1; }
 
-/* Fixed behind the page at the large viewport height, so a phone's collapsing toolbar never
-   resizes it. Until the shader paints, and without WebGL, the native still fallback shows:
-   four corner glows over the same base. */
+/* One Grain Gradient panel. Until the shader paints, and without WebGL, the native still
+   fallback shows: four corner glows over the same base. */
 .one-grain {
-  position: fixed;
-  z-index: 0;
-  inset: 0 0 auto;
-  height: 100lvh;
-  pointer-events: none;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   background:
     radial-gradient(circle at 100% 35%, color-mix(in srgb, var(--grain-3) 70%, transparent), transparent 75%),
     radial-gradient(circle at 0% 60%, color-mix(in srgb, var(--grain-2) 70%, transparent), transparent 75%),
@@ -52,11 +50,13 @@
     radial-gradient(circle at 0% 100%, color-mix(in srgb, var(--grain-0) 70%, transparent), transparent 75%),
     var(--grain-back);
 }
-.one-grain canvas { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity .6s ease; }
-.one-grain canvas[data-painted] { opacity: 1; }
+.one-grain-canvas { position: absolute; z-index: -1; inset: 0; display: block; width: 100%; height: 100%; opacity: 0; transition: opacity .6s ease; }
+.one-grain-canvas[data-painted] { opacity: 1; }
+/* A hairline keeps a panel's pale corners from melting into the page. */
+.one-grain::after { content: ''; position: absolute; z-index: 1; inset: 0; border: 1px solid var(--home-line); border-radius: inherit; pointer-events: none; }
 
-/* Header and footer sit straight on the gradient, like the phone's first screen. */
-.happy-home .site-header-wrap { background: transparent; transition: border-color .2s ease, background-color .2s ease; }
+/* Header and footer sit on the page's base colour. */
+.happy-home .site-header-wrap { background: var(--grain-back); transition: border-color .2s ease, background-color .2s ease; }
 .happy-home .site-header-wrap[data-scrolled] { border-bottom-color: var(--home-line); background: var(--home-header); -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); }
 .happy-home .wordmark { color: var(--home-ink); font-family: 'Bricolage Grotesque', 'IBM Plex Sans', sans-serif; font-size: 1.12rem; letter-spacing: -.03em; }
 .happy-home .wordmark span { color: var(--home-ink-2); font-weight: 700; }
@@ -70,12 +70,21 @@
 .happy-home .one-scrollbar[data-active] .one-scrollbar-thumb { background: color-mix(in srgb, var(--home-ink) 27%, transparent); }
 .happy-home .one-scrollbar:hover .one-scrollbar-thumb { background: color-mix(in srgb, var(--home-ink) 44%, transparent); }
 
-/* The hero, in the start screen's type: Plex Sans SemiBold titles, the line under them at 87%. */
+/* The hero, in the start screen's type: Plex Sans SemiBold, the line under it at 87%. */
 .happy-home h1, .happy-home h2 { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 600; letter-spacing: -.025em; }
-.happy-home h1 em { color: var(--home-accent); }
+.happy-home h1 em, .happy-home h2 em { color: var(--home-accent); }
 .happy-home .one-hero-tagline { color: var(--home-ink); }
-.happy-home .one-hero-note { color: var(--home-ink-2); }
+.happy-home .one-hero-note, .happy-home .one-download > p { color: var(--home-ink-2); }
 .happy-home .one-demo-frame { box-shadow: 0 30px 70px -28px #14112e8c, 0 0 0 .5px #0000003d; }
+
+/* The recording stands on a Grain Gradient stage as wide as the page, padded above and below
+   instead of the stage's usual 20px shadow room; the first-screen fit counts the difference. */
+.happy-home { --one-stage-pad: 36px; }
+.happy-home .one-hero { --one-hero-reserved: calc(245px + 2 * var(--one-stage-pad) + 3.12 * var(--one-h1)); }
+.happy-home .one-demo-stage { position: relative; padding: var(--one-stage-pad) 0; }
+.one-demo-stage > .one-stage-grain { position: absolute; inset: 0; border-radius: 32px; }
+.one-demo-stage > .one-demo-frame { z-index: 1; }
+.happy-one[data-social-preview] .one-stage-grain { display: none; }
 
 .happy-home .one-mac-architecture, .happy-home .one-platform-links { color: var(--home-ink-2); }
 .happy-home .one-platform-links a:hover { color: var(--home-ink); }
@@ -86,23 +95,60 @@
 .happy-home .one-brew-line { font-family: 'IBM Plex Mono', monospace; }
 .happy-home .one-desktop-button:focus-visible, .happy-home .one-brew-command button:focus-visible { outline-color: var(--home-accent); }
 
-/* What you get: four equal sections, each the phone's slide (art over a title over a line),
-   two by two on wide screens. Their lines are written to the same length. */
-.one-values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5.5rem 4rem; width: min(980px, calc(100% - 64px)); padding-block: 6.5rem 8rem; }
-.one-value { display: flex; flex-direction: column; align-items: center; text-align: center; }
-.one-value-art { width: 120px; height: 120px; margin-bottom: 1.5rem; }
-.one-emoji { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity .4s ease; }
-.one-emoji[data-ready] { opacity: 1; }
-.happy-home .one-value h2 { margin: 0 0 .75rem; font-size: 1.75rem; line-height: 1.2; }
-.one-value p { max-width: 25.5rem; margin: 0; color: var(--home-ink-2); font-size: 1.0625rem; line-height: 1.5; text-wrap: balance; }
+/* What you get: one section each, stacked, the panel and the words trading sides. */
+.one-values { padding-block: 4.5rem 1.5rem; }
+.one-value { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); align-items: center; gap: clamp(2.5rem, 6vw, 6rem); width: min(1080px, calc(100% - 64px)); margin: 0 auto; padding-block: 3.25rem; }
+.one-value[data-side='end'] { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+.one-value[data-side='end'] > .one-value-panel { order: 2; }
+/* Mirrored on the right, so the panels' colour corners face the same way across the zig-zag. */
+.one-value[data-side='end'] .one-grain-canvas { transform: scaleX(-1); }
+.one-value-panel { display: grid; place-items: center; aspect-ratio: 4 / 3; border-radius: 32px; }
+.one-value-panel > .one-emoji { display: block; width: 40%; height: auto; aspect-ratio: 1; opacity: 0; transition: opacity .4s ease; filter: drop-shadow(0 18px 28px #14112e33); }
+.one-value-panel > .one-emoji[data-ready] { opacity: 1; }
+.happy-home .one-value h2 { margin: 0 0 .85rem; font-size: clamp(1.75rem, 2.7vw, 2.4rem); line-height: 1.15; }
+.one-value-copy p { max-width: 25rem; margin: 0; color: var(--home-ink-2); font-size: 1.18rem; line-height: 1.55; text-wrap: pretty; }
+
+/* Don't trust our words: one line, then the prompt to paste into any agent. */
+.one-trust { padding-block: 6.5rem 1rem; text-align: center; }
+.happy-home .one-trust h2 { margin: 0 0 .75rem; font-size: var(--one-h1); }
+.one-trust > p { margin: 0; color: var(--home-ink-2); font-size: 1.125rem; line-height: 1.5; text-wrap: balance; }
+.one-trust-prompt { position: relative; max-width: 40rem; margin: 2rem auto 0; padding: .9rem 1.1rem 1.1rem; border: 1px solid var(--home-line); border-radius: 16px; background: var(--home-surface); text-align: left; }
+.one-trust-prompt figcaption { min-height: 32px; padding-right: 6rem; color: var(--home-ink-2); font-size: .78rem; font-weight: 500; letter-spacing: .04em; line-height: 32px; text-transform: uppercase; }
+.one-trust-prompt > p { margin: .35rem 0 0; font: 1rem/1.55 'IBM Plex Mono', monospace; overflow-wrap: anywhere; }
+.one-trust-prompt button { position: absolute; top: .65rem; right: .65rem; display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-width: 5.5rem; height: 36px; padding: 0 .75rem; border: 0; border-radius: 8px; background: transparent; color: var(--home-ink); font: 500 .85rem/1 inherit; cursor: pointer; }
+.one-trust-prompt button:hover { background: var(--home-surface); }
+.one-trust-prompt button:focus-visible { outline: 2px solid var(--home-accent); outline-offset: 2px; }
+
+/* Where to find us, just above the footer. */
+.one-talk { padding-block: 2.5rem 5rem; text-align: center; }
+.happy-home .one-talk h2 { margin: 0 0 1.25rem; font-size: 1.6rem; }
+.one-talk-links { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin: 0; padding: 0; list-style: none; }
+.one-talk-links a { display: inline-flex; align-items: center; gap: .55rem; min-height: 44px; padding: .4rem 1rem .4rem .45rem; border: 1px solid var(--home-line); border-radius: 999px; color: var(--home-ink); font-weight: 500; transition: background-color .2s ease; }
+.one-talk-links a:hover { background: var(--home-surface); }
+.one-talk-links a > svg:first-child { margin-left: .5rem; }
+.one-talk-links img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+.one-talk-links a > svg:last-child:not(:first-child) { opacity: .6; }
+
+@media (max-width: 700px) {
+  /* The recording is nearly full width, so its stage runs edge to edge. */
+  .happy-home { --one-stage-pad: 30px; }
+  .one-demo-stage > .one-stage-grain { inset: 0 calc(50% - 50vw); border-radius: 0; }
+  .one-demo-stage > .one-stage-grain::after { border-inline: 0; }
+}
 
 @media (max-width: 760px) {
-  .one-values { grid-template-columns: minmax(0, 1fr); gap: 4.5rem; width: calc(100% - 40px); padding-block: 4.5rem 5.5rem; }
-  .one-value-art { width: 104px; height: 104px; margin-bottom: 1.25rem; }
-  .happy-home .one-value h2 { font-size: 1.6rem; }
-  .one-value p { max-width: 22rem; }
+  .one-values { padding-block: 3rem 0; }
+  .one-value, .one-value[data-side='end'] { grid-template-columns: minmax(0, 1fr); gap: 1.6rem; width: calc(100% - 40px); padding-block: 2.25rem; text-align: center; }
+  .one-value[data-side='end'] > .one-value-panel { order: 0; }
+  .one-value-panel { aspect-ratio: 16 / 11; border-radius: 26px; }
+  .happy-home .one-value h2 { font-size: 1.65rem; }
+  .one-value-copy p { max-width: 21rem; margin-inline: auto; font-size: 1.06rem; text-wrap: balance; }
+  .one-trust { padding-block: 4.5rem .5rem; }
+  .one-trust-prompt > p { font-size: .92rem; }
+  .one-talk { padding-block: 2rem 4rem; }
+  .happy-home .one-talk h2 { font-size: 1.4rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .one-grain canvas, .one-emoji { transition: none; }
+  .one-grain-canvas, .one-value-panel > .one-emoji, .one-talk-links a { transition: none; }
 }

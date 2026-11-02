@@ -124,5 +124,5 @@ export function AnimatedEmoji({ name, section }: { name: AnimatedEmojiName; sect
     }
   }, [name, section])
 
-  return <canvas ref={canvas} className="one-emoji" width="256" height="256" />
+  return <canvas ref={canvas} className="one-emoji" width="256" height="256" aria-hidden="true" />
 }

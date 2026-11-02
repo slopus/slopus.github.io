@@ -20,11 +20,12 @@ function compile(gl: WebGLRenderingContext, type: number, source: string) {
 /**
  * Draws the Grain Gradient into one canvas, as happy-desktop's onboardingGrainRenderer does:
  * the native 33ms cadence, the clock paused while the canvas is out of view or the tab is
- * hidden, and a still first frame when `moving` is false. The palette is the canvas's
- * `--grain-*` custom properties (six-digit hex), read again when the color scheme changes.
+ * hidden, and a still first frame when `moving` is false. `offset` shifts the shader's time,
+ * so panels on one page don't show the same frame. The palette is the canvas's `--grain-*`
+ * custom properties (six-digit hex), read again when the color scheme changes.
  * Returns the one teardown that releases the program, observers, and listeners.
  */
-export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean, clock: { seconds: number }) {
+export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean, clock: { seconds: number }, offset = 0) {
   const document = canvas.ownerDocument
   const view = document.defaultView
   // Without WebGL the CSS corner glows stay.
@@ -103,7 +104,7 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
     render = () => {
       if (gl.isContextLost()) return
       gl.uniform2f(resolution, canvas.width, canvas.height)
-      gl.uniform1f(time, clock.seconds)
+      gl.uniform1f(time, offset + clock.seconds)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
     }
     // Painted: the CSS corner glows underneath can stop showing through.

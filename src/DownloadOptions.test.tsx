@@ -173,10 +173,10 @@ describe('desktop and mobile downloads', () => {
     const { container } = render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     expect(container.querySelectorAll('.one-store-download .store-rating')).toHaveLength(2)
     expect(container.querySelectorAll('.store-stars[aria-hidden="true"]')).toHaveLength(2)
-    expect(screen.getByLabelText('4.9 stars from 1,006 App Store ratings in the US')).toBeTruthy()
-    expect(screen.getByLabelText('5.0 stars from 3,128 Google Play reviews in the US')).toBeTruthy()
+    expect(screen.getByLabelText('4.9 stars from 1,056 App Store ratings in the US')).toBeTruthy()
+    expect(screen.getByLabelText('5.0 stars from 3,291 Google Play reviews in the US')).toBeTruthy()
     expect(screen.getByText('1,000+ ratings')).toBeTruthy()
-    expect(screen.getByText('3.1k+ reviews')).toBeTruthy()
+    expect(screen.getByText('3.2k+ reviews')).toBeTruthy()
   })
 
   it('ships the white Apple badge with no badge picker or toggle', () => {

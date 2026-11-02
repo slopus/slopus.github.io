@@ -1,6 +1,6 @@
 import { act, cleanup, render, screen, within } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
-import DesktopApp from './DesktopApp'
+import DesktopApp, { TRUST_PROMPT } from './DesktopApp'
 import { Router } from './Router'
 
 // The recorded demo needs real media APIs; the page around it is what these tests cover.
@@ -90,18 +90,20 @@ describe('Happy Desktop landing page', () => {
     expect(container.querySelectorAll('#download')).toHaveLength(1)
   })
 
-  it('has one download block, under the demo', () => {
+  it('offers the downloads twice: under the demo, and again after Trust the code', () => {
     const { container } = render(<DesktopApp />)
 
-    expect(container.querySelectorAll('.one-download-actions')).toHaveLength(1)
-    expect(container.querySelector('#download-again')).toBeNull()
+    expect(container.querySelectorAll('.one-download-actions')).toHaveLength(2)
+    expect(container.querySelector('#download-again .one-download-actions')).toBeTruthy()
   })
 
-  it('runs demo, downloads, then the four value sections, each with its animated emoji', () => {
+  it('runs demo, downloads, the four values, Trust the code, downloads again, then Talk to us', () => {
     const { container } = render(<DesktopApp />)
     const main = container.querySelector('main')!
 
-    expect([...main.children].map((child) => child.className)).toEqual(['one-hero page-width', 'one-values page-width'])
+    expect([...main.children].map((child) => child.className.split(' ')[0])).toEqual([
+      'one-hero', 'one-values', 'one-trust', 'one-download', 'one-talk',
+    ])
     const sections = [...main.querySelectorAll('.one-value')]
     expect(sections.map((section) => section.querySelector('h2')?.textContent)).toEqual([
       'Use all your subscriptions',
@@ -109,14 +111,42 @@ describe('Happy Desktop landing page', () => {
       'Open source, MIT',
       'End-to-end encrypted',
     ])
-    for (const section of sections) expect(section.querySelector('canvas.one-emoji')).toBeTruthy()
+    // A zig-zag: the panel starts on the left, then trades sides.
+    expect(sections.map((section) => section.getAttribute('data-side'))).toEqual(['start', 'end', 'start', 'end'])
+    for (const section of sections) expect(section.querySelector('.one-value-panel canvas.one-emoji')).toBeTruthy()
   })
 
-  it('keeps the four value lines about the same length', () => {
+  it('keeps the four value lines short and about the same length', () => {
     const { container } = render(<DesktopApp />)
     const lengths = [...container.querySelectorAll('.one-value p')].map((body) => body.textContent!.length)
 
-    expect(Math.max(...lengths) - Math.min(...lengths)).toBeLessThanOrEqual(12)
+    expect(Math.max(...lengths)).toBeLessThanOrEqual(110)
+    expect(Math.max(...lengths) - Math.min(...lengths)).toBeLessThanOrEqual(8)
+  })
+
+  it('does not claim a relay that only sees ciphertext or sessions already on the phone', () => {
+    const { container } = render(<DesktopApp />)
+
+    expect(container.textContent).not.toMatch(/ciphertext|already on your phone/i)
+  })
+
+  it('offers a prompt to check Happy against its code', () => {
+    const { container } = render(<DesktopApp />)
+    const trust = container.querySelector('.one-trust')!
+
+    expect(trust.querySelector('h2')?.textContent).toMatch(/trust the code/i)
+    expect(trust.textContent).toContain(TRUST_PROMPT)
+    expect(within(trust as HTMLElement).getByRole('button', { name: 'Copy prompt' })).toBeTruthy()
+  })
+
+  it('ends on the founders on Twitter and the Discord invite', () => {
+    const { container } = render(<DesktopApp />)
+    const talk = container.querySelector('.one-talk')!
+
+    expect(talk.querySelector('h2')?.textContent).toBe('Talk to us on Twitter or Discord.')
+    expect([...talk.querySelectorAll('a')].map((link) => link.getAttribute('href'))).toEqual([
+      'https://x.com/Ex3NDR', 'https://x.com/bra1n_dump', 'https://discord.gg/fX9WBAhyfD',
+    ])
   })
 
   it('does not mount the social-preview stars line by default', () => {

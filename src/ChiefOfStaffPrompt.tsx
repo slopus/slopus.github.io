@@ -4,7 +4,7 @@ import { CopyIcon } from './CopyIcon'
 /** The fence that authors a prompt block in the docs: ```chief-of-staff <task>, one prompt per line. */
 export const CHIEF_OF_STAFF_LANGUAGE = 'chief-of-staff'
 
-async function copyText(text: string) {
+export async function copyText(text: string) {
   try {
     await navigator.clipboard.writeText(text)
     return

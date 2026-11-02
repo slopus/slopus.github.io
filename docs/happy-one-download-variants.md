@@ -71,6 +71,9 @@ Checked 2026-09-15. Google Play's visible page also showed 5.0 and 3.13K reviews
 its phone-only breakdown had a different count, so do not mix those populations.
 Scores can vary by country and device category.
 
+Refreshed 2026-11-02: App Store 4.86742 from 1,056 ratings (4.9 · 1,000+ ratings);
+Google Play 4.9666667 from 3,291 (5.0 · 3.2k+ reviews; the visible page showed 3.29K reviews).
+
 Run `node scripts/check-store-ratings.mjs` for a read-only first-party refresh,
 verify the visible listings, and then update `src/storeRatings.ts` deliberately.
 The script never writes files or silently changes marketing claims.

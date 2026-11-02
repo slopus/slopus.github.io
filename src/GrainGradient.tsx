@@ -1,4 +1,4 @@
-import { useEffect, useRef, useSyncExternalStore } from 'react'
+import { useEffect, useRef, useSyncExternalStore, type ReactNode } from 'react'
 import { grainGradientRenderer } from './grainGradientRenderer'
 
 const reducedMotionSubscribe = (listener: () => void) => {
@@ -9,20 +9,22 @@ const reducedMotionSubscribe = (listener: () => void) => {
 const reducedMotionGet = () => matchMedia('(prefers-reduced-motion: reduce)').matches
 
 /**
- * The Grain Gradient from the phone apps' first screen and desktop onboarding, fixed behind
- * the whole page. Its palette is theirs (`--grain-*` in happy-one.css), light or dark with
- * the system. Without WebGL, the CSS corner glows underneath stand in for it.
+ * One panel of the Grain Gradient from the phone apps' first screen and desktop onboarding,
+ * in their palette (`--grain-*` in happy-home.css), light or dark with the system. It scrolls
+ * with the page; `offset` (seconds) keeps neighbouring panels from showing the same frame.
+ * Without WebGL, the CSS corner glows stand in for it. `children` sit above the gradient.
  */
-export function GrainGradient() {
+export function GrainGradient({ className, offset = 0, children }: { className: string; offset?: number; children?: ReactNode }) {
   const canvas = useRef<HTMLCanvasElement>(null)
   // The prerendered page and reduced motion both start still.
   const reducedMotion = useSyncExternalStore(reducedMotionSubscribe, reducedMotionGet, () => true)
   // Turning reduced motion off resumes the motion where it was.
   const clock = useRef({ seconds: 0 })
-  useEffect(() => grainGradientRenderer(canvas.current!, !reducedMotion, clock.current), [reducedMotion])
+  useEffect(() => grainGradientRenderer(canvas.current!, !reducedMotion, clock.current, offset), [reducedMotion, offset])
   return (
-    <div className="one-grain" aria-hidden="true">
-      <canvas ref={canvas} />
+    <div className={`one-grain ${className}`}>
+      <canvas ref={canvas} className="one-grain-canvas" aria-hidden="true" />
+      {children}
     </div>
   )
 }
