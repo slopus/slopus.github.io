@@ -1,9 +1,9 @@
-import { Fragment, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
 import { GITHUB_HAPPY, GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
 import { HAPPY_DESCRIPTOR, HAPPY_DESKTOP, HAPPY_DISCORD } from './products'
 import { HappyOneDemo } from './HappyOneDemo'
 import { GrainGradient } from './GrainGradient'
-import { HEADLINES, homeVariants, homeVariantsSearch, homeVariantsSubscribe } from './homeVariants'
+import { HEADLINES, SOCIAL_HEADLINE, homeVariants, homeVariantsSearch, homeVariantsSubscribe } from './homeVariants'
 import { HomeVariantSwitcher } from './HomeVariantSwitcher'
 import { AnimatedEmoji, type AnimatedEmojiName } from './AnimatedEmoji'
 import { DownloadOptions, type DownloadOptionsProps } from './DownloadOptions'
@@ -16,7 +16,7 @@ import './happy-one.css'
 import './happy-one-preview.css'
 import './happy-home.css'
 
-/** One or two short sentences each, about the same length, so the four sections read alike. */
+/** A title and two short sentences each, the four bodies about the same length. */
 const values: readonly { title: string; body: string; emoji: AnimatedEmojiName }[] = [
   {
     title: 'Use all your subscriptions',
@@ -59,7 +59,7 @@ function ValueProposition({ title, body, emoji, index }: (typeof values)[number]
 }
 
 /** The prompt we suggest: any coding agent can check our claims against the source. */
-export const TRUST_PROMPT = 'Read the code at github.com/slopus/happy-desktop and github.com/slopus/happy-agent. What is Happy, and would you trust it on my machine?'
+export const TRUST_PROMPT = 'Read github.com/slopus/happy-desktop and github.com/slopus/happy-agent. Would you trust Happy?'
 
 function TrustTheCode() {
   const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle')
@@ -78,9 +78,8 @@ function TrustTheCode() {
   return (
     <section className="one-trust page-width" aria-labelledby="trust-heading">
       <h2 id="trust-heading">Don’t trust our words. <em>Trust the code.</em></h2>
-      <p>Ask your agent of choice about Happy, and watch that agent become happy.</p>
-      <figure className="one-trust-prompt">
-        <figcaption>Paste into any agent</figcaption>
+      <p>Ask your agent, and watch it become happy.</p>
+      <figure className="one-trust-prompt" aria-label="Prompt for any agent">
         <p>{TRUST_PROMPT}</p>
         <button type="button" onClick={copy} data-state={state} aria-label={state === 'copied' ? 'Prompt copied' : 'Copy prompt'}>
           {state === 'copied'
@@ -94,11 +93,10 @@ function TrustTheCode() {
   )
 }
 
+/** The downloads again, just the buttons. */
 function Downloads(props: DownloadOptionsProps) {
   return (
-    <section className="one-download page-width" id="download-again" aria-labelledby="download-heading">
-      <h2 id="download-heading">Download Happy.</h2>
-      <p>Free and open source</p>
+    <section className="one-download page-width" id="download-again" aria-label="Download Happy">
       <DownloadOptions {...props} />
     </section>
   )
@@ -138,19 +136,32 @@ function TalkToUs() {
   )
 }
 
-/** The line under every headline: the short descriptor, then where and with whom. */
-const HERO_LINE = `${HAPPY_DESCRIPTOR}\u00a0— locally or on a remote server, by yourself or with your team.`
+/** Text with its *starred* runs in the accent colour and its `\n` as line breaks. */
+function Accented({ text }: { text: string }) {
+  return text.split(/\*([^*]+)\*/u).map((run, index) => index % 2
+    ? <em key={index}>{run}</em>
+    : run.split('\n').flatMap((part, line) => line ? [<br key={`${index}-${line}`} />, part] : [part]))
+}
+
+/** A headline line; a whole starred line is the accent block. */
+function HeadlineLine({ line }: { line: string }) {
+  const whole = /^\*([^*]+)\*$/u.exec(line)
+  if (whole) return <em>{whole[1]}</em>
+  return <span><Accented text={line} /></span>
+}
+
 
 /**
  * The homepage, in the phone apps' first-screen look, on one Grain Gradient surface from top to
- * bottom: the demo, the downloads, four value rows in a zig-zag, a prompt to check us against
- * the code, the downloads again, and where to talk to us.
+ * bottom: the headline and demo, the downloads, four value rows in a zig-zag, a prompt to check
+ * us against the code, the downloads again, and where to talk to us.
  */
 export default function DesktopApp() {
   // Read after hydration: the prerendered homepage is the ordinary page.
   const variants = homeVariants(useSyncExternalStore(homeVariantsSubscribe, homeVariantsSearch, () => ''))
   const { palette, hero, preview: ogPreview } = variants
-  const headline = HEADLINES[hero - 1]
+  // The link-preview card keeps the headline and descriptor it was made with.
+  const headline = ogPreview ? { ...SOCIAL_HEADLINE, sub: HAPPY_DESCRIPTOR } : HEADLINES[hero]
   // The two download blocks share one architecture choice.
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   return (
@@ -158,18 +169,18 @@ export default function DesktopApp() {
       {!ogPreview && <GrainGradient palette={palette} />}
       <SiteHeader product={HAPPY_DESKTOP} />
       <main>
-        <section className="one-hero page-width" aria-labelledby="one-heading" style={{ '--one-hero-lines': headline.length } as CSSProperties}>
+        <section className="one-hero page-width" aria-labelledby="one-heading" data-name={headline.name ? '' : undefined}
+          data-kicker={headline.kicker ? '' : undefined} style={{
+            '--hero-lines': headline.lines.length, '--hero-sub-lines': headline.sub ? headline.sub.split('\n').length : 0,
+          } as CSSProperties}>
           {/* On a phone this fills the first screen above the store badges. */}
           <div className="one-hero-fold">
             <div className="one-hero-copy">
+              {headline.kicker && <p className="one-hero-kicker">{headline.kicker}</p>}
               <h1 id="one-heading">
-                {headline.map((line, index) => index < headline.length - 1
-                  ? <Fragment key={line}><span>{line}</span>{' '}</Fragment>
-                  // The social image ends on the accent without its full stop.
-                  : <em key={line}>{ogPreview ? line.replace(/\.$/u, '') : line}</em>)}
+                {headline.lines.flatMap((line, index) => [index ? ' ' : '', <HeadlineLine key={line} line={line} />])}
               </h1>
-              {/* The social image keeps the short descriptor. */}
-              <p className="one-hero-tagline">{ogPreview ? HAPPY_DESCRIPTOR : HERO_LINE}</p>
+              {headline.sub && <p className="one-hero-tagline"><Accented text={headline.sub} /></p>}
               <p className="one-hero-note">Free and open source</p>
               {ogPreview && <a className="one-social-stars" href={GITHUB_HAPPY}>
                 <GithubMark /><span>GitHub · {HAPPY_ONE_GITHUB_STARS.compact} stars</span>
@@ -186,7 +197,7 @@ export default function DesktopApp() {
         <Downloads macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
         <TalkToUs />
       </main>
-      <SiteFooter product={HAPPY_DESKTOP} cliLink={false} additionalLinks={
+      <SiteFooter product={HAPPY_DESKTOP} cliLink={false} people={false} additionalLinks={
         <a href="/video/happy-one/device/CREDITS.txt" target="_blank" rel="noopener noreferrer">Credits</a>
       } />
       {import.meta.env.DEV && !ogPreview && <HomeVariantSwitcher {...variants} />}

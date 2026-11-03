@@ -16,6 +16,8 @@
 .happy-one[data-social-preview] .one-hero-note { font-size: 22px; line-height: 28px; }
 .happy-one[data-social-preview] .one-social-stars { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 18px; line-height: 24px; }
 .happy-one[data-social-preview] .one-social-stars svg { width: 18px; height: 18px; }
-.happy-one[data-social-preview] .one-demo { flex: none; width: 664px; margin: 0; }
-.happy-one[data-social-preview] .one-demo-stage { --demo-width: 100cqw; padding: 0; }
+.happy-one[data-social-preview] .one-demo { flex: none; width: 596px; margin: 0; }
+.happy-one[data-social-preview] .one-demo-stage { --desktop-width: 100cqw; --phone-left: calc(100cqw + 12px); padding: 0; }
+/* The card clips the right half of the parked phone, like a narrow screen. */
+.happy-one[data-social-preview] .one-demo-phone { bottom: 0; transition: none; }
 .happy-one[data-social-preview] .one-demo video { pointer-events: none; }

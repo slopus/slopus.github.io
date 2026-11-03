@@ -125,33 +125,48 @@ so blog downloads and `/releases/` keep `happy-one.css`).
 The gradient is the page's one surface, top to bottom, scrolling with the content:
 never fixed, never boxed into panels, with no plain page background between grain
 areas. Its noise and grain are the apps'; only `main()` differs, working in page
-space with the colour at the left and right edges and a calm column down the middle
-in the palette's base colour. Text, emoji, video, and buttons sit directly on it,
-and the header is transparent until the page scrolls, then frosted.
-`src/grainGradientRenderer.ts` keeps one canvas around the viewport and moves it in
-120px steps, so scrolling never redraws; the field runs at 0.4× the apps' speed and
-draws every 66ms.
+space (`HOME_SURFACE` in `src/GrainGradient.tsx`): a few big, slow swells along the
+left and right edges, a large patch in the top right corner, and one in the bottom
+left at the page's end, which may run under the footer's text, with a plain column
+down the middle in the palette's base colour. No band along the top, and nothing
+choppy: no thin jagged edges or quick wobble. On phones the colour stays out of the
+content: the top right corner and the bottom left at the footer. It never wraps
+around content blocks; Kirill found that claustrophobic. Text, emoji, video, and
+buttons sit directly on it, and the header is transparent until the page scrolls,
+then frosted. `src/grainGradientRenderer.ts` keeps one canvas around the viewport
+and moves it in 120px steps, so scrolling never redraws; the field runs at 0.4× the
+apps' speed and draws every 66ms.
 
 Its order is the demo, the downloads, the four value rows (subscriptions,
 multiplayer, open source, end-to-end encryption), "Don't trust our words. Trust
-the code." with a copyable prompt, the downloads again, "Talk to us on Twitter or
-Discord", and the footer. It never mentions the CLI, not even in the footer. The
-value rows zig-zag on two columns: everything on the left starts on one edge and
-everything on the right ends on the other, so each emoji lines up with the words
-of the next row. Each value body is one or two short sentences, all four about the
-same length. Each value's animated emoji is a Telegram Lottie under
-`src/assets/emoji/`, drawn by dotLottie as in happy-desktop, and plays once when
-its row reaches the middle of the viewport or the pointer enters it. The drawing,
-not its box, meets the edge: `AnimatedEmoji.tsx` records each emoji's empty margins
-at rest, so measure them again when an emoji changes. Twitter means the founders'
-accounts (`STEVE`, `KIRILL` in `src/Team.tsx`); we have no company account. The
-Discord invite is `HAPPY_DISCORD` in `src/products.ts`.
+the code." with a copyable prompt, the downloads again (just the buttons), "Talk to
+us on Twitter or Discord", and the footer, which keeps its statement and drops the
+links to us, since "Talk to us" has them. The demo
+is the Mac window and the phone straight on the surface, with no stage; swap the take
+in `src/happyOneDemoMedia.ts` (`docs/happy-one-demo.md`). It never mentions the CLI,
+not even in the footer. Keep the copy short: the hero is the headline, at most one
+short line, and "Free and open source"; each value is a title and two short
+sentences of about 100 characters, the four about the same length. The emoji are
+what got smaller, not the explanations. The value rows zig-zag on two
+columns: everything on the left starts on one edge and everything on the right ends
+on the other, so each emoji lines up with the words of the next row. Each value's
+animated emoji is a Telegram Lottie under `src/assets/emoji/`, drawn by dotLottie as
+in happy-desktop, a little shorter than its words. Scrolling plays it once as it
+crosses the middle of the viewport, and again only after it has left the middle half,
+so jitter never replays it. The pointer moving onto the drawing, or a tap on it,
+restarts it from the first frame every time; the words beside it do nothing. The
+drawing, not its box, meets the edge and takes the hover: `AnimatedEmoji.tsx` records
+each emoji's four empty margins at rest, so measure them again when an emoji changes. Twitter means the founders' accounts (`STEVE`,
+`KIRILL` in `src/Team.tsx`); we have no company account. The Discord invite is
+`HAPPY_DISCORD` in `src/products.ts`.
 
-The line under the headline is `HAPPY_DESCRIPTOR` followed by "— locally or on a
-remote server, by yourself or with your team." Palettes (`?palette=`) and
-headlines (`?hero=`) are under review in `src/homeVariants.ts`; the first of each
-is the default and the prerendered page. The dev server shows a switcher for them
-in the corner (`src/HomeVariantSwitcher.tsx`); production never renders it.
+Headlines (`?hero=`) and palettes (`?palette=`) are under review in
+`src/homeVariants.ts`; their defaults, Kirill's "One place for you, your team, and
+your agents." under "Happy" and lavender, are the prerendered page, and the build
+checks the default headline. The hero's name is set in the page's own face, not the wordmark's. The dev server shows a
+switcher for them in the corner (`src/HomeVariantSwitcher.tsx`); production never
+renders it. `?preview=og` keeps the link-preview card's own headline
+(`SOCIAL_HEADLINE`) until the card is regenerated.
 
 ## SEO skills
 

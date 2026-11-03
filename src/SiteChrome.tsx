@@ -87,8 +87,11 @@ export function SiteHeader({
   )
 }
 
-/** `cliLink` off drops the quiet link to the original CLI docs: the homepage no longer mentions the CLI. */
-export function SiteFooter({ product = HAPPY, additionalLinks, cliLink = true }: { product?: Product; additionalLinks?: ReactNode; cliLink?: boolean }) {
+/**
+ * `cliLink` off drops the quiet link to the original CLI docs: the homepage no longer mentions
+ * the CLI. `people` off drops the links to us, for a page that already has them.
+ */
+export function SiteFooter({ product = HAPPY, additionalLinks, cliLink = true, people = true }: { product?: Product; additionalLinks?: ReactNode; cliLink?: boolean; people?: boolean }) {
   const currentYear = new Date().getFullYear()
 
   return (
@@ -97,11 +100,11 @@ export function SiteFooter({ product = HAPPY, additionalLinks, cliLink = true }:
         <p className="footer-statement">
           We build interfaces around agents: how you control them, how they run,
           and how teams share context with them.
-          <span className="footer-people">
+          {people && <span className="footer-people">
             <a href={STEVE.href} target="_blank" rel="noopener noreferrer">{STEVE.label}</a>
             {' and '}
             <a href={KIRILL.href} target="_blank" rel="noopener noreferrer">{KIRILL.label}</a>
-          </span>
+          </span>}
         </p>
         <div className="footer-meta">
           <div className="footer-links" aria-label="Footer navigation">

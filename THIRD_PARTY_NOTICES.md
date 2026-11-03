@@ -10,8 +10,8 @@ through Happy's native Android `ui/start/GrainGradient.kt` and iOS
 then to WebGL for happy-desktop's onboarding (`slopus/happy-desktop` commit
 `aa8e7a43`, `packages/happy-desktop-ui/src/onboardingGrainShader.ts`). Its
 noise, grain, and colour bands are unchanged from happy-desktop; the homepage
-replaces the corner shape in `main()` with colour along the page's side edges,
-in page space, as the file's header states. Upstream:
+replaces the corner shape in `main()` with colour in page space along the page's
+side edges and in its corners, as the file's header states. Upstream:
 https://github.com/paper-design/shaders, `grain-gradient.ts`, `shader-utils.ts`,
 and `vertex-shader.ts`.
 

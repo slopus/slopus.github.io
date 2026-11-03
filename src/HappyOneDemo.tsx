@@ -1,35 +1,46 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { DEMO_TAKE, type DemoMovie } from './happyOneDemoMedia'
 import { useRevealedControls } from './revealedControls'
 import './happy-one-demo.css'
-
-const MEDIA = '/video/happy-one/v36'
 
 type DataConnection = EventTarget & { saveData?: boolean }
 function dataConnection() {
   return (navigator as Navigator & { connection?: DataConnection }).connection
 }
 
+function Sources({ movie }: { movie: DemoMovie }) {
+  return movie.sources.map(({ src, type, media }) => <source key={src} src={src} type={type} media={media} />)
+}
+
 /**
- * The recorded take: the Mac window and Steve's phone, composed into one movie.
- * It loops muted while in view, without browser chrome covering it. Deliberate
- * pointer/keyboard interaction reveals the ordinary native controls; reduced
- * motion, save-data, and blocked autoplay leave it paused on its poster with them.
- * `backdrop` is drawn on the stage behind the movie.
+ * The recorded take (happyOneDemoMedia.ts) straight on the page: the Mac window on the page's
+ * axis and the phone standing beside it, peeking in from the screen's edge where there is no
+ * room. The window's movie is the clock. It loops muted while in view, without browser chrome
+ * covering it; deliberate pointer/keyboard interaction reveals the ordinary native controls, and
+ * reduced motion, save-data, and blocked autoplay leave it paused on its poster with them. A
+ * phone movie on the same clock follows its play, pause, seek, and rate. The phone comes forward
+ * for its part of the story, and drifts in as the page scrolls.
  */
-export function HappyOneDemo({ backdrop }: { backdrop?: ReactNode }) {
-  const stage = useRef<HTMLElement>(null)
-  const movie = useRef<HTMLVideoElement>(null)
-  // A failed load reports on the last <source> the browser tried, not on the video.
-  const fallback = useRef<HTMLSourceElement>(null)
+export function HappyOneDemo() {
+  const take = DEMO_TAKE
+  const figure = useRef<HTMLElement>(null)
+  const stage = useRef<HTMLDivElement>(null)
+  const desktop = useRef<HTMLVideoElement>(null)
+  const phone = useRef<HTMLVideoElement>(null)
   const [error, setError] = useState(false)
+  const [phoneFocused, setPhoneFocused] = useState(false)
   const { revealControls, videoProps } = useRevealedControls()
 
   useEffect(() => {
-    const video = movie.current!
-    const lastSource = fallback.current!
+    const main = desktop.current!
+    const companion = phone.current
+    const follows = take.phone.kind === 'movie' && take.phone.follows
+    // A failed load reports on the last <source> the browser tried, not on the video.
+    const lastSource = main.querySelector<HTMLSourceElement>('source:last-of-type')!
     // Muted here, not as a prop: the prerendered markup cannot carry it, and hydration would
-    // leave the movie unmuted, which blocks autoplay.
-    video.muted = true
+    // leave the movies unmuted, which blocks autoplay.
+    main.muted = true
+    if (companion) companion.muted = true
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
     const connection = dataConnection()
     let autoplay = !reducedMotion.matches && !connection?.saveData
@@ -39,32 +50,67 @@ export function HappyOneDemo({ backdrop }: { backdrop?: ReactNode }) {
     // Pausing for the viewport or a hidden tab resumes; a visitor's own pause stays paused.
     let holding = false
     let resume = false
+    let focused = false
 
+    const focus = () => {
+      const [from, to] = take.phoneFocus ?? [Infinity, Infinity]
+      const now = main.currentTime >= from && main.currentTime < to
+      if (now !== focused) { focused = now; setPhoneFocused(now) }
+    }
+    const align = (force = false) => {
+      if (!companion || !follows || companion.readyState < 1) return
+      if (force || Math.abs(companion.currentTime - main.currentTime) > 0.12) companion.currentTime = main.currentTime
+    }
+    const follow = () => {
+      if (!companion) return
+      if (main.paused || main.seeking || main.ended || main.readyState < 3) companion.pause()
+      else if (companion.paused && companion.readyState >= 2) void companion.play().catch(() => undefined)
+    }
     const play = () => {
       if (!(autoplay || resume) || !visible || document.hidden) return
       resume = false
-      void video.play().catch(() => {
+      void main.play().catch(() => {
         if (disposed) return
         autoplay = false
         revealControls()
       })
     }
     const hold = () => {
-      if (video.paused) return
+      if (main.paused) return
       holding = true
-      video.pause()
+      main.pause()
+    }
+    const onPlay = () => {
+      align(true)
+      if (companion && follows) companion.playbackRate = main.playbackRate
+      follow()
     }
     const onPause = () => {
+      companion?.pause()
       if (holding) resume = true
       else autoplay = resume = false
       holding = false
     }
+    // Looping seeks the window back to the start, which brings the phone along.
+    const onSeeking = () => { companion?.pause(); align(true); focus() }
+    const onRate = () => { if (companion && follows) companion.playbackRate = main.playbackRate }
+    // Also picks the phone back up if it stalled behind the window.
+    const onTime = () => { focus(); align(); follow() }
     const onError = () => setError(true)
     const onVisibility = () => { if (document.hidden) hold(); else play() }
     const onMotion = () => {
-      if (reducedMotion.matches || connection?.saveData) { autoplay = false; video.pause(); revealControls() }
+      if (reducedMotion.matches || connection?.saveData) { autoplay = false; main.pause(); revealControls() }
     }
-    video.addEventListener('pause', onPause)
+    main.addEventListener('play', onPlay)
+    main.addEventListener('playing', follow)
+    main.addEventListener('pause', onPause)
+    main.addEventListener('waiting', follow)
+    main.addEventListener('seeking', onSeeking)
+    main.addEventListener('seeked', follow)
+    main.addEventListener('ratechange', onRate)
+    main.addEventListener('timeupdate', onTime)
+    companion?.addEventListener('canplay', follow)
+    companion?.addEventListener('seeked', follow)
     lastSource.addEventListener('error', onError)
     document.addEventListener('visibilitychange', onVisibility)
     reducedMotion.addEventListener('change', onMotion)
@@ -74,33 +120,80 @@ export function HappyOneDemo({ backdrop }: { backdrop?: ReactNode }) {
       if (visible) play()
       else hold()
     }, { threshold: [0, 0.25] })
-    observer.observe(stage.current!)
+    observer.observe(figure.current!)
     return () => {
       disposed = true
       observer.disconnect()
       document.removeEventListener('visibilitychange', onVisibility)
       reducedMotion.removeEventListener('change', onMotion)
       connection?.removeEventListener('change', onMotion)
-      video.removeEventListener('pause', onPause)
+      main.removeEventListener('play', onPlay)
+      main.removeEventListener('playing', follow)
+      main.removeEventListener('pause', onPause)
+      main.removeEventListener('waiting', follow)
+      main.removeEventListener('seeking', onSeeking)
+      main.removeEventListener('seeked', follow)
+      main.removeEventListener('ratechange', onRate)
+      main.removeEventListener('timeupdate', onTime)
+      companion?.removeEventListener('canplay', follow)
+      companion?.removeEventListener('seeked', follow)
       lastSource.removeEventListener('error', onError)
-      video.pause()
+      main.pause()
+      companion?.pause()
     }
   }, [])
 
+  // How far the page has carried the stage from where it rests toward the top: 0 to 1.
+  useEffect(() => {
+    const node = stage.current!
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
+    let frame = 0
+    let last = ''
+    const update = () => {
+      frame = 0
+      const rest = node.getBoundingClientRect().top + scrollY
+      const progress = reducedMotion.matches ? 0 : Math.min(1, Math.max(0, scrollY / Math.max(rest, 1)))
+      const value = progress.toFixed(3)
+      if (value !== last) node.style.setProperty('--demo-scroll', last = value)
+    }
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update) }
+    addEventListener('scroll', schedule, { passive: true })
+    addEventListener('resize', schedule)
+    reducedMotion.addEventListener('change', schedule)
+    update()
+    return () => {
+      cancelAnimationFrame(frame)
+      removeEventListener('scroll', schedule)
+      removeEventListener('resize', schedule)
+      reducedMotion.removeEventListener('change', schedule)
+    }
+  }, [])
+
+  const { desktop: mac, phone: screen } = take
+  const size = { '--desktop-w': mac.width, '--desktop-h': mac.height } as CSSProperties
   return (
-    <figure ref={stage} className="one-demo">
-      <div className="one-demo-stage">
-        {backdrop}
-        <div className="one-demo-frame">
-          <video ref={movie} poster={`${MEDIA}/poster.webp`} width="1618" height="1000"
-            {...videoProps} loop playsInline preload="metadata"
-            aria-label="Happy Desktop opens on the model list and picks Opus. A new chat starts as a stem cell, names itself and grows its icon, and the sidebar self-organizes. The agent loops in @Steve, who asks from his phone to make it narrower and ship it, and the agent fixes it and ships. The finished task archives itself and stays readable. It ends on a new stem cell: “Stem cells for you and your team. Go divide and conquer :D”">
-            <source src={`${MEDIA}/demo.webm`} type="video/webm; codecs=av01.0.08M.08, opus" />
-            <source ref={fallback} src={`${MEDIA}/demo.mp4`} type="video/mp4" />
+    <figure ref={figure} className="one-demo">
+      <div ref={stage} className="one-demo-stage" style={size} data-phone-focus={phoneFocused ? '' : undefined}>
+        <div className="one-demo-window">
+          <video ref={desktop} poster={mac.poster} width={mac.width} height={mac.height}
+            {...videoProps} loop playsInline preload="metadata" aria-label={take.label}>
+            <Sources movie={mac} />
           </video>
         </div>
+        {/* The take's label describes both screens. */}
+        <div className="one-demo-phone" aria-hidden="true">
+          <span className="one-phone-screen">
+            {screen.kind === 'movie'
+              ? <video ref={phone} poster={screen.poster} width={screen.width} height={screen.height}
+                  loop={!screen.follows} playsInline preload="metadata" tabIndex={-1}>
+                  <Sources movie={screen} />
+                </video>
+              : <img src={screen.src} width={screen.width} height={screen.height} alt="" />}
+          </span>
+          <img className="one-phone-frame" src="/video/happy-one/device/iphone-16-pro-black.png" width="1406" height="2822" alt="" />
+        </div>
       </div>
-      {error && <p className="one-demo-error" role="status">The demo couldn’t load. <a href={`${MEDIA}/demo.mp4`} target="_blank" rel="noopener">Open the video</a>.</p>}
+      {error && <p className="one-demo-error" role="status">The demo couldn’t load. <a href={mac.sources.at(-1)!.src} target="_blank" rel="noopener">Open the video</a>.</p>}
     </figure>
   )
 }

@@ -7,6 +7,22 @@ void main() { gl_Position = vec4(a_position, 0., 1.); }
 
 const PALETTE = ['back', '0', '1', '2', '3'] as const
 
+/** Where the colour goes, in CSS px unless noted. */
+export type SurfaceShape = {
+  /** Left reach, left wave, right reach, right wave: fractions of the margin beside the calm column. */
+  sides: readonly [number, number, number, number]
+  /** Top reach and wave, bottom reach and wave, deepest at the sides. */
+  ends: readonly [number, number, number, number]
+  /** Blob radii: top left, top right, and at the page's end bottom left, bottom right. */
+  corners: readonly [number, number, number, number]
+  /** Half the width of the column down the middle that the sides leave plain. */
+  calm: number
+  /** How long the sides' waves are, down the page. */
+  wavelength: number
+}
+/** One shape for wide screens and one for phones (narrower than 700 CSS px). */
+export type Surface = { wide: SurfaceShape; narrow: SurfaceShape }
+
 /** The field moves at this fraction of the apps' rate (1: one shader second per second). */
 export const GRAIN_SPEED = .4
 /** Milliseconds between frames; the apps draw every 33. */
@@ -28,15 +44,16 @@ function compile(gl: WebGLRenderingContext, type: number, source: string) {
 }
 
 /**
- * Draws the Grain Gradient as the page's surface. The canvas sits in a layer as tall as the
- * page and covers the viewport plus a buffer above and below; the shader works in page space,
- * so moving the canvas a step changes nothing on screen, and scrolling is the browser's own.
+ * Draws the Grain Gradient as the page's surface, shaped by `surface`. The canvas sits in a layer
+ * as tall as the page and covers the viewport plus a buffer above and below; the shader works in
+ * page space, so moving the canvas a step changes nothing on screen, and scrolling is the
+ * browser's own.
  * The clock pauses while the tab is hidden, and stays on its first frame when `moving` is
  * false. The palette is the canvas's `--grain-*` custom properties (six-digit hex), read again
  * when the color scheme changes. Returns the one teardown that releases the program,
  * observers, and listeners.
  */
-export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean, clock: { seconds: number }) {
+export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean, clock: { seconds: number }, surface: Surface) {
   const document = canvas.ownerDocument
   const view = document.defaultView
   const layer = canvas.parentElement
@@ -60,6 +77,9 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
   let top = 0
   let height = 0
   let ratio = 1
+  // The page's size, in CSS px.
+  let pageWidth = 0
+  let pageHeight = 0
   // Phones resize the viewport as their toolbars come and go; the canvas only grows.
   let tallest = 0
   if (!moving) clock.seconds = 0
@@ -95,6 +115,11 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
     const offset = gl.getUniformLocation(program, 'u_top')
     const scale = gl.getUniformLocation(program, 'u_ratio')
     const time = gl.getUniformLocation(program, 'u_time')
+    const page = gl.getUniformLocation(program, 'u_height')
+    const sides = gl.getUniformLocation(program, 'u_sides')
+    const ends = gl.getUniformLocation(program, 'u_ends')
+    const corners = gl.getUniformLocation(program, 'u_corners')
+    const shape = gl.getUniformLocation(program, 'u_shape')
     const colors = PALETTE.map(name => ({
       location: gl.getUniformLocation(program, `u_color${name === 'back' ? 'Back' : name}`),
       token: `--grain-${name}`,
@@ -126,6 +151,12 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
       gl.uniform1f(offset, top * ratio)
       gl.uniform1f(scale, ratio)
       gl.uniform1f(time, clock.seconds)
+      gl.uniform1f(page, pageHeight)
+      const current = pageWidth < 700 ? surface.narrow : surface.wide
+      gl.uniform4f(sides, ...current.sides)
+      gl.uniform4f(ends, ...current.ends)
+      gl.uniform4f(corners, ...current.corners)
+      gl.uniform2f(shape, current.calm, current.wavelength)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
     }
     // Painted: the CSS edges underneath can stop showing through.
@@ -158,6 +189,8 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
    */
   const place = (sized: boolean) => {
     const bounds = layer.getBoundingClientRect()
+    pageWidth = bounds.width
+    pageHeight = bounds.height
     tallest = Math.max(tallest, view.innerHeight)
     const buffer = Math.ceil(Math.max(240, .4 * tallest) / STEP) * STEP
     const wanted = Math.ceil((tallest + 2 * buffer) / STEP) * STEP

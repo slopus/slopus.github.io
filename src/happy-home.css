@@ -71,24 +71,39 @@
 }
 
 .happy-home { position: relative; isolation: isolate; color: var(--home-ink); font-family: 'IBM Plex Sans', system-ui, sans-serif; }
+/* Room after the footer for the colour in the bottom left corner (HOME_SURFACE). */
+.happy-home:not([data-social-preview]) { padding-bottom: 120px; }
 
 /* The surface, as tall as the page; GrainGradient keeps its canvas around the viewport. Until
-   the shader paints, and without WebGL, the colour stands at the edges in plain CSS. */
+   the shader paints, and without WebGL, the colour stands where HOME_SURFACE puts it in plain
+   CSS: the sides, the top right, and the bottom left; on phones only the two corners. */
 .home-grain {
   --home-edge: max(24px, (100% - 960px) * .4);
+  --home-patch: color-mix(in srgb, var(--grain-0) 55%, var(--grain-back));
   position: absolute;
   z-index: -1;
   inset: 0;
   overflow: hidden;
   overflow: clip;
   pointer-events: none;
-  background: linear-gradient(90deg,
-    var(--grain-3),
-    color-mix(in srgb, var(--grain-0) 55%, var(--grain-back)) var(--home-edge),
-    var(--grain-back) calc(2 * var(--home-edge)),
-    var(--grain-back) calc(100% - 2 * var(--home-edge)),
-    color-mix(in srgb, var(--grain-0) 55%, var(--grain-back)) calc(100% - var(--home-edge)),
-    var(--grain-3));
+  background:
+    radial-gradient(circle 580px at 100% 0, var(--grain-3), var(--home-patch) 45%, transparent),
+    radial-gradient(circle 500px at 0 100%, var(--grain-3), var(--home-patch) 45%, transparent),
+    linear-gradient(90deg,
+      var(--grain-3),
+      var(--home-patch) var(--home-edge),
+      var(--grain-back) calc(2 * var(--home-edge)),
+      var(--grain-back) calc(100% - 2 * var(--home-edge)),
+      var(--home-patch) calc(100% - var(--home-edge)),
+      var(--grain-3));
+}
+@media (max-width: 699px) {
+  .home-grain {
+    background:
+      radial-gradient(circle 270px at 100% 0, var(--grain-3), var(--home-patch) 45%, transparent),
+      radial-gradient(circle 300px at 0 100%, var(--grain-3), var(--home-patch) 45%, transparent),
+      var(--grain-back);
+  }
 }
 .home-grain > canvas { position: absolute; top: 0; left: 0; display: block; width: 100%; opacity: 0; transition: opacity .6s ease; will-change: transform; }
 .home-grain > canvas[data-painted] { opacity: 1; }
@@ -111,11 +126,24 @@
 /* The hero, in the start screen's type: Plex Sans SemiBold, the line under it at 87%. */
 .happy-home h1, .happy-home h2 { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 600; letter-spacing: -.025em; }
 .happy-home h1 em, .happy-home h2 em { color: var(--home-accent); }
-.happy-home .one-hero-tagline { max-width: 40rem; margin-inline: auto; color: var(--home-ink); }
 .happy-home .one-hero-note, .happy-home .one-download > p { color: var(--home-ink-2); }
-.happy-home .one-demo-frame { box-shadow: 0 30px 70px -28px #14112e8c, 0 0 0 .5px #0000003d; }
-/* The first-screen fit (happy-one.css) for this headline's line count and a two-line tagline. */
-.happy-home .one-hero { --one-hero-reserved: calc(292px + var(--one-hero-lines, 3) * 1.04 * var(--one-h1)); }
+/* The headline, at most one short line under it, and the note. The first-screen fit
+   (happy-one.css) counts the headline's lines at its own size and the line under it, if any:
+   header 60px, hero top 28px, heading margin 8px, note 24px, movie gap 12px, stage padding
+   20px, download margin and padding 16px, badge with its architecture selector 70px. */
+.happy-home .one-hero { --hero-h1: clamp(1.9rem, 3.7vw, 3.3rem); --hero-kicker: 0px; --hero-sub-gap: calc(min(var(--hero-sub-lines, 0), 1) * .9rem); --one-hero-reserved: calc(238px + var(--hero-kicker) + var(--hero-sub-gap) + var(--hero-sub-lines, 0) * 1.9rem + var(--hero-lines, 2) * 1.04 * var(--hero-h1)); }
+.happy-home .one-hero[data-kicker] { --hero-kicker: 3.4rem; }
+/* The link-preview card (?preview=og, happy-one-preview.css) keeps its own type. */
+.happy-home:not([data-social-preview]) .one-hero h1 { font-size: var(--hero-h1); line-height: 1.04; }
+.happy-home .one-hero h1 > :is(span, em) { text-wrap: balance; }
+/* The name alone, large. */
+.happy-home .one-hero[data-name] { --hero-h1: clamp(3rem, 5.6vw, 4.5rem); }
+.happy-home .one-hero[data-name] h1 { margin-bottom: .35rem; letter-spacing: -.035em; }
+.happy-home .one-hero-tagline { color: var(--home-ink); }
+.happy-home:not([data-social-preview]) .one-hero-tagline { max-width: 36rem; margin: 0 auto .9rem; font-size: 1.3rem; line-height: 1.45; text-wrap: balance; }
+.happy-home .one-hero-tagline em { color: var(--home-accent); font-style: normal; font-weight: 600; white-space: nowrap; }
+/* The name above a heading that says the rest. */
+.happy-home .one-hero-kicker { margin: 0 0 .35rem; color: var(--home-ink); font: 700 2.4rem/1.1 'Bricolage Grotesque', 'IBM Plex Sans', sans-serif; letter-spacing: -.04em; }
 
 .happy-home .one-mac-architecture, .happy-home .one-platform-links { color: var(--home-ink-2); }
 .happy-home .one-platform-links a:hover { color: var(--home-ink); }
@@ -130,26 +158,30 @@
    the left starts on the same left edge and whatever is on the right ends on the same right
    edge, so the emoji of one row and the words of the next line up. The emoji's box is pulled out
    by its empty margin (AnimatedEmoji.tsx), so the drawing itself meets the edge. */
-.one-values { --value-emoji: 19rem; display: grid; gap: 1.5rem; width: min(48.5rem, calc(100% - 64px)); margin: 0 auto; padding-block: 4.5rem 1.5rem; }
+.one-values { --value-emoji: 10.8rem; display: grid; gap: 2.5rem; width: min(42rem, calc(100% - 64px)); margin: 0 auto; padding-block: 5rem 2rem; }
 .one-value { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .one-value[data-side='end'] { flex-direction: row-reverse; }
 .one-value > .one-emoji { flex: none; display: block; width: var(--value-emoji); height: auto; aspect-ratio: 1; margin-left: calc(var(--value-emoji) * var(--emoji-left, 0) * -1); opacity: 0; transition: opacity .4s ease; filter: drop-shadow(0 16px 26px var(--home-shadow)); }
 .one-value[data-side='end'] > .one-emoji { margin-left: 0; margin-right: calc(var(--value-emoji) * var(--emoji-right, 0) * -1); }
 .one-value > .one-emoji[data-ready] { opacity: 1; }
-.one-value-copy { flex: 0 1 25rem; min-width: 0; }
-.happy-home .one-value h2 { margin: 0 0 .85rem; font-size: clamp(1.75rem, 2.7vw, 2.25rem); line-height: 1.15; }
+/* Taps replay it: no highlight, and quick taps never zoom. */
+.one-value > .one-emoji { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.one-value-copy { flex: 0 1 22rem; min-width: 0; }
+.happy-home .one-value h2 { margin: 0 0 .6rem; font-size: clamp(1.75rem, 2.7vw, 2.25rem); line-height: 1.15; }
 .one-value-copy p { margin: 0; color: var(--home-ink-2); font-size: 1.18rem; line-height: 1.55; text-wrap: pretty; }
 
 /* Don't trust our words: one line, then the prompt to paste into any agent. */
 .one-trust { padding-block: 6.5rem 1rem; text-align: center; }
 .happy-home .one-trust h2 { margin: 0 0 .75rem; font-size: var(--one-h1); }
 .one-trust > p { margin: 0; color: var(--home-ink-2); font-size: 1.125rem; line-height: 1.5; text-wrap: balance; }
-.one-trust-prompt { position: relative; max-width: 40rem; margin: 2rem auto 0; padding: .9rem 1.1rem 1.1rem; border: 1px solid var(--home-line); border-radius: 16px; background: var(--home-surface); text-align: left; }
-.one-trust-prompt figcaption { min-height: 32px; padding-right: 6rem; color: var(--home-ink-2); font-size: .78rem; font-weight: 500; letter-spacing: .04em; line-height: 32px; text-transform: uppercase; }
-.one-trust-prompt > p { margin: .35rem 0 0; font: 1rem/1.55 'IBM Plex Mono', monospace; overflow-wrap: anywhere; }
-.one-trust-prompt button { position: absolute; top: .65rem; right: .65rem; display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-width: 5.5rem; height: 36px; padding: 0 .75rem; border: 0; border-radius: 8px; background: transparent; color: var(--home-ink); font: 500 .85rem/1 inherit; cursor: pointer; }
+.one-trust-prompt { position: relative; max-width: 36rem; margin: 2rem auto 0; padding: 1rem 6.75rem 1rem 1.1rem; border: 1px solid var(--home-line); border-radius: 16px; background: var(--home-surface); text-align: left; }
+.one-trust-prompt > p { margin: 0; font: 1rem/1.55 'IBM Plex Mono', monospace; overflow-wrap: anywhere; }
+.one-trust-prompt button { position: absolute; top: .75rem; right: .65rem; display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-width: 5.5rem; height: 36px; padding: 0 .75rem; border: 0; border-radius: 8px; background: transparent; color: var(--home-ink); font: 500 .85rem/1 inherit; cursor: pointer; }
 .one-trust-prompt button:hover { background: var(--home-surface); }
 .one-trust-prompt button:focus-visible { outline: 2px solid var(--home-accent); outline-offset: 2px; }
+
+/* The downloads again: just the buttons. */
+.happy-home #download-again { padding-block: 3.5rem 1rem; }
 
 /* Where to find us, just above the footer. */
 .one-talk { padding-block: 2.5rem 5rem; text-align: center; }
@@ -170,13 +202,21 @@
 
 @media (max-width: 760px) {
   /* One column: each emoji over its words, still on its side, its drawing on that edge. */
-  .one-values { --value-emoji: 8.5rem; gap: 2.75rem; width: calc(100% - 40px); padding-block: 3rem .5rem; }
+  .happy-home .one-hero { --hero-h1: clamp(1.9rem, 8.6vw, 2.4rem); }
+  .happy-home:not([data-social-preview]) { padding-bottom: 140px; }
+  .happy-home .one-hero[data-name] { --hero-h1: clamp(2.9rem, 14vw, 3.6rem); }
+  .happy-home:not([data-social-preview]) .one-hero-tagline { font-size: 1.15rem; }
+  /* The copy, the devices and the badge close together, not spread over the first screen. */
+  .happy-home:not([data-social-preview]) .one-hero-fold { min-height: 0; justify-content: flex-start; gap: 2.25rem; padding-top: 2.75rem; }
+  .happy-home .one-hero-kicker { font-size: 2rem; }
+  .one-values { --value-emoji: 5rem; gap: 3.5rem; width: calc(100% - 40px); padding-block: 3.5rem 1rem; }
   .one-value, .one-value[data-side='end'] { flex-direction: column; align-items: flex-start; gap: .5rem; }
   .one-value[data-side='end'] > .one-emoji { align-self: flex-end; }
   .one-value-copy { flex: none; width: 100%; }
   .happy-home .one-value h2 { margin-bottom: .6rem; font-size: 1.65rem; }
   .one-value-copy p { font-size: 1.06rem; }
   .one-trust { padding-block: 4.5rem .5rem; }
+  .one-trust-prompt { padding: 3.25rem 1rem 1rem; }
   .one-trust-prompt > p { font-size: .92rem; }
   .one-talk { padding-block: 2rem 4rem; }
   .happy-home .one-talk h2 { font-size: 1.4rem; }

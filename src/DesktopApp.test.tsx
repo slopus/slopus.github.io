@@ -1,7 +1,12 @@
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import DesktopApp, { TRUST_PROMPT } from './DesktopApp'
+import { HEADLINES, HERO_DEFAULT } from './homeVariants'
 import { Router } from './Router'
+
+/** A headline as it reads: its lines joined, without the accent marks. */
+const headlineText = (key: string) => HEADLINES[key].lines.join(' ').replaceAll('*', '')
+const DEFAULT_HEADLINE = headlineText(HERO_DEFAULT)
 
 // The recorded demo needs real media APIs; the page around it is what these tests cover.
 vi.mock('./HappyOneDemo', () => ({ HappyOneDemo: () => <figure data-testid="demo" /> }))
@@ -25,12 +30,24 @@ describe('Happy Desktop landing page', () => {
     cleanup()
   })
 
-  it('leads with the harness pitch', () => {
-    render(<DesktopApp />)
+  it('leads with the default headline, at most one short line, and Free and open source', () => {
+    const { container } = render(<DesktopApp />)
 
-    const heading = screen.getByRole('heading', { level: 1 })
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(DEFAULT_HEADLINE)
+    const lines = [...container.querySelectorAll('.one-hero-copy p')].map((line) => line.textContent!)
+    expect(lines.at(-1)).toBe('Free and open source')
+    expect(lines.length).toBeLessThanOrEqual(2)
+    for (const line of lines) expect(line.length).toBeLessThanOrEqual(60)
+    expect(container.textContent).not.toMatch(/remote server/i)
+  })
 
-    expect(heading.textContent).toMatch(/any model\.\s*your subscription\.\s*happy harness\./i)
+  it('keeps the copy short: headings and lines under 160 words in all', () => {
+    const { container } = render(<DesktopApp />)
+    const words = [...container.querySelectorAll('main :is(h1, h2, p)')]
+      .filter((element) => !element.closest('.one-download-actions'))
+      .flatMap((element) => element.textContent!.split(/\s+/).filter(Boolean))
+
+    expect(words.length).toBeLessThanOrEqual(160)
   })
 
   it('offers every desktop platform and both app stores', () => {
@@ -125,20 +142,13 @@ describe('Happy Desktop landing page', () => {
     expect(container.querySelector('.one-grain, .one-value-panel, .one-stage-grain')).toBeNull()
   })
 
-  it('puts where and with whom under the headline', () => {
-    const { container } = render(<DesktopApp />)
-
-    expect(container.querySelector('.one-hero-tagline')?.textContent).toBe(
-      'Orchestrate Claude, Codex, Grok, Gemini and more in one app\u00a0— locally or on a remote server, by yourself or with your team.',
-    )
-  })
-
-  it('keeps the four value lines short and about the same length', () => {
+  it('explains each value in about 100 characters, the four about the same length', () => {
     const { container } = render(<DesktopApp />)
     const lengths = [...container.querySelectorAll('.one-value p')].map((body) => body.textContent!.length)
 
+    expect(Math.min(...lengths)).toBeGreaterThanOrEqual(90)
     expect(Math.max(...lengths)).toBeLessThanOrEqual(110)
-    expect(Math.max(...lengths) - Math.min(...lengths)).toBeLessThanOrEqual(8)
+    expect(Math.max(...lengths) - Math.min(...lengths)).toBeLessThanOrEqual(6)
   })
 
   it('does not claim a relay that only sees ciphertext or sessions already on the phone', () => {
@@ -160,27 +170,44 @@ describe('Happy Desktop landing page', () => {
     try {
       window.history.replaceState(null, '', '/?hero=4&palette=ocean')
       const { container, unmount } = render(<DesktopApp />)
-      expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Stop working with AI alone.')
+      expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('AI work, out of private chats.')
       expect(container.querySelector('.happy-home')?.getAttribute('data-palette')).toBe('ocean')
       unmount()
 
       window.history.replaceState(null, '', '/?hero=9&palette=neon')
       const second = render(<DesktopApp />)
-      expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Any Model. Your Subscription. Happy Harness.')
+      expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(DEFAULT_HEADLINE)
       expect(second.container.querySelector('.happy-home')?.getAttribute('data-palette')).toBe('lavender')
     } finally {
       window.history.replaceState(null, '', '/')
     }
   })
 
+  it('puts the colour in big swells at the sides, the top right, and the bottom left', async () => {
+    const { HOME_SURFACE } = await import('./GrainGradient')
+    const { wide, narrow } = HOME_SURFACE
+
+    // No band along the top, and none along the bottom: the bottom left corner instead.
+    expect(wide.ends).toEqual([0, 0, 0, 0])
+    expect(wide.corners).toEqual([0, expect.any(Number), expect.any(Number), 0])
+    expect(Math.min(wide.corners[1], wide.corners[2])).toBeGreaterThanOrEqual(400)
+    expect(wide.sides[1]).toBeGreaterThan(0)
+    // Phones: the two corners, out of the content.
+    expect(narrow.sides).toEqual([0, 0, 0, 0])
+    expect(narrow.ends).toEqual([0, 0, 0, 0])
+    expect(narrow.corners).toEqual([0, expect.any(Number), expect.any(Number), 0])
+  })
+
   it('flips the variants live from the dev switcher', () => {
     render(<DesktopApp />)
     const switcher = screen.getByRole('form', { name: 'Homepage variants' })
 
+    expect(within(switcher).queryByRole('combobox', { name: 'Surface' })).toBeNull()
     fireEvent.change(within(switcher).getByRole('combobox', { name: 'Hero' }), { target: { value: '5' } })
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Where your team and its agents work together.')
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Happy')
+    expect(screen.getByText('One place for your team and its agents.')).toBeTruthy()
     expect(window.location.search).toBe('?hero=5')
-    fireEvent.change(within(switcher).getByRole('combobox', { name: 'Hero' }), { target: { value: '1' } })
+    fireEvent.change(within(switcher).getByRole('combobox', { name: 'Hero' }), { target: { value: HERO_DEFAULT } })
     expect(window.location.search).toBe('')
   })
 
@@ -203,20 +230,20 @@ describe('Happy Desktop landing page', () => {
 
   it('is the homepage, and the old /desktop URL still lands on it', () => {
     const { unmount } = render(<Router pathname="/" />)
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/happy harness/i)
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(DEFAULT_HEADLINE)
     unmount()
 
     render(<Router pathname="/desktop/" />)
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/happy harness/i)
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(DEFAULT_HEADLINE)
   })
 
   it('still answers on the old /happy2 and /tmp/happy-one URLs', () => {
     const { unmount } = render(<Router pathname="/happy2/" />)
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/happy harness/i)
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(DEFAULT_HEADLINE)
     unmount()
 
     const second = render(<Router pathname="/tmp/happy-one/" />)
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/happy harness/i)
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(DEFAULT_HEADLINE)
     second.unmount()
 
     render(<Router pathname="/happy2/docs/quick-start/" />)
@@ -238,14 +265,20 @@ describe('site footer', () => {
     cleanup()
   })
 
-  it('names the people behind Happy on every page', () => {
+  it('says what we build on every page, and names us on all but the homepage, whose Talk to us does', () => {
     for (const pathname of ['/', '/docs/', '/welcome/', '/privacy/']) {
       const { unmount } = render(<Router pathname={pathname} />)
       const footer = screen.getByRole('contentinfo')
 
       expect(footer.textContent).toMatch(/we build interfaces around agents/i)
-      expect(within(footer).getByRole('link', { name: '@Ex3NDR' })).toBeTruthy()
-      expect(within(footer).getByRole('link', { name: '@bra1n_dump' })).toBeTruthy()
+      if (pathname === '/') {
+        expect(within(footer).queryByRole('link', { name: '@Ex3NDR' })).toBeNull()
+        expect(within(footer).queryByRole('link', { name: '@bra1n_dump' })).toBeNull()
+        expect(screen.getAllByRole('heading', { name: 'Talk to us on Twitter or Discord.' })).toHaveLength(1)
+      } else {
+        expect(within(footer).getByRole('link', { name: '@Ex3NDR' })).toBeTruthy()
+        expect(within(footer).getByRole('link', { name: '@bra1n_dump' })).toBeTruthy()
+      }
       unmount()
     }
   })

@@ -13,8 +13,8 @@ export function HomeVariantSwitcher({ palette, hero }: HomeVariants) {
       <label>
         <span>Hero</span>
         <select value={hero} onChange={event => homeVariantSet('hero', event.target.value)}>
-          {HEADLINES.map((lines, index) => (
-            <option key={index} value={index + 1}>{`${index + 1}. ${lines.join(' ')}`}</option>
+          {Object.entries(HEADLINES).map(([key, { lines, sub }]) => (
+            <option key={key} value={key}>{`${key}. ${[...lines, sub ?? ''].join(' ').replaceAll('*', '').trim()}`}</option>
           ))}
         </select>
       </label>

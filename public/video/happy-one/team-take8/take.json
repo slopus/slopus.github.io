@@ -1,0 +1,221 @@
+{
+  "fps": 60,
+  "frames": 2228,
+  "seconds": 37.13333333333333,
+  "desktop": {
+    "width": 2000,
+    "height": 1400
+  },
+  "phone": {
+    "width": 1206,
+    "height": 2622
+  },
+  "phonePart": [
+    8.916666666666666,
+    35.833333333333336
+  ],
+  "cues": [
+    {
+      "name": "open",
+      "seconds": 0
+    },
+    {
+      "name": "model-scan",
+      "seconds": 1.75
+    },
+    {
+      "name": "model-chosen",
+      "seconds": 4.15
+    },
+    {
+      "name": "typing-started",
+      "seconds": 5.25
+    },
+    {
+      "name": "sent",
+      "seconds": 8.55
+    },
+    {
+      "name": "task-created",
+      "seconds": 8.55,
+      "rect": {
+        "x": 62,
+        "y": 390,
+        "width": 276,
+        "height": 32
+      }
+    },
+    {
+      "name": "phone-task",
+      "seconds": 8.8
+    },
+    {
+      "name": "phone-enter",
+      "seconds": 8.916666666666666
+    },
+    {
+      "name": "working",
+      "seconds": 10.333333333333334
+    },
+    {
+      "name": "phone-open",
+      "seconds": 11.616666666666667
+    },
+    {
+      "name": "preview",
+      "seconds": 15.933333333333334
+    },
+    {
+      "name": "phone-typing",
+      "seconds": 24.633333333333333
+    },
+    {
+      "name": "steve-feedback",
+      "seconds": 30.816666666666666,
+      "rect": {
+        "x": 374,
+        "y": 403,
+        "width": 282.609375,
+        "height": 24
+      }
+    },
+    {
+      "name": "phone-sent",
+      "seconds": 30.816666666666666
+    },
+    {
+      "name": "five-bars",
+      "seconds": 32.46666666666667
+    },
+    {
+      "name": "outro",
+      "seconds": 33.21666666666667
+    },
+    {
+      "name": "phone-exit",
+      "seconds": 35.833333333333336
+    },
+    {
+      "name": "settled",
+      "seconds": 36.46666666666667
+    }
+  ],
+  "edits": {
+    "speedUps": [
+      {
+        "from": "phone-typing",
+        "to": "phone-sent",
+        "rate": 2
+      }
+    ],
+    "freezesCut": {
+      "count": 12,
+      "frames": 116
+    },
+    "phoneHolds": [
+      {
+        "takeFrames": [
+          2413,
+          2435
+        ],
+        "heldFrame": 2412,
+        "cutSeconds": [
+          32.45,
+          32.583333333333336
+        ],
+        "cutFrames": 8
+      }
+    ],
+    "loopSeconds": 0.6
+  },
+  "files": [
+    {
+      "file": "desktop.webm",
+      "codec": "av1",
+      "rate": 60,
+      "size": {
+        "width": 2000,
+        "height": 1400
+      },
+      "bytes": 3721784
+    },
+    {
+      "file": "desktop.mp4",
+      "codec": "h264",
+      "rate": 60,
+      "size": {
+        "width": 2000,
+        "height": 1400
+      },
+      "bytes": 4534640
+    },
+    {
+      "file": "desktop-30.webm",
+      "codec": "av1",
+      "rate": 30,
+      "size": {
+        "width": 1600,
+        "height": 1120
+      },
+      "bytes": 1532798
+    },
+    {
+      "file": "desktop-30.mp4",
+      "codec": "h264",
+      "rate": 30,
+      "size": {
+        "width": 1600,
+        "height": 1120
+      },
+      "bytes": 2572153
+    },
+    {
+      "file": "desktop-poster.webp",
+      "bytes": 112812
+    },
+    {
+      "file": "phone.webm",
+      "codec": "av1",
+      "rate": 60,
+      "size": {
+        "width": 1206,
+        "height": 2622
+      },
+      "bytes": 3729765
+    },
+    {
+      "file": "phone.mp4",
+      "codec": "h264",
+      "rate": 60,
+      "size": {
+        "width": 1206,
+        "height": 2622
+      },
+      "bytes": 5840280
+    },
+    {
+      "file": "phone-30.webm",
+      "codec": "av1",
+      "rate": 30,
+      "size": {
+        "width": 964,
+        "height": 2098
+      },
+      "bytes": 1850280
+    },
+    {
+      "file": "phone-30.mp4",
+      "codec": "h264",
+      "rate": 30,
+      "size": {
+        "width": 964,
+        "height": 2098
+      },
+      "bytes": 3889569
+    },
+    {
+      "file": "phone-poster.webp",
+      "bytes": 103172
+    }
+  ]
+}

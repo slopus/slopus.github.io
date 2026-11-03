@@ -1,9 +1,90 @@
 # Happy One homepage demo
 
-## Current export: v36, from take v36-team-r13
+## Current layout: the window and the phone on the page
 
-The homepage `/` plays one composed movie: the recorded Mac window with Steve's
-phone laid over it and the captions baked in. It replaced the synchronized
+The hero shows the take as two devices standing straight on the page's gradient
+surface, with no stage, panel, or wallpaper around them: the recorded Mac window
+on the page's axis, and the phone parked beside its right edge, hanging 12px
+below it. This is the v22 layout (homepage from 2026-09-17 until the composed
+movie, `08a5188^`), with the split player from the archived draft (`4c9dafb` on
+`archive/homepage-video-sizing`), without that draft's caption line, phone label,
+and hint.
+
+The hero plays team take 8, in `public/video/happy-one/team-take8/`: the split
+exports of happy-desktop's `scripts/demo/demos/team` (`9d40e8e7` on
+`worktree/team-demo-video`), copied byte for byte from the composition's
+`take8/composed/split/` output. Kirill picks Opus 5.5 from the open model list
+and sends; the task is in Steve's sidebar on his phone at once; Opus puts up a
+live preview, Steve answers from his phone, and Opus narrows it to five bars on
+both screens. The window and the phone screen are separate tracks on the cut's
+60fps clock, 2,228 frames (37.13s), so frame i of each is frame i of the composed
+movie; the window tracks carry its soundtrack and its traffic lights. The phone
+holds its last waveform frame for 8 frames at 32.45–32.58s, over its preview's
+blank reload (`edits.phoneHolds` in `take.json`).
+The last 0.6s dissolves into frame 0, so the loop has no seam. `take.json` holds the cues;
+`captions.vtt` holds the composed movie's captions, which the hero does not show.
+
+| Asset | Encoding | Size |
+| --- | --- | --- |
+| `desktop.webm` / `.mp4` | AV1 + Opus / H.264 High 5.1 + AAC, 2000×1400, 60fps | 3,721,784 / 4,534,640 bytes |
+| `desktop-30.webm` / `.mp4` | AV1 + Opus / H.264 High 5.1 + AAC, 1600×1120, 30fps | 1,532,798 / 2,572,153 bytes |
+| `phone.webm` / `.mp4` | AV1 / H.264 High 5.1, 1206×2622, 60fps | 3,729,765 / 5,840,280 bytes |
+| `phone-30.webm` / `.mp4` | AV1 / H.264 High 5.1, 964×2098, 30fps | 1,850,280 / 3,889,569 bytes |
+| `desktop-poster.webp`, `phone-poster.webp` | frame 0 | 112,812 / 103,172 bytes |
+
+Screens wider than 700px get 60fps: the AV1, or the H.264 in browsers without
+AV1 (Macs before M3). The H.264 is level 5.1 with 5 reference frames, which
+hardware decoders take at 60fps. Phones get the 30fps cut.
+
+The phone comes forward for Steve's part, `phone-enter` to `phone-exit`, frames
+535–2150 (8.92–35.83s).
+
+The loop was checked in headless Chromium by drawing both movies every animation
+frame from 1.2s before the end to 1.5s after the wrap, on the 60fps AV1, the
+60fps H.264, and the 30fps AV1 tracks: at the wrap the window changes by at most
+0.53 of 255 per channel and the phone by at most 0.54, less than between two
+frames of the dissolve, and no `emptied`, `loadstart`, or `abort` event brings a
+poster back. Under software decoding the 30fps phone track sometimes falls more
+than 120ms behind; the page then re-aligns it and it shows its last decoded frame
+until it catches up, at the wrap as anywhere else.
+
+That draft's own tracks, the v36 split of `v36-team-r13` (2200×1500 window), stay
+on `archive/homepage-video-sizing` and never landed on main. Their 60fps H.264
+pair needed level 6.0: x264 used 16 reference frames at that size.
+
+**Swapping the take.** `src/happyOneDemoMedia.ts` is the only file to change.
+`DEMO_TAKE.desktop` is the window movie: its frame is the window edge, so bake
+the traffic lights in; the page sizes the window from its `width`/`height`.
+`DEMO_TAKE.phone` is a movie or a still (`kind: 'still'`). The screen fills the
+iPhone 16 Pro frame's 1206×2622 aperture and is cropped to it, so any iPhone
+screen recording fits. `follows: true` puts a phone movie on the window's clock
+(play, pause, seek, rate, drift over 120ms, the loop); `follows: false` loops it
+on its own and only pauses with the window. `phoneFocus` is the interval, in
+seconds of the window movie, while the phone comes forward; leave it out and the
+phone stays parked. Sources are tried in order, each with an optional `media`
+query; screens wider than 700px try the 60fps AV1, then the 60fps H.264, and
+everything else the 30fps AV1, then the 30fps H.264. Encode H.264 at `-level
+5.1` and check the reference frames fit it.
+
+**Geometry** (`src/happy-one-demo.css`). The window is as large as the first
+screen allows, from 36% to 84% of the page column and at most 968px. The phone is
+84% of the window's height. Where the screen ends before the phone does, it keeps
+55% in view and peeks in from the edge, which the site shell clips. At 700px and
+below the window is 84% of the screen and the phone, 92% of the window's height,
+shows 45% of itself over the window's right bezel. For `phoneFocus` it grows 1.18×
+(1.12× and fully in view, 8px from the edge, on phones). As the page scrolls the
+stage from where it rests to the top of the viewport, the phone rises by 16% of
+its width and slides in by half of whatever the edge hides. Reduced motion turns
+off the scrolling motion and the easing.
+
+At 320–1920px there is no horizontal overflow, the window and download badge
+share an axis, and the badge stays on the first screen. Checked in headless
+Chromium against the dev server, not in Safari.
+
+## Previous export: v36 composed movie, from take v36-team-r13
+
+Until the layout above, the homepage `/` played one composed movie: the recorded
+Mac window with Steve's phone laid over it and the captions baked in. It replaced the synchronized
 desktop/phone pair below. Assets are in `public/video/happy-one/v36/`, copied
 unchanged from the desktop workspace's
 `scripts/demo/demos/stem/artifacts/v36-team-r13/final/web/`:
@@ -160,10 +241,10 @@ existing 47 tests and production build pass.
 ## Regenerating the social preview
 
 This is an agent-run screenshot recipe, not a production script. The ordinary
-page uses the requested capitalization, “Any Model. Your Subscription. Happy Harness.”,
-with “Orchestrate Claude, Codex, Grok, Gemini and more in one app — locally or on a remote
-server, by yourself or with your team.” under it; `?preview=og` keeps the descriptor alone,
-without the gradient surface. Every route without its own card (all but
+page's headline is the default in `src/homeVariants.ts`; `?preview=og` renders the card's own
+headline, “Any Model. Your Subscription. Happy Harness” (`SOCIAL_HEADLINE`), with
+“Orchestrate Claude, Codex, Grok, Gemini and more in one app” under it and without the
+gradient surface. Every route without its own card (all but
 the desktop docs, whose cards come from `notes/og/cards.py`) uses
 `/og/happy-harness-v26.png` as its social image, served with `?v=` and
 `SOCIAL_IMAGE_VERSION` from `src/siteMetadata.ts` so link previews refetch;
@@ -189,13 +270,18 @@ list open and Opus hovered.
    flag, the extra hero line is not mounted and the normal layout is unchanged.
    Keep the headline on three lines: “Any Model.” / “Your Subscription.” / “Happy Harness”.
    The copy starts at x=48px in a 440px column; a 24px gap separates it from
-   the 664px movie. Do not stack the movie below the headline in this mode.
+   the 596px window, with the parked phone 12px right of it, cut by the card's
+   edge. (The v26 card predates this and shows the 664px composed movie.) Do
+   not stack the demo below the headline in this mode.
    Wait for **Space Grotesk** and **DM Sans** to load from the existing Google
    Fonts stylesheet, plus the video. Do not capture
    fallback fonts, posters, loading indicators, or browser playback controls.
-4. Freeze the `.one-demo video` at **2.8 seconds** of the current asset: pause
+4. Freeze the `.one-demo video` (the window; the phone seeks with it) at
+   **2.8 seconds** of the v29 asset: pause
    it, set `controls = false`, and set `currentTime = 2.8`. The model list is
-   open with Opus hovered. Wait until it is paused, not seeking, decode-ready,
+   open with Opus hovered. Team take 8 has the model menu open from 0 to 4.15s
+   (the pointer scans the list from 1.75s; Opus picked at 4.15s), so choose its
+   frame again. Wait until it is paused, not seeking, decode-ready,
    and at the target; then wait two animation frames. Keep the pointer away
    from the video.
 5. Capture the full 1200×630 viewport at 2× (2400×1260 bitmap), then downsample

@@ -24,9 +24,11 @@
  * packages/happy-desktop-ui/src/onboardingGrainShader.ts, the shader behind
  * desktop onboarding. Its noise, grain, and colour bands are unchanged. The
  * homepage replaces the corner shape in main(): the field is in page space, so
- * one surface runs the length of the page, its colour at the left and right
- * edges and a plain column down the middle. `u_top` is the canvas's top in the
- * page and `u_ratio` its device pixels per CSS pixel.
+ * one surface runs the length of the page, its colour in slow swells along the
+ * sides and, by surface, the top and bottom and blobs in the corners, with a
+ * plain column down the middle. `u_top` is the canvas's top in the page,
+ * `u_ratio` its device pixels per CSS pixel, `u_height` the page's height in
+ * CSS px, and the rest the surface (SurfaceShape in grainGradientRenderer.ts).
  */
 export const grainGradientFragmentShader = `
 precision highp float;
@@ -34,6 +36,11 @@ uniform vec2 u_resolution;
 uniform float u_top;
 uniform float u_ratio;
 uniform float u_time;
+uniform float u_height;
+uniform vec4 u_sides;
+uniform vec4 u_ends;
+uniform vec4 u_corners;
+uniform vec2 u_shape;
 uniform vec3 u_colorBack;
 uniform vec3 u_color0;
 uniform vec3 u_color1;
@@ -44,8 +51,6 @@ const float COUNT = 4.;
 const float SOFTNESS = .5;
 const float INTENSITY = .5;
 const float NOISE = .25;
-// Half the width, in CSS px, of the column down the middle of the page that stays plain.
-const float CALM = 480.;
 
 vec3 permute(vec3 x) { return mod(((x * 34.0) + 1.0) * x, 289.0); }
 
@@ -119,30 +124,60 @@ float band(float mixer, float aa) {
   return smoothstep(.5 - .5 * SOFTNESS - aa, .5 + .5 * SOFTNESS + aa, clamp(mixer, 0., 1.));
 }
 
+// Colour and grain for a point d CSS px from an edge whose colour reaches reach px in; the
+// grain dissolves a little further than the colour.
+vec2 rim(float d, float reach) {
+  if (reach < 1.) return vec2(0.);
+  return vec2(1. - smoothstep(0., reach, d), 1. - smoothstep(.6 * reach, 1.3 * reach + 40., d));
+}
+
+// A blob in a page corner, its radius wandering around it and over time.
+vec2 blob(vec2 css, vec2 corner, float radius, float t, float seed) {
+  if (radius < 1.) return vec2(0.);
+  vec2 away = css - corner;
+  float reach = radius * (1. + .3 * snoise(away / radius * 1.4 + vec2(seed, t)));
+  return rim(length(away), reach);
+}
+
 void main() {
   float t = .1 * (u_time + 7.);
-  // The page, not the canvas: x from its left edge and y down from its top, in device px.
+  // The page in device px, x from its left edge and y down from its top; and in CSS px.
   vec2 page = vec2(gl_FragCoord.x, u_top + u_resolution.y - gl_FragCoord.y);
-  float right = step(.5 * u_resolution.x, page.x);
-  float y = page.y / u_ratio;
-  // CSS px from the nearer side, and the room each side keeps outside the calm column.
-  float edge = min(page.x, u_resolution.x - page.x) / u_ratio;
-  float margin = max(.5 * u_resolution.x / u_ratio - CALM, 0.);
-  float base = clamp(.06 * u_resolution.x / u_ratio, 18., 40.);
-  // How far the colour reaches in wanders down the page and over time, each side on its own.
-  float wave = .65 * snoise(vec2(y / 700. + 37. * right, 2. * t + 11. * right))
-    + .35 * snoise(vec2(y / 260. - 23. * right, 3. * t));
-  float reach = mix(.4, 1.2, clamp(.5 + .7 * wave, 0., 1.)) * margin + base;
-  float fade = 1.6 * reach + 60.;
-  // The calm column is the plain base colour.
-  if (edge > fade) {
+  vec2 css = page / u_ratio;
+  float width = u_resolution.x / u_ratio;
+  float right = step(.5 * width, css.x);
+  float edge = min(css.x, width - css.x);
+  // 1 at a side edge, 0 down the middle.
+  float outer = 1. - edge / (.5 * width);
+  float wavelength = u_shape.y;
+
+  // Each side's reach wanders with two long, slow octaves of noise, so the band swells and
+  // thins down the page in a few big shapes, and the two sides do it differently.
+  float wave = .8 * snoise(vec2(css.y / wavelength + 37. * right, .8 * t + 11. * right))
+    + .2 * snoise(vec2(css.y / (.5 * wavelength) - 23. * right, t));
+  vec2 side = mix(u_sides.xy, u_sides.zw, right);
+  float margin = max(.5 * width - u_shape.x, 0.);
+  vec2 colour = rim(edge, margin * clamp(side.x + side.y * wave, 0., .92));
+
+  // The page's top and bottom, deepest at the sides and shallow over the middle.
+  float across = snoise(vec2(css.x / (1.3 * wavelength) + 3., t));
+  float valance = mix(.35, 1., outer);
+  colour = max(colour, rim(css.y, max(u_ends.x + u_ends.y * across, 0.) * valance));
+  colour = max(colour, rim(u_height - css.y, max(u_ends.z + u_ends.w * snoise(vec2(css.x / (1.3 * wavelength) - 9., t)), 0.) * valance));
+
+  // The corners: the page's top two, and the bottom two at its end.
+  colour = max(colour, blob(css, vec2(0., 0.), u_corners.x, t, 1.));
+  colour = max(colour, blob(css, vec2(width, 0.), u_corners.y, t, 17.));
+  colour = max(colour, blob(css, vec2(0., u_height), u_corners.z, t, 33.));
+  colour = max(colour, blob(css, vec2(width, u_height), u_corners.w, t, 49.));
+
+  // Everywhere else, the plain base colour.
+  if (colour.y <= 0.) {
     gl_FragColor = vec4(u_colorBack, 1.);
     return;
   }
-  float shape = 1. - smoothstep(0., reach, edge);
-  shape *= mix(.75, 1.1, .5 + .5 * snoise(vec2(y / 1300. - 5. * right, 2. * t)));
-  // The grain fades out with the colour, so the column never fills with specks.
-  float grained = 1. - smoothstep(.6 * reach, fade, edge);
+  float shape = colour.x * mix(.75, 1.1, .5 + .5 * snoise(vec2(css.y / 1300. - 5. * right, 2. * t)));
+  float grained = colour.y;
 
   vec2 grain_uv = page * .7;
   vec3 slow = vec3(fbm(.002 * grain_uv + 10.), fbm(.003 * grain_uv), fbm(.001 * grain_uv));
