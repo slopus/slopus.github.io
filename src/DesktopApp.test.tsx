@@ -1,4 +1,4 @@
-import { act, cleanup, render, screen, within } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import DesktopApp, { TRUST_PROMPT } from './DesktopApp'
 import { Router } from './Router'
@@ -111,9 +111,26 @@ describe('Happy Desktop landing page', () => {
       'Open source, MIT',
       'End-to-end encrypted',
     ])
-    // A zig-zag: the panel starts on the left, then trades sides.
+    // A zig-zag: the emoji starts on the left, then trades sides.
     expect(sections.map((section) => section.getAttribute('data-side'))).toEqual(['start', 'end', 'start', 'end'])
-    for (const section of sections) expect(section.querySelector('.one-value-panel canvas.one-emoji')).toBeTruthy()
+    for (const section of sections) expect(section.querySelector(':scope > canvas.one-emoji')).toBeTruthy()
+  })
+
+  it('stands on one gradient surface, with no panels', () => {
+    const { container } = render(<DesktopApp />)
+    const shell = container.querySelector('.happy-home')!
+
+    expect(shell.firstElementChild?.className).toBe('home-grain')
+    expect(container.querySelectorAll('.home-grain canvas')).toHaveLength(1)
+    expect(container.querySelector('.one-grain, .one-value-panel, .one-stage-grain')).toBeNull()
+  })
+
+  it('puts where and with whom under the headline', () => {
+    const { container } = render(<DesktopApp />)
+
+    expect(container.querySelector('.one-hero-tagline')?.textContent).toBe(
+      'Orchestrate Claude, Codex, Grok, Gemini and more in one app\u00a0— locally or on a remote server, by yourself or with your team.',
+    )
   })
 
   it('keeps the four value lines short and about the same length', () => {
@@ -137,6 +154,34 @@ describe('Happy Desktop landing page', () => {
     expect(trust.querySelector('h2')?.textContent).toMatch(/trust the code/i)
     expect(trust.textContent).toContain(TRUST_PROMPT)
     expect(within(trust as HTMLElement).getByRole('button', { name: 'Copy prompt' })).toBeTruthy()
+  })
+
+  it('switches headline and palette from the URL, falling back to the first of each', () => {
+    try {
+      window.history.replaceState(null, '', '/?hero=4&palette=ocean')
+      const { container, unmount } = render(<DesktopApp />)
+      expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Stop working with AI alone.')
+      expect(container.querySelector('.happy-home')?.getAttribute('data-palette')).toBe('ocean')
+      unmount()
+
+      window.history.replaceState(null, '', '/?hero=9&palette=neon')
+      const second = render(<DesktopApp />)
+      expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Any Model. Your Subscription. Happy Harness.')
+      expect(second.container.querySelector('.happy-home')?.getAttribute('data-palette')).toBe('lavender')
+    } finally {
+      window.history.replaceState(null, '', '/')
+    }
+  })
+
+  it('flips the variants live from the dev switcher', () => {
+    render(<DesktopApp />)
+    const switcher = screen.getByRole('form', { name: 'Homepage variants' })
+
+    fireEvent.change(within(switcher).getByRole('combobox', { name: 'Hero' }), { target: { value: '5' } })
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Where your team and its agents work together.')
+    expect(window.location.search).toBe('?hero=5')
+    fireEvent.change(within(switcher).getByRole('combobox', { name: 'Hero' }), { target: { value: '1' } })
+    expect(window.location.search).toBe('')
   })
 
   it('ends on the founders on Twitter and the Discord invite', () => {

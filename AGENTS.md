@@ -116,26 +116,42 @@ link are constants in `src/DownloadOptions.tsx`. Release links use
 ## Homepage look
 
 The homepage is in the phone apps' first-screen look: their Grain Gradient
-(`src/grainGradientShader.ts`, copied unchanged from happy-desktop's onboarding
-shader, which ports the native iOS/Android one; Apache-2.0 notice in
-`THIRD_PARTY_NOTICES.md`), the native start-screen palette light or dark with the
-system, IBM Plex Sans, and Bricolage Grotesque for the wordmark (`src/happy-home.css`,
-scoped to `.happy-home` so blog downloads and `/releases/` keep `happy-one.css`).
-The gradient is never wallpaper: it is panels that scroll with the page, the stage
-behind the demo and one panel per value section, and copy sits on the plain base
-colour, never on grain.
+(`src/grainGradientShader.ts`, from happy-desktop's onboarding shader, which ports
+the native iOS/Android one; Apache-2.0 notice in `THIRD_PARTY_NOTICES.md`), the
+native start-screen palette light or dark with the system, IBM Plex Sans, and
+Bricolage Grotesque for the wordmark (`src/happy-home.css`, scoped to `.happy-home`
+so blog downloads and `/releases/` keep `happy-one.css`).
 
-Its order is the demo, the downloads, the four value sections (subscriptions,
-multiplayer, open source, end-to-end encryption) zig-zagging panel left then
-right, "Don't trust our words. Trust the code." with a copyable prompt, the
-downloads again, "Talk to us on Twitter or Discord", and the footer. It never
-mentions the CLI, not even in the footer. Each value body is one or two short
-sentences, all four about the same length. Each value's animated emoji is a
-Telegram Lottie under `src/assets/emoji/`, drawn by dotLottie as in happy-desktop,
-and plays once when its section reaches the middle of the viewport or the pointer
-enters it. Twitter means the founders' accounts (`STEVE`, `KIRILL` in
-`src/Team.tsx`); we have no company account. The Discord invite is `HAPPY_DISCORD`
-in `src/products.ts`.
+The gradient is the page's one surface, top to bottom, scrolling with the content:
+never fixed, never boxed into panels, with no plain page background between grain
+areas. Its noise and grain are the apps'; only `main()` differs, working in page
+space with the colour at the left and right edges and a calm column down the middle
+in the palette's base colour. Text, emoji, video, and buttons sit directly on it,
+and the header is transparent until the page scrolls, then frosted.
+`src/grainGradientRenderer.ts` keeps one canvas around the viewport and moves it in
+120px steps, so scrolling never redraws; the field runs at 0.4× the apps' speed and
+draws every 66ms.
+
+Its order is the demo, the downloads, the four value rows (subscriptions,
+multiplayer, open source, end-to-end encryption), "Don't trust our words. Trust
+the code." with a copyable prompt, the downloads again, "Talk to us on Twitter or
+Discord", and the footer. It never mentions the CLI, not even in the footer. The
+value rows zig-zag on two columns: everything on the left starts on one edge and
+everything on the right ends on the other, so each emoji lines up with the words
+of the next row. Each value body is one or two short sentences, all four about the
+same length. Each value's animated emoji is a Telegram Lottie under
+`src/assets/emoji/`, drawn by dotLottie as in happy-desktop, and plays once when
+its row reaches the middle of the viewport or the pointer enters it. The drawing,
+not its box, meets the edge: `AnimatedEmoji.tsx` records each emoji's empty margins
+at rest, so measure them again when an emoji changes. Twitter means the founders'
+accounts (`STEVE`, `KIRILL` in `src/Team.tsx`); we have no company account. The
+Discord invite is `HAPPY_DISCORD` in `src/products.ts`.
+
+The line under the headline is `HAPPY_DESCRIPTOR` followed by "— locally or on a
+remote server, by yourself or with your team." Palettes (`?palette=`) and
+headlines (`?hero=`) are under review in `src/homeVariants.ts`; the first of each
+is the default and the prerendered page. The dev server shows a switcher for them
+in the corner (`src/HomeVariantSwitcher.tsx`); production never renders it.
 
 ## SEO skills
 

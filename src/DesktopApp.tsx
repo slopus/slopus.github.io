@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { Fragment, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
 import { GITHUB_HAPPY, GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
 import { HAPPY_DESCRIPTOR, HAPPY_DESKTOP, HAPPY_DISCORD } from './products'
 import { HappyOneDemo } from './HappyOneDemo'
 import { GrainGradient } from './GrainGradient'
+import { HEADLINES, homeVariants, homeVariantsSearch, homeVariantsSubscribe } from './homeVariants'
+import { HomeVariantSwitcher } from './HomeVariantSwitcher'
 import { AnimatedEmoji, type AnimatedEmojiName } from './AnimatedEmoji'
 import { DownloadOptions, type DownloadOptionsProps } from './DownloadOptions'
 import { copyText } from './ChiefOfStaffPrompt'
@@ -19,7 +21,7 @@ const values: readonly { title: string; body: string; emoji: AnimatedEmojiName }
   {
     title: 'Use all your subscriptions',
     body: 'Claude, Codex, Grok, and Gemini, on the subscriptions you already pay for. Mix them in a single task.',
-    emoji: 'counterclockwise-arrows',
+    emoji: 'rainbow',
   },
   {
     title: 'Build it together',
@@ -38,15 +40,16 @@ const values: readonly { title: string; body: string; emoji: AnimatedEmojiName }
   },
 ]
 
-/** A section of its own: the emoji on a Grain Gradient panel, the words beside it on the page. */
+/**
+ * A row of its own: the emoji and the words, trading sides down the page. Each side's edge is
+ * shared by every row, the emoji's on one row and the words' on the next.
+ */
 function ValueProposition({ title, body, emoji, index }: (typeof values)[number] & { index: number }) {
   const section = useRef<HTMLElement>(null)
   const heading = `value-${emoji}`
   return (
     <section ref={section} className="one-value" data-side={index % 2 ? 'end' : 'start'} aria-labelledby={heading}>
-      <GrainGradient className="one-value-panel" offset={11 * (index + 1)}>
-        <AnimatedEmoji name={emoji} section={section} />
-      </GrainGradient>
+      <AnimatedEmoji name={emoji} section={section} />
       <div className="one-value-copy">
         <h2 id={heading}>{title}</h2>
         <p>{body}</p>
@@ -135,36 +138,44 @@ function TalkToUs() {
   )
 }
 
-const NO_SUBSCRIPTION = () => () => {}
-const socialPreviewRequested = () => new URLSearchParams(window.location.search).get('preview') === 'og'
+/** The line under every headline: the short descriptor, then where and with whom. */
+const HERO_LINE = `${HAPPY_DESCRIPTOR}\u00a0— locally or on a remote server, by yourself or with your team.`
 
 /**
- * The homepage, in the phone apps' first-screen look: the demo on a Grain Gradient band, the
- * downloads, four value sections in a zig-zag, a prompt to check us against the code, the
- * downloads again, and where to talk to us.
+ * The homepage, in the phone apps' first-screen look, on one Grain Gradient surface from top to
+ * bottom: the demo, the downloads, four value rows in a zig-zag, a prompt to check us against
+ * the code, the downloads again, and where to talk to us.
  */
 export default function DesktopApp() {
   // Read after hydration: the prerendered homepage is the ordinary page.
-  const ogPreview = useSyncExternalStore(NO_SUBSCRIPTION, socialPreviewRequested, () => false)
+  const variants = homeVariants(useSyncExternalStore(homeVariantsSubscribe, homeVariantsSearch, () => ''))
+  const { palette, hero, preview: ogPreview } = variants
+  const headline = HEADLINES[hero - 1]
   // The two download blocks share one architecture choice.
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   return (
-    <div className="site-shell happy-one happy-home" data-social-preview={ogPreview ? '' : undefined}>
+    <div className="site-shell happy-one happy-home" data-palette={palette} data-social-preview={ogPreview ? '' : undefined}>
+      {!ogPreview && <GrainGradient palette={palette} />}
       <SiteHeader product={HAPPY_DESKTOP} />
       <main>
-        <section className="one-hero page-width" aria-labelledby="one-heading">
+        <section className="one-hero page-width" aria-labelledby="one-heading" style={{ '--one-hero-lines': headline.length } as CSSProperties}>
           {/* On a phone this fills the first screen above the store badges. */}
           <div className="one-hero-fold">
             <div className="one-hero-copy">
-              <h1 id="one-heading"><span>Any Model.</span>{' '}<span>Your Subscription.</span>{' '}<em>Happy Harness{ogPreview ? '' : '.'}</em></h1>
-              <p className="one-hero-tagline">{HAPPY_DESCRIPTOR}</p>
+              <h1 id="one-heading">
+                {headline.map((line, index) => index < headline.length - 1
+                  ? <Fragment key={line}><span>{line}</span>{' '}</Fragment>
+                  // The social image ends on the accent without its full stop.
+                  : <em key={line}>{ogPreview ? line.replace(/\.$/u, '') : line}</em>)}
+              </h1>
+              {/* The social image keeps the short descriptor. */}
+              <p className="one-hero-tagline">{ogPreview ? HAPPY_DESCRIPTOR : HERO_LINE}</p>
               <p className="one-hero-note">Free and open source</p>
               {ogPreview && <a className="one-social-stars" href={GITHUB_HAPPY}>
                 <GithubMark /><span>GitHub · {HAPPY_ONE_GITHUB_STARS.compact} stars</span>
               </a>}
             </div>
-            {/* The recording stands on a Grain Gradient stage; the words stay on the page. */}
-            <HappyOneDemo backdrop={<GrainGradient className="one-stage-grain" />} />
+            <HappyOneDemo />
           </div>
           <DownloadOptions id="download" macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
         </section>
@@ -178,6 +189,7 @@ export default function DesktopApp() {
       <SiteFooter product={HAPPY_DESKTOP} cliLink={false} additionalLinks={
         <a href="/video/happy-one/device/CREDITS.txt" target="_blank" rel="noopener noreferrer">Credits</a>
       } />
+      {import.meta.env.DEV && !ogPreview && <HomeVariantSwitcher {...variants} />}
     </div>
   )
 }

@@ -161,7 +161,9 @@ existing 47 tests and production build pass.
 
 This is an agent-run screenshot recipe, not a production script. The ordinary
 page uses the requested capitalization, “Any Model. Your Subscription. Happy Harness.”,
-with “Orchestrate Claude, Codex, Grok, Gemini and more in one app” under it. Every route without its own card (all but
+with “Orchestrate Claude, Codex, Grok, Gemini and more in one app — locally or on a remote
+server, by yourself or with your team.” under it; `?preview=og` keeps the descriptor alone,
+without the gradient surface. Every route without its own card (all but
 the desktop docs, whose cards come from `notes/og/cards.py`) uses
 `/og/happy-harness-v26.png` as its social image, served with `?v=` and
 `SOCIAL_IMAGE_VERSION` from `src/siteMetadata.ts` so link previews refetch;

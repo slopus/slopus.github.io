@@ -1,18 +1,22 @@
-import { useEffect, useRef, type RefObject } from 'react'
+import { useEffect, useRef, type CSSProperties, type RefObject } from 'react'
 import type { DotLottie, DotLottieWorker } from '@lottiefiles/dotlottie-web'
 // Served from this site: the worker must never fall back to fetching the renderer from a CDN.
 import wasmUrl from '@lottiefiles/dotlottie-web/dotlottie-player.wasm?url'
-import counterclockwiseArrows from './assets/emoji/counterclockwise-arrows.json?url'
+import rainbow from './assets/emoji/rainbow.json?url'
 import alienMonster from './assets/emoji/alien-monster.json?url'
 import openSource from './assets/emoji/open-source.json?url'
 import closedLock from './assets/emoji/closed-lock.json?url'
 
-/** Telegram's animated emoji, as Lottie: the ones Happy Desktop draws, plus Kirill's open-source one. */
+/**
+ * Telegram's animated emoji, as Lottie: the ones Happy Desktop draws, plus Kirill's rainbow and
+ * open-source ones. `left` and `right` are the empty margins beside the drawing at rest, as
+ * fractions of the box, so a layout can line up the drawing's edge rather than the box's.
+ */
 const SOURCES = {
-  'counterclockwise-arrows': counterclockwiseArrows,
-  'alien-monster': alienMonster,
-  'open-source': openSource,
-  'closed-lock': closedLock,
+  rainbow: { src: rainbow, left: .118, right: .104 },
+  'alien-monster': { src: alienMonster, left: .111, right: .108 },
+  'open-source': { src: openSource, left: .104, right: .111 },
+  'closed-lock': { src: closedLock, left: .097, right: .097 },
 }
 export type AnimatedEmojiName = keyof typeof SOURCES
 
@@ -77,7 +81,7 @@ export function AnimatedEmoji({ name, section }: { name: AnimatedEmojiName; sect
       const config = {
         autoplay: false,
         loop: false,
-        src: new URL(SOURCES[name], location.href).href,
+        src: new URL(SOURCES[name].src, location.href).href,
         renderConfig: { autoResize: true, devicePixelRatio: Math.min(devicePixelRatio || 1, 2), freezeOnOffscreen: true },
       }
       const instance = typeof element.transferControlToOffscreen === 'function'
@@ -124,5 +128,7 @@ export function AnimatedEmoji({ name, section }: { name: AnimatedEmojiName; sect
     }
   }, [name, section])
 
-  return <canvas ref={canvas} className="one-emoji" width="256" height="256" aria-hidden="true" />
+  const { left, right } = SOURCES[name]
+  return <canvas ref={canvas} className="one-emoji" width="256" height="256" aria-hidden="true"
+    style={{ '--emoji-left': left, '--emoji-right': right } as CSSProperties} />
 }

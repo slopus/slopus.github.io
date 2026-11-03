@@ -7,6 +7,16 @@ void main() { gl_Position = vec4(a_position, 0., 1.); }
 
 const PALETTE = ['back', '0', '1', '2', '3'] as const
 
+/** The field moves at this fraction of the apps' rate (1: one shader second per second). */
+export const GRAIN_SPEED = .4
+/** Milliseconds between frames; the apps draw every 33. */
+export const GRAIN_CADENCE = 66
+/**
+ * The canvas moves in whole steps of this many CSS px, a whole number of device pixels at the
+ * usual ratios, so the grain lands on the same pixels wherever the canvas is.
+ */
+const STEP = 120
+
 function compile(gl: WebGLRenderingContext, type: number, source: string) {
   const shader = gl.createShader(type)
   if (shader === null) return null
@@ -18,20 +28,22 @@ function compile(gl: WebGLRenderingContext, type: number, source: string) {
 }
 
 /**
- * Draws the Grain Gradient into one canvas, as happy-desktop's onboardingGrainRenderer does:
- * the native 33ms cadence, the clock paused while the canvas is out of view or the tab is
- * hidden, and a still first frame when `moving` is false. `offset` shifts the shader's time,
- * so panels on one page don't show the same frame. The palette is the canvas's `--grain-*`
- * custom properties (six-digit hex), read again when the color scheme changes.
- * Returns the one teardown that releases the program, observers, and listeners.
+ * Draws the Grain Gradient as the page's surface. The canvas sits in a layer as tall as the
+ * page and covers the viewport plus a buffer above and below; the shader works in page space,
+ * so moving the canvas a step changes nothing on screen, and scrolling is the browser's own.
+ * The clock pauses while the tab is hidden, and stays on its first frame when `moving` is
+ * false. The palette is the canvas's `--grain-*` custom properties (six-digit hex), read again
+ * when the color scheme changes. Returns the one teardown that releases the program,
+ * observers, and listeners.
  */
-export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean, clock: { seconds: number }, offset = 0) {
+export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean, clock: { seconds: number }) {
   const document = canvas.ownerDocument
   const view = document.defaultView
-  // Without WebGL the CSS corner glows stay.
-  if (view === null || typeof view.WebGLRenderingContext === 'undefined') return
+  const layer = canvas.parentElement
+  // Without WebGL the CSS edges stay.
+  if (view === null || layer === null || typeof view.WebGLRenderingContext === 'undefined') return
   const gl = canvas.getContext('webgl', {
-    alpha: true,
+    alpha: false,
     antialias: false,
     depth: false,
     stencil: false,
@@ -43,8 +55,13 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
   let render: (() => void) | undefined
   let paletteUpdate: (() => boolean) | undefined
   let frame: number | undefined
-  let visible = false
   let last: number | undefined
+  // The canvas's place in the layer and its height, in CSS px, and device pixels per CSS px.
+  let top = 0
+  let height = 0
+  let ratio = 1
+  // Phones resize the viewport as their toolbars come and go; the canvas only grows.
+  let tallest = 0
   if (!moving) clock.seconds = 0
 
   const initialize = () => {
@@ -75,6 +92,8 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
       return
     }
     const resolution = gl.getUniformLocation(program, 'u_resolution')
+    const offset = gl.getUniformLocation(program, 'u_top')
+    const scale = gl.getUniformLocation(program, 'u_ratio')
     const time = gl.getUniformLocation(program, 'u_time')
     const colors = PALETTE.map(name => ({
       location: gl.getUniformLocation(program, `u_color${name === 'back' ? 'Back' : name}`),
@@ -104,10 +123,12 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
     render = () => {
       if (gl.isContextLost()) return
       gl.uniform2f(resolution, canvas.width, canvas.height)
-      gl.uniform1f(time, offset + clock.seconds)
+      gl.uniform1f(offset, top * ratio)
+      gl.uniform1f(scale, ratio)
+      gl.uniform1f(time, clock.seconds)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
     }
-    // Painted: the CSS corner glows underneath can stop showing through.
+    // Painted: the CSS edges underneath can stop showing through.
     canvas.dataset.painted = ''
   }
 
@@ -119,30 +140,47 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
   const loop = (now: number) => {
     frame = undefined
     if (last === undefined) last = now
-    // Match the native 33ms cadence.
-    if (now - last >= 33) {
-      clock.seconds += (now - last) / 1000
+    if (now - last >= GRAIN_CADENCE) {
+      clock.seconds += (now - last) / 1000 * GRAIN_SPEED
       last = now
       render?.()
     }
     frame = view.requestAnimationFrame(loop)
   }
   const settle = () => {
-    if (!moving || !visible || document.hidden || render === undefined) stop()
+    if (!moving || document.hidden || render === undefined) stop()
     else if (frame === undefined) frame = view.requestAnimationFrame(loop)
   }
-  const resize = () => {
-    const bounds = canvas.getBoundingClientRect()
-    const ratio = Math.min(2, Math.max(1, view.devicePixelRatio))
+  /**
+   * Keeps the canvas around the viewport, with a buffer of at least 40% of its height above
+   * and below. Once the viewport comes within half a buffer of either end, the canvas moves
+   * and repaints in the same frame. Past the end of the page the layer clips it.
+   */
+  const place = (sized: boolean) => {
+    const bounds = layer.getBoundingClientRect()
+    tallest = Math.max(tallest, view.innerHeight)
+    const buffer = Math.ceil(Math.max(240, .4 * tallest) / STEP) * STEP
+    const wanted = Math.ceil((tallest + 2 * buffer) / STEP) * STEP
+    const scrolled = -bounds.top
+    const near = top > 0 && scrolled - top < buffer / 2
+    const far = top + height - (scrolled + view.innerHeight) < buffer / 2
+    if (!sized && wanted === height && !near && !far) return
+    ratio = Math.min(2, Math.max(1, view.devicePixelRatio))
     const width = Math.max(1, Math.round(bounds.width * ratio))
-    const height = Math.max(1, Math.round(bounds.height * ratio))
-    if (canvas.width !== width || canvas.height !== height) {
+    const pixels = Math.max(1, Math.round(wanted * ratio))
+    if (canvas.width !== width || canvas.height !== pixels) {
       canvas.width = width
-      canvas.height = height
-      gl.viewport(0, 0, width, height)
+      canvas.height = pixels
+      gl.viewport(0, 0, width, pixels)
     }
+    if (height !== wanted) canvas.style.height = `${wanted}px`
+    height = wanted
+    top = Math.max(0, Math.floor((scrolled - buffer) / STEP) * STEP)
+    canvas.style.transform = `translateY(${top}px)`
     render?.()
   }
+  const resize = () => place(true)
+  const scroll = () => place(false)
   const lost = (event: Event) => {
     event.preventDefault()
     stop()
@@ -160,13 +198,11 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
   }
   initialize()
   resize()
+  settle()
   const sizing = new view.ResizeObserver(resize)
-  sizing.observe(canvas)
-  const intersection = new view.IntersectionObserver(entries => {
-    visible = entries.some(entry => entry.isIntersecting)
-    settle()
-  })
-  intersection.observe(canvas)
+  sizing.observe(layer)
+  view.addEventListener('scroll', scroll, { passive: true })
+  view.addEventListener('resize', resize)
   document.addEventListener('visibilitychange', settle)
   scheme.addEventListener('change', recolor)
   canvas.addEventListener('webglcontextlost', lost)
@@ -174,7 +210,8 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
   return () => {
     stop()
     sizing.disconnect()
-    intersection.disconnect()
+    view.removeEventListener('scroll', scroll)
+    view.removeEventListener('resize', resize)
     document.removeEventListener('visibilitychange', settle)
     scheme.removeEventListener('change', recolor)
     canvas.removeEventListener('webglcontextlost', lost)

@@ -20,13 +20,19 @@
  * Desktop changes: AGSL/Metal types to GLSL ES 1.00, gl_FragColor output,
  * and WebGL's already-upward fragment Y coordinate (no native Y inversion).
  *
- * Copied unchanged from slopus/happy-desktop at aa8e7a43:
+ * Taken from slopus/happy-desktop at aa8e7a43:
  * packages/happy-desktop-ui/src/onboardingGrainShader.ts, the shader behind
- * desktop onboarding, so the homepage moves exactly as the apps' first screens.
+ * desktop onboarding. Its noise, grain, and colour bands are unchanged. The
+ * homepage replaces the corner shape in main(): the field is in page space, so
+ * one surface runs the length of the page, its colour at the left and right
+ * edges and a plain column down the middle. `u_top` is the canvas's top in the
+ * page and `u_ratio` its device pixels per CSS pixel.
  */
 export const grainGradientFragmentShader = `
 precision highp float;
 uniform vec2 u_resolution;
+uniform float u_top;
+uniform float u_ratio;
 uniform float u_time;
 uniform vec3 u_colorBack;
 uniform vec3 u_color0;
@@ -38,6 +44,8 @@ const float COUNT = 4.;
 const float SOFTNESS = .5;
 const float INTENSITY = .5;
 const float NOISE = .25;
+// Half the width, in CSS px, of the column down the middle of the page that stays plain.
+const float CALM = 480.;
 
 vec3 permute(vec3 x) { return mod(((x * 34.0) + 1.0) * x, 289.0); }
 
@@ -113,26 +121,34 @@ float band(float mixer, float aa) {
 
 void main() {
   float t = .1 * (u_time + 7.);
-  float box = min(u_resolution.x, u_resolution.y);
-  vec2 uv = gl_FragCoord.xy / u_resolution - .5;
-  vec2 shape_uv = uv * u_resolution / box;
-  vec2 grain_uv = shape_uv * box * .7;
+  // The page, not the canvas: x from its left edge and y down from its top, in device px.
+  vec2 page = vec2(gl_FragCoord.x, u_top + u_resolution.y - gl_FragCoord.y);
+  float right = step(.5 * u_resolution.x, page.x);
+  float y = page.y / u_ratio;
+  // CSS px from the nearer side, and the room each side keeps outside the calm column.
+  float edge = min(page.x, u_resolution.x - page.x) / u_ratio;
+  float margin = max(.5 * u_resolution.x / u_ratio - CALM, 0.);
+  float base = clamp(.06 * u_resolution.x / u_ratio, 18., 40.);
+  // How far the colour reaches in wanders down the page and over time, each side on its own.
+  float wave = .65 * snoise(vec2(y / 700. + 37. * right, 2. * t + 11. * right))
+    + .35 * snoise(vec2(y / 260. - 23. * right, 3. * t));
+  float reach = mix(.4, 1.2, clamp(.5 + .7 * wave, 0., 1.)) * margin + base;
+  float fade = 1.6 * reach + 60.;
+  // The calm column is the plain base colour.
+  if (edge > fade) {
+    gl_FragColor = vec4(u_colorBack, 1.);
+    return;
+  }
+  float shape = 1. - smoothstep(0., reach, edge);
+  shape *= mix(.75, 1.1, .5 + .5 * snoise(vec2(y / 1300. - 5. * right, 2. * t)));
+  // The grain fades out with the colour, so the column never fills with specks.
+  float grained = 1. - smoothstep(.6 * reach, fade, edge);
 
-  shape_uv *= .6;
-  vec2 outer = vec2(.5);
-  vec2 bl = smoothstep(vec2(0.), outer, shape_uv + vec2(.1 + .1 * sin(3. * t), .2 - .1 * sin(5.25 * t)));
-  vec2 tr = smoothstep(vec2(0.), outer, 1. - shape_uv);
-  float shape = 1. - bl.x * bl.y * tr.x * tr.y;
-  shape_uv = -shape_uv;
-  bl = smoothstep(vec2(0.), outer, shape_uv + vec2(.1 + .1 * sin(3. * t), .2 - .1 * cos(5.25 * t)));
-  tr = smoothstep(vec2(0.), outer, 1. - shape_uv);
-  shape -= bl.x * bl.y * tr.x * tr.y;
-  shape = 1. - smoothstep(0., 1., shape);
-
+  vec2 grain_uv = page * .7;
   vec3 slow = vec3(fbm(.002 * grain_uv + 10.), fbm(.003 * grain_uv), fbm(.001 * grain_uv));
   float added = grain(grain_uv, slow);
-  shape += added;
-  float aa = abs(grain(grain_uv + vec2(.7, 0.), slow) - added) + abs(grain(grain_uv - vec2(0., .7), slow) - added);
+  shape += grained * added;
+  float aa = grained * (abs(grain(grain_uv + vec2(.7, 0.), slow) - added) + abs(grain(grain_uv - vec2(0., .7), slow) - added));
   shape = clamp(shape - .5 / COUNT, 0., 1.);
   float totalShape = smoothstep(0., SOFTNESS + 2. * aa, clamp(shape * COUNT, 0., 1.));
   float mixer = shape * (COUNT - 1.);
