@@ -63,6 +63,12 @@ const movedPrefixes: Array<[string, string]> = [
   ['/desktop/docs', ''],
 ]
 
+/** Google Translate marks <html> and wraps text in <font>; Edge's translator tags what it rewrites. */
+function pageTranslated() {
+  const html = document.documentElement
+  return html.classList.contains('translated-ltr') || html.classList.contains('translated-rtl') || document.querySelector('font[style*="vertical-align"], [_msttexthash]') !== null
+}
+
 function normalizedPathname(pathname: string) {
   const trimmed = pathname.replace(/\/+$/, '') || '/'
   const moved = movedPaths[trimmed]
@@ -267,6 +273,12 @@ export function Router({ pathname }: { pathname?: string }) {
 
       const url = new URL(anchor.href, window.location.href)
       if (url.origin !== window.location.origin) {
+        return
+      }
+
+      // A translated page no longer matches what React rendered; a client-side render
+      // would crash on it, so let the browser load the next page.
+      if (pageTranslated() && normalizedPathname(url.pathname) !== normalizedPathname(window.location.pathname)) {
         return
       }
 

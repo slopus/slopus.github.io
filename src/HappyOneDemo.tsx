@@ -98,7 +98,7 @@ export function HappyOneDemo() {
           </video>
         </div>
       </div>
-      {error && <p className="one-demo-error" role="status">The demo couldn’t load. <a href={`${MEDIA}/demo.mp4`}>Open the video</a>.</p>}
+      {error && <p className="one-demo-error" role="status">The demo couldn’t load. <a href={`${MEDIA}/demo.mp4`} target="_blank" rel="noopener">Open the video</a>.</p>}
     </figure>
   )
 }
