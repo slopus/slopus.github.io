@@ -1,7 +1,8 @@
-import { HEADLINES, PALETTES, homeVariantSet, type HomeVariants } from './homeVariants'
+import { HEADLINES, PALETTES, homeVariantSet, type HomeVariants } from './homeVariantsDev'
+import './homeVariantsDev.css'
 
-/** The dev server's corner control for the homepage variants; production never renders it. */
-export function HomeVariantSwitcher({ palette, hero }: HomeVariants) {
+/** The dev server's corner control for the homepage variants; the build leaves it out. */
+export default function HomeVariantSwitcher({ palette, hero }: HomeVariants) {
   return (
     <form className="home-variants" aria-label="Homepage variants" onSubmit={event => event.preventDefault()}>
       <label>

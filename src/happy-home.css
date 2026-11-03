@@ -2,8 +2,9 @@
    surface, top to bottom and scrolling with it, its colour at the side edges and a plain column
    down the middle where the words sit; IBM Plex Sans, and Bricolage Grotesque for the wordmark.
    Lavender, the default, is copied verbatim from the native start screens (happy-ios
-   StartViewController and StartTokens.swift), light or dark with the system; the other palettes
-   are under review (?palette=). Blog downloads and /releases/ keep happy-one.css alone. */
+   StartViewController and StartTokens.swift), light or dark with the system; the palettes still
+   under review are in homeVariantsDev.css, on the dev server only. Blog downloads and /releases/
+   keep happy-one.css alone. */
 :root:has(.happy-home) {
   color-scheme: light dark;
   --grain-back: #f4f2ff;
@@ -22,24 +23,7 @@
   --home-shadow: #14112e2e;
   background: var(--grain-back);
 }
-:root:has(.happy-home[data-palette='ocean']) {
-  --grain-back: #eff8fb; --grain-0: #38bdf8; --grain-1: #a5f3fc; --grain-2: #5eead4; --grain-3: #3b82f6;
-  --home-ink: #0a2230; --home-accent: #0e7490;
-}
-:root:has(.happy-home[data-palette='sunset']) {
-  --grain-back: #fff6f0; --grain-0: #fb923c; --grain-1: #fecdd3; --grain-2: #fcd34d; --grain-3: #f43f5e;
-  --home-ink: #2b1208; --home-accent: #c2410c;
-}
-:root:has(.happy-home[data-palette='mint']) {
-  --grain-back: #f1faf5; --grain-0: #34d399; --grain-1: #bbf7d0; --grain-2: #a3e635; --grain-3: #14b8a6;
-  --home-ink: #0a2318; --home-accent: #047857;
-}
-:root:has(.happy-home[data-palette='mono']) {
-  --grain-back: #f6f6f5; --grain-0: #a8a29e; --grain-1: #e7e5e4; --grain-2: #d6d3d1; --grain-3: #78716c;
-  --home-ink: #1c1917; --home-accent: #57534e;
-}
 @media (prefers-color-scheme: dark) {
-  /* Every dark palette sets its ink: a light palette's would outrank the default's. */
   :root:has(.happy-home) {
     --grain-back: #06050f;
     --grain-0: #4338ca;
@@ -51,22 +35,6 @@
     --home-line: color-mix(in srgb, var(--home-ink) 14%, transparent);
     --home-surface: color-mix(in srgb, var(--home-ink) 5%, transparent);
     --home-shadow: #00000080;
-  }
-  :root:has(.happy-home[data-palette='ocean']) {
-    --grain-back: #020a10; --grain-0: #0369a1; --grain-1: #0e7490; --grain-2: #0f766e; --grain-3: #1d4ed8;
-    --home-ink: #ffffff; --home-accent: #67e8f9;
-  }
-  :root:has(.happy-home[data-palette='sunset']) {
-    --grain-back: #0f0605; --grain-0: #c2410c; --grain-1: #9f1239; --grain-2: #b45309; --grain-3: #e11d48;
-    --home-ink: #ffffff; --home-accent: #fdba74;
-  }
-  :root:has(.happy-home[data-palette='mint']) {
-    --grain-back: #030b07; --grain-0: #047857; --grain-1: #065f46; --grain-2: #4d7c0f; --grain-3: #0d9488;
-    --home-ink: #ffffff; --home-accent: #6ee7b7;
-  }
-  :root:has(.happy-home[data-palette='mono']) {
-    --grain-back: #0a0a0a; --grain-0: #3f3f46; --grain-1: #27272a; --grain-2: #52525b; --grain-3: #a1a1aa;
-    --home-ink: #ffffff; --home-accent: #d4d4d8;
   }
 }
 
@@ -192,13 +160,6 @@
 .one-talk-links a > svg:first-child { margin-left: .5rem; }
 .one-talk-links img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
 .one-talk-links a > svg:last-child:not(:first-child) { opacity: .6; }
-
-/* The dev server's variant switcher (HomeVariantSwitcher.tsx). */
-.home-variants { position: fixed; z-index: 60; bottom: 12px; left: 12px; display: flex; flex-wrap: wrap; gap: .5rem; max-width: calc(100% - 24px); padding: .45rem .55rem; border: 1px solid var(--home-line); border-radius: 10px; background: var(--home-header); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); color: var(--home-ink); font: 500 .78rem/1.2 'IBM Plex Sans', sans-serif; }
-.home-variants label { display: flex; align-items: center; gap: .35rem; min-width: 0; }
-.home-variants span { color: var(--home-ink-2); font-size: .66rem; letter-spacing: .05em; text-transform: uppercase; }
-.home-variants select { min-width: 0; max-width: 13rem; padding: .2rem .3rem; border: 1px solid var(--home-line); border-radius: 6px; background: transparent; color: inherit; font: inherit; }
-.home-variants option { color: #14112e; background: #ffffff; }
 
 @media (max-width: 760px) {
   /* One column: each emoji over its words, still on its side, its drawing on that edge. */

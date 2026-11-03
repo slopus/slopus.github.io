@@ -1,12 +1,12 @@
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import DesktopApp, { TRUST_PROMPT } from './DesktopApp'
-import { HEADLINES, HERO_DEFAULT } from './homeVariants'
+import { HOME_HEADLINE } from './homeVariants'
+import { HERO_DEFAULT } from './homeVariantsDev'
 import { Router } from './Router'
 
-/** A headline as it reads: its lines joined, without the accent marks. */
-const headlineText = (key: string) => HEADLINES[key].lines.join(' ').replaceAll('*', '')
-const DEFAULT_HEADLINE = headlineText(HERO_DEFAULT)
+/** The headline as it reads: its lines joined, without the accent marks. */
+const DEFAULT_HEADLINE = HOME_HEADLINE.lines.join(' ').replaceAll('*', '')
 
 // The recorded demo needs real media APIs; the page around it is what these tests cover.
 vi.mock('./HappyOneDemo', () => ({ HappyOneDemo: () => <figure data-testid="demo" /> }))
@@ -33,7 +33,11 @@ describe('Happy Desktop landing page', () => {
   it('leads with the default headline, at most one short line, and Free and open source', () => {
     const { container } = render(<DesktopApp />)
 
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(DEFAULT_HEADLINE)
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Happy')
+    // Kirill's line, plain: nothing in it takes the accent colour.
+    const tagline = container.querySelector('.one-hero-tagline')!
+    expect(tagline.textContent).toBe('One place for you, your team, and your agents.')
+    expect(tagline.querySelector('em')).toBeNull()
     const lines = [...container.querySelectorAll('.one-hero-copy p')].map((line) => line.textContent!)
     expect(lines.at(-1)).toBe('Free and open source')
     expect(lines.length).toBeLessThanOrEqual(2)
@@ -198,9 +202,23 @@ describe('Happy Desktop landing page', () => {
     expect(narrow.corners).toEqual([0, expect.any(Number), expect.any(Number), 0])
   })
 
-  it('flips the variants live from the dev switcher', () => {
+  it('ignores the variants in the URL outside the dev server, and never loads the switcher', () => {
+    vi.stubEnv('DEV', false)
+    try {
+      window.history.replaceState(null, '', '/?hero=4&palette=ocean')
+      const { container } = render(<DesktopApp />)
+      expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(DEFAULT_HEADLINE)
+      expect(container.querySelector('.happy-home')?.getAttribute('data-palette')).toBe('lavender')
+      expect(screen.queryByRole('form', { name: 'Homepage variants' })).toBeNull()
+    } finally {
+      vi.unstubAllEnvs()
+      window.history.replaceState(null, '', '/')
+    }
+  })
+
+  it('flips the variants live from the dev switcher', async () => {
     render(<DesktopApp />)
-    const switcher = screen.getByRole('form', { name: 'Homepage variants' })
+    const switcher = await screen.findByRole('form', { name: 'Homepage variants' })
 
     expect(within(switcher).queryByRole('combobox', { name: 'Surface' })).toBeNull()
     fireEvent.change(within(switcher).getByRole('combobox', { name: 'Hero' }), { target: { value: '5' } })

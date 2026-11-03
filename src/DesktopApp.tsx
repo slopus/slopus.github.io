@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
+import { Suspense, lazy, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
+import { createPortal } from 'react-dom'
 import { GITHUB_HAPPY, GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
 import { HAPPY_DESCRIPTOR, HAPPY_DESKTOP, HAPPY_DISCORD } from './products'
 import { HappyOneDemo } from './HappyOneDemo'
 import { GrainGradient } from './GrainGradient'
-import { HEADLINES, SOCIAL_HEADLINE, homeVariants, homeVariantsSearch, homeVariantsSubscribe } from './homeVariants'
-import { HomeVariantSwitcher } from './HomeVariantSwitcher'
+import { HOME_HEADLINE, PALETTE_DEFAULT, SOCIAL_HEADLINE, homePreview, homeVariantsSearch, homeVariantsSubscribe } from './homeVariants'
+import { homeVariantsDev } from './homeVariantsDev'
 import { AnimatedEmoji, type AnimatedEmojiName } from './AnimatedEmoji'
 import { DownloadOptions, type DownloadOptionsProps } from './DownloadOptions'
 import { copyText } from './ChiefOfStaffPrompt'
@@ -151,6 +152,11 @@ function HeadlineLine({ line }: { line: string }) {
 }
 
 
+/** The dev server's switcher for the variants under review; the build leaves it out. */
+const HomeVariantSwitcher = import.meta.env.DEV ? lazy(() => import('./HomeVariantSwitcher')) : undefined
+// After hydration, and outside the page: the prerendered page has no switcher to match.
+const noSubscription = () => () => {}
+
 /**
  * The homepage, in the phone apps' first-screen look, on one Grain Gradient surface from top to
  * bottom: the headline and demo, the downloads, four value rows in a zig-zag, a prompt to check
@@ -158,10 +164,13 @@ function HeadlineLine({ line }: { line: string }) {
  */
 export default function DesktopApp() {
   // Read after hydration: the prerendered homepage is the ordinary page.
-  const variants = homeVariants(useSyncExternalStore(homeVariantsSubscribe, homeVariantsSearch, () => ''))
-  const { palette, hero, preview: ogPreview } = variants
+  const search = useSyncExternalStore(homeVariantsSubscribe, homeVariantsSearch, () => '')
+  const ogPreview = homePreview(search)
+  const variants = import.meta.env.DEV ? homeVariantsDev(search) : undefined
+  const palette = variants?.palette ?? PALETTE_DEFAULT
+  const hydrated = useSyncExternalStore(noSubscription, () => true, () => false)
   // The link-preview card keeps the headline and descriptor it was made with.
-  const headline = ogPreview ? { ...SOCIAL_HEADLINE, sub: HAPPY_DESCRIPTOR } : HEADLINES[hero]
+  const headline = ogPreview ? { ...SOCIAL_HEADLINE, sub: HAPPY_DESCRIPTOR } : variants?.headline ?? HOME_HEADLINE
   // The two download blocks share one architecture choice.
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   return (
@@ -200,7 +209,8 @@ export default function DesktopApp() {
       <SiteFooter product={HAPPY_DESKTOP} cliLink={false} people={false} additionalLinks={
         <a href="/video/happy-one/device/CREDITS.txt" target="_blank" rel="noopener noreferrer">Credits</a>
       } />
-      {import.meta.env.DEV && !ogPreview && <HomeVariantSwitcher {...variants} />}
+      {HomeVariantSwitcher && variants && hydrated && !ogPreview
+        && createPortal(<Suspense fallback={null}><HomeVariantSwitcher {...variants} /></Suspense>, document.body)}
     </div>
   )
 }

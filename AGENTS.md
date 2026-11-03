@@ -160,12 +160,14 @@ each emoji's four empty margins at rest, so measure them again when an emoji cha
 `KIRILL` in `src/Team.tsx`); we have no company account. The Discord invite is
 `HAPPY_DISCORD` in `src/products.ts`.
 
-Headlines (`?hero=`) and palettes (`?palette=`) are under review in
-`src/homeVariants.ts`; their defaults, Kirill's "One place for you, your team, and
-your agents." under "Happy" and lavender, are the prerendered page, and the build
-checks the default headline. The hero's name is set in the page's own face, not the wordmark's. The dev server shows a
-switcher for them in the corner (`src/HomeVariantSwitcher.tsx`); production never
-renders it. `?preview=og` keeps the link-preview card's own headline
+The hero is "Happy", Kirill's "One place for you, your team, and your agents." under
+it, plain with no accent, and "Free and open source" (`HOME_HEADLINE` in
+`src/homeVariants.ts`), in lavender; the build checks the headline and the line. The
+hero's name is set in the page's own face, not the wordmark's. The candidates still
+under review, headlines (`?hero=`) and palettes (`?palette=`), live in
+`src/homeVariantsDev.ts` and `.css` and work on the dev server only, with a switcher
+in the corner (`src/HomeVariantSwitcher.tsx`); the build leaves all three out and
+ignores the parameters. `?preview=og` keeps the link-preview card's own headline
 (`SOCIAL_HEADLINE`) until the card is regenerated.
 
 ## SEO skills

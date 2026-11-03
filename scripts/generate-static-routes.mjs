@@ -375,9 +375,12 @@ for (const entry of productionChangelogEntries) {
 // The homepage ships its markup too, under index.html's own head. The other pages are built
 // from baseHtml, the empty-root copy read at the start, so overwriting the file is safe.
 const homepage = withAppMarkup(baseHtml, prerendered('/'))
-// The default headline (HERO_DEFAULT in src/homeVariants.ts).
+// The headline and the plain line under it (HOME_HEADLINE in src/homeVariants.ts).
 if (textOfHtml(homepage.match(/<h1[\s>][\s\S]*?<\/h1>/)?.[0] ?? '').trim() !== 'Happy') {
   throw new Error('dist/index.html should render the homepage heading "Happy"')
+}
+if (!homepage.includes('<p class="one-hero-tagline">One place for you, your team, and your agents.</p>')) {
+  throw new Error('dist/index.html should render "One place for you, your team, and your agents." under the heading, plain')
 }
 await writeFile(path.join(distRoot, 'index.html'), homepage)
 

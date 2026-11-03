@@ -241,7 +241,7 @@ existing 47 tests and production build pass.
 ## Regenerating the social preview
 
 This is an agent-run screenshot recipe, not a production script. The ordinary
-page's headline is the default in `src/homeVariants.ts`; `?preview=og` renders the card's own
+page's headline is `HOME_HEADLINE` in `src/homeVariants.ts`; `?preview=og` renders the card's own
 headline, “Any Model. Your Subscription. Happy Harness” (`SOCIAL_HEADLINE`), with
 “Orchestrate Claude, Codex, Grok, Gemini and more in one app” under it and without the
 gradient surface. Every route without its own card (all but

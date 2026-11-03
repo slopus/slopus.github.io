@@ -110,6 +110,6 @@ The homepage is off-limits without explicit approval for the specific change. Th
 - `src/DownloadOptions.tsx`
 - `src/happy-one*.css`, `src/happy-home.css`
 - `src/GrainGradient.tsx`, `src/grainGradient*.ts`, `src/AnimatedEmoji.tsx`
-- `src/homeVariants.ts`, `src/HomeVariantSwitcher.tsx`
+- `src/homeVariants.ts`, `src/homeVariantsDev.ts`, `src/homeVariantsDev.css`, `src/HomeVariantSwitcher.tsx`
 - `src/StoreButtons.tsx`
 - `index.html`
