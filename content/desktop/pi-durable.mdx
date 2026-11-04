@@ -11,13 +11,16 @@ Facts about Pi Durable come from [Earendil's launch post](https://earendil.com/p
 | What you get | Desktop app, phone apps, and Happy Agent | A library you build on |
 | Runs on | Your Mac, Windows, or Linux machine, or your server | Any JavaScript runtime, Cloudflare, Vercel |
 | Storage | One SQLite database in `~/.happy/agent` | Memory, SQLite, JSONL, or your own |
+| Models | Claude, Codex, Grok on your subscriptions; any ACP agent (beta) | Any pi-ai provider |
 | Clients | Desktop, iOS, Android, REST API | The ones you build |
+| Several clients on one conversation | ✓ | ✓ |
 | A retried send | Same message `id`, one message | Same `requestId`, one submission |
 | A tool cut off by a crash | Reruns only if safe, else recorded as interrupted | Reruns only if safe, else the model is told |
 | A half-written answer | Dropped; finished parts are kept | Kept, marked aborted |
 | Fork a conversation | ✗ | ✓ |
 | Team sign-in | ✓ | Yours to build |
 | License | MIT | MIT |
+| Maturity | Released, pre-1.0 (Happy Agent 0.4) | Experimental (1.5); the API can change in minor releases |
 
 Both save each step before moving on, let one process own the storage at a time, run many conversations at once, and let a client steer a running turn or queue the next message.
 
@@ -40,12 +43,16 @@ Both save each step before moving on, let one process own the storage at a time,
 
 ## What survives a crash in Happy
 
-Happy Agent writes every message, tool call, and result to its SQLite database as it goes, inside a transaction, and only then moves on. After a crash it reopens the database and picks up each agent that still owed work.
+Happy Agent is a daemon on your machine, and the apps are only clients. Close the window or the phone app and your agents keep working.
+
+Happy Agent writes every message, tool call, and result to its SQLite database as it goes, inside a transaction, and only then moves on. After a crash it reopens the database and picks up each agent that still owed work. Idle agents stay on disk until something asks for them.
 
 - **Messages.** A client names each message with its own `id`. Sending the same `id` again returns the message that already exists, so retrying a send whose response was lost is safe.
 - **Tools.** A tool that isn't safe to repeat runs at most once. If a crash cuts it off, it is answered as interrupted and never run again.
 - **Answers.** Only finished blocks are stored. A half-written answer is dropped, and the model is asked to continue from where it left off.
+- **Subagents.** They are sessions too, saved the same way. One that finished can take a follow-up with its full context.
 - **Waits and scheduled messages.** An agent waiting until a time, or a message scheduled for later, survives the restart.
+- **Workspaces.** A workspace is a folder on disk, or a Git worktree for parallel work, so the agent's edits are where it left them.
 
 On macOS and Linux, Happy Agent restarts itself after a crash; on Windows it doesn't yet. On a [server](/guides/remote-server/) it runs as a systemd or launchd service.
 
