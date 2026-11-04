@@ -43,6 +43,12 @@
    so fractional scaling never shows a hairline between them, and is cropped to fit. */
 .one-phone-screen { position: absolute; left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; overflow: hidden; background: #000; transform: scale(1.008); mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
 .one-phone-screen > video, .one-phone-screen > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* The header's own frost at 1% opacity, swept down the demo once while the page rests. Chrome
+   builds the GPU pipelines the frosted header needs over the page, the window and the phone the
+   first time it draws them, which on a cold cache stalls the screen for 150-230ms; this moves
+   that to before the first scroll. HappyOneDemo adds and removes it. */
+.one-demo-warm { position: absolute; z-index: 3; top: -30px; left: calc(50% - 50vw); width: 100vw; height: 60px; pointer-events: none; opacity: .01; backdrop-filter: var(--home-frost); animation: one-demo-warm 360ms steps(12, jump-none) forwards; }
+@keyframes one-demo-warm { to { top: calc(100% - 30px); } }
 .one-demo-error { margin-top: 1rem; font-size: .85rem; color: #8c3926; }
 @media (max-width: 700px) {
   .one-demo { margin-top: 2.5rem; }

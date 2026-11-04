@@ -42,9 +42,9 @@
 /* Room after the footer for the colour in the bottom left corner (HOME_SURFACE). */
 .happy-home:not([data-social-preview]) { padding-bottom: 120px; }
 
-/* The surface, as tall as the page; GrainGradient keeps its canvas around the viewport. Until
-   the shader paints, and without WebGL, the colour stands where HOME_SURFACE puts it in plain
-   CSS: the sides, the top right, and the bottom left; on phones only the two corners. */
+/* The surface, as tall as the page; GrainGradient draws canvases into it once, where the colour
+   can be. Until the shader paints, and without WebGL, the colour stands where HOME_SURFACE puts
+   it in plain CSS: the sides, the top right, and the bottom left; on phones only the two corners. */
 .home-grain {
   --home-edge: max(24px, (100% - 960px) * .4);
   --home-patch: color-mix(in srgb, var(--grain-0) 55%, var(--grain-back));
@@ -73,12 +73,15 @@
       var(--grain-back);
   }
 }
-.home-grain > canvas { position: absolute; top: 0; left: 0; display: block; width: 100%; opacity: 0; transition: opacity .6s ease; will-change: transform; }
-.home-grain > canvas[data-painted] { opacity: 1; }
+.home-grain > canvas { position: absolute; display: block; opacity: 0; transition: opacity .6s ease; }
+.home-grain[data-painted] > canvas { opacity: 1; }
+/* Once the canvases have faded in, the base colour is all that shows between them. */
+.home-grain[data-settled] { background: var(--grain-back); }
 
 /* The header lets the surface through; once the page scrolls under it, it frosts. */
 .happy-home .site-header-wrap { background: transparent; transition: border-color .2s ease, background-color .2s ease; }
-.happy-home .site-header-wrap[data-scrolled] { border-bottom-color: var(--home-line); background: var(--home-header); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); }
+.happy-home { --home-frost: blur(20px) saturate(1.4); }
+.happy-home .site-header-wrap[data-scrolled] { border-bottom-color: var(--home-line); background: var(--home-header); -webkit-backdrop-filter: var(--home-frost); backdrop-filter: var(--home-frost); }
 .happy-home .wordmark { color: var(--home-ink); font-family: 'Bricolage Grotesque', 'IBM Plex Sans', sans-serif; font-size: 1.12rem; letter-spacing: -.03em; }
 .happy-home .wordmark span { color: var(--home-ink-2); font-weight: 700; }
 .happy-home .nav-github-count { font-family: 'IBM Plex Mono', monospace; }

@@ -25,14 +25,78 @@ export type Surface = { wide: SurfaceShape; narrow: SurfaceShape }
 
 /**
  * The moment of the apps' animated field the page shows, in shader seconds: a still, the frame
- * the page always opened on. It is drawn again only when the canvas moves, resizes or recolours.
+ * the page always opened on.
  */
 export const GRAIN_STILL = 0
+/** The largest piece drawn at once, in device px, well inside every GPU's limits. */
+const PIECE = 4096
+
+/** A rectangle of the page: x and y from its top left. */
+type Rect = { x: number; y: number; width: number; height: number }
+
 /**
- * The canvas moves in whole steps of this many CSS px, a whole number of device pixels at the
- * usual ratios, so the grain lands on the same pixels wherever the canvas is.
+ * Where the shader can put colour, in CSS px; everywhere else it draws the plain base colour,
+ * which the layer's own background shows. The bounds are the shader's: rim() reaches 1.3 × its
+ * reach + 40px, a side's reach is at most .92 of its margin, a blob's wanders up to 1.3 × its
+ * radius, and each gets 8px to spare.
  */
-const STEP = 120
+function colouredRects(shape: SurfaceShape, width: number, height: number): Rect[] {
+  const rects: Rect[] = []
+  const extent = (reach: number) => (reach < 1 ? 0 : 1.3 * reach + 48)
+  const [leftReach, leftWave, rightReach, rightWave] = shape.sides
+  const margin = Math.max(.5 * width - shape.calm, 0)
+  const side = Math.min(.5 * width, extent(margin * Math.min(.92, Math.max(leftReach + Math.abs(leftWave), rightReach + Math.abs(rightWave)))))
+  if (side > 0) rects.push({ x: 0, y: 0, width: side, height }, { x: width - side, y: 0, width: side, height })
+  const [topReach, topWave, bottomReach, bottomWave] = shape.ends
+  const top = extent(topReach + Math.abs(topWave))
+  const bottom = extent(bottomReach + Math.abs(bottomWave))
+  if (top > 0) rects.push({ x: 0, y: 0, width, height: top })
+  if (bottom > 0) rects.push({ x: 0, y: height - bottom, width, height: bottom })
+  const corners = [[0, 0], [1, 0], [0, 1], [1, 1]] as const
+  shape.corners.forEach((radius, index) => {
+    const size = extent(1.3 * radius)
+    if (size <= 0) return
+    const [right, low] = corners[index]
+    rects.push({ x: right ? width - size : 0, y: low ? height - size : 0, width: size, height: size })
+  })
+  return rects
+}
+
+/**
+ * The same area as `rects`, clamped to the page, in whole device px and without overlaps, cut
+ * into pieces no larger than PIECE.
+ */
+function pieces(rects: Rect[], ratio: number, width: number, height: number): Rect[] {
+  const device = rects.map(rect => {
+    const x0 = Math.max(0, Math.floor(rect.x * ratio))
+    const y0 = Math.max(0, Math.floor(rect.y * ratio))
+    const x1 = Math.min(width, Math.ceil((rect.x + rect.width) * ratio))
+    const y1 = Math.min(height, Math.ceil((rect.y + rect.height) * ratio))
+    return { x0, y0, x1, y1 }
+  }).filter(({ x0, y0, x1, y1 }) => x1 > x0 && y1 > y0)
+  // Bands across the page between every top and bottom edge, each the union of what covers it.
+  const edges = [...new Set(device.flatMap(({ y0, y1 }) => [y0, y1]))].sort((a, b) => a - b)
+  const bands: { y0: number; y1: number; spans: [number, number][] }[] = []
+  for (let i = 0; i + 1 < edges.length; i++) {
+    const [y0, y1] = [edges[i], edges[i + 1]]
+    const spans: [number, number][] = []
+    for (const { x0, x1 } of device.filter(rect => rect.y0 <= y0 && rect.y1 >= y1).sort((a, b) => a.x0 - b.x0)) {
+      const last = spans.at(-1)
+      if (last && x0 <= last[1]) last[1] = Math.max(last[1], x1)
+      else spans.push([x0, x1])
+    }
+    const previous = bands.at(-1)
+    if (previous && previous.y1 === y0 && JSON.stringify(previous.spans) === JSON.stringify(spans)) previous.y1 = y1
+    else if (spans.length) bands.push({ y0, y1, spans })
+  }
+  const result: Rect[] = []
+  for (const { y0, y1, spans } of bands)
+    for (const [x0, x1] of spans)
+      for (let y = y0; y < y1; y += PIECE)
+        for (let x = x0; x < x1; x += PIECE)
+          result.push({ x, y, width: Math.min(PIECE, x1 - x), height: Math.min(PIECE, y1 - y) })
+  return result
+}
 
 function compile(gl: WebGLRenderingContext, type: number, source: string) {
   const shader = gl.createShader(type)
@@ -45,41 +109,36 @@ function compile(gl: WebGLRenderingContext, type: number, source: string) {
 }
 
 /**
- * Draws the Grain Gradient as the page's surface, shaped by `surface`, as a still (GRAIN_STILL).
- * The canvas sits in a layer as tall as the page and covers the viewport plus a buffer above and
- * below; the shader works in page space, so moving the canvas a step changes nothing on screen,
- * and scrolling is the browser's own. Nothing runs between draws.
- * The palette is the canvas's `--grain-*` custom properties (six-digit hex), read again when the
- * color scheme changes. Returns the one teardown that releases the program, observers, and
+ * Draws the Grain Gradient as the page's surface, shaped by `surface`, as a still (GRAIN_STILL),
+ * into `layer`, an element as large as the page. Only where the shader can put colour gets
+ * canvases, each drawn once, in page space, by one WebGL context kept off the page, then handed
+ * over as a bitmap; the layer's background is the plain base colour between them. They are drawn
+ * again only when the page resizes or the colour scheme changes, all at once, so scrolling never
+ * draws and moves nothing. The palette is the layer's `--grain-*` custom properties (six-digit
+ * hex). Returns the one teardown that removes the canvases and releases the context and
  * listeners.
  */
-export function grainGradientRenderer(canvas: HTMLCanvasElement, surface: Surface) {
-  const document = canvas.ownerDocument
+export function grainGradientRenderer(layer: HTMLElement, surface: Surface) {
+  const document = layer.ownerDocument
   const view = document.defaultView
-  const layer = canvas.parentElement
   // Without WebGL the CSS edges stay.
-  if (view === null || layer === null || typeof view.WebGLRenderingContext === 'undefined') return
-  const gl = canvas.getContext('webgl', {
+  if (view === null || typeof view.WebGLRenderingContext === 'undefined' || typeof view.createImageBitmap !== 'function') return
+  const source = document.createElement('canvas')
+  const gl = source.getContext('webgl', {
     alpha: false,
     antialias: false,
     depth: false,
     stencil: false,
+    preserveDrawingBuffer: true,
     powerPreference: 'low-power',
   })
   if (gl === null) return
 
   let releaseProgram: (() => void) | undefined
-  let render: (() => void) | undefined
+  let render: ((piece: Rect, shape: SurfaceShape, ratio: number, width: number, height: number) => void) | undefined
   let paletteUpdate: (() => boolean) | undefined
-  // The canvas's place in the layer and its height, in CSS px, and device pixels per CSS px.
-  let top = 0
-  let height = 0
-  let ratio = 1
-  // The page's size, in CSS px.
-  let pageWidth = 0
-  let pageHeight = 0
-  // Phones resize the viewport as their toolbars come and go; the canvas only grows.
-  let tallest = 0
+  let shown: HTMLCanvasElement[] = []
+  let settle: number | undefined
 
   const initialize = () => {
     const vertex = compile(gl, gl.VERTEX_SHADER, vertexSource)
@@ -109,10 +168,11 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, surface: Surfac
       return
     }
     const resolution = gl.getUniformLocation(program, 'u_resolution')
-    const offset = gl.getUniformLocation(program, 'u_top')
+    const origin = gl.getUniformLocation(program, 'u_origin')
     const scale = gl.getUniformLocation(program, 'u_ratio')
     const time = gl.getUniformLocation(program, 'u_time')
-    const page = gl.getUniformLocation(program, 'u_height')
+    const pageWidth = gl.getUniformLocation(program, 'u_width')
+    const pageHeight = gl.getUniformLocation(program, 'u_height')
     const sides = gl.getUniformLocation(program, 'u_sides')
     const ends = gl.getUniformLocation(program, 'u_ends')
     const corners = gl.getUniformLocation(program, 'u_corners')
@@ -128,7 +188,7 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, surface: Surfac
     gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0)
     releaseProgram = release
     paletteUpdate = () => {
-      const style = view.getComputedStyle(canvas)
+      const style = view.getComputedStyle(layer)
       for (const { location, token } of colors) {
         const color = style.getPropertyValue(token).trim()
         if (!/^#[0-9a-f]{6}$/iu.test(color)) return false
@@ -142,98 +202,111 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, surface: Surfac
       releaseProgram = paletteUpdate = undefined
       return
     }
-    render = () => {
-      if (gl.isContextLost()) return
-      gl.uniform2f(resolution, canvas.width, canvas.height)
-      gl.uniform1f(offset, top * ratio)
+    render = (piece, current, ratio, width, height) => {
+      if (source.width !== piece.width || source.height !== piece.height) {
+        source.width = piece.width
+        source.height = piece.height
+      }
+      gl.viewport(0, 0, piece.width, piece.height)
+      gl.uniform2f(resolution, piece.width, piece.height)
+      gl.uniform2f(origin, piece.x, piece.y)
       gl.uniform1f(scale, ratio)
       gl.uniform1f(time, GRAIN_STILL)
-      gl.uniform1f(page, pageHeight)
-      const current = pageWidth < 700 ? surface.narrow : surface.wide
+      gl.uniform1f(pageWidth, width / ratio)
+      gl.uniform1f(pageHeight, height)
       gl.uniform4f(sides, ...current.sides)
       gl.uniform4f(ends, ...current.ends)
       gl.uniform4f(corners, ...current.corners)
       gl.uniform2f(shape, current.calm, current.wavelength)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
     }
-    // Painted: the CSS edges underneath can stop showing through.
-    canvas.dataset.painted = ''
   }
 
-  // What the canvas shows; the still is drawn again only when this changes.
+  // What the canvases show; they are drawn again only when this changes.
   let drawn = ''
-  const draw = () => {
-    const showing = `${canvas.width} ${canvas.height} ${top} ${pageHeight} ${ratio}`
-    if (render === undefined || showing === drawn) return
-    drawn = showing
-    render()
-  }
-  /**
-   * Keeps the canvas around the viewport, with a buffer of at least 40% of its height above
-   * and below. Once the viewport comes within half a buffer of either end, the canvas moves
-   * and repaints in the same frame. Past the end of the page the layer clips it.
-   */
-  const place = (sized: boolean) => {
+  let pass = 0
+  const paint = async () => {
+    if (render === undefined) return
     const bounds = layer.getBoundingClientRect()
-    pageWidth = bounds.width
-    pageHeight = bounds.height
-    tallest = Math.max(tallest, view.innerHeight)
-    const buffer = Math.ceil(Math.max(240, .4 * tallest) / STEP) * STEP
-    const wanted = Math.ceil((tallest + 2 * buffer) / STEP) * STEP
-    const scrolled = -bounds.top
-    const near = top > 0 && scrolled - top < buffer / 2
-    const far = top + height - (scrolled + view.innerHeight) < buffer / 2
-    if (!sized && wanted === height && !near && !far) return
-    ratio = Math.min(2, Math.max(1, view.devicePixelRatio))
+    const ratio = Math.min(2, Math.max(1, view.devicePixelRatio))
     const width = Math.max(1, Math.round(bounds.width * ratio))
-    const pixels = Math.max(1, Math.round(wanted * ratio))
-    if (canvas.width !== width || canvas.height !== pixels) {
-      canvas.width = width
-      canvas.height = pixels
-      gl.viewport(0, 0, width, pixels)
+    const height = bounds.height
+    const palette = view.getComputedStyle(layer).getPropertyValue('--grain-back')
+    const wanted = `${width} ${height} ${ratio} ${palette}`
+    if (wanted === drawn) return
+    drawn = wanted
+    const current = ++pass
+    if (!paletteUpdate?.()) return
+    const shape = bounds.width < 700 ? surface.narrow : surface.wide
+    const made: HTMLCanvasElement[] = []
+    for (const piece of pieces(colouredRects(shape, width / ratio, height), ratio, width, Math.ceil(height * ratio))) {
+      if (render === undefined || current !== pass) return
+      render(piece, shape, ratio, width, height)
+      const bitmap = await view.createImageBitmap(source)
+      if (current !== pass) { bitmap.close(); return }
+      const canvas = document.createElement('canvas')
+      canvas.width = piece.width
+      canvas.height = piece.height
+      Object.assign(canvas.style, {
+        left: `${piece.x / ratio}px`, top: `${piece.y / ratio}px`,
+        width: `${piece.width / ratio}px`, height: `${piece.height / ratio}px`,
+      })
+      const bitmapContext = canvas.getContext('bitmaprenderer')
+      if (bitmapContext) bitmapContext.transferFromImageBitmap(bitmap)
+      else { canvas.getContext('2d')?.drawImage(bitmap, 0, 0); bitmap.close() }
+      made.push(canvas)
     }
-    if (height !== wanted) canvas.style.height = `${wanted}px`
-    height = wanted
-    top = Math.max(0, Math.floor((scrolled - buffer) / STEP) * STEP)
-    canvas.style.transform = `translateY(${top}px)`
-    draw()
+    // All at once: the old canvases go as the new ones arrive.
+    for (const canvas of shown) canvas.remove()
+    layer.append(...made)
+    shown = made
+    if (!('painted' in layer.dataset)) {
+      // Painted: the canvases fade in over the CSS edges, which then give way to the plain base.
+      void view.getComputedStyle(made[0] ?? layer).opacity
+      layer.dataset.painted = ''
+      settle = view.setTimeout(() => { layer.dataset.settled = '' }, 700)
+    }
   }
-  const resize = () => place(true)
-  const scroll = () => place(false)
+  // The first paint goes at once; later ones wait for the page to stop changing size, as it does
+  // while it loads, so it is painted again once rather than at every step.
+  let wait: number | undefined
+  const schedule = () => {
+    view.clearTimeout(wait)
+    if (drawn === '') void Promise.resolve().then(paint)
+    else wait = view.setTimeout(paint, 150)
+  }
   const lost = (event: Event) => {
     event.preventDefault()
-    delete canvas.dataset.painted
     render = releaseProgram = paletteUpdate = undefined
     drawn = ''
+    pass++
   }
   const restored = () => {
     initialize()
-    resize()
+    schedule()
   }
   const scheme = view.matchMedia('(prefers-color-scheme: dark)')
-  const recolor = () => {
-    if (paletteUpdate?.()) {
-      drawn = ''
-      draw()
-    }
-  }
   initialize()
-  resize()
-  const sizing = new view.ResizeObserver(resize)
+  schedule()
+  const sizing = new view.ResizeObserver(schedule)
   sizing.observe(layer)
-  view.addEventListener('scroll', scroll, { passive: true })
-  view.addEventListener('resize', resize)
-  scheme.addEventListener('change', recolor)
-  canvas.addEventListener('webglcontextlost', lost)
-  canvas.addEventListener('webglcontextrestored', restored)
+  view.addEventListener('resize', schedule)
+  scheme.addEventListener('change', schedule)
+  source.addEventListener('webglcontextlost', lost)
+  source.addEventListener('webglcontextrestored', restored)
   return () => {
+    pass++
     sizing.disconnect()
-    view.removeEventListener('scroll', scroll)
-    view.removeEventListener('resize', resize)
-    scheme.removeEventListener('change', recolor)
-    canvas.removeEventListener('webglcontextlost', lost)
-    canvas.removeEventListener('webglcontextrestored', restored)
+    view.removeEventListener('resize', schedule)
+    scheme.removeEventListener('change', schedule)
+    source.removeEventListener('webglcontextlost', lost)
+    source.removeEventListener('webglcontextrestored', restored)
+    view.clearTimeout(settle)
+    view.clearTimeout(wait)
     releaseProgram?.()
-    delete canvas.dataset.painted
+    gl.getExtension('WEBGL_lose_context')?.loseContext()
+    for (const canvas of shown) canvas.remove()
+    delete layer.dataset.painted
+    delete layer.dataset.settled
   }
 }

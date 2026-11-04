@@ -80,6 +80,25 @@ export function HappyOneDemo() {
       holding = true
       main.pause()
     }
+    // Once, while the page rests with the window playing: the header's frost swept down the
+    // demo, invisibly (.one-demo-warm), so a cold browser builds its pipelines now.
+    let warmed = false
+    let warming: HTMLSpanElement | undefined
+    const warm = () => {
+      if (warmed || disposed) return
+      warmed = true
+      if (scrollY > 0 || typeof requestIdleCallback === 'undefined') return
+      requestIdleCallback(() => {
+        if (disposed || scrollY > 0) return
+        warming = document.createElement('span')
+        warming.className = 'one-demo-warm'
+        warming.setAttribute('aria-hidden', 'true')
+        warming.addEventListener('animationend', () => warming?.remove(), { once: true })
+        stage.current!.append(warming)
+        setTimeout(() => warming?.remove(), 1000)
+      }, { timeout: 2000 })
+    }
+    const onPlaying = () => { follow(); warm() }
     const onPlay = () => {
       align(true)
       if (companion && follows) companion.playbackRate = main.playbackRate
@@ -102,7 +121,7 @@ export function HappyOneDemo() {
       if (reducedMotion.matches || connection?.saveData) { autoplay = false; main.pause(); revealControls() }
     }
     main.addEventListener('play', onPlay)
-    main.addEventListener('playing', follow)
+    main.addEventListener('playing', onPlaying)
     main.addEventListener('pause', onPause)
     main.addEventListener('waiting', follow)
     main.addEventListener('seeking', onSeeking)
@@ -128,7 +147,8 @@ export function HappyOneDemo() {
       reducedMotion.removeEventListener('change', onMotion)
       connection?.removeEventListener('change', onMotion)
       main.removeEventListener('play', onPlay)
-      main.removeEventListener('playing', follow)
+      main.removeEventListener('playing', onPlaying)
+      warming?.remove()
       main.removeEventListener('pause', onPause)
       main.removeEventListener('waiting', follow)
       main.removeEventListener('seeking', onSeeking)

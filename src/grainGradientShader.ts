@@ -27,17 +27,18 @@
  * one surface runs the length of the page, its colour in slow swells along the
  * sides and, by surface, the top and bottom and blobs in the corners, with a
  * plain column down the middle; each half has noise of its own, blended across
- * the middle. The page shows one moment of it, still. `u_top` is the canvas's
- * top in the page, `u_ratio` its device pixels per CSS pixel, `u_height` the
- * page's height in CSS px, and the rest the surface (SurfaceShape in
- * grainGradientRenderer.ts).
+ * the middle. The page shows one moment of it, still, drawn a piece at a time:
+ * `u_origin` is the piece's top left in the page in device px, `u_ratio` device
+ * pixels per CSS pixel, `u_width` and `u_height` the page's size in CSS px, and
+ * the rest the surface (SurfaceShape in grainGradientRenderer.ts).
  */
 export const grainGradientFragmentShader = `
 precision highp float;
 uniform vec2 u_resolution;
-uniform float u_top;
+uniform vec2 u_origin;
 uniform float u_ratio;
 uniform float u_time;
+uniform float u_width;
 uniform float u_height;
 uniform vec4 u_sides;
 uniform vec4 u_ends;
@@ -150,9 +151,9 @@ vec2 blob(vec2 css, vec2 corner, float radius, float t, float seed) {
 void main() {
   float t = .1 * (u_time + 7.);
   // The page in device px, x from its left edge and y down from its top; and in CSS px.
-  vec2 page = vec2(gl_FragCoord.x, u_top + u_resolution.y - gl_FragCoord.y);
+  vec2 page = vec2(u_origin.x + gl_FragCoord.x, u_origin.y + u_resolution.y - gl_FragCoord.y);
   vec2 css = page / u_ratio;
-  float width = u_resolution.x / u_ratio;
+  float width = u_width;
   // 0 on the left half and 1 on the right, each half with noise of its own. Across the middle
   // the two are blended, so where colour crosses it (a corner patch on a narrow page) they never
   // meet in a line.

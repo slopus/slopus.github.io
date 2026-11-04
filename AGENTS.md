@@ -134,13 +134,20 @@ content: the top right corner and the bottom left at the footer. It never wraps
 around content blocks; Kirill found that claustrophobic. Text, emoji, video, and
 buttons sit directly on it, and the header is transparent until the page scrolls,
 then frosted. The field is a still, never animated: the apps' field at one moment
-(`GRAIN_STILL`). `src/grainGradientRenderer.ts` keeps one canvas around the viewport
-and moves it in 120px steps; it draws only when the canvas moves a step, resizes or
-changes scheme, and nothing runs between draws. Each half of the page has noise of
-its own, blended across the middle, so where a corner patch crosses the middle the
-halves never meet in a line. Baked images were weighed and rejected: the grain is
-one device pixel and the shapes follow the page's width and height, so an image
-would be resampled at every other width and pixel ratio.
+(`GRAIN_STILL`). `src/grainGradientRenderer.ts` draws it once, in page space, into
+canvases only where the shader can put colour (bounds from the shader's own reach),
+with the plain base colour between them, and draws again only on a resize or a new
+scheme: scrolling never draws or moves anything, so it stays on the compositor. The
+canvas that used to follow the viewport redrew 9.7 MP (12.6ms of GPU on an M4 Pro)
+every 240px of scroll. The pieces match one whole-page draw pixel for pixel; check
+that again when the shapes or the shader's reach change. Each half of the page has
+noise of its own, blended across the middle, so where a corner patch crosses the
+middle the halves never meet in a line. Baked images were weighed and rejected: the
+grain is one device pixel and the shapes follow the page's width and height, so an
+image would be resampled at every other width and pixel ratio. The frosted header
+makes Chrome build GPU pipelines the first time it draws, which stalled the first
+scroll for 150-230ms on a cold cache; `.one-demo-warm` sweeps the same frost, at 1%,
+down the demo once while the page rests, so that happens before the first scroll.
 
 Its order is the demo, the downloads, the four value rows (subscriptions,
 multiplayer, open source, end-to-end encryption), "Don't trust our words. Trust

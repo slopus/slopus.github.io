@@ -143,7 +143,6 @@ describe('Happy Desktop landing page', () => {
     const shell = container.querySelector('.happy-home')!
 
     expect(shell.firstElementChild?.className).toBe('home-grain')
-    expect(container.querySelectorAll('.home-grain canvas')).toHaveLength(1)
     expect(container.querySelector('.one-grain, .one-value-panel, .one-stage-grain')).toBeNull()
   })
 
@@ -205,8 +204,11 @@ describe('Happy Desktop landing page', () => {
 
   it('holds the gradient still, its two halves blended across the middle', async () => {
     const { grainGradientFragmentShader } = await import('./grainGradientShader')
-    // Drawn on a move, resize or new scheme, never on a clock.
-    expect(readFileSync('src/grainGradientRenderer.ts', 'utf8')).not.toMatch(/requestAnimationFrame|setInterval/)
+    // Drawn on a resize or new scheme, never on a clock.
+    const renderer = readFileSync('src/grainGradientRenderer.ts', 'utf8')
+    expect(renderer).not.toMatch(/requestAnimationFrame|setInterval/)
+    // Drawn once into canvases that scroll with the page: nothing listens to the scroll.
+    expect(renderer).not.toMatch(/'scroll'/)
     // A hard switch between the halves' noise drew a vertical line wherever colour crossed the middle.
     expect(grainGradientFragmentShader).toMatch(/float right = smoothstep\(/)
     expect(grainGradientFragmentShader).not.toMatch(/step\(\.5 \* width, css\.x\)/)

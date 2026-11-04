@@ -14,15 +14,12 @@ export const HOME_SURFACE: Surface = {
 /**
  * The page's surface: the Grain Gradient from the phone apps' first screen and desktop
  * onboarding, held still, one field from the top of the page to the bottom that scrolls with
- * it, its colour where HOME_SURFACE puts it. Its palette is `--grain-*` in happy-home.css, light
- * or dark with the system; a new `palette` repaints it. Without WebGL, CSS edges stand in for it.
+ * it, its colour where HOME_SURFACE puts it, drawn once into canvases where the colour can be.
+ * Its palette is `--grain-*` in happy-home.css, light or dark with the system; a new `palette`
+ * repaints it. Without WebGL, CSS edges stand in for it.
  */
 export function GrainGradient({ palette }: { palette: string }) {
-  const canvas = useRef<HTMLCanvasElement>(null)
-  useEffect(() => grainGradientRenderer(canvas.current!, HOME_SURFACE), [palette])
-  return (
-    <div className="home-grain" aria-hidden="true">
-      <canvas ref={canvas} />
-    </div>
-  )
+  const layer = useRef<HTMLDivElement>(null)
+  useEffect(() => grainGradientRenderer(layer.current!, HOME_SURFACE), [palette])
+  return <div ref={layer} className="home-grain" aria-hidden="true" />
 }
