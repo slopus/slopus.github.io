@@ -3,6 +3,7 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 import { Router } from './Router'
 import { startAnalytics } from './analytics'
 import './style.css'
+import './site-theme.css'
 
 const root = document.querySelector<HTMLDivElement>('#app')
 

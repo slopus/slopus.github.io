@@ -3,9 +3,9 @@
    down the middle where the words sit; IBM Plex Sans, and Bricolage Grotesque for the wordmark.
    Lavender, the default, is copied verbatim from the native start screens (happy-ios
    StartViewController and StartTokens.swift), light or dark with the system; the palettes still
-   under review are in homeVariantsDev.css, on the dev server only. Blog downloads and /releases/
-   keep happy-one.css alone. */
-:root:has(.happy-home) {
+   under review are in homeVariantsDev.css, on the dev server only. Every other page takes the same
+   palette and type through site-theme.css (.site-theme). */
+:root:has(:is(.happy-home, .site-theme)) {
   color-scheme: light dark;
   --grain-back: #f4f2ff;
   --grain-0: #818cf8;
@@ -24,7 +24,7 @@
   background: var(--grain-back);
 }
 @media (prefers-color-scheme: dark) {
-  :root:has(.happy-home) {
+  :root:has(:is(.happy-home, .site-theme)) {
     --grain-back: #06050f;
     --grain-0: #4338ca;
     --grain-1: #7c3aed;

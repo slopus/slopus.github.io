@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Components } from 'react-markdown'
 import { DownloadOptions } from './DownloadOptions'
+import { GrainGradient, SITE_SURFACE } from './GrainGradient'
 import type { MacArchitecture } from './desktopDownloads'
 import { MarkdownDocument } from './MarkdownDocument'
 import {
@@ -140,6 +141,7 @@ function LegacyNotice() {
 export function DocsPage({ product = HAPPY, path, changelogPath }: { product?: Product; path: string; changelogPath?: string }) {
   const [isSidebarScrollbarVisible, setIsSidebarScrollbarVisible] = useState(false)
   const sidebarScrollbarTimer = useRef<number | null>(null)
+  const article = useRef<HTMLElement>(null)
   const normalizedPath = normalizeDocumentPath(path)
   const activeDocument = getDocument(product.key, normalizedPath)
 
@@ -171,7 +173,8 @@ export function DocsPage({ product = HAPPY, path, changelogPath }: { product?: P
   const nextDocument = activeIndex === -1 ? undefined : productDocuments[activeIndex + 1]
 
   return (
-    <div className="site-shell document-site-shell docs-shell">
+    <div className="site-shell document-site-shell docs-shell site-theme">
+      <GrainGradient surface={SITE_SURFACE} className="site-grain" scroller={article} />
       <SiteHeader product={product} docsActive />
       <DocsMobileNavigation key={changelogPath ?? activeDocument.path} product={product} activeDocument={changelogEntry ? { ...activeDocument, title: changelogEntry.title } : activeDocument} />
       <main className="docs-layout page-width">
@@ -184,6 +187,7 @@ export function DocsPage({ product = HAPPY, path, changelogPath }: { product?: P
         </aside>
 
         <article
+          ref={article}
           className={activeDocument.essay ? 'document-article essay-article' : 'document-article'}
           data-document={activeDocument.path || undefined}
           data-changelog-entry={changelogEntry?.slug}
@@ -246,7 +250,8 @@ export function LegalPage({
   const markdown = prepareMarkdown(getLegalSource(name))
 
   return (
-    <div className="site-shell document-site-shell">
+    <div className="site-shell document-site-shell site-theme">
+      <GrainGradient surface={SITE_SURFACE} className="site-grain" />
       <SiteHeader />
       <main className="legal-layout page-width">
         <a className="document-back-link" href={back.href}>
@@ -314,7 +319,8 @@ const essayComponents: Components = {
 
 export function NotFoundPage() {
   return (
-    <div className="site-shell document-site-shell">
+    <div className="site-shell document-site-shell site-theme">
+      <GrainGradient surface={SITE_SURFACE} className="site-grain" />
       <SiteHeader />
       <main className="not-found page-width">
         <p className="eyebrow">404</p>

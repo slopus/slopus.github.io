@@ -1,0 +1,173 @@
+/* Every page with .site-theme on its shell (docs, blog posts, legal pages, /releases/, /plugins/,
+   404) in the homepage's look, minimally: its palette (happy-home.css), light or dark with the
+   system; IBM Plex Sans and IBM Plex Mono, with Bricolage Grotesque for the wordmark; and the
+   Grain Gradient only as a patch in the top right corner (SITE_SURFACE), behind the header and
+   beside the title, scrolling away with the page. These rules override style.css, happy-one.css,
+   releases.css and plugins.css on those pages; /model-benchmarks/ keeps the older cream look. */
+.site-theme {
+  /* Captions, navigation and meta lines: the ink at 66% on the base, 5.6:1 in light. */
+  --site-muted: color-mix(in srgb, var(--home-ink) 66%, var(--grain-back));
+  --site-wash: color-mix(in srgb, var(--home-ink) 6%, transparent);
+  --site-tint: color-mix(in srgb, var(--home-accent) 9%, transparent);
+  /* Code blocks stay dark in both schemes, as they were. */
+  --site-code: #14112e;
+  --site-code-ink: #e9e7fb;
+  position: relative;
+  isolation: isolate;
+  color: var(--home-ink);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+}
+
+/* The patch: its layer is as wide as the page, so the shader picks the phone shape below 700px
+   as the homepage's does, and just tall enough for the patch's wandering edge and grain. Until
+   the shader paints, and without WebGL, a CSS corner stands in. */
+.site-grain {
+  --site-patch: 320px;
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(1.7 * var(--site-patch) + 40px);
+  overflow: hidden;
+  overflow: clip;
+  pointer-events: none;
+  background: radial-gradient(circle var(--site-patch) at 100% 0, var(--grain-3), color-mix(in srgb, var(--grain-0) 55%, var(--grain-back)) 45%, transparent);
+}
+@media (max-width: 699px) {
+  .site-grain { --site-patch: 180px; }
+}
+.site-grain > canvas { position: absolute; display: block; opacity: 0; transition: opacity .6s ease; }
+.site-grain[data-painted] > canvas { opacity: 1; }
+/* Once the canvas has faded in, the page shows between it and the layer's edges. */
+.site-grain[data-settled] { background: none; }
+
+/* The header and footer, as on the homepage: the header lets the corner through, and frosts
+   once the page scrolls under it. */
+.site-theme .site-header-wrap { background: transparent; transition: border-color .2s ease, background-color .2s ease; }
+.site-theme .site-header-wrap[data-scrolled] { border-bottom-color: var(--home-line); background: var(--home-header); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); }
+.site-theme .wordmark { color: var(--home-ink); font-family: 'Bricolage Grotesque', 'IBM Plex Sans', sans-serif; font-size: 1.12rem; letter-spacing: -.03em; }
+.site-theme .wordmark span { color: var(--home-ink-2); font-weight: 700; }
+.site-theme .site-header nav > a[aria-current='page'] { text-decoration-color: var(--home-accent); }
+.site-theme .nav-github:hover { color: var(--home-accent); }
+.site-theme .site-footer { background: transparent; border-top-color: var(--home-line); }
+.site-theme .footer-statement, .site-theme .footer-people { font-family: inherit; }
+.site-theme .footer-meta p, .site-theme .footer-links .footer-link-quiet { color: var(--home-ink-2); }
+.site-theme .footer-meta .footer-descriptor { color: var(--home-ink); }
+.site-theme .one-scrollbar[data-active] .one-scrollbar-thumb { background: color-mix(in srgb, var(--home-ink) 27%, transparent); }
+.site-theme .one-scrollbar:hover .one-scrollbar-thumb { background: color-mix(in srgb, var(--home-ink) 44%, transparent); }
+
+/* Type: Plex Sans SemiBold headings, Plex Mono wherever DM Mono was. */
+.site-theme :is(h1, h2, h3) { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 600; }
+.site-theme :is(h1, h2) em { color: var(--home-accent); }
+.site-theme :is(.eyebrow, .nav-github-count, .docs-mobile-trail, .recipe-source code, .legacy-notice code, .document-pagination a span, .releases-version, .one-brew-line),
+.site-theme .document-content :is(pre, :not(pre) > code, .cos-prompt-example) { font-family: 'IBM Plex Mono', monospace; }
+
+/* The docs sidebar, and its phone breadcrumb. */
+.site-theme .docs-nav-group h2, .site-theme .docs-nav-fold summary { color: var(--home-ink); font-family: inherit; font-weight: 600; }
+.site-theme .docs-nav-fold summary:focus-visible, .site-theme .docs-mobile-trail:focus-visible { outline-color: var(--home-accent); }
+.site-theme .docs-nav-group a { color: var(--site-muted); }
+.site-theme .docs-nav-group a:hover { background: var(--site-wash); color: var(--home-ink); }
+.site-theme .docs-nav-group a[aria-current='page'] { background: var(--site-tint); color: var(--home-ink); }
+.site-theme .docs-sidebar.is-scrollbar-active { scrollbar-color: color-mix(in srgb, var(--home-ink) 27%, transparent) transparent; }
+.site-theme .docs-sidebar.is-scrollbar-active::-webkit-scrollbar-thumb { background-color: color-mix(in srgb, var(--home-ink) 27%, transparent); }
+.site-theme .docs-sidebar.is-scrollbar-active::-webkit-scrollbar-thumb:hover { background-color: color-mix(in srgb, var(--home-ink) 44%, transparent); }
+.site-theme .docs-mobile-navigation { border-bottom-color: var(--home-line); }
+.site-theme .docs-mobile-trail { color: var(--home-ink); }
+.site-theme .docs-mobile-trail-group { color: var(--site-muted); }
+
+/* Notices above a page's text. */
+.site-theme .legacy-notice { border-color: var(--home-line); border-left-color: var(--home-accent); background: var(--home-surface); color: var(--home-ink-2); }
+.site-theme .legacy-notice a { color: var(--home-ink); }
+.site-theme .recipe-source { color: var(--site-muted); }
+.site-theme .recipe-source a:hover { color: var(--home-accent); }
+.site-theme .document-article[data-document='changelog'] .document-content > h2 + p,
+.site-theme .document-article[data-changelog-entry] .document-content > h1 + p { color: var(--site-muted); }
+.site-theme .changelog-beta { border-color: color-mix(in srgb, var(--home-accent) 45%, transparent); color: var(--home-accent); font-family: inherit; }
+
+/* The text. */
+.site-theme .document-content { color: var(--home-ink-2); }
+.site-theme .document-content :is(h1, h2, h3), .site-theme .document-content strong { color: var(--home-ink); }
+.site-theme .document-content :is(h1, h2, h3) { font-family: inherit; }
+.site-theme .document-content :is(h2, hr) { border-top-color: var(--home-line); }
+.site-theme .document-content .heading-anchor, .site-theme .document-content li::marker { color: var(--home-accent); }
+.site-theme .document-content > p:first-of-type { color: var(--site-muted); }
+.site-theme .document-content a { color: var(--home-accent); text-decoration-color: color-mix(in srgb, var(--home-accent) 35%, transparent); }
+.site-theme .document-content a:hover { text-decoration-color: currentColor; }
+.site-theme .document-content blockquote { background: var(--site-wash); border-left-color: var(--home-accent); }
+.site-theme .document-content pre { border-color: color-mix(in srgb, var(--home-ink) 14%, var(--site-code)); background: var(--site-code); color: var(--site-code-ink); }
+.site-theme .document-content :not(pre) > code { background: var(--site-wash); color: var(--home-ink); }
+.site-theme .document-content :is(img, video), .site-theme .document-content .labelled-image img { border-color: var(--home-line); }
+.site-theme .document-content :is(.side-figure figcaption, .labelled-image-label, .essay-figure figcaption, .social-embed-byline),
+.site-theme .document-content p:has(> video, > img) + p:has(> em:only-child),
+.site-theme .document-content blockquote + p:has(> em:only-child) { color: var(--site-muted); }
+.site-theme .document-content .social-embed blockquote { border-color: var(--home-line); background: var(--home-surface); color: var(--home-ink-2); }
+/* The Chief of Staff block: each prompt on 7% of the accent, with an accent edge. */
+.site-theme .document-content .cos-prompt-label, .site-theme .document-content .cos-prompt-example, .site-theme .document-content .cos-prompt-copy { color: var(--site-muted); }
+.site-theme .document-content .cos-prompt-label a { color: var(--home-ink); text-decoration-color: color-mix(in srgb, var(--home-ink) 35%, transparent); }
+.site-theme .document-content .cos-prompt-line { border-left-color: var(--home-accent); background: color-mix(in srgb, var(--home-accent) 7%, transparent); }
+.site-theme .document-content .cos-prompt-text { color: var(--home-ink); }
+.site-theme .document-content .cos-prompt-copy { font-family: inherit; }
+.site-theme .document-content .cos-prompt-copy:hover { background: var(--site-wash); color: var(--home-ink); }
+.site-theme .document-content .cos-prompt-copy[data-state='copied'] { color: var(--home-ink); }
+.site-theme .document-content .cos-prompt-copy[data-state='copied'] svg { color: var(--home-accent); }
+.site-theme .document-content .cos-prompt-copy:focus-visible { outline-color: var(--home-accent); }
+
+/* Tables, and the cards they become on a phone. */
+.site-theme .document-table-wrap, .site-theme .document-content :is(th, td) { border-color: var(--home-line); }
+.site-theme .document-content th { background: var(--site-wash); color: var(--home-ink); }
+.site-theme .document-content .document-table-cards table :is(tr, th, td) { border-color: var(--home-line); }
+.site-theme .document-content .document-table-cards table td::before { color: var(--site-muted); }
+.site-theme .document-content .document-table-cards table[data-cards='rows'] td:first-child { background: var(--site-wash); color: var(--home-ink); }
+
+.site-theme .document-pagination { border-top-color: var(--home-line); }
+.site-theme .document-pagination a { border-color: var(--home-line); color: var(--home-ink); }
+.site-theme .document-pagination a:hover { border-color: var(--home-ink); }
+.site-theme .document-pagination a span { color: var(--site-muted); }
+
+/* Legal pages and the 404. */
+.site-theme .document-back-link, .site-theme .not-found > p:not(.eyebrow) { color: var(--site-muted); }
+.site-theme .document-back-link:hover { color: var(--home-accent); }
+.site-theme .legal-article .document-content > p:nth-of-type(1) { color: var(--site-muted); font-family: 'IBM Plex Mono', monospace; }
+.site-theme .button-primary { background: var(--home-ink); color: var(--grain-back); }
+.site-theme .button-ghost { border-color: var(--home-ink); }
+.site-theme .button-ghost:hover { background: var(--home-ink); color: var(--grain-back); }
+
+/* /releases/ and the downloads closing every blog post, coloured as on the homepage. */
+.site-theme .releases-channel + .releases-channel { border-left-color: var(--home-line); }
+.site-theme .releases-note, .site-theme .one-download > p { color: var(--home-ink-2); }
+.site-theme .releases-version { color: var(--home-ink); }
+.site-theme .releases-version > a { text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); }
+.site-theme .releases-version > a:hover { text-decoration-color: currentColor; }
+.site-theme .releases-github { color: var(--home-ink-2); text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); }
+.site-theme .releases-github:hover { color: var(--home-ink); text-decoration-color: currentColor; }
+.site-theme .happy-one h3 { font-family: inherit; }
+.site-theme .one-mac-architecture, .site-theme .one-platform-links { color: var(--home-ink-2); }
+.site-theme .one-platform-links a:hover { color: var(--home-ink); }
+.site-theme .one-mac-architecture:focus-visible { outline-color: var(--home-ink); }
+.site-theme .one-mac-architecture option { color: #14112e; background: #ffffff; }
+.site-theme .one-store-download .store-rating strong { color: var(--home-ink); }
+.site-theme .one-store-download .store-count { color: var(--home-ink-2); }
+.site-theme .happy-one a:focus-visible, .site-theme .one-desktop-button:focus-visible, .site-theme .one-brew-command button:focus-visible { outline-color: var(--home-accent); }
+
+/* /plugins/ and each plugin's page. */
+.site-theme .plugin-main .eyebrow, .site-theme .plugin-credits { color: var(--site-muted); }
+.site-theme .plugin-main .eyebrow a:hover, .site-theme .plugin-credits a:hover { color: var(--home-accent); }
+.site-theme :is(.plugin-tagline, .plugin-index-arrow) { color: var(--home-accent); }
+.site-theme .plugin-tagline, .site-theme .plugin-index-card strong { font-family: inherit; }
+.site-theme .plugin-points li::before { color: var(--home-accent); font-family: 'IBM Plex Mono', monospace; }
+.site-theme :is(.plugin-summary, .plugin-section-intro, .plugin-note, .plugin-points p, .plugin-install-copy, .plugin-index-card > span:not(.plugin-index-arrow)) { color: var(--home-ink-2); }
+.site-theme :is(.plugin-section, .plugin-credits, .plugin-points li, .plugin-examples img, .plugin-index-card) { border-color: var(--home-line); }
+.site-theme .plugin-index-card:hover { border-color: var(--home-ink); }
+.site-theme .plugin-examples img, .site-theme .plugin-prompts li { background: var(--site-wash); }
+.site-theme .plugin-prompts li, .site-theme .plugin-policy-links a, .site-theme .plugin-index-card strong { color: var(--home-ink); }
+.site-theme .plugin-credits a { text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); }
+
+@media (prefers-color-scheme: dark) {
+  /* The hand-drawn diagrams are dark ink on a transparent ground: turned light, hues kept. */
+  .site-theme .document-content img[src$='.svg'] { filter: invert(1) hue-rotate(180deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-grain > canvas { transition: none; }
+}

@@ -36,6 +36,8 @@ const version = (column: HTMLElement) => column.querySelector('.releases-version
 beforeEach(() => {
   // jsdom has no ResizeObserver; the painted page scrollbar only observes with it.
   vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} })
+  // The corner's gradient reads reduced motion; without WebGL it never draws.
+  vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false, addEventListener() {}, removeEventListener() {} }))
   vi.stubGlobal('navigator', { userAgent: 'Macintosh', platform: 'MacIntel', maxTouchPoints: 0 })
   github([PREVIEW, STABLE])
 })
@@ -49,6 +51,7 @@ afterEach(() => {
 describe('releases page', () => {
   it('shows Stable and Preview side by side, the phone apps once below them, and GitHub last', async () => {
     const { container } = await page()
+    expect(container.firstElementChild!.classList.contains('site-theme')).toBe(true)
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Download Happy.')
     expect(screen.getAllByRole('heading', { level: 2 }).map(heading => heading.textContent)).toEqual(['Stable', 'Preview', 'Phone app'])
     const stable = screen.getByRole('region', { name: 'Stable' })

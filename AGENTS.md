@@ -128,8 +128,8 @@ The homepage is in the phone apps' first-screen look: their Grain Gradient
 (`src/grainGradientShader.ts`, from happy-desktop's onboarding shader, which ports
 the native iOS/Android one; Apache-2.0 notice in `THIRD_PARTY_NOTICES.md`), the
 native start-screen palette light or dark with the system, IBM Plex Sans, and
-Bricolage Grotesque for the wordmark (`src/happy-home.css`, scoped to `.happy-home`
-so blog downloads and `/releases/` keep `happy-one.css`).
+Bricolage Grotesque for the wordmark (`src/happy-home.css`, scoped to `.happy-home`;
+its palette is shared with the other pages, below).
 
 The gradient is the page's one surface, top to bottom, scrolling with the content:
 never fixed, never boxed into panels, with no plain page background between grain
@@ -195,6 +195,21 @@ under review, headlines (`?hero=`) and palettes (`?palette=`), live in
 in the corner (`src/HomeVariantSwitcher.tsx`); the build leaves all three out and
 ignores the parameters. `?preview=og` keeps the link-preview card's own headline
 (`SOCIAL_HEADLINE`) until the card is regenerated.
+
+## The other pages' look
+
+Docs, blog posts, legal pages, `/releases/`, `/plugins/` and the 404 take the
+homepage's look minimally: `.site-theme` on their shell (`src/site-theme.css`), the
+same palette (defined once, in `happy-home.css`) light or dark with the system, IBM
+Plex Sans and Plex Mono, Bricolage for the wordmark, and the Grain Gradient only as a
+patch in the top right corner (`SITE_SURFACE` in `src/GrainGradient.tsx`), behind the
+header and beside the title: never under the text, no side swells. Like the
+homepage's, it is a still. Its layer is only as tall as the patch, so the renderer
+draws it whole, once, and scrolling never redraws it.
+It scrolls away with the page; wide docs scroll their article, and the patch goes up
+with it. `theme-color` is the base colour, `#f4f2ff` light and `#06050f` dark. In dark
+mode the hand-drawn diagrams are inverted with their hues kept. `/model-benchmarks/`
+keeps the older cream look for now.
 
 ## SEO skills
 

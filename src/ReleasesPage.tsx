@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP } from './products'
 import { DownloadOptions, MobileDownloads } from './DownloadOptions'
+import { GrainGradient, SITE_SURFACE } from './GrainGradient'
 import { channelDesktopDownloads, GITHUB_RELEASES, releaseNotesUrl, type DesktopDownloads, type MacArchitecture, type ReleaseChannel } from './desktopDownloads'
 import './happy-one.css'
 import './releases.css'
@@ -40,7 +41,8 @@ export default function ReleasesPage() {
   // Both columns' Mac downloads follow one architecture choice.
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   return (
-    <div className="site-shell happy-one releases-page">
+    <div className="site-shell happy-one releases-page site-theme">
+      <GrainGradient surface={SITE_SURFACE} className="site-grain" />
       <SiteHeader product={HAPPY_DESKTOP} />
       <main className="releases-main page-width">
         <h1>Download Happy.</h1>

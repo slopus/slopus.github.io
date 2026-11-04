@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { SiteFooter, SiteHeader } from './SiteChrome'
+import { GrainGradient, SITE_SURFACE } from './GrainGradient'
 import './plugins.css'
 
 const MEMES_ICON = '/img/plugins/memes/logo.png'
@@ -59,7 +60,8 @@ const memesExamples = [
 
 function PluginShell({ children }: { children: ReactNode }) {
   return (
-    <div className="site-shell document-site-shell plugin-shell">
+    <div className="site-shell document-site-shell plugin-shell site-theme">
+      <GrainGradient surface={SITE_SURFACE} className="site-grain" />
       <SiteHeader />
       <main className="plugin-main page-width">{children}</main>
       <SiteFooter />

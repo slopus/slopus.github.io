@@ -14,11 +14,14 @@ import { prerenderedPaths, renderPath } from './prerender'
 import { desktopDocsMetadata, docsMetadata, thesisMetadata } from './siteMetadata'
 import { documentHref, HAPPY, HAPPY_DESKTOP } from './products'
 import { createHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
 import { recipeHref, recipeSources } from './recipeSources'
 
 // jsdom has no ResizeObserver; the painted page scrollbar only observes with it.
 beforeAll(() => {
   vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} })
+  // The corner's gradient reads reduced motion; without WebGL it never draws.
+  vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false, addEventListener() {}, removeEventListener() {} }))
 })
 
 afterAll(() => {
@@ -578,6 +581,22 @@ describe('static document pages', () => {
 
     rerender(<Router pathname="/terms/" />)
     expect(screen.getByRole('heading', { level: 1, name: /terms of use/i })).toBeTruthy()
+  })
+
+  it('dresses every page but the homepage and the benchmarks in the homepage palette, with only a corner of gradient', () => {
+    for (const path of ['/welcome/', '/workos/', '/docs/', '/privacy/', '/plugins/', '/plugins/memes/', '/plugins/terms/', '/no-such-page/']) {
+      const { container, unmount } = render(<Router pathname={path} />)
+      const shell = container.firstElementChild!
+      expect(shell.classList.contains('site-theme'), path).toBe(true)
+      expect(shell.firstElementChild?.className, path).toBe('site-grain')
+      unmount()
+    }
+    // The browser's toolbar takes the pages' base colour, light or dark.
+    const themeColors = [...readFileSync('index.html', 'utf8').matchAll(/<meta name="theme-color" content="([^"]+)" media="([^"]+)" \/>/g)]
+    expect(themeColors.map(([, color, media]) => [color, media])).toEqual([
+      ['#f4f2ff', '(prefers-color-scheme: light)'],
+      ['#06050f', '(prefers-color-scheme: dark)'],
+    ])
   })
 
   it('handles same-page links without reloading the document', () => {
