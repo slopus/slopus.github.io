@@ -1,12 +1,12 @@
 export type MacArchitecture = 'arm64' | 'x64'
 export type ReleaseChannel = 'stable' | 'preview'
-/** One app's installers in a release. Previews ship no Linux AppImage yet, and older previews no Windows installer. */
+/** Each installer is optional: preview builds can publish independently. */
 export type DesktopInstallers = Readonly<{
-  macos: Readonly<{ arm64: string; x64: string }>
+  macos: Readonly<{ arm64: string | null; x64: string | null }>
   windows: string | null
   linux: string | null
 }>
-/** One release's installers: Happy on Stable, Happy Nightly on Preview. */
+/** Happy on Stable; newest available installers per platform and flavor on Preview. */
 export type DesktopDownloads = DesktopInstallers & Readonly<{
   tag: string
   publishedAt?: string
@@ -66,16 +66,11 @@ function productionDownloads(value: unknown): DesktopDownloads | null {
     : null
 }
 
-/**
- * A preview's own builds: its macOS disk images, and its Windows installer and Linux
- * AppImage when it has them (the first previews were macOS only; previews build no
- * Linux yet). Null without both disk images.
- */
-function previewInstallers(assets: readonly unknown[], tag: string, prefix: string): DesktopInstallers | null {
+/** Read only published assets; a missing build never blocks another platform. */
+function previewInstallers(assets: readonly unknown[], tag: string, prefix: string): DesktopInstallers {
   const version = tag.slice(1)
   const arm64 = assetUrl(assets, tag, `${prefix}-${version}-arm64.dmg`)
   const x64 = assetUrl(assets, tag, `${prefix}-${version}-x64.dmg`)
-  if (!arm64 || !x64) return null
   return {
     macos: { arm64, x64 },
     windows: assetUrl(assets, tag, `${prefix}-${version}-x64.exe`),
@@ -83,11 +78,23 @@ function previewInstallers(assets: readonly unknown[], tag: string, prefix: stri
   }
 }
 
+function hasInstallers(installers: DesktopInstallers) {
+  return !!(installers.macos.arm64 || installers.macos.x64 || installers.windows || installers.linux)
+}
+
+/** Fill missing slots from an older release, keeping each newer asset. */
+function mergeInstallers(newer: DesktopInstallers, older: DesktopInstallers): DesktopInstallers {
+  return {
+    macos: { arm64: newer.macos.arm64 ?? older.macos.arm64, x64: newer.macos.x64 ?? older.macos.x64 },
+    windows: newer.windows ?? older.windows,
+    linux: newer.linux ?? older.linux,
+  }
+}
+
 /**
  * The preview download is Happy Nightly (installed beside Happy), which updates to every
- * preview and stable release. Every release carries its disk images, so it is the newest
- * published release's, whichever kind it is. A preview also ships its own build of Happy,
- * offered beside it; a stable release's is the Stable column's.
+ * preview and stable release. Pick each installer independently by publication date.
+ * Happy's own preview builds are offered until a newer stable release replaces them.
  * GitHub lists releases by creation, not publication, so sort them first.
  */
 function previewDownloads(value: unknown): DesktopDownloads | null {
@@ -98,13 +105,22 @@ function previewDownloads(value: unknown): DesktopDownloads | null {
       && typeof release.tag_name === 'string' && /^v\d+\.\d+\.\d+(-preview\.\d+)?$/.test(release.tag_name)
       && typeof release.published_at === 'string' && Array.isArray(release.assets))
     .sort((a, b) => b.published_at.localeCompare(a.published_at))
+  const empty: DesktopInstallers = { macos: { arm64: null, x64: null }, windows: null, linux: null }
+  let downloads: DesktopDownloads | null = null
+  let standard = empty
+  let beforeStable = true
   for (const release of releases) {
     const nightly = previewInstallers(release.assets, release.tag_name, 'Happy-Nightly')
-    if (!nightly) continue
-    const standard = release.tag_name.includes('-preview.') ? previewInstallers(release.assets, release.tag_name, 'Happy') : null
-    return { tag: release.tag_name, publishedAt: release.published_at, ...nightly, ...(standard ? { standard } : {}) }
+    const isPreview = release.tag_name.includes('-preview.')
+    if (!isPreview) beforeStable = false
+    const own = isPreview && beforeStable ? previewInstallers(release.assets, release.tag_name, 'Happy') : empty
+    standard = mergeInstallers(standard, own)
+    if (!downloads && (hasInstallers(nightly) || hasInstallers(own))) {
+      downloads = { tag: release.tag_name, publishedAt: release.published_at, ...empty }
+    }
+    if (downloads) downloads = { ...downloads, ...mergeInstallers(downloads, nightly) }
   }
-  return null
+  return downloads ? { ...downloads, ...(hasInstallers(standard) ? { standard } : {}) } : null
 }
 
 async function githubReleases(path: string): Promise<unknown> {

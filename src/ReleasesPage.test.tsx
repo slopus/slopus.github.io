@@ -148,6 +148,63 @@ describe('releases page', () => {
     expect(within(preview).queryByRole('link', { name: /the Happy preview/ })).toBeNull()
   })
 
+  it('offers preview.20 independently for each asset, falling back only for Intel Nightly', async () => {
+    const newest = 'v0.0.103-preview.20'
+    const older = 'v0.0.103-preview.19'
+    const assets = [...stableAssets(newest.slice(1)), 'Happy-0.0.103-preview.20-arm64.AppImage',
+      'Happy-Nightly-0.0.103-preview.20-arm64.dmg', 'Happy-Nightly-0.0.103-preview.20-x64.exe',
+      'latest-mac.yml', 'latest.yml', 'nightly.yml']
+    github([
+      githubRelease(older, '2026-11-04T12:00:00Z', [...stableAssets(older.slice(1)), ...nightlyAssets(older.slice(1))]),
+      githubRelease(newest, '2026-11-04T22:29:14Z', assets),
+      STABLE,
+    ])
+    await page()
+    const preview = screen.getByRole('region', { name: 'Preview' })
+    const href = (name: string) => within(preview).getByRole('link', { name }).getAttribute('href')
+    await waitFor(() => expect(version(preview)).toBe('Happy Nightly 0.0.103-preview.20 · Nov 4, 2026'))
+    expect(href('Download Happy Nightly for macOS')).toBe(`${DOWNLOAD}/${newest}/Happy-Nightly-${newest.slice(1)}-arm64.dmg`)
+    expect(href('Download Happy Nightly for Windows')).toBe(`${DOWNLOAD}/${newest}/Happy-Nightly-${newest.slice(1)}-x64.exe`)
+    for (const [platform, suffix] of [['macOS', 'arm64.dmg'], ['Windows', 'x64.exe'], ['Linux', 'x64.AppImage']]) {
+      expect(href(`Download the Happy preview for ${platform}`)).toBe(`${DOWNLOAD}/${newest}/Happy-${newest.slice(1)}-${suffix}`)
+    }
+    expect(within(preview).queryByRole('link', { name: 'Download Happy Nightly for Linux' })).toBeNull()
+    fireEvent.change(within(preview).getByRole('combobox', { name: 'Preview Mac architecture' }), { target: { value: 'x64' } })
+    expect(href('Download Happy Nightly for macOS')).toBe(`${DOWNLOAD}/${older}/Happy-Nightly-${older.slice(1)}-x64.dmg`)
+    expect(href('Download the Happy preview for macOS')).toBe(`${DOWNLOAD}/${newest}/Happy-${newest.slice(1)}-x64.dmg`)
+  })
+
+  it('hides an unavailable Mac architecture and restores available links when switching back', async () => {
+    const tag = 'v0.0.103-preview.20'
+    github([githubRelease(tag, '2026-11-04T22:29:14Z', [
+      'Happy-Nightly-0.0.103-preview.20-arm64.dmg', 'Happy-Nightly-0.0.103-preview.20-x64.exe',
+      'Happy-0.0.103-preview.20-x64.AppImage',
+    ])])
+    await page()
+    const preview = screen.getByRole('region', { name: 'Preview' })
+    await waitFor(() => expect(version(preview)).toContain('0.0.103-preview.20'))
+    fireEvent.change(within(preview).getByRole('combobox', { name: 'Preview Mac architecture' }), { target: { value: 'x64' } })
+    expect(within(preview).queryByRole('link', { name: /for macOS/ })).toBeNull()
+    expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for Windows' }).getAttribute('href'))
+      .toBe(`${DOWNLOAD}/${tag}/Happy-Nightly-0.0.103-preview.20-x64.exe`)
+    expect(within(preview).getByRole('link', { name: 'Download the Happy preview for Linux' }).getAttribute('href'))
+      .toBe(`${DOWNLOAD}/${tag}/Happy-0.0.103-preview.20-x64.AppImage`)
+    fireEvent.change(within(preview).getByRole('combobox', { name: 'Preview Mac architecture' }), { target: { value: 'arm64' } })
+    expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href'))
+      .toBe(`${DOWNLOAD}/${tag}/Happy-Nightly-0.0.103-preview.20-arm64.dmg`)
+  })
+
+  it('offers a Windows-only preview without requiring any Nightly Mac build', async () => {
+    const tag = 'v0.0.103-preview.20'
+    github([githubRelease(tag, '2026-11-04T22:29:14Z', ['Happy-0.0.103-preview.20-x64.exe'])])
+    await page()
+    const preview = screen.getByRole('region', { name: 'Preview' })
+    await waitFor(() => expect(within(preview).getByRole('link', { name: 'Download the Happy preview for Windows' }).getAttribute('href'))
+      .toBe(`${DOWNLOAD}/${tag}/Happy-0.0.103-preview.20-x64.exe`))
+    expect(within(preview).queryByRole('link', { name: /Happy Nightly/ })).toBeNull()
+    expect(within(preview).queryByRole('link', { name: /macOS|Linux/ })).toBeNull()
+  })
+
   it('points Preview at GitHub when GitHub does not answer, and Stable at its verified release', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')))
     await page()
