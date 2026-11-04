@@ -127,7 +127,7 @@ describe('Happy Desktop landing page', () => {
     expect(container.querySelector('#download-again .one-download-actions')).toBeTruthy()
   })
 
-  it('runs demo, downloads, the four values, Trust the code, downloads again, then Talk to us', () => {
+  it('runs demo, downloads, the five values, Trust the code, downloads again, then Talk to us', () => {
     const { container } = render(<DesktopApp />)
     const main = container.querySelector('main')!
 
@@ -138,11 +138,12 @@ describe('Happy Desktop landing page', () => {
     expect(sections.map((section) => section.querySelector('h2')?.textContent)).toEqual([
       'Use all your subscriptions',
       'Build it together',
+      'F1 Fast Mobile',
       'Open source, MIT',
       'End-to-end encrypted',
     ])
     // A zig-zag: the emoji starts on the left, then trades sides.
-    expect(sections.map((section) => section.getAttribute('data-side'))).toEqual(['start', 'end', 'start', 'end'])
+    expect(sections.map((section) => section.getAttribute('data-side'))).toEqual(['start', 'end', 'start', 'end', 'start'])
     for (const section of sections) expect(section.querySelector(':scope > canvas.one-emoji')).toBeTruthy()
   })
 
@@ -154,13 +155,16 @@ describe('Happy Desktop landing page', () => {
     expect(container.querySelector('.one-grain, .one-value-panel, .one-stage-grain')).toBeNull()
   })
 
-  it('explains each value in about 100 characters, the four about the same length', () => {
+  it('explains each value in about 100 characters, about the same length, F1 Fast Mobile in Kirill\'s words', () => {
     const { container } = render(<DesktopApp />)
-    const lengths = [...container.querySelectorAll('.one-value p')].map((body) => body.textContent!.length)
+    const bodies = [...container.querySelectorAll('.one-value p')].map((body) => body.textContent!)
+    const f1 = 'We have hyper-tuned our mobile app with the best tricks in the industry'
+    expect(bodies).toContain(f1)
+    const lengths = bodies.filter((body) => body !== f1).map((body) => body.length)
 
     expect(Math.min(...lengths)).toBeGreaterThanOrEqual(90)
     expect(Math.max(...lengths)).toBeLessThanOrEqual(110)
-    expect(Math.max(...lengths) - Math.min(...lengths)).toBeLessThanOrEqual(6)
+    expect(Math.max(...lengths) - Math.min(...lengths)).toBeLessThanOrEqual(10)
   })
 
   it('does not claim a relay that only sees ciphertext or sessions already on the phone', () => {

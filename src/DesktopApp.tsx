@@ -17,17 +17,22 @@ import './happy-one.css'
 import './happy-one-preview.css'
 import './happy-home.css'
 
-/** A title and two short sentences each, the four bodies about the same length. */
+/** A title and two short sentences each, about the same length; F1 Fast Mobile is Kirill's line as written. */
 const values: readonly { title: string; body: string; emoji: AnimatedEmojiName }[] = [
   {
     title: 'Use all your subscriptions',
-    body: 'Claude, Codex, Grok, and Gemini, on the subscriptions you already pay for. Mix them in a single task.',
+    body: 'Claude Code, Codex, Grok, and Gemini, on the subscriptions you already pay for. Mix them in a single task.',
     emoji: 'rainbow',
   },
   {
     title: 'Build it together',
     body: 'Work with your team in shared sessions. Divide and conquer, then share stories of what you built.',
     emoji: 'alien-monster',
+  },
+  {
+    title: 'F1 Fast Mobile',
+    body: 'We have hyper-tuned our mobile app with the best tricks in the industry',
+    emoji: 'f1-car',
   },
   {
     title: 'Open source, MIT',
@@ -189,7 +194,7 @@ const noSubscription = () => () => {}
 
 /**
  * The homepage, in the phone apps' first-screen look, on one Grain Gradient surface from top to
- * bottom: the headline and demo, the downloads, four value rows in a zig-zag, a prompt to check
+ * bottom: the headline and demo, the downloads, five value rows in a zig-zag, a prompt to check
  * us against the code, the downloads again, and where to talk to us.
  */
 export default function DesktopApp() {
