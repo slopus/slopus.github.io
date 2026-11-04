@@ -35,7 +35,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(46)
+    expect(documentsForProduct('desktop')).toHaveLength(47)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -157,12 +157,13 @@ describe('static document pages', () => {
 
   it('lists the comparison pages in the desktop docs, each linking to its sources', () => {
     const welcome = renderPath('/welcome/')
-    for (const pathname of ['/desktop-app/', '/mobile-app/', '/claude-code-remote-control/', '/t3-code/']) {
+    for (const pathname of ['/desktop-app/', '/mobile-app/', '/claude-code-remote-control/', '/t3-code/', '/pi-durable/']) {
       expect(welcome).toContain(`href="${pathname}"`)
     }
     expect(renderPath('/claude-code-remote-control/')).toContain('href="https://code.claude.com/docs/en/remote-control"')
     expect(renderPath('/mobile-app/')).toContain('href="https://code.claude.com/docs/en/remote-control"')
     expect(renderPath('/t3-code/')).toContain('href="https://github.com/pingdotgg/t3code/tree/main/docs/user"')
+    expect(renderPath('/pi-durable/')).toContain('href="https://earendil.com/posts/pi-durable/"')
     // Desktop docs links stay top-level; only the original CLI docs resolve under /docs.
     expect(renderPath('/models/')).toContain('href="/guides/configuration/"')
   })

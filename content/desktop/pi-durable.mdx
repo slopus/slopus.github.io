@@ -1,0 +1,72 @@
+# Happy vs Pi Durable
+
+Happy and Pi Durable both keep an agent's work through a crash or a restart. They solve it for different people. Pi Durable is a TypeScript library for building your own agent app, on your server, on Cloudflare, or on Vercel. Happy is an app you use today: a desktop app and phone apps for coding agents, running Claude, Codex, Grok, Gemini, and more on the subscriptions you already pay for.
+
+## Side by side
+
+Facts about Pi Durable come from [Earendil's launch post](https://earendil.com/posts/pi-durable/), its npm package, and the Cloudflare and Vercel docs, checked on November 4, 2026. It is experimental, and its API can change in minor releases.
+
+| | Happy | Pi Durable |
+| --- | --- | --- |
+| What you get | Desktop app, phone apps, and Happy Agent | A library you build on |
+| Runs on | Your Mac, Windows, or Linux machine, or your server | Any JavaScript runtime, Cloudflare, Vercel |
+| Storage | One SQLite database in `~/.happy/agent` | Memory, SQLite, JSONL, or your own |
+| Clients | Desktop, iOS, Android, REST API | The ones you build |
+| A retried send | Same message `id`, one message | Same `requestId`, one submission |
+| A tool cut off by a crash | Reruns only if safe, else recorded as interrupted | Reruns only if safe, else the model is told |
+| A half-written answer | Dropped; finished parts are kept | Kept, marked aborted |
+| Fork a conversation | ✗ | ✓ |
+| Team sign-in | ✓ | Yours to build |
+| License | MIT | MIT |
+
+Both save each step before moving on, let one process own the storage at a time, run many conversations at once, and let a client steer a running turn or queue the next message.
+
+## Where Pi Durable is better
+
+- **It runs anywhere JavaScript does.** Its SQLite and JSONL storage use no Node APIs, so the same harness runs in Node, Bun, or a Cloudflare Durable Object. Happy Agent runs on a machine you keep on.
+- **Bring your own storage.** The storage interface is small, and it ships a conformance suite to test your backend against. Happy Agent stores everything in its own SQLite database.
+- **Fork a conversation.** A conversation can branch from any point in another's transcript without copying it. Happy can't fork a conversation yet.
+- **Small enough for an agent to read.** Earendil, October 1, 2026: "The entire source code, without tests, is about 15,000 lines."
+- **Build any agent.** Coding agents are one use. Earendil's examples are Slack bots and threads, each thread a fork of the channel.
+
+## Where Happy is better
+
+- **Nothing to build.** Install Happy Desktop and start a session. Pi Durable gives you the harness; the app, the clients, and the auth are yours to write.
+- **Your subscriptions.** Happy Agent uses the Claude Code, Codex, and Grok sign-ins already on your machine.
+- **A desktop and a phone app.** Both watch and steer the same sessions. The phone goes through Happy's relay, end-to-end encrypted.
+- **A sandbox and review.** Commands run in an OS sandbox, and in Auto a separate agent reviews anything that would cross it. See [Permissions & Sandbox](/permissions/).
+- **A team server.** In team mode each member signs in as themselves, through WorkOS or [your own identity provider](/workos/), and works in the same projects. See [Multiplayer & Teams](/multiplayer/).
+- **Updates mid-turn.** Install an update while an agent is working and the same turn continues on the new version. See [Updates Mid-Turn](/updates/).
+
+## What survives a crash in Happy
+
+Happy Agent writes every message, tool call, and result to its SQLite database as it goes, inside a transaction, and only then moves on. After a crash it reopens the database and picks up each agent that still owed work.
+
+- **Messages.** A client names each message with its own `id`. Sending the same `id` again returns the message that already exists, so retrying a send whose response was lost is safe.
+- **Tools.** A tool that isn't safe to repeat runs at most once. If a crash cuts it off, it is answered as interrupted and never run again.
+- **Answers.** Only finished blocks are stored. A half-written answer is dropped, and the model is asked to continue from where it left off.
+- **Waits and scheduled messages.** An agent waiting until a time, or a message scheduled for later, survives the restart.
+
+On macOS and Linux, Happy Agent restarts itself after a crash; on Windows it doesn't yet. On a [server](/guides/remote-server/) it runs as a systemd or launchd service.
+
+We checked the agent loop with machine-checked proofs in Lean: accepted messages are never lost or duplicated, an unsafe tool never reruns after a crash, and a restarted agent can finish its work and settle. The proofs are over [a model of the loop](https://github.com/slopus/happy-agent/tree/main/packages/happy-agent-base/verification/lean), not the TypeScript itself.
+
+## Pi Durable on Cloudflare and Vercel
+
+**Cloudflare.** The Agents SDK's [`PiHarness`](https://developers.cloudflare.com/agents/harnesses/pi/) stores Pi's transcripts and tasks in a Durable Object's SQLite database. If the object is evicted mid-run, an alarm restarts it and the run continues. You choose how clients connect: WebSockets, HTTP, or RPC. Each Agents SDK release supports one Pi minor version, and Cloudflare warns that after moving to Pi 1.5, rolling back leaves conversations unreadable, so "roll forward to fix a bad deploy instead."
+
+**Vercel.** [`durable-harness`](https://github.com/vercel-labs/durable-harness) runs Pi, OpenCode, fx, Claude Code, and Codex as durable agents on the Workflow SDK. Each session is a workflow run, so a crash resumes the turn from its event log on another machine. Claude Code and Codex run only in the session's own Vercel Sandbox. It is on version 0.0.x, Apache-2.0, and its README says the API may change between releases. To self-host it, use its Postgres backend.
+
+## Which one
+
+| You want | Use |
+| --- | --- |
+| Your own agent app, Slack bot, or service | Pi Durable |
+| Agents on Cloudflare or Vercel | Pi Durable |
+| Forked conversations | Pi Durable |
+| Coding agents on your own machine, today | Happy |
+| Claude, Codex, and Grok on your subscriptions | Happy |
+| A desktop and phone app for the same sessions | Happy |
+| A team on one agent server, each signed in | Happy |
+
+To start with Happy, see the [Quick Start](/quick-start/) or [download it](/#download).
