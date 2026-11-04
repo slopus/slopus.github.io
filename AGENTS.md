@@ -133,9 +133,14 @@ choppy: no thin jagged edges or quick wobble. On phones the colour stays out of 
 content: the top right corner and the bottom left at the footer. It never wraps
 around content blocks; Kirill found that claustrophobic. Text, emoji, video, and
 buttons sit directly on it, and the header is transparent until the page scrolls,
-then frosted. `src/grainGradientRenderer.ts` keeps one canvas around the viewport
-and moves it in 120px steps, so scrolling never redraws; the field runs at 0.4× the
-apps' speed and draws every 66ms.
+then frosted. The field is a still, never animated: the apps' field at one moment
+(`GRAIN_STILL`). `src/grainGradientRenderer.ts` keeps one canvas around the viewport
+and moves it in 120px steps; it draws only when the canvas moves a step, resizes or
+changes scheme, and nothing runs between draws. Each half of the page has noise of
+its own, blended across the middle, so where a corner patch crosses the middle the
+halves never meet in a line. Baked images were weighed and rejected: the grain is
+one device pixel and the shapes follow the page's width and height, so an image
+would be resampled at every other width and pixel ratio.
 
 Its order is the demo, the downloads, the four value rows (subscriptions,
 multiplayer, open source, end-to-end encryption), "Don't trust our words. Trust

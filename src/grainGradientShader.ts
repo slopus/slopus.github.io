@@ -26,9 +26,11 @@
  * homepage replaces the corner shape in main(): the field is in page space, so
  * one surface runs the length of the page, its colour in slow swells along the
  * sides and, by surface, the top and bottom and blobs in the corners, with a
- * plain column down the middle. `u_top` is the canvas's top in the page,
- * `u_ratio` its device pixels per CSS pixel, `u_height` the page's height in
- * CSS px, and the rest the surface (SurfaceShape in grainGradientRenderer.ts).
+ * plain column down the middle; each half has noise of its own, blended across
+ * the middle. The page shows one moment of it, still. `u_top` is the canvas's
+ * top in the page, `u_ratio` its device pixels per CSS pixel, `u_height` the
+ * page's height in CSS px, and the rest the surface (SurfaceShape in
+ * grainGradientRenderer.ts).
  */
 export const grainGradientFragmentShader = `
 precision highp float;
@@ -131,6 +133,12 @@ vec2 rim(float d, float reach) {
   return vec2(1. - smoothstep(0., reach, d), 1. - smoothstep(.6 * reach, 1.3 * reach + 40., d));
 }
 
+// One side's swell down the page: two long, slow octaves of noise, each side with its own.
+float sideWave(float y, float wavelength, float t, float right) {
+  return .8 * snoise(vec2(y / wavelength + 37. * right, .8 * t + 11. * right))
+    + .2 * snoise(vec2(y / (.5 * wavelength) - 23. * right, t));
+}
+
 // A blob in a page corner, its radius wandering around it and over time.
 vec2 blob(vec2 css, vec2 corner, float radius, float t, float seed) {
   if (radius < 1.) return vec2(0.);
@@ -145,16 +153,19 @@ void main() {
   vec2 page = vec2(gl_FragCoord.x, u_top + u_resolution.y - gl_FragCoord.y);
   vec2 css = page / u_ratio;
   float width = u_resolution.x / u_ratio;
-  float right = step(.5 * width, css.x);
+  // 0 on the left half and 1 on the right, each half with noise of its own. Across the middle
+  // the two are blended, so where colour crosses it (a corner patch on a narrow page) they never
+  // meet in a line.
+  float blend = min(.15 * width, 200.);
+  float right = smoothstep(.5 * width - blend, .5 * width + blend, css.x);
   float edge = min(css.x, width - css.x);
   // 1 at a side edge, 0 down the middle.
   float outer = 1. - edge / (.5 * width);
   float wavelength = u_shape.y;
 
-  // Each side's reach wanders with two long, slow octaves of noise, so the band swells and
-  // thins down the page in a few big shapes, and the two sides do it differently.
-  float wave = .8 * snoise(vec2(css.y / wavelength + 37. * right, .8 * t + 11. * right))
-    + .2 * snoise(vec2(css.y / (.5 * wavelength) - 23. * right, t));
+  // Each side's reach wanders, so the band swells and thins down the page in a few big shapes,
+  // and the two sides do it differently.
+  float wave = mix(sideWave(css.y, wavelength, t, 0.), sideWave(css.y, wavelength, t, 1.), right);
   vec2 side = mix(u_sides.xy, u_sides.zw, right);
   float margin = max(.5 * width - u_shape.x, 0.);
   vec2 colour = rim(edge, margin * clamp(side.x + side.y * wave, 0., .92));
@@ -176,7 +187,8 @@ void main() {
     gl_FragColor = vec4(u_colorBack, 1.);
     return;
   }
-  float shape = colour.x * mix(.75, 1.1, .5 + .5 * snoise(vec2(css.y / 1300. - 5. * right, 2. * t)));
+  float swell = mix(snoise(vec2(css.y / 1300., 2. * t)), snoise(vec2(css.y / 1300. - 5., 2. * t)), right);
+  float shape = colour.x * mix(.75, 1.1, .5 + .5 * swell);
   float grained = colour.y;
 
   vec2 grain_uv = page * .7;

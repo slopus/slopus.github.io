@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import DesktopApp, { TRUST_PROMPT } from './DesktopApp'
@@ -200,6 +201,15 @@ describe('Happy Desktop landing page', () => {
     expect(narrow.sides).toEqual([0, 0, 0, 0])
     expect(narrow.ends).toEqual([0, 0, 0, 0])
     expect(narrow.corners).toEqual([0, expect.any(Number), expect.any(Number), 0])
+  })
+
+  it('holds the gradient still, its two halves blended across the middle', async () => {
+    const { grainGradientFragmentShader } = await import('./grainGradientShader')
+    // Drawn on a move, resize or new scheme, never on a clock.
+    expect(readFileSync('src/grainGradientRenderer.ts', 'utf8')).not.toMatch(/requestAnimationFrame|setInterval/)
+    // A hard switch between the halves' noise drew a vertical line wherever colour crossed the middle.
+    expect(grainGradientFragmentShader).toMatch(/float right = smoothstep\(/)
+    expect(grainGradientFragmentShader).not.toMatch(/step\(\.5 \* width, css\.x\)/)
   })
 
   it('ignores the variants in the URL outside the dev server, and never loads the switcher', () => {

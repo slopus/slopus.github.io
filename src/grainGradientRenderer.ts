@@ -23,10 +23,11 @@ export type SurfaceShape = {
 /** One shape for wide screens and one for phones (narrower than 700 CSS px). */
 export type Surface = { wide: SurfaceShape; narrow: SurfaceShape }
 
-/** The field moves at this fraction of the apps' rate (1: one shader second per second). */
-export const GRAIN_SPEED = .4
-/** Milliseconds between frames; the apps draw every 33. */
-export const GRAIN_CADENCE = 66
+/**
+ * The moment of the apps' animated field the page shows, in shader seconds: a still, the frame
+ * the page always opened on. It is drawn again only when the canvas moves, resizes or recolours.
+ */
+export const GRAIN_STILL = 0
 /**
  * The canvas moves in whole steps of this many CSS px, a whole number of device pixels at the
  * usual ratios, so the grain lands on the same pixels wherever the canvas is.
@@ -44,16 +45,15 @@ function compile(gl: WebGLRenderingContext, type: number, source: string) {
 }
 
 /**
- * Draws the Grain Gradient as the page's surface, shaped by `surface`. The canvas sits in a layer
- * as tall as the page and covers the viewport plus a buffer above and below; the shader works in
- * page space, so moving the canvas a step changes nothing on screen, and scrolling is the
- * browser's own.
- * The clock pauses while the tab is hidden, and stays on its first frame when `moving` is
- * false. The palette is the canvas's `--grain-*` custom properties (six-digit hex), read again
- * when the color scheme changes. Returns the one teardown that releases the program,
- * observers, and listeners.
+ * Draws the Grain Gradient as the page's surface, shaped by `surface`, as a still (GRAIN_STILL).
+ * The canvas sits in a layer as tall as the page and covers the viewport plus a buffer above and
+ * below; the shader works in page space, so moving the canvas a step changes nothing on screen,
+ * and scrolling is the browser's own. Nothing runs between draws.
+ * The palette is the canvas's `--grain-*` custom properties (six-digit hex), read again when the
+ * color scheme changes. Returns the one teardown that releases the program, observers, and
+ * listeners.
  */
-export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean, clock: { seconds: number }, surface: Surface) {
+export function grainGradientRenderer(canvas: HTMLCanvasElement, surface: Surface) {
   const document = canvas.ownerDocument
   const view = document.defaultView
   const layer = canvas.parentElement
@@ -71,8 +71,6 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
   let releaseProgram: (() => void) | undefined
   let render: (() => void) | undefined
   let paletteUpdate: (() => boolean) | undefined
-  let frame: number | undefined
-  let last: number | undefined
   // The canvas's place in the layer and its height, in CSS px, and device pixels per CSS px.
   let top = 0
   let height = 0
@@ -82,7 +80,6 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
   let pageHeight = 0
   // Phones resize the viewport as their toolbars come and go; the canvas only grows.
   let tallest = 0
-  if (!moving) clock.seconds = 0
 
   const initialize = () => {
     const vertex = compile(gl, gl.VERTEX_SHADER, vertexSource)
@@ -150,7 +147,7 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
       gl.uniform2f(resolution, canvas.width, canvas.height)
       gl.uniform1f(offset, top * ratio)
       gl.uniform1f(scale, ratio)
-      gl.uniform1f(time, clock.seconds)
+      gl.uniform1f(time, GRAIN_STILL)
       gl.uniform1f(page, pageHeight)
       const current = pageWidth < 700 ? surface.narrow : surface.wide
       gl.uniform4f(sides, ...current.sides)
@@ -163,24 +160,13 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
     canvas.dataset.painted = ''
   }
 
-  const stop = () => {
-    if (frame !== undefined) view.cancelAnimationFrame(frame)
-    frame = undefined
-    last = undefined
-  }
-  const loop = (now: number) => {
-    frame = undefined
-    if (last === undefined) last = now
-    if (now - last >= GRAIN_CADENCE) {
-      clock.seconds += (now - last) / 1000 * GRAIN_SPEED
-      last = now
-      render?.()
-    }
-    frame = view.requestAnimationFrame(loop)
-  }
-  const settle = () => {
-    if (!moving || document.hidden || render === undefined) stop()
-    else if (frame === undefined) frame = view.requestAnimationFrame(loop)
+  // What the canvas shows; the still is drawn again only when this changes.
+  let drawn = ''
+  const draw = () => {
+    const showing = `${canvas.width} ${canvas.height} ${top} ${pageHeight} ${ratio}`
+    if (render === undefined || showing === drawn) return
+    drawn = showing
+    render()
   }
   /**
    * Keeps the canvas around the viewport, with a buffer of at least 40% of its height above
@@ -210,42 +196,40 @@ export function grainGradientRenderer(canvas: HTMLCanvasElement, moving: boolean
     height = wanted
     top = Math.max(0, Math.floor((scrolled - buffer) / STEP) * STEP)
     canvas.style.transform = `translateY(${top}px)`
-    render?.()
+    draw()
   }
   const resize = () => place(true)
   const scroll = () => place(false)
   const lost = (event: Event) => {
     event.preventDefault()
-    stop()
     delete canvas.dataset.painted
     render = releaseProgram = paletteUpdate = undefined
+    drawn = ''
   }
   const restored = () => {
     initialize()
     resize()
-    settle()
   }
   const scheme = view.matchMedia('(prefers-color-scheme: dark)')
   const recolor = () => {
-    if (paletteUpdate?.()) render?.()
+    if (paletteUpdate?.()) {
+      drawn = ''
+      draw()
+    }
   }
   initialize()
   resize()
-  settle()
   const sizing = new view.ResizeObserver(resize)
   sizing.observe(layer)
   view.addEventListener('scroll', scroll, { passive: true })
   view.addEventListener('resize', resize)
-  document.addEventListener('visibilitychange', settle)
   scheme.addEventListener('change', recolor)
   canvas.addEventListener('webglcontextlost', lost)
   canvas.addEventListener('webglcontextrestored', restored)
   return () => {
-    stop()
     sizing.disconnect()
     view.removeEventListener('scroll', scroll)
     view.removeEventListener('resize', resize)
-    document.removeEventListener('visibilitychange', settle)
     scheme.removeEventListener('change', recolor)
     canvas.removeEventListener('webglcontextlost', lost)
     canvas.removeEventListener('webglcontextrestored', restored)
