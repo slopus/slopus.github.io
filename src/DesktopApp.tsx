@@ -41,7 +41,7 @@ const values: readonly { title: string; body: string; emoji: AnimatedEmojiName }
   },
   {
     title: 'F1 Fast Mobile',
-    body: 'We have hyper-tuned our mobile app with the best tricks in the industry',
+    body: 'Ever heard about a mobile app getting a speeding ticket? We just got one!',
     emoji: 'f1-car',
   },
 ]

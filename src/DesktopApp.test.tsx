@@ -158,7 +158,7 @@ describe('Happy Desktop landing page', () => {
   it('explains each value in about 100 characters, about the same length, F1 Fast Mobile in Kirill\'s words', () => {
     const { container } = render(<DesktopApp />)
     const bodies = [...container.querySelectorAll('.one-value p')].map((body) => body.textContent!)
-    const f1 = 'We have hyper-tuned our mobile app with the best tricks in the industry'
+    const f1 = 'Ever heard about a mobile app getting a speeding ticket? We just got one!'
     expect(bodies).toContain(f1)
     const lengths = bodies.filter((body) => body !== f1).map((body) => body.length)
 
