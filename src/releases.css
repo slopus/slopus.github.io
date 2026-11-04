@@ -13,6 +13,8 @@
 /* Reserved while GitHub answers, so the downloads do not jump. */
 .releases-version { min-height: 1.5em; margin: .35rem 0 0; color: #183f38; font: .8rem/1.5 'DM Mono', monospace; }
 .releases-version > span { white-space: nowrap; }
+.releases-version > a { display: table; margin: .15rem auto 0; color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #183f3866; }
+.releases-version > a:hover { text-decoration-color: currentColor; }
 .releases-channel > .one-download-actions { min-width: 0; max-width: 100%; margin-top: 1rem; }
 /* The Homebrew strip stays narrower than its column; a cut command ends in an ellipsis, and Copy copies all of it. */
 .releases-channel .one-brew-command { max-width: min(100%, 20rem); }

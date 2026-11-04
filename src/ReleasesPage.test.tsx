@@ -30,7 +30,8 @@ async function page() {
   return render(<Router pathname="/releases/" />)
 }
 
-const version = (column: HTMLElement) => column.querySelector('.releases-version')?.textContent
+// The version line, without its Release notes link.
+const version = (column: HTMLElement) => column.querySelector('.releases-version')?.textContent?.replace(/Release notes$/, '')
 
 beforeEach(() => {
   // jsdom has no ResizeObserver; the painted page scrollbar only observes with it.
@@ -54,12 +55,14 @@ describe('releases page', () => {
     const preview = screen.getByRole('region', { name: 'Preview' })
 
     await waitFor(() => expect(version(stable)).toBe('Happy 0.0.102 · Oct 25, 2026'))
+    expect(within(stable).getByRole('link', { name: 'Release notes' }).getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases/tag/v0.0.102')
     expect(within(stable).getByRole('link', { name: 'Download Happy for macOS' }).getAttribute('href')).toBe(`${DOWNLOAD}/v0.0.102/Happy-0.0.102-arm64.dmg`)
     expect(within(stable).getByText('brew install --cask slopus/tap/happy')).toBeTruthy()
     for (const os of ['Windows', 'Linux']) expect(within(stable).getByRole('link', { name: `Download Happy for ${os}` })).toBeTruthy()
 
     await waitFor(() => expect(version(preview)).toBe('Happy Nightly 0.0.103-preview.17 · Nov 2, 2026'))
-    expect(within(preview).getByText('Help us test Happy on macOS by installing the preview build.')).toBeTruthy()
+    expect(within(preview).getByRole('link', { name: 'Release notes' }).getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases/tag/v0.0.103-preview.17')
+    expect(within(preview).getByText('Help us test Happy by installing the preview build. Happy Nightly installs beside Happy.')).toBeTruthy()
     expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href'))
       .toBe(`${DOWNLOAD}/v0.0.103-preview.17/Happy-Nightly-0.0.103-preview.17-arm64.dmg`)
     expect(within(preview).queryByText('brew install --cask slopus/tap/happy')).toBeNull()
@@ -100,6 +103,18 @@ describe('releases page', () => {
     await waitFor(() => expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href'))
       .toBe(`${DOWNLOAD}/v0.0.102/Happy-Nightly-0.0.102-arm64.dmg`))
     expect(version(preview)).toBe('Happy Nightly 0.0.102 · Oct 25, 2026')
+  })
+
+  it('adds the preview\'s Nightly Windows installer once the preview ships one, and never a Linux one', async () => {
+    const tag = 'v0.0.103-preview.18'
+    github([githubRelease(tag, '2026-11-04T00:00:00Z', [...nightlyAssets('0.0.103-preview.18'), 'Happy-Nightly-0.0.103-preview.18-x64.exe']), PREVIEW, STABLE])
+    await page()
+    const preview = screen.getByRole('region', { name: 'Preview' })
+    await waitFor(() => expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for Windows' }).getAttribute('href'))
+      .toBe(`${DOWNLOAD}/${tag}/Happy-Nightly-0.0.103-preview.18-x64.exe`))
+    expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href'))
+      .toBe(`${DOWNLOAD}/${tag}/Happy-Nightly-0.0.103-preview.18-arm64.dmg`)
+    expect(within(preview).queryByRole('link', { name: /Linux/ })).toBeNull()
   })
 
   it('points Preview at GitHub when GitHub does not answer, and Stable at its verified release', async () => {

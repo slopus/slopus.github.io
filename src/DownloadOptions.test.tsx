@@ -216,7 +216,7 @@ describe('desktop and mobile downloads', () => {
     expect(screen.getByRole('link', { name: 'All Releases' }).getAttribute('href')).toBe('/releases/')
   })
 
-  it('offers Preview as the Nightly Mac disk images alone, with no Homebrew, other platforms, or stores', async () => {
+  it('offers Preview as the Nightly Mac disk images alone while the preview has no Windows installer, with no Homebrew or stores', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => GITHUB_RELEASES }))
     device('Windows NT 10.0')
     vi.resetModules()
@@ -230,6 +230,32 @@ describe('desktop and mobile downloads', () => {
     expect(screen.queryByRole('note')).toBeNull()
     expect(screen.queryByRole('link', { name: /Windows|Linux|All Releases/ })).toBeNull()
     expect(container.querySelector('.one-mobile-downloads')).toBeNull()
+  })
+
+  it('offers a preview\'s Nightly Windows installer first on Windows, and beside the Mac download elsewhere', async () => {
+    const windowsPreview = githubRelease('v0.0.103-preview.18', '2026-11-04T00:00:00Z',
+      [...nightly('0.0.103-preview.18'), 'Happy-0.0.103-preview.18-x64.exe', 'Happy-Nightly-0.0.103-preview.18-x64.exe'])
+    const download = 'https://github.com/slopus/happy-desktop/releases/download/v0.0.103-preview.18'
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => [windowsPreview, ...GITHUB_RELEASES] }))
+    device('Windows NT 10.0')
+    vi.resetModules()
+    let { DownloadOptions: Fresh } = await import('./DownloadOptions')
+    const { container } = render(<Fresh channel="preview" macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
+    await waitFor(() => expect(container.querySelector('.one-download-actions')?.getAttribute('data-primary-platform')).toBe('windows'))
+    expect(screen.getByRole('link', { name: 'Download Happy Nightly for Windows' }).getAttribute('href')).toBe(`${download}/Happy-Nightly-0.0.103-preview.18-x64.exe`)
+    expect(screen.getByRole('note').textContent).toContain('SmartScreen')
+    expect(screen.getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href')).toBe(`${download}/Happy-Nightly-0.0.103-preview.18-arm64.dmg`)
+    expect(screen.queryByRole('link', { name: /Linux|All Releases/ })).toBeNull()
+    cleanup()
+
+    device('Macintosh', 'MacIntel')
+    vi.resetModules()
+    ;({ DownloadOptions: Fresh } = await import('./DownloadOptions'))
+    render(<Fresh channel="preview" macArchitecture="x64" onMacArchitectureChange={vi.fn()} />)
+    await waitFor(() => expect(screen.getByRole('link', { name: 'Download Happy Nightly for Windows' }).getAttribute('href'))
+      .toBe(`${download}/Happy-Nightly-0.0.103-preview.18-x64.exe`))
+    expect(screen.getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href')).toBe(`${download}/Happy-Nightly-0.0.103-preview.18-x64.dmg`)
+    expect(screen.queryByRole('note')).toBeNull()
   })
 
   it('sends Preview to the GitHub release list when GitHub has no preview to offer', async () => {

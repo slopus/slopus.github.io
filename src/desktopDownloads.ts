@@ -1,6 +1,6 @@
 export type MacArchitecture = 'arm64' | 'x64'
 export type ReleaseChannel = 'stable' | 'preview'
-/** One release's installers. Previews ship macOS only, so they have no Windows or Linux one. */
+/** One release's installers. Previews ship no Linux AppImage, and older previews no Windows installer. */
 export type DesktopDownloads = Readonly<{
   tag: string
   publishedAt?: string
@@ -11,6 +11,11 @@ export type DesktopDownloads = Readonly<{
 
 export const GITHUB_RELEASES = 'https://github.com/slopus/happy-desktop/releases'
 export const LATEST_RELEASE = `${GITHUB_RELEASES}/latest`
+
+/** The release's own GitHub page, with its notes. */
+export function releaseNotesUrl(tag: string) {
+  return `${GITHUB_RELEASES}/tag/${tag}`
+}
 
 // Verified production assets remain usable if GitHub is unavailable/rate-limited.
 const VERIFIED_RELEASE = 'https://github.com/slopus/happy-desktop/releases/download/v0.0.90'
@@ -59,8 +64,9 @@ function productionDownloads(value: unknown): DesktopDownloads | null {
 /**
  * Previews ship only the Nightly app (Happy Nightly, installed beside Happy), which
  * updates to every preview and stable release. Every release carries its disk images,
- * so the preview download is the newest published release's, whichever kind it is.
- * GitHub lists releases by creation, not publication, so sort them first.
+ * so the preview download is the newest published release's, whichever kind it is,
+ * with its Nightly Windows installer when it has one (the first previews
+ * were macOS only). GitHub lists releases by creation, not publication, so sort them first.
  */
 function previewDownloads(value: unknown): DesktopDownloads | null {
   if (!Array.isArray(value)) return null
@@ -74,7 +80,8 @@ function previewDownloads(value: unknown): DesktopDownloads | null {
     const version = release.tag_name.slice(1)
     const arm64 = assetUrl(release.assets, release.tag_name, `Happy-Nightly-${version}-arm64.dmg`)
     const x64 = assetUrl(release.assets, release.tag_name, `Happy-Nightly-${version}-x64.dmg`)
-    if (arm64 && x64) return { tag: release.tag_name, publishedAt: release.published_at, macos: { arm64, x64 }, windows: null, linux: null }
+    const windows = assetUrl(release.assets, release.tag_name, `Happy-Nightly-${version}-x64.exe`)
+    if (arm64 && x64) return { tag: release.tag_name, publishedAt: release.published_at, macos: { arm64, x64 }, windows, linux: null }
   }
   return null
 }

@@ -2,21 +2,22 @@ import { useEffect, useState } from 'react'
 import { GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP } from './products'
 import { DownloadOptions, MobileDownloads } from './DownloadOptions'
-import { channelDesktopDownloads, GITHUB_RELEASES, type DesktopDownloads, type MacArchitecture, type ReleaseChannel } from './desktopDownloads'
+import { channelDesktopDownloads, GITHUB_RELEASES, releaseNotesUrl, type DesktopDownloads, type MacArchitecture, type ReleaseChannel } from './desktopDownloads'
 import './happy-one.css'
 import './releases.css'
 
 const CHANNELS = [
   { value: 'stable', label: 'Stable', note: 'Production releases for macOS, Windows, and Linux.' },
-  { value: 'preview', label: 'Preview', note: 'Help us test Happy on macOS by installing the preview build.' },
+  { value: 'preview', label: 'Preview', note: 'Help us test Happy by installing the preview build. Happy Nightly installs beside Happy.' },
 ] as const satisfies ReadonlyArray<{ value: ReleaseChannel; label: string; note: string }>
 
-/** The name and the date each stay on one line; a phone wraps between them. */
+/** The name and the date each stay on one line; a phone wraps between them. The notes link gets a line of its own. */
 function releaseLine(channel: ReleaseChannel, downloads: DesktopDownloads) {
   const name = <span>{channel === 'preview' ? 'Happy Nightly' : 'Happy'} {downloads.tag.slice(1)}</span>
-  if (!downloads.publishedAt) return name
+  const notes = <a href={releaseNotesUrl(downloads.tag)}>Release notes</a>
+  if (!downloads.publishedAt) return <>{name}{notes}</>
   const date = new Date(downloads.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
-  return <>{name} · <span>{date}</span></>
+  return <>{name} · <span>{date}</span>{notes}</>
 }
 
 function ReleaseVersion({ channel }: { channel: ReleaseChannel }) {

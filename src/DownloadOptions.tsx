@@ -19,7 +19,7 @@ export type DownloadOptionsProps = {
   macArchitecture: MacArchitecture
   onMacArchitectureChange: (architecture: MacArchitecture) => void
   id?: string
-  /** Preview offers the Nightly app's Mac disk images alone: previews ship nothing else. */
+  /** Preview offers the Nightly app: its Mac disk images, and its Windows installer once the preview has one. */
   channel?: ReleaseChannel
   /** Off on the releases page itself. */
   releasesLink?: boolean
@@ -105,10 +105,15 @@ function DesktopDownloadLink({ platform, macArchitecture, downloads, channel = '
   </a>
 }
 
-function PlatformLinks({ current, downloads, macArchitecture, releasesLink }: { current: Exclude<DesktopPlatform, 'desktop'>; downloads: DesktopDownloads | null; macArchitecture: MacArchitecture; releasesLink: boolean }) {
+/** The desktops this release has an installer for: Stable always ships all three; a preview, what GitHub lists. */
+function releasePlatforms(channel: ReleaseChannel, downloads: DesktopDownloads | null) {
+  return channel === 'stable' ? DESKTOP_PLATFORMS : DESKTOP_PLATFORMS.filter(platform => platform === 'macos' || downloads?.[platform])
+}
+
+function PlatformLinks({ platforms, downloads, channel, macArchitecture, releasesLink }: { platforms: readonly Exclude<DesktopPlatform, 'desktop'>[]; downloads: DesktopDownloads | null; channel: ReleaseChannel; macArchitecture: MacArchitecture; releasesLink: boolean }) {
   return (
     <div className="one-platform-links" aria-label="Desktop platforms">
-      {DESKTOP_PLATFORMS.filter(platform => platform !== current).map(platform => <DesktopDownloadLink key={platform} platform={platform} downloads={downloads} macArchitecture={macArchitecture}>
+      {platforms.map(platform => <DesktopDownloadLink key={platform} platform={platform} downloads={downloads} channel={channel} macArchitecture={macArchitecture}>
         {platform !== 'macos' && <span className="one-platform-icon" data-platform={platform} aria-hidden="true"
           style={{ '--platform-icon': `url('/img/happy-one/icons/${platform}.svg')` } as CSSProperties} />}
         {LABELS[platform]}
@@ -230,13 +235,16 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
   // Never one channel's files under the other's switch while the new lookup runs.
   const downloads = resolved?.channel === channel ? resolved.downloads : null
   const preview = channel === 'preview'
-  // Phones install from the stores; Preview is the desktop app's.
+  // Phones install from the stores; Preview is the desktop app's, shown on the releases page itself.
   const withMobile = mobile && !preview
+  const withReleasesLink = releasesLink && !preview
   // The prerendered homepage has no platform; hydration settles on this device's.
   const platform = useSyncExternalStore(NO_SUBSCRIPTION, desktopPlatform, () => 'desktop' as const)
-  // Phones and unknown platforms default to macOS, with the other installers
-  // linked below its Homebrew command.
-  const primaryPlatform = platform === 'desktop' || preview ? 'macos' : platform
+  const platforms = releasePlatforms(channel, downloads)
+  // Phones, unknown platforms, and desktops this preview has no installer for default
+  // to macOS, with the other installers linked below its Homebrew command.
+  const primaryPlatform = platform !== 'desktop' && platforms.includes(platform) ? platform : 'macos'
+  const otherPlatforms = platforms.filter(other => other !== primaryPlatform)
   // The tap's only cask is the stable app.
   const showBrew = primaryPlatform === 'macos' && !preview
   // Prerendered markup has no store preference; hydration settles on this device's.
@@ -266,7 +274,7 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
         </div>
         {primaryPlatform === 'windows' && <SmartScreenWarning />}
         {showBrew && <HomebrewCommand />}
-        {!preview && <PlatformLinks current={primaryPlatform} downloads={downloads} macArchitecture={macArchitecture} releasesLink={releasesLink} />}
+        {(otherPlatforms.length > 0 || withReleasesLink) && <PlatformLinks platforms={otherPlatforms} downloads={downloads} channel={channel} macArchitecture={macArchitecture} releasesLink={withReleasesLink} />}
       </div>
       {withMobile && <MobileDownloads />}
     </div>
