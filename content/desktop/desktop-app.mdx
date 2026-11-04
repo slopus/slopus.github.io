@@ -1,6 +1,24 @@
 # The Open Source Desktop App for Claude Code, Codex, Grok, and Gemini
 
-Happy Desktop is a free, MIT-licensed app for orchestrating Claude Code, Codex, Grok, Gemini, and more on macOS, Windows, and Linux, reusing the subscriptions you already pay for. Install it with Homebrew or from GitHub. Unlike the Code tab in Claude Desktop or Codex in the ChatGPT app, it runs every vendor's agents, and its code is open. The iOS and Android app is the phone half: the same sessions, end-to-end encrypted.
+Happy Desktop is a free, MIT-licensed app for orchestrating Claude Code, Codex, Grok, Gemini, and more on macOS, Windows, and Linux, reusing the subscriptions you already pay for. It is a Claude Code desktop app and a Codex desktop app in one window, signed in with your own logins.
+
+Unlike the Code tab in Claude Desktop or Codex in the ChatGPT app, it runs every vendor's agents, and its code is open. The iOS and Android app is the phone half: the same sessions, end-to-end encrypted.
+
+## Download the Claude Code and Codex desktop app
+
+[Releases](/releases/) has the current Stable and Preview installers. On macOS or Linux you can also use Homebrew:
+
+```sh
+brew install --cask slopus/tap/happy
+```
+
+| Platform | Installer | Updates |
+| --- | --- | --- |
+| macOS, Apple Silicon or Intel | Signed and notarized `.dmg`, or Homebrew | The app updates itself |
+| Windows, x64 | Signed `.exe` | The app updates itself |
+| Linux, x64 or arm64 | `.AppImage`, or Homebrew | Through Homebrew |
+
+Then sign in to Claude Code or Codex on the machine, if you haven't, and open Happy. It finds those sign-ins on its own. The [Quick Start](/quick-start/) goes from install to a first change. For your phone, get Happy from the [App Store](https://apps.apple.com/us/app/happy-codex-claude-code-app/id6748571505) or [Google Play](https://play.google.com/store/apps/details?id=com.ex3ndr.happy).
 
 ## How it compares
 
@@ -19,9 +37,15 @@ If you use one vendor and want its newest features the day they ship, its own ap
 
 T3 Code is another open-source app for several vendors' agents. See [Happy vs T3 Code](/t3-code/).
 
+## A Claude Code client that also runs Codex
+
+Sign in to Claude Code and Happy runs Claude with Claude Code's prompts and tools on your Claude subscription. To run Claude Code's own agent loop instead (beta), with its settings, skills, and sub-agents, add a `[harnesses.claude_code]` table to `happy.toml`. Happy ships Claude Code, so there is nothing else to install.
+
+Codex works the same way. By default Happy runs GPT models with Codex's prompts and tools; a `[harnesses.codex_cli]` table runs the Codex CLI itself (beta). See [Harnesses](/recepies/harnesses/).
+
 ## One harness, every model native
 
-Claude gets Claude Code's prompts and tools, GPT models get Codex's, and Grok gets Grok Build's. Everything around the model is shared: one permission model, one sandbox, one set of tools. Change the model or reasoning effort as you go and the transcript stays. Subagents each pick their own model, so one task can plan on one provider and review on another. Happy can also run a vendor's whole agent instead (beta): Antigravity for Gemini, Claude Code, Codex, OpenCode, or any Agent Client Protocol (ACP) agent. See [Models & Subscriptions](/models/).
+Claude gets Claude Code's prompts and tools, GPT models get Codex's, and Grok gets Grok Build's. Everything around the model is shared: one permission model, one sandbox, one set of tools. Change the model or reasoning effort as you go and the transcript stays. Subagents each pick their own model, so one task can plan on one provider and review on another. Happy can also run a vendor's whole agent instead (beta): Antigravity for Gemini, OpenCode, or any Agent Client Protocol (ACP) agent. See [Models & Subscriptions](/models/).
 
 ## Your subscriptions, no keys
 
@@ -39,6 +63,6 @@ New sessions start in Auto. Reads and workspace edits run freely, everything els
 
 Pair the Happy app for iOS or Android once. Every session on the computer is on the phone, end-to-end encrypted. The relay sees ciphertext only. See [Claude Code on your phone](/mobile-app/).
 
-## Get it
+## Source code
 
-Download for [macOS, Windows, or Linux](/#download), or run `brew install --cask slopus/tap/happy` on macOS or Linux. The [Quick Start](/quick-start/) takes you from install to a first change. The source is on GitHub: [the app](https://github.com/slopus/happy-desktop) and [its agent runtime](https://github.com/slopus/happy-agent).
+The app and its agent runtime are on GitHub: [slopus/happy-desktop](https://github.com/slopus/happy-desktop) and [slopus/happy-agent](https://github.com/slopus/happy-agent), both MIT.

@@ -511,7 +511,7 @@ const desktopDocuments: DocumentDefinition[] = [
     sourcePath: '/content/desktop/desktop-app.mdx',
     title: 'Desktop App for Claude Code & Codex',
     pageTitle: 'Open Source Desktop App for Claude Code, Codex, Grok & Gemini',
-    description: 'Happy Desktop is a free, MIT-licensed app for orchestrating Claude Code, Codex, Grok, Gemini, and more on macOS, Windows, and Linux.',
+    description: 'Happy Desktop is a free, MIT-licensed desktop app for Claude Code, Codex, Grok, Gemini, and more. Download it for macOS, Windows, or Linux.',
     cardLine: 'Free on macOS, Windows and Linux',
     group: 'Comparisons',
   },
