@@ -31,6 +31,8 @@ export interface DocumentEntry {
    * words, benefit first, no closing period. Required on a page without a figure (notes/og/cards.py).
    */
   cardLine?: string
+  /** An original Happy CLI page's Happy Desktop counterpart, linked from its maintenance notice. */
+  current?: Readonly<{ path: string; label: string }>
   /**
    * A post whose link preview plays a video: an H.264 MP4 under public/, at its pixel size. Its
    * card is a frame of the video, /og/<path>.png, 1200 wide at the video's aspect ratio.
@@ -68,24 +70,27 @@ const happyDocuments: DocumentDefinition[] = [
     path: '',
     sourcePath: '/content/docs/index.mdx',
     title: 'Welcome',
-    description: 'The original Happy CLI: control Claude Code and Codex on your computer from your phone. In maintenance mode; Happy today is the desktop harness.',
+    description: 'Docs for the original Happy CLI, a phone remote for Claude Code and Codex. Happy (formerly Happy Coder) is now a desktop app for Claude, Codex, Grok and more.',
     group: 'Start here',
+    current: { path: '/welcome/', label: 'Welcome' },
   },
   {
     path: 'quick-start',
     sourcePath: '/content/docs/quick-start.mdx',
-    pageTitle: 'Install Happy Coder (npm install -g happy) and Pair Your Phone',
+    pageTitle: 'Happy (formerly Happy Coder) CLI Quick Start: npm i -g happy',
     title: 'Quick Start',
-    description: 'Install the original Happy CLI, pair your phone, and start a Claude Code session. For Happy today, see the Happy Desktop Quick Start.',
+    description: 'Install the original Happy CLI with npm and pair your phone by QR code. Happy (formerly Happy Coder) is now a desktop app; start with its Quick Start.',
     group: 'Start here',
+    current: { path: '/quick-start/', label: 'Quick Start' },
   },
   {
     path: 'how-it-works',
     sourcePath: '/content/docs/how-it-works.mdx',
-    pageTitle: 'How Happy Coder Works: CLI, Phone App and Encrypted Relay',
+    pageTitle: 'How the Happy (formerly Happy Coder) CLI Works: Phone and Relay',
     title: 'How It Works',
-    description: 'Understand the CLI, mobile app, relay server, and encrypted data flow.',
+    description: 'How the original Happy CLI, the phone app and the encrypted relay fit together. Happy (formerly Happy Coder) is now a desktop app with its own runtime.',
     group: 'Start here',
+    current: { path: '/how-it-works/', label: 'How It Works' },
   },
   {
     path: 'security',
@@ -97,10 +102,11 @@ const happyDocuments: DocumentDefinition[] = [
   {
     path: 'faq',
     sourcePath: '/content/docs/faq.mdx',
-    pageTitle: 'Happy Coder FAQ: Setup, Privacy and Troubleshooting',
+    pageTitle: 'Happy (formerly Happy Coder) CLI FAQ: Pricing, Privacy, Setup',
     title: 'FAQ',
-    description: 'Answers to common questions about Happy, setup, privacy, and troubleshooting.',
+    description: 'Answers about the original Happy CLI: cost, privacy, setup and fixes. Happy (formerly Happy Coder) is now a desktop app for Claude, Codex, Grok and more.',
     group: 'Start here',
+    current: { path: '/welcome/', label: 'Welcome' },
   },
   {
     path: 'guides/happy-coder-best-practices',
@@ -128,9 +134,10 @@ const happyDocuments: DocumentDefinition[] = [
     path: 'features',
     sourcePath: '/content/docs/features/index.mdx',
     title: 'All Features',
-    pageTitle: 'Happy Coder Features: Claude Code and Codex from Your Phone',
-    description: 'Explore Happy’s core architecture and mobile workflow features.',
+    pageTitle: 'Happy (formerly Happy Coder) CLI Features: Sync, Voice, Push',
+    description: 'What the original Happy CLI does: live sync with your phone, parallel sessions, voice and push. Happy (formerly Happy Coder) is now a desktop app.',
     group: 'Features',
+    current: { path: '/welcome/#what-you-get', label: 'its features' },
   },
   {
     path: 'features/real-time-sync',
@@ -193,10 +200,11 @@ const happyDocuments: DocumentDefinition[] = [
   {
     path: 'distribution',
     sourcePath: '/content/docs/distribution/index.mdx',
-    pageTitle: 'Happy Coder Product Descriptions and Links',
+    pageTitle: 'Happy (formerly Happy Coder): Product Descriptions and Links',
     title: 'Distribution Resources',
-    description: 'Product descriptions, feature summaries, and canonical Happy links.',
+    description: 'Copy-paste descriptions and links for listing Happy (formerly Happy Coder): the desktop app, the phone app, and the original CLI.',
     group: 'Resources',
+    current: { path: '/welcome/', label: 'Welcome' },
   },
 ]
 
