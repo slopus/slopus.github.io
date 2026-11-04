@@ -6,19 +6,23 @@ import rainbow from './assets/emoji/rainbow.json?url'
 import alienMonster from './assets/emoji/alien-monster.json?url'
 import openSource from './assets/emoji/open-source.json?url'
 import closedLock from './assets/emoji/closed-lock.json?url'
+import f1Car from './assets/emoji/f1-car.json?url'
 
 /**
- * Telegram's animated emoji, as Lottie: the ones Happy Desktop draws, plus Kirill's rainbow and
- * open-source ones. `left`, `right`, `top` and `bottom` are the empty margins around the drawing
- * at rest, as fractions of the box: a layout lines up the drawing's edge rather than the box's,
- * and the pointer replays it over the drawing, not over the margins.
+ * Telegram's animated emoji, as Lottie: the ones Happy Desktop draws, plus Kirill's rainbow,
+ * open-source and F1 car ones. `left`, `right`, `top` and `bottom` are the empty margins around
+ * the drawing at rest, as fractions of the box: a layout lines up the drawing's edge rather than
+ * the box's, and the pointer replays it over the drawing, not over the margins. A `loop` emoji plays on
+ * its own and keeps going while it is on screen instead.
  */
+type Source = { src: string; left: number; right: number; top: number; bottom: number; loop?: boolean }
 const SOURCES = {
   rainbow: { src: rainbow, left: .118, right: .104, top: .128, bottom: .052 },
   'alien-monster': { src: alienMonster, left: .111, right: .108, top: .18, bottom: .145 },
   'open-source': { src: openSource, left: .104, right: .111, top: .07, bottom: .081 },
   'closed-lock': { src: closedLock, left: .097, right: .097, top: .099, bottom: .11 },
-}
+  'f1-car': { src: f1Car, left: .061, right: .078, top: .432, bottom: .096, loop: true },
+} satisfies Record<string, Source>
 export type AnimatedEmojiName = keyof typeof SOURCES
 
 type Runtime = typeof import('@lottiefiles/dotlottie-web')
@@ -53,7 +57,8 @@ function pointerTrack() {
  * Scrolling plays it once as it crosses the middle of the viewport, and again only after it has
  * left the middle half of the viewport, so jitter at the line never replays it. The pointer
  * moving onto the drawing, or a tap on the emoji, restarts it from the first frame every time;
- * the words beside it do nothing. With reduced motion it never moves.
+ * the words beside it do nothing. A looping emoji instead plays from the moment it is ready and
+ * loops; the renderer stops drawing it while it is off screen. With reduced motion it never moves.
  */
 export function AnimatedEmoji({ name, section }: { name: AnimatedEmojiName; section: RefObject<HTMLElement | null> }) {
   const canvas = useRef<HTMLCanvasElement>(null)
@@ -71,6 +76,7 @@ export function AnimatedEmoji({ name, section }: { name: AnimatedEmojiName; sect
     let owed = false
     let rest = 0
     let startedAt = -Infinity
+    const loop = (SOURCES[name] as Source).loop ?? false
 
     /** `restart` plays from the first frame even mid-play; otherwise a running play continues. */
     const play = (restart: boolean) => {
@@ -84,7 +90,9 @@ export function AnimatedEmoji({ name, section }: { name: AnimatedEmojiName; sect
       void player.play()
     }
     const hold = () => {
-      if (!reducedMotion.matches || !player || !ready) return
+      if (!player || !ready) return
+      // A looping emoji picks up again once motion is allowed.
+      if (!reducedMotion.matches) { if (loop) play(false); return }
       playing = false
       void player.pause()
       void player.setFrame(rest)
@@ -95,7 +103,7 @@ export function AnimatedEmoji({ name, section }: { name: AnimatedEmojiName; sect
       if (disposed) return
       const config = {
         autoplay: false,
-        loop: false,
+        loop,
         src: new URL(SOURCES[name].src, location.href).href,
         renderConfig: { autoResize: true, devicePixelRatio: Math.min(devicePixelRatio || 1, 2), freezeOnOffscreen: true },
       }
@@ -109,7 +117,7 @@ export function AnimatedEmoji({ name, section }: { name: AnimatedEmojiName; sect
         void instance.setFrame(rest)
         ready = true
         element.dataset.ready = ''
-        if (owed) { owed = false; play(false) }
+        if (owed || loop) { owed = false; play(false) }
       })
       instance.addEventListener('complete', () => {
         // Too soon after a restart: this completion is the play it cut short.
@@ -150,13 +158,13 @@ export function AnimatedEmoji({ name, section }: { name: AnimatedEmojiName; sect
       const y = (event.clientY - box.top) / box.height
       const inside = x >= margins.left && x <= 1 - margins.right && y >= margins.top && y <= 1 - margins.bottom
       const moved = pointer === undefined || pointer.x !== event.clientX || pointer.y !== event.clientY
-      if (inside && !hovering && moved) play(true)
+      if (inside && !hovering && moved && !loop) play(true)
       hovering = inside
     }
     const away = () => { hovering = false }
     // Touch replays on a tap; a mouse has the hover.
     const tap = (event: MouseEvent) => {
-      if ((event as PointerEvent).pointerType !== 'mouse') play(true)
+      if ((event as PointerEvent).pointerType !== 'mouse' && !loop) play(true)
     }
     element.addEventListener('pointerover', over)
     element.addEventListener('pointermove', over)

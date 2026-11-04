@@ -150,7 +150,7 @@
 .happy-home .one-brew-line { font-family: 'IBM Plex Mono', monospace; }
 .happy-home .one-desktop-button:focus-visible, .happy-home .one-brew-command button:focus-visible { outline-color: var(--home-accent); }
 
-/* What you get: four rows of two columns, the emoji and the words trading sides. Whatever is on
+/* What you get: five rows of two columns, the emoji and the words trading sides. Whatever is on
    the left starts on the same left edge and whatever is on the right ends on the same right
    edge, so the emoji of one row and the words of the next line up. The emoji's box is pulled out
    by its empty margin (AnimatedEmoji.tsx), so the drawing itself meets the edge. */
