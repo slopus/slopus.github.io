@@ -52,15 +52,14 @@ function PromptLine({ prompt }: { prompt: string }) {
 
   return (
     <li className="cos-prompt-line">
-      {/* A header row above the prompt: the label left, Copy right. The prompt runs the full width
-          under it, and only the prompt is copied. */}
+      {/* "Example" above the prompt, and the copy icon in the top right corner, out of the flow: it
+          never sets a line's height. The prompt runs the full width, and only the prompt is copied. */}
       <div className="cos-prompt-head">
         <span className="cos-prompt-example">Example</span>
         <button type="button" className="cos-prompt-copy" data-state={state} onClick={copy} aria-label={state === 'copied' ? `Copied: ${prompt}` : `Copy prompt: ${prompt}`}>
           {state === 'copied'
             ? <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
             : <CopyIcon />}
-          <span aria-hidden="true">{state === 'copied' ? 'Copied' : 'Copy'}</span>
         </button>
       </div>
       <p className="cos-prompt-text">{prompt}</p>
@@ -72,7 +71,7 @@ function PromptLine({ prompt }: { prompt: string }) {
 /**
  * A ready-to-paste request for the Chief of Staff in Happy Desktop: under a line naming the task
  * ("To add skills, simply ask the Chief of Staff:"), each prompt in its own lightly tinted box,
- * "Example" top left and Copy top right. The prompts are plain text in the served page, so they
+ * "Example" top left and a copy icon top right. The prompts are plain text in the served page, so they
  * read and select without JavaScript.
  */
 export function ChiefOfStaffPrompt({ task, prompts }: { task: string; prompts: string[] }) {

@@ -79,8 +79,8 @@ The short descriptor is **Orchestrate Claude, Codex, Grok, Gemini and more in on
 - **The Chief of Staff block.** Every feature page, and every guide whose task the [Chief of Staff](/chief-of-staff/) can do, has a `chief-of-staff` fence right after its intro, with one prompt per line. Every page renders it the same way (`src/ChiefOfStaffPrompt.tsx`):
   - One line naming what the prompts do, from the fence's first line: ```` ```chief-of-staff add skills ```` renders "To add skills, simply ask the Chief of Staff:". Keep the task short and specific to the page.
   - Each prompt in its own quote-style box: the accent at 7% as its fill and a 3px accent left edge. No card: no full border, no shadow, no heavy fill.
-  - A header row inside the box: a quiet "Example" label in small caps top left, the Copy button top right. The prompt runs the full width below them, never squeezed by a button column, and wraps under them at 390.
-  - Copy is borderless and copies only the prompt. It keeps a fixed size and place, shows "Copied" for 1.5 seconds without changing width, has an `aria-label` naming the prompt and a visible focus ring, and a hit area of at least 32px (44px on phones).
+  - Inside the box: a quiet "Example" label in small caps top left, a copy icon top right. The prompt runs the full width below them, never squeezed by a button column, and wraps under them at 390.
+  - The copy icon has no text and no border, and copies only the prompt. It sits out of the flow, so it never sets a line's height or pushes text down. It keeps a fixed size and place, shows a check for 1.5 seconds, has an `aria-label` naming the prompt and a visible focus ring, and a hit area of at least 32px (44px on phones).
   - Contrast on the tint: text and label at least 4.5:1, the accent edge and the focus ring at least 3:1.
   - Without JavaScript the prompt is plain text that selects and copies by hand.
   - Use prompts the Chief of Staff can carry out today with its tools and recipes. Check before adding one.

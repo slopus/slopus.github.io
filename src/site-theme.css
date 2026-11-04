@@ -108,7 +108,6 @@
 .site-theme .document-content .cos-prompt-label a { color: var(--home-ink); text-decoration-color: color-mix(in srgb, var(--home-ink) 35%, transparent); }
 .site-theme .document-content .cos-prompt-line { border-left-color: var(--home-accent); background: color-mix(in srgb, var(--home-accent) 7%, transparent); }
 .site-theme .document-content .cos-prompt-text { color: var(--home-ink); }
-.site-theme .document-content .cos-prompt-copy { font-family: inherit; }
 .site-theme .document-content .cos-prompt-copy:hover { background: var(--site-wash); color: var(--home-ink); }
 .site-theme .document-content .cos-prompt-copy[data-state='copied'] { color: var(--home-ink); }
 .site-theme .document-content .cos-prompt-copy[data-state='copied'] svg { color: var(--home-accent); }

@@ -138,9 +138,9 @@ describe('Happy Desktop landing page', () => {
     expect(sections.map((section) => section.querySelector('h2')?.textContent)).toEqual([
       'Use all your subscriptions',
       'Build it together',
-      'F1 Fast Mobile',
       'Open source, MIT',
       'End-to-end encrypted',
+      'F1 Fast Mobile',
     ])
     // A zig-zag: the emoji starts on the left, then trades sides.
     expect(sections.map((section) => section.getAttribute('data-side'))).toEqual(['start', 'end', 'start', 'end', 'start'])

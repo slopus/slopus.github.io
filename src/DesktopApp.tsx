@@ -30,11 +30,6 @@ const values: readonly { title: string; body: string; emoji: AnimatedEmojiName }
     emoji: 'alien-monster',
   },
   {
-    title: 'F1 Fast Mobile',
-    body: 'We have hyper-tuned our mobile app with the best tricks in the industry',
-    emoji: 'f1-car',
-  },
-  {
     title: 'Open source, MIT',
     body: 'Happy is MIT licensed and runs on your own hardware. Read the code, fork it, and ship your own build.',
     emoji: 'open-source',
@@ -43,6 +38,11 @@ const values: readonly { title: string; body: string; emoji: AnimatedEmojiName }
     title: 'End-to-end encrypted',
     body: 'Pair your phone with a QR code. Everything that travels between your devices is end-to-end encrypted.',
     emoji: 'closed-lock',
+  },
+  {
+    title: 'F1 Fast Mobile',
+    body: 'We have hyper-tuned our mobile app with the best tricks in the industry',
+    emoji: 'f1-car',
   },
 ]
 
@@ -91,7 +91,6 @@ function TrustTheCode() {
           {state === 'copied'
             ? <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
             : <CopyIcon />}
-          <span aria-hidden="true">{state === 'copied' ? 'Copied' : 'Copy'}</span>
         </button>
         <span className="one-download-sr" role="status">{state === 'copied' ? 'Copied.' : state === 'failed' ? 'Clipboard unavailable. Select the prompt to copy it.' : ''}</span>
       </figure>

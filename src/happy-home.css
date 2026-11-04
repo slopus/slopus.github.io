@@ -166,13 +166,15 @@
 .happy-home .one-value h2 { margin: 0 0 .6rem; font-size: clamp(1.75rem, 2.7vw, 2.25rem); line-height: 1.15; }
 .one-value-copy p { margin: 0; color: var(--home-ink-2); font-size: 1.18rem; line-height: 1.55; text-wrap: pretty; }
 
-/* Don't trust our words: one line, then the prompt to paste into any agent. */
+/* Don't trust our words: one line, then the prompt to paste into any agent. The copy icon sits in
+   the top right corner, out of the flow and centred on the first line, in room the padding keeps
+   for it: it never moves a line, copied or not. */
 .one-trust { padding-block: 6.5rem 1rem; text-align: center; }
 .happy-home .one-trust h2 { margin: 0 0 .75rem; font-size: var(--one-h1); }
 .one-trust > p { margin: 0; color: var(--home-ink-2); font-size: 1.125rem; line-height: 1.5; text-wrap: balance; }
-.one-trust-prompt { position: relative; max-width: 36rem; margin: 2rem auto 0; padding: 1rem 6.75rem 1rem 1.1rem; border: 1px solid var(--home-line); border-radius: 16px; background: var(--home-surface); text-align: left; }
+.one-trust-prompt { position: relative; max-width: 36rem; margin: 2rem auto 0; padding: 1rem 3.5rem 1rem 1.1rem; border: 1px solid var(--home-line); border-radius: 16px; background: var(--home-surface); text-align: left; }
 .one-trust-prompt > p { margin: 0; font: 1rem/1.55 'IBM Plex Mono', monospace; overflow-wrap: anywhere; }
-.one-trust-prompt button { position: absolute; top: .75rem; right: .65rem; display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-width: 5.5rem; height: 36px; padding: 0 .75rem; border: 0; border-radius: 8px; background: transparent; color: var(--home-ink); font: 500 .85rem/1 inherit; cursor: pointer; }
+.one-trust-prompt button { position: absolute; top: .375rem; right: .375rem; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 10px; background: transparent; color: var(--home-ink); cursor: pointer; }
 .one-trust-prompt button:hover { background: var(--home-surface); }
 .one-trust-prompt button:focus-visible { outline: 2px solid var(--home-accent); outline-offset: 2px; }
 
@@ -205,7 +207,7 @@
   .happy-home .one-value h2 { margin-bottom: .6rem; font-size: 1.65rem; }
   .one-value-copy p { font-size: 1.06rem; }
   .one-trust { padding-block: 4.5rem .5rem; }
-  .one-trust-prompt { padding: 3.25rem 1rem 1rem; }
+  .one-trust-prompt { padding: 1rem 3.5rem 1rem 1rem; }
   .one-trust-prompt > p { font-size: .92rem; }
   .one-talk { padding-block: 2rem 4rem; }
   .happy-home .one-talk h2 { font-size: 1.4rem; }
