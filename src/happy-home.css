@@ -78,8 +78,13 @@
 /* Once the canvases have faded in, the base colour is all that shows between them. */
 .home-grain[data-settled] { background: var(--grain-back); }
 
-/* The header lets the surface through; once the page scrolls under it, it frosts. */
-.happy-home .site-header-wrap { background: transparent; transition: border-color .2s ease, background-color .2s ease; }
+/* The header lets the surface through; once the page scrolls under it, it frosts. It stays out of
+   sight until the hero's name has scrolled up past it (data-header-shown, DesktopApp), then shows
+   as on every page; keyboard focus inside it shows it at once, and without scripts it is there. */
+.happy-home .site-header-wrap { background: transparent; transition: opacity .25s ease, border-color .2s ease, background-color .2s ease; }
+@media (scripting: enabled) {
+  .happy-home:not([data-header-shown]) .site-header-wrap:not(:focus-within) { opacity: 0; pointer-events: none; }
+}
 .happy-home { --home-frost: blur(20px) saturate(1.4); }
 .happy-home .site-header-wrap[data-scrolled] { border-bottom-color: var(--home-line); background: var(--home-header); -webkit-backdrop-filter: var(--home-frost); backdrop-filter: var(--home-frost); }
 .happy-home .wordmark { color: var(--home-ink); font-family: 'Bricolage Grotesque', 'IBM Plex Sans', sans-serif; font-size: 1.12rem; letter-spacing: -.03em; }
@@ -98,6 +103,12 @@
 .happy-home h1, .happy-home h2 { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 600; letter-spacing: -.025em; }
 .happy-home h1 em, .happy-home h2 em { color: var(--home-accent); }
 .happy-home .one-hero-note, .happy-home .one-download > p { color: var(--home-ink-2); }
+/* After it, the GitHub mark and the plain star count, as in the header. */
+.one-hero-stars { position: relative; margin-left: .7rem; color: inherit; white-space: nowrap; transition: color .2s ease; }
+.one-hero-stars::after { content: ''; position: absolute; inset: -10px -6px; }
+.one-hero-stars svg { display: inline-block; width: 1em; height: 1em; margin-right: .4rem; vertical-align: -.14em; }
+.one-hero-stars > span { font: 500 .9em 'IBM Plex Mono', monospace; }
+.one-hero-stars:hover { color: var(--home-accent); }
 /* The headline, at most one short line under it, and the note. The first-screen fit
    (happy-one.css) counts the headline's lines at its own size and the line under it, if any:
    header 60px, hero top 28px, heading margin 8px, note 24px, movie gap 12px, stage padding
@@ -165,7 +176,6 @@
 .one-talk-links a > svg:last-child:not(:first-child) { opacity: .6; }
 
 @media (max-width: 760px) {
-  /* One column: each emoji over its words, still on its side, its drawing on that edge. */
   .happy-home .one-hero { --hero-h1: clamp(1.9rem, 8.6vw, 2.4rem); }
   .happy-home:not([data-social-preview]) { padding-bottom: 140px; }
   .happy-home .one-hero[data-name] { --hero-h1: clamp(2.9rem, 14vw, 3.6rem); }
@@ -173,10 +183,11 @@
   /* The copy, the devices and the badge close together, not spread over the first screen. */
   .happy-home:not([data-social-preview]) .one-hero-fold { min-height: 0; justify-content: flex-start; gap: 2.25rem; padding-top: 2.75rem; }
   .happy-home .one-hero-kicker { font-size: 2rem; }
-  .one-values { --value-emoji: 5rem; gap: 3.5rem; width: calc(100% - 40px); padding-block: 3.5rem 1rem; }
-  .one-value, .one-value[data-side='end'] { flex-direction: column; align-items: flex-start; gap: .5rem; }
-  .one-value[data-side='end'] > .one-emoji { align-self: flex-end; }
-  .one-value-copy { flex: none; width: 100%; }
+  /* Each emoji still beside its words, trading sides; the words take the rest of the row. */
+  .one-values { --value-emoji: clamp(4rem, 19vw, 5rem); gap: 3rem; width: calc(100% - 40px); padding-block: 3.5rem 1rem; }
+  .one-value-copy { flex: 1 1 0; }
+  /* Filled line by line: balanced, a narrow column breaks "End-to-end" at its hyphen. */
+  .happy-home .one-value h2 { text-wrap: wrap; }
   .happy-home .one-value h2 { margin-bottom: .6rem; font-size: 1.65rem; }
   .one-value-copy p { font-size: 1.06rem; }
   .one-trust { padding-block: 4.5rem .5rem; }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
 import { DEMO_TAKE, type DemoMovie } from './happyOneDemoMedia'
 import { useRevealedControls } from './revealedControls'
 import './happy-one-demo.css'
@@ -19,14 +19,16 @@ function Sources({ movie }: { movie: DemoMovie }) {
  * covering it; deliberate pointer/keyboard interaction reveals the ordinary native controls, and
  * reduced motion, save-data, and blocked autoplay leave it paused on its poster with them. A
  * phone movie on the same clock follows its play, pause, seek, and rate. The phone comes forward
- * for its part of the story, and drifts in as the page scrolls.
+ * for its part of the story, and drifts in as the page scrolls. `reach` is the line above the
+ * demo the phone may grow up to when it comes forward on a phone.
  */
-export function HappyOneDemo() {
+export function HappyOneDemo({ reach }: { reach?: RefObject<HTMLElement | null> } = {}) {
   const take = DEMO_TAKE
   const figure = useRef<HTMLElement>(null)
   const stage = useRef<HTMLDivElement>(null)
   const desktop = useRef<HTMLVideoElement>(null)
   const phone = useRef<HTMLVideoElement>(null)
+  const device = useRef<HTMLDivElement>(null)
   const [error, setError] = useState(false)
   const [phoneFocused, setPhoneFocused] = useState(false)
   const { revealControls, videoProps } = useRevealedControls()
@@ -189,6 +191,29 @@ export function HappyOneDemo() {
     }
   }, [])
 
+  // How far the phone may grow from its bottom edge, forward, for its top to stay 8px under
+  // `reach`: taller than the window. Phones use it (happy-one-demo.css); wider screens keep
+  // 1.18×. Measured when the layout changes, never while scrolling.
+  useEffect(() => {
+    const line = reach?.current
+    if (!line) return
+    const node = stage.current!
+    const parked = device.current!
+    const update = () => {
+      const top = line.getBoundingClientRect().bottom - node.getBoundingClientRect().top + 8
+      const scale = (parked.offsetTop + parked.offsetHeight - top) / parked.offsetHeight
+      node.style.setProperty('--phone-reach', Math.min(1.6, Math.max(1, scale)).toFixed(3))
+    }
+    update()
+    const resize = new ResizeObserver(update)
+    resize.observe(node)
+    resize.observe(line)
+    return () => {
+      resize.disconnect()
+      node.style.removeProperty('--phone-reach')
+    }
+  }, [reach])
+
   const { desktop: mac, phone: screen } = take
   const size = { '--desktop-w': mac.width, '--desktop-h': mac.height } as CSSProperties
   return (
@@ -201,7 +226,7 @@ export function HappyOneDemo() {
           </video>
         </div>
         {/* The take's label describes both screens. */}
-        <div className="one-demo-phone" aria-hidden="true">
+        <div ref={device} className="one-demo-phone" aria-hidden="true">
           <span className="one-phone-screen">
             {screen.kind === 'movie'
               ? <video ref={phone} poster={screen.poster} width={screen.width} height={screen.height}

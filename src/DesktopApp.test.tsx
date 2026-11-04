@@ -39,8 +39,16 @@ describe('Happy Desktop landing page', () => {
     const tagline = container.querySelector('.one-hero-tagline')!
     expect(tagline.textContent).toBe('One place for you, your team, and your agents.')
     expect(tagline.querySelector('em')).toBeNull()
+    const note = container.querySelector('.one-hero-note')!
+    const stars = note.querySelector('a')!
+    expect(note.firstChild!.textContent!.trim()).toBe('Free and open source')
+    // Then the GitHub mark and the star count, as in the header.
+    expect(stars.getAttribute('href')).toBe('https://github.com/slopus/happy')
+    expect(stars.querySelector('svg')).toBeTruthy()
+    expect(stars.textContent).toBe('24k')
+    expect(stars.getAttribute('aria-label')).toBe('Happy on GitHub, 24,384 stars')
     const lines = [...container.querySelectorAll('.one-hero-copy p')].map((line) => line.textContent!)
-    expect(lines.at(-1)).toBe('Free and open source')
+    expect(lines.at(-1)).toBe('Free and open source24k')
     expect(lines.length).toBeLessThanOrEqual(2)
     for (const line of lines) expect(line.length).toBeLessThanOrEqual(60)
     expect(container.textContent).not.toMatch(/remote server/i)
@@ -356,6 +364,30 @@ describe('site header', () => {
       document.dispatchEvent(new Event('scroll'))
     })
     expect(header.hasAttribute('data-scrolled')).toBe(false)
+  })
+
+  it('keeps its header out of sight until the name has scrolled up past it', () => {
+    const watching = new Map<Element, IntersectionObserverCallback>()
+    vi.stubGlobal('IntersectionObserver', class {
+      constructor(private callback: IntersectionObserverCallback) {}
+      observe(target: Element) { watching.set(target, this.callback) }
+      disconnect() {}
+    })
+    const { container } = render(<DesktopApp />)
+    const shell = container.querySelector('.happy-home')!
+    const heading = watching.get(container.querySelector('#one-heading')!)!
+    const report = (isIntersecting: boolean, bottom: number) => act(() => heading(
+      [{ isIntersecting, boundingClientRect: { bottom }, rootBounds: { top: 60 } } as unknown as IntersectionObserverEntry], {} as IntersectionObserver))
+
+    expect(shell.hasAttribute('data-header-shown')).toBe(false)
+    report(true, 164)
+    expect(shell.hasAttribute('data-header-shown')).toBe(false)
+    report(false, 40)
+    expect(shell.hasAttribute('data-header-shown')).toBe(true)
+    report(true, 90)
+    expect(shell.hasAttribute('data-header-shown')).toBe(false)
+    // As jsdom has it, for the tests after this one.
+    vi.stubGlobal('IntersectionObserver', undefined)
   })
 
   it('is the same plain header on every page, without a product switch', () => {

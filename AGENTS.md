@@ -11,7 +11,8 @@ regenerating it, follow **Regenerating the social preview** in
 `docs/happy-one-demo.md`. Use the current recorded model-selection frame and the
 page's explicit screenshot mode; do not substitute an illustrated mockup. Keep
 the existing preview title and description unless the user asks to change them.
-The screenshot-only GitHub/stars line must stay absent from the normal hero.
+The screenshot-only GitHub/stars line must stay absent from the normal hero, whose
+"Free and open source" carries the stars instead.
 Maintain regeneration instructions, not a dedicated screenshot script.
 
 ## Products and docs
@@ -102,7 +103,10 @@ internal link or asset reference that does not resolve inside `dist/`.
 Every page shares one plain `SiteHeader`: the full "Happy Engineering" wordmark
 at every width, Docs, and the GitHub mark with its plain star count (no star glyph, border, or
 pill). It is 60px tall (52px on phones), pinned while scrolling, and shows a
-hairline only once the page has scrolled, so page shells must not use
+hairline only once the page has scrolled. The homepage keeps it out of sight until the
+hero's "Happy" has scrolled up past it (`usePastHeading` in `src/DesktopApp.tsx`, an
+IntersectionObserver, never a scroll listener), then shows it unchanged; keyboard focus
+inside it shows it at once, and without scripts it is always there. Page shells must not use
 `overflow: hidden` (it breaks `position: sticky`); clip horizontally with
 `overflow-x: clip`. `/#download` is the README "Download" target:
 `id="download"` sits on the download block right under the demo, and the second
@@ -154,14 +158,18 @@ multiplayer, open source, end-to-end encryption), "Don't trust our words. Trust
 the code." with a copyable prompt, the downloads again (just the buttons), "Talk to
 us on Twitter or Discord", and the footer, which keeps its statement and drops the
 links to us, since "Talk to us" has them. The demo
-is the Mac window and the phone straight on the surface, with no stage; swap the take
+is the Mac window and the phone straight on the surface, with no stage; on phones the
+window's left edge is 8px from the screen's, and when the phone comes forward it grows,
+taller than the window, until its top is just under "Free and open source"; wider
+screens keep it at 1.18×, which Kirill prefers there. Swap the take
 in `src/happyOneDemoMedia.ts` (`docs/happy-one-demo.md`). It never mentions the CLI,
 not even in the footer. Keep the copy short: the hero is the headline, at most one
 short line, and "Free and open source"; each value is a title and two short
 sentences of about 100 characters, the four about the same length. The emoji are
 what got smaller, not the explanations. The value rows zig-zag on two
 columns: everything on the left starts on one edge and everything on the right ends
-on the other, so each emoji lines up with the words of the next row. Each value's
+on the other, so each emoji lines up with the words of the next row. On phones too,
+each emoji stays beside its words, trading sides. Each value's
 animated emoji is a Telegram Lottie under `src/assets/emoji/`, drawn by dotLottie as
 in happy-desktop, a little shorter than its words. Scrolling plays it once as it
 crosses the middle of the viewport, and again only after it has left the middle half,
@@ -173,7 +181,8 @@ each emoji's four empty margins at rest, so measure them again when an emoji cha
 `HAPPY_DISCORD` in `src/products.ts`.
 
 The hero is "Happy", Kirill's "One place for you, your team, and your agents." under
-it, plain with no accent, and "Free and open source" (`HOME_HEADLINE` in
+it, plain with no accent, and "Free and open source" followed by the GitHub mark and
+the plain star count, as in the header (`HOME_HEADLINE` in
 `src/homeVariants.ts`), in lavender; the build checks the headline and the line. The
 hero's name is set in the page's own face, not the wordmark's. The candidates still
 under review, headlines (`?hero=`) and palettes (`?palette=`), live in

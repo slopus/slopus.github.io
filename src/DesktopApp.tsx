@@ -152,6 +152,36 @@ function HeadlineLine({ line }: { line: string }) {
 }
 
 
+/**
+ * Whether the hero's name has scrolled up past the header: until then the homepage keeps its
+ * header out of sight. Observed rather than read on every scroll, so scrolling stays on the
+ * compositor; the observer is remade when the header's height changes (60px, 52px on phones).
+ */
+function usePastHeading() {
+  const [past, setPast] = useState(false)
+  useEffect(() => {
+    const heading = document.getElementById('one-heading')
+    const header = document.querySelector<HTMLElement>('.site-header-wrap')
+    if (!heading || !header || typeof IntersectionObserver === 'undefined') return setPast(true)
+    let observer: IntersectionObserver | undefined
+    const observe = () => {
+      observer?.disconnect()
+      observer = new IntersectionObserver(([entry]) => {
+        setPast(!entry.isIntersecting && entry.boundingClientRect.bottom <= (entry.rootBounds?.top ?? 0))
+      }, { rootMargin: `-${header.offsetHeight}px 0px 0px 0px` })
+      observer.observe(heading)
+    }
+    observe()
+    const resize = new ResizeObserver(observe)
+    resize.observe(header)
+    return () => {
+      resize.disconnect()
+      observer?.disconnect()
+    }
+  }, [])
+  return past
+}
+
 /** The dev server's switcher for the variants under review; the build leaves it out. */
 const HomeVariantSwitcher = import.meta.env.DEV ? lazy(() => import('./HomeVariantSwitcher')) : undefined
 // After hydration, and outside the page: the prerendered page has no switcher to match.
@@ -173,8 +203,11 @@ export default function DesktopApp() {
   const headline = ogPreview ? { ...SOCIAL_HEADLINE, sub: HAPPY_DESCRIPTOR } : variants?.headline ?? HOME_HEADLINE
   // The two download blocks share one architecture choice.
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
+  const headerShown = usePastHeading()
+  const note = useRef<HTMLParagraphElement>(null)
   return (
-    <div className="site-shell happy-one happy-home" data-palette={palette} data-social-preview={ogPreview ? '' : undefined}>
+    <div className="site-shell happy-one happy-home" data-palette={palette} data-social-preview={ogPreview ? '' : undefined}
+      data-header-shown={headerShown ? '' : undefined}>
       {!ogPreview && <GrainGradient palette={palette} />}
       <SiteHeader product={HAPPY_DESKTOP} />
       <main>
@@ -190,12 +223,19 @@ export default function DesktopApp() {
                 {headline.lines.flatMap((line, index) => [index ? ' ' : '', <HeadlineLine key={line} line={line} />])}
               </h1>
               {headline.sub && <p className="one-hero-tagline"><Accented text={headline.sub} /></p>}
-              <p className="one-hero-note">Free and open source</p>
+              {/* The note carries the GitHub stars; the link-preview card has a line of its own for them. */}
+              <p ref={note} className="one-hero-note">
+                Free and open source
+                {!ogPreview && <a className="one-hero-stars" href={GITHUB_HAPPY} target="_blank" rel="noopener noreferrer"
+                  aria-label={`Happy on GitHub, ${HAPPY_ONE_GITHUB_STARS.count.toLocaleString('en-US')} stars`}>
+                  <GithubMark /><span>{HAPPY_ONE_GITHUB_STARS.compact}</span>
+                </a>}
+              </p>
               {ogPreview && <a className="one-social-stars" href={GITHUB_HAPPY}>
                 <GithubMark /><span>GitHub · {HAPPY_ONE_GITHUB_STARS.compact} stars</span>
               </a>}
             </div>
-            <HappyOneDemo />
+            <HappyOneDemo reach={note} />
           </div>
           <DownloadOptions id="download" macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
         </section>

@@ -70,9 +70,12 @@ everything else the 30fps AV1, then the 30fps H.264. Encode H.264 at `-level
 screen allows, from 36% to 84% of the page column and at most 968px. The phone is
 84% of the window's height. Where the screen ends before the phone does, it keeps
 55% in view and peeks in from the edge, which the site shell clips. At 700px and
-below the window is 84% of the screen and the phone, 92% of the window's height,
-shows 45% of itself over the window's right bezel. For `phoneFocus` it grows 1.18×
-(1.12× and fully in view, 8px from the edge, on phones). As the page scrolls the
+below the window's left edge is 8px from the screen's and its right edge 8% in, and
+the phone, 92% of the window's height, shows 45% of itself over the window's right
+bezel. For `phoneFocus` it grows 1.18×; on phones it is fully in view, 8px from the
+edge, and grows from its bottom edge until its top is 8px under the hero's "Free and
+open source" line, taller than the window (`--phone-reach`, which `HappyOneDemo`
+measures whenever the layout changes: 1.257× at 390). As the page scrolls the
 stage from where it rests to the top of the viewport, the phone rises by 16% of
 its width and slides in by half of whatever the edge hides. Reduced motion turns
 off the scrolling motion and the easing.
