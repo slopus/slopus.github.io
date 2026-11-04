@@ -124,7 +124,7 @@ function RecipeSourceLine({ route }: { route: string }) {
   )
 }
 
-function LegacyNotice() {
+function LegacyNotice({ current }: { current?: DocumentEntry['current'] }) {
   return (
     <aside className="legacy-notice" aria-label="The original Happy CLI is in maintenance mode">
       <p>
@@ -134,6 +134,7 @@ function LegacyNotice() {
         with both. These docs describe the CLI; for Happy today, an open-source harness for orchestrating
         Claude, Codex, Grok, Gemini, and more, start at <a href="/welcome/">Welcome</a>.
       </p>
+      {current && <p className="legacy-notice-current">For Happy Desktop, see <a href={current.path}>{current.label}</a>.</p>}
     </aside>
   )
 }
@@ -192,7 +193,7 @@ export function DocsPage({ product = HAPPY, path, changelogPath }: { product?: P
           data-document={activeDocument.path || undefined}
           data-changelog-entry={changelogEntry?.slug}
         >
-          {product.key === 'happy' && <LegacyNotice />}
+          {product.key === 'happy' && <LegacyNotice current={activeDocument.current} />}
           {activeDocument.group === 'Recipes' && <RecipeSourceLine route={activeDocument.path} />}
           <MarkdownDocument markdown={markdown} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} resolveHref={activeDocument.group === 'Recipes' ? (href) => recipeHref(activeDocument.path, href) : undefined} headingId={activeDocument.group === 'Changelog' ? (text, depth) => {
             const entry = depth < 3 ? productionChangelogEntries.find((entry) => entry.title === text) : undefined

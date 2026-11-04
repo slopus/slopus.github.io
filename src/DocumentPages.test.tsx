@@ -103,10 +103,29 @@ describe('static document pages', () => {
 
     expect(notice.textContent).toMatch(/^Happy is now a desktop app\. The original Happy CLI \(happy on npm, formerly happy-coder\) is in maintenance mode/)
     expect(screen.getByRole('link', { name: 'Happy desktop app' }).getAttribute('href')).toBe('/')
+    expect(within(notice).getByRole('link', { name: 'Quick Start' }).getAttribute('href')).toBe('/quick-start/')
     unmount()
 
     render(<Router pathname="/quick-start/" />)
     expect(screen.queryByRole('complementary', { name: /maintenance mode/i })).toBeNull()
+  })
+
+  // These pages show up under the homepage for "happy coder" searches; each says what it is and where Happy is now.
+  it('titles the most-searched original Happy CLI pages by the old name and links each to its Happy Desktop page', () => {
+    const paths = ['/docs/', '/docs/faq/', '/docs/features/', '/docs/how-it-works/', '/docs/quick-start/', '/docs/distribution/']
+    const titles = paths.map((path) => metadataForPath(path).title)
+    expect(new Set(titles).size).toBe(paths.length)
+    for (const path of paths) {
+      const metadata = metadataForPath(path)
+      expect(metadata.title).toContain('Happy (formerly Happy Coder)')
+      expect(metadata.title.length).toBeLessThanOrEqual(65)
+      expect(metadata.description).toContain('Happy (formerly Happy Coder)')
+      expect(metadata.description.length).toBeLessThanOrEqual(160)
+      const document = documents.find((entry) => entry.product === 'happy' && documentHref(HAPPY, entry.path) === path)
+      expect(document?.current?.path).toMatch(/^\/(welcome|quick-start|how-it-works)\//)
+    }
+    const allTitles = documents.map((entry) => metadataForPath(documentHref(entry.product === 'desktop' ? HAPPY_DESKTOP : HAPPY, entry.path)).title)
+    for (const title of titles) expect(allTitles.filter((other) => other === title)).toHaveLength(1)
   })
 
   it('does not claim automatic account routing is missing', () => {
