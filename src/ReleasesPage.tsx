@@ -8,7 +8,7 @@ import './releases.css'
 
 const CHANNELS = [
   { value: 'stable', label: 'Stable', note: 'Production releases for macOS, Windows, and Linux.' },
-  { value: 'preview', label: 'Preview', note: 'Help us test Happy by installing the preview build. Happy Nightly installs beside Happy.' },
+  { value: 'preview', label: 'Preview', note: 'Help us test Happy by installing a preview build. Happy Nightly installs beside Happy.' },
 ] as const satisfies ReadonlyArray<{ value: ReleaseChannel; label: string; note: string }>
 
 /** The name and the date each stay on one line; a phone wraps between them. The notes link gets a line of its own. */

@@ -233,8 +233,9 @@ describe('desktop and mobile downloads', () => {
   })
 
   it('offers a preview\'s Nightly Windows installer first on Windows, and beside the Mac download elsewhere', async () => {
-    const windowsPreview = githubRelease('v0.0.103-preview.18', '2026-11-04T00:00:00Z',
-      [...nightly('0.0.103-preview.18'), 'Happy-0.0.103-preview.18-x64.exe', 'Happy-Nightly-0.0.103-preview.18-x64.exe'])
+    // preview.18's assets as GitHub lists them, installers only.
+    const windowsPreview = githubRelease('v0.0.103-preview.18', '2026-11-04T04:49:39Z', ['Happy', 'Happy-Nightly']
+      .flatMap(app => ['arm64.dmg', 'x64.dmg', 'x64.exe'].map(suffix => `${app}-0.0.103-preview.18-${suffix}`)))
     const download = 'https://github.com/slopus/happy-desktop/releases/download/v0.0.103-preview.18'
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => [windowsPreview, ...GITHUB_RELEASES] }))
     device('Windows NT 10.0')
@@ -245,6 +246,10 @@ describe('desktop and mobile downloads', () => {
     expect(screen.getByRole('link', { name: 'Download Happy Nightly for Windows' }).getAttribute('href')).toBe(`${download}/Happy-Nightly-0.0.103-preview.18-x64.exe`)
     expect(screen.getByRole('note').textContent).toContain('SmartScreen')
     expect(screen.getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href')).toBe(`${download}/Happy-Nightly-0.0.103-preview.18-arm64.dmg`)
+    // The preview's own build of Happy follows, on both desktops it ships on.
+    expect(screen.getByText('Or Happy\'s own preview build, which replaces Happy:')).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Download the Happy preview for Windows' }).getAttribute('href')).toBe(`${download}/Happy-0.0.103-preview.18-x64.exe`)
+    expect(screen.getByRole('link', { name: 'Download the Happy preview for macOS' }).getAttribute('href')).toBe(`${download}/Happy-0.0.103-preview.18-arm64.dmg`)
     expect(screen.queryByRole('link', { name: /Linux|All Releases/ })).toBeNull()
     cleanup()
 
@@ -255,6 +260,7 @@ describe('desktop and mobile downloads', () => {
     await waitFor(() => expect(screen.getByRole('link', { name: 'Download Happy Nightly for Windows' }).getAttribute('href'))
       .toBe(`${download}/Happy-Nightly-0.0.103-preview.18-x64.exe`))
     expect(screen.getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href')).toBe(`${download}/Happy-Nightly-0.0.103-preview.18-x64.dmg`)
+    expect(screen.getByRole('link', { name: 'Download the Happy preview for macOS' }).getAttribute('href')).toBe(`${download}/Happy-0.0.103-preview.18-x64.dmg`)
     expect(screen.queryByRole('note')).toBeNull()
   })
 

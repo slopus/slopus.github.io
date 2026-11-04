@@ -57,6 +57,9 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
 .one-platform-icon[data-platform='linux'] { width: .63em; width: .875cap; }
 .one-platform-links a > svg { display: block; flex: none; width: .72em; height: .72em; width: 1cap; height: 1cap; }
 .one-platform-links a:hover { color: #183f38; text-decoration-color: currentColor; }
+/* Preview: its own build of Happy, a quieter line under Happy Nightly's links. */
+.one-preview-standard { display: grid; justify-items: center; gap: .45rem; margin-top: .5rem; padding-top: 1rem; border-top: 1px solid #d9d3c5; }
+.one-preview-standard > p { margin: 0; color: #47645e; font-size: .82rem; line-height: 1.4; }
 .one-desktop-button:focus-visible { outline: 2px solid #e6522c; outline-offset: 3px; }
 .one-brew-command { position: relative; display: flex; align-items: center; width: max-content; max-width: 100%; min-height: 46px; margin-top: .3rem; padding: 0 0 0 12px; border: 1px solid #344139; border-radius: 8px; background: #000; color: #e1e9d5; }
 .one-brew-line { display: flex; align-items: center; gap: 6px; min-width: 0; font: .72rem/1.65 'DM Mono', monospace; }

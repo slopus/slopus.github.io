@@ -19,7 +19,7 @@ export type DownloadOptionsProps = {
   macArchitecture: MacArchitecture
   onMacArchitectureChange: (architecture: MacArchitecture) => void
   id?: string
-  /** Preview offers the Nightly app: its Mac disk images, and its Windows installer once the preview has one. */
+  /** Preview offers the Nightly app for each desktop the preview ships it on, then the preview's own build of Happy. */
   channel?: ReleaseChannel
   /** Off on the releases page itself. */
   releasesLink?: boolean
@@ -57,15 +57,17 @@ function DownloadBadge({ platform }: { platform: Exclude<DesktopPlatform, 'deskt
   )
 }
 
-function desktopDownloadUrl(downloads: DesktopDownloads | null, platform: Exclude<DesktopPlatform, 'desktop'>, architecture: MacArchitecture, channel: ReleaseChannel) {
+/** Preview's links are Happy Nightly's, or with `standard` the preview's own build of Happy. */
+function desktopDownloadUrl(downloads: DesktopDownloads | null, platform: Exclude<DesktopPlatform, 'desktop'>, architecture: MacArchitecture, channel: ReleaseChannel, standard = false) {
   // Without the release, the release page: GitHub's latest is never a preview, so previews get the list.
   const fallback = channel === 'preview' ? GITHUB_RELEASES : LATEST_RELEASE
-  if (!downloads) return fallback
-  return (platform === 'macos' ? downloads.macos[architecture] : downloads[platform]) ?? fallback
+  const installers = standard ? downloads?.standard : downloads
+  if (!installers) return fallback
+  return (platform === 'macos' ? installers.macos[architecture] : installers[platform]) ?? fallback
 }
 
-function DesktopDownloadLink({ platform, macArchitecture, downloads, channel = 'stable', className, children }: {
-  platform: Exclude<DesktopPlatform, 'desktop'>; macArchitecture: MacArchitecture; downloads: DesktopDownloads | null; channel?: ReleaseChannel; className?: string; children: ReactNode
+function DesktopDownloadLink({ platform, macArchitecture, downloads, channel = 'stable', standard = false, className, children }: {
+  platform: Exclude<DesktopPlatform, 'desktop'>; macArchitecture: MacArchitecture; downloads: DesktopDownloads | null; channel?: ReleaseChannel; standard?: boolean; className?: string; children: ReactNode
 }) {
   const [checking, setChecking] = useState(false)
   const [message, setMessage] = useState('')
@@ -87,7 +89,7 @@ function DesktopDownloadLink({ platform, macArchitecture, downloads, channel = '
     // Capture this click's choice even if the shared selector changes while waiting.
     const requestedArchitecture = macArchitecture
     void channelDesktopDownloads(channel).then(value => {
-      const url = desktopDownloadUrl(value, platform, requestedArchitecture, channel)
+      const url = desktopDownloadUrl(value, platform, requestedArchitecture, channel, standard)
       if (destination) {
         if (!destination.closed) destination.location.replace(url)
       } else if (link.isConnected) window.location.assign(url)
@@ -96,8 +98,9 @@ function DesktopDownloadLink({ platform, macArchitecture, downloads, channel = '
     })
   }
   // Until the lookup resolves, the click handler fetches the file; without JavaScript the link opens the release page.
-  return <a className={className} href={desktopDownloadUrl(downloads, platform, macArchitecture, channel)}
-    aria-label={`Download ${channel === 'preview' ? 'Happy Nightly' : 'Happy'} for ${LABELS[platform]}`} aria-busy={checking || undefined}
+  const app = channel === 'stable' ? 'Happy' : standard ? 'the Happy preview' : 'Happy Nightly'
+  return <a className={className} href={desktopDownloadUrl(downloads, platform, macArchitecture, channel, standard)}
+    aria-label={`Download ${app} for ${LABELS[platform]}`} aria-busy={checking || undefined}
     data-download-platform={platform} data-download-arch={platform === 'macos' ? macArchitecture : 'x64'}
     onClick={start} onAuxClick={start}>
     {children}
@@ -105,20 +108,33 @@ function DesktopDownloadLink({ platform, macArchitecture, downloads, channel = '
   </a>
 }
 
-/** The desktops this release has an installer for: Stable always ships all three; a preview, what GitHub lists. */
+/** The desktops this release has an installer for: Stable always ships all three; Preview, what GitHub lists for Happy Nightly. */
 function releasePlatforms(channel: ReleaseChannel, downloads: DesktopDownloads | null) {
   return channel === 'stable' ? DESKTOP_PLATFORMS : DESKTOP_PLATFORMS.filter(platform => platform === 'macos' || downloads?.[platform])
 }
 
-function PlatformLinks({ platforms, downloads, channel, macArchitecture, releasesLink }: { platforms: readonly Exclude<DesktopPlatform, 'desktop'>[]; downloads: DesktopDownloads | null; channel: ReleaseChannel; macArchitecture: MacArchitecture; releasesLink: boolean }) {
+function PlatformLinks({ platforms, downloads, channel, macArchitecture, releasesLink, standard = false }: { platforms: readonly Exclude<DesktopPlatform, 'desktop'>[]; downloads: DesktopDownloads | null; channel: ReleaseChannel; macArchitecture: MacArchitecture; releasesLink: boolean; standard?: boolean }) {
   return (
-    <div className="one-platform-links" aria-label="Desktop platforms">
-      {platforms.map(platform => <DesktopDownloadLink key={platform} platform={platform} downloads={downloads} channel={channel} macArchitecture={macArchitecture}>
+    <div className="one-platform-links" aria-label={standard ? 'Happy preview platforms' : 'Desktop platforms'}>
+      {platforms.map(platform => <DesktopDownloadLink key={platform} platform={platform} downloads={downloads} channel={channel} standard={standard} macArchitecture={macArchitecture}>
         {platform !== 'macos' && <span className="one-platform-icon" data-platform={platform} aria-hidden="true"
           style={{ '--platform-icon': `url('/img/happy-one/icons/${platform}.svg')` } as CSSProperties} />}
         {LABELS[platform]}
       </DesktopDownloadLink>)}
       {releasesLink && <a href={RELEASES_PAGE}><GithubMark />All Releases</a>}
+    </div>
+  )
+}
+
+/** A preview's own build of Happy, for every desktop it ships on, under Happy Nightly's. */
+function StandardPreview({ downloads, macArchitecture }: { downloads: DesktopDownloads; macArchitecture: MacArchitecture }) {
+  const standard = downloads.standard
+  if (!standard) return null
+  const platforms = DESKTOP_PLATFORMS.filter(platform => platform === 'macos' || standard[platform])
+  return (
+    <div className="one-preview-standard">
+      <p>Or Happy's own preview build, which replaces Happy:</p>
+      <PlatformLinks platforms={platforms} downloads={downloads} channel="preview" standard macArchitecture={macArchitecture} releasesLink={false} />
     </div>
   )
 }
@@ -275,6 +291,7 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
         {primaryPlatform === 'windows' && <SmartScreenWarning />}
         {showBrew && <HomebrewCommand />}
         {(otherPlatforms.length > 0 || withReleasesLink) && <PlatformLinks platforms={otherPlatforms} downloads={downloads} channel={channel} macArchitecture={macArchitecture} releasesLink={withReleasesLink} />}
+        {preview && downloads && <StandardPreview downloads={downloads} macArchitecture={macArchitecture} />}
       </div>
       {withMobile && <MobileDownloads />}
     </div>

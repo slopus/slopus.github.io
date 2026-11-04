@@ -1,12 +1,17 @@
 export type MacArchitecture = 'arm64' | 'x64'
 export type ReleaseChannel = 'stable' | 'preview'
-/** One release's installers. Previews ship no Linux AppImage, and older previews no Windows installer. */
-export type DesktopDownloads = Readonly<{
-  tag: string
-  publishedAt?: string
+/** One app's installers in a release. Previews ship no Linux AppImage yet, and older previews no Windows installer. */
+export type DesktopInstallers = Readonly<{
   macos: Readonly<{ arm64: string; x64: string }>
   windows: string | null
   linux: string | null
+}>
+/** One release's installers: Happy on Stable, Happy Nightly on Preview. */
+export type DesktopDownloads = DesktopInstallers & Readonly<{
+  tag: string
+  publishedAt?: string
+  /** A preview's own build of Happy, which replaces Happy; absent on Stable and on Nightly-only previews. */
+  standard?: DesktopInstallers
 }>
 
 export const GITHUB_RELEASES = 'https://github.com/slopus/happy-desktop/releases'
@@ -62,11 +67,28 @@ function productionDownloads(value: unknown): DesktopDownloads | null {
 }
 
 /**
- * Previews ship only the Nightly app (Happy Nightly, installed beside Happy), which
- * updates to every preview and stable release. Every release carries its disk images,
- * so the preview download is the newest published release's, whichever kind it is,
- * with its Nightly Windows installer when it has one (the first previews
- * were macOS only). GitHub lists releases by creation, not publication, so sort them first.
+ * A preview's own builds: its macOS disk images, and its Windows installer and Linux
+ * AppImage when it has them (the first previews were macOS only; previews build no
+ * Linux yet). Null without both disk images.
+ */
+function previewInstallers(assets: readonly unknown[], tag: string, prefix: string): DesktopInstallers | null {
+  const version = tag.slice(1)
+  const arm64 = assetUrl(assets, tag, `${prefix}-${version}-arm64.dmg`)
+  const x64 = assetUrl(assets, tag, `${prefix}-${version}-x64.dmg`)
+  if (!arm64 || !x64) return null
+  return {
+    macos: { arm64, x64 },
+    windows: assetUrl(assets, tag, `${prefix}-${version}-x64.exe`),
+    linux: assetUrl(assets, tag, `${prefix}-${version}-x64.AppImage`),
+  }
+}
+
+/**
+ * The preview download is Happy Nightly (installed beside Happy), which updates to every
+ * preview and stable release. Every release carries its disk images, so it is the newest
+ * published release's, whichever kind it is. A preview also ships its own build of Happy,
+ * offered beside it; a stable release's is the Stable column's.
+ * GitHub lists releases by creation, not publication, so sort them first.
  */
 function previewDownloads(value: unknown): DesktopDownloads | null {
   if (!Array.isArray(value)) return null
@@ -77,11 +99,10 @@ function previewDownloads(value: unknown): DesktopDownloads | null {
       && typeof release.published_at === 'string' && Array.isArray(release.assets))
     .sort((a, b) => b.published_at.localeCompare(a.published_at))
   for (const release of releases) {
-    const version = release.tag_name.slice(1)
-    const arm64 = assetUrl(release.assets, release.tag_name, `Happy-Nightly-${version}-arm64.dmg`)
-    const x64 = assetUrl(release.assets, release.tag_name, `Happy-Nightly-${version}-x64.dmg`)
-    const windows = assetUrl(release.assets, release.tag_name, `Happy-Nightly-${version}-x64.exe`)
-    if (arm64 && x64) return { tag: release.tag_name, publishedAt: release.published_at, macos: { arm64, x64 }, windows, linux: null }
+    const nightly = previewInstallers(release.assets, release.tag_name, 'Happy-Nightly')
+    if (!nightly) continue
+    const standard = release.tag_name.includes('-preview.') ? previewInstallers(release.assets, release.tag_name, 'Happy') : null
+    return { tag: release.tag_name, publishedAt: release.published_at, ...nightly, ...(standard ? { standard } : {}) }
   }
   return null
 }
