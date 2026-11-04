@@ -134,7 +134,7 @@ function LegacyNotice({ current }: { current?: DocumentEntry['current'] }) {
         with both. These docs describe the CLI; for Happy today, an open-source harness for orchestrating
         Claude, Codex, Grok, Gemini, and more, start at <a href="/welcome/">Welcome</a>.
       </p>
-      {current && <p className="legacy-notice-current">For Happy Desktop, see <a href={current.path}>{current.label}</a>.</p>}
+      {current && <p>For Happy Desktop, see <a href={current.path}>{current.label}</a>.</p>}
     </aside>
   )
 }
