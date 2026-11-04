@@ -30,6 +30,11 @@ async function page() {
   return render(<Router pathname="/releases/" />)
 }
 
+function selectChannel(name: 'Stable' | 'Preview') {
+  fireEvent.click(screen.getByRole('radio', { name }))
+  return screen.getByRole('region', { name })
+}
+
 // The version line, without its Release notes link.
 const version = (column: HTMLElement) => column.querySelector('.releases-version')?.textContent?.replace(/Release notes$/, '')
 
@@ -49,13 +54,16 @@ afterEach(() => {
 })
 
 describe('releases page', () => {
-  it('shows Stable and Preview side by side, the phone apps once below them, and GitHub last', async () => {
+  it('defaults to Stable, switches the visible panel, and shares the phone apps and GitHub link', async () => {
     const { container } = await page()
     expect(container.firstElementChild!.classList.contains('site-theme')).toBe(true)
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Download Happy.')
-    expect(screen.getAllByRole('heading', { level: 2 }).map(heading => heading.textContent)).toEqual(['Stable', 'Preview', 'Phone app'])
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Download Happy')
+    expect(screen.getAllByRole('heading', { level: 2 }).map(heading => heading.textContent)).toEqual(['Phone app'])
+    expect(screen.getByRole('radiogroup', { name: 'Release channel' })).toBeTruthy()
+    expect((screen.getByRole('radio', { name: 'Stable' }) as HTMLInputElement).checked).toBe(true)
+    expect(screen.queryByRole('region', { name: 'Preview' })).toBeNull()
+    expect(container.querySelector('#releases-panel-preview')?.hasAttribute('inert')).toBe(true)
     const stable = screen.getByRole('region', { name: 'Stable' })
-    const preview = screen.getByRole('region', { name: 'Preview' })
 
     await waitFor(() => expect(version(stable)).toBe('Happy 0.0.102 · Oct 25, 2026'))
     expect(within(stable).getByRole('link', { name: 'Release notes' }).getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases/tag/v0.0.102')
@@ -63,6 +71,10 @@ describe('releases page', () => {
     expect(within(stable).getByText('brew install --cask slopus/tap/happy')).toBeTruthy()
     for (const os of ['Windows', 'Linux']) expect(within(stable).getByRole('link', { name: `Download Happy for ${os}` })).toBeTruthy()
 
+    const preview = selectChannel('Preview')
+    expect(screen.queryByRole('region', { name: 'Stable' })).toBeNull()
+    expect(stable.hasAttribute('inert')).toBe(true)
+    expect(preview.hasAttribute('inert')).toBe(false)
     await waitFor(() => expect(version(preview)).toBe('Happy Nightly 0.0.103-preview.17 · Nov 2, 2026'))
     expect(within(preview).getByRole('link', { name: 'Release notes' }).getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases/tag/v0.0.103-preview.17')
     expect(within(preview).getByText('Help us test Happy by installing a preview build. Happy Nightly installs beside Happy.')).toBeTruthy()
@@ -90,19 +102,19 @@ describe('releases page', () => {
       STABLE,
     ])
     await page()
-    const stable = screen.getByRole('region', { name: 'Stable' })
-    const preview = screen.getByRole('region', { name: 'Preview' })
+    const preview = selectChannel('Preview')
     await waitFor(() => expect(version(preview)).toBe('Happy Nightly 0.0.103-preview.17 · Nov 2, 2026'))
     fireEvent.change(within(preview).getByRole('combobox', { name: 'Preview Mac architecture' }), { target: { value: 'x64' } })
     expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href'))
       .toBe(`${DOWNLOAD}/v0.0.103-preview.17/Happy-Nightly-0.0.103-preview.17-x64.dmg`)
+    const stable = selectChannel('Stable')
     await waitFor(() => expect(within(stable).getByRole('link', { name: 'Download Happy for macOS' }).getAttribute('href')).toBe(`${DOWNLOAD}/v0.0.102/Happy-0.0.102-x64.dmg`))
   })
 
   it('offers a stable release newer than every preview as the Preview download', async () => {
     github([STABLE, githubRelease('v0.0.102-preview.9', '2026-10-24T04:24:02Z', nightlyAssets('0.0.102-preview.9'))])
     await page()
-    const preview = screen.getByRole('region', { name: 'Preview' })
+    const preview = selectChannel('Preview')
     await waitFor(() => expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href'))
       .toBe(`${DOWNLOAD}/v0.0.102/Happy-Nightly-0.0.102-arm64.dmg`))
     expect(version(preview)).toBe('Happy Nightly 0.0.102 · Oct 25, 2026')
@@ -115,7 +127,7 @@ describe('releases page', () => {
       .map(suffix => `${app}-0.0.103-preview.18-${suffix}`))
     github([githubRelease(tag, '2026-11-04T04:49:39Z', [...assets, 'latest-mac.yml', 'latest.yml', 'nightly-mac.yml', 'nightly.yml']), PREVIEW, STABLE])
     await page()
-    const preview = screen.getByRole('region', { name: 'Preview' })
+    const preview = selectChannel('Preview')
     await waitFor(() => expect(version(preview)).toBe('Happy Nightly 0.0.103-preview.18 · Nov 4, 2026'))
     const href = (name: string) => within(preview).getByRole('link', { name }).getAttribute('href')
     expect(href('Download Happy Nightly for macOS')).toBe(`${DOWNLOAD}/${tag}/Happy-Nightly-0.0.103-preview.18-arm64.dmg`)
@@ -124,7 +136,7 @@ describe('releases page', () => {
     expect(href('Download the Happy preview for Windows')).toBe(`${DOWNLOAD}/${tag}/Happy-0.0.103-preview.18-x64.exe`)
     // Previews build no Linux yet; Stable keeps its own.
     expect(within(preview).queryByRole('link', { name: /Linux/ })).toBeNull()
-    expect(within(screen.getByRole('region', { name: 'Stable' })).getByRole('link', { name: 'Download Happy for Linux' }).getAttribute('href'))
+    expect(within(selectChannel('Stable')).getByRole('link', { name: 'Download Happy for Linux' }).getAttribute('href'))
       .toBe(`${DOWNLOAD}/v0.0.102/Happy-0.0.102-x64.AppImage`)
   })
 
@@ -133,7 +145,7 @@ describe('releases page', () => {
     const assets = ['Happy', 'Happy-Nightly'].flatMap(app => ['arm64.dmg', 'x64.dmg', 'x64.exe'].map(suffix => `${app}-0.0.104-preview.1-${suffix}`))
     github([githubRelease(tag, '2026-11-05T00:00:00Z', [...assets, 'Happy-0.0.104-preview.1-x64.AppImage', 'Happy-0.0.104-preview.1-arm64.AppImage']), PREVIEW, STABLE])
     await page()
-    const preview = screen.getByRole('region', { name: 'Preview' })
+    const preview = selectChannel('Preview')
     await waitFor(() => expect(within(preview).getByRole('link', { name: 'Download the Happy preview for Linux' }).getAttribute('href'))
       .toBe(`${DOWNLOAD}/${tag}/Happy-0.0.104-preview.1-x64.AppImage`))
     // Happy Nightly gets Linux only with an AppImage of its own.
@@ -143,7 +155,7 @@ describe('releases page', () => {
   it('offers no second Happy beside a stable release offered as the Preview download', async () => {
     github([STABLE])
     await page()
-    const preview = screen.getByRole('region', { name: 'Preview' })
+    const preview = selectChannel('Preview')
     await waitFor(() => expect(version(preview)).toBe('Happy Nightly 0.0.102 · Oct 25, 2026'))
     expect(within(preview).queryByRole('link', { name: /the Happy preview/ })).toBeNull()
   })
@@ -160,7 +172,7 @@ describe('releases page', () => {
       STABLE,
     ])
     await page()
-    const preview = screen.getByRole('region', { name: 'Preview' })
+    const preview = selectChannel('Preview')
     const href = (name: string) => within(preview).getByRole('link', { name }).getAttribute('href')
     await waitFor(() => expect(version(preview)).toBe('Happy Nightly 0.0.103-preview.20 · Nov 4, 2026'))
     expect(href('Download Happy Nightly for macOS')).toBe(`${DOWNLOAD}/${newest}/Happy-Nightly-${newest.slice(1)}-arm64.dmg`)
@@ -181,7 +193,7 @@ describe('releases page', () => {
       'Happy-0.0.103-preview.20-x64.AppImage',
     ])])
     await page()
-    const preview = screen.getByRole('region', { name: 'Preview' })
+    const preview = selectChannel('Preview')
     await waitFor(() => expect(version(preview)).toContain('0.0.103-preview.20'))
     fireEvent.change(within(preview).getByRole('combobox', { name: 'Preview Mac architecture' }), { target: { value: 'x64' } })
     expect(within(preview).queryByRole('link', { name: /for macOS/ })).toBeNull()
@@ -198,23 +210,60 @@ describe('releases page', () => {
     const tag = 'v0.0.103-preview.20'
     github([githubRelease(tag, '2026-11-04T22:29:14Z', ['Happy-0.0.103-preview.20-x64.exe'])])
     await page()
-    const preview = screen.getByRole('region', { name: 'Preview' })
+    const preview = selectChannel('Preview')
     await waitFor(() => expect(within(preview).getByRole('link', { name: 'Download the Happy preview for Windows' }).getAttribute('href'))
       .toBe(`${DOWNLOAD}/${tag}/Happy-0.0.103-preview.20-x64.exe`))
     expect(within(preview).queryByRole('link', { name: /Happy Nightly/ })).toBeNull()
     expect(within(preview).queryByRole('link', { name: /macOS|Linux/ })).toBeNull()
   })
 
+  it.each([
+    ['Macintosh', 'MacIntel', 0, 'macos', 'Happy Nightly', 'arm64.dmg'],
+    ['Windows NT 10.0', 'Win32', 0, 'windows', 'Happy Nightly', 'x64.exe'],
+    ['X11; Linux x86_64', 'Linux x86_64', 0, 'linux', 'the Happy preview', 'x64.AppImage'],
+    ['Android; Linux', 'Linux armv8l', 5, 'macos', 'Happy Nightly', 'arm64.dmg'],
+    ['Macintosh', 'MacIntel', 5, 'macos', 'Happy Nightly', 'arm64.dmg'],
+  ])('uses the same platform prediction for both channels on %s (%s, %s touch points)', async (userAgent, platform, maxTouchPoints, primary, app, suffix) => {
+    vi.stubGlobal('navigator', { userAgent, platform, maxTouchPoints })
+    const tag = 'v0.0.103-preview.20'
+    github([githubRelease(tag, '2026-11-04T22:29:14Z', [
+      ...stableAssets(tag.slice(1)), ...nightlyAssets(tag.slice(1)), `Happy-Nightly-${tag.slice(1)}-x64.exe`,
+    ]), STABLE])
+    await page()
+    const stable = screen.getByRole('region', { name: 'Stable' })
+    await waitFor(() => expect(stable.querySelector('.one-download-actions')?.getAttribute('data-primary-platform')).toBe(primary))
+    const preview = selectChannel('Preview')
+    const prefix = app === 'the Happy preview' ? 'Happy' : 'Happy-Nightly'
+    await waitFor(() => expect(preview.querySelector('.one-desktop-button')?.getAttribute('href')).toBe(`${DOWNLOAD}/${tag}/${prefix}-${tag.slice(1)}-${suffix}`))
+    expect(preview.querySelector('.one-download-actions')?.getAttribute('data-primary-platform')).toBe(primary)
+    expect(preview.querySelector('.one-desktop-button')?.getAttribute('aria-label')).toBe(`Download ${app} for ${{ macos: 'macOS', windows: 'Windows', linux: 'Linux' }[primary]}`)
+    if (primary === 'linux') {
+      expect(within(preview).getByText("Happy's own preview build, which replaces Happy:")).toBeTruthy()
+      expect(within(preview).getByText('Or Happy Nightly, which installs beside Happy:')).toBeTruthy()
+      expect(preview.querySelector('.one-preview-standard .one-desktop-button')).toBeNull()
+    }
+  })
+
+  it('uses the own preview as the main Windows download when only Nightly for Mac exists', async () => {
+    vi.stubGlobal('navigator', { userAgent: 'Windows NT 10.0', platform: 'Win32', maxTouchPoints: 0 })
+    const tag = 'v0.0.103-preview.20'
+    github([githubRelease(tag, '2026-11-04T22:29:14Z', [...nightlyAssets(tag.slice(1)), `Happy-${tag.slice(1)}-x64.exe`])])
+    await page()
+    const preview = selectChannel('Preview')
+    await waitFor(() => expect(preview.querySelector('.one-desktop-button')?.getAttribute('href')).toBe(`${DOWNLOAD}/${tag}/Happy-${tag.slice(1)}-x64.exe`))
+    expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for macOS' })).toBeTruthy()
+  })
+
   it('points Preview at GitHub when GitHub does not answer, and Stable at its verified release', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')))
     await page()
-    const preview = screen.getByRole('region', { name: 'Preview' })
+    const preview = selectChannel('Preview')
     await waitFor(() => expect(version(preview)).toBe('The newest preview is listed on GitHub, below.'))
     expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases')
-    await waitFor(() => expect(version(screen.getByRole('region', { name: 'Stable' }))).toBe('Happy 0.0.90'))
+    await waitFor(() => expect(version(selectChannel('Stable'))).toBe('Happy 0.0.90'))
   })
 
-  it('prerenders both columns with one h1, under its own title', async () => {
+  it('prerenders both reserved panels with Stable selected and one h1, under its own title', async () => {
     vi.resetModules()
     const { renderPath, metadataForPath } = await import('./prerender')
     const html = renderPath('/releases/')

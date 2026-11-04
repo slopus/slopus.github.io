@@ -36,20 +36,32 @@ function ReleaseVersion({ channel }: { channel: ReleaseChannel }) {
   )
 }
 
-/** Stable and Preview side by side, the phone apps they share, and every release on GitHub. */
+/** Both channels reserve their height so switching never moves the shared phone apps. */
 export default function ReleasesPage() {
-  // Both columns' Mac downloads follow one architecture choice.
+  const [selectedChannel, setSelectedChannel] = useState<ReleaseChannel>('stable')
+  // Both channels' Mac downloads follow one architecture choice.
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   return (
     <div className="site-shell happy-one releases-page site-theme">
       <GrainGradient surface={SITE_SURFACE} className="site-grain" />
       <SiteHeader product={HAPPY_DESKTOP} />
       <main className="releases-main page-width">
-        <h1>Download Happy.</h1>
+        <h1>Download Happy</h1>
+        <div className="releases-toggle" role="radiogroup" aria-label="Release channel">
+          {CHANNELS.map(channel => (
+            <label key={channel.value}>
+              <input type="radio" name="release-channel" value={channel.value}
+                checked={selectedChannel === channel.value} aria-controls={`releases-panel-${channel.value}`}
+                onChange={() => setSelectedChannel(channel.value)} />
+              <span id={`releases-${channel.value}`}>{channel.label}</span>
+            </label>
+          ))}
+        </div>
         <div className="releases-channels">
           {CHANNELS.map(channel => (
-            <section key={channel.value} className="releases-channel" aria-labelledby={`releases-${channel.value}`}>
-              <h2 id={`releases-${channel.value}`}>{channel.label}</h2>
+            <section key={channel.value} id={`releases-panel-${channel.value}`} className="releases-channel"
+              aria-labelledby={`releases-${channel.value}`} aria-hidden={selectedChannel !== channel.value}
+              inert={selectedChannel !== channel.value} data-active={selectedChannel === channel.value}>
               <p className="releases-note">{channel.note}</p>
               <ReleaseVersion channel={channel.value} />
               <DownloadOptions channel={channel.value} releasesLink={false} mobile={false}

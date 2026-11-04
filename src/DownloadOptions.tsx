@@ -6,7 +6,7 @@ import { GithubMark } from './SiteChrome'
 import { channelDesktopDownloads, GITHUB_RELEASES, LATEST_RELEASE, type DesktopDownloads, type MacArchitecture, type ReleaseChannel } from './desktopDownloads'
 
 const BREW = 'brew install --cask slopus/tap/happy'
-/** Stable and Preview, side by side, with every release on GitHub at the end. */
+/** Stable and Preview downloads, with every release on GitHub at the end. */
 export const RELEASES_PAGE = '/releases/'
 const DESKTOP_PLATFORMS = ['macos', 'windows', 'linux'] as const
 const LABELS = { macos: 'macOS', windows: 'Windows', linux: 'Linux', desktop: 'Desktop' }
@@ -109,9 +109,10 @@ function DesktopDownloadLink({ platform, macArchitecture, downloads, channel = '
 }
 
 /** Show a preview platform only when the selected architecture has an installer. */
-function releasePlatforms(channel: ReleaseChannel, downloads: DesktopDownloads | null, architecture: MacArchitecture) {
+function releasePlatforms(channel: ReleaseChannel, downloads: DesktopDownloads | null, architecture: MacArchitecture, standard = false) {
+  const installers = standard ? downloads?.standard : downloads
   return channel === 'stable' ? DESKTOP_PLATFORMS : DESKTOP_PLATFORMS.filter(platform =>
-    platform === 'macos' ? downloads ? downloads.macos[architecture] : true : downloads?.[platform])
+    platform === 'macos' ? downloads ? installers?.macos[architecture] : !standard : installers?.[platform])
 }
 
 function PlatformLinks({ platforms, downloads, channel, macArchitecture, releasesLink, standard = false }: { platforms: readonly Exclude<DesktopPlatform, 'desktop'>[]; downloads: DesktopDownloads | null; channel: ReleaseChannel; macArchitecture: MacArchitecture; releasesLink: boolean; standard?: boolean }) {
@@ -127,16 +128,14 @@ function PlatformLinks({ platforms, downloads, channel, macArchitecture, release
   )
 }
 
-/** A preview's own build of Happy, for every desktop it ships on, under Happy Nightly's. */
-function StandardPreview({ downloads, macArchitecture }: { downloads: DesktopDownloads; macArchitecture: MacArchitecture }) {
-  const standard = downloads.standard
-  if (!standard) return null
-  const platforms = DESKTOP_PLATFORMS.filter(platform => platform === 'macos' ? standard.macos[macArchitecture] : standard[platform])
+/** The other app's installers, with the distinction between replacing and installing beside Happy. */
+function PreviewAlternative({ downloads, macArchitecture, standard }: { downloads: DesktopDownloads; macArchitecture: MacArchitecture; standard: boolean }) {
+  const platforms = releasePlatforms('preview', downloads, macArchitecture, standard)
   if (!platforms.length) return null
   return (
     <div className="one-preview-standard">
-      <p>Or Happy's own preview build, which replaces Happy:</p>
-      <PlatformLinks platforms={platforms} downloads={downloads} channel="preview" standard macArchitecture={macArchitecture} releasesLink={false} />
+      <p>{standard ? "Or Happy's own preview build, which replaces Happy:" : 'Or Happy Nightly, which installs beside Happy:'}</p>
+      <PlatformLinks platforms={platforms} downloads={downloads} channel="preview" standard={standard} macArchitecture={macArchitecture} releasesLink={false} />
     </div>
   )
 }
@@ -258,10 +257,13 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
   const withReleasesLink = releasesLink && !preview
   // The prerendered homepage has no platform; hydration settles on this device's.
   const platform = useSyncExternalStore(NO_SUBSCRIPTION, desktopPlatform, () => 'desktop' as const)
-  const platforms = releasePlatforms(channel, downloads, macArchitecture)
-  // Phones, unknown platforms, and desktops this preview has no installer for default
-  // to macOS, with the other installers linked below its Homebrew command.
-  const primaryPlatform = platform !== 'desktop' && platforms.includes(platform) ? platform : platforms[0]
+  const nightlyPlatforms = releasePlatforms(channel, downloads, macArchitecture)
+  const standardPlatforms = preview ? releasePlatforms(channel, downloads, macArchitecture, true) : []
+  const availablePlatforms = DESKTOP_PLATFORMS.filter(candidate => nightlyPlatforms.includes(candidate) || standardPlatforms.includes(candidate))
+  const primaryPlatform = platform !== 'desktop' && availablePlatforms.includes(platform) ? platform : availablePlatforms[0]
+  // Prefer Nightly on this device; use Happy's own preview when only it has an installer.
+  const primaryStandard = !!primaryPlatform && !nightlyPlatforms.includes(primaryPlatform)
+  const platforms = primaryStandard ? standardPlatforms : nightlyPlatforms
   const otherPlatforms = platforms.filter(other => other !== primaryPlatform)
   // The tap's only cask is the stable app.
   const showBrew = primaryPlatform === 'macos' && !preview
@@ -280,8 +282,9 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
       aria-label={preview ? 'Preview downloads' : withMobile ? 'Desktop and mobile downloads' : 'Desktop downloads'}
     >
       <div className="one-desktop-downloads">
+        {primaryStandard && <p className="one-preview-primary-note">Happy's own preview build, which replaces Happy:</p>}
         {primaryPlatform && <div className="one-primary-download">
-          <DesktopDownloadLink className="store-button one-desktop-button" platform={primaryPlatform} downloads={downloads} channel={channel} macArchitecture={macArchitecture}>
+          <DesktopDownloadLink className="store-button one-desktop-button" platform={primaryPlatform} downloads={downloads} channel={channel} standard={primaryStandard} macArchitecture={macArchitecture}>
             <DownloadBadge platform={primaryPlatform} />
           </DesktopDownloadLink>
           {primaryPlatform === 'macos' && <select className="one-mac-architecture" aria-label={preview ? 'Preview Mac architecture' : 'Mac architecture'} value={macArchitecture}
@@ -298,8 +301,8 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
           </select>}
         {primaryPlatform === 'windows' && <SmartScreenWarning />}
         {showBrew && <HomebrewCommand />}
-        {(otherPlatforms.length > 0 || withReleasesLink) && <PlatformLinks platforms={otherPlatforms} downloads={downloads} channel={channel} macArchitecture={macArchitecture} releasesLink={withReleasesLink} />}
-        {preview && downloads && <StandardPreview downloads={downloads} macArchitecture={macArchitecture} />}
+        {(otherPlatforms.length > 0 || withReleasesLink) && <PlatformLinks platforms={otherPlatforms} downloads={downloads} channel={channel} standard={primaryStandard} macArchitecture={macArchitecture} releasesLink={withReleasesLink} />}
+        {preview && downloads && <PreviewAlternative downloads={downloads} macArchitecture={macArchitecture} standard={!primaryStandard} />}
       </div>
       {withMobile && <MobileDownloads />}
     </div>

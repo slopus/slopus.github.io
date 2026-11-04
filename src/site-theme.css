@@ -134,7 +134,6 @@
 .site-theme .button-ghost:hover { background: var(--home-ink); color: var(--grain-back); }
 
 /* /releases/ and the downloads closing every blog post, coloured as on the homepage. */
-.site-theme .releases-channel + .releases-channel { border-left-color: var(--home-line); }
 .site-theme .releases-note, .site-theme .one-download > p { color: var(--home-ink-2); }
 .site-theme .releases-version { color: var(--home-ink); }
 .site-theme .releases-version > a { text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); }
@@ -143,6 +142,7 @@
 .site-theme .releases-github:hover { color: var(--home-ink); text-decoration-color: currentColor; }
 .site-theme .one-preview-standard { border-top-color: var(--home-line); }
 .site-theme .one-preview-standard > p { color: var(--home-ink-2); }
+.site-theme .one-preview-primary-note { max-width: 24rem; margin: 0 0 .75rem; color: var(--home-ink-2); font-size: .85rem; line-height: 1.6; }
 .site-theme .happy-one h3 { font-family: inherit; }
 .site-theme .one-mac-architecture, .site-theme .one-platform-links { color: var(--home-ink-2); }
 .site-theme .one-platform-links a:hover { color: var(--home-ink); }

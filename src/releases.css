@@ -1,14 +1,19 @@
-/* /releases/: the homepage's download options for Stable and Preview, side by side. */
+/* /releases/: the homepage's download options, switched between Stable and Preview. */
 .releases-page { display: flex; flex-direction: column; min-height: 100vh; }
 .releases-main { flex: 1; display: flex; flex-direction: column; align-items: center; padding-block: 3.5rem 4.5rem; text-align: center; }
-.releases-main h1 { font-size: var(--one-h1); margin-bottom: 2.5rem; }
+.releases-main h1 { font-size: var(--one-h1); margin-bottom: 1.5rem; }
 .happy-one .releases-main h2 { font-size: clamp(1.5rem, 2.2vw, 1.9rem); margin-bottom: .5rem; }
 
-/* Two equal columns split by a hairline; each centers its own label and downloads. The
-   columns share their rows (subgrid), so the versions and download badges line up. */
-.releases-channels { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(4, auto); width: min(100%, 56rem); }
-.releases-channel { display: grid; grid-row: span 4; grid-template-rows: subgrid; justify-items: center; align-content: start; min-width: 0; padding: 0 2.5rem; }
-.releases-channel + .releases-channel { border-left: 1px solid #d9d3c5; }
+.releases-toggle { display: flex; width: min(100%, 24rem); padding: .3rem; margin-bottom: 1.75rem; border: 1px solid var(--home-line); border-radius: 999px; }
+.releases-toggle label { position: relative; flex: 1; cursor: pointer; }
+.releases-toggle input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.releases-toggle span { display: block; padding: .85rem 1.5rem; border-radius: 999px; color: var(--home-ink-2); font-size: 1.15rem; font-weight: 600; }
+.releases-toggle input:checked + span { background: var(--home-ink); color: var(--grain-back); }
+.releases-toggle input:focus-visible + span { outline: 2px solid var(--home-accent); outline-offset: 3px; }
+/* Hidden panels still size this shared grid cell, including after GitHub responds. */
+.releases-channels { display: grid; width: min(100%, 32rem); }
+.releases-channel { grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; min-width: 0; visibility: hidden; }
+.releases-channel[data-active='true'] { visibility: visible; }
 .releases-note { max-width: 22rem; margin: 0; color: #47645e; font-size: .98rem; line-height: 1.6; text-wrap: balance; }
 /* Reserved while GitHub answers, so the downloads do not jump. */
 .releases-version { min-height: 1.5em; margin: .35rem 0 0; color: #183f38; font: .8rem/1.5 'DM Mono', monospace; }
@@ -26,12 +31,8 @@
 .releases-github { display: inline-flex; align-items: center; gap: .45em; min-height: 44px; margin-top: 2.5rem; color: #47645e; font-size: .92rem; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #47645e66; }
 .releases-github:hover { color: #183f38; text-decoration-color: currentColor; }
 
-/* Phones: Stable, then Preview, then the phone apps, one after another. */
+/* The overlapping panels reserve the same space on phones. */
 @media (max-width: 700px) {
   .releases-main { padding-block: 2rem 3rem; }
-  .releases-main h1 { margin-bottom: 1.75rem; }
-  .releases-channels { grid-template-columns: 1fr; grid-template-rows: none; }
-  .releases-channel { grid-row: auto; grid-template-rows: none; padding: 0; }
-  .releases-channel + .releases-channel { margin-top: 3rem; border-left: 0; }
   .releases-mobile { margin-top: 3rem; }
 }
