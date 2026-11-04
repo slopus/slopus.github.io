@@ -150,8 +150,8 @@ const happyDocuments: DocumentDefinition[] = [
     path: 'features/voice-coding-with-claude-code',
     sourcePath: '/content/docs/features/voice-coding-with-claude-code.mdx',
     title: 'Voice Coding',
-    pageTitle: 'Why Voice Coding Makes Sense — Original Happy CLI Docs',
-    description: 'Use voice to shape ideas and send structured work to your coding agent.',
+    pageTitle: 'Voice Coding with Claude Code from Your Phone — Happy',
+    description: 'Voice coding with Claude Code in the Happy app: tap the mic, talk, and a voice agent sends your request to the session and tells you when it is done.',
     group: 'Features',
   },
   {
