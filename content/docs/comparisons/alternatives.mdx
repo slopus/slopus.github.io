@@ -1,19 +1,38 @@
 # Alternatives for Claude Code and Codex on Mobile and Desktop
 
-There are six common ways to run Claude Code or Codex from your phone or a desktop app: Anthropic's Remote Control, Codex in the ChatGPT app, T3 Code, Conductor, Happy, and SSH with tmux. In all six the agent runs on a computer you own, and the app is a window into it. They differ in which agents they run, which devices they reach, what the server in between can read, and what they cost.
+There are six common ways to run Claude Code or Codex from a desktop app or your phone: Happy, Anthropic's Remote Control, Codex in the ChatGPT app, T3 Code, Conductor, and SSH with tmux. They differ in which agents and models they run, whether they have a harness of their own, whether a team can share them, which devices they reach, and what sits in between.
 
 ## Side by side
 
 Facts about the other tools come from their own docs and sites, checked on November 4, 2026. They ship often, so follow the links for the current state.
 
-| | Agents | Desktop | Phone | In between | Source | Price |
-| --- | --- | --- | --- | --- | --- | --- |
-| Claude Code Remote Control | Claude Code | Claude Desktop, VS Code, the terminal | Claude app for iOS and Android, claude.ai/code | Anthropic's servers | Closed | Included with Claude Pro, Max, Ultra, Team, Enterprise |
-| Codex in the ChatGPT app | Codex | ChatGPT app for macOS and Windows | ChatGPT for iOS and Android | OpenAI's relay | Closed | Included with ChatGPT plans that have Codex |
-| T3 Code | Claude Code, Codex, Cursor, Grok Build, OpenCode, Antigravity, fx, ACP agents | macOS, Windows, Linux | iOS, Android, web | Direct HTTPS, or T3 Connect | MIT | Free |
-| Conductor | Claude Code, Codex, Cursor, OpenCode | macOS | iOS (experimental) | Conductor's relay, end-to-end encrypted | Not public | Free; the phone app is in Pro, $50 a month |
-| Happy | Claude, Codex, Grok; Gemini and ACP agents (beta) | macOS, Windows, Linux | iOS, Android | Happy's relay, end-to-end encrypted | MIT | Free; voice is paid |
-| SSH, tmux, and Termius | Anything that runs in a terminal | Any terminal | Any SSH app | Nothing, if your phone can reach the machine | tmux is open source | Free to paid |
+| | Agents | Own harness | Team | Desktop | Phone | In between | Source | Price |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Happy | Claude, Codex, Grok; Gemini and ACP agents (beta) | Yes, and Claude Code's and Codex's own loops (beta) | Team server; each member signs in as themselves | macOS, Windows, Linux | iOS, Android | Happy's relay, end-to-end encrypted, or direct | MIT | Free; voice is paid |
+| Claude Code Remote Control | Claude Code | Claude Code itself | Admin controls on Team and Enterprise; shared live sessions not documented | Claude Desktop, VS Code, the terminal | Claude app for iOS and Android, claude.ai/code | Anthropic's servers | Closed | Included with Claude Pro, Max, Ultra, Team, Enterprise |
+| Codex in the ChatGPT app | Codex | Codex itself | Read-only thread snapshots for workspace members | ChatGPT app for macOS and Windows | ChatGPT for iOS and Android | OpenAI's relay | Closed | Included with ChatGPT plans that have Codex |
+| T3 Code | Claude Code, Codex, Cursor, Grok Build, OpenCode, Antigravity, fx, ACP agents | No; runs each vendor's agent | A guest link to one thread (beta); team accounts not documented | macOS, Windows, Linux | iOS, Android, web | Direct HTTPS, or T3 Connect | MIT | Free |
+| Conductor | Claude Code, Codex, Cursor, OpenCode | No; runs each vendor's agent | Shared cloud workspaces, from Pro | macOS | iOS (experimental) | Conductor's relay, end-to-end encrypted | Not public | Free; the phone app and multiplayer are in Pro, $50 a month |
+| SSH, tmux, and Termius | Anything that runs in a terminal | No; runs whatever you start | Shared shell accounts | Any terminal | Any SSH app | Nothing, if your phone can reach the machine | tmux is open source | Free to paid |
+
+Direct, for Happy: Happy Desktop reaches a [Happy Agent server](/guides/remote-server/) over [Tailcat](/tailcat/), a WireGuard tunnel that goes machine to machine when the network allows and through a relay that only forwards ciphertext when it doesn't. A phone can pair directly over Tailcat too, in Happy Desktop 0.0.102 and later, but that is experimental: Relay stays selected by default, and the phone apps in the stores don't support it yet.
+
+Whichever you pick, the agent runs on a machine of yours, so that machine has to be on. Put it on a [remote server](/guides/remote-server/) and it keeps working while your laptop sleeps.
+
+## Happy
+
+Happy is an open-source harness for orchestrating coding agents: Claude, Codex, Grok, Gemini, and more in one desktop app, reusing the subscriptions you already pay for.
+
+- **Several models in one app.** Claude, GPT, and Grok, reusing the subscriptions you already pay for. A conversation can switch between them and keep its transcript. See [Models](/models/).
+- **Its own harness.** Happy Agent runs the agent loop itself, with one OS sandbox and Auto review for every model. It can also run Claude Code's and Codex's own loops (beta), and other agents over ACP. See [Harnesses](/recepies/harnesses/).
+- **Teams.** One Happy Agent on a server, where each member signs in as themselves, through WorkOS or your own identity provider, and works in the same projects and sessions. See [Multiplayer & Teams](/multiplayer/).
+- **Desktop and phone.** [Happy Desktop](/desktop-app/) for macOS, Windows, and Linux, and the [phone app](/mobile-app/) for iPhone and Android, which reaches every session.
+- **Open source.** MIT licensed, the apps and the agent runtime.
+- **End-to-end encrypted.** Happy's relay only sees ciphertext.
+
+Sessions belong to Happy Agent, a runtime under the app, so quitting the window doesn't stop them.
+
+What it doesn't do: there is no web client, and team setup takes several steps today.
 
 ## Claude Code Remote Control
 
@@ -21,7 +40,7 @@ Facts about the other tools come from their own docs and sites, checked on Novem
 
 It runs Claude Code only. It needs a claude.ai login, so it doesn't work with API keys, Amazon Bedrock, Google Cloud, Microsoft Foundry, or a custom `ANTHROPIC_BASE_URL`. On Team and Enterprise an owner has to turn it on first.
 
-If your laptop will be closed, Anthropic's [cloud sessions](https://code.claude.com/docs/en/mobile) run on its own infrastructure from a GitHub repository, and you follow them from the same app.
+Anthropic's [cloud sessions](https://code.claude.com/docs/en/claude-code-on-the-web) run on its own infrastructure from a GitHub repository, and you follow them from the same app. On Team and Enterprise you can share a cloud session's link with your organization; teammates see it as it was when they open it.
 
 For the details, see [Happy vs Claude Code Remote Control](/claude-code-remote-control/).
 
@@ -29,13 +48,13 @@ For the details, see [Happy vs Claude Code Remote Control](/claude-code-remote-c
 
 The ChatGPT desktop app on macOS or Windows can [let your phone control it](https://learn.chatgpt.com/docs/remote-connections). Pair it in **Settings > Connections > Control this Mac or PC** with a QR code, then open **Codex** in ChatGPT on iOS or Android. From the phone you can start chats, steer them, approve commands, and read diffs.
 
-Setup has to start in the desktop app; the Codex CLI and IDE extension can't do it. A workspace admin may need to enable it. If the host sleeps or closes the app, the phone loses it until it's back.
+Setup has to start in the desktop app; the Codex CLI and IDE extension can't do it. A workspace admin may need to enable it. To show a thread to a teammate, the macOS app [shares a read-only snapshot](https://learn.chatgpt.com/docs/use-chatgpt); later messages don't update it.
 
 ## T3 Code
 
 [T3 Code](https://github.com/pingdotgg/t3code) is a free, MIT-licensed app that runs Claude Code, Codex, Cursor, Grok Build, OpenCode, Antigravity, and fx on your subscriptions, plus other ACP agents. It has a desktop app for macOS, Windows, and Linux, phone apps, and a web client at app.t3.codes. It also has tools for app work, such as a live iOS Simulator or Android Emulator next to the thread.
 
-Each vendor's own agent does the work, under that vendor's sandbox. New threads start in Full access unless you change the default. There is no team server where each person signs in as themselves.
+Each vendor's own agent does the work, under that vendor's sandbox. New threads start in Full access unless you change the default. A guest link (beta) lets one person follow a thread and suggest messages for you to send; there is no team server where each person signs in as themselves.
 
 For the details, see [Happy vs T3 Code](/t3-code/).
 
@@ -43,15 +62,7 @@ For the details, see [Happy vs T3 Code](/t3-code/).
 
 [Conductor](https://www.conductor.build/docs) runs Claude Code, Codex, Cursor, and OpenCode in parallel on your Mac, each task in its own workspace and branch, with a diff viewer, and opens the pull request when the work is ready. Local use is free with your own subscriptions or keys.
 
-Its [Remote Control](https://www.conductor.build/docs/reference/remote-control) for the iPhone app is experimental and works with local workspaces only. Traffic goes through Conductor's relay, end-to-end encrypted. The [pricing page](https://www.conductor.build/pricing) lists the mobile app, cloud workspaces, and multiplayer in Pro at $50 a month. It is Mac only, with no Android app, and its source is not public.
-
-## Happy
-
-Happy is an open-source harness for orchestrating coding agents: Claude, Codex, Grok, Gemini, and more in one desktop app, reusing the subscriptions you already pay for. [Happy Desktop](/desktop-app/) runs on macOS, Windows, and Linux. The [phone app](/mobile-app/) for iPhone and Android reaches every session, and Happy's relay only sees ciphertext.
-
-Sessions belong to Happy Agent, a runtime under the app, so quitting the window doesn't stop them. A conversation can switch between Claude, GPT, and Grok and keep its transcript. Teams can run one Happy Agent on a server where each member signs in as themselves.
-
-What it doesn't do: there is no web client. Your computer has to stay on, unless you run Happy Agent on a remote server. Vendor features land in the vendor's own app first. Team setup takes several steps today.
+Its [Remote Control](https://www.conductor.build/docs/reference/remote-control) for the iPhone app is experimental and works with local workspaces only. Traffic goes through Conductor's relay, end-to-end encrypted. On the [Pro plan](https://www.conductor.build/pricing), $50 a month, cloud workspaces run in Vercel sandboxes and are [shared with your organization](https://www.conductor.build/docs/cloud/collaboration): teammates open the same chats and see them update live. Conductor stores cloud workspaces' messages on its servers. It is Mac only, with no Android app, and its source is not public.
 
 ## SSH, tmux, and Termius
 
@@ -67,13 +78,14 @@ Omnara used to be a phone app for Claude Code. As of November 4, 2026, [its site
 
 | You want | Use |
 | --- | --- |
+| Claude, Codex, and Grok in one app, on the subscriptions you already pay for | Happy |
+| One agent server for a team, each person signed in as themselves | Happy |
+| One harness and sandbox for every model, plus Claude Code's and Codex's own loops | Happy |
+| A desktop app on any OS and an end-to-end encrypted phone app, open source | Happy |
 | Claude Code on your phone with nothing new to install | Claude Code Remote Control |
 | Codex on your phone, and you already use the ChatGPT app | Codex in the ChatGPT app |
-| Work that keeps going while your laptop is closed, with no server of your own | Claude Code cloud sessions |
 | A web client for the machine your agents run on | T3 Code |
-| Parallel workspaces and pull requests on a Mac | Conductor |
-| Claude, Codex, and Grok in one desktop app, on any OS, plus an encrypted phone app | Happy |
-| One agent server for a team, each person signed in | Happy |
+| Parallel workspaces and pull requests on a Mac, shared in the cloud | Conductor |
 | No company in between at all | SSH and tmux |
 
 To try Happy, start with the [Quick Start](/quick-start/).

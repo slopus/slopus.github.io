@@ -39,6 +39,9 @@ function normalizeHref(href: string | undefined, originalDocsLinks: boolean) {
   }
   const aliasedHref = aliases[href] ?? href
 
+  // Desktop guides the original docs link to, served at the top level.
+  if (aliasedHref === '/guides/remote-server/') return aliasedHref
+
   if (aliasedHref.startsWith('/docs/')) {
     return aliasedHref.endsWith('/') ? aliasedHref : `${aliasedHref}/`
   }

@@ -175,7 +175,7 @@ const happyDocuments: DocumentDefinition[] = [
     sourcePath: '/content/docs/comparisons/alternatives.mdx',
     title: 'Alternatives',
     pageTitle: 'Claude Code and Codex on Mobile and Desktop: 6 Alternatives Compared',
-    description: 'Claude Code Remote Control, Codex in ChatGPT, T3 Code, Conductor, Happy, and tmux with Termius: agents, phone and desktop apps, encryption, and price.',
+    description: 'Happy, Claude Code Remote Control, Codex in ChatGPT, T3 Code, Conductor, and tmux with Termius: agents, harness, teams, desktop and phone apps, and price.',
     group: 'Comparisons',
   },
   {
