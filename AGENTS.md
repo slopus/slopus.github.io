@@ -198,9 +198,11 @@ ignores the parameters. `?preview=og` keeps the link-preview card's own headline
 
 ## The other pages' look
 
-Docs, blog posts, legal pages, `/releases/`, `/plugins/` and the 404 take the
-homepage's look minimally: `.site-theme` on their shell (`src/site-theme.css`), the
-same palette (defined once, in `happy-home.css`) light or dark with the system, IBM
+Every other page (docs, blog posts, legal pages, `/releases/`, `/plugins/`,
+`/model-benchmarks/` and the 404) takes the homepage's look minimally: `.site-theme` on
+its shell (`src/site-theme.css`), the same palette (defined once, on `:root` in
+`happy-home.css`, so a page whose markup comes with its script never shows another colour
+first) light or dark with the system, IBM
 Plex Sans and Plex Mono, Bricolage for the wordmark, and the Grain Gradient only as a
 patch in the top right corner (`SITE_SURFACE` in `src/GrainGradient.tsx`), behind the
 header and beside the title: never under the text, no side swells. Like the
@@ -208,8 +210,9 @@ homepage's, it is a still. Its layer is only as tall as the patch, so the render
 draws it whole, once, and scrolling never redraws it.
 It scrolls away with the page; wide docs scroll their article, and the patch goes up
 with it. `theme-color` is the base colour, `#f4f2ff` light and `#06050f` dark. In dark
-mode the hand-drawn diagrams are inverted with their hues kept. `/model-benchmarks/`
-keeps the older cream look for now.
+mode the hand-drawn diagrams are inverted with their hues kept, and X and Reddit embeds
+load in the system's scheme. The tier list's rows take the gradient's hues, strongest at
+S. Redirect pages carry the base colour inline. No page keeps the old cream look.
 
 ## SEO skills
 

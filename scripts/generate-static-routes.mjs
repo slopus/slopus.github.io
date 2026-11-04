@@ -388,7 +388,8 @@ await writeFile(path.join(distRoot, 'index.html'), homepage)
 // Its old URLs redirect there without JavaScript, so GitHub Pages serves a real
 // redirect: a refresh, a canonical to the target, and a script that keeps ?query and #hash.
 // It carries the target's title, description, and link preview, so a shared old URL
-// previews as the page it moved to.
+// previews as the page it moved to. Its few lines are on the site's base colour, so the hop
+// never flashes white.
 function redirectHtml(target) {
   const url = new URL(target, siteUrl).toString()
   const head = htmlForPage(metadataForPath(target))
@@ -401,6 +402,8 @@ function redirectHtml(target) {
     <meta charset="UTF-8" />
     ${title}
     ${description}
+    <meta name="color-scheme" content="light dark" />
+    <style>html{background:#f4f2ff;color:#14112e;font-family:system-ui,sans-serif}@media (prefers-color-scheme:dark){html{background:#06050f;color:#fff}}a{color:inherit}</style>
     <link rel="canonical" href="${escapeHtml(url)}" />
     ${socialTags}
     <meta http-equiv="refresh" content="0; url=${escapeHtml(target)}" />

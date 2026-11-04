@@ -1,20 +1,34 @@
-.benchmark-page { min-height: 100vh; }
+/* In the site's palette (.site-theme): the tiers take the gradient's hues, strongest at S. */
+.benchmark-page {
+  --bench-line: color-mix(in srgb, var(--home-ink) 16%, transparent);
+  /* Cards stand off the base: near-white in light, a lift of the ink in dark. */
+  --bench-card: color-mix(in srgb, #fff 72%, transparent);
+  --bench-caveat: color-mix(in srgb, #b45309 72%, var(--home-ink));
+  --bench-tier-s: color-mix(in srgb, var(--grain-3) 34%, transparent);
+  --bench-tier-a: color-mix(in srgb, var(--grain-1) 34%, transparent);
+  --bench-tier-b: color-mix(in srgb, var(--grain-2) 28%, transparent);
+  --bench-tier-f: var(--site-wash);
+  min-height: 100vh;
+}
+@media (prefers-color-scheme: dark) {
+  .benchmark-page { --bench-card: color-mix(in srgb, var(--home-ink) 6%, transparent); }
+}
 .benchmark-main { max-width: 1080px; padding-top: 2rem; padding-bottom: 4rem; }
 .benchmark-heading { margin-bottom: 1.6rem; text-align: center; }
 .benchmark-heading h1 { font-size: clamp(2rem, 4vw, 3.2rem); margin-bottom: .9rem; }
 .benchmark-heading h1 em { white-space: nowrap; }
-.benchmark-meta { display: flex; justify-content: center; gap: .6rem; color: #557068; font: .68rem 'DM Mono', monospace; }
+.benchmark-meta { display: flex; justify-content: center; gap: .6rem; color: var(--site-muted); font: .68rem 'IBM Plex Mono', monospace; }
 .benchmark-meta a { text-decoration: underline; text-underline-offset: 3px; }
-.benchmark-meta a:hover { color: #e6522c; }
-.benchmark-meta a:focus-visible { outline: 2px solid #e6522c; outline-offset: 3px; }
-.benchmark-table { --card-width: 244px; --cell-pad: .75rem; --card-gap: calc(2 * var(--cell-pad) + 1px); border-collapse: separate; border-spacing: 0; width: max-content; max-width: 100%; margin-inline: auto; text-align: left; border: 1px solid #c9cabe; border-radius: 8px; }
-.benchmark-table > tbody > tr > th { width: 72px; font-family: 'Space Grotesk', sans-serif; font-size: 1.45rem; text-align: center; padding: .65rem .8rem; border-right: 1px solid #c9cabe; }
+.benchmark-meta a:hover { color: var(--home-accent); }
+.benchmark-meta a:focus-visible { outline: 2px solid var(--home-accent); outline-offset: 3px; }
+.benchmark-table { --card-width: 244px; --cell-pad: .75rem; --card-gap: calc(2 * var(--cell-pad) + 1px); border-collapse: separate; border-spacing: 0; width: max-content; max-width: 100%; margin-inline: auto; text-align: left; border: 1px solid var(--bench-line); border-radius: 8px; }
+.benchmark-table > tbody > tr > th { width: 72px; font-weight: 600; font-size: 1.45rem; text-align: center; padding: .65rem .8rem; border-right: 1px solid var(--bench-line); }
 .benchmark-table td { padding: var(--cell-pad); vertical-align: top; }
-.benchmark-table > tbody > tr:not(:last-child) > * { border-bottom: 1px solid #c9cabe; }
-.benchmark-tier-s > th { background: #f1d5c4; border-radius: 7px 0 0 0; }
-.benchmark-tier-a > th { background: #efe0b3; }
-.benchmark-tier-b > th { background: #e2e3bd; }
-.benchmark-tier-f > th { background: #ead6d0; }
+.benchmark-table > tbody > tr:not(:last-child) > * { border-bottom: 1px solid var(--bench-line); }
+.benchmark-tier-s > th { background: var(--bench-tier-s); border-radius: 7px 0 0 0; }
+.benchmark-tier-a > th { background: var(--bench-tier-a); }
+.benchmark-tier-b > th { background: var(--bench-tier-b); }
+.benchmark-tier-f > th { background: var(--bench-tier-f); }
 .benchmark-table > tbody > tr:last-child > th { border-bottom-left-radius: 7px; }
 /*
  * S holds a one-row table: a Frontier column and a Chores column, each headed by its label.
@@ -23,48 +37,48 @@
  */
 .benchmark-table td.benchmark-lanes { padding: 0; }
 .benchmark-lane-table { border-collapse: separate; border-spacing: 0; min-width: 100%; }
-.benchmark-lane-table th.benchmark-lane-label { padding: .3rem var(--cell-pad); background: #f8e7dc; color: #b4462a; border-bottom: 1px solid #c9cabe; font: 500 .62rem/1.4 'DM Mono', monospace; letter-spacing: .14em; text-align: left; text-transform: uppercase; }
+.benchmark-lane-table th.benchmark-lane-label { padding: .3rem var(--cell-pad); background: color-mix(in srgb, var(--grain-3) 14%, transparent); color: var(--home-accent); border-bottom: 1px solid var(--bench-line); font: 500 .62rem/1.4 'IBM Plex Mono', monospace; letter-spacing: .14em; text-align: left; text-transform: uppercase; }
 .benchmark-lane-table th.benchmark-lane-label-frontier { box-sizing: border-box; width: calc(var(--cards) * (var(--card-width) + var(--card-gap))); }
-.benchmark-lane-table th.benchmark-lane-label-frontier, .benchmark-lane-table td.benchmark-lane-frontier { border-right: 1px solid #c9cabe; }
+.benchmark-lane-table th.benchmark-lane-label-frontier, .benchmark-lane-table td.benchmark-lane-frontier { border-right: 1px solid var(--bench-line); }
 .benchmark-models { display: flex; flex-wrap: wrap; gap: 1rem var(--card-gap); }
 /* Every card has the same size; claims are written to fit two lines each. */
-.benchmark-card { position: relative; box-sizing: border-box; width: var(--card-width); height: 236px; display: flex; flex-direction: column; background: #fcfaf5; color: #183f38; border: 1px solid #c9cabe; border-radius: 6px; padding: .7rem .8rem; }
+.benchmark-card { position: relative; box-sizing: border-box; width: var(--card-width); height: 236px; display: flex; flex-direction: column; background: var(--bench-card); color: var(--home-ink); border: 1px solid var(--bench-line); border-radius: 6px; padding: .7rem .8rem; }
 .benchmark-card-title { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; min-height: 1.75rem; }
-.benchmark-model { font: 600 .9rem/1.25 'DM Sans', sans-serif; }
+.benchmark-model { font-size: .9rem; font-weight: 600; line-height: 1.25; }
 .benchmark-claim { color: inherit; text-decoration: none; }
 .benchmark-claim:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
-.benchmark-claim:focus-visible { outline: 2px solid #e6522c; outline-offset: 1px; border-radius: 2px; }
+.benchmark-claim:focus-visible { outline: 2px solid var(--home-accent); outline-offset: 1px; border-radius: 2px; }
 .benchmark-claim-end { white-space: nowrap; }
-.benchmark-claim-arrow { display: inline-block; font-family: 'DM Mono', monospace; margin-left: .12em; font-size: .72em; line-height: 0; vertical-align: .55em; color: #73857d; }
-.benchmark-claim:hover .benchmark-claim-arrow { color: #e6522c; }
-.benchmark-headline { align-self: flex-start; display: flex; flex-direction: column; margin: .3rem 0 0; color: #183f38; font-size: .72rem; line-height: 1.35; }
-.benchmark-headline-rank { margin-bottom: .1rem; color: #557068; font: .62rem 'DM Mono', monospace; white-space: nowrap; }
-.benchmark-headline-rank strong { margin-right: .3rem; color: #183f38; font: 600 1.25rem/1.1 'Space Grotesk', sans-serif; }
-.benchmark-headline-missing { color: #557068; }
-.benchmark-legend { max-width: 640px; margin: .7rem auto 0; color: #557068; font-size: .72rem; line-height: 1.5; text-align: center; text-wrap: balance; }
-.benchmark-legend .benchmark-claim { color: #183f38; }
+.benchmark-claim-arrow { display: inline-block; font-family: 'IBM Plex Mono', monospace; margin-left: .12em; font-size: .72em; line-height: 0; vertical-align: .55em; color: var(--site-muted); }
+.benchmark-claim:hover .benchmark-claim-arrow { color: var(--home-accent); }
+.benchmark-headline { align-self: flex-start; display: flex; flex-direction: column; margin: .3rem 0 0; color: var(--home-ink); font-size: .72rem; line-height: 1.35; }
+.benchmark-headline-rank { margin-bottom: .1rem; color: var(--site-muted); font: .62rem 'IBM Plex Mono', monospace; white-space: nowrap; }
+.benchmark-headline-rank strong { margin-right: .3rem; color: var(--home-ink); font: 600 1.25rem/1.1 'IBM Plex Sans', system-ui, sans-serif; }
+.benchmark-headline-missing { color: var(--site-muted); }
+.benchmark-legend { max-width: 640px; margin: .7rem auto 0; color: var(--site-muted); font-size: .72rem; line-height: 1.5; text-align: center; text-wrap: balance; }
+.benchmark-legend .benchmark-claim { color: var(--home-ink); }
 .benchmark-card ul { margin: .5rem 0 0; padding-left: .85rem; font-size: .72rem; line-height: 1.38; }
 .benchmark-card li + li { margin-top: .22rem; }
-.benchmark-card li::marker { color: #9aa79f; }
-.benchmark-card .benchmark-note-lead { color: #557068; }
-.benchmark-card .benchmark-note-lead .benchmark-claim { color: #183f38; }
-.benchmark-card .benchmark-note-caveat { color: #8a5a35; }
-.benchmark-new { position: absolute; z-index: 2; top: -9px; right: 10px; display: inline-flex; align-items: center; gap: .25rem; padding: .12rem .4rem .12rem .32rem; border: 1px solid #e9b49b; border-radius: 999px; background: #fdeee6; color: #b4462a; font: 500 .62rem/1.2 'DM Mono', monospace; pointer-events: none; }
+.benchmark-card li::marker { color: color-mix(in srgb, var(--home-ink) 35%, transparent); }
+.benchmark-card .benchmark-note-lead { color: var(--site-muted); }
+.benchmark-card .benchmark-note-lead .benchmark-claim { color: var(--home-ink); }
+.benchmark-card .benchmark-note-caveat { color: var(--bench-caveat); }
+.benchmark-new { position: absolute; z-index: 2; top: -9px; right: 10px; display: inline-flex; align-items: center; gap: .25rem; padding: .12rem .4rem .12rem .32rem; border: 1px solid color-mix(in srgb, var(--home-accent) 40%, var(--grain-back)); border-radius: 999px; background: color-mix(in srgb, var(--home-accent) 10%, var(--grain-back)); color: var(--home-accent); font: 500 .62rem/1.2 'IBM Plex Mono', monospace; pointer-events: none; }
 .benchmark-new-icon { width: 12px; height: 12px; }
 .benchmark-evidence { margin-top: 2.6rem; }
 /* Two columns of whole posts. Each post spans as many 4px rows as it is tall (set from ModelBenchmarksPage), so no post is split across columns. */
 .benchmark-source-list { display: grid; grid-template-columns: repeat(2, minmax(0, 350px)); grid-auto-rows: 4px; justify-content: center; column-gap: 1.2rem; }
 .benchmark-source { min-width: 0; }
 .benchmark-source footer { padding-top: .4rem; }
-.benchmark-source time { display: block; color: #7b887e; font-size: .67rem; }
+.benchmark-source time { display: block; color: var(--site-muted); font-size: .67rem; }
 .benchmark-embed > div { min-width: 0; display: flow-root; }
 .benchmark-embed iframe { max-width: 100%; float: none !important; }
 .benchmark-embed .twitter-tweet { margin-inline: 0 !important; }
-.benchmark-loading { display: grid; place-items: center; min-height: 320px; border: 1px solid #deded4; border-radius: 12px; color: #7b887e; font-size: .75rem; }
-.benchmark-fallback { padding: 1rem; background: #fcfaf5; border: 1px solid #d7d8ce; border-radius: 12px; font-size: .85rem; line-height: 1.6; }
-.benchmark-fallback > a:first-child span { display: block; font-size: .72rem; color: #557068; }
+.benchmark-loading { display: grid; place-items: center; min-height: 320px; border: 1px solid var(--home-line); border-radius: 12px; color: var(--site-muted); font-size: .75rem; }
+.benchmark-fallback { padding: 1rem; background: var(--bench-card); border: 1px solid var(--home-line); border-radius: 12px; font-size: .85rem; line-height: 1.6; }
+.benchmark-fallback > a:first-child span { display: block; font-size: .72rem; color: var(--site-muted); }
 .benchmark-fallback p { margin: 1rem 0; }
-.benchmark-fallback-link { color: #557068; font-size: .75rem; text-decoration: underline; text-underline-offset: 3px; }
+.benchmark-fallback-link { color: var(--site-muted); font-size: .75rem; text-decoration: underline; text-underline-offset: 3px; }
 .benchmark-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 640px) {
   .benchmark-main { width: calc(100% - 32px); padding-top: 1.4rem; }
@@ -73,7 +87,7 @@
   /* Each row is a grid: the tier letter on the left, cards stacked on the right; S stacks Frontier over Chores. */
   .benchmark-table, .benchmark-table > tbody { display: block; }
   .benchmark-table > tbody > tr { display: grid; grid-template-columns: 44px minmax(0, 1fr); }
-  .benchmark-table > tbody > tr:not(:last-child) { border-bottom: 1px solid #c9cabe; }
+  .benchmark-table > tbody > tr:not(:last-child) { border-bottom: 1px solid var(--bench-line); }
   .benchmark-table > tbody > tr:not(:last-child) > * { border-bottom: 0; }
   .benchmark-table > tbody > tr > th { width: auto; padding: .5rem 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
   .benchmark-tier-s > th { border-top-left-radius: 7px; }
@@ -85,7 +99,7 @@
   .benchmark-lane-table th.benchmark-lane-label { padding: .3rem .55rem; }
   .benchmark-lane-label-frontier { order: 1; }
   .benchmark-lane-frontier { order: 2; }
-  .benchmark-lane-label-chores { order: 3; border-top: 1px solid #c9cabe; }
+  .benchmark-lane-label-chores { order: 3; border-top: 1px solid var(--bench-line); }
   .benchmark-lane-chores { order: 4; }
   .benchmark-models { flex-direction: column; gap: .7rem; }
   .benchmark-card { width: 100%; height: auto; min-height: 0; }

@@ -36,6 +36,11 @@ export function loadWidgets() {
   return widgetPromise
 }
 
+/** X's and Reddit's embeds come light or dark; they take the system's scheme, as the page does. */
+export function embedTheme(): 'light' | 'dark' {
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
 export function XPostEmbed({ postId, fallback }: { postId: string; fallback: ReactNode }) {
   const host = useRef<HTMLDivElement>(null)
   const [state, setState] = useState<'loading' | 'loaded' | 'unavailable'>('loading')
@@ -54,7 +59,7 @@ export function XPostEmbed({ postId, fallback }: { postId: string; fallback: Rea
         const widgets = await loadWidgets()
         if (cancelled) return
         const result = await widgets.widgets.createTweet(postId, element, {
-          dnt: true, conversation: 'none', theme: 'light', align: 'center', width: Math.min(330, element.clientWidth || 330),
+          dnt: true, conversation: 'none', theme: embedTheme(), align: 'center', width: Math.min(330, element.clientWidth || 330),
         })
         if (!cancelled) setState(result ? 'loaded' : 'unavailable')
       } catch {

@@ -1,5 +1,5 @@
 import { memo, useEffect, useRef } from 'react'
-import { loadWidgets } from './XPostEmbed'
+import { embedTheme, loadWidgets } from './XPostEmbed'
 
 /**
  * What a post said, keyed by its URL. The served page carries it inside the embed's blockquote,
@@ -44,10 +44,13 @@ const REDDIT_SCRIPT = 'https://embed.reddit.com/widgets.js'
 
 /** X's script loads once and upgrades each embed; Reddit's scans the page only as it runs, so each Reddit embed runs it again. */
 function load(kind: 'tweet' | 'reddit', element: HTMLElement) {
+  const quote = element.querySelector('blockquote')
   if (kind === 'tweet') {
+    quote?.setAttribute('data-theme', embedTheme())
     loadWidgets().then((twttr) => twttr.widgets.load?.(element)).catch(() => undefined)
     return
   }
+  if (embedTheme() === 'dark') quote?.setAttribute('data-embed-theme', 'dark')
   const script = document.createElement('script')
   script.src = REDDIT_SCRIPT
   script.async = true

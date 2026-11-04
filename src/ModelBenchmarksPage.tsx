@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { GrainGradient, SITE_SURFACE } from './GrainGradient'
 import { SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP } from './products'
 import { absoluteDate, arenaGap, benchmarkCatalog, LANES, leaderOf, newModelAge, publicationAge, shortDate, TIERS, wallSources, type BenchmarkCatalog, type RankedModel } from './modelBenchmarks'
@@ -90,7 +91,8 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
   }
 
   return (
-    <div className="benchmark-page">
+    <div className="benchmark-page site-theme">
+      <GrainGradient surface={SITE_SURFACE} className="site-grain" />
       <SiteHeader product={HAPPY_DESKTOP} />
       <main className="benchmark-main page-width">
         <header className="benchmark-heading">
