@@ -24,7 +24,7 @@ export type DemoTake = {
   label: string
 }
 
-const TAKE = '/video/happy-one/team-take8'
+const TAKE = '/video/happy-one/team-take11'
 // Wider screens get 60fps: AV1, or H.264 for browsers without it (Macs before M3). The H.264 is
 // level 5.1 with 5 reference frames, which hardware decoders take at 60fps. Phones get the 30fps
 // cut, already sharper than their window.
@@ -32,12 +32,12 @@ const WIDE = '(min-width: 701px)'
 const H264 = 'video/mp4; codecs="avc1.640033, mp4a.40.2"'
 
 /**
- * Team take 8: Kirill's desktop and Steve's phone, frame for frame on one 60fps clock. Its last
+ * Team take 11: Kirill's desktop and Steve's phone, frame for frame on one 60fps clock. Its last
  * 0.6s dissolves into frame 0, so the loop has no seam.
  */
 export const DEMO_TAKE: DemoTake = {
   desktop: {
-    kind: 'movie', width: 2000, height: 1400, poster: `${TAKE}/desktop-poster.webp`,
+    kind: 'movie', width: 2266, height: 1400, poster: `${TAKE}/desktop-poster.webp`,
     sources: [
       { src: `${TAKE}/desktop.webm`, type: 'video/webm; codecs="av01.0.12M.08, opus"', media: WIDE },
       { src: `${TAKE}/desktop.mp4`, type: H264, media: WIDE },
@@ -54,7 +54,9 @@ export const DEMO_TAKE: DemoTake = {
       { src: `${TAKE}/phone-30.mp4`, type: 'video/mp4; codecs="avc1.640033"' },
     ],
   },
-  // phone-enter to phone-exit: the task reaches Steve, he answers, and the five bars reach him.
-  phoneFocus: [535 / 60, 2150 / 60],
-  label: 'Kirill opens a new task with the model menu open, picks Opus 5.5 and asks for an animated waveform in the voice agent. On Send the task appears in Steve’s sidebar on his phone. Opus builds the waveform and shows a live preview on both screens. Steve answers from his phone: narrower, five bars max. Opus narrows it to five bars on both screens.',
+  // Steve's part, phone-forward to the second phone-tuck: he opens the task, answers, and is back
+  // on his sidebar. The composed movie also brings the phone forward as the task arrives
+  // (9.45–12.95s); here it stays beside the window then.
+  phoneFocus: [2023 / 60, 2833 / 60],
+  label: 'Kirill opens a new task with the model menu open, picks Opus 5.5 and asks for an animated waveform in the voice agent. On Send the task appears in Steve’s sidebar on his phone. Opus hands the code to a subtask, then shows a live preview of the waveform. Steve opens the task on his phone and answers: narrower, five bars max. Opus narrows it to five bars.',
 }

@@ -10,43 +10,48 @@ movie, `08a5188^`), with the split player from the archived draft (`4c9dafb` on
 `archive/homepage-video-sizing`), without that draft's caption line, phone label,
 and hint.
 
-The hero plays team take 8, in `public/video/happy-one/team-take8/`: the split
-exports of happy-desktop's `scripts/demo/demos/team` (`9d40e8e7` on
-`worktree/team-demo-video`), copied byte for byte from the composition's
-`take8/composed/split/` output. Kirill picks Opus 5.5 from the open model list
-and sends; the task is in Steve's sidebar on his phone at once; Opus puts up a
-live preview, Steve answers from his phone, and Opus narrows it to five bars on
-both screens. The window and the phone screen are separate tracks on the cut's
-60fps clock, 2,228 frames (37.13s), so frame i of each is frame i of the composed
-movie; the window tracks carry its soundtrack and its traffic lights. The phone
-holds its last waveform frame for 8 frames at 32.45–32.58s, over its preview's
-blank reload (`edits.phoneHolds` in `take.json`).
+The hero plays team take 11, in `public/video/happy-one/team-take11/`: the split
+exports of happy-desktop's `scripts/demo/demos/team` (`ed8c1a87` on
+`worktree/demo-take-10`, which keeps the take's records under
+`selected/take11/`), copied byte for byte. Kirill picks Opus 5.5 from the open
+model list and sends; the task is in Steve's sidebar on his phone at once; Opus
+hands the code to a subtask and puts up a live preview; Steve opens the task on
+his phone and answers "narrower, five bars max", and Opus narrows it to five
+bars. The window, a golden-ratio 2266×1400, and the phone screen are separate
+tracks on the cut's 60fps clock, 3,120 frames (52.0s), so frame i of each is
+frame i of the composed movie; the window tracks carry its soundtrack and its
+traffic lights. The cut drops 17 freezes (175 frames) and plays Steve's typing at
+double speed (`edits` in `take.json`).
 The last 0.6s dissolves into frame 0, so the loop has no seam. `take.json` holds the cues;
 `captions.vtt` holds the composed movie's captions, which the hero does not show.
 
 | Asset | Encoding | Size |
 | --- | --- | --- |
-| `desktop.webm` / `.mp4` | AV1 + Opus / H.264 High 5.1 + AAC, 2000×1400, 60fps | 3,721,784 / 4,534,640 bytes |
-| `desktop-30.webm` / `.mp4` | AV1 + Opus / H.264 High 5.1 + AAC, 1600×1120, 30fps | 1,532,798 / 2,572,153 bytes |
-| `phone.webm` / `.mp4` | AV1 / H.264 High 5.1, 1206×2622, 60fps | 3,729,765 / 5,840,280 bytes |
-| `phone-30.webm` / `.mp4` | AV1 / H.264 High 5.1, 964×2098, 30fps | 1,850,280 / 3,889,569 bytes |
-| `desktop-poster.webp`, `phone-poster.webp` | frame 0 | 112,812 / 103,172 bytes |
+| `desktop.webm` / `.mp4` | AV1 + Opus / H.264 High 5.1 + AAC, 2266×1400, 60fps | 4,919,048 / 5,866,070 bytes |
+| `desktop-30.webm` / `.mp4` | AV1 + Opus / H.264 High 5.1 + AAC, 1812×1120, 30fps | 2,044,892 / 3,342,521 bytes |
+| `phone.webm` / `.mp4` | AV1 / H.264 High 5.1, 1206×2622, 60fps | 4,986,139 / 7,342,738 bytes |
+| `phone-30.webm` / `.mp4` | AV1 / H.264 High 5.1, 964×2098, 30fps | 2,372,987 / 4,174,951 bytes |
+| `desktop-poster.webp`, `phone-poster.webp` | frame 0 | 112,996 / 107,798 bytes |
 
 Screens wider than 700px get 60fps: the AV1, or the H.264 in browsers without
 AV1 (Macs before M3). The H.264 is level 5.1 with 5 reference frames, which
 hardware decoders take at 60fps. Phones get the 30fps cut.
 
-The phone comes forward for Steve's part, `phone-enter` to `phone-exit`, frames
-535–2150 (8.92–35.83s).
+The phone comes forward once, for Steve's part: from `phone-forward`, just
+before he opens the task, to the second `phone-tuck`, when he is back on his
+sidebar, frames 2023–2833 (33.72–47.22s). The composed movie also brings it
+forward as the task arrives (`phoneStates` in `take.json`, 9.45–12.95s); Kirill
+wants the page's phone beside the window then, so `phoneFocus` leaves that out.
 
 The loop was checked in headless Chromium by drawing both movies every animation
-frame from 1.2s before the end to 1.5s after the wrap, on the 60fps AV1, the
-60fps H.264, and the 30fps AV1 tracks: at the wrap the window changes by at most
-0.53 of 255 per channel and the phone by at most 0.54, less than between two
-frames of the dissolve, and no `emptied`, `loadstart`, or `abort` event brings a
-poster back. Under software decoding the 30fps phone track sometimes falls more
-than 120ms behind; the page then re-aligns it and it shows its last decoded frame
-until it catches up, at the wrap as anywhere else.
+frame from 1.2s before the end to 1.5s after the wrap, on the 60fps AV1 and the
+60fps H.264 at 1440px and the 30fps AV1 at 390px: at the wrap the window changes
+by at most 0.1 of 255 per channel and the phone by at most 0.07, no more than
+between two frames of the dissolve (up to 0.57), and no `emptied`, `loadstart`,
+or `abort` event brings a poster back. Frame for frame, each of the eight tracks'
+last frame is within 0.54 of its first. Under software decoding the 30fps phone
+track sometimes falls more than 120ms behind; the page then re-aligns it and it
+shows its last decoded frame until it catches up, at the wrap as anywhere else.
 
 That draft's own tracks, the v36 split of `v36-team-r13` (2200×1500 window), stay
 on `archive/homepage-video-sizing` and never landed on main. Their 60fps H.264
@@ -59,9 +64,10 @@ the traffic lights in; the page sizes the window from its `width`/`height`.
 iPhone 16 Pro frame's 1206×2622 aperture and is cropped to it, so any iPhone
 screen recording fits. `follows: true` puts a phone movie on the window's clock
 (play, pause, seek, rate, drift over 120ms, the loop); `follows: false` loops it
-on its own and only pauses with the window. `phoneFocus` is the interval, in
+on its own and only pauses with the window. `phoneFocus` is the one interval, in
 seconds of the window movie, while the phone comes forward; leave it out and the
-phone stays parked. Sources are tried in order, each with an optional `media`
+phone stays parked. A take's `phoneStates` may bring it forward more than once;
+pick the interval with Kirill. Sources are tried in order, each with an optional `media`
 query; screens wider than 700px try the 60fps AV1, then the 60fps H.264, and
 everything else the 30fps AV1, then the 30fps H.264. Encode H.264 at `-level
 5.1` and check the reference frames fit it.
@@ -70,7 +76,8 @@ everything else the 30fps AV1, then the 30fps H.264. Encode H.264 at `-level
 screen allows, from 36% to 84% of the page column and at most 968px. Above 700px
 the hidden header takes no room, "Happy" starts 32px from the top, and the download
 badge sits 20px under the window (`--one-hero-reserved` in `src/happy-home.css`
-counts the rest); at 1015×637 the window is 524px wide. The phone is
+counts the rest); with take 11 the window is 594px wide at 1015×637 and reaches
+968px at 1440×900. The phone is
 84% of the window's height. Where the screen ends before the phone does, it keeps
 55% in view and peeks in from the edge, which the site shell clips. At 700px and
 below the window's left edge is 8px from the screen's and its right edge 8% in, and
@@ -285,8 +292,8 @@ list open and Opus hovered.
 4. Freeze the `.one-demo video` (the window; the phone seeks with it) at
    **2.8 seconds** of the v29 asset: pause
    it, set `controls = false`, and set `currentTime = 2.8`. The model list is
-   open with Opus hovered. Team take 8 has the model menu open from 0 to 4.15s
-   (the pointer scans the list from 1.75s; Opus picked at 4.15s), so choose its
+   open with Opus hovered. Team take 11 has the model menu open from 0 to 4.22s
+   (the pointer scans the list from 1.8s; Opus picked at 4.22s), so choose its
    frame again. Wait until it is paused, not seeking, decode-ready,
    and at the target; then wait two animation frames. Keep the pointer away
    from the video.
