@@ -24,6 +24,7 @@
 /* The Homebrew strip stays narrower than its column; a cut command ends in an ellipsis, and Copy copies all of it. */
 .releases-channel .one-brew-command { max-width: min(100%, 20rem); }
 .releases-channel .one-brew-command code { overflow: hidden; text-overflow: ellipsis; }
+.releases-channel .one-preview-standard { margin-top: .25rem; padding-top: .75rem; }
 
 .releases-mobile { display: flex; flex-direction: column; align-items: center; width: min(100%, 56rem); margin-top: 4rem; }
 .releases-mobile > .one-mobile-downloads { margin-top: .75rem; }

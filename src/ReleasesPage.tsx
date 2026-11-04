@@ -1,38 +1,40 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP } from './products'
-import { DownloadOptions, MobileDownloads } from './DownloadOptions'
+import { DownloadOptions, MobileDownloads, useDesktopDownloadSelection } from './DownloadOptions'
 import { GrainGradient, SITE_SURFACE } from './GrainGradient'
-import { channelDesktopDownloads, GITHUB_RELEASES, releaseNotesUrl, type DesktopDownloads, type MacArchitecture, type ReleaseChannel } from './desktopDownloads'
+import { GITHUB_RELEASES, releaseNotesUrl, type DesktopDownloads, type MacArchitecture, type ReleaseChannel } from './desktopDownloads'
 import './happy-one.css'
 import './releases.css'
 
 const CHANNELS = [
   { value: 'stable', label: 'Stable', note: 'Production releases for macOS, Windows, and Linux.' },
-  { value: 'preview', label: 'Preview', note: 'Help us test Happy by installing a preview build. Happy Nightly installs beside Happy.' },
+  { value: 'preview', label: 'Preview', note: 'Help us test Happy. Happy Nightly installs beside Happy.' },
 ] as const satisfies ReadonlyArray<{ value: ReleaseChannel; label: string; note: string }>
 
 /** The name and the date each stay on one line; a phone wraps between them. The notes link gets a line of its own. */
-function releaseLine(channel: ReleaseChannel, downloads: DesktopDownloads) {
-  const name = <span>{channel === 'preview' ? 'Happy Nightly' : 'Happy'} {downloads.tag.slice(1)}</span>
+function releaseLine(channel: ReleaseChannel, downloads: DesktopDownloads, primaryStandard: boolean) {
+  const name = <span>{channel === 'preview' && !primaryStandard ? 'Happy Nightly' : 'Happy'} {downloads.tag.slice(1)}</span>
   const notes = <a href={releaseNotesUrl(downloads.tag)}>Release notes</a>
   if (!downloads.publishedAt) return <>{name}{notes}</>
   const date = new Date(downloads.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
   return <>{name} · <span>{date}</span>{notes}</>
 }
 
-function ReleaseVersion({ channel }: { channel: ReleaseChannel }) {
-  // undefined while GitHub answers; null when it has no release to offer.
-  const [downloads, setDownloads] = useState<DesktopDownloads | null | undefined>(undefined)
-  useEffect(() => {
-    let active = true
-    void channelDesktopDownloads(channel).then(value => { if (active) setDownloads(value) })
-    return () => { active = false }
-  }, [channel])
+function ReleasePanel({ channel, active, macArchitecture, onMacArchitectureChange }: {
+  channel: typeof CHANNELS[number]; active: boolean; macArchitecture: MacArchitecture; onMacArchitectureChange: (architecture: MacArchitecture) => void
+}) {
+  const { downloads, loading, primaryStandard } = useDesktopDownloadSelection(channel.value, macArchitecture)
   return (
-    <p className="releases-version" aria-live="polite">
-      {downloads === undefined ? '' : downloads ? releaseLine(channel, downloads) : 'The newest preview is listed on GitHub, below.'}
-    </p>
+    <section id={`releases-panel-${channel.value}`} className="releases-channel"
+      aria-labelledby={`releases-${channel.value}`} aria-hidden={!active} inert={!active} data-active={active}>
+      <p className="releases-note">{primaryStandard ? 'Help us test Happy. This preview build replaces Happy.' : channel.note}</p>
+      <p className="releases-version" aria-live="polite">
+        {loading ? '' : downloads ? releaseLine(channel.value, downloads, primaryStandard) : 'The newest preview is listed on GitHub, below.'}
+      </p>
+      <DownloadOptions channel={channel.value} releasesLink={false} mobile={false}
+        macArchitecture={macArchitecture} onMacArchitectureChange={onMacArchitectureChange} />
+    </section>
   )
 }
 
@@ -59,14 +61,8 @@ export default function ReleasesPage() {
         </div>
         <div className="releases-channels">
           {CHANNELS.map(channel => (
-            <section key={channel.value} id={`releases-panel-${channel.value}`} className="releases-channel"
-              aria-labelledby={`releases-${channel.value}`} aria-hidden={selectedChannel !== channel.value}
-              inert={selectedChannel !== channel.value} data-active={selectedChannel === channel.value}>
-              <p className="releases-note">{channel.note}</p>
-              <ReleaseVersion channel={channel.value} />
-              <DownloadOptions channel={channel.value} releasesLink={false} mobile={false}
-                macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
-            </section>
+            <ReleasePanel key={channel.value} channel={channel} active={selectedChannel === channel.value}
+              macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
           ))}
         </div>
         <section className="releases-mobile" aria-labelledby="releases-mobile">

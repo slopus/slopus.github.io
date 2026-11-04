@@ -67,10 +67,12 @@ try:
             assert stable_top == preview_top, (name, stable_top, preview_top)
             primary = page.locator('#releases-panel-preview .one-desktop-button')
             assert primary.get_attribute('data-download-platform') == expected
+            assert page.get_by_role('combobox').count() == (1 if expected == 'macos' else 0)
             href = primary.get_attribute('href')
             if name == 'linux':
                 assert href.endswith('-x64.AppImage') and '/Happy-' in href and '/Happy-Nightly-' not in href, href
-                assert "Happy's own preview build" in page.locator('#releases-panel-preview').inner_text()
+                assert 'This preview build replaces Happy.' in page.locator('#releases-panel-preview .releases-note').inner_text()
+                assert page.locator('#releases-panel-preview .releases-version').inner_text().startswith('Happy 0.')
             if name == 'mac':
                 page.get_by_role('combobox', name='Preview Mac architecture', exact=True).select_option('x64')
                 assert primary.get_attribute('href').endswith('-x64.dmg')

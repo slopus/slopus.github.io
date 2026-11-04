@@ -242,7 +242,8 @@ export function MobileDownloads() {
   )
 }
 
-export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, channel = 'stable', releasesLink = true, mobile = true }: DownloadOptionsProps) {
+/** Shared release lookup and device prediction for both downloads and their page copy. */
+export function useDesktopDownloadSelection(channel: ReleaseChannel, macArchitecture: MacArchitecture) {
   const [resolved, setResolved] = useState<{ channel: ReleaseChannel; downloads: DesktopDownloads | null } | null>(null)
   useEffect(() => {
     let active = true
@@ -251,20 +252,25 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
   }, [channel])
   // Never one channel's files under the other's switch while the new lookup runs.
   const downloads = resolved?.channel === channel ? resolved.downloads : null
-  const preview = channel === 'preview'
-  // Phones install from the stores; Preview is the desktop app's, shown on the releases page itself.
-  const withMobile = mobile && !preview
-  const withReleasesLink = releasesLink && !preview
   // The prerendered homepage has no platform; hydration settles on this device's.
   const platform = useSyncExternalStore(NO_SUBSCRIPTION, desktopPlatform, () => 'desktop' as const)
   const nightlyPlatforms = releasePlatforms(channel, downloads, macArchitecture)
-  const standardPlatforms = preview ? releasePlatforms(channel, downloads, macArchitecture, true) : []
+  const standardPlatforms = channel === 'preview' ? releasePlatforms(channel, downloads, macArchitecture, true) : []
   const availablePlatforms = DESKTOP_PLATFORMS.filter(candidate => nightlyPlatforms.includes(candidate) || standardPlatforms.includes(candidate))
   const primaryPlatform = platform !== 'desktop' && availablePlatforms.includes(platform) ? platform : availablePlatforms[0]
   // Prefer Nightly on this device; use Happy's own preview when only it has an installer.
   const primaryStandard = !!primaryPlatform && !nightlyPlatforms.includes(primaryPlatform)
   const platforms = primaryStandard ? standardPlatforms : nightlyPlatforms
   const otherPlatforms = platforms.filter(other => other !== primaryPlatform)
+  return { downloads, loading: resolved?.channel !== channel, platform, primaryPlatform, primaryStandard, otherPlatforms }
+}
+
+export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, channel = 'stable', releasesLink = true, mobile = true }: DownloadOptionsProps) {
+  const { downloads, platform, primaryPlatform, primaryStandard, otherPlatforms } = useDesktopDownloadSelection(channel, macArchitecture)
+  const preview = channel === 'preview'
+  // Phones install from the stores; Preview is the desktop app's, shown on the releases page itself.
+  const withMobile = mobile && !preview
+  const withReleasesLink = releasesLink && !preview
   // The tap's only cask is the stable app.
   const showBrew = primaryPlatform === 'macos' && !preview
   // Prerendered markup has no store preference; hydration settles on this device's.
@@ -282,7 +288,6 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
       aria-label={preview ? 'Preview downloads' : withMobile ? 'Desktop and mobile downloads' : 'Desktop downloads'}
     >
       <div className="one-desktop-downloads">
-        {primaryStandard && <p className="one-preview-primary-note">Happy's own preview build, which replaces Happy:</p>}
         {primaryPlatform && <div className="one-primary-download">
           <DesktopDownloadLink className="store-button one-desktop-button" platform={primaryPlatform} downloads={downloads} channel={channel} standard={primaryStandard} macArchitecture={macArchitecture}>
             <DownloadBadge platform={primaryPlatform} />
@@ -293,12 +298,6 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
             <option value="x64">Intel</option>
           </select>}
         </div>}
-        {preview && primaryPlatform !== 'macos' && downloads && (downloads.macos.arm64 || downloads.macos.x64 || downloads.standard?.macos.arm64 || downloads.standard?.macos.x64) &&
-          <select className="one-mac-architecture" aria-label="Preview Mac architecture" value={macArchitecture}
-            onChange={event => { if (event.target.value === 'arm64' || event.target.value === 'x64') onMacArchitectureChange(event.target.value) }}>
-            <option value="arm64">Apple Silicon</option>
-            <option value="x64">Intel</option>
-          </select>}
         {primaryPlatform === 'windows' && <SmartScreenWarning />}
         {showBrew && <HomebrewCommand />}
         {(otherPlatforms.length > 0 || withReleasesLink) && <PlatformLinks platforms={otherPlatforms} downloads={downloads} channel={channel} standard={primaryStandard} macArchitecture={macArchitecture} releasesLink={withReleasesLink} />}
