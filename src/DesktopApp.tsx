@@ -8,8 +8,6 @@ import { HOME_HEADLINE, PALETTE_DEFAULT, SOCIAL_HEADLINE, homePreview, homeVaria
 import { homeVariantsDev } from './homeVariantsDev'
 import { AnimatedEmoji, type AnimatedEmojiName } from './AnimatedEmoji'
 import { DownloadOptions, type DownloadOptionsProps } from './DownloadOptions'
-import { copyText } from './ChiefOfStaffPrompt'
-import { CopyIcon } from './CopyIcon'
 import { KIRILL, STEVE } from './Team'
 import type { MacArchitecture } from './desktopDownloads'
 import { HAPPY_ONE_GITHUB_STARS } from './happyOneGithubStars'
@@ -60,40 +58,6 @@ function ValueProposition({ title, body, emoji, index }: (typeof values)[number]
         <h2 id={heading}>{title}</h2>
         <p>{body}</p>
       </div>
-    </section>
-  )
-}
-
-/** The prompt we suggest: any coding agent can check our claims against the source. */
-export const TRUST_PROMPT = 'Read github.com/slopus/happy-desktop and github.com/slopus/happy-agent. Would you trust Happy?'
-
-function TrustTheCode() {
-  const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle')
-  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-  useEffect(() => () => clearTimeout(timer.current), [])
-  const copy = async () => {
-    clearTimeout(timer.current)
-    try {
-      await copyText(TRUST_PROMPT)
-      setState('copied')
-      timer.current = setTimeout(() => setState('idle'), 1500)
-    } catch {
-      setState('failed')
-    }
-  }
-  return (
-    <section className="one-trust page-width" aria-labelledby="trust-heading">
-      <h2 id="trust-heading">Don’t trust our words. <em>Trust the code.</em></h2>
-      <p>Ask your agent, and watch it become happy.</p>
-      <figure className="one-trust-prompt" aria-label="Prompt for any agent">
-        <p>{TRUST_PROMPT}</p>
-        <button type="button" onClick={copy} data-state={state} aria-label={state === 'copied' ? 'Prompt copied' : 'Copy prompt'}>
-          {state === 'copied'
-            ? <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
-            : <CopyIcon />}
-        </button>
-        <span className="one-download-sr" role="status">{state === 'copied' ? 'Copied.' : state === 'failed' ? 'Clipboard unavailable. Select the prompt to copy it.' : ''}</span>
-      </figure>
     </section>
   )
 }
@@ -246,7 +210,6 @@ export default function DesktopApp() {
         <div className="one-values" id="product">
           {values.map((value, index) => <ValueProposition key={value.title} {...value} index={index} />)}
         </div>
-        <TrustTheCode />
         <Downloads macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
         <TalkToUs />
       </main>

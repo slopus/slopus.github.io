@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
-import DesktopApp, { TRUST_PROMPT } from './DesktopApp'
+import DesktopApp from './DesktopApp'
 import { HOME_HEADLINE } from './homeVariants'
 import { HERO_DEFAULT } from './homeVariantsDev'
 import { Router } from './Router'
@@ -120,19 +120,19 @@ describe('Happy Desktop landing page', () => {
     expect(container.querySelectorAll('#download')).toHaveLength(1)
   })
 
-  it('offers the downloads twice: under the demo, and again after Trust the code', () => {
+  it('offers the downloads twice: under the demo, and again after the values', () => {
     const { container } = render(<DesktopApp />)
 
     expect(container.querySelectorAll('.one-download-actions')).toHaveLength(2)
     expect(container.querySelector('#download-again .one-download-actions')).toBeTruthy()
   })
 
-  it('runs demo, downloads, the five values, Trust the code, downloads again, then Talk to us', () => {
+  it('runs demo, downloads, the five values, downloads again, then Talk to us', () => {
     const { container } = render(<DesktopApp />)
     const main = container.querySelector('main')!
 
     expect([...main.children].map((child) => child.className.split(' ')[0])).toEqual([
-      'one-hero', 'one-values', 'one-trust', 'one-download', 'one-talk',
+      'one-hero', 'one-values', 'one-download', 'one-talk',
     ])
     const sections = [...main.querySelectorAll('.one-value')]
     expect(sections.map((section) => section.querySelector('h2')?.textContent)).toEqual([
@@ -171,15 +171,6 @@ describe('Happy Desktop landing page', () => {
     const { container } = render(<DesktopApp />)
 
     expect(container.textContent).not.toMatch(/ciphertext|already on your phone/i)
-  })
-
-  it('offers a prompt to check Happy against its code', () => {
-    const { container } = render(<DesktopApp />)
-    const trust = container.querySelector('.one-trust')!
-
-    expect(trust.querySelector('h2')?.textContent).toMatch(/trust the code/i)
-    expect(trust.textContent).toContain(TRUST_PROMPT)
-    expect(within(trust as HTMLElement).getByRole('button', { name: 'Copy prompt' })).toBeTruthy()
   })
 
   it('switches headline and palette from the URL, falling back to the first of each', () => {
