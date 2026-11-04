@@ -1,0 +1,56 @@
+# Move from the Happy CLI to Happy Agent
+
+Happy now has a desktop app. Multiplayer for remote servers, lower latency, better attachment support and much more. Please migrate! It takes around 5 minutes, a bit longer if you have several machines.
+
+<Download />
+
+```chief-of-staff set up a new remote server
+Put Happy Agent on my server ubuntu@203.0.113.10
+```
+
+## On your computer
+
+1. **Open Happy on your computer.** Make sure Happy Desktop is up to date. Download it above, or from [happy.engineering](/#download), for macOS, Windows, or Linux. Sign in to at least one of Claude, Codex, or Grok; Happy Agent, the runtime that runs your agents, starts with the app. The [Quick Start](/quick-start/) has the details.
+2. **Choose Link Mobile App during onboarding, or go to Settings › Mobile Access.** Happy Desktop shows a QR code.
+3. **Using Happy on a server?** Select it in Happy Desktop and scan its code the same way. To set up a new remote server, just ask the [Chief of Staff](/chief-of-staff/) bot in Happy Desktop, with the prompt above.
+
+Happy Desktop shows a **Relay | Direct** switch above the code. **Direct** needs the latest Happy app on your phone; with an older phone app, use **Relay**.
+
+## On your phone
+
+Open Happy and tap **Scan QR code** on the migration screen, or **+** anywhere in the app. Scan the code Happy Desktop shows. Your computer now shows on your phone.
+
+## Already on Happy Agent through the Happy server?
+
+If your phone already reaches Happy Desktop through the Happy server, go to **Settings › Mobile Access › Connect a phone directly › Show QR code** in Happy Desktop and scan it from your phone. The Happy server link stays as it is.
+
+## Run Happy Agent on a server or a headless machine
+
+If you ran `happy` on a server, a VPS, or a Mac mini without a screen, run Happy Agent there instead. You don't install Happy Desktop on it.
+
+If Happy Agent isn't on the server yet, ask the Chief of Staff in Happy Desktop on your own computer. Over SSH it installs Happy Agent as a service, signs in the provider accounts you approve, and connects the server to your Happy Desktop. It stops only for choices and sign-ins that are yours. Then select the server in Happy Desktop and link your phone from its **Settings › Mobile Access**.
+
+The same server can serve your team, each member signed in as themselves. [Remote Server](/guides/remote-server/) explains what the Chief of Staff asks you, which providers work, and how team mode works.
+
+## What changes when you switch
+
+| | Happy CLI | Happy Agent |
+| --- | --- | --- |
+| On your computer | `happy claude` or `happy codex` in a terminal | The Happy Desktop app |
+| Agents | Claude Code and Codex | Claude, Codex, Grok, Gemini, and more |
+| Your phone reaches it | Through the Happy server, which stores your chats, encrypted | Your phone connects to your computer; traffic may pass through a relay that stores nothing |
+| Sessions | Last as long as the `happy` process | Survive a closed window and a restart |
+| Teams | One person's machines | Shared projects and sessions on a team server |
+
+## What happens to your Happy CLI setup
+
+- The Happy CLI still works. It is in maintenance mode: it gets critical fixes, and new features ship in Happy Desktop. See [The Original Happy CLI](/guides/terminal/).
+- Happy Desktop and the CLI both keep state under `~/.happy`. Never delete it to fix a problem.
+
+## Get help
+
+- [Mobile Access](/mobile/): what you can do from the phone, and troubleshooting.
+- [Chief of Staff](/chief-of-staff/): what else it sets up for you.
+- [Multiplayer & Teams](/multiplayer/): working with your team in one Happy Agent.
+
+If something you rely on in the CLI is missing from Happy Desktop, DM Kirill on X, [@bra1n_dump](https://x.com/bra1n_dump).

@@ -1,9 +1,11 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { AutoplayClip } from './AutoplayClip'
 import { ChiefOfStaffPrompt, CHIEF_OF_STAFF_LANGUAGE } from './ChiefOfStaffPrompt'
 import { HoverClip } from './HoverClip'
+import { DownloadOptions } from './DownloadOptions'
+import type { MacArchitecture } from './desktopDownloads'
 import { RedditEmbed, Tweet } from './SocialEmbed'
 import { slugifyHeading } from './documents'
 
@@ -116,7 +118,10 @@ function remarkEmbeds() {
   const visit = (node: MdastNode) => {
     for (const child of node.children ?? []) {
       const embed = child.type === 'html' && child.value?.trim().match(/^<(Tweet|RedditEmbed)\s+url="([^"]+)"\s*\/>$/)
-      if (embed) {
+      if (child.type === 'html' && child.value?.trim() === '<Download />') {
+        child.type = 'embed'
+        child.data = { hName: 'download-embed', hProperties: {} }
+      } else if (embed) {
         child.type = 'embed'
         child.data = { hName: embed[1] === 'Tweet' ? 'tweet-embed' : 'reddit-embed', hProperties: { url: embed[2] } }
       } else {
@@ -160,7 +165,18 @@ function rehypeSideFigures() {
   }
 }
 
+/** <Download /> in a page: the homepage's desktop download buttons, where the page needs them. */
+function DownloadEmbed() {
+  const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
+  return (
+    <div className="happy-one document-download">
+      <DownloadOptions macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} mobile={false} />
+    </div>
+  )
+}
+
 const EMBEDS = {
+  'download-embed': DownloadEmbed,
   'tweet-embed': ({ url }: { url: string }) => <Tweet url={url} />,
   'reddit-embed': ({ url }: { url: string }) => <RedditEmbed url={url} />,
 } as Components

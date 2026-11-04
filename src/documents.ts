@@ -346,6 +346,16 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Guides',
   },
   {
+    // happy.engineering/migrate, linked from the Happy CLI home's migration screen in the iOS and Android apps. Keep the URL.
+    path: 'migrate',
+    sourcePath: '/content/desktop/migrate.mdx',
+    title: 'Switch to Happy Agent',
+    pageTitle: 'Switch from the Happy CLI to Happy Agent and Happy Desktop',
+    description: 'Happy now has a desktop app: multiplayer for remote servers, lower latency, and better attachments. Move from the Happy CLI in around 5 minutes.',
+    cardLine: 'A desktop app, and multiplayer servers',
+    group: 'Guides',
+  },
+  {
     path: 'guides/configuration',
     sourcePath: '/content/desktop/guides/configuration.mdx',
     title: 'Configuration',

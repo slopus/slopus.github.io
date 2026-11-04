@@ -70,6 +70,7 @@
 /happy2/docs/quick-start/
 /happy2/docs/workspaces/
 /how-it-works/
+/migrate/
 /mobile-app/
 /mobile/
 /model-benchmarks/

@@ -35,7 +35,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(47)
+    expect(documentsForProduct('desktop')).toHaveLength(48)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -565,7 +565,7 @@ describe('static document pages', () => {
   })
 
   it('puts a copyable Chief of Staff prompt right after the intro of every page it can help with', () => {
-    const withPrompt = ['quick-start', 'chief-of-staff', 'models', 'permissions', 'secrets', 'workspaces', 'agents', 'mobile', 'multiplayer', 'extending', 'guides/configuration', 'guides/remote-server']
+    const withPrompt = ['quick-start', 'chief-of-staff', 'models', 'permissions', 'secrets', 'workspaces', 'agents', 'mobile', 'multiplayer', 'extending', 'guides/configuration', 'guides/remote-server', 'migrate']
     for (const document of documentsForProduct('desktop')) {
       const markup = renderPath(`/${document.path}/`)
       const block = markup.indexOf('<aside class="cos-prompt"')
