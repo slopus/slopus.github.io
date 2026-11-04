@@ -1,338 +1,79 @@
-# Happy Coder vs Alternatives
-
-How Happy Coder compares to other mobile Claude Code solutions.
-
-**Key Distinction**: Some solutions run AI agents on your local machine (Happy Coder, Omnara, ClaudeCodeUI), while others run them on cloud VMs (Terragon, Cursor). This affects privacy, performance, and which tools work.
-
-## Quick Comparison Tables
-
-### Mobile Clients
-
-| Feature | Happy Coder | Omnara | ClaudeCodeUI | Cursor Mobile | Kisuke | CodeRemote | SSH + tmux (Terminus) |
-|---------|------------|---------|---------------------|---------------|---------|------------|----------------------|
-| **Price** | Free | $9/month | Free | $20/month (Included with Cursor) | Unknown (private beta) | $49/month | Free |
-| **Platform** | iOS, Android, Web | iOS | PWA | PWA | iOS | iOS | iOS, Android (via Terminus) |
-| **Counter Party** | Open source side project by developers | YC25 startup | AI website builder startup (GPL desktop app as content marketing) | VC-backed company | Solo developer/indie | Solo developer/indie | Solo developer/indie |
-| **Open Source** | Yes (MIT) | No | Yes (GPL) | No | No | No | Yes |
-| **Runs on YOUR machine** | ✅ | ✅  | ✅  | ❌ | ✅ | ✅ | ✅ |
-| **Use any coding agent** | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ |
-| **End-to-end encryption** | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | Depends |
-| **Self-hostable** | ✅ | ✅  | ✅  | ❌ | ❌ | ✅ | N/A |
-| **Voice coding** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Mobile-optimized UI** | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
-
-### Desktop Clients
-
-| Feature | Cursor Agents | Terragon | Claudia | Tonkotsu |
-|---------|------------------|----------|---------|----------|
-| **Price** | $20/month | Free (beta), then TBD | Free (AGPL), paid tiers | Free (early access) |
-| **Counter Party** | VC-backed company | VC-backed startup | YC24 (AGPL as sales channel) | Startup |
-| **Open Source** | No | No | Yes (AGPL) | No |
-| **Runs on YOUR machine** | ❌ | ❌ | ✅ | ✅ |
-| **Use any coding agent** | ❌ | ❌ | ✅ | ❌ |
-| **Self-hostable** | ❌ | ❌ | ✅ | ❌ |
-| **Voice coding** | ❌ | ❌ | ❌ | ❌ |
+# Alternatives for Claude Code and Codex on Mobile and Desktop
 
-## Detailed Comparisons
+There are six common ways to run Claude Code or Codex from your phone or a desktop app: Anthropic's Remote Control, Codex in the ChatGPT app, T3 Code, Conductor, Happy, and SSH with tmux. In all six the agent runs on a computer you own, and the app is a window into it. They differ in which agents they run, which devices they reach, what the server in between can read, and what they cost.
 
-### Happy Coder vs Omnara
-
-**Omnara** runs Claude Code locally on your machine, similar to Happy Coder.
+## Side by side
 
-**Key Differences:**
-- **Where code runs**: Both run on YOUR computer locally.
-- **Privacy**: Happy has end-to-end encryption. Omnara stores plain text conversations on their servers (unless self-hosted).
-- **Cost**: Omnara charges $9/month. Happy is free.
-- **Self-hosting**: Both support self-hosting for complete privacy control.
-
-**Choose Omnara if:**
-- You prefer their specific UI/UX
-- You don't mind paying for a subscription
-- You want their particular feature set
-
-**Choose Happy Coder if:**
-- You want to use your existing development environment
-- Privacy is critical (true end-to-end encryption)
-- You want to avoid monthly subscriptions
-- You prefer open source solutions
-- You don't want to self-host for privacy
-
-### Happy Coder vs siteboon/ClaudeCodeUI
-
-**ClaudeCodeUI** is an open-source solution that runs Claude Code locally on your machine.
-
-**Key Differences:**
-- **Infrastructure**: Both run on your local machine.
-- **Privacy**: Happy has end-to-end encryption. ClaudeCodeUI stores plain text conversations on their servers (unless self-hosted).
-- **Pricing model**: ClaudeCodeUI may charge for usage in paid tiers. Happy is free.
-- **Mobile experience**: Happy offers native mobile apps, ClaudeCodeUI is web-based.
-- **Self-hosting**: Both support self-hosting for complete privacy control.
-
-**The Trust Problem:**
-These startups will pivot. They always do. Today's "free tier" becomes tomorrow's "$29/month minimum." Happy Coder can't rugpull you because it's open source.
-
-### Happy Coder vs Terragon
-
-**Terragon** offers a comprehensive platform for AI agent management, running on cloud VMs.
-
-**Key Differences:**
-- **Infrastructure**: Terragon runs on cloud VMs. Happy uses your machines.
-- **Pricing**: Currently free during beta, but at a bare minimum will charge for
-VM usage at those high retail cloud prices. Expect dollars per hour. Happy is
-free.
-- **Complexity**: Terragon has dashboards, analytics, team management. Happy is simple.
-- **Lock-in**: Terragon wants to own your workflow. Happy works with what you have.
-- **Scope**: Terragon tries to do everything. Happy does one thing well.
-
-**Choose Terragon if:**
-- You want an enterprise platform
-- You need team management features
-- You're okay with vendor lock-in
-- You don't mind paying for spinning up VMs in the cloud
-
-**Choose Happy Coder if:**
-- You value simplicity
-- You want to keep your existing workflow
-- You prefer open source tools
-- You want to avoid paying extra for functionality you already have on your own computer.
+Facts about the other tools come from their own docs and sites, checked on November 4, 2026. They ship often, so follow the links for the current state.
 
-### Happy Coder vs Cursor Mobile
+| | Agents | Desktop | Phone | In between | Source | Price |
+| --- | --- | --- | --- | --- | --- | --- |
+| Claude Code Remote Control | Claude Code | Claude Desktop, VS Code, the terminal | Claude app for iOS and Android, claude.ai/code | Anthropic's servers | Closed | Included with Claude Pro, Max, Ultra, Team, Enterprise |
+| Codex in the ChatGPT app | Codex | ChatGPT app for macOS and Windows | ChatGPT for iOS and Android | OpenAI's relay | Closed | Included with ChatGPT plans that have Codex |
+| T3 Code | Claude Code, Codex, Cursor, Grok Build, OpenCode, Antigravity, fx, ACP agents | macOS, Windows, Linux | iOS, Android, web | Direct HTTPS, or T3 Connect | MIT | Free |
+| Conductor | Claude Code, Codex, Cursor, OpenCode | macOS | iOS (experimental) | Conductor's relay, end-to-end encrypted | Not public | Free; the phone app is in Pro, $50 a month |
+| Happy | Claude, Codex, Grok; Gemini and ACP agents (beta) | macOS, Windows, Linux | iOS, Android | Happy's relay, end-to-end encrypted | MIT | Free; voice is paid |
+| SSH, tmux, and Termius | Anything that runs in a terminal | Any terminal | Any SSH app | Nothing, if your phone can reach the machine | tmux is open source | Free to paid |
 
-**Cursor** has mobile features for their IDE.
+## Claude Code Remote Control
 
-**Key Differences:**
-- **Integration**: Cursor mobile only works with Cursor IDE. Happy works with any Claude Code setup.
-- **Flexibility**: Cursor runs on their infrastructure. Happy runs anywhere.
-- **Cost**: Cursor mobile comes with Cursor subscription. Happy is free.
+[Remote Control](https://code.claude.com/docs/en/remote-control) connects the Claude app or claude.ai/code to a Claude Code session on your computer. Run `claude remote-control`, or `/remote-control` in a session, and scan the QR code. If you already pay for Claude and only use Claude Code, this is the least setup of anything here.
 
-**The Reality:**
-Cursor is building an IDE empire. Their mobile feature is one piece of a larger platform play. Happy Coder just wants to let you use Claude Code from your phone.
+It runs Claude Code only. It needs a claude.ai login, so it doesn't work with API keys, Amazon Bedrock, Google Cloud, Microsoft Foundry, or a custom `ANTHROPIC_BASE_URL`. On Team and Enterprise an owner has to turn it on first.
 
-### Happy Coder vs SSH + tmux (Terminus)
+If your laptop will be closed, Anthropic's [cloud sessions](https://code.claude.com/docs/en/mobile) run on its own infrastructure from a GitHub repository, and you follow them from the same app.
 
-**The Developer Way**: SSH into your machine via Terminus app, attach to tmux, run Claude Code.
+For the details, see [Happy vs Claude Code Remote Control](/claude-code-remote-control/).
 
-**Why Happy is Better:**
-- **Mobile-optimized UI**: No squinting at tiny terminal text
-- **Voice coding**: Try doing that with SSH
-- **Push notifications**: Know when Claude is done
-- **Better disconnection handling**: No broken tmux sessions
-- **Purpose-built**: Designed specifically for Claude Code
+## Codex in the ChatGPT app
 
-**But SSH + tmux via Terminus is:**
-- More work to set up
-- Painful on mobile (tiny text, hard to type)
-- No Claude Code-specific features
-- Connection drops break everything
-
-**The Verdict:**
-If you enjoy suffering, use SSH + tmux. If you want something that just works, use Happy Coder.
+The ChatGPT desktop app on macOS or Windows can [let your phone control it](https://learn.chatgpt.com/docs/remote-connections). Pair it in **Settings > Connections > Control this Mac or PC** with a QR code, then open **Codex** in ChatGPT on iOS or Android. From the phone you can start chats, steer them, approve commands, and read diffs.
 
-### Happy Coder vs Kisuke
+Setup has to start in the desktop app; the Codex CLI and IDE extension can't do it. A workspace admin may need to enable it. If the host sleeps or closes the app, the phone loses it until it's back.
 
-**Kisuke** is an iOS-only mobile development environment with SSH client and voice command support.
+## T3 Code
 
-**Key Differences:**
-- **Platform**: Kisuke is iOS-only. Happy works on iOS, Android, and web.
-- **Voice coding**: Both support voice commands for coding.
-- **Pricing**: Kisuke is free. Happy is also free.
-- **Scope**: Kisuke is a broader mobile development environment. Happy focuses specifically on Claude Code.
+[T3 Code](https://github.com/pingdotgg/t3code) is a free, MIT-licensed app that runs Claude Code, Codex, Cursor, Grok Build, OpenCode, Antigravity, and fx on your subscriptions, plus other ACP agents. It has a desktop app for macOS, Windows, and Linux, phone apps, and a web client at app.t3.codes. It also has tools for app work, such as a live iOS Simulator or Android Emulator next to the thread.
 
-**Choose Kisuke if:**
-- You're iOS-only
-- You want a full mobile development environment
-- You don't specifically need Claude Code integration
+Each vendor's own agent does the work, under that vendor's sandbox. New threads start in Full access unless you change the default. There is no team server where each person signs in as themselves.
 
-**Choose Happy Coder if:**
-- You want cross-platform support
-- You're specifically using Claude Code
-- You want purpose-built Claude Code features
-- You need end-to-end encryption
+For the details, see [Happy vs T3 Code](/t3-code/).
 
-### Happy Coder vs CodeRemote
+## Conductor
 
-**CodeRemote** provides remote development capabilities with mobile and desktop interfaces.
+[Conductor](https://www.conductor.build/docs) runs Claude Code, Codex, Cursor, and OpenCode in parallel on your Mac, each task in its own workspace and branch, with a diff viewer, and opens the pull request when the work is ready. Local use is free with your own subscriptions or keys.
 
-**Key Differences:**
-- **Pricing**: CodeRemote charges $49/month. Happy is free.
-- **Features**: CodeRemote has live preview and advanced session management. Happy has voice coding and better mobile UX.
-- **Platform**: CodeRemote is web-based. Happy has native mobile apps.
-- **Focus**: CodeRemote is a general remote development solution. Happy is purpose-built for Claude Code.
+Its [Remote Control](https://www.conductor.build/docs/reference/remote-control) for the iPhone app is experimental and works with local workspaces only. Traffic goes through Conductor's relay, end-to-end encrypted. The [pricing page](https://www.conductor.build/pricing) lists the mobile app, cloud workspaces, and multiplayer in Pro at $50 a month. It is Mac only, with no Android app, and its source is not public.
 
-**Choose CodeRemote if:**
-- You need advanced live preview features
-- You don't mind paying $49/month
-- You want a general remote development solution
-
-**Choose Happy Coder if:**
-- You want to avoid monthly subscriptions
-- You prefer native mobile apps
-- Voice coding is important to you
-- You're specifically focused on Claude Code workflows
+## Happy
 
-### Happy Coder vs Claudia
+Happy is an open-source harness for orchestrating coding agents: Claude, Codex, Grok, Gemini, and more in one desktop app, reusing the subscriptions you already pay for. [Happy Desktop](/desktop-app/) runs on macOS, Windows, and Linux. The [phone app](/mobile-app/) for iPhone and Android reaches every session, and Happy's relay only sees ciphertext.
 
-**Claudia** is a YC startup offering a desktop coding agent with AGPL licensing
-as a marketing channel to sell their paid "AI Software Engineer" alternative to
-claude code.
+Sessions belong to Happy Agent, a runtime under the app, so quitting the window doesn't stop them. A conversation can switch between Claude, GPT, and Grok and keep its transcript. Teams can run one Happy Agent on a server where each member signs in as themselves.
 
-**Key Differences:**
-- **Business Model**: Claudia uses this desktop app as a sales funnel for their alternative to Claude Code. Happy is truly free and will let you use any coding agent.
-- **Privacy**: Happy has end-to-end encryption. Claudia stores conversations on their servers.
-- **Sustainability**: Claudia needs to monetize users eventually. Happy has no such pressure.
-- **Lock-in**: Claudia wants you in their ecosystem. Happy works with your existing setup.
+What it doesn't do: there is no web client. Your computer has to stay on, unless you run Happy Agent on a remote server. Vendor features land in the vendor's own app first. Team setup takes several steps today.
 
-**The AGPL Strategy:**
-Claudia's AGPL license looks open source, but it's designed to make commercial use difficult, pushing users toward their paid proprietary offerings. It's "open source" marketing for a proprietary business.
+## SSH, tmux, and Termius
 
-**The Contribution Lock-In:**
-Here's the hidden cost of AGPL: if you contribute a fix or change to Claudia, you can't actually reuse that larger work in your own projects because it's mixed with AGPL code. Your contribution gets locked away.
+Run Claude Code or Codex inside tmux on your computer, then attach from an SSH app such as [Termius](https://termius.com) on your phone. Most people put both on a private network such as Tailscale so the machine needs no open port.
 
-But it's worse than that. All the mental work you put in to understand how the AGPL system works - the data flow patterns, the architectural decisions, the clever solutions to hard problems - now you have the risk that you can't use that knowledge in your own projects. You become "tainted" by having worked with AGPL sources.
+Nothing sits in between, and it works with any agent that runs in a terminal. You get a terminal on a phone screen, though: small text, no touch-sized controls, and no alert when the agent stops to ask you something unless you set one up yourself.
 
-This creates a chilling effect: smart developers avoid contributing to AGPL projects precisely because they don't want to contaminate their ability to work on commercial projects later.
+## What happened to Omnara
 
-With Happy's MIT license, when you contribute and improve a subsystem, you can take that subsystem and integrate it into your own projects. The knowledge you gain makes you more valuable, not legally restricted. We're all sharing and all benefiting together - true collaborative development.
+Omnara used to be a phone app for Claude Code. As of November 4, 2026, [its site](https://www.omnara.com/) calls it "The open-source alternative to Claude Managed Agents": an API and platform for running agents, not a remote for your Claude Code session.
 
-**Choose Claudia if:**
-- You don't mind eventual paid subscriptions
-- You're okay with vendor-controlled development
-- You want their specific feature set
+## Which one
 
-**Choose Happy Coder if:**
-- You want truly free, open source software
-- Privacy is important (end-to-end encryption)
-- You prefer MIT licensing over AGPL
-- You want to avoid the "free tier to paid conversion" funnel
+| You want | Use |
+| --- | --- |
+| Claude Code on your phone with nothing new to install | Claude Code Remote Control |
+| Codex on your phone, and you already use the ChatGPT app | Codex in the ChatGPT app |
+| Work that keeps going while your laptop is closed, with no server of your own | Claude Code cloud sessions |
+| A web client for the machine your agents run on | T3 Code |
+| Parallel workspaces and pull requests on a Mac | Conductor |
+| Claude, Codex, and Grok in one desktop app, on any OS, plus an encrypted phone app | Happy |
+| One agent server for a team, each person signed in | Happy |
+| No company in between at all | SSH and tmux |
 
-## Why "Free" Matters
-
-Let's talk about the elephant in the room: sustainability.
-
-**VC-Funded Competitors:**
-- Take VC money
-- Offer unsustainable free tiers
-- Burn cash for growth
-- Eventually need to make money
-- Change pricing, add restrictions
-- You're stuck or forced to migrate
-
-**Happy Coder:**
-- No VC funding
-- No burn rate
-- Permissive open source
-- Self-hostable
-- Can't rugpull you
-- Community-driven
-
-## The Privacy Comparison
-
-This matters more than you think.
-
-### Who Can See Your Code?
-
-**Happy Coder**: Nobody. End-to-end encrypted. The free community relay server only sees encrypted blobs.
-
-**Local Execution** (Omnara, ClaudeCodeUI): 
-- Code execution happens on your machine
-- BUT their servers store plain text conversations and code
-- Their employees can read everything
-- Self-hosting option eliminates this risk
-
-**Cloud VM Providers** (Terragon, Cursor):
-- Their servers run your code
-- They have full access
-- Their employees could read it
-- Subject to subpoenas
-- Vulnerable to breaches
-
-**SSH + tmux**: Direct connection, but:
-- No encryption by default
-- Vulnerable to MITM attacks
-- Logs might leak sensitive data
-
-### Data Retention
-
-**Happy Coder**: 
-- You control retention
-- Delete anytime
-- Self-host for complete control
-
-**Local Execution** (Omnara, ClaudeCodeUI):
-- Code runs on your machine, but servers store plain text conversations
-- Their employees can read your code and conversations
-- Self-hosting option available. Solves privacy if you host your own server
-- You control retention only if self-hosted
-
-**Cloud VM Providers** (Terragon, Cursor):
-- They control retention
-- Backups you can't delete
-- Data might persist after account deletion
-
-## Feature Comparison Deep Dive
-
-### MCP Tools Support
-
-**Local Execution (Happy Coder, Omnara, ClaudeCodeUI)**: Full MCP support. Since agents run on your machine, all your local MCP tools work natively.
-
-**Cloud VM Execution (Terragon, Cursor)**: Extra work to get MCP working. Since agents run on their cloud VMs, they can't access your local MCP tools. You have to set up MCP tools all over again.
-
-### Custom Agents
-
-**Local Execution (Happy Coder, Omnara, ClaudeCodeUI)**: Full support for custom agents. Your local `~/.claude/agents/` directory works directly since agents run on your machine.
-
-**Cloud VM Execution (Terragon, Cursor)**: Limited or platform-specific agent support. You'd need to recreate or upload agents to their cloud environment.
-
-### Voice Coding
-
-**Happy Coder**: Built-in voice agent with customizable prompts.
-
-**Others**: Not available.
-
-## The Bottom Line
-
-### Choose Happy Coder When:
-- You value privacy and control
-- You want to use your existing setup
-- You're tired of subscription fatigue
-- You prefer open source
-- You want it to just work
-
-### Choose Alternatives When:
-- You need a fully managed service
-- You don't care about privacy
-- You're okay with vendor lock-in
-- You have budget for subscriptions
-- You trust startups not to change
-
-## Migration Guide
-
-Coming from another solution? Here's how to switch:
-
-### From Cloud Providers
-1. Install Happy Coder: `npm install -g happy`
-2. No migration needed. Your code is already on your machine
-3. Start using Happy immediately
-
-### From SSH + tmux
-1. Install Happy Coder
-2. Your workflow stays the same, just better mobile UX
-3. Keep tmux as backup if you want
-
-### From Cursor
-1. Happy works alongside Cursor
-2. Use Happy for mobile, Cursor for desktop
-3. Or replace Cursor entirely - your choice
-
-## Try It Risk-Free
-
-Happy Coder is open source. No sign-up, no credit card, no trial period. Just install and use.
-
-```bash
-npm install -g happy
-happy
-```
-
-If you don't like it, uninstall with one command. No cancellation process, no retention team, no dark patterns.
-
-That's the difference between a tool built for developers and a product built for investors.
+To try Happy, start with the [Quick Start](/quick-start/).
