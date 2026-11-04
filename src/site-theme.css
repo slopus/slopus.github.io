@@ -142,6 +142,8 @@
 .site-theme .releases-version > a:hover { text-decoration-color: currentColor; }
 .site-theme .releases-github { color: var(--home-ink-2); text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); }
 .site-theme .releases-github:hover { color: var(--home-ink); text-decoration-color: currentColor; }
+.site-theme .one-preview-standard { border-top-color: var(--home-line); }
+.site-theme .one-preview-standard > p { color: var(--home-ink-2); }
 .site-theme .happy-one h3 { font-family: inherit; }
 .site-theme .one-mac-architecture, .site-theme .one-platform-links { color: var(--home-ink-2); }
 .site-theme .one-platform-links a:hover { color: var(--home-ink); }
