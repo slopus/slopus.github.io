@@ -4,11 +4,16 @@ The master follows public/brand/mobile-app-icon.png: a 607-unit mark with
 190-unit blocks, 18.5-unit seams, and 64-unit external corner radii. It omits
 the mobile artwork's textured background. Keep the master geometry unchanged.
 
-The browser SVG is transparent and theme adaptive. At widths up to 32px it
-uses a derived optical variant: integer-aligned 4-unit blocks and 1-unit seams
-on a 16-unit canvas. ICO16/32 use that same variant; ICO48 and larger exports
-use canonical proportions. Legacy ICO/PNG are neutral gray for both themes.
-Installed icons are white on a flat dark square, with platform-safe padding.
+Every icon is Happy Desktop's app icon: the black mark on a white tile
+(happy-desktop's packages/happy-desktop-electron/assets/app-icon/source.png,
+where the mark is 607/1024 of the tile and the tile's corners are 185/824 of
+it). The tile keeps the black mark readable on dark tabs as well as light
+ones, so nothing changes with the colour scheme. At widths up to 32px the
+browser SVG uses a derived optical variant: integer-aligned 4-unit blocks and
+1-unit seams on a 16-unit canvas, so the tile is a 1-unit rim. ICO16/32 use
+that same variant; ICO48 and PNG96 the app icon's proportions. Installed icons
+are full-bleed white squares, which iOS and Android round themselves, with
+platform-safe padding.
 
 Run from the repository root:
     python3 -m pip install Pillow==13.0.0 CairoSVG==2.9.1
@@ -58,18 +63,23 @@ def paths(optical=False):
     return [optical_path(path.attrib["d"]) if optical else path.attrib["d"] for path in root]
 
 
+# The app icon's proportions on a 16-unit tile.
+APP_MARK = 607 / 1024
+TILE_RADIUS = 16 * 185 / 824
+
+
 def browser_svg():
     canonical = "\n".join(f'    <path d="{path}"/>' for path in paths())
     optical = "\n".join(f'    <path d="{path}"/>' for path in paths(optical=True))
+    width = APP_MARK * 16
     return f'''<svg xmlns="{SVG_NS}" viewBox="0 0 16 16">
   <style>
-    :root {{ color-scheme: light dark; }}
-    g {{ fill: #101014; }}
+    g {{ fill: #000; }}
     .optical {{ display: none; }}
-    @media (prefers-color-scheme: dark) {{ g {{ fill: #fff; }} }}
     @media (max-width: 32px) {{ .canonical {{ display: none; }} .optical {{ display: inline; }} }}
   </style>
-  <g class="canonical" transform="translate(1 1) scale({14 / 607:.14g})">
+  <rect width="16" height="16" rx="{TILE_RADIUS:.4g}" fill="#fff"/>
+  <g class="canonical" transform="translate({(16 - width) / 2:g} {(16 - width) / 2:g}) scale({width / 607:.14g})">
 {canonical}
   </g>
   <g class="optical">
@@ -79,13 +89,14 @@ def browser_svg():
 '''
 
 
-def render(size, mark_fraction=14 / 16, installed=False, optical=False):
+def render(size, mark_fraction=APP_MARK, installed=False, optical=False):
     root = ET.Element(f"{{{SVG_NS}}}svg", {"viewBox": "0 0 16 16"})
-    if installed:
-        ET.SubElement(root, f"{{{SVG_NS}}}rect", {
-            "width": "16", "height": "16", "fill": "#101014"
-        })
-    group = ET.SubElement(root, f"{{{SVG_NS}}}g", {"fill": "#fff" if installed else "#808080"})
+    # Installed icons are full-bleed; the platform rounds them.
+    ET.SubElement(root, f"{{{SVG_NS}}}rect", {
+        "width": "16", "height": "16", "fill": "#fff",
+        **({} if installed else {"rx": f"{TILE_RADIUS:.4g}"}),
+    })
+    group = ET.SubElement(root, f"{{{SVG_NS}}}g", {"fill": "#000"})
     if not optical:
         width = mark_fraction * 16
         group.set("transform", f"translate({(16 - width) / 2:g} {(16 - width) / 2:g}) scale({width / 607:.14g})")
@@ -103,13 +114,13 @@ def main():
         append_images=frames[:-1],
     )
     render(96).save(PUBLIC / "favicon-96x96.png")
-    render(180, mark_fraction=0.7, installed=True).save(PUBLIC / "apple-touch-icon.png")
+    render(180, installed=True).save(PUBLIC / "apple-touch-icon.png")
     for size in (192, 512):
         # A 9/16-width square fits inside the central 80%-diameter circle.
         render(size, mark_fraction=9 / 16, installed=True).save(
             PUBLIC / f"web-app-manifest-{size}x{size}.png"
         )
-    print("Rendered responsive SVG, optical ICO16/32, canonical ICO48/PNG96/Apple180/maskable192/512.")
+    print("Rendered the tile SVG, optical ICO16/32, canonical ICO48/PNG96/Apple180/maskable192/512.")
 
 
 if __name__ == "__main__":

@@ -1,12 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
   <style>
-    :root { color-scheme: light dark; }
-    g { fill: #101014; }
+    g { fill: #000; }
     .optical { display: none; }
-    @media (prefers-color-scheme: dark) { g { fill: #fff; } }
     @media (max-width: 32px) { .canonical { display: none; } .optical { display: inline; } }
   </style>
-  <g class="canonical" transform="translate(1 1) scale(0.023064250411862)">
+  <rect width="16" height="16" rx="3.592" fill="#fff"/>
+  <g class="canonical" transform="translate(3.25781 3.25781) scale(0.015625)">
     <path d="M64 0H190V190H0V64A64 64 0 0 1 64 0Z"/>
     <path d="M417 0H543A64 64 0 0 1 607 64V190H417Z"/>
     <path d="M0 208.5H190V398.5H0ZM208.5 208.5H398.5V398.5H208.5ZM417 208.5H607V398.5H417Z"/>

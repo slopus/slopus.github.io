@@ -117,6 +117,11 @@ height. Windows visitors see the SmartScreen note; its signer name and profile
 link are constants in `src/DownloadOptions.tsx`. Release links use
 `releases/latest`, never a pinned version.
 
+The favicon and installed icons are Happy Desktop's app icon, the black H on a white
+tile, so they read on light and dark tabs alike. `notes/brand/favicon.py` renders every
+icon file from `notes/brand/mark.svg`; when they change, bump the `?v=` on their links in
+`index.html` and `public/site.webmanifest`.
+
 ## Homepage look
 
 The homepage is in the phone apps' first-screen look: their Grain Gradient
