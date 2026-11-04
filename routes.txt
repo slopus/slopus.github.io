@@ -76,6 +76,7 @@
 /models/
 /multiplayer/
 /permissions/
+/pi-durable/
 /plugins/
 /plugins/memes/
 /plugins/privacy/

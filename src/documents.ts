@@ -556,6 +556,15 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Comparisons',
   },
   {
+    path: 'pi-durable',
+    sourcePath: '/content/desktop/pi-durable.mdx',
+    title: 'Happy vs Pi Durable',
+    pageTitle: 'Happy vs Pi Durable — Durable Agent Harnesses Compared',
+    description: 'Happy vs Pi Durable, plus PiHarness on Cloudflare and durable-harness on Vercel: what survives a crash, where each runs, and who each one is for.',
+    cardLine: 'An app you use, or a library you build on',
+    group: 'Comparisons',
+  },
+  {
     path: 'changelog',
     sourcePath: '/content/desktop/changelog.mdx',
     title: 'Changelog',
