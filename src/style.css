@@ -305,6 +305,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .legacy-notice code { font-family: 'DM Mono', monospace; font-size: .88em; }
 .legacy-notice a { color: #183f38; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .recipe-source { color: #6b7f78; font-size: .82rem; margin: 0 0 1.25rem; max-width: 760px; overflow-wrap: anywhere; }
+.recipe-source:has(+ .recipe-source) { margin-bottom: .35rem; }
 .recipe-source a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .recipe-source a:hover { color: #e6522c; }
 .recipe-source code { font-family: 'DM Mono', monospace; font-size: .95em; }

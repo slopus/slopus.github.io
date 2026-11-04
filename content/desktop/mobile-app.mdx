@@ -1,28 +1,35 @@
-# Claude Code and Codex on Your Phone
+# Claude Code Mobile App for iPhone and Android
 
-The Happy phone app is the mobile half of Happy, an open-source harness for orchestrating Claude, Codex, Grok, Gemini, and more on your computer. It is free on iPhone and Android. Pair your phone once with a QR code. Then send messages, answer permission requests, switch models, and read the changes from anywhere. The agents keep running on your machine, and the sync is end-to-end encrypted.
+The Happy app is a free, open-source Claude Code mobile app, and it works the same way with Codex, Grok, and Gemini. It is the phone half of Happy, an open-source harness for orchestrating coding agents on your computer. Pair once with a QR code, and every session on your computer is on your phone, while the agents keep running there.
+
+- **Platforms:** iPhone and Android, from the App Store and Google Play.
+- **License:** MIT. The app's code is in [slopus/happy](https://github.com/slopus/happy).
+- **How the phone reaches your computer:** both connect out to Happy's relay, so you open no ports. Sessions are end-to-end encrypted, and the relay passes on ciphertext it can't read.
+- **Price:** free. Voice is the one paid feature, with 20 free minutes every 30 days.
 
 ## Can I control Claude Code from my phone?
 
-Yes. Pair the Happy app with Happy Desktop once by scanning a QR code. From then on you can start sessions, send messages, answer permission requests, switch models, and read the changes from your phone, while the agent keeps running on your computer.
+Yes. Happy Desktop runs Claude Code on your computer, and the phone app shows the same sessions. From your phone you can start a session, send a message, answer a permission request, stop a turn, or switch models. Nothing runs on the phone itself.
 
-## Does it work with Codex, Grok, and Gemini too?
+## Set up Claude Code on your phone
 
-Yes. Happy runs Claude, Codex, and Grok on the subscriptions you already pay for, and Gemini and any ACP agent on their own logins (beta). The phone shows all of their sessions.
+1. In Happy Desktop, open **Settings → Mobile Access**.
+2. Install Happy from the [App Store or Google Play](/#download). Desktop shows a QR code for the listing.
+3. Scan the device QR Desktop shows next, and approve the computer on the phone.
 
-## Do I need a terminal?
+That is the only scan. A computer you have linked before is reused.
 
-No. Happy Desktop runs the agents. If you already use the original Happy CLI (`happy` on npm), the same phone app works with it.
+## What you can do with Claude Code from your phone
 
-## Does my computer have to stay on?
+Everything a session needs while you are away: messages with images, permission answers, stopping a turn, switching models and effort, new sessions in a directory you pick, and the session's files and Git changes. [Mobile Access](/mobile/#what-you-can-do-from-the-phone) has the full list.
 
-The agents run on it, so yes. To keep them working while your laptop sleeps, run Happy Agent on a [remote server](/guides/remote-server/) and reach it from the same phone app.
+## Is there an official Claude Code mobile app?
 
-## What does it cost?
+Anthropic's Claude app for iOS and Android can continue a Claude Code session through [Remote Control](https://code.claude.com/docs/en/remote-control). Happy is a separate app, made by us and MIT licensed. It also runs Codex, Grok, and Gemini, and the server in between can't read your sessions.
 
-The app is free and MIT licensed. Voice is the only thing we charge for; see [Voice](/voice/).
+If you only use Claude Code and already have the Claude app, Remote Control is the shortest path: nothing else to install. If you want Codex too, or you want your sessions unreadable to anyone in between, use Happy.
 
-## Ways to reach your agent from a phone
+## Ways to use Claude Code on your phone
 
 | | Happy | Claude Code Remote Control | SSH and a terminal app |
 | --- | --- | --- | --- |
@@ -35,21 +42,25 @@ The app is free and MIT licensed. Voice is the only thing we charge for; see [Vo
 
 Remote Control facts are from [Anthropic's Remote Control docs](https://code.claude.com/docs/en/remote-control), checked on October 9, 2026. For the details, see [Happy vs Claude Code Remote Control](/claude-code-remote-control/).
 
-If you only use Claude Code and already have the Claude app, Remote Control is the shortest path: nothing else to install. If you want Codex too, or you want the content of your sessions unreadable to anyone in between, use Happy.
+## Does the Claude Code phone app work with Codex, Grok, and Gemini?
 
-## Pairing
+Yes. Happy runs Claude, Codex, and Grok on the subscriptions you already pay for, and Gemini and any ACP agent on their own logins (beta). The phone shows all of their sessions in one list.
 
-In Happy Desktop, open **Settings → Mobile Access**. Install Happy from the [App Store or Google Play](/#download), scan the device QR Desktop shows, and approve the computer on the phone. One scan.
+## Do I need a terminal?
 
-Already using the original Happy CLI (`happy` on npm)? The same phone app works with it; see [its docs](/docs/).
+No. Happy Desktop runs the agents. If you already use the original Happy CLI (`happy` on npm), the same phone app works with it; see [its docs](/docs/).
 
-## What you can do from the phone
+## Does my computer have to stay on?
 
-Everything a session needs while you are away: messages with images, permission answers, stopping a turn, switching models, new sessions, and the files and Git changes. [Mobile Access](/mobile/#what-you-can-do-from-the-phone) has the full list.
+The agents run on it, so yes. To keep them working while your laptop sleeps, run Happy Agent on a [remote server](/guides/remote-server/) and reach it from the same phone app.
 
-## Privacy
+## Can Happy read my sessions?
 
-Sessions are end-to-end encrypted, so Happy's relay sees ciphertext only; see [how the phone sync is encrypted](/mobile/#how-the-phone-sync-is-encrypted).
+No. Sessions are end-to-end encrypted, so Happy's relay sees that machines and sessions exist, not what is in them. See [how the phone sync is encrypted](/mobile/#how-the-phone-sync-is-encrypted).
+
+## What does it cost?
+
+The app is free and MIT licensed. Voice is the only thing we charge for: 20 free minutes every 30 days, then a subscription. See [Voice](/voice/).
 
 ## More
 

@@ -150,6 +150,22 @@ describe('static document pages', () => {
     expect(metadataForPath('/desktop/docs/models/')).toEqual(metadataForPath('/models/'))
   }, 30_000)
 
+  it('names the phone searches on /mobile-app/ and links it as the Claude Code mobile app', () => {
+    const page = new DOMParser().parseFromString(renderPath('/mobile-app/'), 'text/html')
+    expect(page.querySelector('article h1')?.textContent?.replace(/#$/, '')).toBe('Claude Code Mobile App for iPhone and Android')
+    const headings = [...page.querySelectorAll('article h2')].map((heading) => heading.textContent?.replace(/#$/, ''))
+    expect(headings).toEqual(expect.arrayContaining([
+      'Can I control Claude Code from my phone?',
+      'Set up Claude Code on your phone',
+      'What you can do with Claude Code from your phone',
+      'Does the Claude Code phone app work with Codex, Grok, and Gemini?',
+    ]))
+    for (const pathname of ['/mobile/', '/recepies/mobile-access/', '/claude-code-remote-control/', '/guides/remote-server/']) {
+      const links = [...new DOMParser().parseFromString(renderPath(pathname), 'text/html').querySelectorAll('article a[href="/mobile-app/"]')]
+      expect(links.map((link) => link.textContent), pathname).toContain('Claude Code mobile app')
+    }
+  }, 30_000)
+
   it('keeps the unlisted Buzz comparison out of search results', () => {
     expect(metadataForPath('/comparisons/buzz/').robots).toBe('noindex, follow')
     expect(metadataForPath('/models/').robots).toBeUndefined()
