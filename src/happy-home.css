@@ -82,10 +82,15 @@
 
 /* The header lets the surface through; once the page scrolls under it, it frosts. It stays out of
    sight until the hero's name has scrolled up past it (data-header-shown, DesktopApp), then shows
-   as on every page; keyboard focus inside it shows it at once, and without scripts it is there. */
+   as on every page; keyboard focus inside it shows it at once, and without scripts it is there.
+   Wider than a phone it takes no room either, so the hero starts at the top of the screen and
+   the recording gets the header's height (--hero-header). */
 .happy-home .site-header-wrap { background: transparent; transition: opacity .25s ease, border-color .2s ease, background-color .2s ease; }
 @media (scripting: enabled) {
   .happy-home:not([data-header-shown]) .site-header-wrap:not(:focus-within) { opacity: 0; pointer-events: none; }
+}
+@media (scripting: enabled) and (min-width: 701px) {
+  .happy-home:not([data-social-preview]) .site-header-wrap { position: fixed; top: 0; right: 0; left: 0; }
 }
 .happy-home { --home-frost: blur(20px) saturate(1.4); }
 .happy-home .site-header-wrap[data-scrolled] { border-bottom-color: var(--home-line); background: var(--home-header); -webkit-backdrop-filter: var(--home-frost); backdrop-filter: var(--home-frost); }
@@ -113,9 +118,16 @@
 .one-hero-stars:hover { color: var(--home-accent); }
 /* The headline, at most one short line under it, and the note. The first-screen fit
    (happy-one.css) counts the headline's lines at its own size and the line under it, if any:
-   header 60px, hero top 28px, heading margin 8px, note 24px, movie gap 12px, stage padding
-   20px, download margin and padding 16px, badge with its architecture selector 70px. */
-.happy-home .one-hero { --hero-h1: clamp(1.9rem, 3.7vw, 3.3rem); --hero-kicker: 0px; --hero-sub-gap: calc(min(var(--hero-sub-lines, 0), 1) * .9rem); --one-hero-reserved: calc(238px + var(--hero-kicker) + var(--hero-sub-gap) + var(--hero-sub-lines, 0) * 1.9rem + var(--hero-lines, 2) * 1.04 * var(--hero-h1)); }
+   the header's 60px where it takes room, hero top 32px, heading margin 8px, note 24px, movie
+   gap 12px, stage padding 12px, download padding 8px, badge with its architecture selector
+   70px. The recording ends 20px above the badge. */
+.happy-home .one-hero { --hero-header: 60px; --hero-h1: clamp(1.9rem, 3.7vw, 3.3rem); --hero-kicker: 0px; --hero-sub-gap: calc(min(var(--hero-sub-lines, 0), 1) * .9rem); --one-hero-reserved: calc(166px + var(--hero-header) + var(--hero-kicker) + var(--hero-sub-gap) + var(--hero-sub-lines, 0) * 1.9rem + var(--hero-lines, 2) * 1.04 * var(--hero-h1)); }
+@media (min-width: 701px) {
+  .happy-home:not([data-social-preview]) .one-hero { padding-top: 2rem; }
+}
+@media (scripting: enabled) and (min-width: 701px) {
+  .happy-home .one-hero { --hero-header: 0px; }
+}
 .happy-home .one-hero[data-kicker] { --hero-kicker: 3.4rem; }
 /* The link-preview card (?preview=og, happy-one-preview.css) keeps its own type. */
 .happy-home:not([data-social-preview]) .one-hero h1 { font-size: var(--hero-h1); line-height: 1.04; }

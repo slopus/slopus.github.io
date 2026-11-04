@@ -11,15 +11,16 @@
    download. Everything but the recording is a known height, so the stage
    (happy-one-demo.css) sizes the recording from what is left of the viewport:
    header 60px, hero top 28px, three heading lines at 1.04, heading margin 8px, tagline 27px, note 24px,
-   movie gap 12px, stage padding 20px, download margin and padding 16px, badge with its
+   movie gap 12px, stage padding 12px, download padding 8px, badge with its
    architecture selector 70px. */
-.one-hero { --one-hero-reserved: calc(265px + 3.12 * var(--one-h1)); padding-top: 1.75rem; text-align: center; }
+.one-hero { --one-hero-reserved: calc(249px + 3.12 * var(--one-h1)); padding-top: 1.75rem; text-align: center; }
 .one-hero h1 { font-size: var(--one-h1); margin-bottom: .5rem; }
 /* Stacked: "Any Model." / "Your Subscription." / "Happy Harness." */
 .one-hero h1 > span, .one-hero h1 > em { display: block; }
 .one-hero-tagline, .one-hero-note { margin: 0; }
 .one-hero-tagline { color: #183f38; font-size: 1.125rem; line-height: 1.5; text-wrap: balance; }
 .one-hero .one-demo { margin-top: var(--one-note-gap); }
+.one-hero .one-download-actions { margin-top: 0; }
 /* Only phones lay out this wrapper; elsewhere the copy and recording are hero items. */
 .one-hero-fold { display: contents; }
 .one-download-actions { position: relative; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%; margin: .5rem auto 0; padding-block: .5rem; }
@@ -104,7 +105,6 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
   .one-hero { padding-top: 0; }
   .one-hero-fold { display: flex; flex-direction: column; justify-content: space-evenly; gap: 28px; min-height: calc(100svh - 144px); padding-top: 28px; }
   .one-hero .one-demo { margin-top: 0; }
-  .one-hero .one-download-actions { margin-top: 0; }
   .one-hero .one-mobile-downloads { order: -1; flex-direction: column; align-items: center; gap: 1.5rem; }
   .one-hero [data-mobile-store='googlePlay'] [data-store='googlePlay'],
   html[data-mobile-store='googlePlay'] .one-hero [data-store='googlePlay'] { order: -1; }

@@ -106,7 +106,9 @@ pill). It is 60px tall (52px on phones), pinned while scrolling, and shows a
 hairline only once the page has scrolled. The homepage keeps it out of sight until the
 hero's "Happy" has scrolled up past it (`usePastHeading` in `src/DesktopApp.tsx`, an
 IntersectionObserver, never a scroll listener), then shows it unchanged; keyboard focus
-inside it shows it at once, and without scripts it is always there. Page shells must not use
+inside it shows it at once, and without scripts it is always there. Wider than 700px it is
+fixed there and takes no room, so "Happy" starts 32px from the top of the screen and the
+demo gets the header's height. Page shells must not use
 `overflow: hidden` (it breaks `position: sticky`); clip horizontally with
 `overflow-x: clip`. `/#download` is the README "Download" target:
 `id="download"` sits on the download block right under the demo, and the second
@@ -166,7 +168,9 @@ links to us, since "Talk to us" has them. The demo
 is the Mac window and the phone straight on the surface, with no stage; on phones the
 window's left edge is 8px from the screen's, and when the phone comes forward it grows,
 taller than the window, until its top is just under "Free and open source"; wider
-screens keep it at 1.18×, which Kirill prefers there. Swap the take
+screens keep it at 1.18×, which Kirill prefers there. Wider than a phone the window is as
+large as the first screen allows, with the download badge 20px under it: on a 1015×637
+Windows laptop at 200% it looked small and blurry, so keep the copy above it tight. Swap the take
 in `src/happyOneDemoMedia.ts` (`docs/happy-one-demo.md`). It never mentions the CLI,
 not even in the footer. Keep the copy short: the hero is the headline, at most one
 short line, and "Free and open source"; each value is a title and two short

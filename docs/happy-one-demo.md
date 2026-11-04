@@ -67,7 +67,10 @@ everything else the 30fps AV1, then the 30fps H.264. Encode H.264 at `-level
 5.1` and check the reference frames fit it.
 
 **Geometry** (`src/happy-one-demo.css`). The window is as large as the first
-screen allows, from 36% to 84% of the page column and at most 968px. The phone is
+screen allows, from 36% to 84% of the page column and at most 968px. Above 700px
+the hidden header takes no room, "Happy" starts 32px from the top, and the download
+badge sits 20px under the window (`--one-hero-reserved` in `src/happy-home.css`
+counts the rest); at 1015×637 the window is 524px wide. The phone is
 84% of the window's height. Where the screen ends before the phone does, it keeps
 55% in view and peeks in from the edge, which the site shell clips. At 700px and
 below the window's left edge is 8px from the screen's and its right edge 8% in, and
