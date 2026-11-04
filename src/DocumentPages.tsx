@@ -195,6 +195,9 @@ export function DocsPage({ product = HAPPY, path, changelogPath }: { product?: P
         >
           {product.key === 'happy' && <LegacyNotice current={activeDocument.current} />}
           {activeDocument.group === 'Recipes' && <RecipeSourceLine route={activeDocument.path} />}
+          {activeDocument.forPeople && (
+            <p className="recipe-source">For people: <a href={activeDocument.forPeople.href}>{activeDocument.forPeople.label}</a></p>
+          )}
           <MarkdownDocument markdown={markdown} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} resolveHref={activeDocument.group === 'Recipes' ? (href) => recipeHref(activeDocument.path, href) : undefined} headingId={activeDocument.group === 'Changelog' ? (text, depth) => {
             const entry = depth < 3 ? productionChangelogEntries.find((entry) => entry.title === text) : undefined
             return entry ? changelogAnchor(entry) : undefined

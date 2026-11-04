@@ -38,6 +38,8 @@ export interface DocumentEntry {
    * card is a frame of the video, /og/<path>.png, 1200 wide at the video's aspect ratio.
    */
   video?: Readonly<{ path: string; width: number; height: number }>
+  /** A recipe's page for people, linked by the renderer under the source line; the recipe text stays byte for byte. */
+  forPeople?: Readonly<{ href: string; label: string }>
 }
 
 const documentSources = import.meta.glob(
@@ -384,6 +386,7 @@ const desktopDocuments: DocumentDefinition[] = [
     description: "Use this recipe when someone wants to control Happy Desktop from Happy Coder on their phone, or control terminal Claude Code/Codex sessions remotely. Mobile...",
     cardLine: 'Your agents, reachable from your phone',
     group: 'Recipes',
+    forPeople: { href: '/mobile-app/', label: 'Claude Code mobile app' },
   },
   {
     path: 'recepies/accounts-and-models',
@@ -528,8 +531,8 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'mobile-app',
     sourcePath: '/content/desktop/mobile-app.mdx',
     title: 'Claude Code on Your Phone',
-    pageTitle: 'Claude Code & Codex Mobile App for iPhone and Android — Happy',
-    description: 'The Happy phone app for iPhone and Android: steer the Claude, Codex, Grok, and Gemini agents Happy runs on your computer, end-to-end encrypted. Free, open source.',
+    pageTitle: 'Claude Code Mobile App for iPhone and Android, with Codex — Happy',
+    description: 'A free, open-source Claude Code mobile app for iPhone and Android. Control Claude Code, Codex, Grok, and Gemini from your phone, end-to-end encrypted.',
     cardLine: 'Free on iPhone and Android, end-to-end encrypted',
     group: 'Comparisons',
   },
