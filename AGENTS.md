@@ -3,6 +3,24 @@
 Follow `DESIGN.md` for copy, claims, diagrams, screenshots, tables, and docs
 pages. Its first rule: no narration; every line must give the reader something.
 
+## The code is the source of truth
+
+Most of this site isn't original writing. It comes from the product code:
+[slopus/happy-agent](https://github.com/slopus/happy-agent),
+[slopus/happy](https://github.com/slopus/happy) (the phone apps, the CLI and the server),
+[slopus/happy-desktop](https://github.com/slopus/happy-desktop), and the repos around
+them. Every page (features, docs, recipes, comparisons, changelog) retells what the
+product already does.
+
+- If the site and the code disagree, the code is right. Fix the site.
+- Read the code before you write about it. Go by the released version, and label
+  anything that is only on `main` or behind a setting (see Changelog below).
+- Every feature, number, limit, settings path and platform on a page has to match
+  the code or its docs today. Don't make one up. Don't copy an old claim forward
+  without checking it again.
+- If a page you're editing says something the code no longer does, fix it in the
+  same change, or report it if it's out of scope.
+
 ## Happy Desktop link preview
 
 The homepage `/` (the Happy Harness page, formerly at `/desktop/` and reviewed
@@ -160,8 +178,8 @@ makes Chrome build GPU pipelines the first time it draws, which stalled the firs
 scroll for 150-230ms on a cold cache; `.one-demo-warm` sweeps the same frost, at 1%,
 down the demo once while the page rests, so that happens before the first scroll.
 
-Its order is the demo, the downloads, the four value rows (subscriptions,
-multiplayer, open source, end-to-end encryption), "Don't trust our words. Trust
+Its order is the demo, the downloads, the five value rows (subscriptions,
+multiplayer, F1 Fast Mobile, open source, end-to-end encryption), "Don't trust our words. Trust
 the code." with a copyable prompt, the downloads again (just the buttons), "Talk to
 us on Twitter or Discord", and the footer, which keeps its statement and drops the
 links to us, since "Talk to us" has them. The demo
@@ -174,7 +192,8 @@ Windows laptop at 200% it looked small and blurry, so keep the copy above it tig
 in `src/happyOneDemoMedia.ts` (`docs/happy-one-demo.md`). It never mentions the CLI,
 not even in the footer. Keep the copy short: the hero is the headline, at most one
 short line, and "Free and open source"; each value is a title and two short
-sentences of about 100 characters, the four about the same length. The emoji are
+sentences of about 100 characters, about the same length; F1 Fast Mobile is
+Kirill's line as written, and the length check skips it. The emoji are
 what got smaller, not the explanations. The value rows zig-zag on two
 columns: everything on the left starts on one edge and everything on the right ends
 on the other, so each emoji lines up with the words of the next row. On phones too,
@@ -183,7 +202,8 @@ animated emoji is a Telegram Lottie under `src/assets/emoji/`, drawn by dotLotti
 in happy-desktop, a little shorter than its words. Scrolling plays it once as it
 crosses the middle of the viewport, and again only after it has left the middle half,
 so jitter never replays it. The pointer moving onto the drawing, or a tap on it,
-restarts it from the first frame every time; the words beside it do nothing. The
+restarts it from the first frame every time; the words beside it do nothing.
+The F1 car is the exception: it loops on its own while it is on screen. The
 drawing, not its box, meets the edge and takes the hover: `AnimatedEmoji.tsx` records
 each emoji's four empty margins at rest, so measure them again when an emoji changes. Twitter means the founders' accounts (`STEVE`,
 `KIRILL` in `src/Team.tsx`); we have no company account. The Discord invite is
