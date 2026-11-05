@@ -192,7 +192,9 @@
   .happy-home .one-hero[data-name] { --hero-h1: clamp(2.9rem, 14vw, 3.6rem); }
   .happy-home:not([data-social-preview]) .one-hero-tagline { font-size: 1.15rem; }
   /* The copy, the devices and the badge close together, not spread over the first screen. */
-  .happy-home:not([data-social-preview]) .one-hero-fold { min-height: 0; justify-content: flex-start; gap: 2.25rem; padding-top: 2.75rem; }
+  /* Tight above the name, more room under the note: the recording sits in the middle of a
+     390×844 screen. */
+  .happy-home:not([data-social-preview]) .one-hero-fold { min-height: 0; justify-content: flex-start; gap: 3.75rem; padding-top: 1.25rem; }
   .happy-home .one-hero-kicker { font-size: 2rem; }
   /* Each emoji still beside its words, trading sides; the words take the rest of the row. */
   .one-values { --value-emoji: clamp(4rem, 19vw, 5rem); gap: 3rem; width: calc(100% - 40px); padding-block: 3.5rem 1rem; }

@@ -64,7 +64,7 @@
      it slides fully in, 8px from the edge, and grows from its bottom edge until its top is just
      under the line above the demo (--phone-reach, which HappyOneDemo measures; 1.12× without
      one). */
-  .one-demo-stage { --demo-zoom: 1.25; --phone-peek: .25; --stage-pad: 20px; justify-content: flex-start; --desktop-width: calc((92vw - 8px) * var(--demo-zoom)); --phone-width: calc(var(--desktop-height) * .92 * 1406 / 2822); --phone-gap: 8px; --phone-hang: 10px; --phone-left: calc(50cqw + 50vw - var(--phone-width) * var(--phone-peek)); --phone-focus: var(--phone-reach, 1.12); --phone-focus-x: calc(50cqw + 50vw - var(--phone-gap) - var(--phone-left) - var(--phone-width)); }
+  .one-demo-stage { --demo-zoom: 1.25; --phone-peek: .35; --stage-pad: 20px; justify-content: flex-start; --desktop-width: calc((92vw - 8px) * var(--demo-zoom)); --phone-width: calc(var(--desktop-height) * .92 * 1406 / 2822); --phone-gap: 8px; --phone-hang: 10px; --phone-left: calc(50cqw + 50vw - var(--phone-width) * var(--phone-peek)); --phone-focus: var(--phone-reach, 1.12); --phone-focus-x: calc(50cqw + 50vw - var(--phone-gap) - var(--phone-left) - var(--phone-width)); }
   .one-demo-window { margin-left: calc(8px + 50cqw - 50vw); }
   .one-demo-phone { translate: 0 calc(var(--demo-scroll, 0) * var(--phone-width) * -.16); }
   .one-demo-phone { transform-origin: bottom right; }

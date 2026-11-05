@@ -124,11 +124,13 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
   .one-hero-fold { display: flex; flex-direction: column; justify-content: space-evenly; gap: 28px; min-height: calc(100svh - 144px); padding-top: 28px; }
   .one-hero .one-demo { margin-top: 0; }
   .one-download-actions { width: min(100%, 24rem); margin-top: .5rem; }
-  /* Phones install from the stores: the two badges one above the other, this phone's first
-     (Android lists Google Play first), then the platforms row. The desktop download, Homebrew
-     and the SmartScreen note are left out. */
+  /* Phones install from the stores: the two badges side by side, this phone's first (Android
+     lists Google Play first), each rating on one line under its badge, then the platforms row.
+     The desktop download, Homebrew and the SmartScreen note are left out. */
   .one-download-actions[data-other-platforms] :is(.one-desktop-downloads, .one-desktop-extras) { display: none; }
-  .one-download-actions[data-other-platforms] .one-mobile-downloads { flex-direction: column; align-items: center; gap: calc(2 * var(--one-note-gap)); }
+  .one-download-actions[data-other-platforms] .one-mobile-downloads { flex-flow: row nowrap; align-items: flex-start; gap: var(--one-note-gap); }
+  .one-download-actions[data-other-platforms] .store-rating { font-size: min(11.5px, 2.9vw); white-space: nowrap; }
+  .one-download-actions[data-other-platforms] .store-stars { letter-spacing: 0; }
   .one-download-actions[data-mobile-store='googlePlay'] [data-store='googlePlay'],
   html[data-mobile-store='googlePlay'] .one-download-actions [data-store='googlePlay'] { order: -1; }
   .one-download-actions[data-other-platforms] .one-other-platforms { margin-top: var(--one-note-gap); }
