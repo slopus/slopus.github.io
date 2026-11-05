@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, useSyncExternalStore, type CSSProperties, type MouseEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type MouseEvent, type ReactNode } from 'react'
 import { AppStoreButton, GooglePlayButton } from './StoreButtons'
 import { MOBILE_STORE_RATINGS } from './storeRatings'
 import { CopyIcon } from './CopyIcon'
@@ -130,28 +130,21 @@ function PlatformLinks({ platforms, downloads, channel, macArchitecture, release
   )
 }
 
-/** How the three platforms sit under "Other platforms": a row, or a column (`stack`). Both are under review. */
-type OtherPlatformsLayout = 'row' | 'stack'
-const OTHER_PLATFORMS_LAYOUT: OtherPlatformsLayout = 'row'
-
-/** Every desktop platform, large, each to the latest release on GitHub; Stable and Preview after them. */
+/** One row: every desktop's mark, each to the latest release on GitHub, then Stable and Preview. */
 function OtherPlatforms({ releasesLink }: { releasesLink: boolean }) {
-  const title = useId()
   return (
-    <div className="one-other-platforms" data-layout={OTHER_PLATFORMS_LAYOUT} role="group" aria-labelledby={title}>
-      <p id={title} className="one-other-platforms-title">Other platforms</p>
-      <ul role="list">
-        {DESKTOP_PLATFORMS.map(platform => <li key={platform}>
-          <a href={LATEST_RELEASE} target="_blank" rel="noopener noreferrer" aria-label={`${LABELS[platform]}: all downloads on GitHub`}
-            data-download-platform={platform} data-analytics-button="other-platforms">
-            <span className="one-other-platform-icon" data-platform={platform} aria-hidden="true"
-              style={{ '--platform-icon': `url('/img/happy-one/icons/${platform}.svg')` } as CSSProperties} />
-            <span>{LABELS[platform]}</span>
-          </a>
-        </li>)}
-      </ul>
-      {releasesLink && <a className="one-other-platforms-releases" href={RELEASES_PAGE}><GithubMark />All Releases</a>}
-    </div>
+    <ul className="one-other-platforms" role="list" aria-label="Other platforms">
+      {DESKTOP_PLATFORMS.map(platform => <li key={platform}>
+        <a href={LATEST_RELEASE} target="_blank" rel="noopener noreferrer" aria-label={`${LABELS[platform]}: all downloads on GitHub`}
+          data-download-platform={platform} data-analytics-button="other-platforms">
+          <span className="one-other-platform-icon" data-platform={platform} aria-hidden="true"
+            style={{ '--platform-icon': `url('/img/happy-one/icons/${platform}.svg')` } as CSSProperties} />
+        </a>
+      </li>)}
+      {releasesLink && <li className="one-other-platforms-releases">
+        <a href={RELEASES_PAGE}>All Releases <span aria-hidden="true">→</span></a>
+      </li>}
+    </ul>
   )
 }
 

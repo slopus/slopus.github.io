@@ -54,14 +54,14 @@
 .one-demo-error { margin-top: 1rem; font-size: .85rem; color: #8c3926; }
 @media (max-width: 700px) {
   .one-demo { margin-top: 2.5rem; }
-  /* The window's left edge 8px from the screen's and its right edge 8% in, wider than the
-     already inset column. Beside it there is no room, so the phone, 92% of the window's height,
-     keeps 45% of itself in view at the edge, over the window's bezel; for its part of the story
-     it slides fully in, 8px from the edge, and grows from its bottom edge until its top is just
-     under the line above the demo, taller than the window (--phone-reach, which HappyOneDemo
-     measures; 1.12× without one). */
-  .one-demo-stage { --stage-pad: 20px; justify-content: flex-start; --desktop-width: calc(92vw - 8px); --phone-width: calc(var(--desktop-height) * .92 * 1406 / 2822); --phone-gap: 8px; --phone-hang: 10px; --phone-left: calc(50cqw + 50vw - var(--phone-width) * .45); --phone-focus: var(--phone-reach, 1.12); --phone-focus-x: calc(50cqw + 50vw - var(--phone-gap) - var(--phone-left) - var(--phone-width) + var(--demo-scroll, 0) * var(--phone-hidden) * .5); }
-  .one-demo-window { margin-left: calc(8px + 50cqw - 50vw); }
+  /* Larger than the screen: the window, --demo-zoom times the screen's width, starts at the
+     column's edge and runs off the right one, so its left part (the sidebar) shows, and the
+     phone, 92% of the window's height and so zoomed alike, stands over it, its right edge at the
+     column's. The two are centred in the column, and the page clips the rest. For its part of
+     the story the phone grows from its bottom edge until its top is just under the line above
+     the demo (--phone-reach, which HappyOneDemo measures; 1.12× without one). */
+  .one-demo-stage { --demo-zoom: 1.5; --demo-inset: 20px; --stage-pad: 20px; justify-content: flex-start; --desktop-width: calc((92vw - 8px) * var(--demo-zoom)); --phone-width: calc(var(--desktop-height) * .92 * 1406 / 2822); --phone-gap: var(--demo-inset); --phone-hang: 10px; --phone-left: calc(50cqw + 50vw - var(--demo-inset) - var(--phone-width)); --phone-focus: var(--phone-reach, 1.12); --phone-focus-x: 0px; }
+  .one-demo-window { margin-left: calc(var(--demo-inset) + 50cqw - 50vw); }
   .one-demo-phone { transform-origin: bottom right; }
 }
 @media (prefers-reduced-motion: reduce) {

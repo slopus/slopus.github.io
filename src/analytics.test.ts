@@ -31,6 +31,15 @@ describe('analytics click events', () => {
     expect(clickEvent(store)).toEqual(['store_click', { store: 'ios', location: 'hero' }])
   })
 
+  it('names the releases page, with where its link sits', () => {
+    const section = document.createElement('div')
+    section.dataset.analyticsLocation = 'hero'
+    const releases = link('/releases/')
+    section.append(releases)
+    expect(clickEvent(releases)).toEqual(['releases_click', { location: 'hero' }])
+    expect(clickEvent(link('/releases/'))).toEqual(['releases_click', {}])
+  })
+
   it('names the store and GitHub links', () => {
     expect(clickEvent(link(APP_STORE_LINK))).toEqual(['store_click', { store: 'ios' }])
     expect(clickEvent(link(GOOGLE_PLAY_LINK))).toEqual(['store_click', { store: 'android' }])

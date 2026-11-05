@@ -15,6 +15,7 @@ type ClickEvent =
   | ['download_click', Placement & { platform: string; arch?: string; button?: string }]
   | ['store_click', Placement & { store: 'ios' | 'android' }]
   | ['github_click', Placement & { repository: string }]
+  | ['releases_click', Placement]
 
 let loading: Promise<PostHog | undefined> | undefined
 
@@ -44,8 +45,9 @@ function load(key: string) {
 }
 
 /**
- * The download, store, and GitHub links, wherever they are on the page. A download names its
- * platform, its Mac chip, and which button it is (`primary`, `platform-link`, `other-platforms`).
+ * The download, store, /releases/, and GitHub links, wherever they are on the page. A download
+ * names its platform, its Mac chip, and which button it is (`primary`, `platform-link`,
+ * `other-platforms`).
  */
 export function clickEvent(link: HTMLAnchorElement): ClickEvent | null {
   const location = link.closest<HTMLElement>('[data-analytics-location]')?.dataset.analyticsLocation
@@ -61,6 +63,7 @@ export function clickEvent(link: HTMLAnchorElement): ClickEvent | null {
   } catch {
     return null
   }
+  if (url.origin === window.location.origin && url.pathname === '/releases/') return ['releases_click', placement]
   if (url.hostname === 'apps.apple.com') return ['store_click', { store: 'ios', ...placement }]
   if (url.hostname === 'play.google.com') return ['store_click', { store: 'android', ...placement }]
   if (url.hostname === 'github.com') {

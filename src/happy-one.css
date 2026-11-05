@@ -48,7 +48,8 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
 .one-store-download .store-stars { color: #d4a72c; letter-spacing: .03em; }
 .one-store-download .store-rating strong { color: #183f38; font-weight: 600; }
 /* Same height as the Homebrew strip beside them. */
-.one-download-actions .store-button { flex: none; width: 148px; height: 46px; }
+.one-download-actions { --store-badge-h: 46px; }
+.one-download-actions .store-button { flex: none; width: 148px; height: var(--store-badge-h); }
 .one-download-actions .one-desktop-button { display: block; padding: 0; border: 0; background: #000; cursor: pointer; }
 .one-desktop-button > img { display: block; width: 100%; height: 100%; }
 .one-platform-links { display: flex; align-items: center; justify-content: center; color: #47645e; font-size: .82rem; line-height: 20px; white-space: nowrap; }
@@ -62,24 +63,20 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
    then Homebrew or the SmartScreen note, then "Other platforms". */
 .one-download-actions[data-other-platforms] { gap: .9rem; }
 .one-desktop-extras { margin-top: .6rem; }
-/* "Other platforms": every desktop, large, each to the latest release on GitHub. Two layouts are
-   under review: a row of icons over their names, or a column of icons beside them. */
-.one-other-platforms { --platform-mark: 64px; display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 2.25rem; }
-.one-other-platforms-title { margin: 0; color: var(--home-ink-2, #47645e); font-size: 1.05rem; font-weight: 600; line-height: 1.3; }
-.one-other-platforms ul { display: flex; justify-content: center; gap: clamp(.5rem, 3vw, 2rem); margin: 0; padding: 0; list-style: none; }
-.one-other-platforms li a { display: flex; flex-direction: column; align-items: center; gap: .7rem; min-width: 104px; padding: .9rem .75rem .7rem; border-radius: 14px; color: var(--home-ink, #183f38); font-size: 1rem; font-weight: 500; line-height: 1.2; transition: background-color .2s ease, color .2s ease; }
-.one-other-platforms li a:hover { color: var(--home-accent, #e6522c); background: var(--home-surface, #183f380a); }
-/* Matched by eye: the Apple and Tux at the full height, the square Windows panes a little less. */
+/* Other platforms: one row of every desktop's mark, half the Apple in the download badge (43.56 of
+   its 76 units), a hairline, and All Releases. Gaps are the hero's spacer and its multiples. */
+.one-other-platforms { --s: var(--one-note-gap); --platform-mark: calc(var(--store-badge-h) * 43.56 / 76 / 2); display: flex; align-items: center; justify-content: center; gap: var(--s); margin: calc(2 * var(--s)) 0 0; padding: 0; list-style: none; color: var(--home-ink, #183f38); }
+.one-other-platforms li { display: flex; }
+.one-other-platforms li > a { position: relative; display: flex; align-items: center; transition: color .2s ease; }
+/* A finger-sized target around each small mark, reaching halfway into the gaps beside it. */
+.one-other-platforms li > a::after { content: ''; position: absolute; inset: calc(-1 * var(--s)) calc(-.5 * var(--s)); }
+.one-other-platforms li > a:hover { color: var(--home-accent, #e6522c); }
 .one-other-platform-icon { display: block; flex: none; height: var(--platform-mark); aspect-ratio: 35.24 / 43.56; background: currentColor; mask: var(--platform-icon) center / contain no-repeat; }
-.one-other-platform-icon[data-platform='windows'] { aspect-ratio: 1; height: calc(var(--platform-mark) * .84); margin-block: calc(var(--platform-mark) * .08); }
+/* Matched by eye: the Apple and Tux at the full height, the square Windows panes a little less. */
+.one-other-platform-icon[data-platform='windows'] { aspect-ratio: 1; height: calc(var(--platform-mark) * .84); }
 .one-other-platform-icon[data-platform='linux'] { aspect-ratio: 448 / 512; }
-.one-other-platforms[data-layout='stack'] { --platform-mark: 52px; }
-.one-other-platforms[data-layout='stack'] ul { flex-direction: column; gap: .25rem; }
-.one-other-platforms[data-layout='stack'] li a { flex-direction: row; gap: 1.25rem; min-width: 0; padding: .55rem 1.5rem .55rem .9rem; font-size: 1.6rem; font-weight: 600; letter-spacing: -.02em; }
-.one-other-platforms[data-layout='stack'] .one-other-platform-icon { width: 56px; aspect-ratio: auto; mask-position: center; }
-.one-other-platforms-releases { display: inline-flex; align-items: center; gap: .35em; min-height: 44px; margin-top: -.25rem; color: var(--home-ink-2, #47645e); font-size: .82rem; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: transparent; }
-.one-other-platforms-releases > svg { display: block; flex: none; width: 1cap; height: 1cap; }
-.one-other-platforms-releases:hover { color: var(--home-ink, #183f38); text-decoration-color: currentColor; }
+.one-other-platforms-releases { align-self: stretch; align-items: center; padding-left: var(--s); border-left: 1px solid var(--home-line, #d9d3c5); }
+.one-other-platforms li.one-other-platforms-releases > a { gap: .3em; color: var(--home-ink, #183f38); font-size: .82rem; font-weight: 500; line-height: 1; white-space: nowrap; }
 /* Preview: its own build of Happy, a quieter line under Happy Nightly's links. */
 .one-preview-standard { display: grid; justify-items: center; gap: .45rem; margin-top: .5rem; padding-top: 1rem; border-top: 1px solid #d9d3c5; }
 .one-preview-standard > p { margin: 0; color: #47645e; font-size: .82rem; line-height: 1.4; }
@@ -131,10 +128,13 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
   .one-hero [data-mobile-store='googlePlay'] [data-store='googlePlay'],
   html[data-mobile-store='googlePlay'] .one-hero [data-store='googlePlay'] { order: -1; }
   .one-download-actions { width: min(100%, 24rem); margin-top: .5rem; }
-  /* Phones install from the stores; every desktop is under "Other platforms". */
+  /* Phones install from the stores; every desktop is in the platforms row. */
   .one-download-actions[data-other-platforms] .one-desktop-downloads { display: none; }
-  .one-other-platforms { --platform-mark: 56px; margin-top: 2rem; }
-  .one-other-platforms[data-layout='row'] li a { min-width: 0; width: 6.5rem; }
+  /* A phone shows only its own store; one we can't tell keeps both. */
+  html[data-mobile-store='appStore'] .one-download-actions[data-other-platforms] [data-store='googlePlay'],
+  .one-download-actions[data-mobile-store='appStore'] [data-store='googlePlay'],
+  html[data-mobile-store='googlePlay'] .one-download-actions[data-other-platforms] [data-store='appStore'],
+  .one-download-actions[data-mobile-store='googlePlay'] [data-store='appStore'] { display: none; }
   .one-download { padding-block: 3.5rem var(--one-section-gap); }
 }
 

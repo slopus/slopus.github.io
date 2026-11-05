@@ -62,7 +62,7 @@ describe('desktop and mobile downloads', () => {
     expect(container.querySelector('[data-platform="desktop"]')).toBeTruthy()
     expect(screen.getByText(BREW)).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Download Happy for macOS' })).toBeTruthy()
-    const other = screen.getByRole('group', { name: 'Other platforms' })
+    const other = screen.getByRole('list', { name: 'Other platforms' })
     for (const os of ['macOS', 'Windows', 'Linux']) {
       const link = within(other).getByRole('link', { name: `${os}: all downloads on GitHub` })
       expect(link.getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases/latest')
@@ -73,7 +73,7 @@ describe('desktop and mobile downloads', () => {
   it('keeps the small platform links where the page has no phone apps', () => {
     device('Macintosh')
     render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} mobile={false} />)
-    expect(screen.queryByRole('group', { name: 'Other platforms' })).toBeNull()
+    expect(screen.queryByRole('list', { name: 'Other platforms' })).toBeNull()
     expect(screen.getByRole('link', { name: 'Download Happy for Windows' }).getAttribute('data-analytics-button')).toBe('platform-link')
     expect(screen.getByRole('link', { name: 'Download Happy for macOS' }).getAttribute('data-analytics-button')).toBe('primary')
   })
@@ -226,7 +226,8 @@ describe('desktop and mobile downloads', () => {
 
   it('links All Releases to the Stable and Preview releases page, not GitHub', () => {
     render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
-    expect(screen.getByRole('link', { name: 'All Releases' }).getAttribute('href')).toBe('/releases/')
+    const other = screen.getByRole('list', { name: 'Other platforms' })
+    expect(within(other).getByRole('link', { name: 'All Releases' }).getAttribute('href')).toBe('/releases/')
   })
 
   it('offers Preview as the Nightly Mac disk images alone while the preview has no Windows installer, with no Homebrew or stores', async () => {
