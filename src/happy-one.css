@@ -123,12 +123,15 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
   .one-hero { padding-top: 0; }
   .one-hero-fold { display: flex; flex-direction: column; justify-content: space-evenly; gap: 28px; min-height: calc(100svh - 144px); padding-top: 28px; }
   .one-hero .one-demo { margin-top: 0; }
-  /* Android lists Google Play first. */
-  .one-hero [data-mobile-store='googlePlay'] [data-store='googlePlay'],
-  html[data-mobile-store='googlePlay'] .one-hero [data-store='googlePlay'] { order: -1; }
   .one-download-actions { width: min(100%, 24rem); margin-top: .5rem; }
-  /* The platforms row right under the stores. */
-  .one-other-platforms { margin-top: 0; }
+  /* Phones install from the stores: the two badges one above the other, this phone's first
+     (Android lists Google Play first), then the platforms row. The desktop download, Homebrew
+     and the SmartScreen note are left out. */
+  .one-download-actions[data-other-platforms] :is(.one-desktop-downloads, .one-desktop-extras) { display: none; }
+  .one-download-actions[data-other-platforms] .one-mobile-downloads { flex-direction: column; align-items: center; gap: calc(2 * var(--one-note-gap)); }
+  .one-download-actions[data-mobile-store='googlePlay'] [data-store='googlePlay'],
+  html[data-mobile-store='googlePlay'] .one-download-actions [data-store='googlePlay'] { order: -1; }
+  .one-download-actions[data-other-platforms] .one-other-platforms { margin-top: var(--one-note-gap); }
   .one-download { padding-block: 3.5rem var(--one-section-gap); }
 }
 
