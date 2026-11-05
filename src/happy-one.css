@@ -35,11 +35,9 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
 .one-mac-architecture:focus-visible { outline: 2px solid #183f38; outline-offset: 3px; border-radius: 2px; }
 .one-desktop-downloads a { cursor: pointer; }
 .one-desktop-downloads a[aria-busy='true'] { cursor: progress; opacity: .7; }
-/* One centered mobile-badge row below the centered desktop installation controls. */
-.one-mobile-downloads { flex-direction: row; justify-content: center; align-items: flex-start; }
-@media (max-width: 480px) {
-  .one-mobile-downloads { flex-direction: column; align-items: center; }
-}
+/* One centered mobile-badge row below the centered desktop installation controls; a screen too
+   narrow for both badges stacks them. */
+.one-mobile-downloads { flex-flow: row wrap; justify-content: center; align-items: flex-start; }
 .one-store-download { display: flex; flex-direction: column; align-items: center; gap: .4rem; }
 /* One quiet line, like the README's rating badges: stars, score, and count share one
    type size, about a quarter of the 46px badge, and never under 11px. */
@@ -59,13 +57,14 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
 .one-platform-icon[data-platform='linux'] { width: .63em; width: .875cap; }
 .one-platform-links a > svg { display: block; flex: none; width: .72em; height: .72em; width: 1cap; height: 1cap; }
 .one-platform-links a:hover { color: #183f38; text-decoration-color: currentColor; }
-/* With the phone apps (the homepage, blog posts): the stores sit right under the desktop download,
-   then Homebrew or the SmartScreen note, then "Other platforms". */
-.one-download-actions[data-other-platforms] { gap: .9rem; }
-.one-desktop-extras { margin-top: .6rem; }
-/* Other platforms: one row of every desktop's mark, half the Apple in the download badge (43.56 of
-   its 76 units), a hairline, and All Releases. Gaps are the hero's spacer and its multiples. */
-.one-other-platforms { --s: var(--one-note-gap); --platform-mark: calc(var(--store-badge-h) * 43.56 / 76 / 2); display: flex; align-items: center; justify-content: center; gap: var(--s); margin: calc(2 * var(--s)) 0 0; padding: 0; list-style: none; color: var(--home-ink, #183f38); }
+/* With the phone apps (the homepage, blog posts), on every screen: the desktop download, the
+   stores right under it, the platforms row, then Homebrew or the SmartScreen note. */
+.one-download-actions[data-other-platforms] { gap: var(--one-note-gap); }
+.one-desktop-extras { margin-top: var(--one-note-gap); }
+/* Other platforms: one row of every desktop's mark, at 0.75 of the Apple in the download badge
+   (43.56 of its 76 units), a hairline, and All Releases. Gaps are the hero's spacer and its
+   multiples. */
+.one-other-platforms { --s: var(--one-note-gap); --platform-mark: calc(var(--store-badge-h) * 43.56 / 76 * .75); display: flex; align-items: center; justify-content: center; gap: var(--s); margin: var(--s) 0 0; padding: 0; list-style: none; color: var(--home-ink, #183f38); }
 .one-other-platforms li { display: flex; }
 .one-other-platforms li > a { position: relative; display: flex; align-items: center; transition: color .2s ease; }
 /* A finger-sized target around each small mark, reaching halfway into the gaps beside it. */
@@ -124,17 +123,12 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
   .one-hero { padding-top: 0; }
   .one-hero-fold { display: flex; flex-direction: column; justify-content: space-evenly; gap: 28px; min-height: calc(100svh - 144px); padding-top: 28px; }
   .one-hero .one-demo { margin-top: 0; }
-  .one-hero .one-mobile-downloads { order: -1; flex-direction: column; align-items: center; gap: 1.5rem; }
+  /* Android lists Google Play first. */
   .one-hero [data-mobile-store='googlePlay'] [data-store='googlePlay'],
   html[data-mobile-store='googlePlay'] .one-hero [data-store='googlePlay'] { order: -1; }
   .one-download-actions { width: min(100%, 24rem); margin-top: .5rem; }
-  /* Phones install from the stores; every desktop is in the platforms row. */
-  .one-download-actions[data-other-platforms] .one-desktop-downloads { display: none; }
-  /* A phone shows only its own store; one we can't tell keeps both. */
-  html[data-mobile-store='appStore'] .one-download-actions[data-other-platforms] [data-store='googlePlay'],
-  .one-download-actions[data-mobile-store='appStore'] [data-store='googlePlay'],
-  html[data-mobile-store='googlePlay'] .one-download-actions[data-other-platforms] [data-store='appStore'],
-  .one-download-actions[data-mobile-store='googlePlay'] [data-store='appStore'] { display: none; }
+  /* The platforms row right under the stores. */
+  .one-other-platforms { margin-top: 0; }
   .one-download { padding-block: 3.5rem var(--one-section-gap); }
 }
 

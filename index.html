@@ -70,10 +70,9 @@
     </script>
     <script>
       // The prerendered homepage offers the Mac download; on Windows and Linux it stays hidden
-      // until the app replaces it with this platform's, and a phone shows only its own store from
+      // until the app replaces it with this platform's, and Android lists Google Play first from
       // the start (src/DownloadOptions.tsx, src/happy-one.css).
       if (/Android/i.test(navigator.userAgent)) document.documentElement.dataset.mobileStore = 'googlePlay'
-      else if (/iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) document.documentElement.dataset.mobileStore = 'appStore'
       if (!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) && !(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
         if (/Windows/i.test(navigator.userAgent)) document.documentElement.dataset.desktopPlatform = 'windows'
         else if (/Linux/i.test(navigator.userAgent) && !/Macintosh|Mac OS X/i.test(navigator.userAgent)) document.documentElement.dataset.desktopPlatform = 'linux'

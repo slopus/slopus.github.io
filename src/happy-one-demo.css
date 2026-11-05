@@ -33,7 +33,9 @@
 }
 /* The movie is the recorded Mac window itself, traffic lights and all: the corner radius,
    hairline and shadow sit on its edge. --apx is one CSS pixel of the 880px-wide recorded app. */
-.one-demo-window { --apx: calc(var(--desktop-width) / 880); position: relative; flex: none; width: var(--desktop-width); aspect-ratio: var(--desktop-w) / var(--desktop-h); overflow: hidden; border-radius: calc(12 * var(--apx)); background: #1e1e1e; box-shadow: 0 28px 64px -26px var(--home-shadow, #14112e59), 0 10px 24px -14px #0000004d, 0 0 0 max(.5px, .5 * var(--apx)) #0000003d; }
+/* Both sides are set, from the variables the phone uses too: with only aspect-ratio, Safari can
+   stretch the window to the stage's height, and the recording is then cropped at its sides. */
+.one-demo-window { --apx: calc(var(--desktop-width) / 880); position: relative; flex: none; align-self: flex-start; width: var(--desktop-width); height: var(--desktop-height); overflow: hidden; border-radius: calc(12 * var(--apx)); background: #1e1e1e; box-shadow: 0 28px 64px -26px var(--home-shadow, #14112e59), 0 10px 24px -14px #0000004d, 0 0 0 max(.5px, .5 * var(--apx)) #0000003d; }
 .one-demo-window > video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
 .one-demo-window::after { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: inherit; box-shadow: inset 0 0 0 max(1px, var(--apx)) #ffffff2e; pointer-events: none; }
 /* Parked beside the window; the page shell clips what passes the screen's edge. Scrolling moves

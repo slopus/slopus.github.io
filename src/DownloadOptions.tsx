@@ -286,9 +286,8 @@ export function useDesktopDownloadSelection(channel: ReleaseChannel, macArchitec
 }
 
 /**
- * With the phone apps, as on the homepage: the primary desktop download, the stores directly under
- * it, Homebrew or the SmartScreen note, then every platform under "Other platforms". On phones the
- * stores lead and the desktop download gives way to "Other platforms" (happy-one.css).
+ * With the phone apps, as on the homepage, on every screen: the primary desktop download, the
+ * stores directly under it, the row of every desktop platform, then Homebrew or the SmartScreen note.
  */
 export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, channel = 'stable', releasesLink = true, mobile = true, analyticsLocation }: DownloadOptionsProps) {
   const { downloads, platform, primaryPlatform, primaryStandard, otherPlatforms } = useDesktopDownloadSelection(channel, macArchitecture)
@@ -331,8 +330,8 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
       {withMobile ? <>
         <div className="one-desktop-downloads">{primary}</div>
         <MobileDownloads />
-        {(primaryPlatform === 'windows' || showBrew) && <div className="one-desktop-downloads one-desktop-extras">{extras}</div>}
         <OtherPlatforms releasesLink={withReleasesLink} />
+        {(primaryPlatform === 'windows' || showBrew) && <div className="one-desktop-downloads one-desktop-extras">{extras}</div>}
       </> : <div className="one-desktop-downloads">
         {primary}
         {extras}
