@@ -42,28 +42,23 @@ export interface DocumentEntry {
   forPeople?: Readonly<{ href: string; label: string }>
 }
 
-const documentSources = import.meta.glob(
-  ['/content/docs/**/*.mdx', '/content/desktop/**/*.mdx'],
-  {
-    eager: true,
-    import: 'default',
-    query: '?raw',
-  },
-) as Record<string, string>
-
-const legalSources = import.meta.glob('/content/legal/**/*.md', {
-  eager: true,
-  import: 'default',
-  query: '?raw',
-}) as Record<string, string>
+/** The pages' text, from src/documentSources.ts, which registers it when it loads (loadDocumentSources). */
+type DocumentSources = {
+  documents: Record<string, string>
+  legal: Record<string, string>
+  thesis: string
+}
+let sources: DocumentSources | undefined
+export function setDocumentSources(loaded: DocumentSources) {
+  sources = loaded
+}
+function loadedSources() {
+  if (!sources) throw new Error('The docs text is not loaded yet: await loadSitePages() (src/Router.tsx) first.')
+  return sources
+}
 
 /** The Vision essay, a plain .md with a frontmatter title; it is the only doc outside the .mdx globs. */
 const THESIS_SOURCE_PATH = '/content/thesis.md'
-const thesisSource = Object.values(import.meta.glob('/content/thesis.md', {
-  eager: true,
-  import: 'default',
-  query: '?raw',
-}) as Record<string, string>)[0] ?? ''
 
 type DocumentDefinition = Omit<DocumentEntry, 'product'>
 
@@ -669,7 +664,7 @@ export function getDocumentSource(document: DocumentEntry): string {
     return getThesisMarkdown()
   }
 
-  const intro = documentSources[document.sourcePath] ?? ''
+  const intro = loadedSources().documents[document.sourcePath] ?? ''
   const source = document.product === 'desktop' && document.path === 'changelog'
     ? `${intro.trim()}\n\n${changelogMarkdown()}`
     : intro
@@ -690,11 +685,12 @@ export function documentHeading(document: DocumentEntry): string {
 export type LegalName = 'privacy' | 'terms' | 'plugins/privacy' | 'plugins/terms'
 
 export function getLegalSource(name: LegalName) {
-  return legalSources[`/content/legal/${name}.md`] ?? ''
+  return loadedSources().legal[`/content/legal/${name}.md`] ?? ''
 }
 
 /** The Vision essay at /vision/, titled by its frontmatter; the h1 is that title. */
 export function getThesisMarkdown() {
+  const thesisSource = loadedSources().thesis
   const title = thesisSource.match(/^title:\s*"(.+)"\s*$/m)?.[1] ?? ''
   // The essay's sections are written as `#`; the frontmatter title is the page's only h1.
   const body = prepareMarkdown(thesisSource).replace(/^# /gm, '## ')

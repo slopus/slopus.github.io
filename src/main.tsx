@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
-import { Router } from './Router'
+import { preparePath, Router } from './Router'
 import { startAnalytics } from './analytics'
 import './style.css'
 import './site-theme.css'
@@ -38,10 +38,14 @@ Node.prototype.insertBefore = function <T extends Node>(this: Node, node: T, bef
 }
 
 // Prerendered routes (see src/prerender.tsx) ship their markup; adopt it instead of rendering twice.
-if (root.hasChildNodes()) {
-  hydrateRoot(root, app)
-} else {
-  createRoot(root).render(app)
-}
+// Every page but the homepage first loads its chunk (src/sitePages.ts), which its served HTML
+// already preloads.
+void preparePath(window.location.pathname).then(() => {
+  if (root.hasChildNodes()) {
+    hydrateRoot(root, app)
+  } else {
+    createRoot(root).render(app)
+  }
+})
 
 startAnalytics()

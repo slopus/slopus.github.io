@@ -2,8 +2,11 @@ import { StrictMode } from 'react'
 import { renderToString } from 'react-dom/server'
 import { documents } from './documents'
 import { documentHref, HAPPY, HAPPY_DESKTOP } from './products'
-import { Router } from './Router'
+import { registerSitePages, Router } from './Router'
+import * as sitePages from './sitePages'
 import { productionChangelogEntries, changelogSharePath } from './changelog'
+
+registerSitePages(sitePages)
 
 // scripts/generate-static-routes.mjs reads the docs registry and the page metadata
 // from this bundle instead of keeping its own copies.

@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 
@@ -13,6 +13,27 @@ for (const tag of ['name="description"', 'property="og:description"', 'property=
   }
 }
 const siteUrl = 'https://happy.engineering'
+
+// Every page but the homepage renders from its own chunk (src/sitePages.ts, loaded by
+// src/main.tsx before it hydrates). Its served HTML preloads that chunk, the chunks it imports,
+// and their styles, so the page needs no extra round trip and never shows unstyled.
+const manifest = JSON.parse(await readFile(path.join(distRoot, '.vite', 'manifest.json'), 'utf8'))
+const sitePagesChunk = manifest['src/sitePages.ts']
+if (!sitePagesChunk) throw new Error('dist/.vite/manifest.json has no src/sitePages.ts chunk.')
+const pageChunks = []
+const pageStyles = new Set()
+for (const queue = [sitePagesChunk]; queue.length;) {
+  const chunk = queue.shift()
+  if (chunk.isEntry || pageChunks.includes(chunk.file)) continue
+  pageChunks.push(chunk.file)
+  for (const css of chunk.css ?? []) pageStyles.add(css)
+  queue.push(...(chunk.imports ?? []).map((key) => manifest[key]))
+}
+const pagePreloads = [
+  ...[...pageStyles].map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`),
+  ...pageChunks.map((file) => `<link rel="modulepreload" crossorigin href="/${file}">`),
+].map((tag) => `    ${tag}\n`).join('')
+await rm(path.join(distRoot, '.vite'), { recursive: true })
 
 // Pages that ship their rendered markup, and the app's own docs registry and page
 // metadata, so the served head matches what the client sets. Built by `vite build --ssr`.
@@ -64,7 +85,7 @@ function htmlForPage({
   robots = 'index, follow',
   socialImage,
   socialVideo,
-}) {
+}, { pages = true } = {}) {
   const canonicalUrl = new URL(canonicalPath, siteUrl).toString()
   let html = baseHtml
     .replace(/<title>.*?<\/title>/, `<title>${escapeHtml(title)}</title>`)
@@ -97,6 +118,7 @@ function htmlForPage({
     html = html.replace(/( *)(<meta property="og:image:alt"[^>]*\/>)/, (_line, indent, tag) => [tag, ...tags].map((line) => `${indent}${line}`).join('\n'))
     if (!html.includes('<meta property="og:video" ')) throw new Error('index.html has no one-line og:image:alt tag to put og:video after.')
   }
+  if (pages) html = html.replace('  </head>', () => `${pagePreloads}  </head>`)
   return html
 }
 

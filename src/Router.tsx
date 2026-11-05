@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
 import DesktopApp from './DesktopApp'
-import ModelBenchmarksPage from './ModelBenchmarksPage'
-import ReleasesPage from './ReleasesPage'
-import { DocsPage, LegalPage, NotFoundPage } from './DocumentPages'
-import { MemesPluginPage, PluginsPage } from './PluginPages'
+import type * as SitePages from './sitePages'
 import { documentHeading, getDocument, normalizeDocumentPath } from './documents'
 import { documentHref, HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import { changelogEntryForPath, changelogEntryMetadata } from './changelog'
@@ -32,6 +29,26 @@ const pluginPageMetadata: Record<string, PageMetadata> = {
 }
 
 const pluginsBack = { href: '/plugins/', label: 'Back to plugins' }
+
+/**
+ * Every page but the homepage, with the docs text: a chunk of its own, so the homepage's bundle
+ * is the homepage. A page loads it before it renders (src/main.tsx, src/prerender.tsx), and a
+ * link to such a page starts loading it as the pointer or focus reaches the link.
+ */
+let sitePages: typeof SitePages | undefined
+let loadingSitePages: Promise<void> | undefined
+export function loadSitePages() {
+  loadingSitePages ??= import('./sitePages').then(registerSitePages)
+  return loadingSitePages
+}
+/** For a build that has the chunk already: the prerender and the tests import it themselves. */
+export function registerSitePages(module: typeof SitePages) {
+  sitePages = module
+}
+/** Resolves once `pathname` can render. */
+export function preparePath(pathname: string) {
+  return normalizedPathname(pathname) === '/' || sitePages ? Promise.resolve() : loadSitePages()
+}
 
 /** Pages that moved. Keep the old URLs working. */
 const movedPaths: Record<string, string> = {
@@ -256,6 +273,19 @@ export function Router({ pathname }: { pathname?: string }) {
       }
     }
 
+    function internalLink(target: EventTarget | null) {
+      const anchor = target instanceof Element ? target.closest<HTMLAnchorElement>('a[href]') : null
+      if (!anchor || anchor.target === '_blank' || anchor.hasAttribute('download')) return undefined
+      const url = new URL(anchor.href, window.location.href)
+      return url.origin === window.location.origin ? url : undefined
+    }
+
+    // Reaching for a link to another page starts loading what it needs.
+    function handleReach(event: Event) {
+      const url = internalLink(event.target)
+      if (url) void preparePath(url.pathname)
+    }
+
     function handleClick(event: MouseEvent) {
       if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
         return
@@ -283,19 +313,29 @@ export function Router({ pathname }: { pathname?: string }) {
       }
 
       event.preventDefault()
-      navigateTo(url)
+      void preparePath(url.pathname).then(() => navigateTo(url))
     }
 
     function handlePopState() {
-      applyPageMetadata(metadataForPath(window.location.pathname))
-      setCurrentPathname(window.location.pathname)
+      const pathname = window.location.pathname
+      void preparePath(pathname).then(() => {
+        if (window.location.pathname !== pathname) return
+        applyPageMetadata(metadataForPath(pathname))
+        setCurrentPathname(pathname)
+      })
     }
 
     document.addEventListener('click', handleClick)
+    document.addEventListener('pointerover', handleReach, { passive: true })
+    document.addEventListener('touchstart', handleReach, { passive: true })
+    document.addEventListener('focusin', handleReach)
     window.addEventListener('popstate', handlePopState)
 
     return () => {
       document.removeEventListener('click', handleClick)
+      document.removeEventListener('pointerover', handleReach)
+      document.removeEventListener('touchstart', handleReach)
+      document.removeEventListener('focusin', handleReach)
       window.removeEventListener('popstate', handlePopState)
     }
   }, [controlled])
@@ -303,6 +343,11 @@ export function Router({ pathname }: { pathname?: string }) {
   if (normalizedPath === '/') {
     return <DesktopApp />
   }
+
+  if (!sitePages) {
+    throw new Error(`${normalizedPath} renders after loadSitePages().`)
+  }
+  const { DocsPage, LegalPage, MemesPluginPage, ModelBenchmarksPage, NotFoundPage, PluginsPage, ReleasesPage } = sitePages
 
   if (normalizedPath === '/model-benchmarks') {
     return <ModelBenchmarksPage />

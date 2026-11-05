@@ -153,28 +153,77 @@ function usePastHeading() {
 /**
  * The hero's downloads on the first screen: the primary download and the store badges, never the
  * platforms row, which starts just below the bottom of the screen, with Homebrew and the
- * SmartScreen note after it. A store badge the bottom would cut, on a short phone, moves below
- * it too. Placed after layout and font changes and when the width changes, never while
- * scrolling: a phone's toolbars change only the height.
+ * SmartScreen note after it. Stacked on a phone, the second store badge sits halfway between the
+ * first and the platforms row, so the three are evenly spaced as the page scrolls; where it would
+ * be cut by the bottom of the screen it moves below it, the platforms row as far again after it.
+ * Self-contained: the prerendered page runs it from an inline script as soon as the block is
+ * parsed, before its first paint (FirstScreenDownloads), and the app again after layout and font
+ * changes.
  */
+function placeFirstScreenDownloads(block: HTMLElement) {
+  const items = [...block.querySelectorAll<HTMLElement>('.one-store-download, .one-other-platforms')]
+  for (const item of items) item.style.marginTop = ''
+  const fold = document.documentElement.clientHeight
+  const box = (item: HTMLElement) => {
+    const rect = item.getBoundingClientRect()
+    return { top: rect.top + window.scrollY, bottom: rect.bottom + window.scrollY }
+  }
+  // In reading order, side-by-side badges as one row.
+  const rows: { items: HTMLElement[]; top: number; bottom: number }[] = []
+  for (const item of items.filter(item => item.offsetParent).sort((a, b) => box(a).top - box(b).top)) {
+    const { top, bottom } = box(item)
+    const row = rows.find(row => Math.abs(row.top - top) < 2)
+    if (row) { row.items.push(item); row.bottom = Math.max(row.bottom, bottom) } else rows.push({ items: [item], top, bottom })
+  }
+  const platforms = rows.at(-1)
+  if (!platforms?.items[0].classList.contains('one-other-platforms')) return
+  const stores = rows.slice(0, -1)
+  const below = fold + 12
+  // How far what follows the last moved row has moved.
+  let shift = 0
+  const move = (row: (typeof rows)[number], by: number, follow = true) => {
+    for (const item of row.items) item.style.marginTop = `${parseFloat(getComputedStyle(item).marginTop) + by}px`
+    if (follow) shift += by
+  }
+  // A badge the bottom of the screen would cut moves below it.
+  const first = stores[0]
+  if (first && first.top < fold && first.bottom > fold) move(first, below - first.top)
+  let after = below
+  if (stores.length === 2) {
+    const firstBottom = stores[0].bottom + shift
+    const second = stores[1]
+    const height = second.bottom - second.top
+    const gap = second.top + shift - firstBottom
+    const even = (below - firstBottom - height) / 2
+    let spacing = gap
+    if (even > gap) {
+      move(second, even - gap)
+      spacing = even
+    } else if (second.top + shift < fold && second.bottom + shift > fold) {
+      move(second, below - (second.top + shift))
+      spacing = below - firstBottom
+    }
+    // The platforms row as far after the second badge as that is after the first.
+    after = Math.max(below, second.bottom + shift + spacing)
+  }
+  const platformsTop = platforms.top + shift
+  if (platformsTop < after) move(platforms, after - platformsTop, false)
+}
+
+/** The placement, as soon as the browser has parsed the block; again once the fonts are in. */
+function FirstScreenDownloads({ id }: { id: string }) {
+  const run = `(()=>{const place=${placeFirstScreenDownloads.toString()};const block=document.getElementById(${JSON.stringify(id)});if(block){place(block);document.fonts&&document.fonts.ready.then(()=>place(block))}})()`
+  return <script dangerouslySetInnerHTML={{ __html: run }} suppressHydrationWarning />
+}
+
+/** The app keeps the placement up: after layout and font changes, and when the width changes, never while scrolling (a phone's toolbars change only the height). */
 function useFirstScreenDownloads(id: string) {
   useEffect(() => {
     const block = document.getElementById(id)
     if (!block || typeof ResizeObserver === 'undefined') return
     const coarse = matchMedia('(pointer: coarse)').matches
     let width = window.innerWidth
-    const place = () => {
-      const items = [...block.querySelectorAll<HTMLElement>('.one-store-download, .one-other-platforms')]
-      for (const item of items) item.style.marginTop = ''
-      const fold = document.documentElement.clientHeight
-      for (const item of items) {
-        if (!item.offsetParent) continue
-        const box = item.getBoundingClientRect()
-        const top = box.top + window.scrollY
-        const off = item.classList.contains('one-other-platforms') ? top < fold : top < fold && top + box.height > fold
-        if (off) item.style.marginTop = `${parseFloat(getComputedStyle(item).marginTop) + fold - top + 12}px`
-      }
-    }
+    const place = () => placeFirstScreenDownloads(block)
     place()
     void document.fonts?.ready.then(place)
     const observer = new ResizeObserver(() => requestAnimationFrame(place))
@@ -249,6 +298,7 @@ export default function DesktopApp() {
             <HappyOneDemo reach={note} />
           </div>
           <DownloadOptions id="download" macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} analyticsLocation="hero" />
+          <FirstScreenDownloads id="download" />
         </section>
         <div className="one-values" id="product">
           {values.map((value, index) => <ValueProposition key={value.title} {...value} index={index} />)}
