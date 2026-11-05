@@ -40,6 +40,9 @@
   }
 }
 
+/* The surface ends with the page: a rubber band past either end showed the corner patches cut
+   in a straight line over the plain base, so the homepage doesn't bounce. */
+:root:has(.happy-home) { overscroll-behavior-y: none; }
 .happy-home { position: relative; isolation: isolate; color: var(--home-ink); font-family: 'IBM Plex Sans', system-ui, sans-serif; }
 /* Room after the footer for the colour in the bottom left corner (HOME_SURFACE). */
 .happy-home:not([data-social-preview]) { padding-bottom: 120px; }

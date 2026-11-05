@@ -160,7 +160,9 @@ left at the page's end, which may run under the footer's text, with a plain colu
 down the middle in the palette's base colour. No band along the top, and nothing
 choppy: no thin jagged edges or quick wobble. On phones the colour stays out of the
 content: the top right corner and the bottom left at the footer. It never wraps
-around content blocks; Kirill found that claustrophobic. Text, emoji, video, and
+around content blocks; Kirill found that claustrophobic. The field ends with the page, so
+the homepage doesn't bounce past its ends (`overscroll-behavior-y: none`): on an iPhone a
+rubber band at the bottom showed the bottom left patch cut in a straight line. Text, emoji, video, and
 buttons sit directly on it, and the header is transparent until the page scrolls,
 then frosted. The field is a still, never animated: the apps' field at one moment
 (`GRAIN_STILL`). `src/grainGradientRenderer.ts` draws it once, in page space, into
