@@ -9,12 +9,13 @@
 export type DemoSource = { src: string, type: string, media?: string }
 /**
  * A movie, and its frame 0 as a still drawn under it until it plays: `poster` (WebP) for any
- * browser, and `stills`, AVIF encoded from each source's own frame 0 at the widths the page draws
- * it, so the browser takes the smallest that is sharp enough and the movie starts on the same
- * pixels.
+ * browser, and `stills`, AVIF encoded from each cut's own frame 0, natively and at half size,
+ * under the same `media` as that cut. The browser takes the smallest sharp enough, and the movie
+ * starts on the same pixels: each cut has its own aspect ratio to the pixel, so a still from
+ * another cut would sit up to a device pixel off.
  */
-export type DemoMovie = { kind: 'movie', width: number, height: number, poster: string, stills: readonly DemoStillSource[], sources: readonly DemoSource[] }
-export type DemoStillSource = { src: string, width: number }
+export type DemoMovie = { kind: 'movie', width: number, height: number, poster: string, stills: readonly DemoStills[], sources: readonly DemoSource[] }
+export type DemoStills = { media?: string, widths: readonly { src: string, width: number }[] }
 export type DemoStill = { kind: 'still', width: number, height: number, src: string }
 
 export type DemoTake = {
@@ -37,6 +38,11 @@ const TAKE = '/video/happy-one/team-take11'
 // cut, already sharper than their window.
 const WIDE = '(min-width: 701px)'
 const H264 = 'video/mp4; codecs="avc1.640033, mp4a.40.2"'
+/** A cut's stills, natively and at half size: the 60fps cut's on wider screens, the 30fps cut's elsewhere. */
+const stills = (name: string, wide: number, narrow: number): DemoStills[] => [
+  { media: WIDE, widths: [wide / 2, wide].map(width => ({ src: `${TAKE}/poster/${name}-${width}.avif`, width })) },
+  { widths: [narrow / 2, narrow].map(width => ({ src: `${TAKE}/poster/${name}-30-${width}.avif`, width })) },
+]
 
 /**
  * Team take 11: Kirill's desktop and Steve's phone, frame for frame on one 60fps clock. Its last
@@ -45,7 +51,7 @@ const H264 = 'video/mp4; codecs="avc1.640033, mp4a.40.2"'
 export const DEMO_TAKE: DemoTake = {
   desktop: {
     kind: 'movie', width: 2266, height: 1400, poster: `${TAKE}/desktop-poster.webp`,
-    stills: [900, 1300, 1812, 2266].map(width => ({ src: `${TAKE}/poster/desktop-${width}.avif`, width })),
+    stills: stills('desktop', 2266, 1812),
     sources: [
       { src: `${TAKE}/desktop.webm`, type: 'video/webm; codecs="av01.0.12M.08, opus"', media: WIDE },
       { src: `${TAKE}/desktop.mp4`, type: H264, media: WIDE },
@@ -55,7 +61,7 @@ export const DEMO_TAKE: DemoTake = {
   },
   phone: {
     kind: 'movie', follows: true, width: 1206, height: 2622, poster: `${TAKE}/phone-poster.webp`,
-    stills: [400, 600, 964, 1206].map(width => ({ src: `${TAKE}/poster/phone-${width}.avif`, width })),
+    stills: stills('phone', 1206, 964),
     sources: [
       { src: `${TAKE}/phone.webm`, type: 'video/webm; codecs="av01.0.12M.08"', media: WIDE },
       { src: `${TAKE}/phone.mp4`, type: 'video/mp4; codecs="avc1.640033"', media: WIDE },

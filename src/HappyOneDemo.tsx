@@ -23,7 +23,9 @@ function Sources({ movie }: { movie: DemoMovie }) {
 function Still({ movie, sizes, priority = false }: { movie: DemoMovie, sizes: string, priority?: boolean }) {
   return (
     <picture className="one-demo-still">
-      <source type="image/avif" srcSet={movie.stills.map(({ src, width }) => `${src} ${width}w`).join(', ')} sizes={sizes} />
+      {movie.stills.map(({ media, widths }) => (
+        <source key={widths[0].src} media={media} type="image/avif" srcSet={widths.map(({ src, width }) => `${src} ${width}w`).join(', ')} sizes={sizes} />
+      ))}
       <img src={movie.poster} width={movie.width} height={movie.height} alt="" fetchPriority={priority ? 'high' : undefined} />
     </picture>
   )
@@ -127,7 +129,24 @@ export function HappyOneDemo({ reach }: { reach?: RefObject<HTMLElement | null> 
       }, { timeout: 2000 })
     }
     const onPlaying = () => { follow(); warm() }
+    // Until it has a frame, a movie with controls showing draws a dark box: its poster is the
+    // still the page already drew, from the cache.
+    const posters = [main, companion].map(video => {
+      const still = video?.parentElement?.querySelector<HTMLImageElement>('.one-demo-still img')
+      if (!video || !still) return () => {}
+      const adopt = () => { if (still.currentSrc) video.poster = still.currentSrc }
+      if (still.complete) adopt()
+      else still.addEventListener('load', adopt, { once: true })
+      return () => still.removeEventListener('load', adopt)
+    })
+    // The phone's movie loads with the window's, once that plays.
+    const loadCompanion = () => {
+      if (!companion || companion.preload !== 'none') return
+      companion.preload = 'auto'
+      companion.load()
+    }
     const onPlay = () => {
+      loadCompanion()
       align(true)
       if (companion && follows) companion.playbackRate = main.playbackRate
       follow()
@@ -148,14 +167,13 @@ export function HappyOneDemo({ reach }: { reach?: RefObject<HTMLElement | null> 
     const onMotion = () => {
       if (reducedMotion.matches || sparing(connection)) { autoplay = false; main.pause(); revealControls() }
     }
-    // Both movies are preload="none" until the page has loaded and is idle; the phone's then
-    // loads with the window's, which play() starts.
+    // Both movies are preload="none" until the page has loaded and is idle, and then only if
+    // they will play: play() loads the window's, and its play event the phone's. Paused on the
+    // stills (reduced motion, Save-Data), nothing loads until the visitor presses play.
     let idle = 0
     const load = () => {
       if (disposed) return
       loaded = true
-      main.preload = 'auto'
-      if (companion) { companion.preload = 'auto'; companion.load() }
       play()
     }
     const rest = () => {
@@ -185,6 +203,7 @@ export function HappyOneDemo({ reach }: { reach?: RefObject<HTMLElement | null> 
     observer.observe(figure.current!)
     return () => {
       disposed = true
+      posters.forEach(stop => stop())
       removeEventListener('load', rest)
       if (typeof cancelIdleCallback === 'function') cancelIdleCallback(idle)
       clearTimeout(idle)

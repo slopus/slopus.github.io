@@ -32,35 +32,38 @@ The last 0.6s dissolves into frame 0, so the loop has no seam. `take.json` holds
 | `phone.webm` / `.mp4` | AV1 / H.264 High 5.1, 1206×2622, 60fps | 4,986,139 / 7,342,738 bytes |
 | `phone-30.webm` / `.mp4` | AV1 / H.264 High 5.1, 964×2098, 30fps | 2,372,987 / 4,174,951 bytes |
 | `desktop-poster.webp`, `phone-poster.webp` | frame 0 | 112,996 / 107,798 bytes |
-| `poster/desktop-{900,1300,1812,2266}.avif` | frame 0, AVIF | 18,845 / 29,967 / 44,570 / 57,623 bytes |
-| `poster/phone-{400,600,964,1206}.avif` | frame 0, AVIF | 13,491 / 21,342 / 40,753 / 43,773 bytes |
+| `poster/desktop-{1133,2266}.avif`, `poster/desktop-30-{906,1812}.avif` | frame 0, AVIF | 20,494 / 57,623, 19,067 / 44,570 bytes |
+| `poster/phone-{603,1206}.avif`, `poster/phone-30-{482,964}.avif` | frame 0, AVIF | 17,420 / 43,773, 16,788 / 40,753 bytes |
 
 **The first screen is the stills.** Each movie has its frame 0 drawn under it
 (`Still` in `src/HappyOneDemo.tsx`): the AVIFs above, from which the browser
 takes the smallest sharp enough for the width the page draws it at, with the
-WebP poster for browsers without AVIF. The window's is the page's LCP image and
-loads at high priority. Both movies are `preload="none"` until the page has
-loaded and is idle; they then load and play over the stills from the same
-frame. Each AVIF is encoded from its own source's YUV frame 0, carrying the
-movie's BT.709 tags, so the browser converts both the same way: the native
-sizes come from the 30fps cut (1812, 964) and the 60fps one (2266, 1206), the
-smaller ones scaled from the 60fps one. With a new take, regenerate them from
-`public/video/happy-one/<take>/`:
+WebP poster for browsers without AVIF; the same still is the movie's `poster`, so
+native controls (reduced motion, Save-Data) never show a dark box. The window's
+is the page's LCP image and loads at high priority. Both movies are
+`preload="none"` until the page has loaded and is idle, and load only if they
+will play; they then play over the stills from the same frame. Each still is
+encoded from its own cut's YUV frame 0, natively and at exactly half size,
+carrying the movie's BT.709 tags, so the browser converts both the same way, and
+is offered under the same `media` as that cut: the 60fps and 30fps cuts differ
+in aspect ratio by up to 0.1%, enough to put a still from the other cut a device
+pixel off. Decoded by Chromium at their own size, each still and its frame 0
+agree to 46-48 dB, with no colour shift. Drawn on the page they sit on the same
+pixels, but Chromium scales a playing movie with a plainer filter than an image,
+so text in the movie is a touch crisper than in the still; no format of the
+still changes that, and the WebP poster before this had the same. With a new take, regenerate
+them from `public/video/happy-one/<take>/`:
 
 ```sh
 T="-color_range tv -colorspace bt709 -color_primaries bt709 -color_trc iec61966-2-1"
 still() { # source width|native out
-  scale=$([ "$2" = native ] || echo "-vf scale=$2:-2:flags=lanczos")
-  ffmpeg -y -i "$1" -frames:v 1 $scale -c:v libaom-av1 -still-picture 1 -crf 20 -cpu-used 2 $T "$3"
+  scale=$([ "$2" = native ] || echo "-vf scale=$2:-1:flags=lanczos")
+  ffmpeg -y -i "$1" -frames:v 1 $scale -c:v libaom-av1 -still-picture 1 -crf 20 -cpu-used 2 $T "poster/$3"
 }
-still desktop.webm 900 poster/desktop-900.avif
-still desktop.webm 1300 poster/desktop-1300.avif
-still desktop-30.webm native poster/desktop-1812.avif
-still desktop.webm native poster/desktop-2266.avif
-still phone.webm 400 poster/phone-400.avif
-still phone.webm 600 poster/phone-600.avif
-still phone-30.webm native poster/phone-964.avif
-still phone.webm native poster/phone-1206.avif
+still desktop.webm 1133 desktop-1133.avif; still desktop.webm native desktop-2266.avif
+still desktop-30.webm 906 desktop-30-906.avif; still desktop-30.webm native desktop-30-1812.avif
+still phone.webm 603 phone-603.avif; still phone.webm native phone-1206.avif
+still phone-30.webm 482 phone-30-482.avif; still phone-30.webm native phone-30-964.avif
 ```
 
 The iPhone frame is `device/iphone-16-pro-black-{480,720,1406}.webp` (6,850 /
