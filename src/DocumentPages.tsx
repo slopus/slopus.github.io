@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import type { Components } from 'react-markdown'
 import { DownloadOptions } from './DownloadOptions'
 import { GrainGradient, SITE_SURFACE } from './GrainGradient'
@@ -198,13 +198,19 @@ export function DocsPage({ product = HAPPY, path, changelogPath }: { product?: P
           {activeDocument.forPeople && (
             <p className="recipe-source">For people: <a href={activeDocument.forPeople.href}>{activeDocument.forPeople.label}</a></p>
           )}
-          <MarkdownDocument markdown={markdown} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} resolveHref={activeDocument.group === 'Recipes' ? (href) => recipeHref(activeDocument.path, href) : undefined} headingId={activeDocument.group === 'Changelog' ? (text, depth) => {
-            const entry = depth < 3 ? productionChangelogEntries.find((entry) => entry.title === text) : undefined
-            return entry ? changelogAnchor(entry) : undefined
-          } : undefined} headingSuffix={activeDocument.group === 'Changelog' ? (text, depth) => {
-            const entry = depth < 3 ? productionChangelogEntries.find((entry) => entry.title === text) : undefined
-            return entry?.beta ? <> <span className="changelog-beta">Beta</span></> : undefined
-          } : undefined} />
+          {/* A line of just <Download /> puts the landing page's download buttons there, outside the Markdown's styles. */}
+          {markdown.split(DOWNLOAD_LINE).map((part, index) => (
+            <Fragment key={index}>
+              {index > 0 && <PageDownload />}
+              <MarkdownDocument markdown={part} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} resolveHref={activeDocument.group === 'Recipes' ? (href) => recipeHref(activeDocument.path, href) : undefined} headingId={activeDocument.group === 'Changelog' ? (text, depth) => {
+                const entry = depth < 3 ? productionChangelogEntries.find((entry) => entry.title === text) : undefined
+                return entry ? changelogAnchor(entry) : undefined
+              } : undefined} headingSuffix={activeDocument.group === 'Changelog' ? (text, depth) => {
+                const entry = depth < 3 ? productionChangelogEntries.find((entry) => entry.title === text) : undefined
+                return entry?.beta ? <> <span className="changelog-beta">Beta</span></> : undefined
+              } : undefined} />
+            </Fragment>
+          ))}
           {activeDocument.group === 'Blog' && <BlogDownload />}
 
           <nav className="document-pagination" aria-label="Previous and next documentation pages">
@@ -226,6 +232,18 @@ export function DocsPage({ product = HAPPY, path, changelogPath }: { product?: P
         </article>
 
       </main>
+    </div>
+  )
+}
+
+const DOWNLOAD_LINE = /^<Download \/>$/m
+
+/** The landing page's download buttons, where a page's <Download /> line puts them. */
+function PageDownload() {
+  const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
+  return (
+    <div className="happy-one document-download">
+      <DownloadOptions macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
     </div>
   )
 }

@@ -629,9 +629,10 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .document-pagination { grid-template-columns: 1fr; }
   .document-pagination-next { text-align: left; }
 }
-/* <Download /> inside a page: the homepage's buttons, left-aligned with the text. */
-.document-content .document-download { margin: 1.6rem 0 2rem; }
-.document-content .document-download .one-download-actions { align-items: flex-start; margin: 0; }
-.document-content .document-download :is(.one-desktop-downloads, .one-primary-download) { align-items: flex-start; }
-.document-content .document-download img { border: 0; border-radius: 0; box-shadow: none; margin: 0; }
-.document-content .document-download a { color: inherit; }
+/* A page's <Download /> line: the landing page's download buttons, between two runs of the page's
+   Markdown rather than inside one, so no docs typography reaches them; left-aligned with the text. */
+.document-download { margin: 0 0 2.4rem; }
+.document-download .one-download-actions { align-items: flex-start; margin: 0; }
+.document-download :is(.one-desktop-downloads, .one-primary-download, .one-mobile-downloads, .one-store-download) { align-items: flex-start; justify-content: flex-start; }
+.document-download .one-platform-links { justify-content: flex-start; }
+.document-content img[src="/img/migrate.svg"] { aspect-ratio: 520 / 536; display: block; margin: 1.6rem 0; width: min(100%, 560px); }
