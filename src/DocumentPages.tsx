@@ -243,7 +243,7 @@ function PageDownload() {
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   return (
     <div className="happy-one document-download">
-      <DownloadOptions macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
+      <DownloadOptions macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} analyticsLocation="page" />
     </div>
   )
 }
@@ -256,7 +256,7 @@ function BlogDownload() {
       <section className="one-download" aria-labelledby="blog-download-heading">
         <h2 id="blog-download-heading">Download Happy.</h2>
         <p>Free and open source</p>
-        <DownloadOptions macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
+        <DownloadOptions macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} analyticsLocation="blog" />
       </section>
     </div>
   )

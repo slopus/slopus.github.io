@@ -118,12 +118,13 @@
 .one-hero-stars:hover { color: var(--home-accent); }
 /* The headline, at most one short line under it, and the note. The first-screen fit
    (happy-one.css) counts the headline's lines at its own size and the line under it, if any:
-   the header's 60px where it takes room, hero top 32px, heading margin 8px, note 24px, movie
+   the header's 60px where it takes room, the hero's top (32px), heading margin 8px, note 24px, movie
    gap 12px, stage padding 12px, download padding 8px, badge with its architecture selector
-   70px. The recording ends 20px above the badge. */
-.happy-home .one-hero { --hero-header: 60px; --hero-h1: clamp(1.9rem, 3.7vw, 3.3rem); --hero-kicker: 0px; --hero-sub-gap: calc(min(var(--hero-sub-lines, 0), 1) * .9rem); --one-hero-reserved: calc(166px + var(--hero-header) + var(--hero-kicker) + var(--hero-sub-gap) + var(--hero-sub-lines, 0) * 1.9rem + var(--hero-lines, 2) * 1.04 * var(--hero-h1)); }
+   70px, then the store badges with their ratings and the gap above them, 82px, and 10px under
+   the ratings. The recording ends 20px above the badge. */
+.happy-home .one-hero { --hero-header: 60px; --hero-h1: clamp(1.9rem, 3.7vw, 3.3rem); --hero-kicker: 0px; --hero-sub-gap: calc(min(var(--hero-sub-lines, 0), 1) * .9rem); --hero-top: 2rem; --one-hero-reserved: calc(226px + var(--hero-top) + var(--hero-header) + var(--hero-kicker) + var(--hero-sub-gap) + var(--hero-sub-lines, 0) * 1.9rem + var(--hero-lines, 2) * 1.04 * var(--hero-h1)); }
 @media (min-width: 701px) {
-  .happy-home:not([data-social-preview]) .one-hero { padding-top: 2rem; }
+  .happy-home:not([data-social-preview]) .one-hero { padding-top: var(--hero-top); }
 }
 @media (scripting: enabled) and (min-width: 701px) {
   .happy-home .one-hero { --hero-header: 0px; }
@@ -135,6 +136,12 @@
 /* The name alone, large. */
 .happy-home .one-hero[data-name] { --hero-h1: clamp(3rem, 5.6vw, 4.5rem); }
 .happy-home .one-hero[data-name] h1 { margin-bottom: .35rem; letter-spacing: -.035em; }
+/* Short laptop screens (1280×720, 1366×768) keep the recording large: a little less above the
+   name, and the name a little smaller. */
+@media (min-width: 701px) and (max-height: 820px) {
+  .happy-home .one-hero { --hero-top: 1.25rem; }
+  .happy-home .one-hero[data-name] { --hero-h1: clamp(3rem, min(5.6vw, 7.6vh), 4.5rem); }
+}
 .happy-home .one-hero-tagline { color: var(--home-ink); }
 .happy-home:not([data-social-preview]) .one-hero-tagline { max-width: 36rem; margin: 0 auto .9rem; font-size: 1.3rem; line-height: 1.45; text-wrap: balance; }
 .happy-home .one-hero-tagline em { color: var(--home-accent); font-style: normal; font-weight: 600; white-space: nowrap; }

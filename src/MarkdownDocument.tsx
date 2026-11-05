@@ -170,7 +170,7 @@ function DownloadEmbed() {
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   return (
     <div className="happy-one document-download">
-      <DownloadOptions macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} mobile={false} />
+      <DownloadOptions macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} mobile={false} analyticsLocation="page" />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type MouseEvent, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type CSSProperties, type MouseEvent, type ReactNode } from 'react'
 import { AppStoreButton, GooglePlayButton } from './StoreButtons'
 import { MOBILE_STORE_RATINGS } from './storeRatings'
 import { CopyIcon } from './CopyIcon'
@@ -25,6 +25,8 @@ export type DownloadOptionsProps = {
   releasesLink?: boolean
   /** Off where the page shows the phone apps once for both channels. */
   mobile?: boolean
+  /** The nearest `data-analytics-location` names it in click events. */
+  analyticsLocation?: string
 }
 type DesktopPlatform = 'desktop' | 'macos' | 'windows' | 'linux'
 
@@ -66,8 +68,8 @@ function desktopDownloadUrl(downloads: DesktopDownloads | null, platform: Exclud
   return (platform === 'macos' ? installers.macos[architecture] : installers[platform]) ?? fallback
 }
 
-function DesktopDownloadLink({ platform, macArchitecture, downloads, channel = 'stable', standard = false, className, children }: {
-  platform: Exclude<DesktopPlatform, 'desktop'>; macArchitecture: MacArchitecture; downloads: DesktopDownloads | null; channel?: ReleaseChannel; standard?: boolean; className?: string; children: ReactNode
+function DesktopDownloadLink({ platform, macArchitecture, downloads, channel = 'stable', standard = false, button, className, children }: {
+  platform: Exclude<DesktopPlatform, 'desktop'>; macArchitecture: MacArchitecture; downloads: DesktopDownloads | null; channel?: ReleaseChannel; standard?: boolean; button: 'primary' | 'platform-link'; className?: string; children: ReactNode
 }) {
   const [checking, setChecking] = useState(false)
   const [message, setMessage] = useState('')
@@ -101,7 +103,7 @@ function DesktopDownloadLink({ platform, macArchitecture, downloads, channel = '
   const app = channel === 'stable' ? 'Happy' : standard ? 'the Happy preview' : 'Happy Nightly'
   return <a className={className} href={desktopDownloadUrl(downloads, platform, macArchitecture, channel, standard)}
     aria-label={`Download ${app} for ${LABELS[platform]}`} aria-busy={checking || undefined}
-    data-download-platform={platform} data-download-arch={platform === 'macos' ? macArchitecture : 'x64'}
+    data-download-platform={platform} data-download-arch={platform === 'macos' ? macArchitecture : 'x64'} data-analytics-button={button}
     onClick={start} onAuxClick={start}>
     {children}
     {message && <span className="one-download-sr" role="status">{message}</span>}
@@ -118,12 +120,37 @@ function releasePlatforms(channel: ReleaseChannel, downloads: DesktopDownloads |
 function PlatformLinks({ platforms, downloads, channel, macArchitecture, releasesLink, standard = false }: { platforms: readonly Exclude<DesktopPlatform, 'desktop'>[]; downloads: DesktopDownloads | null; channel: ReleaseChannel; macArchitecture: MacArchitecture; releasesLink: boolean; standard?: boolean }) {
   return (
     <div className="one-platform-links" aria-label={standard ? 'Happy preview platforms' : 'Desktop platforms'}>
-      {platforms.map(platform => <DesktopDownloadLink key={platform} platform={platform} downloads={downloads} channel={channel} standard={standard} macArchitecture={macArchitecture}>
+      {platforms.map(platform => <DesktopDownloadLink key={platform} platform={platform} downloads={downloads} channel={channel} standard={standard} macArchitecture={macArchitecture} button="platform-link">
         {platform !== 'macos' && <span className="one-platform-icon" data-platform={platform} aria-hidden="true"
           style={{ '--platform-icon': `url('/img/happy-one/icons/${platform}.svg')` } as CSSProperties} />}
         {LABELS[platform]}
       </DesktopDownloadLink>)}
       {releasesLink && <a href={RELEASES_PAGE}><GithubMark />All Releases</a>}
+    </div>
+  )
+}
+
+/** How the three platforms sit under "Other platforms": a row, or a column (`stack`). Both are under review. */
+type OtherPlatformsLayout = 'row' | 'stack'
+const OTHER_PLATFORMS_LAYOUT: OtherPlatformsLayout = 'row'
+
+/** Every desktop platform, large, each to the latest release on GitHub; Stable and Preview after them. */
+function OtherPlatforms({ releasesLink }: { releasesLink: boolean }) {
+  const title = useId()
+  return (
+    <div className="one-other-platforms" data-layout={OTHER_PLATFORMS_LAYOUT} role="group" aria-labelledby={title}>
+      <p id={title} className="one-other-platforms-title">Other platforms</p>
+      <ul role="list">
+        {DESKTOP_PLATFORMS.map(platform => <li key={platform}>
+          <a href={LATEST_RELEASE} target="_blank" rel="noopener noreferrer" aria-label={`${LABELS[platform]}: all downloads on GitHub`}
+            data-download-platform={platform} data-analytics-button="other-platforms">
+            <span className="one-other-platform-icon" data-platform={platform} aria-hidden="true"
+              style={{ '--platform-icon': `url('/img/happy-one/icons/${platform}.svg')` } as CSSProperties} />
+            <span>{LABELS[platform]}</span>
+          </a>
+        </li>)}
+      </ul>
+      {releasesLink && <a className="one-other-platforms-releases" href={RELEASES_PAGE}><GithubMark />All Releases</a>}
     </div>
   )
 }
@@ -265,7 +292,12 @@ export function useDesktopDownloadSelection(channel: ReleaseChannel, macArchitec
   return { downloads, loading: resolved?.channel !== channel, platform, primaryPlatform, primaryStandard, otherPlatforms }
 }
 
-export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, channel = 'stable', releasesLink = true, mobile = true }: DownloadOptionsProps) {
+/**
+ * With the phone apps, as on the homepage: the primary desktop download, the stores directly under
+ * it, Homebrew or the SmartScreen note, then every platform under "Other platforms". On phones the
+ * stores lead and the desktop download gives way to "Other platforms" (happy-one.css).
+ */
+export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, channel = 'stable', releasesLink = true, mobile = true, analyticsLocation }: DownloadOptionsProps) {
   const { downloads, platform, primaryPlatform, primaryStandard, otherPlatforms } = useDesktopDownloadSelection(channel, macArchitecture)
   const preview = channel === 'preview'
   // Phones install from the stores; Preview is the desktop app's, shown on the releases page itself.
@@ -275,6 +307,20 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
   const showBrew = primaryPlatform === 'macos' && !preview
   // Prerendered markup has no store preference; hydration settles on this device's.
   const store = useSyncExternalStore(NO_SUBSCRIPTION, mobileStore, () => null)
+  const primary = primaryPlatform && <div className="one-primary-download">
+    <DesktopDownloadLink className="store-button one-desktop-button" platform={primaryPlatform} downloads={downloads} channel={channel} standard={primaryStandard} macArchitecture={macArchitecture} button="primary">
+      <DownloadBadge platform={primaryPlatform} />
+    </DesktopDownloadLink>
+    {primaryPlatform === 'macos' && <select className="one-mac-architecture" aria-label={preview ? 'Preview Mac architecture' : 'Mac architecture'} value={macArchitecture}
+      onChange={event => { if (event.target.value === 'arm64' || event.target.value === 'x64') onMacArchitectureChange(event.target.value) }}>
+      <option value="arm64">Apple Silicon</option>
+      <option value="x64">Intel</option>
+    </select>}
+  </div>
+  const extras = <>
+    {primaryPlatform === 'windows' && <SmartScreenWarning />}
+    {showBrew && <HomebrewCommand />}
+  </>
 
   return (
     <div
@@ -284,26 +330,22 @@ export function DownloadOptions({ macArchitecture, onMacArchitectureChange, id, 
       data-primary-platform={primaryPlatform}
       data-mobile-store={withMobile ? store ?? undefined : undefined}
       data-channel={preview ? 'preview' : undefined}
+      data-other-platforms={withMobile ? '' : undefined}
+      data-analytics-location={analyticsLocation}
       role="group"
       aria-label={preview ? 'Preview downloads' : withMobile ? 'Desktop and mobile downloads' : 'Desktop downloads'}
     >
-      <div className="one-desktop-downloads">
-        {primaryPlatform && <div className="one-primary-download">
-          <DesktopDownloadLink className="store-button one-desktop-button" platform={primaryPlatform} downloads={downloads} channel={channel} standard={primaryStandard} macArchitecture={macArchitecture}>
-            <DownloadBadge platform={primaryPlatform} />
-          </DesktopDownloadLink>
-          {primaryPlatform === 'macos' && <select className="one-mac-architecture" aria-label={preview ? 'Preview Mac architecture' : 'Mac architecture'} value={macArchitecture}
-            onChange={event => { if (event.target.value === 'arm64' || event.target.value === 'x64') onMacArchitectureChange(event.target.value) }}>
-            <option value="arm64">Apple Silicon</option>
-            <option value="x64">Intel</option>
-          </select>}
-        </div>}
-        {primaryPlatform === 'windows' && <SmartScreenWarning />}
-        {showBrew && <HomebrewCommand />}
+      {withMobile ? <>
+        <div className="one-desktop-downloads">{primary}</div>
+        <MobileDownloads />
+        {(primaryPlatform === 'windows' || showBrew) && <div className="one-desktop-downloads one-desktop-extras">{extras}</div>}
+        <OtherPlatforms releasesLink={withReleasesLink} />
+      </> : <div className="one-desktop-downloads">
+        {primary}
+        {extras}
         {(otherPlatforms.length > 0 || withReleasesLink) && <PlatformLinks platforms={otherPlatforms} downloads={downloads} channel={channel} standard={primaryStandard} macArchitecture={macArchitecture} releasesLink={withReleasesLink} />}
         {preview && downloads && <PreviewAlternative downloads={downloads} macArchitecture={macArchitecture} standard={!primaryStandard} />}
-      </div>
-      {withMobile && <MobileDownloads />}
+      </div>}
     </div>
   )
 }

@@ -47,7 +47,7 @@ export default function ReleasesPage() {
     <div className="site-shell happy-one releases-page site-theme">
       <GrainGradient surface={SITE_SURFACE} className="site-grain" />
       <SiteHeader product={HAPPY_DESKTOP} />
-      <main className="releases-main page-width">
+      <main className="releases-main page-width" data-analytics-location="releases">
         <h1>Download Happy</h1>
         <div className="releases-toggle" role="radiogroup" aria-label="Release channel">
           {CHANNELS.map(channel => (

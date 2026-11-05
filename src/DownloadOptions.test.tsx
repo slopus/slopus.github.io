@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import { DownloadOptions } from './DownloadOptions'
@@ -56,13 +56,26 @@ describe('desktop and mobile downloads', () => {
     ['iPhone', 'iPhone', '', 5],
     ['Android', 'Linux; Android 15', '', 5],
     ['iPad desktop mode', 'Macintosh; Intel Mac OS X 10_15_7', 'MacIntel', 5],
-  ])('keeps Homebrew and all desktop platforms visible on %s', (_name, ua, platform, touch) => {
+  ])('keeps Homebrew and every desktop platform under Other platforms on %s', (_name, ua, platform, touch) => {
     device(ua as string, platform as string, touch as number)
     const { container } = render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     expect(container.querySelector('[data-platform="desktop"]')).toBeTruthy()
     expect(screen.getByText(BREW)).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Download Happy for macOS' })).toBeTruthy()
-    for (const os of ['macOS', 'Windows', 'Linux']) expect(screen.getByRole('link', { name: `Download Happy for ${os}` })).toBeTruthy()
+    const other = screen.getByRole('group', { name: 'Other platforms' })
+    for (const os of ['macOS', 'Windows', 'Linux']) {
+      const link = within(other).getByRole('link', { name: `${os}: all downloads on GitHub` })
+      expect(link.getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases/latest')
+      expect(link.getAttribute('data-analytics-button')).toBe('other-platforms')
+    }
+  })
+
+  it('keeps the small platform links where the page has no phone apps', () => {
+    device('Macintosh')
+    render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} mobile={false} />)
+    expect(screen.queryByRole('group', { name: 'Other platforms' })).toBeNull()
+    expect(screen.getByRole('link', { name: 'Download Happy for Windows' }).getAttribute('data-analytics-button')).toBe('platform-link')
+    expect(screen.getByRole('link', { name: 'Download Happy for macOS' }).getAttribute('data-analytics-button')).toBe('primary')
   })
 
   it.each([['Macintosh', 'macOS', 'Happy-0.0.90-arm64.dmg'], ['X11; Linux x86_64', 'Linux', 'Happy-0.0.90-x64.AppImage']])('uses the right desktop badge for %s', async (ua, label, asset) => {
@@ -278,7 +291,8 @@ describe('desktop and mobile downloads', () => {
   it('links every download to the latest release until the lookup resolves, and still fetches the file on click', async () => {
     const html = renderToString(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
     const links = [...html.matchAll(/<a [^>]*data-download-platform[^>]*>/g)].map(([tag]) => tag)
-    expect(links).toHaveLength(3)
+    // The primary download, then macOS, Windows and Linux under Other platforms.
+    expect(links).toHaveLength(4)
     for (const tag of links) expect(tag).toContain('href="https://github.com/slopus/happy-desktop/releases/latest"')
 
     vi.resetModules()
@@ -316,7 +330,7 @@ describe('desktop and mobile downloads', () => {
     for (const ua of ['Macintosh', 'X11; Linux x86_64', 'iPhone']) {
       device(ua)
       const { unmount: next } = render(<DownloadOptions macArchitecture="arm64" onMacArchitectureChange={vi.fn()} />)
-      expect(screen.getByRole('link', { name: 'Download Happy for Windows' })).toBeTruthy()
+      expect(screen.getByRole('link', { name: 'Windows: all downloads on GitHub' })).toBeTruthy()
       expect(screen.queryByRole('note')).toBeNull()
       expect(screen.queryByText(/SmartScreen/)).toBeNull()
       next()

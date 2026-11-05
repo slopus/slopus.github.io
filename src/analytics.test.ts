@@ -19,6 +19,18 @@ describe('analytics click events', () => {
       .toEqual(['download_click', { platform: 'all' }])
   })
 
+  it('names which download button was clicked, and where it sits on the page', () => {
+    const section = document.createElement('div')
+    section.dataset.analyticsLocation = 'hero'
+    const primary = link('https://github.com/slopus/happy-desktop/releases/latest', { downloadPlatform: 'macos', downloadArch: 'x64', analyticsButton: 'primary' })
+    const other = link('https://github.com/slopus/happy-desktop/releases/latest', { downloadPlatform: 'linux', analyticsButton: 'other-platforms' })
+    const store = link(APP_STORE_LINK)
+    section.append(primary, other, store)
+    expect(clickEvent(primary)).toEqual(['download_click', { platform: 'macos', arch: 'x64', button: 'primary', location: 'hero' }])
+    expect(clickEvent(other)).toEqual(['download_click', { platform: 'linux', button: 'other-platforms', location: 'hero' }])
+    expect(clickEvent(store)).toEqual(['store_click', { store: 'ios', location: 'hero' }])
+  })
+
   it('names the store and GitHub links', () => {
     expect(clickEvent(link(APP_STORE_LINK))).toEqual(['store_click', { store: 'ios' }])
     expect(clickEvent(link(GOOGLE_PLAY_LINK))).toEqual(['store_click', { store: 'android' }])

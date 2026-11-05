@@ -9,10 +9,12 @@ import type { PostHog } from 'posthog-js'
 const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_KEY
 const POSTHOG_HOST = 'https://us.i.posthog.com'
 
+/** Where on the page: the nearest `data-analytics-location`, such as `hero` or `download-again`. */
+type Placement = { location?: string }
 type ClickEvent =
-  | ['download_click', { platform: string; arch?: string }]
-  | ['store_click', { store: 'ios' | 'android' }]
-  | ['github_click', { repository: string }]
+  | ['download_click', Placement & { platform: string; arch?: string; button?: string }]
+  | ['store_click', Placement & { store: 'ios' | 'android' }]
+  | ['github_click', Placement & { repository: string }]
 
 let loading: Promise<PostHog | undefined> | undefined
 
@@ -41,11 +43,17 @@ function load(key: string) {
   return loading
 }
 
-/** The download, store, and GitHub links, wherever they are on the page. */
+/**
+ * The download, store, and GitHub links, wherever they are on the page. A download names its
+ * platform, its Mac chip, and which button it is (`primary`, `platform-link`, `other-platforms`).
+ */
 export function clickEvent(link: HTMLAnchorElement): ClickEvent | null {
+  const location = link.closest<HTMLElement>('[data-analytics-location]')?.dataset.analyticsLocation
+  const placement: Placement = location ? { location } : {}
   const platform = link.dataset.downloadPlatform
   if (platform) {
-    return ['download_click', link.dataset.downloadArch ? { platform, arch: link.dataset.downloadArch } : { platform }]
+    const { downloadArch: arch, analyticsButton: button } = link.dataset
+    return ['download_click', { platform, ...(arch ? { arch } : {}), ...(button ? { button } : {}), ...placement }]
   }
   let url: URL
   try {
@@ -53,12 +61,12 @@ export function clickEvent(link: HTMLAnchorElement): ClickEvent | null {
   } catch {
     return null
   }
-  if (url.hostname === 'apps.apple.com') return ['store_click', { store: 'ios' }]
-  if (url.hostname === 'play.google.com') return ['store_click', { store: 'android' }]
+  if (url.hostname === 'apps.apple.com') return ['store_click', { store: 'ios', ...placement }]
+  if (url.hostname === 'play.google.com') return ['store_click', { store: 'android', ...placement }]
   if (url.hostname === 'github.com') {
-    if (url.pathname.startsWith('/slopus/happy-desktop/releases')) return ['download_click', { platform: 'all' }]
+    if (url.pathname.startsWith('/slopus/happy-desktop/releases')) return ['download_click', { platform: 'all', ...placement }]
     const repository = url.pathname.split('/').slice(1, 3).join('/')
-    if (repository) return ['github_click', { repository }]
+    if (repository) return ['github_click', { repository, ...placement }]
   }
   return null
 }

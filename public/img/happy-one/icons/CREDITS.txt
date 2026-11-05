@@ -15,6 +15,8 @@ https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/brands/linux
 https://creativecommons.org/licenses/by/4.0/
 Tux was originally created by Larry Ewing using GIMP.
 Original badge attribution: /img/happy-one/badges/NOTICE.md
+The macOS mark (macos.svg) is the Apple silhouette path from this site's App
+Store button (src/StoreButtons.tsx), unchanged, with a viewBox cropped to it.
 
 X and Discord marks on the homepage (src/DesktopApp.tsx): Simple Icons, CC0 1.0
 https://simpleicons.org/ https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md

@@ -66,7 +66,7 @@ function ValueProposition({ title, body, emoji, index }: (typeof values)[number]
 function Downloads(props: DownloadOptionsProps) {
   return (
     <section className="one-download page-width" id="download-again" aria-label="Download Happy">
-      <DownloadOptions {...props} />
+      <DownloadOptions {...props} analyticsLocation="download-again" />
     </section>
   )
 }
@@ -205,7 +205,7 @@ export default function DesktopApp() {
             </div>
             <HappyOneDemo reach={note} />
           </div>
-          <DownloadOptions id="download" macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
+          <DownloadOptions id="download" macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} analyticsLocation="hero" />
         </section>
         <div className="one-values" id="product">
           {values.map((value, index) => <ValueProposition key={value.title} {...value} index={index} />)}
