@@ -66,8 +66,8 @@ describe('Happy Desktop landing page', () => {
   it('offers every desktop platform and both app stores', () => {
     render(<DesktopApp />)
 
-    // jsdom reports Linux, so the primary download is Linux's.
-    expect(screen.getAllByRole('link', { name: 'Download Happy for Linux' }).length).toBeGreaterThan(0)
+    // The primary download follows the host jsdom reports: Linux or macOS.
+    expect(screen.getAllByRole('link', { name: /^Download Happy for (macOS|Windows|Linux)$/ }).length).toBeGreaterThan(0)
     for (const os of ['macOS', 'Windows', 'Linux']) {
       for (const link of screen.getAllByRole('link', { name: `${os}: all downloads on GitHub` })) {
         expect(link.getAttribute('href')).toBe('https://github.com/slopus/happy-desktop/releases/latest')
@@ -102,9 +102,9 @@ describe('Happy Desktop landing page', () => {
     expect(fold?.nextElementSibling).toBe(downloads)
     expect(downloads?.querySelector('.one-desktop-downloads')).toBeTruthy()
     expect(downloads?.querySelector('.one-mobile-downloads')).toBeTruthy()
-    // The stores come right after the desktop download, and every platform after them.
+    // The stores come right after the desktop download, and every platform right after them.
     expect(downloads?.querySelector('.one-desktop-downloads')?.nextElementSibling?.className).toBe('one-mobile-downloads')
-    expect(downloads?.lastElementChild?.className).toBe('one-other-platforms')
+    expect(downloads?.querySelector('.one-mobile-downloads')?.nextElementSibling?.className).toBe('one-other-platforms')
   })
 
   it('never mentions the CLI', () => {
