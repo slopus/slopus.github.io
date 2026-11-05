@@ -238,6 +238,29 @@ mode the hand-drawn diagrams are inverted with their hues kept (card diagrams, d
 load in the system's scheme. The tier list's rows take the gradient's hues, strongest at
 S. Redirect pages carry the base colour inline. No page keeps the old cream look.
 
+## Page speed and Google's page experience
+
+Search ranks pages partly on Core Web Vitals from real Chrome visitors (the Chrome UX Report,
+28 days, 75th percentile), on phones and desktops separately: LCP at most 2.5s, INP at most
+200ms, CLS at most 0.1. Lighthouse and other lab scores do not rank, but they show why a
+field number is bad. Before shipping a change to the homepage's first screen, its media, its
+fonts, or the Grain Gradient, and after any report of a slow or jumpy load:
+
+- Run `scripts/vitals.sh` (homepage by default, any URLs as arguments) for the field numbers
+  of the URL and the whole site and one Lighthouse run, phone and desktop. Export
+  `PSI_API_KEY`; the keyless quota is shared and often used up.
+- Check the phone lab run under Lighthouse's conditions (4x CPU, 150ms RTT, 1.6 Mbps) in
+  headless Chromium as well: the LCP element and time, layout shifts and their sources, and
+  long tasks. Watch a filmstrip of the first screen; nothing may appear and then change shape:
+  black boxes before posters, a stand-in background swapped for another.
+- The first screen is plain HTML, CSS and images that are already the right size: posters
+  and the phone frame in WebP or AVIF, the LCP image preloaded, nothing below the fold loaded
+  eagerly. Video and WebGL come after, as an upgrade, and only where the device can take it
+  (`failIfMajorPerformanceCaveat`, Save-Data, reduced motion); never block the main thread
+  for more than 50ms to draw them.
+- Report the field numbers with the change. A field number that is not good is a bug to fix,
+  ahead of new polish.
+
 ## SEO skills
 
 Three upstream SEO skills are installed under `.agents/skills/`, with their
