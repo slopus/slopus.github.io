@@ -12,6 +12,8 @@ export type DesktopDownloads = DesktopInstallers & Readonly<{
   publishedAt?: string
   /** A preview's own build of Happy, which replaces Happy; absent on Stable and on Nightly-only previews. */
   standard?: DesktopInstallers
+  /** On Preview, the newest stable Happy, only where neither app has a preview build. */
+  latest?: DesktopInstallers & Readonly<{ tag: string; publishedAt?: string }>
 }>
 
 export const GITHUB_RELEASES = 'https://github.com/slopus/happy-desktop/releases'
@@ -91,10 +93,21 @@ function mergeInstallers(newer: DesktopInstallers, older: DesktopInstallers): De
   }
 }
 
+/** The fallback's installers for the slots no offered build fills. */
+function unfilledInstallers(fallback: DesktopInstallers, ...offered: DesktopInstallers[]): DesktopInstallers {
+  const unfilled = (pick: (installers: DesktopInstallers) => string | null) => offered.some(pick) ? null : pick(fallback)
+  return {
+    macos: { arm64: unfilled(installers => installers.macos.arm64), x64: unfilled(installers => installers.macos.x64) },
+    windows: unfilled(installers => installers.windows),
+    linux: unfilled(installers => installers.linux),
+  }
+}
+
 /**
  * The preview download is Happy Nightly (installed beside Happy), which updates to every
  * preview and stable release. Pick each installer independently by publication date.
  * Happy's own preview builds are offered until a newer stable release replaces them.
+ * Where neither app has a build, the newest stable Happy is offered instead.
  * GitHub lists releases by creation, not publication, so sort them first.
  */
 function previewDownloads(value: unknown): DesktopDownloads | null {
@@ -108,11 +121,15 @@ function previewDownloads(value: unknown): DesktopDownloads | null {
   const empty: DesktopInstallers = { macos: { arm64: null, x64: null }, windows: null, linux: null }
   let downloads: DesktopDownloads | null = null
   let standard = empty
+  let stable: NonNullable<DesktopDownloads['latest']> | null = null
   let beforeStable = true
   for (const release of releases) {
     const nightly = previewInstallers(release.assets, release.tag_name, 'Happy-Nightly')
     const isPreview = release.tag_name.includes('-preview.')
     if (!isPreview) beforeStable = false
+    if (!isPreview && !stable) {
+      stable = { tag: release.tag_name, publishedAt: release.published_at, ...previewInstallers(release.assets, release.tag_name, 'Happy') }
+    }
     const own = isPreview && beforeStable ? previewInstallers(release.assets, release.tag_name, 'Happy') : empty
     standard = mergeInstallers(standard, own)
     if (!downloads && (hasInstallers(nightly) || hasInstallers(own))) {
@@ -120,7 +137,14 @@ function previewDownloads(value: unknown): DesktopDownloads | null {
     }
     if (downloads) downloads = { ...downloads, ...mergeInstallers(downloads, nightly) }
   }
-  return downloads ? { ...downloads, ...(hasInstallers(standard) ? { standard } : {}) } : null
+  if (!downloads && stable && hasInstallers(stable)) downloads = { tag: stable.tag, publishedAt: stable.publishedAt, ...empty }
+  if (!downloads) return null
+  const latest = stable && { tag: stable.tag, publishedAt: stable.publishedAt, ...unfilledInstallers(stable, downloads, standard) }
+  return {
+    ...downloads,
+    ...(hasInstallers(standard) ? { standard } : {}),
+    ...(latest && hasInstallers(latest) ? { latest } : {}),
+  }
 }
 
 async function githubReleases(path: string): Promise<unknown> {

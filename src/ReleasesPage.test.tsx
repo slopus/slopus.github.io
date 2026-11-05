@@ -81,7 +81,11 @@ describe('releases page', () => {
     expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href'))
       .toBe(`${DOWNLOAD}/v0.0.103-preview.17/Happy-Nightly-0.0.103-preview.17-arm64.dmg`)
     expect(within(preview).queryByText('brew install --cask slopus/tap/happy')).toBeNull()
-    expect(within(preview).queryByRole('link', { name: /Windows|Linux/ })).toBeNull()
+    // Without a preview build for Windows or Linux, those are the latest release's.
+    expect(within(preview).queryByRole('link', { name: /Nightly for (Windows|Linux)/ })).toBeNull()
+    for (const [os, suffix] of [['Windows', 'x64.exe'], ['Linux', 'x64.AppImage']]) {
+      expect(within(preview).getByRole('link', { name: `Download Happy for ${os}` }).getAttribute('href')).toBe(`${DOWNLOAD}/v0.0.102/Happy-0.0.102-${suffix}`)
+    }
 
     // The stores are shared: one App Store and one Google Play badge, in their own section.
     expect(container.querySelectorAll('.one-mobile-downloads')).toHaveLength(1)
@@ -134,8 +138,9 @@ describe('releases page', () => {
     expect(href('Download Happy Nightly for Windows')).toBe(`${DOWNLOAD}/${tag}/Happy-Nightly-0.0.103-preview.18-x64.exe`)
     expect(href('Download the Happy preview for macOS')).toBe(`${DOWNLOAD}/${tag}/Happy-0.0.103-preview.18-arm64.dmg`)
     expect(href('Download the Happy preview for Windows')).toBe(`${DOWNLOAD}/${tag}/Happy-0.0.103-preview.18-x64.exe`)
-    // Previews build no Linux yet; Stable keeps its own.
-    expect(within(preview).queryByRole('link', { name: /Linux/ })).toBeNull()
+    // No preview builds Linux yet, so Preview offers the latest release's, as Stable does.
+    expect(within(preview).getAllByRole('link', { name: /Linux/ }).map(link => link.getAttribute('aria-label'))).toEqual(['Download Happy for Linux'])
+    expect(within(preview).getByRole('link', { name: 'Download Happy for Linux' }).getAttribute('href')).toBe(`${DOWNLOAD}/v0.0.102/Happy-0.0.102-x64.AppImage`)
     expect(within(selectChannel('Stable')).getByRole('link', { name: 'Download Happy for Linux' }).getAttribute('href'))
       .toBe(`${DOWNLOAD}/v0.0.102/Happy-0.0.102-x64.AppImage`)
   })
@@ -158,6 +163,77 @@ describe('releases page', () => {
     const preview = selectChannel('Preview')
     await waitFor(() => expect(version(preview)).toBe('Happy Nightly 0.0.102 · Oct 25, 2026'))
     expect(within(preview).queryByRole('link', { name: /the Happy preview/ })).toBeNull()
+  })
+
+  it('offers Linux the stable AppImage on Preview once stable 0.0.103 replaces every preview, never a Mac download', async () => {
+    // GitHub's list after 0.0.103 shipped: Happy Nightly for macOS and Windows on the stable release, none for Linux.
+    vi.stubGlobal('navigator', { userAgent: 'X11; Linux x86_64', platform: 'Linux x86_64', maxTouchPoints: 0 })
+    const stable = 'v0.0.103'
+    const older = 'v0.0.103-preview.21'
+    const linux = ['arm64.AppImage', 'x64.AppImage']
+    github([
+      githubRelease(stable, '2026-11-05T15:32:52Z', [...stableAssets('0.0.103'), 'Happy-0.0.103-arm64.AppImage', ...nightlyAssets('0.0.103'), 'Happy-Nightly-0.0.103-x64.exe']),
+      githubRelease(older, '2026-11-05T07:33:10Z', [...stableAssets(older.slice(1)), ...linux.map(suffix => `Happy-${older.slice(1)}-${suffix}`), ...nightlyAssets(older.slice(1))]),
+      STABLE,
+    ])
+    await page()
+    const preview = selectChannel('Preview')
+    await waitFor(() => expect(version(preview)).toBe('Happy 0.0.103 · Nov 5, 2026'))
+    const primary = preview.querySelector('.one-desktop-button')!
+    expect(primary.getAttribute('data-download-platform')).toBe('linux')
+    expect(primary.getAttribute('aria-label')).toBe('Download Happy for Linux')
+    expect(primary.getAttribute('href')).toBe(`${DOWNLOAD}/${stable}/Happy-0.0.103-x64.AppImage`)
+    expect(within(preview).getByText('No newer preview right now — this is the latest release.')).toBeTruthy()
+    expect(within(preview).getByRole('link', { name: 'Release notes' }).getAttribute('href')).toBe(`https://github.com/slopus/happy-desktop/releases/tag/${stable}`)
+    // The preview's own builds are older than the stable release, so never offered.
+    expect(within(preview).queryByRole('link', { name: /the Happy preview/ })).toBeNull()
+    expect(within(preview).getByText('Or Happy Nightly, which installs beside Happy:')).toBeTruthy()
+    expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href')).toBe(`${DOWNLOAD}/${stable}/Happy-Nightly-0.0.103-arm64.dmg`)
+    expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for Windows' }).getAttribute('href')).toBe(`${DOWNLOAD}/${stable}/Happy-Nightly-0.0.103-x64.exe`)
+  })
+
+  it('offers the latest release beside Happy Nightly on a Mac, only for platforms without a preview build', async () => {
+    const stable = 'v0.0.103'
+    github([githubRelease(stable, '2026-11-05T15:32:52Z', [...stableAssets('0.0.103'), ...nightlyAssets('0.0.103')]), STABLE])
+    await page()
+    const preview = selectChannel('Preview')
+    await waitFor(() => expect(version(preview)).toBe('Happy Nightly 0.0.103 · Nov 5, 2026'))
+    expect(within(preview).getByText('Help us test Happy. Happy Nightly installs beside Happy.')).toBeTruthy()
+    expect(within(preview).getByRole('link', { name: 'Download Happy Nightly for macOS' }).getAttribute('href')).toBe(`${DOWNLOAD}/${stable}/Happy-Nightly-0.0.103-arm64.dmg`)
+    expect(within(preview).getByText('Or the latest release, where no preview is newer:')).toBeTruthy()
+    const href = (name: string) => within(preview).getByRole('link', { name }).getAttribute('href')
+    expect(href('Download Happy for Windows')).toBe(`${DOWNLOAD}/${stable}/Happy-0.0.103-x64.exe`)
+    expect(href('Download Happy for Linux')).toBe(`${DOWNLOAD}/${stable}/Happy-0.0.103-x64.AppImage`)
+    expect(within(preview).queryByRole('link', { name: 'Download Happy for macOS' })).toBeNull()
+  })
+
+  it('still offers a Linux preview newer than the stable release, with no stable fallback', async () => {
+    vi.stubGlobal('navigator', { userAgent: 'X11; Linux x86_64', platform: 'Linux x86_64', maxTouchPoints: 0 })
+    const tag = 'v0.0.104-preview.1'
+    github([
+      githubRelease(tag, '2026-11-06T00:00:00Z', [...stableAssets(tag.slice(1)), ...nightlyAssets(tag.slice(1)), `Happy-Nightly-${tag.slice(1)}-x64.exe`]),
+      githubRelease('v0.0.103', '2026-11-05T15:32:52Z', [...stableAssets('0.0.103'), ...nightlyAssets('0.0.103')]),
+    ])
+    await page()
+    const preview = selectChannel('Preview')
+    await waitFor(() => expect(version(preview)).toBe('Happy 0.0.104-preview.1 · Nov 6, 2026'))
+    expect(preview.querySelector('.one-desktop-button')?.getAttribute('href')).toBe(`${DOWNLOAD}/${tag}/Happy-0.0.104-preview.1-x64.AppImage`)
+    expect(within(preview).getByText('Help us test Happy. This preview build replaces Happy.')).toBeTruthy()
+    expect(within(preview).queryByText('No newer preview right now — this is the latest release.')).toBeNull()
+    expect(within(preview).queryByText('Or the latest release, where no preview is newer:')).toBeNull()
+    expect(within(preview).queryAllByRole('link', { name: /^Download Happy for/ })).toHaveLength(0)
+  })
+
+  it('offers the stable release alone on Preview when no release has any preview build', async () => {
+    vi.stubGlobal('navigator', { userAgent: 'Windows NT 10.0', platform: 'Win32', maxTouchPoints: 0 })
+    github([githubRelease('v0.0.103', '2026-11-05T15:32:52Z', stableAssets('0.0.103'))])
+    await page()
+    const preview = selectChannel('Preview')
+    await waitFor(() => expect(version(preview)).toBe('Happy 0.0.103 · Nov 5, 2026'))
+    expect(preview.querySelector('.one-desktop-button')?.getAttribute('href')).toBe(`${DOWNLOAD}/v0.0.103/Happy-0.0.103-x64.exe`)
+    expect(within(preview).getByText('No newer preview right now — this is the latest release.')).toBeTruthy()
+    expect(within(preview).getByRole('link', { name: 'Download Happy for macOS' }).getAttribute('href')).toBe(`${DOWNLOAD}/v0.0.103/Happy-0.0.103-arm64.dmg`)
+    expect(within(preview).queryByRole('link', { name: /Happy Nightly|the Happy preview/ })).toBeNull()
   })
 
   it('offers preview.20 independently for each asset, falling back only for Intel Nightly', async () => {

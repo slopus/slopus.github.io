@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP } from './products'
-import { DownloadOptions, MobileDownloads, useDesktopDownloadSelection } from './DownloadOptions'
+import { DownloadOptions, MobileDownloads, useDesktopDownloadSelection, type DownloadBuild } from './DownloadOptions'
 import { GrainGradient, SITE_SURFACE } from './GrainGradient'
 import { GITHUB_RELEASES, releaseNotesUrl, type DesktopDownloads, type MacArchitecture, type ReleaseChannel } from './desktopDownloads'
 import './happy-one.css'
@@ -12,25 +12,32 @@ const CHANNELS = [
   { value: 'preview', label: 'Preview', note: 'Help us test Happy. Happy Nightly installs beside Happy.' },
 ] as const satisfies ReadonlyArray<{ value: ReleaseChannel; label: string; note: string }>
 
+/** Preview's note when its main download is not Happy Nightly. */
+const PRIMARY_NOTES: Partial<Record<DownloadBuild, string>> = {
+  standard: 'Help us test Happy. This preview build replaces Happy.',
+  latest: 'No newer preview right now — this is the latest release.',
+}
+
 /** The name and the date each stay on one line; a phone wraps between them. The notes link gets a line of its own. */
-function releaseLine(channel: ReleaseChannel, downloads: DesktopDownloads, primaryStandard: boolean) {
-  const name = <span>{channel === 'preview' && !primaryStandard ? 'Happy Nightly' : 'Happy'} {downloads.tag.slice(1)}</span>
-  const notes = <a href={releaseNotesUrl(downloads.tag)}>Release notes</a>
-  if (!downloads.publishedAt) return <>{name}{notes}</>
-  const date = new Date(downloads.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+function releaseLine(channel: ReleaseChannel, downloads: DesktopDownloads, primaryBuild: DownloadBuild) {
+  const release = primaryBuild === 'latest' && downloads.latest || downloads
+  const name = <span>{channel === 'preview' && primaryBuild === 'channel' ? 'Happy Nightly' : 'Happy'} {release.tag.slice(1)}</span>
+  const notes = <a href={releaseNotesUrl(release.tag)}>Release notes</a>
+  if (!release.publishedAt) return <>{name}{notes}</>
+  const date = new Date(release.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
   return <>{name} · <span>{date}</span>{notes}</>
 }
 
 function ReleasePanel({ channel, active, macArchitecture, onMacArchitectureChange }: {
   channel: typeof CHANNELS[number]; active: boolean; macArchitecture: MacArchitecture; onMacArchitectureChange: (architecture: MacArchitecture) => void
 }) {
-  const { downloads, loading, primaryStandard } = useDesktopDownloadSelection(channel.value, macArchitecture)
+  const { downloads, loading, primaryBuild } = useDesktopDownloadSelection(channel.value, macArchitecture)
   return (
     <section id={`releases-panel-${channel.value}`} className="releases-channel"
       aria-labelledby={`releases-${channel.value}`} aria-hidden={!active} inert={!active} data-active={active}>
-      <p className="releases-note">{primaryStandard ? 'Help us test Happy. This preview build replaces Happy.' : channel.note}</p>
+      <p className="releases-note">{PRIMARY_NOTES[primaryBuild] ?? channel.note}</p>
       <p className="releases-version" aria-live="polite">
-        {loading ? '' : downloads ? releaseLine(channel.value, downloads, primaryStandard) : 'The newest preview is listed on GitHub, below.'}
+        {loading ? '' : downloads ? releaseLine(channel.value, downloads, primaryBuild) : 'The newest preview is listed on GitHub, below.'}
       </p>
       <DownloadOptions channel={channel.value} releasesLink={false} mobile={false}
         macArchitecture={macArchitecture} onMacArchitectureChange={onMacArchitectureChange} />

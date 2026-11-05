@@ -56,6 +56,8 @@ try:
             stable_top = phone.evaluate('(el) => el.offsetTop')
             stable_link = page.locator('#releases-panel-stable .one-desktop-button')
             assert stable_link.get_attribute('data-download-platform') == expected
+            stable_href = stable_link.get_attribute('href')
+            stable_version = page.locator('#releases-panel-stable .releases-version').inner_text()
             page.screenshot(path=str(ROOT / '.context' / f'{PREFIX}releases-{name}-stable.png'), full_page=True)
             # Native radios must select with arrow keys and wrap in both directions.
             page.get_by_role('radio', name='Stable', exact=True).focus()
@@ -70,9 +72,17 @@ try:
             assert page.get_by_role('combobox').count() == (1 if expected == 'macos' else 0)
             href = primary.get_attribute('href')
             if name == 'linux':
+                # Linux has no Happy Nightly: the preview's own AppImage, or the stable one when no preview is newer.
                 assert href.endswith('-x64.AppImage') and '/Happy-' in href and '/Happy-Nightly-' not in href, href
-                assert 'This preview build replaces Happy.' in page.locator('#releases-panel-preview .releases-note').inner_text()
-                assert page.locator('#releases-panel-preview .releases-version').inner_text().startswith('Happy 0.')
+                note = page.locator('#releases-panel-preview .releases-note').inner_text()
+                preview_version = page.locator('#releases-panel-preview .releases-version').inner_text()
+                assert preview_version.startswith('Happy 0.'), preview_version
+                if '-preview.' in href:
+                    assert 'This preview build replaces Happy.' in note, note
+                else:
+                    assert note == 'No newer preview right now — this is the latest release.', note
+                    assert href == stable_href, (href, stable_href)
+                    assert preview_version == stable_version, (preview_version, stable_version)
             if name == 'mac':
                 page.get_by_role('combobox', name='Preview Mac architecture', exact=True).select_option('x64')
                 assert primary.get_attribute('href').endswith('-x64.dmg')
@@ -89,7 +99,7 @@ try:
             assert phone.evaluate('(el) => el.offsetTop') == stable_top
             page.keyboard.press('ArrowLeft')
             assert page.get_by_role('radio', name='Preview', exact=True).is_checked()
-            results.append({'device': name, 'viewport': [width, height], 'stablePhoneOffsetTop': stable_top, 'previewPhoneOffsetTop': preview_top, 'previewPrimary': href, 'githubResponses': responses, 'errors': errors})
+            results.append({'device': name, 'viewport': [width, height], 'previewNote': page.locator('#releases-panel-preview .releases-note').inner_text(), 'stablePhoneOffsetTop': stable_top, 'previewPhoneOffsetTop': preview_top, 'previewPrimary': href, 'githubResponses': responses, 'errors': errors})
             context.close()
         browser.close()
 finally:
