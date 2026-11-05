@@ -3,9 +3,13 @@ import { DEMO_TAKE, type DemoMovie } from './happyOneDemoMedia'
 import { useRevealedControls } from './revealedControls'
 import './happy-one-demo.css'
 
-type DataConnection = EventTarget & { saveData?: boolean }
+type DataConnection = EventTarget & { saveData?: boolean, effectiveType?: string }
 function dataConnection() {
   return (navigator as Navigator & { connection?: DataConnection }).connection
+}
+/** Save-Data, or a connection too slow for the movies: the stills stay, with controls. */
+function sparing(connection: DataConnection | undefined) {
+  return Boolean(connection?.saveData) || connection?.effectiveType === 'slow-2g' || connection?.effectiveType === '2g'
 }
 
 function Sources({ movie }: { movie: DemoMovie }) {
@@ -13,11 +17,32 @@ function Sources({ movie }: { movie: DemoMovie }) {
 }
 
 /**
+ * The movie's frame 0, under it: what the first screen shows until the movie has loaded and
+ * plays over it on the same pixels. `sizes` is the widest the page draws it.
+ */
+function Still({ movie, sizes, priority = false }: { movie: DemoMovie, sizes: string, priority?: boolean }) {
+  return (
+    <picture className="one-demo-still">
+      <source type="image/avif" srcSet={movie.stills.map(({ src, width }) => `${src} ${width}w`).join(', ')} sizes={sizes} />
+      <img src={movie.poster} width={movie.width} height={movie.height} alt="" fetchPriority={priority ? 'high' : undefined} />
+    </picture>
+  )
+}
+
+/** The widest the page draws the window, the phone's screen, and its frame (happy-one-demo.css). */
+const WINDOW_SIZES = '(max-width: 700px) calc(115vw - 10px), min(968px, 76vw - 24px)'
+const SCREEN_SIZES = '(max-width: 700px) 36vw, 260px'
+const FRAME_SIZES = '(max-width: 700px) 42vw, 300px'
+const FRAME = '/video/happy-one/device/iphone-16-pro-black'
+
+/**
  * The recorded take (happyOneDemoMedia.ts) straight on the page: the Mac window on the page's
  * axis and the phone standing beside it, peeking in from the screen's edge where there is no
  * room. The window's movie is the clock. It loops muted while in view, without browser chrome
  * covering it; deliberate pointer/keyboard interaction reveals the ordinary native controls, and
- * reduced motion, save-data, and blocked autoplay leave it paused on its poster with them. A
+ * reduced motion, save-data, a 2G connection, and blocked autoplay leave it paused on its still
+ * with them. The first screen is the stills: the movies load only once the page has, while it
+ * rests, and play over them from the same frame. A
  * phone movie on the same clock follows its play, pause, seek, and rate. The phone comes forward
  * for its part of the story, and drifts in as the page scrolls. `reach` is the line above the
  * demo the phone may grow up to when it comes forward on a phone.
@@ -45,8 +70,9 @@ export function HappyOneDemo({ reach }: { reach?: RefObject<HTMLElement | null> 
     if (companion) companion.muted = true
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
     const connection = dataConnection()
-    let autoplay = !reducedMotion.matches && !connection?.saveData
+    let autoplay = !reducedMotion.matches && !sparing(connection)
     if (!autoplay) revealControls()
+    let loaded = false
     let visible = false
     let disposed = false
     // Pausing for the viewport or a hidden tab resumes; a visitor's own pause stays paused.
@@ -69,7 +95,7 @@ export function HappyOneDemo({ reach }: { reach?: RefObject<HTMLElement | null> 
       else if (companion.paused && companion.readyState >= 2) void companion.play().catch(() => undefined)
     }
     const play = () => {
-      if (!(autoplay || resume) || !visible || document.hidden) return
+      if (!loaded || !(autoplay || resume) || !visible || document.hidden) return
       resume = false
       void main.play().catch(() => {
         if (disposed) return
@@ -120,8 +146,23 @@ export function HappyOneDemo({ reach }: { reach?: RefObject<HTMLElement | null> 
     const onError = () => setError(true)
     const onVisibility = () => { if (document.hidden) hold(); else play() }
     const onMotion = () => {
-      if (reducedMotion.matches || connection?.saveData) { autoplay = false; main.pause(); revealControls() }
+      if (reducedMotion.matches || sparing(connection)) { autoplay = false; main.pause(); revealControls() }
     }
+    // Both movies are preload="none" until the page has loaded and is idle; the phone's then
+    // loads with the window's, which play() starts.
+    let idle = 0
+    const load = () => {
+      if (disposed) return
+      loaded = true
+      main.preload = 'auto'
+      if (companion) { companion.preload = 'auto'; companion.load() }
+      play()
+    }
+    const rest = () => {
+      idle = typeof requestIdleCallback === 'function' ? requestIdleCallback(load, { timeout: 2000 }) : window.setTimeout(load, 300)
+    }
+    if (document.readyState === 'complete') rest()
+    else addEventListener('load', rest, { once: true })
     main.addEventListener('play', onPlay)
     main.addEventListener('playing', onPlaying)
     main.addEventListener('pause', onPause)
@@ -144,6 +185,9 @@ export function HappyOneDemo({ reach }: { reach?: RefObject<HTMLElement | null> 
     observer.observe(figure.current!)
     return () => {
       disposed = true
+      removeEventListener('load', rest)
+      if (typeof cancelIdleCallback === 'function') cancelIdleCallback(idle)
+      clearTimeout(idle)
       observer.disconnect()
       document.removeEventListener('visibilitychange', onVisibility)
       reducedMotion.removeEventListener('change', onMotion)
@@ -220,8 +264,9 @@ export function HappyOneDemo({ reach }: { reach?: RefObject<HTMLElement | null> 
     <figure ref={figure} className="one-demo">
       <div ref={stage} className="one-demo-stage" style={size} data-phone-focus={phoneFocused ? '' : undefined}>
         <div className="one-demo-window">
-          <video ref={desktop} poster={mac.poster} width={mac.width} height={mac.height}
-            {...videoProps} loop playsInline preload="metadata" aria-label={take.label}>
+          <Still movie={mac} sizes={WINDOW_SIZES} priority />
+          <video ref={desktop} width={mac.width} height={mac.height}
+            {...videoProps} loop playsInline preload="none" aria-label={take.label}>
             <Sources movie={mac} />
           </video>
         </div>
@@ -229,13 +274,17 @@ export function HappyOneDemo({ reach }: { reach?: RefObject<HTMLElement | null> 
         <div ref={device} className="one-demo-phone" aria-hidden="true">
           <span className="one-phone-screen">
             {screen.kind === 'movie'
-              ? <video ref={phone} poster={screen.poster} width={screen.width} height={screen.height}
-                  loop={!screen.follows} playsInline preload="metadata" tabIndex={-1}>
-                  <Sources movie={screen} />
-                </video>
+              ? <>
+                  <Still movie={screen} sizes={SCREEN_SIZES} />
+                  <video ref={phone} width={screen.width} height={screen.height}
+                    loop={!screen.follows} playsInline preload="none" tabIndex={-1}>
+                    <Sources movie={screen} />
+                  </video>
+                </>
               : <img src={screen.src} width={screen.width} height={screen.height} alt="" />}
           </span>
-          <img className="one-phone-frame" src="/video/happy-one/device/iphone-16-pro-black.png" width="1406" height="2822" alt="" />
+          <img className="one-phone-frame" src={`${FRAME}-1406.webp`} srcSet={[480, 720, 1406].map(width => `${FRAME}-${width}.webp ${width}w`).join(', ')}
+            sizes={FRAME_SIZES} width="1406" height="2822" alt="" />
         </div>
       </div>
       {error && <p className="one-demo-error" role="status">The demo couldn’t load. <a href={mac.sources.at(-1)!.src} target="_blank" rel="noopener">Open the video</a>.</p>}

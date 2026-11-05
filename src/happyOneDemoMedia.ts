@@ -7,7 +7,14 @@
 
 /** One encoding; the browser plays the first it can whose `media` matches the viewport. */
 export type DemoSource = { src: string, type: string, media?: string }
-export type DemoMovie = { kind: 'movie', width: number, height: number, poster: string, sources: readonly DemoSource[] }
+/**
+ * A movie, and its frame 0 as a still drawn under it until it plays: `poster` (WebP) for any
+ * browser, and `stills`, AVIF encoded from each source's own frame 0 at the widths the page draws
+ * it, so the browser takes the smallest that is sharp enough and the movie starts on the same
+ * pixels.
+ */
+export type DemoMovie = { kind: 'movie', width: number, height: number, poster: string, stills: readonly DemoStillSource[], sources: readonly DemoSource[] }
+export type DemoStillSource = { src: string, width: number }
 export type DemoStill = { kind: 'still', width: number, height: number, src: string }
 
 export type DemoTake = {
@@ -38,6 +45,7 @@ const H264 = 'video/mp4; codecs="avc1.640033, mp4a.40.2"'
 export const DEMO_TAKE: DemoTake = {
   desktop: {
     kind: 'movie', width: 2266, height: 1400, poster: `${TAKE}/desktop-poster.webp`,
+    stills: [900, 1300, 1812, 2266].map(width => ({ src: `${TAKE}/poster/desktop-${width}.avif`, width })),
     sources: [
       { src: `${TAKE}/desktop.webm`, type: 'video/webm; codecs="av01.0.12M.08, opus"', media: WIDE },
       { src: `${TAKE}/desktop.mp4`, type: H264, media: WIDE },
@@ -47,6 +55,7 @@ export const DEMO_TAKE: DemoTake = {
   },
   phone: {
     kind: 'movie', follows: true, width: 1206, height: 2622, poster: `${TAKE}/phone-poster.webp`,
+    stills: [400, 600, 964, 1206].map(width => ({ src: `${TAKE}/poster/phone-${width}.avif`, width })),
     sources: [
       { src: `${TAKE}/phone.webm`, type: 'video/webm; codecs="av01.0.12M.08"', media: WIDE },
       { src: `${TAKE}/phone.mp4`, type: 'video/mp4; codecs="avc1.640033"', media: WIDE },

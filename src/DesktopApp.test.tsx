@@ -219,12 +219,17 @@ describe('Happy Desktop landing page', () => {
     expect(narrow.corners).toEqual([0, expect.any(Number), expect.any(Number), 0])
   })
 
-  it('holds the gradient still, its two halves blended across the middle', async () => {
+  it('moves the gradient only near the page\'s ends, off the main thread, its two halves blended across the middle', async () => {
     const { grainGradientFragmentShader } = await import('./grainGradientShader')
-    // Drawn on a resize or new scheme, never on a clock.
+    // The main thread draws on a resize or new scheme, never on a clock; the worker moves the ends.
     const renderer = readFileSync('src/grainGradientRenderer.ts', 'utf8')
     expect(renderer).not.toMatch(/requestAnimationFrame|setInterval/)
-    // Drawn once into canvases that scroll with the page: nothing listens to the scroll.
+    // Only on a GPU: software WebGL would spend seconds of CPU on it.
+    expect(readFileSync('src/grainGradientWorker.ts', 'utf8')).toMatch(/failIfMajorPerformanceCaveat: true/)
+    expect(renderer).toMatch(/failIfMajorPerformanceCaveat: true/)
+    // With no time elapsed, every row is the still.
+    expect(grainGradientFragmentShader).toMatch(/float t = \.1 \* \(u_time \+ moving \* u_elapsed \+ 7\.\);/)
+    // Drawn into canvases that scroll with the page: nothing listens to the scroll.
     expect(renderer).not.toMatch(/'scroll'/)
     // A hard switch between the halves' noise drew a vertical line wherever colour crossed the middle.
     expect(grainGradientFragmentShader).toMatch(/float right = smoothstep\(/)

@@ -21,3 +21,11 @@ License: [Apache-2.0](licenses/Paper-Shaders-Apache-2.0.txt).
 
 `@lottiefiles/dotlottie-web` (MIT) draws the homepage's animated emoji, as in
 happy-desktop.
+
+## Fonts
+
+`public/fonts/` holds Google Fonts' own WOFF2 files, unchanged, for IBM Plex
+Sans, IBM Plex Mono, Bricolage Grotesque, DM Sans, DM Mono, and Space Grotesk,
+with Google's `@font-face` rules in `src/fonts.css`
+(`scripts/self-host-fonts.py` fetches them again). Each is under the SIL Open
+Font License 1.1: https://openfontlicense.org.

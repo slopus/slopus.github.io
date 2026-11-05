@@ -47,19 +47,14 @@
 /* Room after the footer for the colour in the bottom left corner (HOME_SURFACE). */
 .happy-home:not([data-social-preview]) { padding-bottom: 120px; }
 
-/* The surface, as tall as the page; GrainGradient draws canvases into it once, where the colour
-   can be. Until the shader paints, and without WebGL, the colour stands where HOME_SURFACE puts
-   it in plain CSS: the sides, the top right, and the bottom left; on phones only the two corners. */
+/* The surface, as tall as the page; GrainGradient draws canvases into it where the colour can be,
+   and they fade in over the plain base. Without scripts, and without WebGL (data-unavailable),
+   the colour stands where HOME_SURFACE puts it in plain CSS: the sides, the top right, and the
+   bottom left; on phones only the two corners. */
 .home-grain {
   --home-edge: max(24px, (100% - 960px) * .4);
   --home-patch: color-mix(in srgb, var(--grain-0) 55%, var(--grain-back));
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  overflow: hidden;
-  overflow: clip;
-  pointer-events: none;
-  background:
+  --home-stand-in:
     radial-gradient(circle 580px at 100% 0, var(--grain-3), var(--home-patch) 45%, transparent),
     radial-gradient(circle 500px at 0 100%, var(--grain-3), var(--home-patch) 45%, transparent),
     linear-gradient(90deg,
@@ -69,19 +64,29 @@
       var(--grain-back) calc(100% - 2 * var(--home-edge)),
       var(--home-patch) calc(100% - var(--home-edge)),
       var(--grain-3));
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  overflow: clip;
+  pointer-events: none;
+  background: var(--grain-back);
 }
 @media (max-width: 699px) {
   .home-grain {
-    background:
+    --home-stand-in:
       radial-gradient(circle 270px at 100% 0, var(--grain-3), var(--home-patch) 45%, transparent),
       radial-gradient(circle 300px at 0 100%, var(--grain-3), var(--home-patch) 45%, transparent),
       var(--grain-back);
   }
 }
+.home-grain::before { content: ''; position: absolute; inset: 0; background: var(--home-stand-in); opacity: 0; transition: opacity .6s ease; }
+.home-grain[data-unavailable]::before { opacity: 1; }
+@media (scripting: none) {
+  .home-grain::before { opacity: 1; }
+}
 .home-grain > canvas { position: absolute; display: block; opacity: 0; transition: opacity .6s ease; }
 .home-grain[data-painted] > canvas { opacity: 1; }
-/* Once the canvases have faded in, the base colour is all that shows between them. */
-.home-grain[data-settled] { background: var(--grain-back); }
 
 /* The header lets the surface through; once the page scrolls under it, it frosts. It stays out of
    sight until the hero's name has scrolled up past it (data-header-shown, DesktopApp), then shows

@@ -3,6 +3,8 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig(({ isSsrBuild }) => ({
   plugins: [react()],
+  // The Grain Gradient's worker (src/grainGradientWorker.ts) is a module, as it is started.
+  worker: { format: 'es' },
   build: {
     rollupOptions: {
       // The prerender build (src/prerender.tsx) leaves dependencies external, so it has nothing to split.

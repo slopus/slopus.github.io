@@ -32,6 +32,46 @@ The last 0.6s dissolves into frame 0, so the loop has no seam. `take.json` holds
 | `phone.webm` / `.mp4` | AV1 / H.264 High 5.1, 1206×2622, 60fps | 4,986,139 / 7,342,738 bytes |
 | `phone-30.webm` / `.mp4` | AV1 / H.264 High 5.1, 964×2098, 30fps | 2,372,987 / 4,174,951 bytes |
 | `desktop-poster.webp`, `phone-poster.webp` | frame 0 | 112,996 / 107,798 bytes |
+| `poster/desktop-{900,1300,1812,2266}.avif` | frame 0, AVIF | 18,845 / 29,967 / 44,570 / 57,623 bytes |
+| `poster/phone-{400,600,964,1206}.avif` | frame 0, AVIF | 13,491 / 21,342 / 40,753 / 43,773 bytes |
+
+**The first screen is the stills.** Each movie has its frame 0 drawn under it
+(`Still` in `src/HappyOneDemo.tsx`): the AVIFs above, from which the browser
+takes the smallest sharp enough for the width the page draws it at, with the
+WebP poster for browsers without AVIF. The window's is the page's LCP image and
+loads at high priority. Both movies are `preload="none"` until the page has
+loaded and is idle; they then load and play over the stills from the same
+frame. Each AVIF is encoded from its own source's YUV frame 0, carrying the
+movie's BT.709 tags, so the browser converts both the same way: the native
+sizes come from the 30fps cut (1812, 964) and the 60fps one (2266, 1206), the
+smaller ones scaled from the 60fps one. With a new take, regenerate them from
+`public/video/happy-one/<take>/`:
+
+```sh
+T="-color_range tv -colorspace bt709 -color_primaries bt709 -color_trc iec61966-2-1"
+still() { # source width|native out
+  scale=$([ "$2" = native ] || echo "-vf scale=$2:-2:flags=lanczos")
+  ffmpeg -y -i "$1" -frames:v 1 $scale -c:v libaom-av1 -still-picture 1 -crf 20 -cpu-used 2 $T "$3"
+}
+still desktop.webm 900 poster/desktop-900.avif
+still desktop.webm 1300 poster/desktop-1300.avif
+still desktop-30.webm native poster/desktop-1812.avif
+still desktop.webm native poster/desktop-2266.avif
+still phone.webm 400 poster/phone-400.avif
+still phone.webm 600 poster/phone-600.avif
+still phone-30.webm native poster/phone-964.avif
+still phone.webm native poster/phone-1206.avif
+```
+
+The iPhone frame is `device/iphone-16-pro-black-{480,720,1406}.webp` (6,850 /
+11,286 / 25,960 bytes; the 501,159-byte PNG it came from stays for the 3D
+phone), WebP at quality 90 with lossless alpha, and the screen's mask is
+`device/phone-mask-603.webp`, the v13 mask at half size, lossless:
+
+```sh
+for w in 480 720 1406; do convert iphone-16-pro-black.png -resize ${w}x -quality 90 -define webp:alpha-quality=100 -define webp:method=6 iphone-16-pro-black-$w.webp; done
+convert ../v13/phone-mask.png -resize 603x -define webp:lossless=true phone-mask-603.webp
+```
 
 Screens wider than 700px get 60fps: the AV1, or the H.264 in browsers without
 AV1 (Macs before M3). The H.264 is level 5.1 with 5 reference frames, which

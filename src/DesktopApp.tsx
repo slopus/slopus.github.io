@@ -88,7 +88,7 @@ function TalkToUs() {
         {[STEVE, KIRILL].map(person => (
           <li key={person.href}>
             <a href={person.href} target="_blank" rel="noopener noreferrer" aria-label={`${person.name}, ${person.label} on Twitter`}>
-              <img src={person.avatar} alt="" width="28" height="28" />
+              <img src={person.avatar} alt="" width="28" height="28" loading="lazy" />
               <span>{person.label}</span>
               <Mark path={X_MARK} />
             </a>

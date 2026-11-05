@@ -36,7 +36,7 @@
 /* Both sides are set, from the variables the phone uses too: with only aspect-ratio, Safari can
    stretch the window to the stage's height, and the recording is then cropped at its sides. */
 .one-demo-window { --apx: calc(var(--desktop-width) / 880); position: relative; flex: none; align-self: flex-start; width: var(--desktop-width); height: var(--desktop-height); overflow: hidden; border-radius: calc(12 * var(--apx)); background: #1e1e1e; box-shadow: 0 28px 64px -26px var(--home-shadow, #14112e59), 0 10px 24px -14px #0000004d, 0 0 0 max(.5px, .5 * var(--apx)) #0000003d; }
-.one-demo-window > video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+.one-demo-window > video, .one-demo-still, .one-demo-still > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
 .one-demo-window::after { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: inherit; box-shadow: inset 0 0 0 max(1px, var(--apx)) #ffffff2e; pointer-events: none; }
 /* Parked beside the window; the page shell clips what passes the screen's edge. Scrolling moves
    it with `translate`, its part of the story with `transform`, so only the second eases. */
@@ -45,8 +45,8 @@
 .one-phone-frame { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
 /* The frame's aperture is 102,100,1206,2622 of 1406×2822; the screen bleeds 0.4% under the bezel
    so fractional scaling never shows a hairline between them, and is cropped to fit. */
-.one-phone-screen { position: absolute; left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; overflow: hidden; background: #000; transform: scale(1.008); mask: url('/video/happy-one/v13/phone-mask.png') center / 100% 100% no-repeat; }
-.one-phone-screen > video, .one-phone-screen > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.one-phone-screen { position: absolute; left: 7.254623%; top: 3.543586%; width: 85.775249%; height: 92.912828%; overflow: hidden; background: #000; transform: scale(1.008); mask: url('/video/happy-one/device/phone-mask-603.webp') center / 100% 100% no-repeat; }
+.one-phone-screen > video, .one-phone-screen > img { position: relative; display: block; width: 100%; height: 100%; object-fit: cover; }
 /* The header's own frost at 1% opacity, swept down the demo once while the page rests. Chrome
    builds the GPU pipelines the frosted header needs over the page, the window and the phone the
    first time it draws them, which on a cold cache stalls the screen for 150-230ms; this moves
