@@ -100,7 +100,7 @@
 .site-theme .document-content :not(pre) > code { background: var(--site-wash); color: var(--home-ink); }
 .site-theme .document-content :is(img, video), .site-theme .document-content .labelled-image img { border-color: var(--home-line); }
 .site-theme .document-content :is(.side-figure figcaption, .labelled-image-label, .essay-figure figcaption, .social-embed-byline),
-.site-theme .document-content p:has(> video, > img) + p:has(> em:only-child),
+.site-theme .document-content p:has(> video, > img, > .inline-diagram) + p:has(> em:only-child),
 .site-theme .document-content blockquote + p:has(> em:only-child) { color: var(--site-muted); }
 .site-theme .document-content .social-embed blockquote { border-color: var(--home-line); background: var(--home-surface); color: var(--home-ink-2); }
 /* The Chief of Staff block: each prompt on 7% of the accent, with an accent edge. */

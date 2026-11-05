@@ -234,7 +234,7 @@ homepage's, it is a still. Its layer is only as tall as the patch, so the render
 draws it whole, once, and scrolling never redraws it.
 It scrolls away with the page; wide docs scroll their article, and the patch goes up
 with it. `theme-color` is the base colour, `#f4f2ff` light and `#06050f` dark. In dark
-mode the hand-drawn diagrams are inverted with their hues kept, and X and Reddit embeds
+mode the hand-drawn diagrams are inverted with their hues kept (card diagrams, drawn inline, take the palette instead; DESIGN.md), and X and Reddit embeds
 load in the system's scheme. The tier list's rows take the gradient's hues, strongest at
 S. Redirect pages carry the base colour inline. No page keeps the old cream look.
 

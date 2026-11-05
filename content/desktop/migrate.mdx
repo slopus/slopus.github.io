@@ -4,17 +4,19 @@ Happy now has a desktop app. Multiplayer for remote servers, lower latency, bett
 
 <Download />
 
-![Before, with the Happy CLI: your phone reaches your computer, where happy runs in a terminal, through the Happy server, which stores your chats, encrypted. Now, with Happy Agent: your phone connects to your computer running Happy Desktop, and to your own server running Happy Agent if you have one. Traffic may pass through a relay that stores nothing.](/img/migrate.svg)
+![Before, with the Happy CLI: your phone reaches your computer, where happy runs in a terminal, through the Happy server, which stores your chats, encrypted. Now: your computer runs Happy Desktop and Happy Agent, and your optional server runs Happy Agent too. Your phone connects to each Happy Agent separately; traffic may pass through a relay that passes traffic and stores nothing. The two Happy Agents connect to each other.](/diagrams/migrate.svg)
+
+*Your phone connects to each Happy Agent separately.*
 
 ```chief-of-staff set up a new remote server
-Set up a remote Happy Agent on my server running on DigitalOcean / Fly.io / Vercel / AWS / Google Cloud
+Set up a remote Happy Agent on my server running on DigitalOcean / Hetzner / Fly.io / AWS / Google Cloud
 ```
 
 ## On your computer
 
 1. **Open Happy on your computer.** Make sure Happy Desktop is up to date. Download it above, or from [happy.engineering](/#download), for macOS, Windows, or Linux. Sign in to at least one of Claude, Codex, or Grok; Happy Agent, the runtime that runs your agents, starts with the app. The [Quick Start](/quick-start/) has the details.
 2. **Choose Link Mobile App during onboarding, or go to Settings › Mobile Access.** Happy Desktop shows a QR code.
-3. **Using Happy on a server?** Select it in Happy Desktop and scan its code the same way. To set up a new remote server, just ask the [Chief of Staff](/chief-of-staff/) bot in Happy Desktop, with the prompt above.
+3. **Using Happy on a server?** Pair it separately: in Happy Desktop, select the server, go to **Settings › Mobile Access** and scan its code. To set up a new remote server, just ask the [Chief of Staff](/chief-of-staff/) bot in Happy Desktop.
 
 Happy Desktop shows a **Relay | Direct** switch above the code. **Direct** needs the latest Happy app on your phone; with an older phone app, use **Relay**.
 

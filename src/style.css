@@ -635,4 +635,10 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-download .one-download-actions { align-items: flex-start; margin: 0; }
 .document-download :is(.one-desktop-downloads, .one-primary-download, .one-mobile-downloads, .one-store-download) { align-items: flex-start; justify-content: flex-start; }
 .document-download .one-platform-links { justify-content: flex-start; }
-.document-content img[src="/img/migrate.svg"] { aspect-ratio: 520 / 536; display: block; margin: 1.6rem 0; width: min(100%, 560px); }
+/* A card-style diagram drawn inline (src/InlineDiagram.tsx), left-aligned with the text. A line
+   in italics right under it is its caption: small, muted, left-aligned. */
+.document-content .inline-diagram { display: block; margin: 1.6rem 0 .5rem; max-width: 600px; }
+.document-content .inline-diagram > svg { display: block; height: auto; overflow: visible; width: 100%; }
+.document-content p:has(> .inline-diagram) { margin-bottom: 0; }
+.document-content p:has(> .inline-diagram) + p:has(> em:only-child) { color: #6b7f78; font-size: .82rem; line-height: 1.45; margin-top: 0; }
+.document-content p:has(> .inline-diagram) + p > em:only-child { font-style: normal; }

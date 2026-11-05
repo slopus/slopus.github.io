@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm'
 import { AutoplayClip } from './AutoplayClip'
 import { ChiefOfStaffPrompt, CHIEF_OF_STAFF_LANGUAGE } from './ChiefOfStaffPrompt'
 import { HoverClip } from './HoverClip'
+import { InlineDiagram, inlineDiagram } from './InlineDiagram'
 import { DownloadOptions } from './DownloadOptions'
 import type { MacArchitecture } from './desktopDownloads'
 import { RedditEmbed, Tweet } from './SocialEmbed'
@@ -282,6 +283,8 @@ export function MarkdownDocument({
         if (title === 'autoplay') return <AutoplayClip folder={src} label={alt ?? ''} />
         return <HoverClip folder={src} label={alt ?? ''} />
       }
+      const diagram = typeof src === 'string' ? inlineDiagram(src) : undefined
+      if (diagram) return <InlineDiagram svg={diagram} label={alt ?? ''} />
       // A video shows its poster, `<name>-poster.webp` beside it, until it plays. The served
       // markup carries `muted`, so it autoplays before hydration; a DOM that doesn't turn that
       // attribute into the `muted` property (jsdom) would otherwise report a mismatch.
