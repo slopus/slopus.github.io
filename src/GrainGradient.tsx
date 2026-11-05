@@ -12,7 +12,6 @@ export const HOME_SURFACE: Surface = {
 }
 
 /**
-/**
  * Every other page: only a patch in the top right corner, beside the title rather than under
  * the text. Its layer (.site-grain in site-theme.css) is just big enough to hold it.
  */
@@ -23,10 +22,11 @@ export const SITE_SURFACE: Surface = {
 
 /**
  * The page's surface: the Grain Gradient from the phone apps' first screen and desktop
- * onboarding, held still, a field that scrolls with the page, its colour where `surface` puts
- * it, drawn once into canvases where the colour can be. Its palette is `--grain-*` in
- * happy-home.css, light or dark with the system; a new `palette` repaints it. Without WebGL, CSS
- * edges stand in for it. A page that scrolls an element instead of the window (wide docs scroll
+ * onboarding, a field that scrolls with the page, its colour where `surface` puts it, drawn by a
+ * worker into canvases where the colour can be: still, except near the page's ends, where it
+ * moves on slowly while in view (grainGradientRenderer.ts). Its palette is `--grain-*` in
+ * happy-home.css, light or dark with the system; a new `palette` repaints it. Without WebGL on a
+ * GPU, CSS edges stand in for it. A page that scrolls an element instead of the window (wide docs scroll
  * their article) names it as `scroller`, and the field goes up with it.
  */
 export function GrainGradient({

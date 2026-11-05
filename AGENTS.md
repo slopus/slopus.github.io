@@ -164,14 +164,25 @@ around content blocks; Kirill found that claustrophobic. The field ends with the
 the homepage doesn't bounce past its ends (`overscroll-behavior-y: none`): on an iPhone a
 rubber band at the bottom showed the bottom left patch cut in a straight line. Text, emoji, video, and
 buttons sit directly on it, and the header is transparent until the page scrolls,
-then frosted. The field is a still, never animated: the apps' field at one moment
-(`GRAIN_STILL`). `src/grainGradientRenderer.ts` draws it once, in page space, into
-canvases only where the shader can put colour (bounds from the shader's own reach),
-with the plain base colour between them, and draws again only on a resize or a new
-scheme: scrolling never draws or moves anything, so it stays on the compositor. The
-canvas that used to follow the viewport redrew 9.7 MP (12.6ms of GPU on an M4 Pro)
-every 240px of scroll. The pieces match one whole-page draw pixel for pixel; check
-that again when the shapes or the shader's reach change. Each half of the page has
+then frosted. The field opens on the apps' field at one moment (`GRAIN_STILL`) and,
+near the page's ends, moves on slowly at the apps' speed: fully in the first and last
+screen, fading to the still over half a screen more, so the moving rows meet the still
+ones without a seam (`u_zone` and `u_elapsed` in the shader; with nothing elapsed every
+row is the still). Kirill wants it to move on phones and desktops alike. Reduced motion
+keeps the still. `src/grainGradientRenderer.ts` draws it in page space, into canvases
+only where the shader can put colour (bounds from the shader's own reach), with the
+plain base colour between them, and draws the still again only on a resize or a new
+scheme: scrolling never draws or moves anything, so it stays on the compositor. A worker
+(`src/grainGradientWorker.ts`) does all the drawing, off the main thread, and redraws
+the moving canvases only while they are in view, at 30 fps, 15 if a frame takes over
+12ms, and stops past 28ms. It draws only on a GPU (`failIfMajorPerformanceCaveat`):
+software WebGL took 1.1s of main thread for the still alone, so without a GPU the CSS
+stand-in fades in instead, as it does without scripts; with a GPU there is no stand-in,
+only the base colour until the field fades in, because a stand-in of another shape was
+visibly swapped. The canvas that used to follow the viewport redrew 9.7 MP (12.6ms of
+GPU on an M4 Pro) every 240px of scroll. The pieces match one whole-page draw pixel for
+pixel, and the worker's still matches the old main-thread one; check both again when the
+shapes, the shader's reach or the moving rows change. Each half of the page has
 noise of its own, blended across the middle, so where a corner patch crosses the
 middle the halves never meet in a line. Baked images were weighed and rejected: the
 grain is one device pixel and the shapes follow the page's width and height, so an
@@ -232,7 +243,7 @@ first) light or dark with the system, IBM
 Plex Sans and Plex Mono, Bricolage for the wordmark, and the Grain Gradient only as a
 patch in the top right corner (`SITE_SURFACE` in `src/GrainGradient.tsx`), behind the
 header and beside the title: never under the text, no side swells. Like the
-homepage's, it is a still. Its layer is only as tall as the patch, so the renderer
+homepage's, it moves while it is in view. Its layer is only as tall as the patch, so the renderer
 draws it whole, once, and scrolling never redraws it.
 It scrolls away with the page; wide docs scroll their article, and the patch goes up
 with it. `theme-color` is the base colour, `#f4f2ff` light and `#06050f` dark. In dark
@@ -241,6 +252,15 @@ load in the system's scheme. The tier list's rows take the gradient's hues, stro
 S. Redirect pages carry the base colour inline. No page keeps the old cream look.
 
 ## Page speed and Google's page experience
+
+**Non-negotiable: every page loads instantly, or near it, on a slow phone.** Kirill's
+order: speed comes before polish, and a change that makes the first screen slower or
+makes it jump does not ship, however it looks. Hold the homepage to what it does today
+in the lab run below (phone: LCP about 1.1s, CLS 0, TBT under 150ms, under 400KB
+before the movies; desktop: LCP about 0.3s, TBT 0), and keep the rest of the site
+within the same budget. Pixel parity comes with it: whatever upgrades the first
+screen (a movie over its still, the field over the base colour) must start on the
+pixels already shown.
 
 Search ranks pages partly on Core Web Vitals from real Chrome visitors (the Chrome UX Report,
 28 days, 75th percentile), on phones and desktops separately: LCP at most 2.5s, INP at most
@@ -255,11 +275,19 @@ fonts, or the Grain Gradient, and after any report of a slow or jumpy load:
   headless Chromium as well: the LCP element and time, layout shifts and their sources, and
   long tasks. Watch a filmstrip of the first screen; nothing may appear and then change shape:
   black boxes before posters, a stand-in background swapped for another.
-- The first screen is plain HTML, CSS and images that are already the right size: posters
-  and the phone frame in WebP or AVIF, the LCP image preloaded, nothing below the fold loaded
-  eagerly. Video and WebGL come after, as an upgrade, and only where the device can take it
-  (`failIfMajorPerformanceCaveat`, Save-Data, reduced motion); never block the main thread
-  for more than 50ms to draw them.
+- The first screen is plain HTML, CSS and images that are already the right size, laid out
+  in its final place before the first paint, with nothing that moves when the app hydrates:
+  the demo's stills are AVIF from each movie's own frame 0 (`docs/happy-one-demo.md`), the
+  window's at high priority, the phone frame a WebP, the body face preloaded from
+  `/fonts/` (self-hosted, `scripts/self-host-fonts.py`; no other origin draws text), and
+  the store badges placed by an inline script as they are parsed. Nothing below the fold
+  loads eagerly. The movies load only after the page has, while it is idle, and not on
+  Save-Data or 2G; WebGL only on a GPU, in a worker. Never block the main thread for more
+  than 50ms.
+- The homepage's script is the homepage: every other page, the docs text and react-markdown
+  live in `src/sitePages.ts`, a chunk the homepage never loads (98KB gzipped for the
+  homepage). Don't import a page or content into the homepage's graph; other pages preload
+  their chunk from their served HTML (`scripts/generate-static-routes.mjs`).
 - Report the field numbers with the change. A field number that is not good is a bug to fix,
   ahead of new polish.
 
