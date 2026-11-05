@@ -1,4 +1,3 @@
-/// <reference lib="webworker" />
 import { grainProgram, type GrainFrame, type GrainPalette, type GrainProgram, type Rect, type SurfaceShape, type Zone } from './grainGradientGL'
 
 /**
@@ -34,7 +33,13 @@ export type FromWorker =
   | { type: 'painted'; id: number }
   | { type: 'lost' }
 
-const scope = self as unknown as DedicatedWorkerGlobalScope
+// The worker's own globals, typed here: the webworker lib would retype the page's for the whole program.
+type WorkerScope = {
+  postMessage(message: FromWorker, transfer: Transferable[]): void
+  addEventListener(type: 'message', listener: (event: MessageEvent<ToWorker>) => void): void
+  requestAnimationFrame?: (callback: (now: number) => void) => number
+}
+const scope = self as unknown as WorkerScope
 const post = (message: FromWorker, transfer: Transferable[] = []) => scope.postMessage(message, transfer)
 const ATTRIBUTES = { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'low-power', failIfMajorPerformanceCaveat: true } as const
 
@@ -56,8 +61,9 @@ let cost = 0
 let last = 0
 let scheduled = false
 
-const nextFrame: (callback: (now: number) => void) => void = typeof scope.requestAnimationFrame === 'function'
-  ? callback => { scope.requestAnimationFrame(callback) }
+const frame = scope.requestAnimationFrame?.bind(scope)
+const nextFrame: (callback: (now: number) => void) => void = frame
+  ? callback => { frame(callback) }
   : callback => { setTimeout(() => callback(performance.now()), 16) }
 
 function schedule() {
@@ -126,7 +132,7 @@ function paint(request: PaintRequest) {
   schedule()
 }
 
-scope.addEventListener('message', ({ data }: MessageEvent<ToWorker>) => {
+scope.addEventListener('message', ({ data }) => {
   if (data.type === 'paint') paint(data)
   else if (data.type === 'visible') {
     if (data.id !== paintId) return

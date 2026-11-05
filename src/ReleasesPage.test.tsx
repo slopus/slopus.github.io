@@ -26,7 +26,9 @@ function github(list: unknown[]) {
 async function page() {
   window.history.replaceState({}, '', '/releases/')
   vi.resetModules()
-  const { Router } = await import('./Router')
+  const { preparePath, Router } = await import('./Router')
+  // Fresh modules: load the pages' chunk as the app does before it renders.
+  await preparePath('/releases/')
   return render(<Router pathname="/releases/" />)
 }
 
