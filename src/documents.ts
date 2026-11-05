@@ -53,7 +53,7 @@ export function setDocumentSources(loaded: DocumentSources) {
   sources = loaded
 }
 function loadedSources() {
-  if (!sources) throw new Error('The docs text is not loaded yet: await loadSitePages() (src/Router.tsx) first.')
+  if (!sources) throw new Error('The docs text is not loaded yet: await preparePath() (src/Router.tsx) first.')
   return sources
 }
 

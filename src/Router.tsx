@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
 import DesktopApp from './DesktopApp'
-import type * as SitePages from './sitePages'
+import { loadedSitePages, loadSitePages } from './sitePagesChunk'
 import { documentHeading, getDocument, normalizeDocumentPath } from './documents'
 import { documentHref, HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import { changelogEntryForPath, changelogEntryMetadata } from './changelog'
@@ -30,24 +30,9 @@ const pluginPageMetadata: Record<string, PageMetadata> = {
 
 const pluginsBack = { href: '/plugins/', label: 'Back to plugins' }
 
-/**
- * Every page but the homepage, with the docs text: a chunk of its own, so the homepage's bundle
- * is the homepage. A page loads it before it renders (src/main.tsx, src/prerender.tsx), and a
- * link to such a page starts loading it as the pointer or focus reaches the link.
- */
-let sitePages: typeof SitePages | undefined
-let loadingSitePages: Promise<void> | undefined
-export function loadSitePages() {
-  loadingSitePages ??= import('./sitePages').then(registerSitePages)
-  return loadingSitePages
-}
-/** For a build that has the chunk already: the prerender and the tests import it themselves. */
-export function registerSitePages(module: typeof SitePages) {
-  sitePages = module
-}
-/** Resolves once `pathname` can render. */
+/** Resolves once `pathname` can render: every page but the homepage needs src/sitePages.ts. */
 export function preparePath(pathname: string) {
-  return normalizedPathname(pathname) === '/' || sitePages ? Promise.resolve() : loadSitePages()
+  return normalizedPathname(pathname) === '/' || loadedSitePages() ? Promise.resolve() : loadSitePages()
 }
 
 /** Pages that moved. Keep the old URLs working. */
@@ -344,8 +329,9 @@ export function Router({ pathname }: { pathname?: string }) {
     return <DesktopApp />
   }
 
+  const sitePages = loadedSitePages()
   if (!sitePages) {
-    throw new Error(`${normalizedPath} renders after loadSitePages().`)
+    throw new Error(`${normalizedPath} renders after preparePath().`)
   }
   const { DocsPage, LegalPage, MemesPluginPage, ModelBenchmarksPage, NotFoundPage, PluginsPage, ReleasesPage } = sitePages
 
