@@ -19,6 +19,8 @@
    bands would stop short of the window edge, and the header would sit a few
    pixels off on pages that scroll the window. Wide docs pages scroll their
    article; it hides its native one below. */
+/* Safari on iPad and iPhone inflates text it judges too small; the type is set as drawn. */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 html:has(.one-scrollbar) { scrollbar-width: none; }
 html:has(.one-scrollbar)::-webkit-scrollbar { width: 0; height: 0; }
 html[data-scrollbar-dragging] { scroll-behavior: auto; }

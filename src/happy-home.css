@@ -120,9 +120,10 @@
    (happy-one.css) counts the headline's lines at its own size and the line under it, if any:
    the header's 60px where it takes room, the hero's top (32px), heading margin 8px, note 24px, movie
    gap 12px, stage padding 12px, download padding 8px, badge with its architecture selector
-   70px, then the store badges with their ratings and the gap above them, 82px, and 10px under
-   the ratings. The recording ends 20px above the badge. */
-.happy-home .one-hero { --hero-header: 60px; --hero-h1: clamp(1.9rem, 3.7vw, 3.3rem); --hero-kicker: 0px; --hero-sub-gap: calc(min(var(--hero-sub-lines, 0), 1) * .9rem); --hero-top: 2rem; --one-hero-reserved: calc(226px + var(--hero-top) + var(--hero-header) + var(--hero-kicker) + var(--hero-sub-gap) + var(--hero-sub-lines, 0) * 1.9rem + var(--hero-lines, 2) * 1.04 * var(--hero-h1)); }
+   70px, then the store badges with their ratings and the gap above them, 82px, the platforms
+   row and the gap above it, 32px, and 10px under it, so the row is never cut by the bottom
+   of the screen. The recording ends 20px above the badge. */
+.happy-home .one-hero { --hero-header: 60px; --hero-h1: clamp(1.9rem, 3.7vw, 3.3rem); --hero-kicker: 0px; --hero-sub-gap: calc(min(var(--hero-sub-lines, 0), 1) * .9rem); --hero-top: 2rem; --one-hero-reserved: calc(258px + var(--hero-top) + var(--hero-header) + var(--hero-kicker) + var(--hero-sub-gap) + var(--hero-sub-lines, 0) * 1.9rem + var(--hero-lines, 2) * 1.04 * var(--hero-h1)); }
 @media (min-width: 701px) {
   .happy-home:not([data-social-preview]) .one-hero { padding-top: var(--hero-top); }
 }

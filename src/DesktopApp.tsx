@@ -150,6 +150,51 @@ function usePastHeading() {
   return past
 }
 
+/**
+ * The bottom of the first screen never cuts the hero's downloads in half: anything after the first
+ * store badge that it would cut (the other badge, the platforms row, Homebrew, the SmartScreen
+ * note) moves just below it. Placed after layout changes and when the width changes, never while
+ * scrolling: a phone's toolbars change only the height.
+ */
+function useWholeAtTheFold(id: string) {
+  useEffect(() => {
+    const block = document.getElementById(id)
+    if (!block || typeof ResizeObserver === 'undefined') return
+    const coarse = matchMedia('(pointer: coarse)').matches
+    let width = window.innerWidth
+    const place = () => {
+      const items = [...block.querySelectorAll<HTMLElement>('.one-store-download, .one-other-platforms, .one-brew-command, .one-smartscreen')]
+      for (const item of items) item.style.marginTop = ''
+      const fold = document.documentElement.clientHeight
+      const shown = items.filter(item => item.offsetParent)
+        .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top)
+      // Side by side, the badges move together or not at all; they fit by design there.
+      const stacked = getComputedStyle(block.querySelector('.one-mobile-downloads') ?? block).flexDirection === 'column'
+      for (const item of shown.slice(1)) {
+        if (!stacked && item.classList.contains('one-store-download')) continue
+        const box = item.getBoundingClientRect()
+        const top = box.top + window.scrollY
+        if (top < fold && top + box.height > fold) {
+          item.style.marginTop = `${parseFloat(getComputedStyle(item).marginTop) + fold - top + 12}px`
+        }
+      }
+    }
+    place()
+    const observer = new ResizeObserver(() => requestAnimationFrame(place))
+    observer.observe(block)
+    const resize = () => {
+      if (coarse && window.innerWidth === width) return
+      width = window.innerWidth
+      place()
+    }
+    window.addEventListener('resize', resize)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', resize)
+    }
+  }, [id])
+}
+
 /** The dev server's switcher for the variants under review; the build leaves it out. */
 const HomeVariantSwitcher = import.meta.env.DEV ? lazy(() => import('./HomeVariantSwitcher')) : undefined
 // After hydration, and outside the page: the prerendered page has no switcher to match.
@@ -172,6 +217,7 @@ export default function DesktopApp() {
   // The two download blocks share one architecture choice.
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   const headerShown = usePastHeading()
+  useWholeAtTheFold('download')
   const note = useRef<HTMLParagraphElement>(null)
   return (
     <div className="site-shell happy-one happy-home" data-palette={palette} data-social-preview={ogPreview ? '' : undefined}
