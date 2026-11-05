@@ -120,10 +120,10 @@
    (happy-one.css) counts the headline's lines at its own size and the line under it, if any:
    the header's 60px where it takes room, the hero's top (32px), heading margin 8px, note 24px, movie
    gap 12px, stage padding 12px, download padding 8px, badge with its architecture selector
-   70px, then the store badges with their ratings and the gap above them, 82px, the platforms
-   row and the gap above it, 32px, and 10px under it, so the row is never cut by the bottom
-   of the screen. The recording ends 20px above the badge. */
-.happy-home .one-hero { --hero-header: 60px; --hero-h1: clamp(1.9rem, 3.7vw, 3.3rem); --hero-kicker: 0px; --hero-sub-gap: calc(min(var(--hero-sub-lines, 0), 1) * .9rem); --hero-top: 2rem; --one-hero-reserved: calc(258px + var(--hero-top) + var(--hero-header) + var(--hero-kicker) + var(--hero-sub-gap) + var(--hero-sub-lines, 0) * 1.9rem + var(--hero-lines, 2) * 1.04 * var(--hero-h1)); }
+   70px, then the store badges with their ratings and the gap above them, 82px, and 10px under
+   the ratings. The platforms row is kept off this screen (DesktopApp). The recording ends 20px
+   above the badge. */
+.happy-home .one-hero { --hero-header: 60px; --hero-h1: clamp(1.9rem, 3.7vw, 3.3rem); --hero-kicker: 0px; --hero-sub-gap: calc(min(var(--hero-sub-lines, 0), 1) * .9rem); --hero-top: 2rem; --one-hero-reserved: calc(226px + var(--hero-top) + var(--hero-header) + var(--hero-kicker) + var(--hero-sub-gap) + var(--hero-sub-lines, 0) * 1.9rem + var(--hero-lines, 2) * 1.04 * var(--hero-h1)); }
 @media (min-width: 701px) {
   .happy-home:not([data-social-preview]) .one-hero { padding-top: var(--hero-top); }
 }
@@ -194,8 +194,9 @@
   .happy-home:not([data-social-preview]) .one-hero-tagline { font-size: 1.15rem; }
   /* The copy, the devices and the badge close together, not spread over the first screen. */
   /* Tight above the name, more room under the note: the recording sits in the middle of a
-     390×844 screen. */
-  .happy-home:not([data-social-preview]) .one-hero-fold { min-height: 0; justify-content: flex-start; gap: 3.75rem; padding-top: 1.25rem; }
+     390×844 screen. Shorter screens give that room up first, so both store badges stay on the
+     first screen where they can; the recording keeps its size. */
+  .happy-home:not([data-social-preview]) .one-hero-fold { min-height: 0; justify-content: flex-start; gap: clamp(1.25rem, 100svh - 680px, 3.75rem); padding-top: 1.25rem; }
   .happy-home .one-hero-kicker { font-size: 2rem; }
   /* Each emoji still beside its words, trading sides; the words take the rest of the row. */
   .one-values { --value-emoji: clamp(4rem, 19vw, 5rem); gap: 3rem; width: calc(100% - 40px); padding-block: 3.5rem 1rem; }

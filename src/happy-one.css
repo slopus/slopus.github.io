@@ -128,7 +128,7 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
      (Android lists Google Play first), then the platforms row. The desktop download, Homebrew
      and the SmartScreen note are left out. */
   .one-download-actions[data-other-platforms] :is(.one-desktop-downloads, .one-desktop-extras) { display: none; }
-  .one-download-actions[data-other-platforms] .one-mobile-downloads { flex-direction: column; align-items: center; gap: calc(2 * var(--one-note-gap)); }
+  .one-download-actions[data-other-platforms] .one-mobile-downloads { flex-direction: column; align-items: center; gap: var(--one-note-gap); }
   .one-download-actions[data-mobile-store='googlePlay'] [data-store='googlePlay'],
   html[data-mobile-store='googlePlay'] .one-download-actions [data-store='googlePlay'] { order: -1; }
   .one-download-actions[data-other-platforms] .one-other-platforms { margin-top: var(--one-note-gap); }
