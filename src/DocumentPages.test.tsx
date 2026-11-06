@@ -377,10 +377,11 @@ describe('static document pages', () => {
     expect(markdown).not.toMatch(/^https:\/\/x\.com\//m)
   })
 
-  it('paints the same page scrollbar on every page, so the header sits in the same place', () => {
+  it('keeps the browser\'s own scrollbar, its gutter kept on every page so the header sits in the same place', () => {
     for (const pathname of ['/', '/docs/', '/welcome/', '/model-benchmarks', '/plugins/', '/vision/', '/privacy/']) {
-      expect(renderPath(pathname).match(/class="one-scrollbar"/g)).toHaveLength(1)
+      expect(renderPath(pathname)).not.toMatch(/class="one-scrollbar"/)
     }
+    expect(readFileSync('src/style.css', 'utf8')).toMatch(/html \{[^}]*scrollbar-gutter: stable/)
   })
 
   it('lists Vision in the docs sidebar right after How It Works and renders it in the docs layout', () => {

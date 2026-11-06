@@ -133,7 +133,14 @@ demo gets the header's height. Page shells must not use
 download section, after "Trust the code", is `#download-again`. The router
 scrolls to the fragment after the first render, and the 82px `scroll-margin-top`
 must keep the whole block visible under the header; change it with the header
-height. Windows visitors see the SmartScreen note; its signer name and profile
+height. The store badges and the platforms row under the desktop download are one stack,
+one gap apart (`--one-stack-gap`), on every screen. Where the bottom of the first screen
+would cut a row, or come closer to it than the gap allows, the stack moves so the bottom of
+the screen crosses the gap after the last row that fits, 80% of the gap above it and 20%
+below (`placeFirstScreenDownloads` in `src/DesktopApp.tsx`); the gaps themselves never
+change. The page's scrollbar is the browser's own, thin, in the ink, with its gutter kept
+(`scrollbar-gutter: stable`) so the header sits still between pages; no script paints one.
+Windows visitors see the SmartScreen note; its signer name and profile
 link are constants in `src/DownloadOptions.tsx`. Release links use
 `releases/latest`, never a pinned version.
 
@@ -160,33 +167,46 @@ left at the page's end, which may run under the footer's text, with a plain colu
 down the middle in the palette's base colour. No band along the top, and nothing
 choppy: no thin jagged edges or quick wobble. On phones the colour stays out of the
 content: the top right corner and the bottom left at the footer. It never wraps
-around content blocks; Kirill found that claustrophobic. The field ends with the page, so
-the homepage doesn't bounce past its ends (`overscroll-behavior-y: none`): on an iPhone a
-rubber band at the bottom showed the bottom left patch cut in a straight line. Text, emoji, video, and
+around content blocks; Kirill found that claustrophobic. The page bounces as usual: turning
+the rubber band off (`overscroll-behavior-y: none`) also turned off pull-to-refresh on the
+iPhone, so the bottom left corner fades out just before the page's end instead, and a bounce
+past it shows no cut. Text, emoji, video, and
 buttons sit directly on it, and the header is transparent until the page scrolls,
 then frosted. The field opens on the apps' field at one moment (`GRAIN_STILL`) and,
 near the page's ends, moves on slowly at the apps' speed: fully in the first and last
 screen, fading to the still over half a screen more, so the moving rows meet the still
 ones without a seam (`u_zone` and `u_elapsed` in the shader; with nothing elapsed every
 row is the still). Kirill wants it to move on phones and desktops alike. Reduced motion
-keeps the still. `src/grainGradientRenderer.ts` draws it in page space, into canvases
+keeps the still. Phones (narrower than 700px, `PHONE`) don't run the shader: their corners
+are the shader recorded (`GrainCorner` in `src/GrainGradient.tsx`; the homepage's top right
+and bottom left, the other pages' top right, smaller), a looping H.264 movie over an AVIF of
+its own frame 0 that the page's markup carries, so the first paint already shows them; the
+movie plays over it once the page has loaded and the corner is near the screen, never on
+reduced motion, Save-Data or 2G. The page's `main` and footer isolate, so they paint over
+a playing corner: iOS Safari drew it above the hero's text otherwise.
+`notes/grain/render-corners.mjs` renders them from the shader; run it again when the shader
+or the palette changes. Wider screens draw the shader:
+`src/grainGradientRenderer.ts` draws it in page space, into canvases
 only where the shader can put colour (bounds from the shader's own reach), with the
 plain base colour between them, and draws the still again only on a resize or a new
 scheme: scrolling never draws or moves anything, so it stays on the compositor. A worker
 (`src/grainGradientWorker.ts`) does all the drawing, off the main thread, and redraws
-the moving canvases only while they are in view, at 30 fps, 15 if a frame takes over
-12ms, and stops past 28ms. It draws only on a GPU (`failIfMajorPerformanceCaveat`):
-software WebGL took 1.1s of main thread for the still alone, so without a GPU the CSS
-stand-in fades in instead, as it does without scripts; with a GPU there is no stand-in,
-only the base colour until the field fades in, because a stand-in of another shape was
-visibly swapped. The canvas that used to follow the viewport redrew 9.7 MP (12.6ms of
+the moving canvases only while they are in view, at 30 fps. The moving canvases are made
+once and kept, each repaint moving and resizing them: a new context for every repaint, left
+for collection, ran Safari out of GPU memory after a few resizes of a window and it killed
+the page, and releasing them lost the worker's other context. Nothing restarts a lost
+context; a reload starts over. It draws only on a GPU (`failIfMajorPerformanceCaveat`):
+software WebGL took 1.1s of main thread for the still alone, so without a GPU the layer
+stays the plain base colour. There is no CSS stand-in except without scripts: a stand-in of
+another shape was visibly swapped, and its gradients cost a software rasterizer a tenth of a
+second a tile. The canvas that used to follow the viewport redrew 9.7 MP (12.6ms of
 GPU on an M4 Pro) every 240px of scroll. The pieces match one whole-page draw pixel for
-pixel, and the worker's still matches the old main-thread one; check both again when the
-shapes, the shader's reach or the moving rows change. Each half of the page has
+pixel; check that again when the shapes, the shader's reach or the moving rows change. Each half of the page has
 noise of its own, blended across the middle, so where a corner patch crosses the
 middle the halves never meet in a line. Baked images were weighed and rejected: the
-grain is one device pixel and the shapes follow the page's width and height, so an
-image would be resampled at every other width and pixel ratio. The frosted header
+grain is one device pixel and the wide shapes follow the page's width and height, so an
+image would be resampled at every other width and pixel ratio; a phone's corners are
+squares of their own, so there a recording is the same at every width. The frosted header
 makes Chrome build GPU pipelines the first time it draws, which stalled the first
 scroll for 150-230ms on a cold cache; `.one-demo-warm` sweeps the same frost, at 1%,
 down the demo once while the page rests, so that happens before the first scroll.
@@ -243,7 +263,7 @@ first) light or dark with the system, IBM
 Plex Sans and Plex Mono, Bricolage for the wordmark, and the Grain Gradient only as a
 patch in the top right corner (`SITE_SURFACE` in `src/GrainGradient.tsx`), behind the
 header and beside the title: never under the text, no side swells. Like the
-homepage's, it moves while it is in view. Its layer is only as tall as the patch, so the renderer
+homepage's, it moves while it is in view, and phones show it recorded (`GrainCorner`). Its layer is only as tall as the patch, so the renderer
 draws it whole, once, and scrolling never redraws it.
 It scrolls away with the page; wide docs scroll their article, and the patch goes up
 with it. `theme-color` is the base colour, `#f4f2ff` light and `#06050f` dark. In dark

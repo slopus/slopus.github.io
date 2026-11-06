@@ -6,7 +6,7 @@
 .happy-one h2 { font-size: var(--one-h1); }
 .happy-one h1, .happy-one h2 { overflow-wrap: anywhere; }
 .happy-one h3 { font: 600 1.15rem/1.3 'Space Grotesk', 'DM Sans', sans-serif; letter-spacing: -.02em; }
-.happy-one { --one-h1: clamp(1.5rem, 3.1vw, 2.85rem); --one-note-gap: .75rem; --one-section-gap: 3.25rem; }
+.happy-one { --one-h1: clamp(1.5rem, 3.1vw, 2.85rem); --one-note-gap: .75rem; --one-stack-gap: var(--one-note-gap); --one-section-gap: 3.25rem; }
 /* The first screen holds the heading, the note, the whole recording, and the primary
    download. Everything but the recording is a known height, so the stage
    (happy-one-demo.css) sizes the recording from what is left of the viewport:
@@ -59,7 +59,9 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
 .one-platform-links a:hover { color: #183f38; text-decoration-color: currentColor; }
 /* With the phone apps (the homepage, blog posts), on every screen: the desktop download, the
    stores right under it, the platforms row, then Homebrew or the SmartScreen note. */
-.one-download-actions[data-other-platforms] { gap: var(--one-note-gap); }
+/* One gap from the desktop download to each store row and the platforms row (DesktopApp places them on the first screen). */
+.one-download-actions[data-other-platforms] { gap: var(--one-stack-gap, .75rem); }
+.one-download-actions[data-other-platforms] .one-other-platforms { margin-top: 0; }
 .one-desktop-extras { margin-top: var(--one-note-gap); }
 /* Other platforms: one row of every desktop's mark, at 0.75 of the Apple in the download badge
    (43.56 of its 76 units), a hairline, and All Releases. Gaps are the hero's spacer and its
@@ -128,10 +130,10 @@ html[data-desktop-platform='linux'] .one-download-actions[data-platform='desktop
      (Android lists Google Play first), then the platforms row. The desktop download, Homebrew
      and the SmartScreen note are left out. */
   .one-download-actions[data-other-platforms] :is(.one-desktop-downloads, .one-desktop-extras) { display: none; }
-  .one-download-actions[data-other-platforms] .one-mobile-downloads { flex-direction: column; align-items: center; gap: var(--one-note-gap); }
+  .happy-one { --one-stack-gap: 1.25rem; }
+  .one-download-actions[data-other-platforms] .one-mobile-downloads { flex-direction: column; align-items: center; gap: var(--one-stack-gap); }
   .one-download-actions[data-mobile-store='googlePlay'] [data-store='googlePlay'],
   html[data-mobile-store='googlePlay'] .one-download-actions [data-store='googlePlay'] { order: -1; }
-  .one-download-actions[data-other-platforms] .one-other-platforms { margin-top: var(--one-note-gap); }
   .one-download { padding-block: 3.5rem var(--one-section-gap); }
 }
 

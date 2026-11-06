@@ -40,17 +40,14 @@
   }
 }
 
-/* The surface ends with the page: a rubber band past either end showed the corner patches cut
-   in a straight line over the plain base, so the homepage doesn't bounce. */
-:root:has(.happy-home) { overscroll-behavior-y: none; }
 .happy-home { position: relative; isolation: isolate; color: var(--home-ink); font-family: 'IBM Plex Sans', system-ui, sans-serif; }
 /* Room after the footer for the colour in the bottom left corner (HOME_SURFACE). */
 .happy-home:not([data-social-preview]) { padding-bottom: 120px; }
 
 /* The surface, as tall as the page; GrainGradient draws canvases into it where the colour can be,
-   and they fade in over the plain base. Without scripts, and without WebGL (data-unavailable),
-   the colour stands where HOME_SURFACE puts it in plain CSS: the sides, the top right, and the
-   bottom left; on phones only the two corners. */
+   and they fade in over the plain base. Without scripts the colour stands where HOME_SURFACE
+   puts it in plain CSS: the sides, the top right, and the bottom left. Phones show their
+   recorded corners instead (grain-gradient.css), with or without scripts. */
 .home-grain {
   --home-edge: max(24px, (100% - 960px) * .4);
   --home-patch: color-mix(in srgb, var(--grain-0) 55%, var(--grain-back));
@@ -72,18 +69,8 @@
   pointer-events: none;
   background: var(--grain-back);
 }
-@media (max-width: 699px) {
-  .home-grain {
-    --home-stand-in:
-      radial-gradient(circle 270px at 100% 0, var(--grain-3), var(--home-patch) 45%, transparent),
-      radial-gradient(circle 300px at 0 100%, var(--grain-3), var(--home-patch) 45%, transparent),
-      var(--grain-back);
-  }
-}
-.home-grain::before { content: ''; position: absolute; inset: 0; background: var(--home-stand-in); opacity: 0; transition: opacity .6s ease; }
-.home-grain[data-unavailable]::before { opacity: 1; }
 @media (scripting: none) {
-  .home-grain::before { opacity: 1; }
+  .home-grain::before { content: ''; position: absolute; inset: 0; background: var(--home-stand-in); }
 }
 .home-grain > canvas { position: absolute; display: block; opacity: 0; transition: opacity .6s ease; }
 .home-grain[data-painted] > canvas { opacity: 1; }
@@ -111,8 +98,6 @@
 .happy-home .footer-meta p, .happy-home .footer-links .footer-link-quiet { color: var(--home-ink-2); }
 .happy-home .footer-meta .footer-descriptor { color: var(--home-ink); }
 .happy-home a:focus-visible { outline-color: var(--home-accent); }
-.happy-home .one-scrollbar[data-active] .one-scrollbar-thumb { background: color-mix(in srgb, var(--home-ink) 27%, transparent); }
-.happy-home .one-scrollbar:hover .one-scrollbar-thumb { background: color-mix(in srgb, var(--home-ink) 44%, transparent); }
 
 /* The hero, in the start screen's type: Plex Sans SemiBold, the line under it at 87%. */
 .happy-home h1, .happy-home h2 { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 600; letter-spacing: -.025em; }

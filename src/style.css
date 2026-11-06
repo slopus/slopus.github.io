@@ -14,30 +14,16 @@
   --section-gap: 6rem; /* 96px — gap between same-background sections */
 }
 
-/* Page scrollbar. Every page hides the native one and paints its own in
-   PageScrollbar.tsx: a native scrollbar reserves a gutter, so the full-bleed
-   bands would stop short of the window edge, and the header would sit a few
-   pixels off on pages that scroll the window. Wide docs pages scroll their
-   article; it hides its native one below. */
 /* Safari on iPad and iPhone inflates text it judges too small; the type is set as drawn. */
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-html:has(.one-scrollbar) { scrollbar-width: none; }
-html:has(.one-scrollbar)::-webkit-scrollbar { width: 0; height: 0; }
-html[data-scrollbar-dragging] { scroll-behavior: auto; }
-html:not(:has(.one-scrollbar)) { scrollbar-color: #929292 transparent; scrollbar-width: thin; }
-html:not(:has(.one-scrollbar))::-webkit-scrollbar { height: 12px; width: 12px; }
-html:not(:has(.one-scrollbar))::-webkit-scrollbar-track { background: transparent; }
-html:not(:has(.one-scrollbar))::-webkit-scrollbar-thumb { background: #929292; background-clip: padding-box; border: 3px solid transparent; border-radius: 999px; }
-html:not(:has(.one-scrollbar))::-webkit-scrollbar-thumb:hover { background-color: #707070; }
-html:not(:has(.one-scrollbar))::-webkit-scrollbar-corner { background: transparent; }
-.one-scrollbar { position: fixed; top: 0; right: 0; bottom: 0; z-index: 60; display: none; width: 10px; touch-action: none; }
-.one-scrollbar[data-overflow] { display: block; }
-.one-scrollbar-thumb { position: absolute; top: 0; right: 2px; width: 6px; border-radius: 999px; background: #183f3800; transition: background-color 480ms linear; }
-.one-scrollbar[data-active] .one-scrollbar-thumb { background: #183f3845; transition: none; }
-.one-scrollbar:hover .one-scrollbar-thumb { background: #183f3870; transition: none; }
-/* A pointer that cannot hover has nothing to grab, so it never covers content. */
-@media (hover: none) { .one-scrollbar { pointer-events: none; } }
-@media (prefers-reduced-motion: reduce) { .one-scrollbar-thumb { transition: none; } }
+/* The page's scrollbar is the browser's own: thin, in the ink, on a clear track. Its gutter is kept
+   on every page, so the header sits still between pages that scroll and pages that don't; overlay
+   scrollbars (macOS by default, phones) take no room. Wide docs pages scroll their article, which
+   has the same bar (style.css, below). */
+html { --scrollbar: color-mix(in srgb, var(--home-ink, #14112e) 27%, transparent); scrollbar-gutter: stable; scrollbar-color: var(--scrollbar) transparent; scrollbar-width: thin; }
+html::-webkit-scrollbar, .document-article::-webkit-scrollbar { height: 10px; width: 10px; }
+html::-webkit-scrollbar-track, .document-article::-webkit-scrollbar-track { background: transparent; }
+html::-webkit-scrollbar-thumb, .document-article::-webkit-scrollbar-thumb { background: var(--scrollbar); background-clip: padding-box; border: 2px solid transparent; border-radius: 999px; }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -245,7 +231,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 /* Documentation and legal pages */
 .document-site-shell { min-height: 100vh; }
 .docs-layout { display: grid; gap: 4rem; grid-template-columns: 210px minmax(0, 760px); min-height: calc(100vh - 61px); padding-bottom: 7rem; padding-top: 3.5rem; }
-/* The sidebar's scrollbar looks like the page's own (.one-scrollbar): a 6px thumb two pixels from the edge,
+/* The sidebar's scrollbar looks like the page's own: a 6px thumb two pixels from the edge,
    no track, shown while the sidebar is scrolled or pointed at. */
 .docs-sidebar { align-self: start; max-height: calc(100vh - 3rem); overflow-y: auto; position: sticky; scrollbar-color: transparent transparent; scrollbar-width: thin; top: 1.5rem; }
 .docs-sidebar::-webkit-scrollbar { height: 10px; width: 10px; }
@@ -264,8 +250,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .site-header-wrap { flex: 0 0 auto; }
   .docs-shell .docs-layout { flex: 1 1 auto; margin: 0; max-width: none; min-height: 0; overflow: hidden; padding: 0 0 0 max(32px, calc((100% - 1180px) / 2)); width: 100%; grid-template-columns: 210px minmax(0, 1fr); }
   .docs-shell .docs-sidebar { align-self: stretch; height: 100%; max-height: none; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 1.75rem 2px 3rem; position: static; }
-  .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 1.75rem 0 0; position: relative; scrollbar-width: none; }
-  .docs-shell .document-article::-webkit-scrollbar { width: 0; height: 0; }
+  .docs-shell .document-article { height: 100%; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 1.75rem 0 0; position: relative; scrollbar-color: var(--scrollbar) transparent; scrollbar-width: thin; }
   /* The column gap is the article's own left padding, so the scrolling article starts at the sidebar's
      edge: a wheel over the gap scrolls it, and a figure's shadow isn't cut at its left edge. */
   .docs-shell .docs-layout { column-gap: 0; }

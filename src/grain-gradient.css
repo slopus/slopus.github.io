@@ -1,0 +1,27 @@
+/* Phones: the recorded corners (GrainCorner), instead of the shader and its CSS stand-in. Each
+   fades out before its square's edges, so the movie's base colour never meets the page's in a
+   line, and the bottom left fades before the page's end, so a rubber band past it shows no cut. */
+.grain-corner { display: none; position: absolute; width: var(--corner); height: var(--corner); pointer-events: none; }
+.grain-corner > picture, .grain-corner img, .grain-corner > video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.grain-corner > video { opacity: 0; }
+.grain-corner > video[data-playing] { opacity: 1; }
+.grain-corner[data-corner='top-right'] {
+  top: 0;
+  right: 0;
+  -webkit-mask-image: radial-gradient(circle var(--corner) at 100% 0, #000 85%, transparent);
+  mask-image: radial-gradient(circle var(--corner) at 100% 0, #000 85%, transparent);
+}
+.grain-corner[data-corner='bottom-left'] {
+  bottom: 0;
+  left: 0;
+  -webkit-mask-image: radial-gradient(circle var(--corner) at 0 100%, #000 85%, transparent), linear-gradient(to top, transparent, #000 48px);
+  -webkit-mask-composite: source-in;
+  mask-image: radial-gradient(circle var(--corner) at 0 100%, #000 85%, transparent), linear-gradient(to top, transparent, #000 48px);
+  mask-composite: intersect;
+}
+@media (max-width: 699.98px) {
+  .grain-corner { display: block; }
+  .home-grain > canvas, .site-grain > canvas, .home-grain::before, .site-grain::before { display: none; }
+}
+/* The page paints over its layer: iOS Safari drew a playing corner above main's text otherwise. */
+:is(.happy-home, .site-theme) :is(main, .site-footer) { isolation: isolate; }

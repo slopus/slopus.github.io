@@ -206,17 +206,15 @@ describe('Happy Desktop landing page', () => {
 
   it('puts the colour in big swells at the sides, the top right, and the bottom left', async () => {
     const { HOME_SURFACE } = await import('./GrainGradient')
-    const { wide, narrow } = HOME_SURFACE
+    const { wide, phone } = HOME_SURFACE
 
     // No band along the top, and none along the bottom: the bottom left corner instead.
     expect(wide.ends).toEqual([0, 0, 0, 0])
     expect(wide.corners).toEqual([0, expect.any(Number), expect.any(Number), 0])
     expect(Math.min(wide.corners[1], wide.corners[2])).toBeGreaterThanOrEqual(400)
     expect(wide.sides[1]).toBeGreaterThan(0)
-    // Phones: the two corners, out of the content.
-    expect(narrow.sides).toEqual([0, 0, 0, 0])
-    expect(narrow.ends).toEqual([0, 0, 0, 0])
-    expect(narrow.corners).toEqual([0, expect.any(Number), expect.any(Number), 0])
+    // Phones: the two recorded corners, out of the content.
+    expect(phone).toEqual({ topRight: expect.any(Number), bottomLeft: expect.any(Number) })
   })
 
   it('moves the gradient only near the page\'s ends, off the main thread, its two halves blended across the middle', async () => {
@@ -226,7 +224,6 @@ describe('Happy Desktop landing page', () => {
     expect(renderer).not.toMatch(/requestAnimationFrame|setInterval/)
     // Only on a GPU: software WebGL would spend seconds of CPU on it.
     expect(readFileSync('src/grainGradientWorker.ts', 'utf8')).toMatch(/failIfMajorPerformanceCaveat: true/)
-    expect(renderer).toMatch(/failIfMajorPerformanceCaveat: true/)
     // With no time elapsed, every row is the still.
     expect(grainGradientFragmentShader).toMatch(/float t = \.1 \* \(u_time \+ moving \* u_elapsed \+ 7\.\);/)
     // Drawn into canvases that scroll with the page: nothing listens to the scroll.

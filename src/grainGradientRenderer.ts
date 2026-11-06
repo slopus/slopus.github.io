@@ -1,4 +1,4 @@
-import type { GrainFrame, GrainPalette, GrainProgram, Rect, SurfaceShape, Zone } from './grainGradientGL'
+import type { GrainPalette, Rect, SurfaceShape, Zone } from './grainGradientGL'
 import type { FromWorker, PaintRequest, ToWorker } from './grainGradientWorker'
 
 export type { SurfaceShape } from './grainGradientGL'
@@ -6,8 +6,13 @@ const STILL_ZONE: Zone = [-1, 1, -1, 1]
 
 const PALETTE = ['back', '0', '1', '2', '3'] as const
 
-/** One shape for wide screens and one for phones (narrower than 700 CSS px). */
-export type Surface = { wide: SurfaceShape; narrow: SurfaceShape }
+/**
+ * The shader's shape on screens 700 CSS px and wider; phones show recorded corners instead
+ * (GrainCorners), each a square of the given size in CSS px.
+ */
+export type Surface = { wide: SurfaceShape; phone: { topRight: number; bottomLeft?: number } }
+/** Where phones show the recorded corners and the shader draws nothing. */
+export const PHONE = '(max-width: 699.98px)'
 
 /**
  * The moment of the apps' animated field the page shows first, in shader seconds: the frame the
@@ -18,8 +23,6 @@ export const GRAIN_STILL = 0
 export const GRAIN_SPEED = 1
 /** The largest piece drawn at once, in device px, well inside every GPU's limits. */
 const PIECE = 4096
-/** On the main thread, without the worker: small enough to draw one between frames. */
-const MAIN_PIECE = 1024
 
 /**
  * Where the shader can put colour, in CSS px; everywhere else it draws the plain base colour,
@@ -111,8 +114,7 @@ function pieces(rects: Rect[], ratio: number, width: number, height: number, lim
 
 type Painted = { rect: Rect; canvas: HTMLCanvasElement; moving: boolean }
 
-function canvasFor(document: Document, rect: Rect, ratio: number) {
-  const canvas = document.createElement('canvas')
+function place(canvas: HTMLCanvasElement, rect: Rect, ratio: number) {
   Object.assign(canvas.style, {
     left: `${rect.x / ratio}px`, top: `${rect.y / ratio}px`,
     width: `${rect.width / ratio}px`, height: `${rect.height / ratio}px`,
@@ -128,7 +130,10 @@ function show(canvas: HTMLCanvasElement, rect: Rect, bitmap: ImageBitmap) {
   else { canvas.getContext('2d')?.drawImage(bitmap, 0, 0); bitmap.close() }
 }
 
-/** A worker started as soon as this module loads, so it is ready by the time the page mounts. */
+/**
+ * A worker started as soon as this module loads, so it is ready by the time the page mounts; not
+ * on a phone, which never draws the shader, until it is one no more.
+ */
 function startWorker() {
   if (typeof window === 'undefined' || typeof Worker === 'undefined' || typeof OffscreenCanvas === 'undefined') return undefined
   try {
@@ -142,36 +147,30 @@ function startWorker() {
     return undefined
   }
 }
-let spare = startWorker()
+let spare = typeof Worker !== 'undefined' && !window.matchMedia(PHONE).matches ? startWorker() : undefined
 
 /**
  * Draws the Grain Gradient as the page's surface, shaped by `surface`, into `layer`, an element as
- * large as the page. Only where the shader can put colour gets canvases, in page space, so
- * scrolling never draws and moves nothing. A worker draws them: the still (GRAIN_STILL) once,
- * and near the page's ends, unless the reader prefers reduced motion, the field moving on at
- * GRAIN_SPEED in canvases the worker redraws while they are in view (the rows between fade to the
- * still, so the two meet without a seam). Without the worker it is the still, drawn here a small
- * piece at a time. All of it is drawn again when the page resizes or the colour scheme changes,
- * and swapped in at once. Until the first draw the layer shows the plain base colour; without
- * WebGL on a GPU, CSS edges fade in instead (data-unavailable). The palette is the layer's `--grain-*` custom
- * properties (six-digit hex). Returns the one teardown.
+ * large as the page, on screens wider than a phone. Only where the shader can put colour gets
+ * canvases, in page space, so scrolling never draws and moves nothing. A worker draws them: the
+ * still (GRAIN_STILL) once, and near the page's ends, unless the reader prefers reduced motion,
+ * the field moving on at GRAIN_SPEED in canvases the worker redraws while they are in view (the
+ * rows between fade to the still, so the two meet without a seam). All of it is drawn again when
+ * the page resizes or the colour scheme changes, and swapped in at once. Until the first draw, and
+ * without the worker or WebGL on a GPU, the layer shows the plain base colour: CSS edges in its
+ * place cost a software rasterizer a tenth of a second a tile. The palette is the layer's
+ * `--grain-*` custom properties (six-digit hex). Returns the one teardown.
  */
 export function grainGradientRenderer(layer: HTMLElement, surface: Surface) {
   const document = layer.ownerDocument
   const view = document.defaultView
-  if (view === null || typeof view.WebGLRenderingContext === 'undefined' || typeof view.createImageBitmap !== 'function') {
-    layer.dataset.unavailable = ''
-    return () => { delete layer.dataset.unavailable }
-  }
-  const started = spare
-  spare = undefined
+  if (view === null || typeof view.Worker === 'undefined' || typeof view.OffscreenCanvas === 'undefined') return () => {}
   const motion = view.matchMedia('(prefers-reduced-motion: reduce)')
   const scheme = view.matchMedia('(prefers-color-scheme: dark)')
-  const canMove = typeof HTMLCanvasElement.prototype.transferControlToOffscreen === 'function'
+  const phone = view.matchMedia(PHONE)
   let disposed = false
   let shown: Painted[] = []
   let pending: Painted[] = []
-  let pendingRatio = 1
   let pass = 0
   // What the canvases show; they are drawn again only when this changes.
   let drawn = ''
@@ -179,15 +178,21 @@ export function grainGradientRenderer(layer: HTMLElement, surface: Surface) {
   let screenWidth = 0
   let screenHeight = 0
   let worker: Worker | undefined
-  let fallback: { program: GrainProgram; source: HTMLCanvasElement } | undefined | null
+  // The moving canvases, handed to the worker once and kept: each repaint moves and resizes them
+  // rather than making new ones. A context made for every repaint, and released, lost the
+  // worker's other context in Safari; left for collection, a few resizes ran Safari out of GPU
+  // memory and it killed the page.
+  const slots: HTMLCanvasElement[] = []
+  let pendingRatio = 1
 
   const settle = (painted: Painted[]) => {
     for (const { canvas } of shown) canvas.remove()
+    for (const { canvas, rect, moving } of painted) if (moving) place(canvas, rect, pendingRatio)
     layer.append(...painted.map(({ canvas }) => canvas))
     shown = painted
     sight.disconnect()
     painted.forEach(({ canvas, moving }) => { if (moving) sight.observe(canvas) })
-    if (!('painted' in layer.dataset)) {
+    if (painted.length && !('painted' in layer.dataset)) {
       // The canvases fade in over the plain base.
       void view.getComputedStyle(painted[0]?.canvas ?? layer).opacity
       layer.dataset.painted = ''
@@ -209,116 +214,99 @@ export function grainGradientRenderer(layer: HTMLElement, surface: Surface) {
   }
 
   const onMessage = ({ data }: MessageEvent<FromWorker>) => {
-    if (data.type === 'lost') {
-      // Start over with a fresh worker.
-      worker?.terminate()
-      worker = undefined
-      drawn = ''
-      begun = false
-      void begin(startWorker())
-      return
-    }
     if (data.type === 'piece') {
       const piece = data.id === pass ? pending[data.index] : undefined
-      if (!piece) { data.bitmap?.close(); return }
-      if (data.bitmap) {
-        if (data.replace) piece.canvas = canvasFor(document, piece.rect, pendingRatio)
-        show(piece.canvas, piece.rect, data.bitmap)
-      }
+      if (!piece) data.bitmap?.close()
+      else if (data.bitmap) show(piece.canvas, piece.rect, data.bitmap)
     } else if (data.type === 'painted' && data.id === pass) settle(pending)
   }
 
-  const paintMain = async (current: number, list: { rect: Rect }[], frame: Omit<GrainFrame, 'piece'>, colours: GrainPalette) => {
-    if (fallback === undefined) {
-      const { grainProgram } = await import('./grainGradientGL')
-      const source = document.createElement('canvas')
-      const gl = source.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, preserveDrawingBuffer: true, powerPreference: 'low-power', failIfMajorPerformanceCaveat: true })
-      const program = gl ? grainProgram(gl, source) : undefined
-      fallback = program ? { program, source } : null
-    }
-    if (!fallback) { layer.dataset.unavailable = ''; return }
-    if (!fallback.program.palette(colours)) return
-    const made: Painted[] = []
-    for (const { rect } of list) {
-      if (disposed || current !== pass) return
-      fallback.program.draw({ ...frame, piece: rect })
-      const bitmap = await view.createImageBitmap(fallback.source)
-      if (disposed || current !== pass) { bitmap.close(); return }
-      const canvas = canvasFor(document, rect, frame.ratio)
-      show(canvas, rect, bitmap)
-      made.push({ rect, canvas, moving: false })
-      // Between pieces, the page gets the main thread back.
-      await new Promise(resolve => view.setTimeout(resolve))
-    }
-    settle(made)
-  }
-
   const paint = () => {
-    if (disposed) return
+    if (disposed || !worker) return
+    if (phone.matches) {
+      // Phones show the recorded corners: nothing to draw, and nothing for the worker to move.
+      if (drawn === 'phone') return
+      drawn = 'phone'
+      pending = []
+      send({ type: 'paint', id: ++pass, palette: palette(), shape: surface.wide, ratio: 1, width: 1, height: 1, still: GRAIN_STILL, zone: STILL_ZONE, speed: 0, pieces: [] })
+      settle([])
+      return
+    }
     const bounds = layer.getBoundingClientRect()
     const ratio = Math.min(2, Math.max(1, view.devicePixelRatio))
     const width = Math.max(1, Math.round(bounds.width * ratio))
     const height = bounds.height
     const colours = palette()
     if (view.innerWidth !== screenWidth || !screenHeight) { screenWidth = view.innerWidth; screenHeight = view.innerHeight }
-    const moves = worker !== undefined && canMove && !motion.matches
+    const moves = !motion.matches
     const wanted = `${width} ${height} ${ratio} ${colours.join()} ${moves ? screenHeight : ''}`
     if (wanted === drawn) return
     drawn = wanted
     const current = ++pass
-    const shape = bounds.width < 700 ? surface.narrow : surface.wide
+    const shape = surface.wide
     // Fully moving for the first and last screen, fading to the still over half a screen more.
     const zone: Zone = moves ? [screenHeight, screenHeight / 2, screenHeight, screenHeight / 2] : STILL_ZONE
     const deviceHeight = Math.ceil(height * ratio)
     const ends = moves ? [Math.ceil((zone[0] + zone[1]) * ratio), Math.floor((height - zone[2] - zone[3]) * ratio)] as const : undefined
     const rects = colouredRects(shape, width / ratio, height)
-    const frame = { shape, ratio, width, height, still: GRAIN_STILL, elapsed: 0, zone }
-    if (!worker) {
-      void paintMain(current, pieces(rects, ratio, width, deviceHeight, MAIN_PIECE), frame, colours)
-      return
-    }
-    pendingRatio = ratio
-    pending = pieces(rects, ratio, width, deviceHeight, PIECE, ends).map(({ rect, moving }) => ({ rect, moving, canvas: canvasFor(document, rect, ratio) }))
     const transfer: Transferable[] = []
-    const request: PaintRequest = {
-      type: 'paint', id: current, palette: colours, shape, ratio, width, height, still: GRAIN_STILL, zone, speed: GRAIN_SPEED,
-      pieces: pending.map(({ rect, moving, canvas }) => {
-        if (!moving) return { rect }
+    const sent: PaintRequest['pieces'] = []
+    let slot = 0
+    pendingRatio = ratio
+    pending = pieces(rects, ratio, width, deviceHeight, PIECE, ends).map(({ rect, moving }) => {
+      if (!moving) {
+        sent.push({ rect })
+        return { rect, moving, canvas: place(document.createElement('canvas'), rect, ratio) }
+      }
+      const reused = slots[slot]
+      const canvas = reused ?? document.createElement('canvas')
+      if (!reused) {
+        slots.push(canvas)
         const offscreen = canvas.transferControlToOffscreen()
         transfer.push(offscreen)
-        return { rect, canvas: offscreen }
-      }),
-    }
+        sent.push({ rect, slot, canvas: offscreen })
+      } else sent.push({ rect, slot })
+      slot++
+      return { rect, moving, canvas }
+    })
+    const request: PaintRequest = { type: 'paint', id: current, palette: colours, shape, ratio, width, height, still: GRAIN_STILL, zone, speed: GRAIN_SPEED, pieces: sent }
     send(request, transfer)
     run()
   }
 
   // The first paint goes at once; later ones wait for the page to stop changing size, as it does
   // while it loads, so it is painted again once rather than at every step.
+  // Nothing is drawn until the worker has said it can (paint).
   let wait: number | undefined
-  // Nothing is drawn until the worker has said whether it can.
-  let begun = false
   const schedule = () => {
-    if (!begun) return
     view.clearTimeout(wait)
     if (drawn === '') void Promise.resolve().then(paint)
     else wait = view.setTimeout(paint, 150)
   }
-  const begin = async (from: ReturnType<typeof startWorker>) => {
-    const ok = from ? await from.ready : false
-    if (disposed) { from?.worker.terminate(); return }
-    if (ok && from) {
+  const begin = async (from: NonNullable<ReturnType<typeof startWorker>>) => {
+    const ok = await from.ready
+    if (disposed) { from.worker.terminate(); return }
+    if (ok) {
       worker = from.worker
       worker.addEventListener('message', onMessage)
-    } else from?.worker.terminate()
-    begun = true
+    } else from.worker.terminate()
     schedule()
   }
-  void begin(started ?? startWorker())
+  let started = false
+  const start = () => {
+    if (started || phone.matches) return
+    started = true
+    const from = spare ?? startWorker()
+    spare = undefined
+    if (from) void begin(from)
+  }
+  start()
   const sizing = new view.ResizeObserver(schedule)
   sizing.observe(layer)
   view.addEventListener('resize', schedule)
   scheme.addEventListener('change', schedule)
+  const onPhone = () => { start(); schedule() }
+  phone.addEventListener('change', onPhone)
   motion.addEventListener('change', run)
   document.addEventListener('visibilitychange', run)
   return () => {
@@ -328,16 +316,12 @@ export function grainGradientRenderer(layer: HTMLElement, surface: Surface) {
     sight.disconnect()
     view.removeEventListener('resize', schedule)
     scheme.removeEventListener('change', schedule)
+    phone.removeEventListener('change', onPhone)
     motion.removeEventListener('change', run)
     document.removeEventListener('visibilitychange', run)
     view.clearTimeout(wait)
     worker?.terminate()
-    if (fallback) {
-      fallback.program.release()
-      ;(fallback.source.getContext('webgl') as WebGLRenderingContext | null)?.getExtension('WEBGL_lose_context')?.loseContext()
-    }
     for (const { canvas } of shown) canvas.remove()
     delete layer.dataset.painted
-    delete layer.dataset.unavailable
   }
 }

@@ -151,63 +151,36 @@ function usePastHeading() {
 }
 
 /**
- * The hero's downloads on the first screen: the primary download and the store badges, never the
- * platforms row, which starts just below the bottom of the screen, with Homebrew and the
- * SmartScreen note after it. Stacked on a phone, the second store badge sits halfway between the
- * first and the platforms row, so the three are evenly spaced as the page scrolls; where it would
- * be cut by the bottom of the screen it moves below it, the platforms row as far again after it.
- * Self-contained: the prerendered page runs it from an inline script as soon as the block is
- * parsed, before its first paint (FirstScreenDownloads), and the app again after layout and font
- * changes.
+ * The hero's downloads on the first screen. The store badges and the platforms row after them are
+ * one stack, a gap apart (--one-stack-gap). If the bottom of the screen would cut one, or come
+ * closer to one than the gap allows, the stack moves so the bottom of the screen crosses the gap
+ * after the last row that fits, 80% of the gap above it and 20% below; up by a gap at most, down
+ * as far as it takes. Self-contained: the prerendered page runs it from an inline script as soon as
+ * the block is parsed, before its first paint (FirstScreenDownloads), and the app again after
+ * layout and font changes.
  */
 function placeFirstScreenDownloads(block: HTMLElement) {
-  const items = [...block.querySelectorAll<HTMLElement>('.one-store-download, .one-other-platforms')]
-  for (const item of items) item.style.marginTop = ''
+  const stack = block.querySelector<HTMLElement>('.one-mobile-downloads')
+  if (!stack) return
+  stack.style.marginTop = ''
+  const gap = parseFloat(getComputedStyle(block).rowGap) || 0
   const fold = document.documentElement.clientHeight
-  const box = (item: HTMLElement) => {
-    const rect = item.getBoundingClientRect()
-    return { top: rect.top + window.scrollY, bottom: rect.bottom + window.scrollY }
-  }
   // In reading order, side-by-side badges as one row.
-  const rows: { items: HTMLElement[]; top: number; bottom: number }[] = []
-  for (const item of items.filter(item => item.offsetParent).sort((a, b) => box(a).top - box(b).top)) {
-    const { top, bottom } = box(item)
+  const rows: { top: number; bottom: number }[] = []
+  for (const item of block.querySelectorAll<HTMLElement>('.one-store-download, .one-other-platforms')) {
+    if (!item.offsetParent) continue
+    const rect = item.getBoundingClientRect()
+    const [top, bottom] = [rect.top + window.scrollY, rect.bottom + window.scrollY]
     const row = rows.find(row => Math.abs(row.top - top) < 2)
-    if (row) { row.items.push(item); row.bottom = Math.max(row.bottom, bottom) } else rows.push({ items: [item], top, bottom })
+    if (row) row.bottom = Math.max(row.bottom, bottom)
+    else rows.push({ top, bottom })
   }
-  const platforms = rows.at(-1)
-  if (!platforms?.items[0].classList.contains('one-other-platforms')) return
-  const stores = rows.slice(0, -1)
-  const below = fold + 12
-  // How far what follows the last moved row has moved.
-  let shift = 0
-  const move = (row: (typeof rows)[number], by: number, follow = true) => {
-    for (const item of row.items) item.style.marginTop = `${parseFloat(getComputedStyle(item).marginTop) + by}px`
-    if (follow) shift += by
-  }
-  // A badge the bottom of the screen would cut moves below it.
-  const first = stores[0]
-  if (first && first.top < fold && first.bottom > fold) move(first, below - first.top)
-  let after = below
-  if (stores.length === 2) {
-    const firstBottom = stores[0].bottom + shift
-    const second = stores[1]
-    const height = second.bottom - second.top
-    const gap = second.top + shift - firstBottom
-    const even = (below - firstBottom - height) / 2
-    let spacing = gap
-    if (even > gap) {
-      move(second, even - gap)
-      spacing = even
-    } else if (second.top + shift < fold && second.bottom + shift > fold) {
-      move(second, below - (second.top + shift))
-      spacing = below - firstBottom
-    }
-    // The platforms row as far after the second badge as that is after the first.
-    after = Math.max(below, second.bottom + shift + spacing)
-  }
-  const platformsTop = platforms.top + shift
-  if (platformsTop < after) move(platforms, after - platformsTop, false)
+  rows.sort((a, b) => a.top - b.top)
+  if (rows.length < 2 || rows[rows.length - 1].bottom <= fold) return
+  // None fits: the first starts 20% of a gap below the bottom of the screen.
+  let shift = fold + .2 * gap - rows[0].top
+  for (const row of rows.slice(0, -1)) if (fold - .8 * gap - row.bottom >= -gap) shift = fold - .8 * gap - row.bottom
+  stack.style.marginTop = `${Math.max(-gap, shift)}px`
 }
 
 /** The placement, as soon as the browser has parsed the block; again once the fonts are in. */

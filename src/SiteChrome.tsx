@@ -1,7 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { HAPPY, HAPPY_DESCRIPTOR, HAPPY_DESKTOP, type Product } from './products'
 import { HAPPY_ONE_GITHUB_STARS } from './happyOneGithubStars'
-import { PageScrollbar } from './PageScrollbar'
 import { KIRILL, STEVE } from './Team'
 
 export const GITHUB_HAPPY = HAPPY.repository
@@ -58,7 +57,7 @@ function usePageScrolled() {
 }
 
 /**
- * One plain header on every page, with the page's painted scrollbar. Docs means
+ * One plain header on every page. Docs means
  * the Happy (desktop) docs.
  */
 export function SiteHeader({
@@ -71,7 +70,6 @@ export function SiteHeader({
   const scrolled = usePageScrolled()
   return (
     <>
-      <PageScrollbar />
       <div className="site-header-wrap" data-scrolled={scrolled ? '' : undefined}>
         <header className="site-header page-width" id="top">
           <div className="site-header-brand">

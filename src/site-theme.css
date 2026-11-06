@@ -19,10 +19,9 @@
   font-family: 'IBM Plex Sans', system-ui, sans-serif;
 }
 
-/* The patch: its layer is as wide as the page, so the shader picks the phone shape below 700px
-   as the homepage's does, and just tall enough for the patch's wandering edge and grain. Until
-   the shader paints the layer is clear; without scripts, and without WebGL (data-unavailable), a
-   CSS corner stands in. */
+/* The patch: its layer is as wide as the page, and just tall enough for the patch's wandering
+   edge and grain, or a phone's recorded corner. Until
+   the shader paints the layer is clear; without scripts a CSS corner stands in. */
 .site-grain {
   --site-patch: 320px;
   position: absolute;
@@ -36,10 +35,8 @@
   pointer-events: none;
   --site-stand-in: radial-gradient(circle var(--site-patch) at 100% 0, var(--grain-3), color-mix(in srgb, var(--grain-0) 55%, var(--grain-back)) 45%, transparent);
 }
-.site-grain::before { content: ''; position: absolute; inset: 0; background: var(--site-stand-in); opacity: 0; transition: opacity .6s ease; }
-.site-grain[data-unavailable]::before { opacity: 1; }
 @media (scripting: none) {
-  .site-grain::before { opacity: 1; }
+  .site-grain::before { content: ''; position: absolute; inset: 0; background: var(--site-stand-in); }
 }
 @media (max-width: 699px) {
   .site-grain { --site-patch: 180px; }
@@ -59,8 +56,6 @@
 .site-theme .footer-statement, .site-theme .footer-people { font-family: inherit; }
 .site-theme .footer-meta p, .site-theme .footer-links .footer-link-quiet { color: var(--home-ink-2); }
 .site-theme .footer-meta .footer-descriptor { color: var(--home-ink); }
-.site-theme .one-scrollbar[data-active] .one-scrollbar-thumb { background: color-mix(in srgb, var(--home-ink) 27%, transparent); }
-.site-theme .one-scrollbar:hover .one-scrollbar-thumb { background: color-mix(in srgb, var(--home-ink) 44%, transparent); }
 
 /* Type: Plex Sans SemiBold headings, Plex Mono wherever DM Mono was. */
 .site-theme :is(h1, h2, h3) { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 600; }

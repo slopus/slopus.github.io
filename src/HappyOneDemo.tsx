@@ -1,16 +1,9 @@
 import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
+import { dataConnection, sparing } from './connection'
 import { DEMO_TAKE, type DemoMovie } from './happyOneDemoMedia'
 import { useRevealedControls } from './revealedControls'
 import './happy-one-demo.css'
 
-type DataConnection = EventTarget & { saveData?: boolean, effectiveType?: string }
-function dataConnection() {
-  return (navigator as Navigator & { connection?: DataConnection }).connection
-}
-/** Save-Data, or a connection too slow for the movies: the stills stay, with controls. */
-function sparing(connection: DataConnection | undefined) {
-  return Boolean(connection?.saveData) || connection?.effectiveType === 'slow-2g' || connection?.effectiveType === '2g'
-}
 
 function Sources({ movie }: { movie: DemoMovie }) {
   return movie.sources.map(({ src, type, media }) => <source key={src} src={src} type={type} media={media} />)
