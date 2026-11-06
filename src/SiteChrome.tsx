@@ -69,7 +69,8 @@ export function SiteHeader({
 }) {
   const scrolled = usePageScrolled()
   return (
-    <>
+    // The slot keeps the header's room in the page on phones, where the header is fixed (style.css).
+    <div className="site-header-slot">
       <div className="site-header-wrap" data-scrolled={scrolled ? '' : undefined}>
         <header className="site-header page-width" id="top">
           <div className="site-header-brand">
@@ -81,7 +82,7 @@ export function SiteHeader({
           </nav>
         </header>
       </div>
-    </>
+    </div>
   )
 }
 

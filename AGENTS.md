@@ -121,7 +121,9 @@ internal link or asset reference that does not resolve inside `dist/`.
 Every page shares one plain `SiteHeader`: the full "Happy Engineering" wordmark
 at every width, Docs, and the GitHub mark with its plain star count (no star glyph, border, or
 pill). It is 60px tall (52px on phones), pinned while scrolling, and shows a
-hairline only once the page has scrolled. The homepage keeps it out of sight until the
+hairline only once the page has scrolled. On phones it is `position: fixed` in a slot that
+keeps its room (`.site-header-slot`), not sticky: iOS Safari left a sticky header up to 2px
+off while the page scrolled, and at rest. The homepage keeps it out of sight until the
 hero's "Happy" has scrolled up past it (`usePastHeading` in `src/DesktopApp.tsx`, an
 IntersectionObserver, never a scroll listener), then shows it unchanged; keyboard focus
 inside it shows it at once, and without scripts it is always there. Wider than 700px it is
@@ -169,8 +171,7 @@ choppy: no thin jagged edges or quick wobble. On phones the colour stays out of 
 content: the top right corner and the bottom left at the footer. It never wraps
 around content blocks; Kirill found that claustrophobic. The page bounces as usual: turning
 the rubber band off (`overscroll-behavior-y: none`) also turned off pull-to-refresh on the
-iPhone, so the bottom left corner fades out just before the page's end instead, and a bounce
-past it shows no cut. Text, emoji, video, and
+iPhone, so the phones' corners fade out just before the page's ends instead. Text, emoji, video, and
 buttons sit directly on it, and the header is transparent until the page scrolls,
 then frosted. The field opens on the apps' field at one moment (`GRAIN_STILL`) and,
 near the page's ends, moves on slowly at the apps' speed: fully in the first and last
@@ -182,8 +183,10 @@ are the shader recorded (`GrainCorner` in `src/GrainGradient.tsx`; the homepage'
 and bottom left, the other pages' top right, smaller), a looping H.264 movie over an AVIF of
 its own frame 0 that the page's markup carries, so the first paint already shows them; the
 movie plays over it once the page has loaded and the corner is near the screen, never on
-reduced motion, Save-Data or 2G. The page's `main` and footer isolate, so they paint over
-a playing corner: iOS Safari drew it above the hero's text otherwise.
+reduced motion, Save-Data or 2G. Everything on the page beside the layer isolates, so it
+paints over a playing corner: iOS Safari drew it above the hero's text and the docs
+breadcrumb otherwise. The corners fade before the page's top and end, so Safari's app banner
+above the page, or a rubber band past it, shows no cut.
 `notes/grain/render-corners.mjs` renders them from the shader; run it again when the shader
 or the palette changes. Wider screens draw the shader:
 `src/grainGradientRenderer.ts` draws it in page space, into canvases

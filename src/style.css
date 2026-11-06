@@ -36,6 +36,8 @@ a { color: inherit; text-decoration: none; }
 .page-width { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
 
 /* Header */
+/* Wider than a phone the slot isn't a box, so the header sticks within the page, not its slot. */
+.site-header-slot { display: contents; }
 .site-header-wrap { background: #f5f0e7; border-bottom: 1px solid transparent; position: sticky; top: 0; z-index: 40; transition: border-color .2s ease; }
 /* The hairline appears only once the page has scrolled under the header. */
 .site-header-wrap[data-scrolled] { border-bottom-color: #d9d3c5; }
@@ -557,6 +559,10 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   :root { --section-y: 5rem; --section-gap: 4rem; }
   .page-width { width: min(100% - 40px, 620px); }
   .site-header { gap: .75rem; min-height: 52px; }
+  /* Phones pin the header fixed, not sticky: iOS Safari left a sticky header up to 2px off while
+     the page scrolled, and at rest. Its slot keeps its 53px in the page. */
+  .site-header-slot { display: block; height: 53px; }
+  .site-header-wrap { position: fixed; top: 0; right: 0; left: 0; }
   .site-header nav { gap: .85rem; font-size: .8rem; }
   .site-header-brand { gap: .6rem; }
   .hero { padding: 2.5rem 0 5rem; }

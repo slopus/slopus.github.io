@@ -86,6 +86,7 @@
 }
 @media (scripting: enabled) and (min-width: 701px) {
   .happy-home:not([data-social-preview]) .site-header-wrap { position: fixed; top: 0; right: 0; left: 0; }
+  .happy-home:not([data-social-preview]) .site-header-slot { height: 0; }
 }
 .happy-home { --home-frost: blur(20px) saturate(1.4); }
 .happy-home .site-header-wrap[data-scrolled] { border-bottom-color: var(--home-line); background: var(--home-header); -webkit-backdrop-filter: var(--home-frost); backdrop-filter: var(--home-frost); }
