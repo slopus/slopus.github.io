@@ -85,7 +85,7 @@ export interface RankedModel {
 export interface HiddenModel {
   id: string
   name: string
-  reason: 'superseded' | 'outranked' | 'over-limit' | 'thin-evidence'
+  reason: 'superseded' | 'outranked' | 'over-limit' | 'thin-evidence' | 'unavailable'
   /** The newer model of the same line (superseded) or the shown model that beats it (outranked). */
   by?: string
   note: string

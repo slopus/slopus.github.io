@@ -36,7 +36,8 @@ The chart answers one question: which model should I use? It is short, and every
 - **A** is strong and worth using for some work, but beaten by S on the reviewed evidence. **B** is usable with clear limits. **F** is a major lab's current frontier model that we recommend against, because cheaper shown models beat it on converging independent evidence. F is a judgment like any other tier and needs the same evidence.
 - **At most seven models.** Fill the chart in this order: the S models; then each major lab's best remaining model with enough evidence; then any remaining slots to the strongest other models on converging evidence. Same-tier order follows the evidence; a spare-slot model is not placed above a stronger model merely because it entered first.
 - **Thin evidence means not shown.** A model without enough exact-version, independent evidence to place stays off the page. Record it in `notShown` with `reason: "thin-evidence"` and a note on what is missing.
-- **Every reviewed model that is not shown is recorded.** `notShown` lists each one with a `reason` (`superseded`, `outranked`, `over-limit` or `thin-evidence`), `by` where it applies, and a one-line evidenced `note`. It is provenance only and never rendered. Keep its entries until the model stops being relevant.
+- **Readers must be able to use it.** A model limited to selected users or vetted organizations (Gemini 4 Carbon's Fairwind rollout, Mythos 5.2) stays off the page however strong it is. Record it in `notShown` with `reason: "unavailable"` and place it when general access opens.
+- **Every reviewed model that is not shown is recorded.** `notShown` lists each one with a `reason` (`superseded`, `outranked`, `over-limit`, `thin-evidence` or `unavailable`), `by` where it applies, and a one-line evidenced `note`. It is provenance only and never rendered. Keep its entries until the model stops being relevant.
 
 ### Supersession
 

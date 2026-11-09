@@ -184,8 +184,8 @@ describe('Agent Arena headline', () => {
     expect(post.summary).toMatch(entry(1, first.name, first.effort, first.score))
     expect(post.summary).toMatch(entry(2, second.name, second.effort, second.score))
     const ranked = benchmarkCatalog.models.filter(model => model.arena)
-    // Every shown model is on the current board; a model not ranked yet would show "Not on Agent Arena yet".
-    expect(ranked).toHaveLength(benchmarkCatalog.models.length)
+    // A shown model is off the board only when it was released after the board; its card says "Not on Agent Arena yet".
+    for (const model of benchmarkCatalog.models.filter(model => !model.arena)) expect(Date.parse(model.releasedAt)).toBeGreaterThan(Date.parse(post.publishedAt))
     expect(new Set(ranked.map(model => model.arena!.rank)).size).toBe(ranked.length)
     for (const model of ranked) {
       const { rank, effort, score } = model.arena!
@@ -203,7 +203,7 @@ describe('Agent Arena headline', () => {
     const board = fixture.arenaBoard
     expect(arenaGap(board, { rank: 1, effort: 'Max', score: 20 })).toBe('4.5 points ahead of #2 Fable (High) in real users’ agent sessions')
     expect(arenaGap(board, { rank: 4, effort: 'xHigh', score: 13.4 })).toBe('6.6 points behind #1 Alpha (Max) in real users’ agent sessions')
-    expect(arenaGap(benchmarkCatalog.arenaBoard, leaderOf(benchmarkCatalog)!.arena!)).toBe('6.8 points ahead of #2 Sonnet 5.5 (Max) in real users’ agent sessions')
+    expect(arenaGap(benchmarkCatalog.arenaBoard, leaderOf(benchmarkCatalog)!.arena!)).toBe('3.5 points ahead of #2 Gemini 4 Carbon (High) in real users’ agent sessions')
   })
   it('shows rank, board, effort and gap on each card and explains the metric once', () => {
     render(<ModelBenchmarksPage catalog={fixture} />)

@@ -129,7 +129,7 @@ export default function ModelBenchmarksPage({ catalog = benchmarkCatalog }: { ca
           })}</tbody>
         </table>
         {board ? <p className="benchmark-legend">
-          Big number: rank on <a className="benchmark-claim" href={board.url} target="_blank" rel="noopener noreferrer">{withArrow(`Arena’s Agent Arena board of ${shortDate(board.publishedAt)}`)}</a>, at the effort shown. Arena scores how much better real users’ agent sessions go with a model than with the average model; the line below is the gap in percentage points of that score. Intelligence Index: Artificial Analysis’s ten tests of reasoning, knowledge and agent work. Its coding-agent index scores each model in its own coding agent on three agentic coding tests; FrontierCode is Cognition’s test of merge-ready code.
+          Big number: rank on <a className="benchmark-claim" href={board.url} target="_blank" rel="noopener noreferrer">{withArrow(`Arena’s Agent Arena board of ${shortDate(board.publishedAt)}`)}</a>, at the effort shown. Arena scores how much better real users’ agent sessions go with a model than with the average model; the line below is the gap in percentage points of that score. Intelligence Index: Artificial Analysis’s nine tests of reasoning, knowledge, science and agent work. Its coding-agent index scores each model in its own coding agent on three agentic coding tests; FrontierCode is Cognition’s test of merge-ready code.
         </p> : null}
 
         <section className="benchmark-evidence" aria-label="Source posts" id="benchmark-evidence">
