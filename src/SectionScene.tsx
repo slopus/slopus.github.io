@@ -15,7 +15,7 @@ export type Scene =
   | { kind: 'region'; wide: Size; narrow: Size; loop: boolean }
   | { kind: 'phone' }
 
-/** A docs image title that makes a scene: "window loop 420x700", "region 560x356 420x356", "phone". */
+/** A docs image title that makes a scene: "window loop 344x700", "region 560x356 344x356", "phone". */
 export function sceneFromTitle(title: string | null | undefined): Scene | undefined {
   if (title === 'phone') return { kind: 'phone' }
   const match = /^(window|region)( loop)?((?: \d+x\d+)+)$/.exec(title ?? '')
@@ -32,10 +32,11 @@ export function sceneFromTitle(title: string | null | undefined): Scene | undefi
  * size is set before anything loads, so the text around it never moves (`.section-scene` in
  * style.css). A docs image whose src is a folder and whose title is one of these is a scene:
  *
- * - `![alt](/video/<name>/ "window 420x700")`: the whole Mac window, wide.webp, running past the
+ * - `![alt](/video/<name>/ "window 344x700")`: the whole Mac window, wide.webp, running past the
  *   text column into the margin. Where the page has less than 920px for it the window would be
- *   too small to read, so it shows one whole part of it instead: narrow.webp, 420 by 700 here.
- * - `![alt](/video/<name>/ "region 560x356 420x356")`: one part of the window, wide.webp, and a
+ *   too small to read, so it shows one whole part of it instead: narrow.webp, 344 by 700 here,
+ *   the rail and sidebar up to their divider. A part always ends on an edge the app has.
+ * - `![alt](/video/<name>/ "region 560x356 344x356")`: one part of the window, wide.webp, and a
  *   smaller part on a phone, narrow.webp.
  * - `![alt](/video/<name>/ "phone")`: the phone in its frame, phone.webp, standing beside the
  *   paragraph after it.
@@ -93,7 +94,7 @@ export function SectionScene({ folder, label, scene }: { folder: string; label: 
     return (
       <span className="section-scene" data-kind="phone">
         <span className="section-scene-screen"><img src={`${folder}phone.webp`} alt={label} loading="lazy" decoding="async" /></span>
-        <img className="section-scene-frame" src={`${FRAME}-480.webp`} srcSet={`${FRAME}-480.webp 480w, ${FRAME}-720.webp 720w`} sizes="260px" width="1406" height="2822" alt="" loading="lazy" decoding="async" />
+        <img className="section-scene-frame" src={`${FRAME}-480.webp`} srcSet={`${FRAME}-480.webp 480w, ${FRAME}-720.webp 720w`} sizes="200px" width="1406" height="2822" alt="" loading="lazy" decoding="async" />
       </span>
     )
   }

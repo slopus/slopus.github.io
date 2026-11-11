@@ -463,8 +463,8 @@ describe('static document pages', () => {
     // first moves. Stills are lazy, and a recording fetches nothing until it is in view.
     const scenes = [...content.querySelectorAll('.section-scene')]
     expect(scenes.map((scene) => [scene.getAttribute('data-kind'), scene.querySelector('img')?.getAttribute('src'), scene.getAttribute('style')])).toEqual([
-      ['window', '/video/multiplayer/aware/wide.webp', '--scene-wide: 960px; --scene-wide-ratio: 1133 / 700; --scene-narrow: 420px; --scene-narrow-ratio: 420 / 700;'],
-      ['region', '/video/multiplayer/bots/wide.webp', '--scene-wide: 560px; --scene-wide-ratio: 560 / 356; --scene-narrow: 420px; --scene-narrow-ratio: 420 / 356;'],
+      ['window', '/video/multiplayer/aware/wide.webp', '--scene-wide: 960px; --scene-wide-ratio: 1133 / 700; --scene-narrow: 344px; --scene-narrow-ratio: 344 / 700;'],
+      ['region', '/video/multiplayer/bots/wide.webp', '--scene-wide: 560px; --scene-wide-ratio: 560 / 356; --scene-narrow: 344px; --scene-narrow-ratio: 344 / 356;'],
       ['region', '/video/multiplayer/step-in/wide.webp', '--scene-wide: 789px; --scene-wide-ratio: 789 / 404; --scene-narrow: 789px; --scene-narrow-ratio: 789 / 404;'],
       ['phone', '/video/multiplayer/phone/phone.webp', null],
     ])

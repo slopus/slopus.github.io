@@ -424,15 +424,16 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 /* The phone, as an aside: it stands beside the paragraph after it, which is centred on its height
    (a table cell, so its links and bold stay inline). Its frame's aperture and mask are the homepage's
    (src/happy-one-demo.css). On a phone's width it stands above the paragraph. */
-.document-content .section-scene[data-kind="phone"] { aspect-ratio: 1406 / 2822; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .22)); margin: 0; width: 260px; }
+.document-content .section-scene[data-kind="phone"] { aspect-ratio: 1406 / 2822; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .22)); margin: 0; width: 200px; }
 .document-content .section-scene-screen { background: #000; display: block; height: 92.912828%; left: 7.254623%; mask: url('/video/happy-one/device/phone-mask-603.webp') center / 100% 100% no-repeat; overflow: hidden; position: absolute; top: 3.543586%; transform: scale(1.008); width: 85.775249%; }
 .document-content .section-scene-frame { height: 100%; inset: 0; pointer-events: none; position: absolute; width: 100%; }
 .document-content p:has(> .section-scene[data-kind="phone"]) { float: left; margin: 1.6rem 2.5rem 1.6rem 0; }
-.document-content p:has(> .section-scene[data-kind="phone"]) + p { display: table-cell; height: calc(260px * 2822 / 1406 + 3.2rem); vertical-align: middle; }
+.document-content p:has(> .section-scene[data-kind="phone"]) + p { display: table-cell; height: calc(200px * 2822 / 1406 + 3.2rem); vertical-align: middle; }
 .document-content p:has(> .section-scene[data-kind="phone"]) + p + * { clear: both; }
 @media (max-width: 700px) {
   .document-content p:has(> .section-scene[data-kind="phone"]) { float: none; margin: 1.6rem 0 1.2rem; }
   .document-content .section-scene[data-kind="phone"] { margin: 0 auto; }
+  .document-content .section-scene-narrow { margin: 0 auto; }
   .document-content p:has(> .section-scene[data-kind="phone"]) + p { display: block; height: auto; }
 }
 /* Pause and play: shown when the pointer or the keyboard reaches the scene, and whenever it is paused. */
