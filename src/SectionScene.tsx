@@ -35,7 +35,8 @@ export function sceneFromTitle(title: string | null | undefined): Scene | undefi
  * - `![alt](/video/<name>/ "window 344x700")`: the whole Mac window, wide.webp, running past the
  *   text column into the margin. Where the page has less than 920px for it the window would be
  *   too small to read, so it shows one whole part of it instead: narrow.webp, 344 by 700 here,
- *   the rail and sidebar up to their divider. A part always ends on an edge the app has.
+ *   the rail and sidebar up to their divider. A part always ends on an edge the app has. The whole
+ *   window's session pane is drawn 45% darker, so the sidebar is the lit part.
  * - `![alt](/video/<name>/ "region 560x356 344x356")`: one part of the window, wide.webp, and a
  *   smaller part on a phone, narrow.webp.
  * - `![alt](/video/<name>/ "phone")`: the phone in its frame, phone.webp, standing beside the
