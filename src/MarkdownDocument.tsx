@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react'
+import { useMemo, useRef, useState, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { AutoplayClip } from './AutoplayClip'
@@ -203,6 +203,31 @@ export function MarkdownDocument({
   /** A visible status label beside a heading, kept out of its permanent id. */
   headingSuffix?: (text: string, depth: 1 | 2 | 3) => ReactNode
 }) {
+  // The components keep their identity across renders: react-markdown draws each as its own
+  // component type, so a new one remounts everything under it, and a remounted video flashes its
+  // poster and starts again from the beginning. They read the latest props through this ref.
+  const options = useRef({ originalDocsLinks, resolveHref, headingId, headingSuffix })
+  options.current = { originalDocsLinks, resolveHref, headingId, headingSuffix }
+  const components = useMemo(() => documentComponents(options), [markdown])
+  const allComponents = useMemo(() => ({ ...components, ...EMBEDS, ...overrides }), [components, overrides])
+
+  return (
+    <div className="document-content">
+      <ReactMarkdown remarkPlugins={[remarkGfm, remarkEmbeds]} rehypePlugins={[rehypeTableCards, rehypeSideFigures]} components={allComponents}>
+        {markdown}
+      </ReactMarkdown>
+    </div>
+  )
+}
+
+type DocumentOptions = {
+  originalDocsLinks: boolean
+  resolveHref?: (href: string | undefined) => string | undefined
+  headingId?: (text: string, depth: 1 | 2 | 3) => string | undefined
+  headingSuffix?: (text: string, depth: 1 | 2 | 3) => ReactNode
+}
+
+function documentComponents(options: { current: DocumentOptions }): Components {
   const usedHeadingIds = new Map<string, number>()
   // Keyed by source offset so a repeat render of a heading (StrictMode, hydration) keeps its id.
   const headingIdsByOffset = new Map<number, string>()
@@ -221,6 +246,7 @@ export function MarkdownDocument({
       const offset = node?.position?.start.offset
       let id = offset === undefined ? undefined : headingIdsByOffset.get(offset)
 
+      const { headingId, headingSuffix } = options.current
       if (id === undefined) {
         const baseId = headingId?.(text, depth) ?? slugifyHeading(text)
         const count = usedHeadingIds.get(baseId) ?? 0
@@ -241,12 +267,13 @@ export function MarkdownDocument({
     }
   }
 
-  const components: Components = {
+  return {
     h1: heading(1),
     h2: heading(2),
     h3: heading(3),
     // `node` is react-markdown's syntax tree, not an HTML attribute; keep it out of the markup.
     a: ({ href, children, node: _node, ...props }) => {
+      const { resolveHref, originalDocsLinks } = options.current
       const normalizedHref = resolveHref ? resolveHref(href) : normalizeHref(href, originalDocsLinks)
       const external = normalizedHref?.startsWith('http')
 
@@ -313,12 +340,4 @@ export function MarkdownDocument({
       return <img {...props} src={src} alt={alt ?? ''} loading="lazy" />
     },
   }
-
-  return (
-    <div className="document-content">
-      <ReactMarkdown remarkPlugins={[remarkGfm, remarkEmbeds]} rehypePlugins={[rehypeTableCards, rehypeSideFigures]} components={{ ...components, ...EMBEDS, ...overrides }}>
-        {markdown}
-      </ReactMarkdown>
-    </div>
-  )
 }

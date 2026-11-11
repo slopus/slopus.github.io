@@ -439,6 +439,17 @@ describe('static document pages', () => {
     expect(documents.filter((document) => document.path === 'team')).toHaveLength(1)
   })
 
+  it('keeps its videos playing across a re-render, so a tab or window coming back never restarts one', () => {
+    // Every component react-markdown draws has to keep its identity between renders: a new one
+    // remounts its subtree, and a remounted <video> flashes its poster and starts again from 0.
+    const { container, rerender } = render(<Router pathname="/multiplayer/" />)
+    const before = [...container.querySelectorAll('video')]
+    expect(before.length).toBeGreaterThan(1)
+    rerender(<Router pathname="/multiplayer/" />)
+    const after = [...container.querySelectorAll('video')]
+    expect(after.every((video, index) => video === before[index])).toBe(true)
+  })
+
   it('leads Features with Multiplayer, which sells the experience under its video; the deployment detail is the Team Server guide', () => {
     const features = listedDocumentsForProduct('desktop').filter((document) => document.group === 'Features')
     expect(features[0].path).toBe('multiplayer')
