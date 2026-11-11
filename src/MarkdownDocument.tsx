@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { AutoplayClip } from './AutoplayClip'
+import { SectionScene, sceneFromTitle } from './SectionScene'
 import { ChiefOfStaffPrompt, CHIEF_OF_STAFF_LANGUAGE } from './ChiefOfStaffPrompt'
 import { HoverClip } from './HoverClip'
 import { InlineDiagram, inlineDiagram } from './InlineDiagram'
@@ -278,11 +279,13 @@ export function MarkdownDocument({
     },
     img: ({ alt, src, title, node: _node, ...props }) => {
       // An image whose src is a folder is a clip: titled "autoplay", a recording that loops while
-      // on screen, or "loop", a section's short one that loads only in view (src/AutoplayClip.tsx);
+      // on screen (src/AutoplayClip.tsx); titled "window", "region" or "phone", a section's picture
+      // of the app at a size it is never enlarged past (src/SectionScene.tsx);
       // otherwise one that plays on hover (src/HoverClip.tsx).
       if (typeof src === 'string' && src.endsWith('/')) {
         if (title === 'autoplay') return <AutoplayClip folder={src} label={alt ?? ''} />
-        if (title === 'loop') return <AutoplayClip folder={src} label={alt ?? ''} section />
+        const scene = sceneFromTitle(title)
+        if (scene) return <SectionScene folder={src} label={alt ?? ''} scene={scene} />
         return <HoverClip folder={src} label={alt ?? ''} />
       }
       const diagram = typeof src === 'string' ? inlineDiagram(src) : undefined

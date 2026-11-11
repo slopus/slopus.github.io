@@ -372,8 +372,6 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content img[src="/img/updates.svg"] { aspect-ratio: 520 / 500; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content img[src="/img/updates-drain.svg"] { aspect-ratio: 520 / 548; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
 .document-content img[src="/img/chief-of-staff-sidebar.png"] { aspect-ratio: 440 / 94; border: 0; border-radius: 14px; box-shadow: none; display: block; filter: drop-shadow(0 10px 22px rgba(24, 63, 56, .2)); margin: 1.6rem 0 1.4rem; width: min(100%, 440px); }
-/* The Bots group of a team server's sidebar, on Multiplayer: a fragment of the dark app at its own size. */
-.document-content img[src="/multiplayer/bots-sidebar.webp"] { aspect-ratio: 576 / 408; border: 0; border-radius: 12px; box-shadow: none; display: block; filter: drop-shadow(0 10px 22px rgba(24, 63, 56, .2)); margin: 1.2rem 0 1.4rem; width: min(100%, 384px); }
 .document-content img[src="/thesis/model-picker.png"] { aspect-ratio: 790 / 770; border: 0; border-radius: 0; box-shadow: none; display: block; filter: drop-shadow(0 10px 22px rgba(24, 63, 56, .14)); margin: 1.6rem auto; width: min(100%, 320px); }
 .document-content video { border: 1px solid #d5cebf; border-radius: 12px; box-shadow: 0 20px 50px -38px rgba(24, 63, 56, .6); height: auto; margin: 1.2rem 0; max-width: 100%; width: 100%; }
 .document-content video[src="/video/updates/update.mp4"] { aspect-ratio: 1; display: block; margin: 1.6rem auto; width: min(100%, 560px); }
@@ -399,10 +397,49 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 /* Each recording's own shape, so its frame hugs it before and after it loads. */
 .document-content video.autoplay-clip[src="/video/stem-cell/app/clip.mp4"] { aspect-ratio: 1080 / 918; }
 .document-content video.autoplay-clip[src="/video/multiplayer/clip.mp4"] { aspect-ratio: 16 / 9; }
-/* A section's own recording (titled "loop"): a 16:9 box that holds its place, the still under the movie. */
-.document-content .section-loop { aspect-ratio: 16 / 9; background: #1b1b1d; border-radius: 10px; box-shadow: 0 0 0 .5px rgba(0, 0, 0, .18), 0 1px 2px rgba(0, 0, 0, .08), 0 8px 24px rgba(0, 0, 0, .12); display: block; margin: 1.2rem 0 1.4rem; overflow: hidden; position: relative; }
-.document-content .section-loop > :is(img, video) { border: 0; border-radius: 0; box-shadow: none; display: block; height: 100%; inset: 0; margin: 0; object-fit: cover; position: absolute; width: 100%; }
-.document-content .section-loop > video:focus:not(:focus-visible) { outline: none; }
+/* A section's scene (src/SectionScene.tsx): a picture of the app, never drawn larger than the app draws
+   itself, in a box sized before anything loads. Each has a wide part and a narrow one, and shows one. */
+.document-content .section-scene { display: block; margin: 1.4rem 0 1.6rem; position: relative; }
+.document-content .section-scene[data-loop] { cursor: pointer; }
+.document-content .section-scene :is(img, video) { border: 0; border-radius: 0; box-shadow: none; display: block; margin: 0; max-width: none; }
+/* A dark app on a light page: a hairline of light inside its edge, and a soft shadow. */
+.document-content .section-scene-part { background: #1b1b1d; border-radius: 8px; box-shadow: 0 1px 2px rgba(0, 0, 0, .1), 0 12px 32px rgba(0, 0, 0, .16); overflow: hidden; position: relative; }
+.document-content .section-scene-part::after { border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); content: ''; inset: 0; pointer-events: none; position: absolute; }
+.document-content :is(.section-scene-part, .section-scene-screen) > :is(img, video) { height: 100%; inset: 0; object-fit: cover; position: absolute; width: 100%; }
+.document-content .section-scene-wide { aspect-ratio: var(--scene-wide-ratio); display: none; width: min(var(--scene-wide), 100%); }
+.document-content .section-scene-narrow { aspect-ratio: var(--scene-narrow-ratio); display: block; width: min(var(--scene-narrow), 100%); }
+/* A region shows its wide part from a tablet up. */
+@media (min-width: 701px) {
+  .document-content .section-scene[data-kind="region"] .section-scene-wide { display: block; }
+  .document-content .section-scene[data-kind="region"] .section-scene-narrow { display: none; }
+}
+/* A whole window needs 920px, which the docs layout has from 1260px: its text column is 760px, and the
+   picture runs past it into the empty margin on its right, stopping 24px short of the screen's edge.
+   298px is the layout's sidebar and the article's padding (.docs-shell .docs-layout) with that 24px. */
+@media (min-width: 1260px) {
+  .docs-shell .document-content .section-scene .section-scene-wide { width: min(var(--scene-wide), 100vw - max(32px, (100vw - 1180px) / 2) - 298px); }
+  .docs-shell .document-content .section-scene[data-kind="window"] .section-scene-wide { display: block; }
+  .docs-shell .document-content .section-scene[data-kind="window"] .section-scene-narrow { display: none; }
+}
+/* The phone, as an aside: it stands beside the paragraph after it, which is centred on its height
+   (a table cell, so its links and bold stay inline). Its frame's aperture and mask are the homepage's
+   (src/happy-one-demo.css). On a phone's width it stands above the paragraph. */
+.document-content .section-scene[data-kind="phone"] { aspect-ratio: 1406 / 2822; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .22)); margin: 0; width: 260px; }
+.document-content .section-scene-screen { background: #000; display: block; height: 92.912828%; left: 7.254623%; mask: url('/video/happy-one/device/phone-mask-603.webp') center / 100% 100% no-repeat; overflow: hidden; position: absolute; top: 3.543586%; transform: scale(1.008); width: 85.775249%; }
+.document-content .section-scene-frame { height: 100%; inset: 0; pointer-events: none; position: absolute; width: 100%; }
+.document-content p:has(> .section-scene[data-kind="phone"]) { float: left; margin: 1.6rem 2.5rem 1.6rem 0; }
+.document-content p:has(> .section-scene[data-kind="phone"]) + p { display: table-cell; height: calc(260px * 2822 / 1406 + 3.2rem); vertical-align: middle; }
+.document-content p:has(> .section-scene[data-kind="phone"]) + p + * { clear: both; }
+@media (max-width: 700px) {
+  .document-content p:has(> .section-scene[data-kind="phone"]) { float: none; margin: 1.6rem 0 1.2rem; }
+  .document-content .section-scene[data-kind="phone"] { margin: 0 auto; }
+  .document-content p:has(> .section-scene[data-kind="phone"]) + p { display: block; height: auto; }
+}
+/* Pause and play: shown when the pointer or the keyboard reaches the scene, and whenever it is paused. */
+.document-content .section-scene-toggle { align-items: center; background: rgba(20, 20, 24, .72); border: 0; border-radius: 50%; bottom: 8px; color: #fff; cursor: pointer; display: flex; height: 32px; justify-content: center; left: 8px; opacity: 0; padding: 0; position: absolute; transition: opacity 120ms; width: 32px; z-index: 1; }
+.document-content .section-scene:hover .section-scene-toggle, .document-content .section-scene[data-paused] .section-scene-toggle, .document-content .section-scene-toggle:focus-visible { opacity: 1; }
+.document-content .section-scene-toggle:focus-visible { outline: 2px solid #7c5cff; outline-offset: 2px; }
+@media (pointer: coarse) { .document-content .section-scene-toggle { height: 44px; width: 44px; } }
 .document-content p:has(> video.autoplay-clip) + p:has(> em:only-child) { margin-top: -.4rem; text-align: left; }
 @media (max-width: 640px) {
   .document-content .side-figure { gap: 1rem; grid-template-columns: minmax(0, 1fr); }

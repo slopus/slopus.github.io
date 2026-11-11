@@ -445,50 +445,68 @@ describe('static document pages', () => {
     const { container, unmount } = render(<Router pathname="/multiplayer/" />)
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/team/i)
     expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/models & subscriptions/i)
-    // The two layers: h1, lede, the video, the Chief of Staff block; then the reference sections.
-    const top = [...container.querySelector('.document-content')!.children].slice(0, 4)
+    const content = container.querySelector('.document-content')!
+    // The two layers: h1, lede, the video, the Chief of Staff block with the one prompt that starts a team.
+    const top = [...content.children].slice(0, 4)
     expect(top[0].tagName).toBe('H1')
     expect(top[1].textContent).toMatch(/^One place for you, your team, and your agents\./)
     expect(top[2].querySelector('video.autoplay-clip')?.getAttribute('src')).toBe('/video/multiplayer/clip.mp4')
     expect(top[2].querySelector('video')?.getAttribute('poster')).toBe('/video/multiplayer/poster.webp')
     expect(top[3].className).toBe('cos-prompt')
+    expect(top[3].querySelectorAll('.cos-prompt-text')).toHaveLength(1)
     // A story in three sections, named as the video's chapter cards are: staying aware, shared bots, and
-    // stepping in as the exception. The rest is short. Each visual sits right under its heading; a
-    // recording is a lazy still with the movie over it, which fetches nothing until it is in view.
-    const sections = [...container.querySelectorAll('.document-content h2')].map((heading) => heading.textContent?.replace(/#$/, ''))
-    expect(sections).toEqual(["See who's working on what", 'Shared bots for the standing jobs', "Step in when it's your call", 'Shared todo lists and docs', 'Invite a teammate', 'Happy vs Cursor Projects, Claude Projects, and ChatGPT projects', 'Run your own team server'])
-    const loops = [...container.querySelectorAll('.document-content .section-loop')]
-    expect(loops.map((loop) => loop.querySelector('video')?.getAttribute('src'))).toEqual(['aware', 'step-in', 'surfaces'].map((name) => `/video/multiplayer/${name}/clip.mp4`))
-    for (const loop of loops) {
-      expect(loop.previousElementSibling ?? loop.parentElement?.previousElementSibling).toHaveProperty('tagName', 'H2')
-      expect(loop.querySelector('img')?.getAttribute('loading')).toBe('lazy')
-      expect(loop.querySelector('img')?.getAttribute('alt')?.length).toBeGreaterThan(40)
-      expect(loop.querySelector('video')?.getAttribute('preload')).toBe('none')
-      expect(loop.querySelector('video')?.hasAttribute('poster')).toBe(false)
-      expect(loop.querySelector('video')?.hasAttribute('autoplay')).toBe(false)
+    // stepping in as the exception. What follows them is short and has no pictures.
+    const sections = [...content.querySelectorAll('h2')].map((heading) => heading.textContent?.replace(/#$/, ''))
+    expect(sections).toEqual(["See who's working on what", 'Shared bots for the standing jobs', "Step in when it's your call", 'Shared todo lists, documents, and calendars', 'Happy vs Cursor Projects, Claude Projects, and ChatGPT projects', 'Run your own team server'])
+    // Each of the three has its picture right under its heading: the app's whole window where the page has
+    // room for it and one whole part of it elsewhere, never a fragment enlarged to the column. Only the
+    // first moves. Stills are lazy, and a recording fetches nothing until it is in view.
+    const scenes = [...content.querySelectorAll('.section-scene')]
+    expect(scenes.map((scene) => [scene.getAttribute('data-kind'), scene.querySelector('img')?.getAttribute('src'), scene.getAttribute('style')])).toEqual([
+      ['window', '/video/multiplayer/aware/wide.webp', '--scene-wide: 960px; --scene-wide-ratio: 1133 / 700; --scene-narrow: 420px; --scene-narrow-ratio: 420 / 700;'],
+      ['region', '/video/multiplayer/bots/wide.webp', '--scene-wide: 560px; --scene-wide-ratio: 560 / 356; --scene-narrow: 420px; --scene-narrow-ratio: 420 / 356;'],
+      ['region', '/video/multiplayer/step-in/wide.webp', '--scene-wide: 789px; --scene-wide-ratio: 789 / 404; --scene-narrow: 789px; --scene-narrow-ratio: 789 / 404;'],
+      ['phone', '/video/multiplayer/phone/phone.webp', null],
+    ])
+    for (const scene of scenes.slice(0, 3)) expect(scene.parentElement?.previousElementSibling).toHaveProperty('tagName', 'H2')
+    for (const image of content.querySelectorAll('.section-scene img')) {
+      expect(image.getAttribute('loading')).toBe('lazy')
+      if (!image.classList.contains('section-scene-frame')) expect(image.getAttribute('alt')?.length).toBeGreaterThan(40)
     }
-    const bots = container.querySelector('.document-content img[src="/multiplayer/bots-sidebar.webp"]')!
-    expect(bots.closest('p')?.previousElementSibling?.id).toBe('shared-bots-for-the-standing-jobs')
-    expect(bots.getAttribute('alt')).toMatch(/Chief of Staff, Disk Sweeper, iOS Production Train, and Product Health/)
-    // Creating a shared bot is the team server's Chief of Staff's job, so that prompt sits in the bots section.
-    const prompts = [...container.querySelectorAll('.document-content .cos-prompt')]
-    expect(prompts).toHaveLength(2)
-    expect(prompts[1].textContent).toMatch(/To add a shared bot, simply ask the Chief of Staff:.*Create a bot called Releases/)
-    expect(prompts[1].compareDocumentPosition(container.querySelector('#step-in-when-it-s-your-call')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    // Awareness leads; steering is the exception, and the feed goes by its released name.
-    expect(container.querySelector('.document-content')!.textContent).toMatch(/Mostly you watch\./)
-    expect(container.querySelector('.document-content')!.textContent).not.toMatch(/Anyone can steer|\bFeed\b/)
+    expect(scenes.map((scene) => [...scene.querySelectorAll('video')].map((movie) => movie.getAttribute('src')))).toEqual([['/video/multiplayer/aware/wide.mp4', '/video/multiplayer/aware/narrow.mp4'], [], [], []])
+    for (const movie of scenes[0].querySelectorAll('video')) {
+      expect(movie.getAttribute('preload')).toBe('none')
+      expect(movie.hasAttribute('poster')).toBe(false)
+      expect(movie.hasAttribute('autoplay')).toBe(false)
+    }
+    expect(scenes[0].querySelector('button')?.getAttribute('aria-label')).toBe('Pause the recording')
+    // The phone is an aside after the third section, not a section: it stands beside its two lines.
+    expect(scenes[3].parentElement?.nextElementSibling?.textContent).toMatch(/^Away from your desk\?/)
+    expect(scenes[3].parentElement?.nextElementSibling?.querySelector('a[href="/mobile/"]')).not.toBeNull()
+    // Awareness leads and steering is the exception; the phone is never the headline action.
+    const text = content.textContent!
+    expect(text).toMatch(/Mostly you watch\./)
+    expect(text).not.toMatch(/Anyone can steer|on Desktop and on your phone|\bFeed\b|no invite button/)
     // People-chat Surfaces are not advertised yet.
-    expect(container.querySelector('.document-content')!.textContent).not.toMatch(/calendars, and chats|chats among people/)
+    expect(text).not.toMatch(/calendars, and chats|chats among people/)
     // It sells what a teammate sees and does; the engineering lives in the guide, linked once.
-    const text = container.querySelector('.document-content')!.textContent!
     expect(text).not.toMatch(/WorkOS|Tailcat|AppArmor|WireGuard|401|happy\.toml/)
-    expect([...container.querySelectorAll('.document-content a[href="/guides/team-server/"]')]).toHaveLength(1)
-    // The comparison quotes each vendor and dates it.
-    const table = container.querySelector('.document-content table')!
+    expect([...content.querySelectorAll('a[href="/guides/team-server/"]')]).toHaveLength(1)
+    // The remaining prompts sit with the server section at the bottom.
+    const prompts = [...content.querySelectorAll('.cos-prompt')]
+    expect(prompts).toHaveLength(2)
+    expect(prompts[1].textContent).toMatch(/To add teammates and bots, simply ask the Chief of Staff:/)
+    expect([...prompts[1].querySelectorAll('.cos-prompt-text')].map((prompt) => prompt.textContent)).toEqual(['Invite bob@example.com to the Acme team', 'Connect me to the Acme team', 'Create a bot called Releases that owns our weekly desktop release'])
+    expect(content.querySelector('#run-your-own-team-server')!.compareDocumentPosition(prompts[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    // The comparison quotes each vendor in a few words; its sources and dates are one line under it.
+    const table = content.querySelector('table')!
     expect([...table.querySelectorAll('thead th')].map((cell) => cell.textContent)).toEqual(['', 'Cursor Projects', 'Claude Projects, Team plan', 'ChatGPT shared projects', 'Happy'])
     expect(table.querySelector('tbody th, tbody td')?.textContent).toBe('Working together')
-    expect(table.textContent).toMatch(/Nov 10, 2026/)
+    expect(table.querySelectorAll('a')).toHaveLength(0)
+    for (const cell of table.querySelectorAll('tbody td')) expect(cell.textContent!.split(/\s+/).length, cell.textContent!).toBeLessThanOrEqual(20)
+    const sources = table.closest('.document-table-wrap')!.nextElementSibling!
+    expect(sources.textContent).toMatch(/^Quoted from Cursor.*Nov 10, 2026.*Sep 10, 2026.*updated Nov 6, 2026.*read Nov 10, 2026\.$/)
+    expect(sources.querySelectorAll('a')).toHaveLength(6)
     unmount()
 
     const guide = getDocument('desktop', 'guides/team-server')!
