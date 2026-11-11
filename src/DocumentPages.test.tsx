@@ -464,11 +464,13 @@ describe('static document pages', () => {
     const scenes = [...content.querySelectorAll('.section-scene')]
     expect(scenes.map((scene) => [scene.getAttribute('data-kind'), scene.querySelector('img')?.getAttribute('src'), scene.getAttribute('style')])).toEqual([
       ['window', '/video/multiplayer/aware/wide.webp', '--scene-wide: 960px; --scene-wide-ratio: 1133 / 700; --scene-narrow: 344px; --scene-narrow-ratio: 344 / 700;'],
-      ['region', '/video/multiplayer/bots/wide.webp', '--scene-wide: 560px; --scene-wide-ratio: 560 / 356; --scene-narrow: 344px; --scene-narrow-ratio: 344 / 356;'],
-      ['region', '/video/multiplayer/step-in/wide.webp', '--scene-wide: 789px; --scene-wide-ratio: 789 / 404; --scene-narrow: 789px; --scene-narrow-ratio: 789 / 404;'],
+      ['window', '/video/multiplayer/bots/wide.webp', '--scene-wide: 960px; --scene-wide-ratio: 1133 / 700; --scene-narrow: 344px; --scene-narrow-ratio: 344 / 390;'],
+      ['region', '/video/multiplayer/step-in/wide.webp', '--scene-wide: 789px; --scene-wide-ratio: 789 / 345; --scene-narrow: 420px; --scene-narrow-ratio: 420 / 415;'],
       ['phone', '/video/multiplayer/phone/phone.webp', null],
     ])
     for (const scene of scenes.slice(0, 3)) expect(scene.parentElement?.previousElementSibling).toHaveProperty('tagName', 'H2')
+    // Only the first darkens its session pane, so the sidebar is the lit part, as the video does.
+    expect(scenes.map((scene) => scene.hasAttribute('data-dim'))).toEqual([true, false, false, false])
     for (const image of content.querySelectorAll('.section-scene img')) {
       expect(image.getAttribute('loading')).toBe('lazy')
       if (!image.classList.contains('section-scene-frame')) expect(image.getAttribute('alt')?.length).toBeGreaterThan(40)

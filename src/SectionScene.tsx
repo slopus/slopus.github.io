@@ -11,19 +11,19 @@ type Size = { width: number; height: number }
  * phone's width. Sizes are the app's own CSS pixels: a part is never drawn larger than that.
  */
 export type Scene =
-  | { kind: 'window'; narrow: Size; loop: boolean }
+  | { kind: 'window'; narrow: Size; loop: boolean; dim: boolean }
   | { kind: 'region'; wide: Size; narrow: Size; loop: boolean }
   | { kind: 'phone' }
 
-/** A docs image title that makes a scene: "window loop 344x700", "region 560x356 344x356", "phone". */
+/** A docs image title that makes a scene: "window loop dim 344x700", "region 560x356 344x356", "phone". */
 export function sceneFromTitle(title: string | null | undefined): Scene | undefined {
   if (title === 'phone') return { kind: 'phone' }
-  const match = /^(window|region)( loop)?((?: \d+x\d+)+)$/.exec(title ?? '')
+  const match = /^(window|region)( loop)?( dim)?((?: \d+x\d+)+)$/.exec(title ?? '')
   if (!match) return undefined
-  const sizes = match[3].trim().split(' ').map((size) => { const [width, height] = size.split('x').map(Number); return { width, height } })
+  const sizes = match[4].trim().split(' ').map((size) => { const [width, height] = size.split('x').map(Number); return { width, height } })
   const loop = match[2] !== undefined
-  if (match[1] === 'window' && sizes.length === 1) return { kind: 'window', narrow: sizes[0], loop }
-  if (match[1] === 'region' && sizes.length === 2) return { kind: 'region', wide: sizes[0], narrow: sizes[1], loop }
+  if (match[1] === 'window' && sizes.length === 1) return { kind: 'window', narrow: sizes[0], loop, dim: match[3] !== undefined }
+  if (match[1] === 'region' && sizes.length === 2 && match[3] === undefined) return { kind: 'region', wide: sizes[0], narrow: sizes[1], loop }
   return undefined
 }
 
@@ -35,8 +35,9 @@ export function sceneFromTitle(title: string | null | undefined): Scene | undefi
  * - `![alt](/video/<name>/ "window 344x700")`: the whole Mac window, wide.webp, running past the
  *   text column into the margin. Where the page has less than 920px for it the window would be
  *   too small to read, so it shows one whole part of it instead: narrow.webp, 344 by 700 here,
- *   the rail and sidebar up to their divider. A part always ends on an edge the app has. The whole
- *   window's session pane is drawn 45% darker, so the sidebar is the lit part.
+ *   the rail and sidebar up to their divider. A part always ends on an edge the app has. With "dim"
+ *   (`window loop dim 344x700`) the whole window's session pane is drawn 45% darker, so the
+ *   sidebar is the lit part.
  * - `![alt](/video/<name>/ "region 560x356 344x356")`: one part of the window, wide.webp, and a
  *   smaller part on a phone, narrow.webp.
  * - `![alt](/video/<name>/ "phone")`: the phone in its frame, phone.webp, standing beside the
@@ -120,7 +121,7 @@ export function SectionScene({ folder, label, scene }: { folder: string; label: 
     '--scene-narrow-ratio': `${scene.narrow.width} / ${scene.narrow.height}`,
   } as CSSProperties
   return (
-    <span ref={root} className="section-scene" data-kind={scene.kind} data-loop={loop || undefined} data-paused={paused || undefined} style={sizes} onClick={loop ? toggle : undefined}>
+    <span ref={root} className="section-scene" data-kind={scene.kind} data-loop={loop || undefined} data-dim={(scene.kind === 'window' && scene.dim) || undefined} data-paused={paused || undefined} style={sizes} onClick={loop ? toggle : undefined}>
       {part('wide')}
       {part('narrow')}
       {loop && (
