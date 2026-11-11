@@ -452,12 +452,13 @@ describe('static document pages', () => {
     expect(top[2].querySelector('video.autoplay-clip')?.getAttribute('src')).toBe('/video/multiplayer/clip.mp4')
     expect(top[2].querySelector('video')?.getAttribute('poster')).toBe('/video/multiplayer/poster.webp')
     expect(top[3].className).toBe('cos-prompt')
-    // The sections follow the video's chapters, each with its own recording right under its heading:
-    // a lazy still with the movie over it, which fetches nothing until it is in view.
+    // A story in three sections, named as the video's chapter cards are: staying aware, shared bots, and
+    // stepping in as the exception. The rest is short. Each visual sits right under its heading; a
+    // recording is a lazy still with the movie over it, which fetches nothing until it is in view.
     const sections = [...container.querySelectorAll('.document-content h2')].map((heading) => heading.textContent?.replace(/#$/, ''))
-    expect(sections).toEqual(['Everyone sees the same work', 'Agents ask the right teammate', 'Anyone can steer, from their phone', 'Shared todo lists and docs', 'Invite a teammate', 'Happy vs Cursor Projects, Claude Projects, and ChatGPT projects', 'Run your own team server'])
+    expect(sections).toEqual(["See who's working on what", 'Shared bots for the standing jobs', "Step in when it's your call", 'Shared todo lists and docs', 'Invite a teammate', 'Happy vs Cursor Projects, Claude Projects, and ChatGPT projects', 'Run your own team server'])
     const loops = [...container.querySelectorAll('.document-content .section-loop')]
-    expect(loops.map((loop) => loop.querySelector('video')?.getAttribute('src'))).toEqual(['same-work', 'ask-teammate', 'steer', 'surfaces'].map((name) => `/video/multiplayer/${name}/clip.mp4`))
+    expect(loops.map((loop) => loop.querySelector('video')?.getAttribute('src'))).toEqual(['aware', 'step-in', 'surfaces'].map((name) => `/video/multiplayer/${name}/clip.mp4`))
     for (const loop of loops) {
       expect(loop.previousElementSibling ?? loop.parentElement?.previousElementSibling).toHaveProperty('tagName', 'H2')
       expect(loop.querySelector('img')?.getAttribute('loading')).toBe('lazy')
@@ -466,6 +467,17 @@ describe('static document pages', () => {
       expect(loop.querySelector('video')?.hasAttribute('poster')).toBe(false)
       expect(loop.querySelector('video')?.hasAttribute('autoplay')).toBe(false)
     }
+    const bots = container.querySelector('.document-content img[src="/multiplayer/bots-sidebar.webp"]')!
+    expect(bots.closest('p')?.previousElementSibling?.id).toBe('shared-bots-for-the-standing-jobs')
+    expect(bots.getAttribute('alt')).toMatch(/Chief of Staff, Disk Sweeper, iOS Production Train, and Product Health/)
+    // Creating a shared bot is the team server's Chief of Staff's job, so that prompt sits in the bots section.
+    const prompts = [...container.querySelectorAll('.document-content .cos-prompt')]
+    expect(prompts).toHaveLength(2)
+    expect(prompts[1].textContent).toMatch(/To add a shared bot, simply ask the Chief of Staff:.*Create a bot called Releases/)
+    expect(prompts[1].compareDocumentPosition(container.querySelector('#step-in-when-it-s-your-call')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    // Awareness leads; steering is the exception, and the feed goes by its released name.
+    expect(container.querySelector('.document-content')!.textContent).toMatch(/Mostly you watch\./)
+    expect(container.querySelector('.document-content')!.textContent).not.toMatch(/Anyone can steer|\bFeed\b/)
     // People-chat Surfaces are not advertised yet.
     expect(container.querySelector('.document-content')!.textContent).not.toMatch(/calendars, and chats|chats among people/)
     // It sells what a teammate sees and does; the engineering lives in the guide, linked once.

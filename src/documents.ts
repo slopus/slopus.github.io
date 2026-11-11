@@ -267,7 +267,7 @@ const desktopDocuments: DocumentDefinition[] = [
     sourcePath: '/content/desktop/multiplayer.mdx',
     title: 'Multiplayer & Teams',
     pageTitle: 'Multiplayer: Share Claude Code and Codex Sessions with Your Team — Happy',
-    description: 'One place for you, your team, and your agents: shared sessions, tasks, todo lists, documents, and calendars, on a server your team runs.',
+    description: 'One place for you, your team, and your agents: see who is working on what, share bots, todo lists, and documents, on a server your team runs.',
     cardLine: 'Your team and your agents in one place',
     group: 'Features',
   },
