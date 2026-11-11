@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 
-const FRAME = '/video/happy-one/device/iphone-16-pro-black'
 /** The Mac window is 1133 by 700; a whole one is drawn at most this wide, 0.85 of its size. */
 const WINDOW = { width: 960, ratio: '1133 / 700' }
 
@@ -13,11 +12,9 @@ type Size = { width: number; height: number }
 export type Scene =
   | { kind: 'window'; narrow: Size; loop: boolean; dim: boolean }
   | { kind: 'region'; wide: Size; narrow: Size; loop: boolean }
-  | { kind: 'phone' }
 
-/** A docs image title that makes a scene: "window loop dim 344x700", "region 560x356 344x356", "phone". */
+/** A docs image title that makes a scene: "window loop dim 344x700", "region 560x356 344x356". */
 export function sceneFromTitle(title: string | null | undefined): Scene | undefined {
-  if (title === 'phone') return { kind: 'phone' }
   const match = /^(window|region)( loop)?( dim)?((?: \d+x\d+)+)$/.exec(title ?? '')
   if (!match) return undefined
   const sizes = match[4].trim().split(' ').map((size) => { const [width, height] = size.split('x').map(Number); return { width, height } })
@@ -40,8 +37,6 @@ export function sceneFromTitle(title: string | null | undefined): Scene | undefi
  *   sidebar is the lit part.
  * - `![alt](/video/<name>/ "region 560x356 344x356")`: one part of the window, wide.webp, and a
  *   smaller part on a phone, narrow.webp.
- * - `![alt](/video/<name>/ "phone")`: the phone in its frame, phone.webp, standing beside the
- *   paragraph after it.
  *
  * "loop" after the first word adds a recording over each still, wide.mp4 and narrow.mp4, the
  * still being its first frame. Nothing here costs the first load: the stills are lazy images, a
@@ -51,7 +46,7 @@ export function sceneFromTitle(title: string | null | undefined): Scene | undefi
  */
 export function SectionScene({ folder, label, scene }: { folder: string; label: string; scene: Scene }) {
   const root = useRef<HTMLSpanElement>(null)
-  const loop = scene.kind !== 'phone' && scene.loop
+  const loop = scene.loop
   const [paused, setPaused] = useState(false)
   const wanted = useRef(false)
   const apply = useRef<() => void>(() => {})
@@ -91,15 +86,6 @@ export function SectionScene({ folder, label, scene }: { folder: string; label: 
       window.removeEventListener('resize', onChange)
     }
   }, [folder, loop])
-
-  if (scene.kind === 'phone') {
-    return (
-      <span className="section-scene" data-kind="phone">
-        <span className="section-scene-screen"><img src={`${folder}phone.webp`} alt={label} loading="lazy" decoding="async" /></span>
-        <img className="section-scene-frame" src={`${FRAME}-480.webp`} srcSet={`${FRAME}-480.webp 480w, ${FRAME}-720.webp 720w`} sizes="200px" width="1406" height="2822" alt="" loading="lazy" decoding="async" />
-      </span>
-    )
-  }
 
   const toggle = () => {
     wanted.current = !wanted.current

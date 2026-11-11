@@ -466,25 +466,25 @@ describe('static document pages', () => {
       ['window', '/video/multiplayer/aware/wide.webp', '--scene-wide: 960px; --scene-wide-ratio: 1133 / 700; --scene-narrow: 344px; --scene-narrow-ratio: 344 / 700;'],
       ['window', '/video/multiplayer/bots/wide.webp', '--scene-wide: 960px; --scene-wide-ratio: 1133 / 700; --scene-narrow: 344px; --scene-narrow-ratio: 344 / 390;'],
       ['region', '/video/multiplayer/step-in/wide.webp', '--scene-wide: 789px; --scene-wide-ratio: 789 / 345; --scene-narrow: 420px; --scene-narrow-ratio: 420 / 415;'],
-      ['phone', '/video/multiplayer/phone/phone.webp', null],
     ])
     for (const scene of scenes.slice(0, 3)) expect(scene.parentElement?.previousElementSibling).toHaveProperty('tagName', 'H2')
     // Only the first darkens its session pane, so the sidebar is the lit part, as the video does.
-    expect(scenes.map((scene) => scene.hasAttribute('data-dim'))).toEqual([true, false, false, false])
+    expect(scenes.map((scene) => scene.hasAttribute('data-dim'))).toEqual([true, false, false])
     for (const image of content.querySelectorAll('.section-scene img')) {
       expect(image.getAttribute('loading')).toBe('lazy')
       if (!image.classList.contains('section-scene-frame')) expect(image.getAttribute('alt')?.length).toBeGreaterThan(40)
     }
-    expect(scenes.map((scene) => [...scene.querySelectorAll('video')].map((movie) => movie.getAttribute('src')))).toEqual([['/video/multiplayer/aware/wide.mp4', '/video/multiplayer/aware/narrow.mp4'], [], [], []])
+    expect(scenes.map((scene) => [...scene.querySelectorAll('video')].map((movie) => movie.getAttribute('src')))).toEqual([['/video/multiplayer/aware/wide.mp4', '/video/multiplayer/aware/narrow.mp4'], [], []])
     for (const movie of scenes[0].querySelectorAll('video')) {
       expect(movie.getAttribute('preload')).toBe('none')
       expect(movie.hasAttribute('poster')).toBe(false)
       expect(movie.hasAttribute('autoplay')).toBe(false)
     }
     expect(scenes[0].querySelector('button')?.getAttribute('aria-label')).toBe('Pause the recording')
-    // The phone is an aside after the third section, not a section: it stands beside its two lines.
-    expect(scenes[3].parentElement?.nextElementSibling?.textContent).toMatch(/^Away from your desk\?/)
-    expect(scenes[3].parentElement?.nextElementSibling?.querySelector('a[href="/mobile/"]')).not.toBeNull()
+    // The phone is an aside at the end of the third section, not a section of its own.
+    const away = [...content.querySelectorAll('p')].find((paragraph) => paragraph.textContent!.startsWith('Away from your desk?'))!
+    expect(away.previousElementSibling?.textContent).toMatch(/^Mostly you watch\./)
+    expect(away.querySelector('a[href="/mobile/"]')).not.toBeNull()
     // Awareness leads and steering is the exception; the phone is never the headline action.
     const text = content.textContent!
     expect(text).toMatch(/Mostly you watch\./)
@@ -497,8 +497,8 @@ describe('static document pages', () => {
     // The remaining prompts sit with the server section at the bottom.
     const prompts = [...content.querySelectorAll('.cos-prompt')]
     expect(prompts).toHaveLength(2)
-    expect(prompts[1].textContent).toMatch(/To add teammates and bots, simply ask the Chief of Staff:/)
-    expect([...prompts[1].querySelectorAll('.cos-prompt-text')].map((prompt) => prompt.textContent)).toEqual(['Invite bob@example.com to the Acme team', 'Connect me to the Acme team', 'Create a bot called Releases that owns our weekly desktop release'])
+    expect(prompts[1].textContent).toMatch(/To add teammates, simply ask the Chief of Staff:/)
+    expect([...prompts[1].querySelectorAll('.cos-prompt-text')].map((prompt) => prompt.textContent)).toEqual(['Invite bob@example.com to the Acme team', 'Connect me to the Acme team'])
     expect(content.querySelector('#run-your-own-team-server')!.compareDocumentPosition(prompts[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     // The comparison quotes each vendor in a few words; its sources and dates are one line under it.
     const table = content.querySelector('table')!
