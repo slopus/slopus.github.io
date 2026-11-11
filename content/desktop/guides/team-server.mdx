@@ -8,15 +8,6 @@ A team server is one Happy Agent on a machine you control, switched into team mo
 Create a team called Acme on my server ubuntu@203.0.113.10 and invite alice@example.com
 ```
 
-## Self-hosted or cloud
-
-Self-hosted is the only deployment today. We do not run team servers for anyone, and there is no Happy-hosted option to sign up for.
-
-- **On your machine:** Happy Agent, every session and task, the repositories, and the Claude, Codex, and Grok sign-ins. Any Linux machine with systemd works, and so does a Mac; the [remote server guide](/guides/remote-server/#providers) lists providers.
-- **On ours:** the account service and the phone relay. The account service signs members in through WorkOS, keeps the team's membership and invitations, and stores the server's address so members' apps can find it. The relay carries the phones' traffic, end-to-end encrypted.
-
-With [your own identity provider](/workos/#bring-your-own-identity-provider), sign-in involves no WorkOS account.
-
 ## How members sign in
 
 Each member connects their Happy account in Desktop (**Settings → Account → Connect account**), which signs in through WorkOS. Their Desktop then gets a short-lived WorkOS token for the team. The server checks it on every request, health included: right signature, right team, not expired. Anything else gets the same `401`.
@@ -91,7 +82,6 @@ There is no per-session invite. Team mode on your own machine gives each person 
 
 ## What we haven't built yet
 
-- **A hosted team server.** You run the machine and upgrade it.
 - **Invite and remove buttons.** Desktop has no member list to manage. The Chief of Staff sends invitations, and there is no remove-member action.
 - **Per-member provider accounts.** All work spends the server's Claude, Codex, and Grok accounts.
 - **Per-member permissions.** Any member can choose Full access, and there are no per-session invites.

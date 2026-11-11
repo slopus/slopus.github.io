@@ -469,11 +469,11 @@ describe('static document pages', () => {
     const markup = renderPath('/guides/team-server/')
     // The architecture diagram moved here, drawn inline in the card style, with everything the old page explained.
     expect(markup).toContain('class="inline-diagram"')
-    for (const id of ['self-hosted-or-cloud', 'how-members-sign-in', 'how-desktop-and-phones-reach-the-server', 'whose-claude-codex-and-grok-accounts-pay', 'sandbox-and-review-on-a-shared-server', 'what-the-team-owner-can-do', 'set-up-a-team-server', 'join-or-leave-a-team', 'share-your-own-computer-with-someone', 'what-we-haven-t-built-yet']) {
+    for (const id of ['how-members-sign-in', 'how-desktop-and-phones-reach-the-server', 'whose-claude-codex-and-grok-accounts-pay', 'sandbox-and-review-on-a-shared-server', 'what-the-team-owner-can-do', 'set-up-a-team-server', 'join-or-leave-a-team', 'share-your-own-computer-with-someone', 'what-we-haven-t-built-yet']) {
       expect(markup, id).toContain(`<h2 id="${id}">`)
     }
-    // No hosted team server exists; the guide says so plainly.
-    expect(markup).toContain('Self-hosted is the only deployment today.')
+    // The guide is about the self-hosted server only: no self-versus-cloud framing.
+    expect(markup).not.toMatch(/cloud|hosted option|Happy-hosted/i)
   })
 
   it('lists Secrets under Features after Permissions, with a search title and description that fit', () => {
