@@ -37,7 +37,7 @@ On Ubuntu 24.04, an administrator first grants the Happy Agent executable an App
 - **Shared:** projects, tasks, sessions, Surfaces, and the server's provider accounts. Any member can read and write any of them.
 - **Each member's own:** their sign-in, their profile, their drafts, the order of their task list and sidebar, and their phone.
 - **Who is speaking.** Each message is stored with its author. Whenever the speaker changes, the agent is told who it is, by name and email. That tells the agent who is talking; it grants nothing: every member's messages carry the same authority.
-- **Joining.** Members join new tasks and Surfaces by default, and can leave any of them. Each can turn that off in Settings, which keeps what they already joined.
+- **Joining.** Members join new tasks and Surfaces by default, and can leave any of them. Each can turn that off in Settings, which keeps what they already joined. An agent that brings a teammate into its task adds it to their list either way.
 - **Roles.** A member can carry a role and what they follow, such as "Billing engineer" and "Stripe webhooks". A task's agent reads both when it decides whom to bring in. Seed them per member under `[feature.team.members]` in the server's `happy.toml`.
 
 ## What the team owner can do
