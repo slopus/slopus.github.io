@@ -6,6 +6,7 @@ import {
   documents,
   documentsForProduct,
   getDocument,
+  listedDocumentsForProduct,
   getDocumentSource,
   getThesisMarkdown,
   prepareMarkdown,
@@ -35,7 +36,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(48)
+    expect(documentsForProduct('desktop')).toHaveLength(49)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -404,7 +405,7 @@ describe('static document pages', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: /^team/i })).toBeTruthy()
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/vision/i)
-    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/models & subscriptions/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/multiplayer & teams/i)
     const content = container.querySelector('.document-content')!
     expect(content.querySelector('h1 + p')?.textContent).toBe('Happy is currently built by the two of us, with help from contributors on GitHub.')
     const people = [...content.querySelectorAll('h2')]
@@ -436,6 +437,43 @@ describe('static document pages', () => {
     // Nobody's level of involvement, in either direction.
     expect(content.textContent).not.toMatch(/full[- ]time|part[- ]time|day job|day to day|side project|spare time/i)
     expect(documents.filter((document) => document.path === 'team')).toHaveLength(1)
+  })
+
+  it('leads Features with Multiplayer, which sells the experience under its video; the deployment detail is the Team Server guide', () => {
+    const features = listedDocumentsForProduct('desktop').filter((document) => document.group === 'Features')
+    expect(features[0].path).toBe('multiplayer')
+    const { container, unmount } = render(<Router pathname="/multiplayer/" />)
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/team/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/models & subscriptions/i)
+    // The two layers: h1, lede, the video, the Chief of Staff block; then the reference sections.
+    const top = [...container.querySelector('.document-content')!.children].slice(0, 4)
+    expect(top[0].tagName).toBe('H1')
+    expect(top[1].textContent).toMatch(/^One place for you, your team, and your agents\./)
+    expect(top[2].querySelector('video.autoplay-clip')?.getAttribute('src')).toBe('/video/multiplayer/clip.mp4')
+    expect(top[2].querySelector('video')?.getAttribute('poster')).toBe('/video/multiplayer/poster.webp')
+    expect(top[3].className).toBe('cos-prompt')
+    // It sells what a teammate sees and does; the engineering lives in the guide, linked once.
+    const text = container.querySelector('.document-content')!.textContent!
+    expect(text).not.toMatch(/WorkOS|Tailcat|AppArmor|WireGuard|401|happy\.toml/)
+    expect([...container.querySelectorAll('.document-content a[href="/guides/team-server/"]')]).toHaveLength(1)
+    // The comparison quotes each vendor and dates it.
+    const table = container.querySelector('.document-content table')!
+    expect([...table.querySelectorAll('thead th')].map((cell) => cell.textContent)).toEqual(['', 'Cursor Projects', 'Claude Projects, Team plan', 'ChatGPT shared projects', 'Happy'])
+    expect(table.textContent).toMatch(/Nov 10, 2026/)
+    unmount()
+
+    const guide = getDocument('desktop', 'guides/team-server')!
+    expect(guide.group).toBe('Guides')
+    expect(guide.description.length).toBeLessThanOrEqual(160)
+    expect(getDocument('desktop', 'multiplayer')!.description.length).toBeLessThanOrEqual(160)
+    const markup = renderPath('/guides/team-server/')
+    // The architecture diagram moved here, drawn inline in the card style, with everything the old page explained.
+    expect(markup).toContain('class="inline-diagram"')
+    for (const id of ['self-hosted-or-cloud', 'how-members-sign-in', 'how-desktop-and-phones-reach-the-server', 'whose-claude-codex-and-grok-accounts-pay', 'sandbox-and-review-on-a-shared-server', 'what-the-team-owner-can-do', 'set-up-a-team-server', 'join-or-leave-a-team', 'share-your-own-computer-with-someone', 'what-we-haven-t-built-yet']) {
+      expect(markup, id).toContain(`<h2 id="${id}">`)
+    }
+    // No hosted team server exists; the guide says so plainly.
+    expect(markup).toContain('Self-hosted is the only deployment today.')
   })
 
   it('lists Secrets under Features after Permissions, with a search title and description that fit', () => {
@@ -566,7 +604,7 @@ describe('static document pages', () => {
   })
 
   it('puts a copyable Chief of Staff prompt right after the intro of every page it can help with', () => {
-    const withPrompt = ['quick-start', 'chief-of-staff', 'models', 'permissions', 'secrets', 'workspaces', 'agents', 'mobile', 'multiplayer', 'extending', 'guides/configuration', 'guides/remote-server', 'migrate']
+    const withPrompt = ['quick-start', 'chief-of-staff', 'models', 'permissions', 'secrets', 'workspaces', 'agents', 'mobile', 'multiplayer', 'extending', 'guides/configuration', 'guides/remote-server', 'guides/team-server', 'migrate']
     for (const document of documentsForProduct('desktop')) {
       const markup = renderPath(`/${document.path}/`)
       const block = markup.indexOf('<aside class="cos-prompt"')

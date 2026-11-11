@@ -1,6 +1,6 @@
 # Team Sign-In with WorkOS
 
-A Happy Agent [team server](/multiplayer/) is powered by [WorkOS](https://workos.com). WorkOS signs each member in and keeps the team's membership; the server only checks a signed token on each request. It never sees a password. Prefer your own identity provider? [Use it instead](#bring-your-own-identity-provider).
+A Happy Agent [team server](/guides/team-server/) is powered by [WorkOS](https://workos.com). WorkOS signs each member in and keeps the team's membership; the server only checks a signed token on each request. It never sees a password. Prefer your own identity provider? [Use it instead](#bring-your-own-identity-provider).
 
 ![How a team member signs in. Happy Desktop signs in with WorkOS through AuthKit with PKCE, and gets back an access token for the team. Every request to the team server carries that token. The team server fetches WorkOS's public signing keys once and caches them, then checks each token locally: the RS256 signature, the issuer, the client, and the org_id, and maps the user to a team member. Or, with authentication set to jwt, the server verifies tokens from your own OAuth server instead.](/img/team-sign-in-workos.svg)
 

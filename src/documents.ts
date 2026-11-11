@@ -262,6 +262,16 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Start here',
   },
   {
+    // The flagship: first in Features. How the server is deployed is the Team Server guide.
+    path: 'multiplayer',
+    sourcePath: '/content/desktop/multiplayer.mdx',
+    title: 'Multiplayer & Teams',
+    pageTitle: 'Multiplayer: Share Claude Code and Codex Sessions with Your Team — Happy',
+    description: 'One place for you, your team, and your agents: shared sessions, tasks, todo lists, documents, and calendars, on a server your team runs.',
+    cardLine: 'Your team and your agents in one place',
+    group: 'Features',
+  },
+  {
     path: 'models',
     sourcePath: '/content/desktop/models.mdx',
     title: 'Models & Subscriptions',
@@ -315,14 +325,6 @@ const desktopDocuments: DocumentDefinition[] = [
     group: 'Features',
   },
   {
-    path: 'multiplayer',
-    sourcePath: '/content/desktop/multiplayer.mdx',
-    title: 'Multiplayer & Teams',
-    pageTitle: 'Multiplayer: Self-Hosted Coding Agent Server for Teams — Happy',
-    description: 'A self-hosted coding agent server for your team: one Happy Agent, each member signed in as themselves, sharing projects and sessions under one sandbox.',
-    group: 'Features',
-  },
-  {
     path: 'extending',
     sourcePath: '/content/desktop/extending.mdx',
     title: 'Skills & MCP',
@@ -366,6 +368,16 @@ const desktopDocuments: DocumentDefinition[] = [
     title: 'Remote Server',
     pageTitle: 'Claude Code and Codex on a Remote Server, from Phone or Desktop — Happy',
     description: 'Run Claude Code and Codex on a server that keeps working while your laptop sleeps. Steer it from Happy Desktop or your phone, alone or as a team.',
+    group: 'Guides',
+  },
+  {
+    // Took the deployment detail that /multiplayer/ carried until it became the feature page.
+    path: 'guides/team-server',
+    sourcePath: '/content/desktop/guides/team-server.mdx',
+    title: 'Team Server',
+    pageTitle: 'Self-Hosted Coding Agent Server for a Team: Run a Happy Team Server',
+    description: 'Run one Happy Agent for your team on your own machine: sign-in, how Desktop and phones reach it, whose provider accounts pay, the sandbox, and the owner.',
+    cardLine: 'One agent server for your whole team',
     group: 'Guides',
   },
   {

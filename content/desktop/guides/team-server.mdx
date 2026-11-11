@@ -1,0 +1,99 @@
+# Run a Happy Team Server
+
+A team server is one Happy Agent on a machine you control, switched into team mode: a self-hosted coding agent server where each member signs in as themselves and works in shared projects, tasks, and sessions. It is the server behind [Multiplayer](/multiplayer/), and an ordinary [remote server](/guides/remote-server/) underneath.
+
+![Three members, Ana, Ben, and Chi, each signed in as themselves, each with Happy Desktop and a phone. Desktop reaches the team server through Tailcat: WireGuard, with no open port. The phone goes through Happy's relay instead, end-to-end encrypted. The team server runs on a machine you run. On it: Happy Agent in team mode, which lets in only this team's sign-ins; shared projects, tasks, and sessions; Claude, Codex, and Grok on the server's accounts; and the OS sandbox, with review in Auto.](/diagrams/team-server.svg)
+
+```chief-of-staff set up a team server
+Create a team called Acme on my server ubuntu@203.0.113.10 and invite alice@example.com
+```
+
+## Self-hosted or cloud
+
+Self-hosted is the only deployment today. We do not run team servers for anyone, and there is no Happy-hosted option to sign up for.
+
+- **On your machine:** Happy Agent, every session and task, the repositories, and the Claude, Codex, and Grok sign-ins. Any Linux machine with systemd works, and so does a Mac; the [remote server guide](/guides/remote-server/#providers) lists providers.
+- **On ours:** the account service and the phone relay. The account service signs members in through WorkOS, keeps the team's membership and invitations, and stores the server's address so members' apps can find it. The relay carries the phones' traffic, end-to-end encrypted.
+
+With [your own identity provider](/workos/#bring-your-own-identity-provider), sign-in involves no WorkOS account.
+
+## How members sign in
+
+Each member connects their Happy account in Desktop (**Settings → Account → Connect account**), which signs in through WorkOS. Their Desktop then gets a short-lived WorkOS token for the team. The server checks it on every request, health included: right signature, right team, not expired. Anything else gets the same `401`.
+
+[Team Sign-In with WorkOS](/workos/) has the details, and how to use Okta, Entra ID, Google Workspace, or Keycloak instead.
+
+## How Desktop and phones reach the server
+
+- **Desktop: Tailcat.** WireGuard without a Tailscale account: no open port, traffic encrypted end to end, and Tailscale's free relays see addresses and timing, not content. The address carries a pre-shared key, so keep it private; even with it, a stranger gets only as far as the sign-in check. See [No Open Ports](/tailcat/).
+- **Phones: Happy's relay.** Each member pairs their own phone from **Settings → Mobile Access** while the team server is selected. The server publishes each member's sessions to their own Happy account, end-to-end encrypted, so the phone can read them even while the server is offline.
+- **Behind your own load balancer.** A server can register an `https:` address instead of a Tailcat one; put it behind TLS termination you trust. The recipe: [Put a team server behind an SSO load balancer](https://github.com/slopus/happy-agent/blob/main/docs/recipe/edge-sso-load-balancer.md).
+
+## Whose Claude, Codex, and Grok accounts pay
+
+The provider sign-ins belong to the server's service account. Every member's work runs on those accounts and their limits; members' own subscriptions are not used.
+
+## Sandbox and review on a shared server
+
+The rules are the ones on your own machine. Read only, Workspace write, and Auto, the default, run every command inside the OS sandbox; in Auto, an action that would cross it is reviewed first, one action at a time. See [Permissions & Sandbox](/permissions/).
+
+Full access removes the sandbox, and any member can switch a session to it. A team server is for people who trust each other.
+
+On Ubuntu 24.04, an administrator first grants the Happy Agent executable an AppArmor namespace allowance, so the sandbox can start.
+
+## What is shared and what is each member's own
+
+- **Shared:** projects, tasks, sessions, Surfaces, and the server's provider accounts. Any member can read and write any of them.
+- **Each member's own:** their sign-in, their profile, their drafts, the order of their task list and sidebar, and their phone.
+- **Who is speaking.** Each message is stored with its author. Whenever the speaker changes, the agent is told who it is, by name and email. That tells the agent who is talking; it grants nothing: every member's messages carry the same authority.
+- **Joining.** Members join new tasks and Surfaces by default, and can leave any of them. Each can turn that off in Settings, which keeps what they already joined.
+- **Roles.** A member can carry a role and what they follow, such as "Billing engineer" and "Stripe webhooks". A task's agent reads both when it decides whom to bring in. Seed them per member under `[feature.team.members]` in the server's `happy.toml`.
+
+## What the team owner can do
+
+The person who created the team is its owner. Only the owner can:
+
+- rename the installation;
+- change the default model and voice settings;
+- turn global skills on and off;
+- change public connectivity and manage server connections;
+- archive another member's task.
+
+Otherwise members have the same access.
+
+## Set up a team server
+
+The Chief of Staff confirms your Happy account, installs Happy Agent on the server as in [the remote server guide](/guides/remote-server/), creates the team, switches the server to team mode, and runs a real task from your Desktop. Only then does it ask whom to invite.
+
+In team mode the server accepts only sign-ins for that team and keeps no local socket or token. Every step is in the public recipe, [Create and deploy a Happy team](https://github.com/slopus/happy-agent/blob/main/docs/recipe/deploy-happy-team.md), which also recommends a [dedicated runner](/recepies/runner/) so agent work runs apart from the server's data and credentials.
+
+## Join or leave a team
+
+**Joining.** Accept the email invitation, connect your Happy account in Desktop with that email, then ask your Chief of Staff to connect to the team.
+
+**Leaving.** We haven't built a remove-member action yet. Stopping the server cuts everyone off at once.
+
+## Share your own computer with someone
+
+You can let someone use the Happy Agent on your own machine. You probably shouldn't, unless it is family or someone you would hand your unlocked laptop to.
+
+The only way today is to give them your connection: turn on Tailcat ("Turn on Tailcat" to the Chief of Staff), then privately send them the address, the port, and your API token from `~/.happy/agent/token`. They add it as a `[connections.<id>]` entry on their machine, or ask their Chief of Staff to add the connection.
+
+They are then you:
+
+- **Everything is shared.** Your projects, sessions, Chief of Staff, settings, and profile. The agent cannot tell you apart.
+- **Your accounts pay.** Their work runs on your Claude, Codex, and Grok subscriptions, your Git identity, and whatever the projects can push to.
+- **The sandbox is their choice.** In Auto, shell commands cannot write outside the workspace, reach unlisted domains, or read credential folders such as `~/.ssh`, `~/.aws`, `~/.claude`, and `~/.codex`; the agent's file tools can still read them, and the rest of your home folder. They can switch any session to Full access, which removes the sandbox. MCP servers always run outside it.
+
+There is no per-session invite. Team mode on your own machine gives each person their own identity, but it turns off the local socket your own Desktop uses, so it belongs on a separate machine.
+
+**To revoke:** ask the Chief of Staff to turn off Tailcat, which closes the connection at once. Then set a new `[api] token` in your `happy.toml` and restart Happy Agent; the old token stops working. Turning Tailcat back on restores the same address, so rotate the token before you do.
+
+## What we haven't built yet
+
+- **A hosted team server.** You run the machine and upgrade it.
+- **Invite and remove buttons.** Desktop has no member list to manage. The Chief of Staff sends invitations, and there is no remove-member action.
+- **Per-member provider accounts.** All work spends the server's Claude, Codex, and Grok accounts.
+- **Per-member permissions.** Any member can choose Full access, and there are no per-session invites.
+
+For one person and one extra machine, see [the remote server guide](/guides/remote-server/). T3 Code has no per-member sign-in; see [Happy vs T3 Code](/t3-code/).

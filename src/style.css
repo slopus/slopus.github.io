@@ -396,6 +396,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content video.autoplay-clip:focus:not(:focus-visible) { outline: none; }
 /* Each recording's own shape, so its frame hugs it before and after it loads. */
 .document-content video.autoplay-clip[src="/video/stem-cell/app/clip.mp4"] { aspect-ratio: 1080 / 918; }
+.document-content video.autoplay-clip[src="/video/multiplayer/clip.mp4"] { aspect-ratio: 16 / 9; }
 .document-content p:has(> video.autoplay-clip) + p:has(> em:only-child) { margin-top: -.4rem; text-align: left; }
 @media (max-width: 640px) {
   .document-content .side-figure { gap: 1rem; grid-template-columns: minmax(0, 1fr); }
