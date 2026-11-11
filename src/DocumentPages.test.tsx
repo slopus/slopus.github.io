@@ -454,33 +454,29 @@ describe('static document pages', () => {
     expect(top[2].querySelector('video')?.getAttribute('poster')).toBe('/video/multiplayer/poster.webp')
     expect(top[3].className).toBe('cos-prompt')
     expect(top[3].querySelectorAll('.cos-prompt-text')).toHaveLength(1)
-    // A story in three sections, named as the video's chapter cards are: staying aware, shared bots, and
-    // stepping in as the exception. What follows them is short and has no pictures.
+    // A story in five sections, named as the video's chapter cards are: staying aware, catching up, shared
+    // bots, shared artifacts, and stepping in as the exception. What follows them is short and has no pictures.
     const sections = [...content.querySelectorAll('h2')].map((heading) => heading.textContent?.replace(/#$/, ''))
-    expect(sections).toEqual(["See who's working on what", 'Shared bots for the standing jobs', "Step in when it's your call", 'Shared todo lists, documents, and calendars', 'Happy vs Cursor Projects, Claude Projects, and ChatGPT projects', 'Run your own team server'])
-    // Each of the three has its picture right under its heading: the app's whole window where the page has
-    // room for it and one whole part of it elsewhere, never a fragment enlarged to the column. Only the
-    // first moves. Stills are lazy, and a recording fetches nothing until it is in view.
-    const scenes = [...content.querySelectorAll('.section-scene')]
-    expect(scenes.map((scene) => [scene.getAttribute('data-kind'), scene.querySelector('img')?.getAttribute('src'), scene.getAttribute('style')])).toEqual([
-      ['window', '/video/multiplayer/aware/wide.webp', '--scene-wide: 960px; --scene-wide-ratio: 1133 / 700; --scene-narrow: 344px; --scene-narrow-ratio: 344 / 700;'],
-      ['window', '/video/multiplayer/bots/wide.webp', '--scene-wide: 960px; --scene-wide-ratio: 1133 / 700; --scene-narrow: 344px; --scene-narrow-ratio: 344 / 390;'],
-      ['region', '/video/multiplayer/step-in/wide.webp', '--scene-wide: 789px; --scene-wide-ratio: 789 / 345; --scene-narrow: 420px; --scene-narrow-ratio: 420 / 415;'],
-    ])
-    for (const scene of scenes.slice(0, 3)) expect(scene.parentElement?.previousElementSibling).toHaveProperty('tagName', 'H2')
-    // Only the first darkens its session pane, so the sidebar is the lit part, as the video does.
-    expect(scenes.map((scene) => scene.hasAttribute('data-dim'))).toEqual([true, false, false])
-    for (const image of content.querySelectorAll('.section-scene img')) {
+    expect(sections).toEqual(["See who's working on what", 'Catch up on what shipped', 'Shared bots for the standing jobs', 'Share what your agents make', "Step in when it's your call", 'Shared todo lists, documents, and calendars', 'Happy vs Cursor Projects, Claude Projects, and ChatGPT projects', 'Run your own team server'])
+    // Each has its picture right under its heading: a still from the video where the camera has settled on
+    // that chapter, and the square cut's same moment on a phone. Only the first moves. Stills are lazy, and
+    // a recording fetches nothing until it is in view.
+    const frames = [...content.querySelectorAll('.stop-frame')]
+    expect(frames.map((frame) => [...frame.querySelectorAll('img')].map((image) => image.getAttribute('src')))).toEqual(
+      ['aware', 'activity', 'bots', 'artifacts', 'step-in'].map((name) => [`/video/multiplayer/${name}/wide.webp`, `/video/multiplayer/${name}/square.webp`]),
+    )
+    for (const frame of frames) expect(frame.parentElement?.previousElementSibling).toHaveProperty('tagName', 'H2')
+    for (const image of content.querySelectorAll('.stop-frame img')) {
       expect(image.getAttribute('loading')).toBe('lazy')
-      if (!image.classList.contains('section-scene-frame')) expect(image.getAttribute('alt')?.length).toBeGreaterThan(40)
+      expect(image.getAttribute('alt')?.length).toBeGreaterThan(40)
     }
-    expect(scenes.map((scene) => [...scene.querySelectorAll('video')].map((movie) => movie.getAttribute('src')))).toEqual([['/video/multiplayer/aware/wide.mp4', '/video/multiplayer/aware/narrow.mp4'], [], []])
-    for (const movie of scenes[0].querySelectorAll('video')) {
+    expect(frames.map((frame) => [...frame.querySelectorAll('video')].map((movie) => movie.getAttribute('src')))).toEqual([['/video/multiplayer/aware/wide.mp4', '/video/multiplayer/aware/square.mp4'], [], [], [], []])
+    for (const movie of frames[0].querySelectorAll('video')) {
       expect(movie.getAttribute('preload')).toBe('none')
       expect(movie.hasAttribute('poster')).toBe(false)
       expect(movie.hasAttribute('autoplay')).toBe(false)
     }
-    expect(scenes[0].querySelector('button')?.getAttribute('aria-label')).toBe('Pause the recording')
+    expect(frames[0].querySelector('button')?.getAttribute('aria-label')).toBe('Pause the recording')
     // The phone is an aside at the end of the third section, not a section of its own.
     const away = [...content.querySelectorAll('p')].find((paragraph) => paragraph.textContent!.startsWith('Away from your desk?'))!
     expect(away.previousElementSibling?.textContent).toMatch(/^Mostly you watch\./)

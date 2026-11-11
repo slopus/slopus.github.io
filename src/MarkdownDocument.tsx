@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { AutoplayClip } from './AutoplayClip'
-import { SectionScene, sceneFromTitle } from './SectionScene'
+import { StopFrame } from './StopFrame'
 import { ChiefOfStaffPrompt, CHIEF_OF_STAFF_LANGUAGE } from './ChiefOfStaffPrompt'
 import { HoverClip } from './HoverClip'
 import { InlineDiagram, inlineDiagram } from './InlineDiagram'
@@ -279,13 +279,12 @@ export function MarkdownDocument({
     },
     img: ({ alt, src, title, node: _node, ...props }) => {
       // An image whose src is a folder is a clip: titled "autoplay", a recording that loops while
-      // on screen (src/AutoplayClip.tsx); titled "window", "region" or "phone", a section's picture
-      // of the app at a size it is never enlarged past (src/SectionScene.tsx);
+      // on screen (src/AutoplayClip.tsx); titled "frame", a section's still from the page's
+      // video, or "frame loop", with its frames playing (src/StopFrame.tsx);
       // otherwise one that plays on hover (src/HoverClip.tsx).
       if (typeof src === 'string' && src.endsWith('/')) {
         if (title === 'autoplay') return <AutoplayClip folder={src} label={alt ?? ''} />
-        const scene = sceneFromTitle(title)
-        if (scene) return <SectionScene folder={src} label={alt ?? ''} scene={scene} />
+        if (title === 'frame' || title === 'frame loop') return <StopFrame folder={src} label={alt ?? ''} loop={title === 'frame loop'} />
         return <HoverClip folder={src} label={alt ?? ''} />
       }
       const diagram = typeof src === 'string' ? inlineDiagram(src) : undefined
