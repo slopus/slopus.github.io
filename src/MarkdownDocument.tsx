@@ -278,9 +278,11 @@ export function MarkdownDocument({
     },
     img: ({ alt, src, title, node: _node, ...props }) => {
       // An image whose src is a folder is a clip: titled "autoplay", a recording that loops while
-      // on screen (src/AutoplayClip.tsx); otherwise one that plays on hover (src/HoverClip.tsx).
+      // on screen, or "loop", a section's short one that loads only in view (src/AutoplayClip.tsx);
+      // otherwise one that plays on hover (src/HoverClip.tsx).
       if (typeof src === 'string' && src.endsWith('/')) {
         if (title === 'autoplay') return <AutoplayClip folder={src} label={alt ?? ''} />
+        if (title === 'loop') return <AutoplayClip folder={src} label={alt ?? ''} section />
         return <HoverClip folder={src} label={alt ?? ''} />
       }
       const diagram = typeof src === 'string' ? inlineDiagram(src) : undefined

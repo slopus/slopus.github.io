@@ -10,8 +10,13 @@ import { useRevealedControls } from './revealedControls'
  *
  * It has no autoplay attribute: Chrome pauses such a video by itself when it scrolls away or the
  * tab hides, and those pauses read as the reader's. Window focus changes nothing.
+ *
+ * Titled "loop" instead, it is a section's own short recording, one of several on a page, so it
+ * costs the first load nothing (`section`): its still is a lazy image the movie lies over, the
+ * movie has no poster and `preload="none"`, so nothing of it is fetched before it scrolls into
+ * view, and with reduced motion or Save-Data it stays the still until the reader plays it.
  */
-export function AutoplayClip({ folder, label }: { folder: string; label: string }) {
+export function AutoplayClip({ folder, label, section = false }: { folder: string; label: string; section?: boolean }) {
   const video = useRef<HTMLVideoElement>(null)
   const { revealControls, videoProps } = useRevealedControls()
   useEffect(() => {
@@ -27,7 +32,10 @@ export function AutoplayClip({ folder, label }: { folder: string; label: string 
     // controls) or keyboard focus on it also count as the reader reaching for it.
     let touched = -Infinity
     let settle: ReturnType<typeof setTimeout> | undefined
-    const play = () => { if (!readerPaused && !document.hidden && ratio >= 0.3 && clip.paused) void clip.play().catch(revealControls) }
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
+    // A section's recording stays its still for a reader who asked for less motion or less data.
+    const still = section && (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || connection?.saveData === true)
+    const play = () => { if (!still && !readerPaused && !document.hidden && ratio >= 0.3 && clip.paused) void clip.play().catch(revealControls) }
     const touchedRecently = () => performance.now() - touched < 1500 || clip.matches(':hover') || document.activeElement === clip
     // A pause is the reader's if they're on the clip or reached for it within 1.5 s either side, so it sticks;
     // any other pause in view (the browser's, a focus change) is undone. The pause event comes a task
@@ -60,9 +68,19 @@ export function AutoplayClip({ folder, label }: { folder: string; label: string 
       clearTimeout(settle)
       document.removeEventListener('visibilitychange', onVisibility)
     }
-  }, [revealControls])
+  }, [revealControls, section])
   // The served markup carries `muted`; a DOM that doesn't turn that attribute into the `muted`
   // property (jsdom) would otherwise report a mismatch.
+  if (section) {
+    // The still shows through the movie until it has a frame. Once the controls show, a movie
+    // without a frame would draw a dark box over it, so it takes the still as its poster then.
+    return (
+      <span className="section-loop">
+        <img src={`${folder}poster.webp`} alt={label} loading="lazy" decoding="async" />
+        <video ref={video} src={`${folder}clip.mp4`} poster={videoProps.controls ? `${folder}poster.webp` : undefined} muted loop playsInline preload="none" aria-label="Recording of this screenshot" suppressHydrationWarning {...videoProps} />
+      </span>
+    )
+  }
   return (
     <video ref={video} className="autoplay-clip" src={`${folder}clip.mp4`} poster={`${folder}poster.webp`} muted loop playsInline preload="metadata" aria-label={label} suppressHydrationWarning {...videoProps} />
   )

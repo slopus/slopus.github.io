@@ -452,6 +452,22 @@ describe('static document pages', () => {
     expect(top[2].querySelector('video.autoplay-clip')?.getAttribute('src')).toBe('/video/multiplayer/clip.mp4')
     expect(top[2].querySelector('video')?.getAttribute('poster')).toBe('/video/multiplayer/poster.webp')
     expect(top[3].className).toBe('cos-prompt')
+    // The sections follow the video's chapters, each with its own recording right under its heading:
+    // a lazy still with the movie over it, which fetches nothing until it is in view.
+    const sections = [...container.querySelectorAll('.document-content h2')].map((heading) => heading.textContent?.replace(/#$/, ''))
+    expect(sections).toEqual(['Everyone sees the same work', 'Agents ask the right teammate', 'Anyone can steer, from their phone', 'Shared todo lists and docs', 'Invite a teammate', 'Happy vs Cursor Projects, Claude Projects, and ChatGPT projects', 'Run your own team server'])
+    const loops = [...container.querySelectorAll('.document-content .section-loop')]
+    expect(loops.map((loop) => loop.querySelector('video')?.getAttribute('src'))).toEqual(['same-work', 'ask-teammate', 'steer', 'surfaces'].map((name) => `/video/multiplayer/${name}/clip.mp4`))
+    for (const loop of loops) {
+      expect(loop.previousElementSibling ?? loop.parentElement?.previousElementSibling).toHaveProperty('tagName', 'H2')
+      expect(loop.querySelector('img')?.getAttribute('loading')).toBe('lazy')
+      expect(loop.querySelector('img')?.getAttribute('alt')?.length).toBeGreaterThan(40)
+      expect(loop.querySelector('video')?.getAttribute('preload')).toBe('none')
+      expect(loop.querySelector('video')?.hasAttribute('poster')).toBe(false)
+      expect(loop.querySelector('video')?.hasAttribute('autoplay')).toBe(false)
+    }
+    // People-chat Surfaces are not advertised yet.
+    expect(container.querySelector('.document-content')!.textContent).not.toMatch(/calendars, and chats|chats among people/)
     // It sells what a teammate sees and does; the engineering lives in the guide, linked once.
     const text = container.querySelector('.document-content')!.textContent!
     expect(text).not.toMatch(/WorkOS|Tailcat|AppArmor|WireGuard|401|happy\.toml/)
@@ -459,6 +475,7 @@ describe('static document pages', () => {
     // The comparison quotes each vendor and dates it.
     const table = container.querySelector('.document-content table')!
     expect([...table.querySelectorAll('thead th')].map((cell) => cell.textContent)).toEqual(['', 'Cursor Projects', 'Claude Projects, Team plan', 'ChatGPT shared projects', 'Happy'])
+    expect(table.querySelector('tbody th, tbody td')?.textContent).toBe('Working together')
     expect(table.textContent).toMatch(/Nov 10, 2026/)
     unmount()
 

@@ -397,6 +397,10 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 /* Each recording's own shape, so its frame hugs it before and after it loads. */
 .document-content video.autoplay-clip[src="/video/stem-cell/app/clip.mp4"] { aspect-ratio: 1080 / 918; }
 .document-content video.autoplay-clip[src="/video/multiplayer/clip.mp4"] { aspect-ratio: 16 / 9; }
+/* A section's own recording (titled "loop"): a 16:9 box that holds its place, the still under the movie. */
+.document-content .section-loop { aspect-ratio: 16 / 9; background: #1b1b1d; border-radius: 10px; box-shadow: 0 0 0 .5px rgba(0, 0, 0, .18), 0 1px 2px rgba(0, 0, 0, .08), 0 8px 24px rgba(0, 0, 0, .12); display: block; margin: 1.2rem 0 1.4rem; overflow: hidden; position: relative; }
+.document-content .section-loop > :is(img, video) { border: 0; border-radius: 0; box-shadow: none; display: block; height: 100%; inset: 0; margin: 0; object-fit: cover; position: absolute; width: 100%; }
+.document-content .section-loop > video:focus:not(:focus-visible) { outline: none; }
 .document-content p:has(> video.autoplay-clip) + p:has(> em:only-child) { margin-top: -.4rem; text-align: left; }
 @media (max-width: 640px) {
   .document-content .side-figure { gap: 1rem; grid-template-columns: minmax(0, 1fr); }
