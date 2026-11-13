@@ -469,6 +469,12 @@ describe('static document pages', () => {
     // Artifacts belong to Activity; steering, phone access, and shared surfaces stay in one short section.
     const sections = [...content.querySelectorAll('h2')].map((heading) => heading.textContent?.replace(/#$/, ''))
     expect(sections).toEqual(["See who's working on what", 'See the most important updates from the team', 'Shared bots for the standing jobs', 'Also', 'Happy vs Cursor Projects, Claude Projects, and ChatGPT projects', 'Run your own team server'])
+    // The bots still is the only picture beneath the video; it keeps the full window visible.
+    const images = [...content.querySelectorAll('img')]
+    expect(images).toHaveLength(1)
+    expect(images[0].getAttribute('src')).toBe('/video/multiplayer/bots/still.webp')
+    expect(images[0].getAttribute('loading')).toBe('lazy')
+    expect(images[0].getAttribute('alt')).toMatch(/full Happy Desktop window.*Six bots.*Desktop Releases is selected/)
     // The phone is a short paragraph in Also, not another illustrated section.
     const away = [...content.querySelectorAll('p')].find((paragraph) => paragraph.textContent!.startsWith('On your phone.'))!
     expect(away.previousElementSibling?.textContent).toMatch(/^Step in when it's your call\./)
