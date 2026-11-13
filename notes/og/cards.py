@@ -44,6 +44,8 @@ FIGURE_OVERRIDES = {
 }
 # Where the page's own figure is too small for a card: a larger cutout kept in notes/og/figures/.
 CARD_FIGURES = {
+    # The video's caption-free Activity hold previews the team's published work.
+    "/multiplayer/": "/video/multiplayer/poster.webp",
     # The sidebar from the homepage demo (public/video/happy-one/v22/desktop.mp4, first frame).
     "/chief-of-staff/": "/__figures/chief-of-staff-sidebar.png",
 }

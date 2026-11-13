@@ -1,50 +1,32 @@
 # Multiplayer
 
-One place for you, your team, and your agents. Everyone signs in as themselves and sees what the team and its agents are working on, with Claude, Codex, and Grok, on a server your team runs.
+One place for you, your team, and your agents. Today most of our tasks start as conversations with agents, and Happy is built around this: your teammates' tasks appear as they start, and what their agents publish lands in Activity.
 
-![The Multiplayer video, 61 seconds, silent, recorded in Happy Desktop on a team server. Teammates' new tasks arrive in the sidebar with their faces; Activity shows a shared checklist and a benchmark an agent published; a team bot answers Steve by name; the camera reads down the benchmark report; and a task's agent asks Kirill a question and goes on with the answer.](/video/multiplayer/ "autoplay")
-
-```chief-of-staff start a team
-Create a team called Acme on my server ubuntu@203.0.113.10
-```
+![A silent, 38-second recording of Happy Desktop on a team server. Scoteezy's and Steve's tasks arrive in the sidebar with their faces. Kirill opens Steve's Offline Drafts, then returns to Voice waveform. A subtask finishes and an Activity badge appears. Activity shows preview cards titled Task list, 3× faster; Approve, with one fix; Sign-in: 2 of 3; and Unread dots, steadier. App Store screenshots show Happy on iOS and Android, followed by the closing line: Free and open source. Runs on your own server.](/video/multiplayer/ "autoplay")
 
 ## See who's working on what
 
-![Happy Desktop on a team server, close on the sidebar. Under Bots: Chief of Staff, Desktop Releases, Mobile Releases, Alerts, and Growth. Under Tasks, each with its owner's picture: Android Push Fixes, Voice waveform, Onboarding Emails, and Team Servers, with Launch Email and Docs Search arriving at the top as teammates start them.](/video/multiplayer/aware/ "frame loop")
+Every task on the team server is in your sidebar with its owner's face. A teammate's new task appears at the top as it starts. Open it to read along, then go back to your own. Tasks run on Claude, Codex, Grok, and more, using the subscriptions signed in on the server.
 
-Every task on the team server is in your sidebar with its owner's face on it. When a teammate starts one, it shows up in your list as it starts, and you can open it and read along.
+## See the most important updates from the team
 
-## Catch up on what shipped
-
-![Happy Desktop's Activity page. Under Today, the team's Launch checklist shows the faces of three teammates and two more beside its newest todo, Fix Android push before launch. Below it, Cold sync benchmark, created by a teammate's agent, is a card with its summary, A cold sync of 10k tasks takes 1.80 s. Two thirds of it is the task list query, the next thing to index, and a cover picture of the report.](/video/multiplayer/activity/ "frame")
-
-Activity is your team's feed of what it and its agents made, day by day. When an agent publishes a page, a report, or an image, it shows up as a card with its summary and cover, so you can see what shipped without opening it. Highlights narrows it to artifacts and tasks, and anything you haven't opened counts as unread until you do.
+When a teammate's agent publishes a review, a report, a design, or a screenshot, it arrives in Activity as an artifact card with a summary and a cover that previews it. Each new version folds into the same card. New tasks and shared lists are there too, grouped by day, with faces. An entry stays unread until you open it or mark all read.
 
 ## Shared bots for the standing jobs
 
-![The team's Desktop Releases bot in Happy Desktop. Kirill writes: Cut a preview once main is green. The bot answers: Main is green. Cutting the preview now: macOS first, then Windows. Steve writes: Tell me when it's out and I'll post the changelog. The bot answers Steve by name: @Steve, will do. macOS is signed and notarized. Windows is still building. It then waits 20 minutes.](/video/multiplayer/bots/ "frame")
+[//]: # (TODO: Add /video/multiplayer/bots/still.webp from the gym with several bots, Desktop Releases selected, and its conversation. The old crops hide the sidebar.)
 
 A bot is one conversation that never ends, with a name, a picture, and a folder of its own. On a team server every member sees the same bots and writes into the same conversation, so a standing job has one place to live.
 
-On our team server we run Desktop & Agent Releases, Mobile Releases, Growth Hacking, a Digital Ocean Watcher, and Product Health. Any member can start one from New bot in the sidebar.
+On our team server we run Desktop & Agent Releases, Mobile Releases, Growth Hacking, a Digital Ocean Watcher, and Product Health. Any member can start one from New bot in the sidebar. Bots publish their work into Activity too.
 
-## Share what your agents make
+## Also
 
-![An artifact open in Happy Desktop: a web page, Cold sync benchmark, with History, Add to sidebar, Copy link, and Delete above it. The report is titled Where a cold sync spends its time, with cards for cold sync 1.80 s, task list query 1.21 s, payload 4.2 MB, and p95 2.31 s, a bar chart of cold sync by team size, and the slowest queries, led by tasks.list at 970 ms.](/video/multiplayer/artifacts/ "frame")
+**Step in when it's your call.** When the decision is yours, the agent asks you by name. Your teammates see your answer under your name and photo.
 
-When an agent finishes a page, a report, or an image, it publishes it as an artifact. Everyone on the team server sees every artifact, wherever it was made, and every update keeps the earlier version.
+**On your phone.** Pair your phone with the team server to read Activity and tasks, or to answer an agent. See [Mobile Access](/mobile/).
 
-## Step in when it's your call
-
-![A task's session in Happy Desktop. A subtask, Agent sign-in, reports that it has finished, and the agent asks: @Kirill, should team servers use the same account as the desktop, or their own? The answer: Same account. The agent replies: Same account it is. Wiring the desktop's sign-in into it now.](/video/multiplayer/step-in/ "frame")
-
-Mostly you watch. When the work needs a decision that is yours, the task's agent asks you by name, in the session. Your teammates see your answer under your name and photo, and the agent is told who wrote, so it answers you.
-
-**Away from your desk?** Pair your own phone with the team server. Read along, or answer when an agent asks for you; what you send arrives under your name, as it does from Desktop. See [Mobile Access](/mobile/).
-
-## Shared todo lists, documents, and calendars
-
-The team also keeps todo lists, documents, and calendars on the server. A new one is in every member's sidebar, and agents read and edit them too.
+**Shared todo lists, documents, and calendars.** They live on the server, appear in every member's sidebar, and agents read and edit them too.
 
 ## Happy vs Cursor Projects, Claude Projects, and ChatGPT projects
 
@@ -62,6 +44,10 @@ Where they are better: there is no server to run, and ChatGPT shares a project f
 ## Run your own team server
 
 A team server is Happy Agent on a Linux machine or a Mac you control, switched into team mode. The Chief of Staff deploys it from a public recipe and asks you only for what is yours to decide.
+
+```chief-of-staff start a team
+Create a team called Acme on my server ubuntu@203.0.113.10
+```
 
 Invitations go by email: ask the Chief of Staff to send one. Your teammate accepts, connects their Happy account in Desktop with that address, and asks their own Chief of Staff to connect them to the team.
 

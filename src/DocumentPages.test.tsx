@@ -444,7 +444,7 @@ describe('static document pages', () => {
     // remounts its subtree, and a remounted <video> flashes its poster and starts again from 0.
     const { container, rerender } = render(<Router pathname="/multiplayer/" />)
     const before = [...container.querySelectorAll('video')]
-    expect(before.length).toBeGreaterThan(1)
+    expect(before.length).toBeGreaterThan(0)
     rerender(<Router pathname="/multiplayer/" />)
     const after = [...container.querySelectorAll('video')]
     expect(after.every((video, index) => video === before[index])).toBe(true)
@@ -457,56 +457,39 @@ describe('static document pages', () => {
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/team/i)
     expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/models & subscriptions/i)
     const content = container.querySelector('.document-content')!
-    // The two layers: h1, lede, the video, the Chief of Staff block with the one prompt that starts a team.
-    const top = [...content.children].slice(0, 4)
+    // The experience leads: h1, first-person lede, and the video, before the story sections.
+    const top = [...content.children].slice(0, 3)
     expect(top[0].tagName).toBe('H1')
     expect(top[1].textContent).toMatch(/^One place for you, your team, and your agents\./)
     expect(top[2].querySelector('video.autoplay-clip')?.getAttribute('src')).toBe('/video/multiplayer/clip.mp4')
     expect(top[2].querySelector('video')?.getAttribute('poster')).toBe('/video/multiplayer/poster.webp')
-    expect(top[3].className).toBe('cos-prompt')
-    expect(top[3].querySelectorAll('.cos-prompt-text')).toHaveLength(1)
-    // A story in five sections, named as the video's chapter cards are: staying aware, catching up, shared
-    // bots, shared artifacts, and stepping in as the exception. What follows them is short and has no pictures.
+    expect(top[1].textContent).toContain('most of our tasks start as conversations with agents')
+    expect(top[2].querySelector('video')?.hasAttribute('loop')).toBe(true)
+    expect(content.querySelectorAll('video')).toHaveLength(1)
+    // Artifacts belong to Activity; steering, phone access, and shared surfaces stay in one short section.
     const sections = [...content.querySelectorAll('h2')].map((heading) => heading.textContent?.replace(/#$/, ''))
-    expect(sections).toEqual(["See who's working on what", 'Catch up on what shipped', 'Shared bots for the standing jobs', 'Share what your agents make', "Step in when it's your call", 'Shared todo lists, documents, and calendars', 'Happy vs Cursor Projects, Claude Projects, and ChatGPT projects', 'Run your own team server'])
-    // Each has its picture right under its heading: a still from the video where the camera has settled on
-    // that chapter, and the square cut's same moment on a phone. Only the first moves. Stills are lazy, and
-    // a recording fetches nothing until it is in view.
-    const frames = [...content.querySelectorAll('.stop-frame')]
-    expect(frames.map((frame) => [...frame.querySelectorAll('img')].map((image) => image.getAttribute('src')))).toEqual(
-      ['aware', 'activity', 'bots', 'artifacts', 'step-in'].map((name) => [`/video/multiplayer/${name}/wide.webp`, `/video/multiplayer/${name}/square.webp`]),
-    )
-    for (const frame of frames) expect(frame.parentElement?.previousElementSibling).toHaveProperty('tagName', 'H2')
-    for (const image of content.querySelectorAll('.stop-frame img')) {
-      expect(image.getAttribute('loading')).toBe('lazy')
-      expect(image.getAttribute('alt')?.length).toBeGreaterThan(40)
-    }
-    expect(frames.map((frame) => [...frame.querySelectorAll('video')].map((movie) => movie.getAttribute('src')))).toEqual([['/video/multiplayer/aware/wide.mp4', '/video/multiplayer/aware/square.mp4'], [], [], [], []])
-    for (const movie of frames[0].querySelectorAll('video')) {
-      expect(movie.getAttribute('preload')).toBe('none')
-      expect(movie.hasAttribute('poster')).toBe(false)
-      expect(movie.hasAttribute('autoplay')).toBe(false)
-    }
-    expect(frames[0].querySelector('button')?.getAttribute('aria-label')).toBe('Pause the recording')
-    // The phone is an aside at the end of the third section, not a section of its own.
-    const away = [...content.querySelectorAll('p')].find((paragraph) => paragraph.textContent!.startsWith('Away from your desk?'))!
-    expect(away.previousElementSibling?.textContent).toMatch(/^Mostly you watch\./)
+    expect(sections).toEqual(["See who's working on what", 'See the most important updates from the team', 'Shared bots for the standing jobs', 'Also', 'Happy vs Cursor Projects, Claude Projects, and ChatGPT projects', 'Run your own team server'])
+    // The phone is a short paragraph in Also, not another illustrated section.
+    const away = [...content.querySelectorAll('p')].find((paragraph) => paragraph.textContent!.startsWith('On your phone.'))!
+    expect(away.previousElementSibling?.textContent).toMatch(/^Step in when it's your call\./)
     expect(away.querySelector('a[href="/mobile/"]')).not.toBeNull()
     // Awareness leads and steering is the exception; the phone is never the headline action.
     const text = content.textContent!
-    expect(text).toMatch(/Mostly you watch\./)
+    expect(text).toContain('Each new version folds into the same card.')
     expect(text).not.toMatch(/Anyone can steer|on Desktop and on your phone|\bFeed\b|no invite button/)
     // People-chat Surfaces are not advertised yet.
     expect(text).not.toMatch(/calendars, and chats|chats among people/)
     // It sells what a teammate sees and does; the engineering lives in the guide, linked once.
     expect(text).not.toMatch(/WorkOS|Tailcat|AppArmor|WireGuard|401|happy\.toml/)
     expect([...content.querySelectorAll('a[href="/guides/team-server/"]')]).toHaveLength(1)
-    // The remaining prompts sit with the server section at the bottom.
+    // Setup and invite prompts sit with the server section at the bottom.
     const prompts = [...content.querySelectorAll('.cos-prompt')]
     expect(prompts).toHaveLength(2)
+    expect(prompts[0].textContent).toMatch(/To start a team, simply ask the Chief of Staff:/)
+    expect(prompts[0].querySelector('.cos-prompt-text')?.textContent).toBe('Create a team called Acme on my server ubuntu@203.0.113.10')
     expect(prompts[1].textContent).toMatch(/To add teammates, simply ask the Chief of Staff:/)
     expect([...prompts[1].querySelectorAll('.cos-prompt-text')].map((prompt) => prompt.textContent)).toEqual(['Invite bob@example.com to the Acme team', 'Connect me to the Acme team'])
-    expect(content.querySelector('#run-your-own-team-server')!.compareDocumentPosition(prompts[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    for (const prompt of prompts) expect(content.querySelector('#run-your-own-team-server')!.compareDocumentPosition(prompt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     // The comparison quotes each vendor in a few words; its sources and dates are one line under it.
     const table = content.querySelector('table')!
     expect([...table.querySelectorAll('thead th')].map((cell) => cell.textContent)).toEqual(['', 'Cursor Projects', 'Claude Projects, Team plan', 'ChatGPT shared projects', 'Happy'])
@@ -670,7 +653,8 @@ describe('static document pages', () => {
       }
       // The prompt is plain text in the served page, before the reference sections; quick-start's sits in its First project step.
       expect(block, document.path).toBeGreaterThan(markup.indexOf('<h1'))
-      if (document.path !== 'quick-start') {
+      // Multiplayer keeps setup in its server section; Quick Start has its own sequence of steps.
+      if (document.path !== 'quick-start' && document.path !== 'multiplayer') {
         expect(block, document.path).toBeLessThan(markup.indexOf('<h2', markup.indexOf('<h1')))
       }
       // A line naming the page's task, then each prompt under a header row: "Example" left, Copy right.
