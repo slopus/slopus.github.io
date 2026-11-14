@@ -66,7 +66,8 @@ The short descriptor is **Orchestrate Claude, Codex, Grok, Gemini and more in on
 
 ## Screenshots
 
-- Cut UI screenshots out of their background: a transparent PNG with its own soft drop shadow and no card, border, or rounded frame. `public/thesis/model-picker.png` is the reference.
+- Show every app screenshot or still as the app's window sitting directly on the page, with its rounded corners (10–12px at display size), title bar, a subtle border, and a soft shadow. Never show a flat rectangular crop or put the window inside an extra backdrop.
+- Use the Markdown image title `window` (`src/AppWindowImage.tsx`) and keep the captured title bar. For the multiplayer recorder's 1133px-wide captures, whose top 40px already reserve the title bar, `window chrome` adds the film's macOS traffic lights. Do not add controls over controls already in the capture.
 - Render each one at a fixed width and height, so the text around it doesn't reflow.
 
 ## Tables

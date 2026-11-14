@@ -2,6 +2,7 @@ import { useMemo, useRef, useState, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { AutoplayClip } from './AutoplayClip'
+import { AppWindowImage } from './AppWindowImage'
 import { StopFrame } from './StopFrame'
 import { ChiefOfStaffPrompt, CHIEF_OF_STAFF_LANGUAGE } from './ChiefOfStaffPrompt'
 import { HoverClip } from './HoverClip'
@@ -316,6 +317,9 @@ function documentComponents(options: { current: DocumentOptions }): Components {
       }
       const diagram = typeof src === 'string' ? inlineDiagram(src) : undefined
       if (diagram) return <InlineDiagram svg={diagram} label={alt ?? ''} />
+      if (typeof src === 'string' && (title === 'window' || title === 'window chrome')) {
+        return <AppWindowImage src={src} alt={alt ?? ''} addChrome={title === 'window chrome'} />
+      }
       // A video shows its poster, `<name>-poster.webp` beside it, until it plays. The served
       // markup carries `muted`, so it autoplays before hydration; a DOM that doesn't turn that
       // attribute into the `muted` property (jsdom) would otherwise report a mismatch.
