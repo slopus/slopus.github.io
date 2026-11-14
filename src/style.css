@@ -399,7 +399,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content video.autoplay-clip[src="/video/multiplayer/clip.mp4"] { aspect-ratio: 16 / 9; }
 .document-content img[src="/video/multiplayer/bots/still.webp"] { aspect-ratio: 1133 / 800; }
 /* The window sits directly on the page. Its own pixels supply the title bar and surface. */
-.document-content .app-window-image { border-radius: 12px; box-shadow: 0 1px 2px rgba(0, 0, 0, .12), 0 16px 36px -12px rgba(18, 0, 42, .32); display: block; isolation: isolate; margin: 1.4rem 0 1.6rem; overflow: hidden; position: relative; }
+.document-content .app-window-image { border-radius: 12px; box-shadow: 0 1px 2px rgba(0, 0, 0, .12), 0 22px 36px -12px rgba(18, 0, 42, .32); display: block; isolation: isolate; margin: 1.4rem 0 1.6rem; overflow: hidden; position: relative; }
 .document-content .app-window-image::after { border: 1px solid rgba(255, 255, 255, .16); border-radius: inherit; content: ''; inset: 0; pointer-events: none; position: absolute; }
 .document-content .app-window-image > img { border: 0; border-radius: 0; box-shadow: none; display: block; height: auto; margin: 0; width: 100%; }
 .document-content .app-window-chrome { display: block; height: auto; left: 0; pointer-events: none; position: absolute; top: 0; width: 100%; }
