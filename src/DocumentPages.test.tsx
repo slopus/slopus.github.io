@@ -468,7 +468,7 @@ describe('static document pages', () => {
     expect(content.querySelectorAll('video')).toHaveLength(1)
     // Artifacts belong to Activity; steering, phone access, and shared surfaces stay in one short section.
     const sections = [...content.querySelectorAll('h2')].map((heading) => heading.textContent?.replace(/#$/, ''))
-    expect(sections).toEqual(["See who's working on what", 'See the most important updates from the team', 'Shared bots for the standing jobs', 'Also', 'Happy vs Cursor Projects, Claude Projects, and ChatGPT projects', 'Run your own team server'])
+    expect(sections).toEqual(["See who's working on what", 'See the most important updates from the team', 'Shared bots for the standing jobs', 'Also', 'Happy vs Cursor Projects, Claude Projects, ChatGPT projects, and Capy AI', 'Run your own team server'])
     // The bots still is the only picture beneath the video; it keeps the full window visible.
     const images = [...content.querySelectorAll('img')]
     expect(images).toHaveLength(1)
@@ -498,13 +498,13 @@ describe('static document pages', () => {
     for (const prompt of prompts) expect(content.querySelector('#run-your-own-team-server')!.compareDocumentPosition(prompt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     // The comparison quotes each vendor in a few words; its sources and dates are one line under it.
     const table = content.querySelector('table')!
-    expect([...table.querySelectorAll('thead th')].map((cell) => cell.textContent)).toEqual(['', 'Cursor Projects', 'Claude Projects, Team plan', 'ChatGPT shared projects', 'Happy'])
+    expect([...table.querySelectorAll('thead th')].map((cell) => cell.textContent)).toEqual(['', 'Cursor Projects', 'Claude Projects, Team plan', 'ChatGPT shared projects', 'Capy AI', 'Happy'])
     expect(table.querySelector('tbody th, tbody td')?.textContent).toBe('Working together')
     expect(table.querySelectorAll('a')).toHaveLength(0)
     for (const cell of table.querySelectorAll('tbody td')) expect(cell.textContent!.split(/\s+/).length, cell.textContent!).toBeLessThanOrEqual(20)
     const sources = table.closest('.document-table-wrap')!.nextElementSibling!
-    expect(sources.textContent).toMatch(/^Quoted from Cursor.*Nov 10, 2026.*Sep 10, 2026.*updated Nov 6, 2026.*read Nov 10, 2026\.$/)
-    expect(sources.querySelectorAll('a')).toHaveLength(6)
+    expect(sources.textContent).toMatch(/^Quoted from Cursor.*Nov 10, 2026.*Sep 10, 2026.*updated Nov 6, 2026.*read Nov 10, 2026\. Capy's.*updated Oct 24, 2026.*read Nov 13, 2026\.$/)
+    expect(sources.querySelectorAll('a')).toHaveLength(12)
     unmount()
 
     const guide = getDocument('desktop', 'guides/team-server')!
