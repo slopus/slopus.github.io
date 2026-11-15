@@ -283,6 +283,11 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .docs-nav-group a { border-radius: 7px; color: #557068; display: block; font-size: .78rem; line-height: 1.35; padding: .38rem .5rem; }
 .docs-nav-group a:hover { background: #ebe5d9; color: #183f38; }
 .docs-nav-group a[aria-current='page'] { background: #dbe2cd; color: #183f38; font-weight: 600; }
+/* The label and a hidden bold copy share one grid cell, so every row is as wide and as tall as its
+   bold form: switching pages never rewraps or moves a row. The copy is not read out ("/ ''"). */
+.docs-nav-label { display: grid; }
+.docs-nav-label > span, .docs-nav-label::after { grid-area: 1 / 1; }
+.docs-nav-label::after { content: attr(data-label); content: attr(data-label) / ''; font-weight: 600; pointer-events: none; user-select: none; visibility: hidden; }
 .docs-mobile-navigation { display: none; }
 
 .document-article { min-width: 0; }

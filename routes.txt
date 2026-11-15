@@ -4,6 +4,7 @@
 /
 /agents/
 /blog/
+/bots/
 /changelog/
 /changelog/gpt-6-1-terra/
 /changelog/initial-core-release/
@@ -12,6 +13,8 @@
 /chief-of-staff/
 /claude-code-remote-control/
 /comparisons/buzz/
+/computers/
+/cursor-projects-claude-team-capy/
 /desktop-app/
 /desktop/
 /desktop/docs/
@@ -49,6 +52,7 @@
 /docs/versions/known-issues/
 /docs/versions/release-notes/
 /extending/
+/feed/
 /guides/configuration/
 /guides/remote-agents/
 /guides/remote-server/
@@ -70,6 +74,7 @@
 /happy2/docs/permissions/
 /happy2/docs/quick-start/
 /happy2/docs/workspaces/
+/hermes-agent-openclaw-secrets/
 /how-it-works/
 /migrate/
 /mobile-app/
@@ -122,10 +127,12 @@
 /recipes/upgrade/
 /recipes/wsl/
 /releases/
+/remote-server-alternatives/
 /secrets/
 /stem-cell/
 /t3-code/
 /tailcat/
+/tasks/
 /team-sign-in-workos/
 /team/
 /terms/

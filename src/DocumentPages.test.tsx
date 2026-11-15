@@ -36,7 +36,7 @@ describe('static document pages', () => {
 
   it('makes every copied documentation source renderable', () => {
     expect(documentsForProduct('happy')).toHaveLength(18)
-    expect(documentsForProduct('desktop')).toHaveLength(49)
+    expect(documentsForProduct('desktop')).toHaveLength(56)
 
     for (const document of documents) {
       const markdown = prepareMarkdown(getDocumentSource(document))
@@ -58,7 +58,7 @@ describe('static document pages', () => {
 
   it('shows the group and page as a breadcrumb on a phone that opens the docs navigation', () => {
     const { container } = render(<Router pathname="/chief-of-staff/" />)
-    const trail = screen.getByRole('button', { name: 'Start here Chief of Staff' })
+    const trail = screen.getByRole('button', { name: 'Your team Chief of Staff' })
     const menu = container.querySelector<HTMLElement>(`#${trail.getAttribute('aria-controls')}`)!
 
     expect(screen.queryByText('Browse documentation')).toBeNull()
@@ -69,7 +69,7 @@ describe('static document pages', () => {
     expect(trail.getAttribute('aria-expanded')).toBe('true')
     expect(menu.hidden).toBe(false)
     expect(within(menu).getByRole('link', { name: 'Chief of Staff' }).getAttribute('aria-current')).toBe('page')
-    expect([...menu.querySelectorAll('.docs-nav-group > h2, .docs-nav-fold > summary')].map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Blog', 'Comparisons', 'Changelog', 'Recipes (for agents)'])
+    expect([...menu.querySelectorAll('.docs-nav-group > h2, .docs-nav-fold > summary')].map((heading) => heading.textContent)).toEqual(['Start here', 'Your team', 'The app', 'Where this goes', 'Under the hood', 'Guides', 'Compare', 'Blog', 'Changelog', 'For agents'])
 
     fireEvent.click(trail)
     expect(menu.hidden).toBe(true)
@@ -84,7 +84,7 @@ describe('static document pages', () => {
     render(<Router pathname="/how-it-works/" />)
 
     expect(screen.getByRole('heading', { level: 1, name: /how it works/i })).toBeTruthy()
-    expect(screen.getAllByRole('link', { name: 'Permissions & Sandbox' }).length).toBeGreaterThan(0)
+    expect(screen.getAllByRole('link', { name: 'Exactly enough access' }).length).toBeGreaterThan(0)
   })
 
   it('keeps Happy and Happy Desktop documentation separate', () => {
@@ -231,7 +231,7 @@ describe('static document pages', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: /no open ports: how happy reaches your server/i })).toBeTruthy()
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/workos/i)
-    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/voice/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/updates mid-turn/i)
     expect(container.querySelector('.document-content img[src="/img/tailcat.svg"]')).not.toBeNull()
     expect(container.querySelector('.document-content a[href="https://github.com/tailscale/tailcat"]')).not.toBeNull()
     // The version main ships, and the one older identities came from.
@@ -239,10 +239,12 @@ describe('static document pages', () => {
     expect(container.querySelector('.document-content')?.textContent).toMatch(/bundled Tailcat v0\.4\.0, has no pre-shared key/)
     unmount()
 
+    // Voice moved up into the reading path, after the phone; its URL and title stay.
     const { unmount: unmount2 } = render(<Router pathname="/voice/" />)
     expect(screen.getByRole('heading', { level: 1, name: /talk to your agents: voice with elevenlabs/i })).toBeTruthy()
-    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/tailcat/i)
-    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/updates/i)
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/happy on your phone/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/vision/i)
+    expect(getDocument('desktop', 'voice')?.group).toBe('The app')
     unmount2()
 
     const updates = render(<Router pathname="/updates/" />)
@@ -259,7 +261,7 @@ describe('static document pages', () => {
     // posts it quotes, their text served inside, and ends, like every post, on the downloads.
     const stemCell = render(<Router pathname="/stem-cell/" />)
     expect(screen.getByRole('heading', { level: 1, name: /sure, gpt, i need another 10 different buttons/i })).toBeTruthy()
-    expect(screen.getByRole('link', { name: /^next/i }).getAttribute('href')).toBe('/desktop-app/')
+    expect(screen.getByRole('link', { name: /^next/i }).getAttribute('href')).toBe('/changelog/')
     const videos = [...stemCell.container.querySelectorAll('.document-content video')]
     expect(videos.map((video) => [video.className, video.getAttribute('src'), video.getAttribute('poster')])).toEqual([['autoplay-clip', '/video/stem-cell/app/clip.mp4', '/video/stem-cell/app/poster.webp']])
     expect(stemCell.container.querySelector('.side-figure > img')?.getAttribute('src')).toBe('/img/stem-cell-create-menu.webp')
@@ -275,7 +277,7 @@ describe('static document pages', () => {
     expect(stemCell.container.querySelector('.blog-download .one-download-actions')).not.toBeNull()
     for (const document of documents.filter((entry) => entry.group === 'Blog')) {
       expect(document.product).toBe('desktop')
-      expect(['workos', 'tailcat', 'voice', 'updates', 'stem-cell']).toContain(document.path)
+      expect(['workos', 'tailcat', 'updates', 'stem-cell']).toContain(document.path)
       // The stem cell post's title is its whole h1, the line it opens on, chosen over the length limit.
       expect(document.pageTitle?.length).toBeLessThanOrEqual(document.path === 'stem-cell' ? 75 : 65)
       expect(document.description.length).toBeLessThanOrEqual(155)
@@ -291,6 +293,7 @@ describe('static document pages', () => {
     const sections = [...container.querySelectorAll('.document-content h2')].map((heading) => heading.firstChild?.textContent)
     expect(sections).toEqual([
       'Make people happy',
+      'One app for the whole company',
       'One primary agent',
       'Chat left the chat',
       'Fiddle less, understand more',
@@ -299,12 +302,14 @@ describe('static document pages', () => {
       'Permissions belong to the agent',
     ])
     // The bullets up top are the sections, one for one, in the same order.
-    const bullets = [...container.querySelectorAll('.document-content > ul > li > strong')].map((bold) => bold.textContent?.replace(/\.$/, ''))
+    const bullets = [...container.querySelectorAll('.document-content > ul:first-of-type > li > strong')].map((bold) => bold.textContent?.replace(/\.$/, ''))
     expect(bullets).toEqual(sections)
     expect(container.querySelector('.document-content h3')).toBeNull()
-    // Three bold lines in the whole body: the primary agent's, and the two claims about chat.
+    // Five bold runs in the whole body: the one app's line and its not-shipped label, the primary agent's, and the two claims about chat.
     const boldLines = [...container.querySelectorAll('.document-content > p > strong')].map((bold) => bold.textContent)
     expect(boldLines).toEqual([
+      'Chat tools were built for people talking to people. Most of your coworkers are agents now.',
+      'These are not shipped:',
       "You'll run lots of agents. Only one of them should talk back to you.",
       'Nobody rereads old messages.',
       'The sidebar and the chat are both prime to become generated artifacts.',
@@ -363,7 +368,9 @@ describe('static document pages', () => {
 
     expect(thesisMetadata.title).toBe('Vision — Happy')
     expect(getDocument('desktop', 'vision')?.title).toBe('Vision')
-    expect(markdown.startsWith('# Vision\n\nEveryone is going to need a way to talk to AI.')).toBe(true)
+    expect(markdown.startsWith('# Vision\n\nEveryone is going to need a way to talk to AI, and every team is going to need a place where its people and its agents work together.')).toBe(true)
+    // What is not shipped is said so, here and nowhere else.
+    expect(markdown).toContain('**These are not shipped:**')
     expect(markdown).toContain('\n\n- **Make people happy.**')
     // One primary agent, never a core one; and multiplayer is not called hard.
     expect(markdown).not.toMatch(/core agent|is (?:very )?hard|last .*piece of software/i)
@@ -385,17 +392,35 @@ describe('static document pages', () => {
     expect(readFileSync('src/style.css', 'utf8')).toMatch(/html \{[^}]*scrollbar-gutter: stable/)
   })
 
-  it('lists Vision in the docs sidebar right after How It Works and renders it in the docs layout', () => {
+  it('sizes every sidebar row by its bold, active form, so no row moves when it becomes active', () => {
+    // The layout check needs a browser: `node scripts/check-sidebar-rows.mjs` after a build.
+    const sidebar = new DOMParser().parseFromString(renderPath('/welcome/'), 'text/html').querySelector('nav.docs-navigation')!
+    const links = [...sidebar.querySelectorAll('a')]
+    expect(links.length).toBeGreaterThan(30)
+    for (const link of links) {
+      const label = link.querySelector(':scope > .docs-nav-label')
+      expect(label?.getAttribute('data-label'), link.getAttribute('href')!).toBe(link.textContent)
+    }
+    expect(readFileSync('src/style.css', 'utf8')).toMatch(/\.docs-nav-label::after \{ content: attr\(data-label\)[^}]*font-weight: 600[^}]*visibility: hidden/)
+  })
+
+  it('lists Vision under Where this goes, after the app, and renders it in the docs layout', () => {
     render(<Router pathname="/vision/" />)
 
     const [sidebar] = screen.getAllByRole('navigation', { name: 'Documentation navigation' })
-    const startHere = within(sidebar).getAllByRole('link').map((link) => link.textContent).slice(0, 6)
-    expect(startHere).toEqual(['Welcome', 'Quick Start', 'Chief of Staff', 'How It Works', 'Vision', 'Team'])
+    const group = (name: string) => [...[...sidebar.querySelectorAll('.docs-nav-group')].find((section) => section.querySelector('h2')?.textContent === name)!.querySelectorAll('a')].map((link) => link.textContent)
+    expect(group('Start here')).toEqual(['Welcome', 'Quick Start'])
+    expect(group('Your team')).toEqual(['One place for the team', 'Bots that own a job', 'Chief of Staff', 'Tasks in the open', 'The feed', 'Exactly enough access', "Your computers, the team's"])
+    expect(group('The app')).toEqual(['Models on your subscriptions', 'Agents That Never Die', 'Happy on your phone', 'Talk to it'])
+    expect(group('Where this goes')).toEqual(['Vision', 'Who builds it'])
     const visionLink = within(sidebar).getByRole('link', { name: 'Vision' })
     expect(visionLink.getAttribute('href')).toBe('/vision/')
     expect(visionLink.getAttribute('aria-current')).toBe('page')
-    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/how it works/i)
-    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/team/i)
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/talk to it/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/who builds it/i)
+    // The thesis is the pull quote under the h1, never a second line in the sidebar.
+    expect(sidebar.textContent).not.toContain('run on one app')
+    expect(document.querySelector('.document-content > h1 + .document-thesis')?.textContent).toBe("A company should be able to run on one app. We're building it in the open.")
     expect(within(screen.getByRole('navigation', { name: 'Primary navigation' })).getByRole('link', { name: 'Docs' }).getAttribute('aria-current')).toBe('page')
     expect(documents.filter((document) => document.path === 'vision')).toHaveLength(1)
   })
@@ -405,7 +430,7 @@ describe('static document pages', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: /^team/i })).toBeTruthy()
     expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/vision/i)
-    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/multiplayer & teams/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/how it works/i)
     const content = container.querySelector('.document-content')!
     expect(content.querySelector('h1 + p')?.textContent).toBe('Happy is currently built by the two of us, with help from contributors on GitHub.')
     const people = [...content.querySelectorAll('h2')]
@@ -450,39 +475,37 @@ describe('static document pages', () => {
     expect(after.every((video, index) => video === before[index])).toBe(true)
   })
 
-  it('leads Features with Multiplayer, which sells the experience under its video; the deployment detail is the Team Server guide', () => {
-    const features = listedDocumentsForProduct('desktop').filter((document) => document.group === 'Features')
-    expect(features[0].path).toBe('multiplayer')
+  it('opens Your team with Multiplayer, the overview that links down to bots, tasks, and the feed; the table is on its Compare page', () => {
+    const team = listedDocumentsForProduct('desktop').filter((document) => document.group === 'Your team')
+    expect(team[0].path).toBe('multiplayer')
     const { container, unmount } = render(<Router pathname="/multiplayer/" />)
-    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/team/i)
-    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/models & subscriptions/i)
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/quick start/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/bots that own a job/i)
     const content = container.querySelector('.document-content')!
-    // The experience leads: h1, first-person lede, and the video, before the story sections.
-    const top = [...content.children].slice(0, 3)
+    // h1, the thesis as its pull quote, the film, which opens the story, then the prose and the four things a team shares.
+    const top = [...content.children].slice(0, 4)
     expect(top[0].tagName).toBe('H1')
-    expect(top[1].textContent).toMatch(/^One place for you, your team, and your agents\./)
-    expect(top[2].querySelector('video.autoplay-clip')?.getAttribute('src')).toBe('/video/multiplayer/clip.mp4')
-    expect(top[2].querySelector('video')?.getAttribute('poster')).toBe('/video/multiplayer/poster.webp')
-    expect(top[1].textContent).toContain('most of our tasks start as conversations with agents')
-    expect(top[2].querySelector('video')?.hasAttribute('loop')).toBe(true)
+    expect(top[1].className).toBe('document-thesis')
+    expect(top[1].textContent).toBe('Your team already works through agents. Give that work one address.')
+    expect(top[2].querySelector('video.autoplay-clip')).not.toBeNull()
+    expect(top[3].textContent).toMatch(/^A lot of a team's work now starts as a conversation with an agent\./)
+    expect([...content.querySelector('ul')!.querySelectorAll(':scope > li > a:first-child')].map((link) => link.textContent)).toEqual(['Tasks', 'Bots', 'The feed', 'Shared lists, documents, and calendars'])
+    const film = content.querySelector('video.autoplay-clip')!
+    expect(film.getAttribute('src')).toBe('/video/multiplayer/clip.mp4')
+    expect(film.getAttribute('poster')).toBe('/video/multiplayer/poster.webp')
+    expect(film.hasAttribute('loop')).toBe(true)
     expect(content.querySelectorAll('video')).toHaveLength(1)
-    // Artifacts belong to Activity; steering, phone access, and shared surfaces stay in one short section.
+    for (const href of ['/tasks/', '/bots/', '/feed/', '/permissions/', '/computers/']) {
+      expect(content.querySelector(`a[href="${href}"]`), href).not.toBeNull()
+    }
     const sections = [...content.querySelectorAll('h2')].map((heading) => heading.textContent?.replace(/#$/, ''))
-    expect(sections).toEqual(["See who's working on what", 'See the most important updates from the team', 'Shared bots for the standing jobs', 'Also', 'Happy vs Cursor Projects, Claude Projects, ChatGPT projects, and Capy AI', 'Run your own team server'])
-    // The bots still is the only picture beneath the video; it keeps the full window visible.
-    const images = [...content.querySelectorAll('img')]
-    expect(images).toHaveLength(1)
-    expect(images[0].getAttribute('src')).toBe('/video/multiplayer/bots/still.webp')
-    expect(images[0].getAttribute('loading')).toBe('lazy')
-    expect(images[0].getAttribute('alt')).toMatch(/full Happy Desktop window.*Six bots.*Desktop Releases is selected/)
-    // The phone is a short paragraph in Also, not another illustrated section.
-    const away = [...content.querySelectorAll('p')].find((paragraph) => paragraph.textContent!.startsWith('On your phone.'))!
-    expect(away.previousElementSibling?.textContent).toMatch(/^Step in when it's your call\./)
-    expect(away.querySelector('a[href="/mobile/"]')).not.toBeNull()
-    // Awareness leads and steering is the exception; the phone is never the headline action.
+    expect(sections).toEqual(['It asks the right person', 'Who can do what, and where it runs', 'The details', 'Shared todo lists, documents, and calendars', 'Use it from your phone', 'Run your own team server'])
+    // No competitor on a reading-path page, not even a link line: Compare is in the sidebar.
+    expect(content.querySelector('table')).toBeNull()
+    expect(content.querySelector('a[href="/cursor-projects-claude-team-capy/"]')).toBeNull()
     const text = content.textContent!
-    expect(text).toContain('Each new version folds into the same card.')
-    expect(text).not.toMatch(/Anyone can steer|on Desktop and on your phone|\bFeed\b|no invite button/)
+    expect(text).not.toMatch(/Capy AI|ChatGPT shared projects|Claude Projects/)
+    expect(text).not.toMatch(/Anyone can steer|on Desktop and on your phone|no invite button/)
     // People-chat Surfaces are not advertised yet.
     expect(text).not.toMatch(/calendars, and chats|chats among people/)
     // It sells what a teammate sees and does; the engineering lives in the guide, linked once.
@@ -496,8 +519,11 @@ describe('static document pages', () => {
     expect(prompts[1].textContent).toMatch(/To add teammates, simply ask the Chief of Staff:/)
     expect([...prompts[1].querySelectorAll('.cos-prompt-text')].map((prompt) => prompt.textContent)).toEqual(['Invite bob@example.com to the Acme team', 'Connect me to the Acme team'])
     for (const prompt of prompts) expect(content.querySelector('#run-your-own-team-server')!.compareDocumentPosition(prompt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    unmount()
+
     // The comparison quotes each vendor in a few words; its sources and dates are one line under it.
-    const table = content.querySelector('table')!
+    const compare = render(<Router pathname="/cursor-projects-claude-team-capy/" />)
+    const table = compare.container.querySelector('.document-content table')!
     expect([...table.querySelectorAll('thead th')].map((cell) => cell.textContent)).toEqual(['', 'Cursor Projects', 'Claude Projects, Team plan', 'ChatGPT shared projects', 'Capy AI', 'Happy'])
     expect(table.querySelector('tbody th, tbody td')?.textContent).toBe('Working together')
     expect(table.querySelectorAll('a')).toHaveLength(0)
@@ -505,7 +531,9 @@ describe('static document pages', () => {
     const sources = table.closest('.document-table-wrap')!.nextElementSibling!
     expect(sources.textContent).toMatch(/^Quoted from Cursor.*Nov 10, 2026.*Sep 10, 2026.*updated Nov 6, 2026.*read Nov 10, 2026\. Capy's.*updated Oct 24, 2026.*read Nov 13, 2026\.$/)
     expect(sources.querySelectorAll('a')).toHaveLength(12)
-    unmount()
+    expect(compare.container.querySelector('#where-they-are-better')).not.toBeNull()
+    expect(getDocument('desktop', 'cursor-projects-claude-team-capy')!.group).toBe('Compare')
+    compare.unmount()
 
     const guide = getDocument('desktop', 'guides/team-server')!
     expect(guide.group).toBe('Guides')
@@ -521,28 +549,32 @@ describe('static document pages', () => {
     expect(markup).not.toMatch(/cloud|hosted option|Happy-hosted/i)
   })
 
-  it('lists Secrets under Features after Permissions, with a search title and description that fit', () => {
+  it('lists Secrets under the hood after Workspaces, with a search title and description that fit', () => {
     render(<Router pathname="/secrets/" />)
 
     expect(screen.getAllByRole('heading', { level: 1 }).map((heading) => heading.id)).toEqual(['secrets'])
-    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/permissions & sandbox/i)
-    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/projects & workspaces/i)
+    expect(screen.getByRole('link', { name: /^previous/i }).textContent).toMatch(/projects & workspaces/i)
+    expect(screen.getByRole('link', { name: /^next/i }).textContent).toMatch(/skills & mcp/i)
     const secrets = getDocument('desktop', 'secrets')!
-    expect(secrets.group).toBe('Features')
+    expect(secrets.group).toBe('Under the hood')
     expect(secrets.pageTitle?.length).toBeLessThanOrEqual(65)
     expect(secrets.description.length).toBeLessThanOrEqual(155)
     expect(metadataForPath('/secrets/').title).toBe(secrets.pageTitle)
     const markup = renderPath('/secrets/')
-    // Every section the page promises; the comparison links each other project's own docs, and no source list closes the page.
-    for (const heading of ['One secret catalog per installation', 'Create and update a secret', 'What the model sees, and never sees', 'Attach a secret to an agent, workspace, or project', 'How a command receives a secret', 'Secrets, the sandbox, and Auto review', 'Where secrets are stored on disk', 'Secrets in Happy Desktop', 'What team members can do with secrets', 'How Happy compares with Hermes Agent and OpenClaw']) {
+    // Every section the page promises, and no source list closes the page.
+    for (const heading of ['One secret catalog per installation', 'Create and update a secret', 'What the model sees, and never sees', 'Attach a secret to an agent, workspace, or project', 'How a command receives a secret', 'Secrets, the sandbox, and Auto review', 'Where secrets are stored on disk', 'Secrets in Happy Desktop', 'What team members can do with secrets']) {
       expect(markup).toContain(`>${heading}<`)
     }
+    // The comparison moved whole to its Compare page, linked in one line; it links each other project's own docs.
+    expect(markup).toContain('href="/hermes-agent-openclaw-secrets/"')
+    const comparison = renderPath('/hermes-agent-openclaw-secrets/')
+    expect(comparison).toContain('>How Happy compares with Hermes Agent and OpenClaw<')
     for (const href of [
       'https://hermes-agent.nousresearch.com/docs/user-guide/secrets/',
       'https://docs.openclaw.ai/gateway/secrets/secret-store-and-egress',
       'https://docs.openclaw.ai/tools/secrets',
     ]) {
-      expect(markup).toContain(`href="${href}"`)
+      expect(comparison).toContain(`href="${href}"`)
     }
     // The diagram, with no narration about it; and the sandbox page points here.
     expect(markup).toContain('src="/img/secrets.svg"')
@@ -555,14 +587,14 @@ describe('static document pages', () => {
     expect(documents.filter((document) => document.path === 'secrets')).toHaveLength(1)
   })
 
-  it('lists Blog before Comparisons, collapsed Changelog next and collapsed Recipes last; keeps the old Blog URLs', () => {
+  it('lists Blog after Compare, collapsed Changelog next and the one Recipes link last; keeps the old Blog URLs', () => {
     render(<Router pathname="/workos/" />)
 
     const [sidebar] = screen.getAllByRole('navigation', { name: 'Documentation navigation' })
     const groups = [...sidebar.querySelectorAll('.docs-nav-group > h2, .docs-nav-fold > summary')]
-    expect(groups.map((heading) => heading.textContent)).toEqual(['Start here', 'Features', 'Guides', 'Blog', 'Comparisons', 'Changelog', 'Recipes (for agents)'])
+    expect(groups.map((heading) => heading.textContent)).toEqual(['Start here', 'Your team', 'The app', 'Where this goes', 'Under the hood', 'Guides', 'Compare', 'Blog', 'Changelog', 'For agents'])
     const posts = within(groups.find((heading) => heading.textContent === 'Blog')!.closest('section')!).getAllByRole('link').map((link) => link.getAttribute('href'))
-    expect(posts).toEqual(['/workos/', '/tailcat/', '/voice/', '/updates/', '/stem-cell/'])
+    expect(posts).toEqual(['/workos/', '/tailcat/', '/updates/', '/stem-cell/'])
     expect(screen.getByRole('heading', { level: 1, name: /team sign-in with workos/i })).toBeTruthy()
     // Server markup: the landing pages' effects need browser APIs jsdom lacks.
     const header = renderPath('/welcome/').match(/<nav[^>]*aria-label="Primary navigation"[\s\S]*?<\/nav>/)?.[0]
@@ -578,17 +610,25 @@ describe('static document pages', () => {
     expect(thesisMetadata.robots).toBeUndefined()
   })
 
-  it('keeps changelog and recipe links in served HTML but folds both by default', () => {
+  it('folds the changelog by default and shows the recipes as one link, every recipe page still served', () => {
     const markup = renderPath('/recepies/')
     const parsed = new DOMParser().parseFromString(markup, 'text/html')
+    // Two copies of the navigation: the sidebar and the phone menu.
     const folds = parsed.querySelectorAll('details.docs-nav-fold')
-    expect(folds).toHaveLength(4)
+    expect(folds).toHaveLength(2)
     for (const fold of folds) {
       expect(fold.hasAttribute('open')).toBe(false)
-      const summary = fold.querySelector('summary')?.textContent
-      expect(['Changelog', 'Recipes (for agents)']).toContain(summary)
-      expect(fold.querySelectorAll('a')).toHaveLength(summary === 'Changelog' ? 1 : 18)
+      expect(fold.querySelector('summary')?.textContent).toBe('Changelog')
+      expect(fold.querySelectorAll('a')).toHaveLength(1)
     }
+    const [sidebar] = parsed.querySelectorAll('nav.docs-navigation')
+    const forAgents = [...sidebar.querySelectorAll('.docs-nav-group')].find((section) => section.querySelector('h2')?.textContent === 'For agents')!
+    expect([...forAgents.querySelectorAll('a')].map((link) => [link.textContent, link.getAttribute('href')])).toEqual([['Recipes', '/recepies/']])
+    // An open recipe shows under the one link, which marks where you are; the index lists them all.
+    const recipe = new DOMParser().parseFromString(renderPath('/recepies/runner/'), 'text/html').querySelector('nav.docs-navigation')!
+    const recipeGroup = [...recipe.querySelectorAll('.docs-nav-group')].find((section) => section.querySelector('h2')?.textContent === 'For agents')!
+    expect([...recipeGroup.querySelectorAll('a')].map((link) => [link.textContent, link.getAttribute('aria-current')])).toEqual([['Recipes', 'true'], ['Add a dedicated runner', 'page']])
+    for (const file of recipeSources.files) expect(prerenderedPaths).toContain(`/${file.route}/`)
   })
 
   it('publishes complete, unmodified recipe sources with source-relative links', () => {
@@ -618,7 +658,7 @@ describe('static document pages', () => {
     expect(page.querySelector('article video')?.getAttribute('src')).toBe('/video/terra.mp4')
     expect(page.querySelector('article a[href="/changelog/"]')?.textContent).toBe('All releases')
     expect(page.querySelectorAll('details.docs-nav-fold[open]')).toHaveLength(0)
-    expect(page.querySelectorAll('details.docs-nav-fold')).toHaveLength(4)
+    expect(page.querySelectorAll('details.docs-nav-fold')).toHaveLength(2)
     expect(metadataForPath(path)).toMatchObject({
       canonicalPath: path,
       socialImage: { path: '/og/terra.png', width: 1200, height: 675 },
@@ -648,6 +688,32 @@ describe('static document pages', () => {
     }
   })
 
+  it('opens Quick Start on the downloads, then teaches repositories, tasks, and bots, with prompts the Chief of Staff page documents', () => {
+    const markup = renderPath('/quick-start/')
+    const download = markup.indexOf('class="happy-one document-download"')
+    expect(download).toBeGreaterThan(markup.indexOf('class="document-thesis"'))
+    expect(download).toBeLessThan(markup.indexOf('<p>You need macOS'))
+    const headings = [...markup.matchAll(/<h2 id="([^"]+)"/g)].map(([, id]) => id)
+    expect(headings).toEqual(['repositories', 'tasks', 'bots', 'then-bring-your-team', 'install-notes'])
+    // The app's word "project" appears once, where the reader meets it in the UI (DESIGN.md, Copy).
+    expect(markup.match(/\bproject\b/gi)).toHaveLength(1)
+    const prompts = (path: string) => [...renderPath(path).matchAll(/<p class="cos-prompt-text">([^<]+)<\/p>/g)].map(([, prompt]) => prompt)
+    const documented = [...prompts('/chief-of-staff/'), ...prompts('/guides/team-server/')]
+    expect(prompts('/quick-start/').filter((prompt) => !documented.includes(prompt))).toEqual([])
+    // Stills in Tasks and Bots, none in Repositories: one picture each, so the browser fetches one file,
+    // the desktop cut on a wide screen and the phone cut elsewhere, each in the system's scheme.
+    const stills = [...markup.matchAll(/<span class="doc-still" data-still="([^"]+)">[\s\S]*?<picture>([\s\S]*?)<\/picture>/g)]
+    expect(stills.map(([, name]) => name)).toEqual(['quick-start-task-tree', 'quick-start-chief-of-staff'])
+    for (const [, name, picture] of stills) {
+      const files = [...picture.matchAll(/(?:srcSet|src)="\/img\/docs\/([^"]+)"/g)].map(([, file]) => file)
+      expect(files).toEqual([`${name}.desktop.dark.webp`, `${name}.desktop.light.webp`, `${name}.phone.dark.webp`, `${name}.phone.light.webp`])
+      expect(picture).toMatch(/<source media="\(prefers-color-scheme: dark\) and \(min-width: \d+px\)"/)
+    }
+    // Its first picture is in Tasks, below the fold: lazy, sized before it loads. Welcome's window, in its opening, loads with the page.
+    expect(markup).toMatch(/<img src="\/img\/docs\/quick-start-task-tree.phone.light.webp" alt="[^"]+" width="345" height="314" loading="lazy"/)
+    expect(renderPath('/welcome/')).toMatch(/<img src="\/img\/docs\/welcome-window.webp" alt="[^"]+" width="2266" height="1600" loading="eager"/)
+  })
+
   it('puts a copyable Chief of Staff prompt right after the intro of every page it can help with', () => {
     const withPrompt = ['quick-start', 'chief-of-staff', 'models', 'permissions', 'secrets', 'workspaces', 'agents', 'mobile', 'multiplayer', 'extending', 'guides/configuration', 'guides/remote-server', 'guides/team-server', 'migrate']
     for (const document of documentsForProduct('desktop')) {
@@ -657,10 +723,15 @@ describe('static document pages', () => {
         expect(block, document.path).toBe(-1)
         continue
       }
-      // The prompt is plain text in the served page, before the reference sections; quick-start's sits in its First project step.
+      // The prompt is plain text in the served page, before the reference sections; Quick Start's sit in its Repositories, Bots, and team sections.
       expect(block, document.path).toBeGreaterThan(markup.indexOf('<h1'))
       // Multiplayer keeps setup in its server section; Quick Start has its own sequence of steps.
-      if (document.path !== 'quick-start' && document.path !== 'multiplayer') {
+      // A reading-path page whose story runs to several sections carries it at the top of The details.
+      const details = markup.indexOf('<h2 id="the-details"')
+      if (document.path === 'permissions') {
+        expect(block, document.path).toBeGreaterThan(details)
+        expect(block, document.path).toBeLessThan(markup.indexOf('<h2', details + 1))
+      } else if (document.path !== 'quick-start' && document.path !== 'multiplayer') {
         expect(block, document.path).toBeLessThan(markup.indexOf('<h2', markup.indexOf('<h1')))
       }
       // A line naming the page's task, then each prompt under a header row: "Example" left, Copy right.

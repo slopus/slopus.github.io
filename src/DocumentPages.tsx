@@ -1,11 +1,16 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState, type ComponentProps } from 'react'
 import type { Components } from 'react-markdown'
 import { DownloadOptions } from './DownloadOptions'
 import { GrainGradient, SITE_SURFACE } from './GrainGradient'
 import type { MacArchitecture } from './desktopDownloads'
 import { MarkdownDocument } from './MarkdownDocument'
+import { prefetchFirstPicture } from './firstPicture'
 import {
+  adjacentDocuments,
+  documentGroupLabel,
+  documentLabel,
   documentGroupsForProduct,
+  documentParent,
   listedDocumentsForProduct,
   getDocument,
   getDocumentSource,
@@ -28,6 +33,25 @@ function DocsNavigation({
   activeDocument: DocumentEntry
 }) {
   const productDocuments = listedDocumentsForProduct(product.key)
+  const activeParent = documentParent(activeDocument)
+
+  const item = (document: DocumentEntry, children: DocumentEntry[] = []) => {
+    const active = document.path === activeDocument.path
+    // A recipe shows under the one Recipes link only while it is open; the index lists them all.
+    const shown = children.filter((child) => child.parent || child.path === activeDocument.path)
+    return (
+      <li key={document.path}>
+        <a
+          href={documentHref(product, document.path)}
+          aria-current={active ? 'page' : document.path === activeParent ? 'true' : undefined}
+        >
+          {/* data-label sizes the row for the label's bold, active form, so no row moves when it becomes active. */}
+          <span className="docs-nav-label" data-label={documentLabel(document)}><span>{documentLabel(document)}</span></span>
+        </a>
+        {shown.length > 0 && <ul className="docs-nav-children">{shown.map((child) => item(child))}</ul>}
+      </li>
+    )
+  }
 
   return (
     <nav className="docs-navigation" aria-label="Documentation navigation">
@@ -41,29 +65,21 @@ function DocsNavigation({
 
         const links = (
           <ul>
-            {groupDocuments.map((document) => (
-              <li key={document.path}>
-                <a
-                  href={documentHref(product, document.path)}
-                  aria-current={document.path === activeDocument.path ? 'page' : undefined}
-                >
-                  {document.title}
-                </a>
-              </li>
-            ))}
+            {groupDocuments.filter((document) => !documentParent(document)).map((document) =>
+              item(document, groupDocuments.filter((child) => documentParent(child) === document.path)))}
           </ul>
         )
 
-        return group === 'Recipes' || group === 'Changelog' ? (
+        return group === 'Changelog' ? (
           <section className="docs-nav-group" key={group}>
             <details className="docs-nav-fold">
-              <summary>{group === 'Recipes' ? 'Recipes (for agents)' : 'Changelog'}</summary>
+              <summary>Changelog</summary>
               {links}
             </details>
           </section>
         ) : (
           <section className="docs-nav-group" key={group}>
-            <h2>{group}</h2>
+            <h2>{documentGroupLabel(group)}</h2>
             {links}
           </section>
         )
@@ -94,9 +110,9 @@ function DocsMobileNavigation({
         aria-controls="docs-mobile-menu"
         onClick={() => setIsOpen((open) => !open)}
       >
-        <span className="docs-mobile-trail-group">{activeDocument.group === 'Recipes' ? 'Recipes (for agents)' : activeDocument.group}</span>
+        <span className="docs-mobile-trail-group">{documentGroupLabel(activeDocument.group)}</span>
         <span aria-hidden="true">/</span>
-        <span className="docs-mobile-trail-page">{activeDocument.title}</span>
+        <span className="docs-mobile-trail-page">{documentLabel(activeDocument)}</span>
       </button>
       <div
         id="docs-mobile-menu"
@@ -159,19 +175,31 @@ export function DocsPage({ product = HAPPY, path, changelogPath }: { product?: P
     if (sidebarScrollbarTimer.current !== null) window.clearTimeout(sidebarScrollbarTimer.current)
   }, [])
 
+  // Nearing the foot of the page starts loading the Next page's first picture.
+  useEffect(() => {
+    const scroller = article.current
+    const next = scroller?.querySelector<HTMLAnchorElement>('.document-pagination-next')
+    if (!scroller || !next || typeof IntersectionObserver === 'undefined') return
+    const root = getComputedStyle(scroller).overflowY === 'auto' ? scroller : null
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      observer.disconnect()
+      prefetchFirstPicture(new URL(next.href).pathname)
+    }, { root, rootMargin: '0px 0px 900px 0px' })
+    observer.observe(next)
+    return () => observer.disconnect()
+  }, [path])
+
   if (!activeDocument) {
     return <NotFoundPage />
   }
 
-  const productDocuments = listedDocumentsForProduct(product.key)
   const changelogEntry = changelogPath ? changelogEntryForPath(changelogPath) : undefined
   const markdown = changelogEntry ? changelogMarkdown(changelogEntry) : activeDocument.group === 'Recipes'
     ? getDocumentSource(activeDocument)
     : prepareMarkdown(getDocumentSource(activeDocument))
   // An unlisted page sits outside the reading order, so it gets no previous or next.
-  const activeIndex = productDocuments.indexOf(activeDocument)
-  const previousDocument = activeIndex === -1 ? undefined : productDocuments[activeIndex - 1]
-  const nextDocument = activeIndex === -1 ? undefined : productDocuments[activeIndex + 1]
+  const { previous: previousDocument, next: nextDocument } = adjacentDocuments(activeDocument)
 
   return (
     <div className="site-shell document-site-shell docs-shell site-theme">
@@ -202,7 +230,7 @@ export function DocsPage({ product = HAPPY, path, changelogPath }: { product?: P
           {markdown.split(DOWNLOAD_LINE).map((part, index) => (
             <Fragment key={index}>
               {index > 0 && <PageDownload />}
-              <MarkdownDocument markdown={part} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} resolveHref={activeDocument.group === 'Recipes' ? (href) => recipeHref(activeDocument.path, href) : undefined} headingId={activeDocument.group === 'Changelog' ? (text, depth) => {
+              <MarkdownDocument markdown={part} thesis={index === 0 && !changelogEntry ? activeDocument.thesis : undefined} originalDocsLinks={product.key === HAPPY.key} components={activeDocument.essay ? essayComponents : undefined} resolveHref={activeDocument.group === 'Recipes' ? (href) => recipeHref(activeDocument.path, href) : undefined} headingId={activeDocument.group === 'Changelog' ? (text, depth) => {
                 const entry = depth < 3 ? productionChangelogEntries.find((entry) => entry.title === text) : undefined
                 return entry ? changelogAnchor(entry) : undefined
               } : undefined} headingSuffix={activeDocument.group === 'Changelog' ? (text, depth) => {
@@ -217,13 +245,13 @@ export function DocsPage({ product = HAPPY, path, changelogPath }: { product?: P
             {previousDocument ? (
               <a href={documentHref(product, previousDocument.path)}>
                 <span>Previous</span>
-                {previousDocument.title}
+                {documentLabel(previousDocument)}
               </a>
             ) : <span />}
             {nextDocument ? (
               <a className="document-pagination-next" href={documentHref(product, nextDocument.path)}>
                 <span>Next</span>
-                {nextDocument.title}
+                {documentLabel(nextDocument)}
               </a>
             ) : <span />}
           </nav>
@@ -307,10 +335,11 @@ const ESSAY_PIG = '/thesis/pig.png'
 /** What an essay (`essay: true` in src/documents.ts) renders differently from a plain docs page. */
 const essayComponents: Components = {
   // The pig beside the first bullet. Any other inline image renders as usual.
-  img: ({ node: _node, alt, src, ...props }) =>
+  // The essay's first picture loads with the page (rehypeFirstImage in src/MarkdownDocument.tsx).
+  img: ({ node, alt, src, 'data-eager': _eager, ...props }: ComponentProps<'img'> & { node?: { properties?: Record<string, unknown> }; 'data-eager'?: unknown }) =>
     src === ESSAY_PIG
-      ? <img {...props} src={src} alt={alt ?? ''} className="essay-pig" width="120" height="117" loading="lazy" />
-      : <img {...props} src={src} alt={alt ?? ''} loading="lazy" />,
+      ? <img {...props} src={src} alt={alt ?? ''} className="essay-pig" width="120" height="117" loading={node?.properties?.dataEager ? 'eager' : 'lazy'} />
+      : <img {...props} src={src} alt={alt ?? ''} loading={node?.properties?.dataEager ? 'eager' : 'lazy'} />,
   // An image alone on its line is a figure. Screenshots float beside the paragraph that follows.
   p: ({ node, children, ...props }) => {
     const [only, ...rest] = node?.children ?? []
@@ -330,7 +359,7 @@ const essayComponents: Components = {
       const caption = only.properties.title ? String(only.properties.title) : undefined
       return (
         <figure className={figure?.place ? `essay-figure essay-figure-${figure.place}` : 'essay-figure'}>
-          <img src={src} alt={alt} width={figure?.width} height={figure?.height} loading="lazy" />
+          <img src={src} alt={alt} width={figure?.width} height={figure?.height} loading={only.properties.dataEager ? 'eager' : 'lazy'} />
           {caption && <figcaption>{caption}</figcaption>}
         </figure>
       )

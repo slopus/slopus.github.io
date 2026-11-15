@@ -578,7 +578,7 @@ for (const route of ['guides/remote-agents', 'desktop/docs/guides/remote-agents'
 const visionHtml = await readFile(path.join(distRoot, 'vision', 'index.html'), 'utf8')
 const visionApp = visionHtml.slice(visionHtml.indexOf('<div id="app">'))
 const visionSource = await readFile(path.join(projectRoot, 'content', 'thesis.md'), 'utf8')
-if (!visionApp.includes('href="/vision/" aria-current="page">Vision</a>')) {
+if (!visionApp.includes('href="/vision/" aria-current="page"><span class="docs-nav-label" data-label="Vision"><span>Vision</span></span></a>')) {
   throw new Error('/vision/ should be the current page in the docs sidebar')
 }
 // The essay's images ship from public/; the build fails if one is missing or not rendered.
