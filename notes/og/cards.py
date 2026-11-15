@@ -49,8 +49,9 @@ CARD_FIGURES = {
     # The sidebar from the homepage demo (public/video/happy-one/v22/desktop.mp4, first frame).
     "/chief-of-staff/": "/__figures/chief-of-staff-sidebar.png",
     # A docs still's first picture on a phone is its phone cut, too tall and narrow for a card: a
-    # 400×417 app px region of its light desktop cut instead, 1.3 card px per app px, its real edges
-    # drawn and its cut edges dissolving (welcome-window adds the traffic lights its chrome reserves).
+    # region of its light desktop cut instead that fills the figure box, its real edges drawn and its
+    # cut edges dissolving. A sidebar-plus-pane cut ends crisp on the sidebar's divider, never on a
+    # half-shown pane; welcome-window adds the traffic lights its chrome reserves.
     # notes/og/still_figures.sh makes them.
     "/welcome/": "/__figures/welcome-window.png",
     "/tasks/": "/__figures/tasks-teammate.png",
