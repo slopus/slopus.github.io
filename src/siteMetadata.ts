@@ -18,15 +18,15 @@ export interface PageMetadata {
  * Every page without its own card shares it, the original CLI docs included.
  */
 export const defaultSocialImage = {
-  path: '/og/happy-harness-v26.png', width: 1200, height: 630,
-  alt: 'Happy Harness with the model list open and Opus hovered, beside Orchestrate Claude, Codex, Grok, Gemini and more in one app, Free and open source, and 24k GitHub stars.',
+  path: '/og/happy-home-v27.png', width: 1200, height: 630,
+  alt: 'Happy, One place for you, your team, and your agents, Free and open source, and 24k GitHub stars, beside the Happy Desktop window with the model list open and Opus hovered.',
 } as const
 
 /**
  * X, Slack and iMessage cache a preview by its image URL. Bump this after redrawing the
  * cards, so links shared before show the new ones.
  */
-export const SOCIAL_IMAGE_VERSION = 10
+export const SOCIAL_IMAGE_VERSION = 11
 
 /** The absolute og:image and twitter:image URL of a card, with its cache-busting version. */
 export function socialImageUrl(image: Readonly<{ path: string }>) {
@@ -75,14 +75,14 @@ export function socialVideoTags(video: NonNullable<PageMetadata['socialVideo']>)
  * read for /, and scripts/generate-static-routes.mjs in sync.
  */
 export const homepageMetadata: PageMetadata = {
-  title: 'Happy — Open-Source Harness for Claude Code, Codex, Grok, Gemini & More',
+  title: 'Happy — One Place for Your Team and Its Coding Agents: Claude Code, Codex, Grok, Gemini',
   description:
-    'Happy Engineering (previously Happy Coder): orchestrate Claude, Codex, Grok, Gemini and more in one app, on desktop and phone. Open source, reusing your subscriptions.',
+    'Happy is the open-source app where a team and its coding agents work in one place. Shared tasks, shared bots, and a feed, on the Claude, Codex, Grok, and Gemini subscriptions you already pay for.',
   canonicalPath: '/',
-  socialTitle: 'Any Model. Your Subscription. Happy Harness.',
-  // The link preview keeps its own text; the search snippet above adds the old name and the phone.
+  // The hero line. The card image itself still shows the old headline until it is regenerated (docs/happy-one-demo.md).
+  socialTitle: 'One place for you, your team, and your agents.',
   socialDescription:
-    'Orchestrate Claude, Codex, Grok, Gemini and more in one app. Happy is an open-source harness that reuses the subscriptions you already pay for.',
+    'Happy is the open-source app where a team and its coding agents work in one place, on the Claude, Codex, Grok, and Gemini subscriptions you already pay for.',
 }
 
 /** The original Happy CLI docs. Kept at their URLs, in maintenance mode. */
@@ -94,9 +94,9 @@ export const docsMetadata: PageMetadata = {
 }
 
 export const desktopDocsMetadata: PageMetadata = {
-  title: 'Happy Docs: Orchestrate Claude, Codex, Grok, Gemini and More',
+  title: 'Happy Docs: One Place for Your Team and Its Claude, Codex, Grok, and Gemini Agents',
   description:
-    'Happy is an open-source harness for orchestrating Claude, Codex, Grok, Gemini, and more in one desktop app, reusing your subscriptions: where to start.',
+    'Happy is the open-source app where a team and its agents work in one place: shared tasks, shared bots, a feed, and permissions, on Claude, Codex, Grok, and Gemini.',
   canonicalPath: '/welcome/',
 }
 
@@ -125,7 +125,7 @@ export const releasesMetadata: PageMetadata = {
  */
 export const thesisMetadata: PageMetadata = {
   title: 'Vision — Happy',
-  description: 'What Happy is betting on: one primary agent, chat that left the chat, phone first, one harness, and open source with no lock-in.',
+  description: 'What Happy is betting on: one primary agent, chat that left the chat, phone first, one harness, open source with no lock-in, and a company that runs on one app.',
   canonicalPath: '/vision/',
 }
 

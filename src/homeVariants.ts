@@ -1,5 +1,5 @@
 /**
- * The homepage's headline, and its link-preview card's: `?preview=og` is the card's screenshot
+ * The homepage's headline, which its link-preview card shares: `?preview=og` is the card's screenshot
  * mode (docs/happy-one-demo.md). On the dev server only, `?palette=` and `?hero=` show the
  * variants still under review (homeVariantsDev.ts); the build leaves them out and ignores them.
  */
@@ -17,8 +17,12 @@ export type Headline = {
 /** Kirill's line under the name, plain. */
 export const HOME_HEADLINE: Headline = { lines: ['Happy'], sub: 'One place for you, your team, and your agents.', name: true }
 
-/** The link-preview image's headline (`?preview=og`), until the card is regenerated. */
-export const SOCIAL_HEADLINE: Headline = { lines: ['Any Model.', 'Your Subscription.', '*Happy Harness*'] }
+/**
+ * The one positioning line under the hero, the only place outside the Compare pages that names a
+ * competitor (DESIGN.md, Positioning). Set it to undefined to drop the line.
+ */
+export const HOME_ALTERNATIVE: string | undefined = 'The open-source alternative to Cursor Projects, Claude Team, and Capy.'
+
 
 /** The native start screens' palette (happy-home.css). */
 export const PALETTE_DEFAULT = 'lavender'

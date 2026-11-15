@@ -9,3 +9,6 @@ Telegram animated emoji as Lottie JSON (512×512, 60fps). The `.tgs` files are g
 | `f1-car.json` | Kirill's `f1 car.tgs`, supplied 4 November 2026, decompressed (its frames run 240–420) |
 | `open-source.json` | Kirill's `open source.tgs`, supplied 2 November 2026, decompressed |
 | `rainbow.json` | Kirill's `rainbow.tgs`, supplied 2 November 2026, decompressed |
+| `robot.json` | happy-list `sources/assets/animations/robot.json` (SHA-256 `eeabc392…`, the file happy-desktop's provenance lists) |
+| `confetti-ball.json` | happy-desktop `packages/happy-desktop-ui/src/assets/animations/confetti-ball.json` |
+| `cloud-variation.json` | happy-desktop `packages/happy-desktop-ui/src/assets/animations/cloud-variation.json` |

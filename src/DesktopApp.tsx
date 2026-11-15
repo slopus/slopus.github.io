@@ -1,10 +1,10 @@
 import { Suspense, lazy, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { GITHUB_HAPPY, GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
-import { HAPPY_DESCRIPTOR, HAPPY_DESKTOP, HAPPY_DISCORD } from './products'
+import { HAPPY_DESKTOP, HAPPY_DISCORD } from './products'
 import { HappyOneDemo } from './HappyOneDemo'
 import { GrainGradient } from './GrainGradient'
-import { HOME_HEADLINE, PALETTE_DEFAULT, SOCIAL_HEADLINE, homePreview, homeVariantsSearch, homeVariantsSubscribe } from './homeVariants'
+import { HOME_ALTERNATIVE, HOME_HEADLINE, PALETTE_DEFAULT, homePreview, homeVariantsSearch, homeVariantsSubscribe } from './homeVariants'
 import { homeVariantsDev } from './homeVariantsDev'
 import { AnimatedEmoji, type AnimatedEmojiName } from './AnimatedEmoji'
 import { DownloadOptions, type DownloadOptionsProps } from './DownloadOptions'
@@ -15,32 +15,50 @@ import './happy-one.css'
 import './happy-one-preview.css'
 import './happy-home.css'
 
-/** A title and two short sentences each, about the same length; F1 Fast Mobile is Kirill's line as written. */
+/**
+ * A title and two short sentences each, about the same length; F1 Fast Mobile is Kirill's line as
+ * written. The order is the docs' story: the team, its bots, the feed, access, computers, then the app.
+ */
 const values: readonly { title: string; body: string; emoji: AnimatedEmojiName }[] = [
+  {
+    title: "See who's working on what",
+    body: "A teammate's task shows up in your sidebar the moment it starts, with their face on it. Open it to read along.",
+    emoji: 'alien-monster',
+  },
+  {
+    title: 'Bots that own a job',
+    body: 'Give releases, growth, or product health to a bot the whole team can ask. It keeps its memory and its folder.',
+    emoji: 'robot',
+  },
+  {
+    title: 'What the team made today',
+    body: 'Agents post what they made: a screenshot, a report, a short video. You scroll one feed, not ten chats.',
+    emoji: 'confetti-ball',
+  },
+  {
+    title: 'Exactly enough access',
+    body: 'Every agent works inside an OS sandbox. A bot can use the deploy key without the key ever reaching a laptop.',
+    emoji: 'closed-lock',
+  },
+  {
+    title: "Your computers and the team's",
+    body: "Agents run on your laptop or on the box under a desk. Close the lid, and the team's computer keeps working.",
+    emoji: 'cloud-variation',
+  },
   {
     title: 'Use all your subscriptions',
     body: 'Claude Code, Codex, Grok, and Gemini, on the subscriptions you already pay for. Mix them in a single task.',
     emoji: 'rainbow',
   },
   {
-    title: 'Build it together',
-    body: 'Work with your team in shared sessions. Divide and conquer, then share stories of what you built.',
-    emoji: 'alien-monster',
-  },
-  {
-    title: 'Open source, MIT',
-    body: 'Happy is MIT licensed and runs on your own hardware. Read the code, fork it, and ship your own build.',
-    emoji: 'open-source',
-  },
-  {
-    title: 'End-to-end encrypted',
-    body: 'Pair your phone with a QR code. Everything that travels between your devices is end-to-end encrypted.',
-    emoji: 'closed-lock',
-  },
-  {
     title: 'F1 Fast Mobile',
     body: 'Ever heard about a mobile app getting a speeding ticket? We just got one!',
     emoji: 'f1-car',
+  },
+  {
+    title: 'Open source, MIT',
+    body: "Read the code, fork it, and ship your own build. We don't sell tokens, and we never hold on to your work.",
+    emoji: 'open-source',
   },
 ]
 
@@ -221,8 +239,8 @@ const noSubscription = () => () => {}
 
 /**
  * The homepage, in the phone apps' first-screen look, on one Grain Gradient surface from top to
- * bottom: the headline and demo, the downloads, five value rows in a zig-zag, a prompt to check
- * us against the code, the downloads again, and where to talk to us.
+ * bottom: the headline and demo, the downloads, eight value rows in a zig-zag, the downloads
+ * again, and where to talk to us.
  */
 export default function DesktopApp() {
   // Read after hydration: the prerendered homepage is the ordinary page.
@@ -231,8 +249,8 @@ export default function DesktopApp() {
   const variants = import.meta.env.DEV ? homeVariantsDev(search) : undefined
   const palette = variants?.palette ?? PALETTE_DEFAULT
   const hydrated = useSyncExternalStore(noSubscription, () => true, () => false)
-  // The link-preview card keeps the headline and descriptor it was made with.
-  const headline = ogPreview ? { ...SOCIAL_HEADLINE, sub: HAPPY_DESCRIPTOR } : variants?.headline ?? HOME_HEADLINE
+  // The link-preview card has the hero's own headline and line.
+  const headline = ogPreview ? HOME_HEADLINE : variants?.headline ?? HOME_HEADLINE
   // The two download blocks share one architecture choice.
   const [macArchitecture, setMacArchitecture] = useState<MacArchitecture>('arm64')
   const headerShown = usePastHeading()
@@ -246,7 +264,8 @@ export default function DesktopApp() {
       <main>
         <section className="one-hero page-width" aria-labelledby="one-heading" data-name={headline.name ? '' : undefined}
           data-kicker={headline.kicker ? '' : undefined} style={{
-            '--hero-lines': headline.lines.length, '--hero-sub-lines': headline.sub ? headline.sub.split('\n').length : 0,
+            '--hero-lines': headline.lines.length,
+            '--hero-sub-lines': (headline.sub ? headline.sub.split('\n').length : 0) + (!ogPreview && HOME_ALTERNATIVE ? 1 : 0),
           } as CSSProperties}>
           {/* On a phone this fills the first screen above the store badges. */}
           <div className="one-hero-fold">
@@ -256,6 +275,7 @@ export default function DesktopApp() {
                 {headline.lines.flatMap((line, index) => [index ? ' ' : '', <HeadlineLine key={line} line={line} />])}
               </h1>
               {headline.sub && <p className="one-hero-tagline"><Accented text={headline.sub} /></p>}
+              {!ogPreview && HOME_ALTERNATIVE && <p className="one-hero-alternative">{HOME_ALTERNATIVE}</p>}
               {/* The note carries the GitHub stars; the link-preview card has a line of its own for them. */}
               <p ref={note} className="one-hero-note">
                 Free and open source

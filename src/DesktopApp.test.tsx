@@ -31,7 +31,7 @@ describe('Happy Desktop landing page', () => {
     cleanup()
   })
 
-  it('leads with the default headline, at most one short line, and Free and open source', () => {
+  it('leads with the default headline, its line, the one positioning line, and Free and open source', () => {
     const { container } = render(<DesktopApp />)
 
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Happy')
@@ -49,18 +49,21 @@ describe('Happy Desktop landing page', () => {
     expect(stars.getAttribute('aria-label')).toBe('Happy on GitHub, 24,384 stars')
     const lines = [...container.querySelectorAll('.one-hero-copy p')].map((line) => line.textContent!)
     expect(lines.at(-1)).toBe('Free and open source24k')
-    expect(lines.length).toBeLessThanOrEqual(2)
-    for (const line of lines) expect(line.length).toBeLessThanOrEqual(60)
+    // The only competitors on the page, once, under the hero (DESIGN.md, Positioning).
+    expect(container.querySelector('.one-hero-alternative')?.textContent).toBe('The open-source alternative to Cursor Projects, Claude Team, and Capy.')
+    expect(lines.length).toBeLessThanOrEqual(3)
+    for (const line of lines) expect(line.length).toBeLessThanOrEqual(72)
+    expect([...container.querySelectorAll('main p, main h2')].filter((element) => /Cursor|Capy|Claude Team/.test(element.textContent!))).toHaveLength(1)
     expect(container.textContent).not.toMatch(/remote server/i)
   })
 
-  it('keeps the copy short: headings and lines under 160 words in all', () => {
+  it('keeps the copy short: eight value rows and the hero in under 240 words', () => {
     const { container } = render(<DesktopApp />)
     const words = [...container.querySelectorAll('main :is(h1, h2, p)')]
       .filter((element) => !element.closest('.one-download-actions'))
       .flatMap((element) => element.textContent!.split(/\s+/).filter(Boolean))
 
-    expect(words.length).toBeLessThanOrEqual(160)
+    expect(words.length).toBeLessThanOrEqual(240)
   })
 
   it('offers every desktop platform and both app stores', () => {
@@ -141,7 +144,7 @@ describe('Happy Desktop landing page', () => {
     expect(container.querySelector('#download-again .one-download-actions')).toBeTruthy()
   })
 
-  it('runs demo, downloads, the five values, downloads again, then Talk to us', () => {
+  it('runs demo, downloads, the eight values in the docs\' story order, downloads again, then Talk to us', () => {
     const { container } = render(<DesktopApp />)
     const main = container.querySelector('main')!
 
@@ -150,14 +153,17 @@ describe('Happy Desktop landing page', () => {
     ])
     const sections = [...main.querySelectorAll('.one-value')]
     expect(sections.map((section) => section.querySelector('h2')?.textContent)).toEqual([
+      "See who's working on what",
+      'Bots that own a job',
+      'What the team made today',
+      'Exactly enough access',
+      "Your computers and the team's",
       'Use all your subscriptions',
-      'Build it together',
-      'Open source, MIT',
-      'End-to-end encrypted',
       'F1 Fast Mobile',
+      'Open source, MIT',
     ])
     // A zig-zag: the emoji starts on the left, then trades sides.
-    expect(sections.map((section) => section.getAttribute('data-side'))).toEqual(['start', 'end', 'start', 'end', 'start'])
+    expect(sections.map((section) => section.getAttribute('data-side'))).toEqual(['start', 'end', 'start', 'end', 'start', 'end', 'start', 'end'])
     for (const section of sections) expect(section.querySelector(':scope > canvas.one-emoji')).toBeTruthy()
   })
 

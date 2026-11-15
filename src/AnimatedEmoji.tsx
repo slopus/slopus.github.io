@@ -7,6 +7,9 @@ import alienMonster from './assets/emoji/alien-monster.json?url'
 import openSource from './assets/emoji/open-source.json?url'
 import closedLock from './assets/emoji/closed-lock.json?url'
 import f1Car from './assets/emoji/f1-car.json?url'
+import robot from './assets/emoji/robot.json?url'
+import confettiBall from './assets/emoji/confetti-ball.json?url'
+import cloudVariation from './assets/emoji/cloud-variation.json?url'
 
 /**
  * Telegram's animated emoji, as Lottie: the ones Happy Desktop draws, plus Kirill's rainbow,
@@ -21,6 +24,10 @@ const SOURCES = {
   'open-source': { src: openSource, left: .104, right: .111, top: .07, bottom: .081 },
   'closed-lock': { src: closedLock, left: .097, right: .097, top: .099, bottom: .11 },
   'f1-car': { src: f1Car, left: .061, right: .078, top: .432, bottom: .096 },
+  // Margins estimated, not yet measured at rest like the others.
+  robot: { src: robot, left: .1, right: .1, top: .1, bottom: .1 },
+  'confetti-ball': { src: confettiBall, left: .1, right: .1, top: .1, bottom: .1 },
+  'cloud-variation': { src: cloudVariation, left: .1, right: .1, top: .15, bottom: .15 },
 } satisfies Record<string, Source>
 export type AnimatedEmojiName = keyof typeof SOURCES
 
