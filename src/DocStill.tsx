@@ -29,6 +29,8 @@ export type DocStillCut = {
   edge: number
   /** CSS px the desktop cut needs from the column's left edge to where the article starts cutting it. */
   needsWidth?: number
+  /** The capture keeps the window's title bar empty, where the traffic lights go: the site draws them. */
+  chrome?: boolean
 }
 
 /** A still without a phone cut is shown only where its desktop cut fits, and hidden elsewhere. */
@@ -72,7 +74,7 @@ function fadeMask({ crop: [x, y, width, height], fade }: DocStillCut) {
 }
 
 /** One cut's frame: its size, corners, edges and fades. */
-function cutCss(still: string, cut: DocStillCut) {
+function cutCss(still: string, cut: DocStillCut, lights = false) {
   const edges = cut.real.filter((side) => !cut.divider.includes(side))
   const corner = (a: Side, b: Side) => edges.includes(a) && edges.includes(b) ? '12px' : '0'
   const lines = [...cut.real, ...cut.divider]
@@ -83,6 +85,8 @@ function cutCss(still: string, cut: DocStillCut) {
     + `${self} .doc-still-frame { width: ${cut.displayWidth}px; height: ${cut.displayHeight}px; border-radius: ${corner('top', 'left')} ${corner('top', 'right')} ${corner('bottom', 'right')} ${corner('bottom', 'left')}`
     + (mask ? `; mask-image: ${mask}; -webkit-mask-image: ${mask}; mask-composite: intersect; -webkit-mask-composite: source-in` : '') + ' }'
     + `${self} .doc-still-frame::after { border-width: ${border} }`
+    // The lights sit where they do in the 1133-wide window, which the cut shows at one CSS px per app px.
+    + (!lights ? '' : `${self} .doc-still-chrome { display: ${cut.chrome ? 'block' : 'none'}; left: ${-cut.crop[0]}px; top: ${-cut.crop[1]}px }`)
 }
 
 /** The media query where a still shows its desktop cut. */
@@ -100,8 +104,9 @@ export function DocStill({ name, loading = 'lazy' }: { name: string; loading?: '
   const wide = desktopCutQuery(still)
   const dark = '(prefers-color-scheme: dark)'
   const self = `.site-theme .document-content .doc-still[data-still="${name}"]`
-  const narrow = phone ? cutCss(name, phone) : `${self} { display: none }`
-  const shown = phone ? cutCss(name, desktop) : `${self} { display: block }${cutCss(name, desktop)}`
+  const lights = Boolean(desktop.chrome || phone?.chrome)
+  const narrow = phone ? cutCss(name, phone, lights) : `${self} { display: none }`
+  const shown = phone ? cutCss(name, desktop, lights) : `${self} { display: block }${cutCss(name, desktop, lights)}`
   const fallback = phone ?? desktop
   return (
     <span className="doc-still" data-still={name}>
@@ -115,6 +120,14 @@ export function DocStill({ name, loading = 'lazy' }: { name: string; loading?: '
           <img src={phone ? `/img/docs/${phone.files.light}` : NOTHING} alt={desktop.alt} width={fallback.displayWidth} height={fallback.displayHeight}
             loading={loading} fetchPriority={loading === 'eager' ? 'high' : undefined} decoding={loading === 'eager' ? undefined : 'async'} />
         </picture>
+        {lights && (
+          // The traffic lights, as src/AppWindowImage.tsx draws them on the recorder's captures.
+          <svg className="doc-still-chrome" viewBox="0 0 80 40" width="80" height="40" aria-hidden="true" focusable="false">
+            <circle cx="20" cy="20" r="6" fill="#ff5f57" stroke="#e0443e" />
+            <circle cx="40" cy="20" r="6" fill="#febc2e" stroke="#dea123" />
+            <circle cx="60" cy="20" r="6" fill="#28c840" stroke="#1aab29" />
+          </svg>
+        )}
       </span>
     </span>
   )
