@@ -31,7 +31,7 @@ describe('Happy Desktop landing page', () => {
     cleanup()
   })
 
-  it('leads with the default headline, its line, the one positioning line, and Free and open source', () => {
+  it('leads with the default headline, at most one short line, and Free and open source', () => {
     const { container } = render(<DesktopApp />)
 
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Happy')
@@ -49,10 +49,10 @@ describe('Happy Desktop landing page', () => {
     expect(stars.getAttribute('aria-label')).toBe('Happy on GitHub, 24,384 stars')
     const lines = [...container.querySelectorAll('.one-hero-copy p')].map((line) => line.textContent!)
     expect(lines.at(-1)).toBe('Free and open source24k')
-    // The only competitors on the page, once, under the hero (DESIGN.md, Positioning).
-    expect(container.querySelector('.one-hero-alternative')?.textContent).toBe('The open-source alternative to Cursor Projects, Claude Team, and Capy.')
-    expect(lines.length).toBeLessThanOrEqual(3)
-    for (const line of lines) expect(line.length).toBeLessThanOrEqual(72)
+    expect(lines.length).toBeLessThanOrEqual(2)
+    for (const line of lines) expect(line.length).toBeLessThanOrEqual(60)
+    // The only competitors on the page, once, in the last value row (DESIGN.md, Positioning).
+    expect(container.querySelector('.one-value:last-of-type p')?.textContent).toMatch(/^The open-source alternative to Cursor Projects, Claude Team, and Capy\. /)
     expect([...container.querySelectorAll('main p, main h2')].filter((element) => /Cursor|Capy|Claude Team/.test(element.textContent!))).toHaveLength(1)
     expect(container.textContent).not.toMatch(/remote server/i)
   })

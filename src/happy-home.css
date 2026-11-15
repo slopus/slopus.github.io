@@ -139,7 +139,6 @@
 }
 .happy-home .one-hero-tagline { color: var(--home-ink); }
 .happy-home:not([data-social-preview]) .one-hero-tagline { max-width: 36rem; margin: 0 auto .9rem; font-size: 1.3rem; line-height: 1.45; text-wrap: balance; }
-.happy-home .one-hero-alternative { max-width: 34rem; margin: -.4rem auto .9rem; color: var(--home-ink-2); font-size: 1rem; line-height: 1.45; text-wrap: balance; }
 .happy-home .one-hero-tagline em { color: var(--home-accent); font-style: normal; font-weight: 600; white-space: nowrap; }
 /* The name above a heading that says the rest. */
 .happy-home .one-hero-kicker { margin: 0 0 .35rem; color: var(--home-ink); font: 700 2.4rem/1.1 'Bricolage Grotesque', 'Bricolage Grotesque Fallback', 'IBM Plex Sans', 'IBM Plex Sans Fallback', 'IBM Plex Sans Fallback Roboto', sans-serif; letter-spacing: -.04em; }

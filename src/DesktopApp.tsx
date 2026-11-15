@@ -4,7 +4,7 @@ import { GITHUB_HAPPY, GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP, HAPPY_DISCORD } from './products'
 import { HappyOneDemo } from './HappyOneDemo'
 import { GrainGradient } from './GrainGradient'
-import { HOME_ALTERNATIVE, HOME_HEADLINE, PALETTE_DEFAULT, homePreview, homeVariantsSearch, homeVariantsSubscribe } from './homeVariants'
+import { HOME_HEADLINE, PALETTE_DEFAULT, homePreview, homeVariantsSearch, homeVariantsSubscribe } from './homeVariants'
 import { homeVariantsDev } from './homeVariantsDev'
 import { AnimatedEmoji, type AnimatedEmojiName } from './AnimatedEmoji'
 import { DownloadOptions, type DownloadOptionsProps } from './DownloadOptions'
@@ -58,7 +58,7 @@ const values: readonly { title: string; body: ReactNode; emoji: AnimatedEmojiNam
   },
   {
     title: 'Open source, MIT',
-    body: "Read the code, fork it, and ship your own build. We don't sell tokens, and we never hold on to your work.",
+    body: 'The open-source alternative to Cursor Projects, Claude Team, and Capy. Read the code and ship your own build.',
     emoji: 'open-source',
   },
 ]
@@ -265,8 +265,7 @@ export default function DesktopApp() {
       <main>
         <section className="one-hero page-width" aria-labelledby="one-heading" data-name={headline.name ? '' : undefined}
           data-kicker={headline.kicker ? '' : undefined} style={{
-            '--hero-lines': headline.lines.length,
-            '--hero-sub-lines': (headline.sub ? headline.sub.split('\n').length : 0) + (!ogPreview && HOME_ALTERNATIVE ? 1 : 0),
+            '--hero-lines': headline.lines.length, '--hero-sub-lines': headline.sub ? headline.sub.split('\n').length : 0,
           } as CSSProperties}>
           {/* On a phone this fills the first screen above the store badges. */}
           <div className="one-hero-fold">
@@ -276,7 +275,6 @@ export default function DesktopApp() {
                 {headline.lines.flatMap((line, index) => [index ? ' ' : '', <HeadlineLine key={line} line={line} />])}
               </h1>
               {headline.sub && <p className="one-hero-tagline"><Accented text={headline.sub} /></p>}
-              {!ogPreview && HOME_ALTERNATIVE && <p className="one-hero-alternative">{HOME_ALTERNATIVE}</p>}
               {/* The note carries the GitHub stars; the link-preview card has a line of its own for them. */}
               <p ref={note} className="one-hero-note">
                 Free and open source

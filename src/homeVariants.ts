@@ -17,12 +17,6 @@ export type Headline = {
 /** Kirill's line under the name, plain. */
 export const HOME_HEADLINE: Headline = { lines: ['Happy'], sub: 'One place for you, your team, and your agents.', name: true }
 
-/**
- * The one positioning line under the hero, the only place outside the Compare pages that names a
- * competitor (DESIGN.md, Positioning). Set it to undefined to drop the line.
- */
-export const HOME_ALTERNATIVE: string | undefined = 'The open-source alternative to Cursor Projects, Claude Team, and Capy.'
-
 
 /** The native start screens' palette (happy-home.css). */
 export const PALETTE_DEFAULT = 'lavender'

@@ -12,7 +12,7 @@ Use this sentence, or a shortening of it, wherever a page says what Happy is: th
 - **Say what you see, not where it runs.** "Your team", not "team server" or "team mode". Happy Agent, daemon, harness, WorkOS, Tailcat, and runner belong to the Under the hood pages, the guides, and the blog.
 - **Words.** Say team, computer, task, bot, role, and the feed. Not server, tenant, organization, node, pool, or worker. A session is a task's conversation with one model; the reading path says task.
 - **"Reuse your subscriptions"**, or "the subscriptions you already pay for". Don't mix in "plans", "existing subscriptions", or "the subscriptions you have".
-- **Competitors appear in two places only:** the one positioning line under the homepage hero, and the Compare pages.
+- **Competitors appear in two places only:** the homepage's one positioning line, which opens its last value row ("Open source, MIT"), and the Compare pages. Never under the hero: the header, hero and demo stay as they are.
 - **Not shipped means Vision only.** Direct messages, calls, and rented compute are described on `/vision/`, labelled as not shipped. Happy Cloud features (roles, invitations with a role, vaults, the audit trail, computer modes) sit under a "Coming with Happy Cloud" heading until an outside team can sign up.
 
 ## Copy
