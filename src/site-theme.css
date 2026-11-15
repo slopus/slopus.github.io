@@ -16,7 +16,7 @@
   position: relative;
   isolation: isolate;
   color: var(--home-ink);
-  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans', 'IBM Plex Sans Fallback', 'IBM Plex Sans Fallback Roboto', system-ui, sans-serif;
 }
 
 /* The patch: its layer is as wide as the page, and just tall enough for the patch's wandering
@@ -48,7 +48,7 @@
    once the page scrolls under it. */
 .site-theme .site-header-wrap { background: transparent; transition: border-color .2s ease, background-color .2s ease; }
 .site-theme .site-header-wrap[data-scrolled] { border-bottom-color: var(--home-line); background: var(--home-header); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); }
-.site-theme .wordmark { color: var(--home-ink); font-family: 'Bricolage Grotesque', 'IBM Plex Sans', sans-serif; font-size: 1.12rem; letter-spacing: -.03em; }
+.site-theme .wordmark { color: var(--home-ink); font-family: 'Bricolage Grotesque', 'Bricolage Grotesque Fallback', 'IBM Plex Sans', 'IBM Plex Sans Fallback', 'IBM Plex Sans Fallback Roboto', sans-serif; font-size: 1.12rem; letter-spacing: -.03em; }
 .site-theme .wordmark span { color: var(--home-ink-2); font-weight: 700; }
 .site-theme .site-header nav > a[aria-current='page'] { text-decoration-color: var(--home-accent); }
 .site-theme .nav-github:hover { color: var(--home-accent); }
@@ -58,10 +58,10 @@
 .site-theme .footer-meta .footer-descriptor { color: var(--home-ink); }
 
 /* Type: Plex Sans SemiBold headings, Plex Mono wherever DM Mono was. */
-.site-theme :is(h1, h2, h3) { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 600; }
+.site-theme :is(h1, h2, h3) { font-family: 'IBM Plex Sans', 'IBM Plex Sans Fallback', 'IBM Plex Sans Fallback Roboto', system-ui, sans-serif; font-weight: 600; }
 .site-theme :is(h1, h2) em { color: var(--home-accent); }
 .site-theme :is(.eyebrow, .nav-github-count, .docs-mobile-trail, .recipe-source code, .legacy-notice code, .document-pagination a span, .releases-version, .one-brew-line),
-.site-theme .document-content :is(pre, :not(pre) > code, .cos-prompt-example) { font-family: 'IBM Plex Mono', monospace; }
+.site-theme .document-content :is(pre, :not(pre) > code, .cos-prompt-example) { font-family: 'IBM Plex Mono', 'IBM Plex Mono Fallback', monospace; }
 
 /* The docs sidebar, and its phone breadcrumb. */
 .site-theme .docs-nav-group h2, .site-theme .docs-nav-fold summary { color: var(--home-ink); font-family: inherit; font-weight: 600; }
@@ -127,7 +127,7 @@
 /* Legal pages and the 404. */
 .site-theme .document-back-link, .site-theme .not-found > p:not(.eyebrow) { color: var(--site-muted); }
 .site-theme .document-back-link:hover { color: var(--home-accent); }
-.site-theme .legal-article .document-content > p:nth-of-type(1) { color: var(--site-muted); font-family: 'IBM Plex Mono', monospace; }
+.site-theme .legal-article .document-content > p:nth-of-type(1) { color: var(--site-muted); font-family: 'IBM Plex Mono', 'IBM Plex Mono Fallback', monospace; }
 .site-theme .button-primary { background: var(--home-ink); color: var(--grain-back); }
 .site-theme .button-ghost { border-color: var(--home-ink); }
 .site-theme .button-ghost:hover { background: var(--home-ink); color: var(--grain-back); }
@@ -155,7 +155,7 @@
 .site-theme .plugin-main .eyebrow a:hover, .site-theme .plugin-credits a:hover { color: var(--home-accent); }
 .site-theme :is(.plugin-tagline, .plugin-index-arrow) { color: var(--home-accent); }
 .site-theme .plugin-tagline, .site-theme .plugin-index-card strong { font-family: inherit; }
-.site-theme .plugin-points li::before { color: var(--home-accent); font-family: 'IBM Plex Mono', monospace; }
+.site-theme .plugin-points li::before { color: var(--home-accent); font-family: 'IBM Plex Mono', 'IBM Plex Mono Fallback', monospace; }
 .site-theme :is(.plugin-summary, .plugin-section-intro, .plugin-note, .plugin-points p, .plugin-install-copy, .plugin-index-card > span:not(.plugin-index-arrow)) { color: var(--home-ink-2); }
 .site-theme :is(.plugin-section, .plugin-credits, .plugin-points li, .plugin-examples img, .plugin-index-card) { border-color: var(--home-line); }
 .site-theme .plugin-index-card:hover { border-color: var(--home-ink); }

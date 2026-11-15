@@ -37,7 +37,7 @@
 }
 
 /* The dev server's variant switcher (HomeVariantSwitcher.tsx). */
-.home-variants { position: fixed; z-index: 60; bottom: 12px; left: 12px; display: flex; flex-wrap: wrap; gap: .5rem; max-width: calc(100% - 24px); padding: .45rem .55rem; border: 1px solid var(--home-line); border-radius: 10px; background: var(--home-header); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); color: var(--home-ink); font: 500 .78rem/1.2 'IBM Plex Sans', sans-serif; }
+.home-variants { position: fixed; z-index: 60; bottom: 12px; left: 12px; display: flex; flex-wrap: wrap; gap: .5rem; max-width: calc(100% - 24px); padding: .45rem .55rem; border: 1px solid var(--home-line); border-radius: 10px; background: var(--home-header); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); color: var(--home-ink); font: 500 .78rem/1.2 'IBM Plex Sans', 'IBM Plex Sans Fallback', 'IBM Plex Sans Fallback Roboto', sans-serif; }
 .home-variants label { display: flex; align-items: center; gap: .35rem; min-width: 0; }
 .home-variants span { color: var(--home-ink-2); font-size: .66rem; letter-spacing: .05em; text-transform: uppercase; }
 .home-variants select { min-width: 0; max-width: 13rem; padding: .2rem .3rem; border: 1px solid var(--home-line); border-radius: 6px; background: transparent; color: inherit; font: inherit; }

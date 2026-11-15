@@ -1,0 +1,25 @@
+/* What the page draws its text in until the self-hosted faces arrive (font-display: swap): Arial,
+   or a font with Arial's metrics, sized and spaced like the face it stands in for, so the text keeps
+   its lines when the face swaps in and nothing below it moves.
+
+   size-adjust is the face's width over Arial's (Arial Bold for 600 and 700), measured in Chromium
+   with fractional glyph advances (as on macOS, iOS, Windows and Android; --font-render-hinting=none
+   on Linux), then set for 400 and 600 to the value that changes the fewest blocks' line counts on
+   the homepage and the eight core docs pages at 360 to 1440 wide. No one value keeps every line: the
+   two faces' widths differ by a few percent from one run of words to the next. Bricolage is measured
+   on the header's wordmark at its size, since its glyphs change with optical size. The overrides are
+   the face's own ascent and descent (Plex 1025 and 275 per 1000, Bricolage 930 and 270, line gap 0)
+   over that size-adjust. Measure again when a face or the copy changes. Roboto, where Arial is
+   missing on Android, is scaled from published average widths (Roboto 0.77% wider than Arial), not
+   measured here. */
+@font-face { font-family: 'IBM Plex Sans Fallback'; font-weight: 400; src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('LiberationSans'), local('Arimo'), local('Helvetica'); size-adjust: 100.8%; ascent-override: 101.69%; descent-override: 27.28%; line-gap-override: 0%; }
+@font-face { font-family: 'IBM Plex Sans Fallback'; font-weight: 500; src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('LiberationSans'), local('Arimo'), local('Helvetica'); size-adjust: 102.98%; ascent-override: 99.53%; descent-override: 26.70%; line-gap-override: 0%; }
+@font-face { font-family: 'IBM Plex Sans Fallback'; font-weight: 600; src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('LiberationSans-Bold'), local('Arimo Bold'), local('Helvetica Bold'); size-adjust: 96.4%; ascent-override: 106.33%; descent-override: 28.53%; line-gap-override: 0%; }
+@font-face { font-family: 'IBM Plex Sans Fallback'; font-weight: 700; src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('LiberationSans-Bold'), local('Arimo Bold'), local('Helvetica Bold'); size-adjust: 98.70%; ascent-override: 103.85%; descent-override: 27.86%; line-gap-override: 0%; }
+@font-face { font-family: 'IBM Plex Sans Fallback Roboto'; font-weight: 400; src: local('Roboto'), local('Roboto-Regular'); size-adjust: 100.03%; ascent-override: 102.47%; descent-override: 27.49%; line-gap-override: 0%; }
+@font-face { font-family: 'IBM Plex Sans Fallback Roboto'; font-weight: 500; src: local('Roboto Medium'), local('Roboto-Medium'); size-adjust: 102.19%; ascent-override: 100.30%; descent-override: 26.91%; line-gap-override: 0%; }
+@font-face { font-family: 'IBM Plex Sans Fallback Roboto'; font-weight: 600; src: local('Roboto Bold'), local('Roboto-Bold'); size-adjust: 95.66%; ascent-override: 107.15%; descent-override: 28.75%; line-gap-override: 0%; }
+@font-face { font-family: 'IBM Plex Sans Fallback Roboto'; font-weight: 700; src: local('Roboto Bold'), local('Roboto-Bold'); size-adjust: 97.95%; ascent-override: 104.65%; descent-override: 28.08%; line-gap-override: 0%; }
+@font-face { font-family: 'Bricolage Grotesque Fallback'; font-weight: 700; src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('LiberationSans-Bold'), local('Arimo Bold'), local('Helvetica Bold'); size-adjust: 101.79%; ascent-override: 91.36%; descent-override: 26.53%; line-gap-override: 0%; }
+/* Plex Mono and Courier New both advance 600 per 1000: only the vertical metrics differ. */
+@font-face { font-family: 'IBM Plex Mono Fallback'; src: local('Courier New'), local('CourierNewPSMT'), local('Liberation Mono'), local('LiberationMono'), local('Cousine'); size-adjust: 100%; ascent-override: 102.5%; descent-override: 27.5%; line-gap-override: 0%; }

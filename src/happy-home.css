@@ -40,7 +40,7 @@
   }
 }
 
-.happy-home { position: relative; isolation: isolate; color: var(--home-ink); font-family: 'IBM Plex Sans', system-ui, sans-serif; }
+.happy-home { position: relative; isolation: isolate; color: var(--home-ink); font-family: 'IBM Plex Sans', 'IBM Plex Sans Fallback', 'IBM Plex Sans Fallback Roboto', system-ui, sans-serif; }
 /* Room after the footer for the colour in the bottom left corner (HOME_SURFACE). */
 .happy-home:not([data-social-preview]) { padding-bottom: 120px; }
 
@@ -90,9 +90,9 @@
 }
 .happy-home { --home-frost: blur(20px) saturate(1.4); }
 .happy-home .site-header-wrap[data-scrolled] { border-bottom-color: var(--home-line); background: var(--home-header); -webkit-backdrop-filter: var(--home-frost); backdrop-filter: var(--home-frost); }
-.happy-home .wordmark { color: var(--home-ink); font-family: 'Bricolage Grotesque', 'IBM Plex Sans', sans-serif; font-size: 1.12rem; letter-spacing: -.03em; }
+.happy-home .wordmark { color: var(--home-ink); font-family: 'Bricolage Grotesque', 'Bricolage Grotesque Fallback', 'IBM Plex Sans', 'IBM Plex Sans Fallback', 'IBM Plex Sans Fallback Roboto', sans-serif; font-size: 1.12rem; letter-spacing: -.03em; }
 .happy-home .wordmark span { color: var(--home-ink-2); font-weight: 700; }
-.happy-home .nav-github-count { font-family: 'IBM Plex Mono', monospace; }
+.happy-home .nav-github-count { font-family: 'IBM Plex Mono', 'IBM Plex Mono Fallback', monospace; }
 .happy-home .nav-github:hover { color: var(--home-accent); }
 .happy-home .site-footer { background: transparent; border-top-color: var(--home-line); }
 .happy-home .footer-statement, .happy-home .footer-people { font-family: inherit; }
@@ -101,14 +101,14 @@
 .happy-home a:focus-visible { outline-color: var(--home-accent); }
 
 /* The hero, in the start screen's type: Plex Sans SemiBold, the line under it at 87%. */
-.happy-home h1, .happy-home h2 { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 600; letter-spacing: -.025em; }
+.happy-home h1, .happy-home h2 { font-family: 'IBM Plex Sans', 'IBM Plex Sans Fallback', 'IBM Plex Sans Fallback Roboto', system-ui, sans-serif; font-weight: 600; letter-spacing: -.025em; }
 .happy-home h1 em, .happy-home h2 em { color: var(--home-accent); }
 .happy-home .one-hero-note, .happy-home .one-download > p { color: var(--home-ink-2); }
 /* After it, the GitHub mark and the plain star count, as in the header. */
 .one-hero-stars { position: relative; margin-left: .7rem; color: inherit; white-space: nowrap; transition: color .2s ease; }
 .one-hero-stars::after { content: ''; position: absolute; inset: -10px -6px; }
 .one-hero-stars svg { display: inline-block; width: 1em; height: 1em; margin-right: .4rem; vertical-align: -.14em; }
-.one-hero-stars > span { font: 500 .9em 'IBM Plex Mono', monospace; }
+.one-hero-stars > span { font: 500 .9em 'IBM Plex Mono', 'IBM Plex Mono Fallback', monospace; }
 .one-hero-stars:hover { color: var(--home-accent); }
 /* The headline, at most one short line under it, and the note. The first-screen fit
    (happy-one.css) counts the headline's lines at its own size and the line under it, if any:
@@ -142,7 +142,7 @@
 .happy-home .one-hero-alternative { max-width: 34rem; margin: -.4rem auto .9rem; color: var(--home-ink-2); font-size: 1rem; line-height: 1.45; text-wrap: balance; }
 .happy-home .one-hero-tagline em { color: var(--home-accent); font-style: normal; font-weight: 600; white-space: nowrap; }
 /* The name above a heading that says the rest. */
-.happy-home .one-hero-kicker { margin: 0 0 .35rem; color: var(--home-ink); font: 700 2.4rem/1.1 'Bricolage Grotesque', 'IBM Plex Sans', sans-serif; letter-spacing: -.04em; }
+.happy-home .one-hero-kicker { margin: 0 0 .35rem; color: var(--home-ink); font: 700 2.4rem/1.1 'Bricolage Grotesque', 'Bricolage Grotesque Fallback', 'IBM Plex Sans', 'IBM Plex Sans Fallback', 'IBM Plex Sans Fallback Roboto', sans-serif; letter-spacing: -.04em; }
 
 .happy-home .one-mac-architecture, .happy-home .one-platform-links { color: var(--home-ink-2); }
 .happy-home .one-platform-links a:hover { color: var(--home-ink); }
@@ -150,7 +150,7 @@
 .happy-home .one-mac-architecture option { color: #14112e; background: #ffffff; }
 .happy-home .one-store-download .store-rating strong { color: var(--home-ink); }
 .happy-home .one-store-download .store-count { color: var(--home-ink-2); }
-.happy-home .one-brew-line { font-family: 'IBM Plex Mono', monospace; }
+.happy-home .one-brew-line { font-family: 'IBM Plex Mono', 'IBM Plex Mono Fallback', monospace; }
 .happy-home .one-desktop-button:focus-visible, .happy-home .one-brew-command button:focus-visible { outline-color: var(--home-accent); }
 
 /* What you get: five rows of two columns, the emoji and the words trading sides. Whatever is on

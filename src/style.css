@@ -1,8 +1,9 @@
 @import './fonts.css';
+@import './font-fallbacks.css';
 
 :root {
   /* Colours: the palette in happy-home.css. */
-  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans', 'IBM Plex Sans Fallback', 'IBM Plex Sans Fallback Roboto', system-ui, sans-serif;
   font-synthesis: none;
   font-optical-sizing: auto;
   text-rendering: optimizeLegibility;
