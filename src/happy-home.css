@@ -168,6 +168,7 @@
 .one-value-copy { flex: 0 1 22rem; min-width: 0; }
 .happy-home .one-value h2 { margin: 0 0 .6rem; font-size: clamp(1.75rem, 2.7vw, 2.25rem); line-height: 1.15; }
 .one-value-copy p { margin: 0; color: var(--home-ink-2); font-size: 1.18rem; line-height: 1.55; text-wrap: pretty; }
+.one-value-copy p a { color: var(--home-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em; }
 
 /* The downloads again: just the buttons. */
 .happy-home #download-again { padding-block: 3.5rem 1rem; }

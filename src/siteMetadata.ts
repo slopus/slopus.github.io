@@ -77,7 +77,7 @@ export function socialVideoTags(video: NonNullable<PageMetadata['socialVideo']>)
 export const homepageMetadata: PageMetadata = {
   title: 'Happy — Open-Source Team App for Claude Code, Codex, Grok, Gemini',
   description:
-    'Happy (previously Happy Coder): the open-source app where a team and its Claude, Codex, Grok, and Gemini agents work in one place, on desktop and phone.',
+    'Happy Engineering (previously Happy Coder): the open-source app where a team and its Claude, Codex, Grok, and Gemini agents work together, on desktop and phone.',
   canonicalPath: '/',
   // The hero line, as on the card image.
   socialTitle: 'One place for you, your team, and your agents.',

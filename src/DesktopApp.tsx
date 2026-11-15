@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
+import { Suspense, lazy, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { GITHUB_HAPPY, GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP, HAPPY_DISCORD } from './products'
@@ -17,9 +17,10 @@ import './happy-home.css'
 
 /**
  * A title and two short sentences each, about the same length; F1 Fast Mobile is Kirill's line as
- * written. The order is the docs' story: the team, its bots, the feed, access, computers, then the app.
+ * written, then the homepage's one line about the phone, linked. The order is the docs' story: the
+ * team, its bots, the feed, access, computers, then the app.
  */
-const values: readonly { title: string; body: string; emoji: AnimatedEmojiName }[] = [
+const values: readonly { title: string; body: ReactNode; emoji: AnimatedEmojiName }[] = [
   {
     title: "See who's working on what",
     body: "A teammate's task shows up in your sidebar the moment it starts, with their face on it. Open it to read along.",
@@ -52,7 +53,7 @@ const values: readonly { title: string; body: string; emoji: AnimatedEmojiName }
   },
   {
     title: 'F1 Fast Mobile',
-    body: 'Ever heard about a mobile app getting a speeding ticket? We just got one!',
+    body: <>Ever heard about a mobile app getting a speeding ticket? We just got one! <a href="/mobile-app/">Pair your phone</a> to follow your agents.</>,
     emoji: 'f1-car',
   },
   {
@@ -299,7 +300,7 @@ export default function DesktopApp() {
         <Downloads macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} />
         <TalkToUs />
       </main>
-      <SiteFooter product={HAPPY_DESKTOP} cliLink={false} people={false} additionalLinks={
+      <SiteFooter product={HAPPY_DESKTOP} cliLink={false} people={false} mobileLabel="Claude Code mobile app" additionalLinks={
         <a href="/video/happy-one/device/CREDITS.txt" target="_blank" rel="noopener noreferrer">Credits</a>
       } />
       {HomeVariantSwitcher && variants && hydrated && !ogPreview

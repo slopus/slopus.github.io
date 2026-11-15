@@ -179,8 +179,13 @@ describe('Happy Desktop landing page', () => {
     const { container } = render(<DesktopApp />)
     const bodies = [...container.querySelectorAll('.one-value p')].map((body) => body.textContent!)
     const f1 = 'Ever heard about a mobile app getting a speeding ticket? We just got one!'
-    expect(bodies).toContain(f1)
-    const lengths = bodies.filter((body) => body !== f1).map((body) => body.length)
+    // Kirill's line, then the homepage's one line about the phone, linked to the phone app's page.
+    expect(bodies).toContain(`${f1} Pair your phone to follow your agents.`)
+    const pair = [...container.querySelectorAll('.one-value p a')].find((link) => link.textContent === 'Pair your phone')
+    expect(pair?.getAttribute('href')).toBe('/mobile-app/')
+    // The phone app's page under the name people search for.
+    expect([...container.querySelectorAll('a[href="/mobile-app/"]')].map((link) => link.textContent)).toContain('Claude Code mobile app')
+    const lengths = bodies.filter((body) => !body.startsWith(f1)).map((body) => body.length)
 
     expect(Math.min(...lengths)).toBeGreaterThanOrEqual(90)
     expect(Math.max(...lengths)).toBeLessThanOrEqual(110)

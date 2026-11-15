@@ -90,7 +90,8 @@ export function SiteHeader({
  * `cliLink` off drops the quiet link to the original CLI docs: the homepage no longer mentions
  * the CLI. `people` off drops the links to us, for a page that already has them.
  */
-export function SiteFooter({ product = HAPPY, additionalLinks, cliLink = true, people = true }: { product?: Product; additionalLinks?: ReactNode; cliLink?: boolean; people?: boolean }) {
+/** `mobileLabel` names the phone app's link: the homepage calls it what people search for. */
+export function SiteFooter({ product = HAPPY, additionalLinks, cliLink = true, people = true, mobileLabel = 'Phone app' }: { product?: Product; additionalLinks?: ReactNode; cliLink?: boolean; people?: boolean; mobileLabel?: string }) {
   const currentYear = new Date().getFullYear()
 
   return (
@@ -109,7 +110,7 @@ export function SiteFooter({ product = HAPPY, additionalLinks, cliLink = true, p
           <div className="footer-links" aria-label="Footer navigation">
             <a href={product.docsHome}>Docs</a>
             <a href="/desktop-app/">Desktop app</a>
-            <a href="/mobile-app/">Phone app</a>
+            <a href="/mobile-app/">{mobileLabel}</a>
             <a href="/privacy/">Privacy</a>
             <a href="/terms/">Terms</a>
             {additionalLinks}
