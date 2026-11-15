@@ -4,15 +4,16 @@ These rules cover the docs, guides, comparisons, and blog. The homepage has rule
 
 ## Positioning
 
-> Happy is an open-source harness for orchestrating coding agents: Claude, Codex, Grok, Gemini, and more in one desktop app, reusing the subscriptions you already pay for.
+> Happy is one place for you, your team, and your agents: a desktop and phone app where a team and its coding agents share tasks, bots, and a feed, on the Claude, Codex, Grok, and Gemini subscriptions you already pay for. Free and MIT licensed.
 
-Use this sentence, or a shortening of it, wherever a page says what Happy is: the homepage metadata, Welcome, and every lede that introduces Happy.
+Use this sentence, or a shortening of it, wherever a page says what Happy is: the homepage metadata, Welcome, and every lede that introduces Happy. The short form is the homepage hero line, **One place for you, your team, and your agents.** It sits under the footer wordmark (`HAPPY_TAGLINE` in `src/products.ts`).
 
-The short descriptor is **Orchestrate Claude, Codex, Grok, Gemini and more in one app** (`HAPPY_DESCRIPTOR` in `src/products.ts`). It sits under the footer wordmark and under the wordmark on every link-preview card and posted diagram, and opens the homepage descriptions.
-
-- **Lead with orchestration and multi-provider.** The desktop app comes first. The phone app, servers, and teams are parts of Happy, never the headline. Happy is not a phone remote for Claude Code; that describes only the original Happy CLI.
+- **Lead with the team and its agents in one place.** What a person sees and does comes first: a teammate's task appearing, a bot that owns a job, the feed, who may do what. Models, the harness, and the runtime are how it works, never the headline. Happy is not a phone remote for Claude Code; that describes only the original Happy CLI.
+- **Say what you see, not where it runs.** "Your team", not "team server" or "team mode". Happy Agent, daemon, harness, WorkOS, Tailcat, and runner belong to the Under the hood pages, the guides, and the blog.
+- **Words.** Say team, computer, task, bot, role, and the feed. Not server, tenant, organization, node, pool, or worker. A session is a task's conversation with one model; the reading path says task.
 - **"Reuse your subscriptions"**, or "the subscriptions you already pay for". Don't mix in "plans", "existing subscriptions", or "the subscriptions you have".
-- **Don't sell "one session".** "Multi-provider", not "several models in one session". Switching models keeps the transcript; say that as a fact where it matters, not as the pitch.
+- **Competitors appear in two places only:** the one positioning line under the homepage hero, and the Compare pages.
+- **Not shipped means Vision only.** Direct messages, calls, and rented compute are described on `/vision/`, labelled as not shipped. Happy Cloud features (roles, invitations with a role, vaults, the audit trail, computer modes) sit under a "Coming with Happy Cloud" heading until an outside team can sign up.
 
 ## Copy
 
@@ -28,6 +29,11 @@ The short descriptor is **Orchestrate Claude, Codex, Grok, Gemini and more in on
 - **Terse and concrete.** Use names, commands, file paths, and settings. Drop marketing filler: "seamless", "powerful", "effortless", "unlock", "supercharge", "next-level".
 - **Lead with the answer.** The first paragraph says what the thing is and why it matters. Background comes after.
 - **Short enough to read on a phone.**
+- **Repositories, tasks, bots. In that order.** Those are the three things in the app, and Quick Start teaches them in that order. A repository is only where code gets checked out from. Nobody cares about a "first project" or a "first session"; the app's word *project* appears once, in brackets, where a reader will meet it in the UI.
+- **You should never have to click through settings.** The Chief of Staff does setup when asked. Say this as a belief, once, on Quick Start, and show it.
+- **Use our own team as the example, and say that is what it is.** We build Happy with Happy, and the reader has never heard of Kirill or Steve. On every page that uses our team, the first mention says so in one sentence ("We build Happy in Happy. There are two of us, Kirill and Steve.") before any name is used. The section is called "How we use it" (or "The bots we run"), never "From ours" or "Ours". Dates are written out ("in November 2026"), never "last week". The facts: two people, 419 tasks in five weeks, 491 checkouts across 16 repositories, and bots for desktop releases, mobile releases, and product health.
+- **A little of Kirill's voice.** The reader is an engineer. Direct, warm, a bit funny, and decent about the reader's freedom to leave. At most one such line on a page, and never at the cost of a fact.
+- **Not shipped is not on the page.** Stories are not shipped: they appear in the changelog only. Same test for anything else before it is named in the reading path.
 
 ## Claims
 
@@ -66,9 +72,34 @@ The short descriptor is **Orchestrate Claude, Codex, Grok, Gemini and more in on
 
 ## Screenshots
 
-- Show every app screenshot or still as the app's window sitting directly on the page, with its rounded corners (10–12px at display size), title bar, a subtle border, and a soft shadow. Never show a flat rectangular crop or put the window inside an extra backdrop.
-- Use the Markdown image title `window` (`src/AppWindowImage.tsx`) and keep the captured title bar. For the multiplayer recorder's 1133px-wide captures, whose top 40px already reserve the title bar, `window chrome` adds the film's macOS traffic lights. Do not add controls over controls already in the capture.
-- Render each one at a fixed width and height, so the text around it doesn't reflow.
+The test: every picture on the site should look like it was taken during **one run of the app**, from different parts of the same window.
+
+1. **One world.** Every capture comes from the same staged team (same people, same bots, same task names), the same app build, the same window size, and 100% zoom. A task named in one picture has the same name, owner, and state in the next.
+2. **True size.** A capture is taken at 2 device pixels per CSS pixel or more and shown at exactly one CSS pixel per app pixel. Never scaled up, never scaled down, so type inside every capture is the app's real size and the same size from picture to picture. The app window is not resized to fit the column; the column shows a region of the usual window.
+3. **Two exceptions, each at one fixed scale site-wide:** the whole-window establishing shot or film (at most one per page), and phone captures in the device frame.
+4. **In context.** A feature is shown as part of the bigger app, with enough of the sidebar or pane around it to tell where it lives. No tight crops of a chat bubble, no backdrop, no nested surface.
+4a. **Fade only where the app really continues.** An edge of the picture dissolves into the page only where the crop cuts through the app with a lot more of it beyond (a hundred pixels or more). Where the crop is at a real window edge, or close to one, the picture goes to that edge and shows it as it is: a crisp border, no fade. A fade a few pixels from the border adds nothing and reads as a rendering bug (Kirill, 15 Nov).
+5. **Theme matches the page.** Light and dark versions of every capture, and everything inside the capture (artifact covers, inline images) is in the same theme.
+6. **No fade in time.** A feature clip starts on its true first frame, plays once, and rests on its last. The only fade is the spatial one in rule 4a. The whole-window film (rule 3) is the exception: it is a film with its own opening and may loop as it does today.
+6a. **Clips move like the app.** 60 frames per second, constant, recorded from the running app at that rate: every frame during motion is a new frame, none dropped, none repeated, none interpolated. Played on a Mac next to the real app, the clip must not look slower than the machine. A clip recorded at 30 does not ship. The build or the capture script checks frame rate and counts repeated frames during motion.
+7. **Show it, don't quote it.** The picture shows the thing the heading names, not a conversation about it. "Several repositories" is a sidebar tree with three repository icons, not a chat that says "three repositories".
+8. **One picture per section, placed right after the sentence it proves.** Never two in a row. If a page needs a third picture, it probably needs a cut.
+1a. **The staged world looks lived in, not generated.** Model it on our real sidebar. A few bots, not a column of them, each with its own picture and at least one with subtasks under it. Tasks that differ from each other: some plain, some with nested subtasks, a few spanning several repositories with their line counts, an unread dot here, a question waiting there. Variety, not volume: it should be pleasant to look at and nothing should repeat a pattern six times.
+9. **Nothing private.** No secrets, tokens, real hostnames, home paths, or anything from the real server; staged data only.
+11. **Pages arrive with their pictures.** The HTML the server returns already holds every still at full quality and true size, with width and height set, so the page is complete on first paint and nothing jumps. No blurry placeholder that sharpens later. A clip loads behind its still and takes over on an identical frame: the still is the clip's own first frame, converted exactly, same pixels, same size, same colour. This holds for the whole-window film too.
+10. **Checked by the build.** Intrinsic size against displayed size (rule 2) is a build or test check, not a habit.
+
+How the site does it:
+
+- A capture lives in `public/img/docs/` at 2x. The page shows it at half its pixel width and height, set as `width` and `height` on the image (`src/MarkdownDocument.tsx`, from sizes `vite.config.ts` reads off the files), so the text around it never moves while it loads. A capture whose half width is wider than the column (728px) is recaptured narrower, never shrunk. `src/docImages.test.ts` fails on a capture that is not 2x or whose half width is wider than the column.
+- A still from the capture script (`![](/img/docs/<name> "still")`, `src/DocStill.tsx`) comes with its manifest entry, kept in `src/docStills.json`: a desktop cut for the two-pane layout and a phone cut below 761px, each light and dark, switched with `prefers-color-scheme`. Each shows at its manifest display size, hanging from the column's left edge; a desktop cut may run into the right margin by its `overhang`, and where the article ends first it cuts the picture and the last `edge` px dissolve. Real edges get a 1px hairline (ink at 16%) and a 12px radius where two window edges meet; the manifest's fades are CSS masks; no other border, radius, or shadow. `src/docImages.test.ts` checks every file against its manifest size and that each still sits in the section its manifest names.
+- A page's first picture loads with the page (`loading="eager"`, `fetchpriority="high"`, decoded synchronously) when it comes before the page's second h2; every later picture is lazy, so nothing below the fold loads eagerly (`rehypeFirstImage` in `src/MarkdownDocument.tsx`). A first clip preloads its still in the page's head.
+- Moving between pages, the next page's first picture is fetched ahead: when the pointer, a touch, or focus reaches its link, and when the reader nears the foot of the page with Next on it (`src/firstPicture.ts`). Only the still that page will show at this width and scheme, never a clip, and nothing on Save-Data or 2G.
+- New captures go to the reading-path pages that carry the story: Welcome, Quick Start, One place for the team, Bots, Tasks, The feed, Exactly enough access, and Computers. Every other page keeps the simple pictures it has.
+- A clip's still (`poster.webp` beside `clip.mp4`) is its frame 0, decoded with `ffmpeg -i clip.mp4 -vf "select=eq(n\,0),scale=in_color_matrix=bt709:in_range=tv:out_range=pc:flags=accurate_rnd+full_chroma_int+full_chroma_inp+bitexact,format=rgb24" -frames:v 1 first.png`, then `magick first.png -quality 95 -define webp:method=6 poster.webp`. ffmpeg's default conversion comes out darker. Measured on the multiplayer film (November 2026): the still is within 0.3% of the exactly decoded frame, but headless Chromium shows the playing clip's blue channel about 4 levels lower (up to 8 on saturated blues), a 0.74% mean difference; near-white clips such as /stem-cell/ match within 0.3%. That was checked only in headless Chromium's software decoder: it is unverified on a Mac with hardware decoding and in Safari. Compare the still with the playing clip's first frame in headless Chromium before shipping it; `src/docImages.test.ts` checks that it is the clip's size.
+- The whole-window shot (image title `window` or `window chrome`, `src/AppWindowImage.tsx`) is the app's window sitting directly on the page, with its rounded corners (10–12px at display size), title bar, a subtle border, and a soft shadow, at the column's width. Keep the captured title bar. For the multiplayer recorder's 1133px-wide captures, whose top 40px already reserve the title bar, `window chrome` adds the film's macOS traffic lights. Do not add controls over controls already in the capture.
+- Phone captures (image title `row`) sit in the device frame at 272px wide.
+- A reading-path clip (`src/AutoplayClip.tsx`, `<folder>clip.mp4`) must be a constant 60 fps; `src/docImages.test.ts` reads the rate from the MP4 header (`src/mp4Timing.ts`). Repeated frames need a decoder, so the capture script counts those.
 
 ## Tables
 
@@ -77,7 +108,15 @@ The short descriptor is **Orchestrate Claude, Codex, Grok, Gemini and more in on
 
 ## Docs pages
 
-- **Two layers.** Most people read the top of a page and act on it. That top is, in order:
+- **Reading-path pages** are the pages in the sidebar's Start here, Your team, The app, and Where this goes groups. Each is read in a row with the one before it:
+  1. the h1, which keeps the page's search phrase;
+  2. the page's thesis line (`thesis` in `src/documents.ts`): one sentence that survives a screenshot, a claim about how teams work with the product second. It renders as the pull quote under the h1 and as the text on its link-preview card. It never appears in the sidebar: a second line under a sidebar item reads as a confusing subtitle;
+  3. the story, in prose, a screen or two, with real examples from our own team;
+  4. no closing "Next:" line; Previous/Next at the foot of the page hands off;
+  5. then, if the page has reference material, a "The details" h2 and the search-phrased sections under it.
+
+  A reading-path page never names a competitor; that material lives on a Compare page linked in one line.
+- **Two layers** for every other docs page (Under the hood, Guides, Compare). Most people read the top of a page and act on it. That top is, in order:
   1. the h1;
   2. a lede of one or two sentences that says what the feature does;
   3. the visual, if the page has one;
@@ -86,8 +125,8 @@ The short descriptor is **Orchestrate Claude, Codex, Grok, Gemini and more in on
   Everything below is the reference layer. It is for readers who want to know how the feature works, and for search engines and AI assistants working out what Happy can do. Each h2 names its question in the words people search with: "Use several accounts of one provider", not "Accounts". Each section stands on its own and states concrete facts. No keyword stuffing.
 
   Lead with what you get, never with the problem. The problem and the workarounds belong in the reference layer, beside the alternatives.
-- **Operational recipes are source quotations for agents.** The `/recepies/` pages preserve the full Happy Agent source text byte for byte. Do not rewrite them into human tutorials or add prompt blocks. The sync script and provenance manifest record their source revision, and each page names its source file and revision above the text. Never edit the copies; change happy-agent and re-sync. Their sidebar group, **Recipes (for agents)**, comes last after Comparisons and starts collapsed.
-- **The Chief of Staff block.** Every feature page, and every guide whose task the [Chief of Staff](/chief-of-staff/) can do, has a `chief-of-staff` fence right after its intro, with one prompt per line. Every page renders it the same way (`src/ChiefOfStaffPrompt.tsx`):
+- **Operational recipes are source quotations for agents.** The `/recepies/` pages preserve the full Happy Agent source text byte for byte. Do not rewrite them into human tutorials or add prompt blocks. The sync script and provenance manifest record their source revision, and each page names its source file and revision above the text. Never edit the copies; change happy-agent and re-sync. The sidebar shows them as one link, **Recipes**, in the last group, **For agents**; every recipe page stays live and is listed on `/recepies/`.
+- **The Chief of Staff block.** Every Under the hood page, and every guide whose task the [Chief of Staff](/chief-of-staff/) can do, has a `chief-of-staff` fence right after its intro, with one prompt per line. A reading-path page that keeps one carries it after its opening or at the top of The details, never ahead of the story. Every page renders it the same way (`src/ChiefOfStaffPrompt.tsx`):
   - One line naming what the prompts do, from the fence's first line: ```` ```chief-of-staff add skills ```` renders "To add skills, simply ask the Chief of Staff:". Keep the task short and specific to the page.
   - Each prompt in its own quote-style box: the accent at 7% as its fill and a 3px accent left edge. No card: no full border, no shadow, no heavy fill.
   - Inside the box: a quiet "Example" label in small caps top left, a copy icon top right. The prompt runs the full width below them, never squeezed by a button column, and wraps under them at 390.
@@ -96,26 +135,27 @@ The short descriptor is **Orchestrate Claude, Codex, Grok, Gemini and more in on
   - Without JavaScript the prompt is plain text that selects and copies by hand.
   - Use prompts the Chief of Staff can carry out today with its tools and recipes. Check before adding one.
   - Make them copyable as written. Use example names such as `acme/api`, `ubuntu@203.0.113.10`, and `alice@example.com`.
-  - Leave the block off pages where it can't help: Using the Terminal, How It Works, comparisons, Vision, Team.
+  - Leave the block off pages where it can't help: Using the Terminal, How It Works, comparisons, Vision, Team, and the new reading-path pages (Bots, Tasks, The feed, Computers).
   - Blog posts never get it. They explain how something works; the feature page they link to carries the prompt.
   - Don't repeat the prompt in a prose "Ask the Chief of Staff" section.
 - **One h1 per page.** The build fails otherwise. Sections are h2.
 - **Nothing above the h1 on desktop.** No eyebrow, breadcrumb, or product label, because the sidebar already shows where you are. On a phone, the docs navigation is the group-and-page trail:
   - a 44px tap target;
   - its chevron at the right end, no taller than the text's capitals.
+- **Sidebar rows never move.** Each label reserves the width of its bold, active form (`data-label` on `.docs-nav-label`, a hidden bold copy in `src/style.css`), so a row has the same lines and height active or not. `node scripts/check-sidebar-rows.mjs` measures every row at 1440, 1180, 1024 and in the phone menu and fails on any that moves; it also lists labels that wrap while inactive. Shorten a reading-path label that wraps; a Compare page keeps its search title.
 - **Metadata.** Each page's title, search title, and description (160 characters at most) live in `src/documents.ts`.
 - **Link preview.** Each desktop doc has its own card, `public/og/<path with dashes>.png`: its title, description, and first figure. After adding a page or changing its title, description, or figure, run `python3 notes/og/cards.py <slug>` and commit the PNG; the build fails without it. The original CLI docs under `/docs/` keep the homepage's card. The description is also the page's meta description and preview text, so it states the capability plainly.
   - A page without a figure gets no logo tile in its place. Its card keeps the header and the URL line, gives the title the full width, and swaps the description for the page's `cardLine` in `src/documents.ts`: one line of four to eight words, benefit first, no closing period, true to the page. `cards.py` stops if the line is missing or wraps. A page with a figure may have a `cardLine` too.
   - A screenshot too small to carry a card gets a larger cutout of the same UI in `notes/og/figures/`, named in `CARD_FIGURES` in `cards.py`. It fills the right side the way a diagram does.
   - A post whose preview should play a video sets `video` in `src/documents.ts`. Its card is a frame of the video, the one that carries its hook, 1200 wide at the video's aspect ratio, not a `cards.py` card; iMessage and Discord play the MP4, everything else shows the frame. `docs/og-video.md` has the tags, the per-platform limits, and how to replace the video.
   - After changing cards that are already shared, bump `SOCIAL_IMAGE_VERSION` in `src/siteMetadata.ts` and the `?v=` on the homepage image in `index.html`, so X, Slack, and LinkedIn fetch them again.
-- **Changelog** is collapsed by default, directly above Recipes, after Comparisons. `/changelog/` lists production releases newest first, never previews. Entry titles name their core features; product, stable version and date sit in a small line below. Each human permalink (`/changelog/gpt-6-1-terra/`) is a complete prerendered page with that entry first and its own canonical, og:url and preview. GitHub Pages cannot vary HTML by query string.
-- **The Blog** follows Guides and precedes Comparisons in the sidebar, with no list page. Each post gets a one-word slug you can type from memory: `/workos/`, `/tailcat/`, `/voice/`. Every post ends on the homepage's download options, added by the page layout (`src/DocumentPages.tsx`), never by the post.
+- **Changelog** is collapsed by default, directly above For agents, after the Blog. `/changelog/` lists production releases newest first, never previews. Entry titles name their core features; product, stable version and date sit in a small line below. Each human permalink (`/changelog/gpt-6-1-terra/`) is a complete prerendered page with that entry first and its own canonical, og:url and preview. GitHub Pages cannot vary HTML by query string.
+- **The Blog** follows Compare and precedes Changelog in the sidebar, with no list page. Each post gets a one-word slug you can type from memory: `/workos/`, `/tailcat/`, `/voice/`. Every post ends on the homepage's download options, added by the page layout (`src/DocumentPages.tsx`), never by the post.
 - **URLs don't break.** `routes.txt` only grows. A shared URL keeps working when its page moves: `/team-sign-in-workos/` redirects to `/workos/`.
 
 ## Landing page
 
-The homepage is off-limits without explicit approval for the specific change. That covers:
+The homepage is off-limits without explicit approval for the specific change. Kirill approved the team-story rewrite of November 2026: the copy and order of the value rows, the footer line, and the homepage metadata. That approval does not cover the demo, the downloads, or the speed budget. The homepage covers:
 
 - `src/DesktopApp.tsx`
 - `src/DownloadOptions.tsx`

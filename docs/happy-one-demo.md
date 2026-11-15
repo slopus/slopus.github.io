@@ -297,19 +297,18 @@ existing 47 tests and production build pass.
 ## Regenerating the social preview
 
 This is an agent-run screenshot recipe, not a production script. The ordinary
-page's headline is `HOME_HEADLINE` in `src/homeVariants.ts`; `?preview=og` renders the card's own
-headline, “Any Model. Your Subscription. Happy Harness” (`SOCIAL_HEADLINE`), with
-“Orchestrate Claude, Codex, Grok, Gemini and more in one app” under it and without the
+page's headline is `HOME_HEADLINE` in `src/homeVariants.ts`; `?preview=og` renders the same
+headline, “Happy” with “One place for you, your team, and your agents.” under it, without the
 gradient surface. Every route without its own card (all but
 the desktop docs, whose cards come from `notes/og/cards.py`) uses
-`/og/happy-harness-v26.png` as its social image, served with `?v=` and
+`/og/happy-home-v27.png` as its social image, served with `?v=` and
 `SOCIAL_IMAGE_VERSION` from `src/siteMetadata.ts` so link previews refetch;
-v22–v25 stay for old shares.
+`happy-harness-v22`–`v26` stay for old shares.
 
-The v26 card is a horizontal composition: the three-line headline at 52px, the
-descriptor on two lines, “Free and open source”, and GitHub stars on the left;
-the v29 movie, 664px wide, on the right, frozen at 2.8 seconds with the model
-list open and Opus hovered.
+The v27 card is a horizontal composition: “Happy”, its line on two lines,
+“Free and open source”, and GitHub stars on the left; the team take 11 window,
+596px wide, with the parked phone on the right, frozen at 3.2 seconds with the
+model list open and Opus hovered.
 
 1. Read the current public `https://api.github.com/repos/slopus/happy` response.
    Update the dated snapshot in `src/happyOneGithubStars.ts` using
@@ -324,20 +323,20 @@ list open and Opus hovered.
 3. The explicit `preview=og` flag mounts the GitHub/stars line and selects the
    fixed social-card composition in `src/happy-one-preview.css`. Without the
    flag, the extra hero line is not mounted and the normal layout is unchanged.
-   Keep the headline on three lines: “Any Model.” / “Your Subscription.” / “Happy Harness”.
+   The headline is the hero's: “Happy”, then its line on two lines.
    The copy starts at x=48px in a 440px column; a 24px gap separates it from
    the 596px window, with the parked phone 12px right of it, cut by the card's
-   edge. (The v26 card predates this and shows the 664px composed movie.) Do
-   not stack the demo below the headline in this mode.
-   Wait for **Space Grotesk** and **DM Sans** to load from the existing Google
-   Fonts stylesheet, plus the video. Do not capture
+   edge. Do not stack the demo below the headline in this mode.
+   Wait for the self-hosted fonts (`document.fonts.ready`) and the video. When
+   fulfilling requests from `dist/` yourself, answer Range requests with 206, or
+   the movie is not seekable and stays on frame 0. Do not capture
    fallback fonts, posters, loading indicators, or browser playback controls.
 4. Freeze the `.one-demo video` (the window; the phone seeks with it) at
-   **2.8 seconds** of the v29 asset: pause
-   it, set `controls = false`, and set `currentTime = 2.8`. The model list is
-   open with Opus hovered. Team take 11 has the model menu open from 0 to 4.22s
-   (the pointer scans the list from 1.8s; Opus picked at 4.22s), so choose its
-   frame again. Wait until it is paused, not seeking, decode-ready,
+   **3.2 seconds** of team take 11: pause it, set `controls = false`, and set
+   `currentTime = 3.2`. The model list is open with Opus hovered; at 2.8s the
+   pointer is still on Codex. The menu is open from 0 to 4.22s (the pointer scans
+   the list from 1.8s; Opus picked at 4.22s), so check the frame again whenever
+   the take changes. Wait until it is paused, not seeking, decode-ready,
    and at the target; then wait two animation frames. Keep the pointer away
    from the video.
 5. Capture the full 1200×630 viewport at 2× (2400×1260 bitmap), then downsample
