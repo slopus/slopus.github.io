@@ -100,8 +100,10 @@ describe('docs stills (DESIGN.md, Screenshots, rule 2)', () => {
       const source = readFileSync(document.sourcePath.slice(1), 'utf8')
       const at = source.indexOf(`![](/img/docs/${name} "still")`)
       expect(at, `${name} is on ${page}`).toBeGreaterThan(-1)
-      // Above the first h2, the section is the page's own h1.
-      expect([...source.slice(0, at).matchAll(/^#{1,2} (.+)$/gm)].at(-1)?.[1], name).toBe(section)
+      // Above the first h2, the section is the page's own h1. The manifest may shorten a heading
+      // ("Shared lists" for "Shared todo lists, documents, and calendars"): each of its words is in it.
+      const heading = [...source.slice(0, at).matchAll(/^#{1,2} (.+)$/gm)].at(-1)?.[1] ?? ''
+      for (const word of (section ?? '').toLowerCase().split(/[^a-z0-9']+/).filter(Boolean)) expect(heading.toLowerCase().split(/[^a-z0-9']+/), `${name}: ${section} in ${heading}`).toContain(word)
     }
   })
 })

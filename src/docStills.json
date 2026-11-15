@@ -515,6 +515,319 @@
    ]
   }
  },
+ "tasks-asks-by-name": {
+  "page": "/tasks/",
+  "section": "It finds you when it's your call",
+  "desktop": {
+   "files": {
+    "light": "tasks-asks-by-name.desktop.light.avif",
+    "dark": "tasks-asks-by-name.desktop.dark.avif"
+   },
+   "bytes": {
+    "light": 26347,
+    "dark": 25454
+   },
+   "alt": "The Voice waveform task: the agent asks @Steve whether the muted waveform should be gray or red, with a question card offering both. Steve answers under his own name, Gray, red reads like an error, and the agent says gray it is and goes back to work.",
+   "displayWidth": 788,
+   "displayHeight": 640,
+   "pixels": [
+    1576,
+    1280
+   ],
+   "crop": [
+    345,
+    0,
+    788,
+    640
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 60,
+   "needsWidth": 735,
+   "real": [
+    "top",
+    "right"
+   ],
+   "divider": [
+    "left"
+   ],
+   "chrome": false,
+   "fade": {
+    "bottom": [
+     640,
+     620
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    360,
+    45,
+    720,
+    572
+   ]
+  },
+  "phone": {
+   "files": {
+    "light": "tasks-asks-by-name.phone.light.avif",
+    "dark": "tasks-asks-by-name.phone.dark.avif"
+   },
+   "bytes": {
+    "light": 18194,
+    "dark": 17257
+   },
+   "alt": "The Voice waveform task: the agent asks @Steve whether the muted waveform should be gray or red, with a question card offering both. Steve answers under his own name, Gray, red reads like an error, and the agent says gray it is and goes back to work.",
+   "displayWidth": 350,
+   "displayHeight": 640,
+   "pixels": [
+    700,
+    1280
+   ],
+   "crop": [
+    345,
+    0,
+    350,
+    640
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 350,
+   "real": [
+    "top"
+   ],
+   "divider": [
+    "left"
+   ],
+   "chrome": false,
+   "fade": {
+    "bottom": [
+     640,
+     620
+    ],
+    "right": [
+     695,
+     675
+    ]
+   },
+   "edge": 24,
+   "focus": [
+    360,
+    45,
+    314,
+    572
+   ]
+  }
+ },
+ "bots-open": {
+  "page": "/bots/",
+  "section": "Bots",
+  "desktop": {
+   "files": {
+    "light": "bots-open.desktop.light.avif",
+    "dark": "bots-open.desktop.dark.avif"
+   },
+   "bytes": {
+    "light": 34661,
+    "dark": 41109
+   },
+   "alt": "The Happy window with the Desktop Releases bot selected in the sidebar's Bots list, a clock beside it because it is waiting for its next check. Its conversation is open: Linux passed, Windows still building, and a build receipt listing macOS, Windows and Linux with their build and signing state.",
+   "displayWidth": 880,
+   "displayHeight": 472,
+   "pixels": [
+    1760,
+    944
+   ],
+   "crop": [
+    0,
+    0,
+    880,
+    472
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 152,
+   "needsWidth": 640,
+   "real": [
+    "top",
+    "left"
+   ],
+   "divider": [],
+   "chrome": true,
+   "fade": {
+    "bottom": [
+     472,
+     450
+    ],
+    "right": [
+     880,
+     760
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    0,
+    0,
+    640,
+    449
+   ]
+  },
+  "phone": {
+   "files": {
+    "light": "bots-open.phone.light.avif",
+    "dark": "bots-open.phone.dark.avif"
+   },
+   "bytes": {
+    "light": 15802,
+    "dark": 15851
+   },
+   "alt": "The Happy sidebar with the Desktop Releases bot selected in the Bots list, a clock beside it because it is waiting for its next check; Chief of Staff above it and Product Health with two subtasks below.",
+   "displayWidth": 345,
+   "displayHeight": 472,
+   "pixels": [
+    690,
+    944
+   ],
+   "crop": [
+    0,
+    0,
+    345,
+    472
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 345,
+   "real": [
+    "top",
+    "left"
+   ],
+   "divider": [
+    "right"
+   ],
+   "chrome": true,
+   "fade": {
+    "bottom": [
+     472,
+     450
+    ]
+   },
+   "edge": 24,
+   "focus": [
+    0,
+    0,
+    345,
+    449
+   ]
+  }
+ },
+ "bots-shared-conversation": {
+  "page": "/bots/",
+  "section": "What makes a bot different",
+  "desktop": {
+   "files": {
+    "light": "bots-shared-conversation.desktop.light.avif",
+    "dark": "bots-shared-conversation.desktop.dark.avif"
+   },
+   "bytes": {
+    "light": 18352,
+    "dark": 17631
+   },
+   "alt": "The Desktop Releases bot's conversation with two people in it. Steve asks under his own name whether Windows is done and the bot answers; Kirill says Windows passed QA and asks it to check the item off, and the bot updates the list and confirms.",
+   "displayWidth": 788,
+   "displayHeight": 418,
+   "pixels": [
+    1576,
+    836
+   ],
+   "crop": [
+    345,
+    222,
+    788,
+    418
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 60,
+   "needsWidth": 755,
+   "real": [
+    "right"
+   ],
+   "divider": [
+    "left"
+   ],
+   "chrome": false,
+   "fade": {
+    "top": [
+     222,
+     240
+    ],
+    "bottom": [
+     640,
+     620
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    360,
+    241,
+    740,
+    372
+   ]
+  },
+  "phone": {
+   "files": {
+    "light": "bots-shared-conversation.phone.light.avif",
+    "dark": "bots-shared-conversation.phone.dark.avif"
+   },
+   "bytes": {
+    "light": 9654,
+    "dark": 9270
+   },
+   "alt": "The Desktop Releases bot's conversation: Steve asks under his own name whether Windows is done, and the bot answers that it is still compiling and that it will tell them both when it is green.",
+   "displayWidth": 350,
+   "displayHeight": 222,
+   "pixels": [
+    700,
+    444
+   ],
+   "crop": [
+    345,
+    222,
+    350,
+    222
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 350,
+   "real": [],
+   "divider": [
+    "left"
+   ],
+   "chrome": false,
+   "fade": {
+    "top": [
+     222,
+     240
+    ],
+    "bottom": [
+     444,
+     422
+    ],
+    "right": [
+     695,
+     675
+    ]
+   },
+   "edge": 24,
+   "focus": [
+    360,
+    241,
+    300,
+    178
+   ]
+  }
+ },
  "feed-activity": {
   "page": "/feed/",
   "section": "The feed",
@@ -671,5 +984,314 @@
   },
   "phone": null,
   "noPhone": "Hidden on phones: the report is running text and a 350 px region would cut it mid-word. The feed picture above shows the same report's cover."
+ },
+ "multiplayer-todo-list": {
+  "page": "/multiplayer/",
+  "section": "Shared lists",
+  "desktop": {
+   "files": {
+    "light": "multiplayer-todo-list.desktop.light.avif",
+    "dark": "multiplayer-todo-list.desktop.dark.avif"
+   },
+   "bytes": {
+    "light": 62231,
+    "dark": 48744
+   },
+   "alt": "The Launch checklist, a shared list created by Steve, with three members' faces in its header. Five open items and two completed ones, each with its owner's face at the right.",
+   "displayWidth": 788,
+   "displayHeight": 500,
+   "pixels": [
+    1576,
+    1000
+   ],
+   "crop": [
+    345,
+    0,
+    788,
+    500
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 60,
+   "needsWidth": 765,
+   "real": [
+    "top",
+    "right"
+   ],
+   "divider": [
+    "left"
+   ],
+   "chrome": false,
+   "fade": {
+    "bottom": [
+     500,
+     476
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    360,
+    0,
+    750,
+    472
+   ]
+  },
+  "phone": {
+   "files": {
+    "light": "multiplayer-todo-list.phone.light.avif",
+    "dark": "multiplayer-todo-list.phone.dark.avif"
+   },
+   "bytes": {
+    "light": 35220,
+    "dark": 30835
+   },
+   "alt": "The Launch checklist, a shared list created by Steve: five open items and two completed ones.",
+   "displayWidth": 350,
+   "displayHeight": 500,
+   "pixels": [
+    700,
+    1000
+   ],
+   "crop": [
+    345,
+    0,
+    350,
+    500
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 350,
+   "real": [
+    "top"
+   ],
+   "divider": [
+    "left"
+   ],
+   "chrome": false,
+   "fade": {
+    "bottom": [
+     500,
+     476
+    ],
+    "right": [
+     695,
+     675
+    ]
+   },
+   "edge": 24,
+   "focus": [
+    360,
+    0,
+    300,
+    472
+   ]
+  }
+ },
+ "permissions-modes": {
+  "page": "/permissions/",
+  "section": "Sandbox",
+  "desktop": {
+   "files": {
+    "light": "permissions-modes.desktop.light.avif",
+    "dark": "permissions-modes.desktop.dark.avif"
+   },
+   "bytes": {
+    "light": 6172,
+    "dark": 5009
+   },
+   "alt": "The mode menu open under the composer: Auto, checked, then Workspace write, Read only and Full access.",
+   "displayWidth": 480,
+   "displayHeight": 222,
+   "pixels": [
+    960,
+    444
+   ],
+   "crop": [
+    345,
+    578,
+    480,
+    222
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 230,
+   "real": [
+    "bottom"
+   ],
+   "divider": [
+    "left"
+   ],
+   "chrome": false,
+   "fade": {
+    "top": [
+     578,
+     600
+    ],
+    "right": [
+     825,
+     745
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    360,
+    601,
+    215,
+    190
+   ]
+  },
+  "phone": {
+   "files": {
+    "light": "permissions-modes.phone.light.avif",
+    "dark": "permissions-modes.phone.dark.avif"
+   },
+   "bytes": {
+    "light": 6160,
+    "dark": 4965
+   },
+   "alt": "The mode menu open under the composer: Auto, checked, then Workspace write, Read only and Full access.",
+   "displayWidth": 350,
+   "displayHeight": 222,
+   "pixels": [
+    700,
+    444
+   ],
+   "crop": [
+    345,
+    578,
+    350,
+    222
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 350,
+   "real": [
+    "bottom"
+   ],
+   "divider": [
+    "left"
+   ],
+   "chrome": false,
+   "fade": {
+    "top": [
+     578,
+     600
+    ],
+    "right": [
+     695,
+     675
+    ]
+   },
+   "edge": 24,
+   "focus": [
+    360,
+    601,
+    215,
+    190
+   ]
+  }
+ },
+ "computers-where": {
+  "page": "/computers/",
+  "section": "Computers",
+  "desktop": {
+   "files": {
+    "light": "computers-where.desktop.light.avif",
+    "dark": "computers-where.desktop.dark.avif"
+   },
+   "bytes": {
+    "light": 7957,
+    "dark": 8152
+   },
+   "alt": "The rail at the window's left edge with two buttons, one for your own computer and one for the team's server, the team's selected, beside the top of its sidebar.",
+   "displayWidth": 345,
+   "displayHeight": 267,
+   "pixels": [
+    690,
+    534
+   ],
+   "crop": [
+    0,
+    0,
+    345,
+    267
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 345,
+   "real": [
+    "top",
+    "left"
+   ],
+   "divider": [
+    "right"
+   ],
+   "chrome": true,
+   "fade": {
+    "bottom": [
+     267,
+     241
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    0,
+    40,
+    345,
+    198
+   ]
+  },
+  "phone": {
+   "files": {
+    "light": "computers-where.phone.light.avif",
+    "dark": "computers-where.phone.dark.avif"
+   },
+   "bytes": {
+    "light": 7957,
+    "dark": 8152
+   },
+   "alt": "The rail at the window's left edge with two buttons, one for your own computer and one for the team's server, the team's selected, beside the top of its sidebar.",
+   "displayWidth": 345,
+   "displayHeight": 267,
+   "pixels": [
+    690,
+    534
+   ],
+   "crop": [
+    0,
+    0,
+    345,
+    267
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 345,
+   "real": [
+    "top",
+    "left"
+   ],
+   "divider": [
+    "right"
+   ],
+   "chrome": true,
+   "fade": {
+    "bottom": [
+     267,
+     241
+    ]
+   },
+   "edge": 24,
+   "focus": [
+    0,
+    40,
+    345,
+    198
+   ]
+  }
  }
 }

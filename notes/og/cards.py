@@ -54,8 +54,11 @@ CARD_FIGURES = {
     # half-shown pane; welcome-window adds the traffic lights its chrome reserves.
     # notes/og/still_figures.sh makes them.
     "/welcome/": "/__figures/welcome-window.png",
+    "/bots/": "/__figures/bots-open.png",
     "/tasks/": "/__figures/tasks-teammate.png",
     "/feed/": "/__figures/feed-activity.png",
+    "/permissions/": "/__figures/permissions-modes.png",
+    "/computers/": "/__figures/computers-where.png",
 }
 
 W, H = 1200, 630
