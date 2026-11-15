@@ -1,6 +1,38 @@
 # Permissions & Sandbox
 
-Every agent in Happy runs under one permission model: Claude, Codex, Grok, and MCP tools share the same filesystem boundary and the same OS sandbox. In Auto, the default, an action that would cross the boundary is reviewed by a separate agent instead of prompting you.
+Sharing agents with a team raises a question that an agent on one person's laptop never had to answer: when an agent acts, on whose authority?
+
+Happy answers it in layers. Every agent works inside a sandbox and asks before it crosses the line. A bot holds only the keys its job needs. Roles for people come next, with Happy Cloud.
+
+## For every agent: the sandbox
+
+Whatever the model, an agent in Happy runs inside an operating-system sandbox. It can change the work in front of it and nothing else, and it reaches only the network addresses you allow. Its shell can still read most of the machine outside the credential folders, so a computer the team shares wants the service and the work under separate users: [harden a shared machine](/recepies/hardening/).
+
+In **Auto**, the default, you are not asked to approve things all day. When an agent needs to cross the line, a second, read-only agent reviews that one action against what you actually asked for and allows or denies it. Only your own words count as permission. Text in a file or a web page that says "go ahead" does not.
+
+![The permission menu open under the composer, with Auto checked above Workspace write, Read only and Full access.](/img/docs/permissions-modes.webp)
+
+When the call belongs to someone else, the agent asks them by name and waits for their answer.
+
+## For bots: one job, one key
+
+A bot can be limited to the secrets its job needs, kept away from the team's other tasks and agents, or made to run its commands in a container. A secret is used, never seen: the value goes into the one command that names it, and the model never receives it. On the team's server, no member's laptop does either.
+
+We build Happy with Happy, and on our own team the signing keys for the phone apps are attached to one bot and to nothing else, and each of our 49 secrets carries a note saying who supplied it and what it is for. → [Secrets](/secrets/), [restrict a bot](/recepies/bot-settings/)
+
+## Coming with Happy Cloud
+
+Today everyone on a team server has the same authority, so it is for people who trust each other. Happy Cloud adds:
+
+- invitations that carry a role;
+- custom roles;
+- private vaults;
+- letting a role use a secret it can never read;
+- an audit trail.
+
+And the rule under all of them: an agent never has more authority than the person it works for.
+
+## The details
 
 ```chief-of-staff change the default permission mode
 Make Workspace write the default permission mode for new sessions

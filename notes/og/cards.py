@@ -1,8 +1,8 @@
 # Writes public/og/<slug>.png, the 1200x630 link preview of every desktop doc: the
 # Happy Engineering wordmark with the descriptor under it, the page's title and description, its URL, and its
-# figure (the first image on the page) on the right. A page's cardLine (src/documents.ts), where it
-# has one, replaces the description; a page without a figure must have one, and gives the title
-# the full width. The original CLI docs under /docs/ keep the homepage's card.
+# figure (the first image on the page) on the right. A page's thesis (src/documents.ts), where it has
+# one, replaces the description; otherwise its cardLine does. A page without a figure must have one
+# of the two, and gives the title the full width. The original CLI docs under /docs/ keep the homepage's card.
 #
 # Run from the repository root after adding or retitling a desktop doc:
 #   python3 notes/og/cards.py            # every desktop doc
@@ -51,8 +51,8 @@ CARD_FIGURES = {
 }
 
 W, H = 1200, 630
-# Under the wordmark on every card, as on public/img/tailcat-x.png; src/products.ts HAPPY_DESCRIPTOR.
-DESCRIPTOR = "Orchestrate Claude, Codex, Grok, Gemini and more in one app"
+# Under the wordmark on every card: the homepage hero line, src/products.ts HAPPY_TAGLINE.
+DESCRIPTOR = "One place for you, your team, and your agents."
 INK, MUTED, BODY, ACCENT, PAPER = "#183f38", "#6b7f78", "#47645e", "#e6522c", "#f5f0e7"
 
 
@@ -75,7 +75,7 @@ def desktop_documents():
         const markup = m.renderPath(href)
         const article = markup.slice(markup.indexOf('<article'), markup.indexOf('</article>'))
         const figures = [...article.matchAll(/<img [^>]*?src="([^"]+)"[^>]*?alt="([^"]*)"/g)].map(([, src, alt]) => ({ src, alt }))
-        return { href, heading: m.documentHeading(d), description: d.description, cardLine: d.cardLine, card: m.metadataForPath(href).socialImage?.path, video: !!d.video, figures }
+        return { href, heading: m.documentHeading(d), description: d.description, cardLine: d.cardLine, thesis: d.thesis, card: m.metadataForPath(href).socialImage?.path, video: !!d.video, figures }
       })
       console.log(JSON.stringify(pages))
     """
@@ -142,9 +142,10 @@ def figure_markup(page):
 def card_html(page):
     figure_w, figure = figure_markup(page)
     copy_w = W - 72 - 56 - 48 - figure_w if figure else W - 2 * 72
-    if not figure and not page.get("cardLine"):
-        sys.exit(f"{page['href']} has no figure: give it a cardLine in src/documents.ts")
-    text = page.get("cardLine") or page["description"]
+    if not figure and not page.get("cardLine") and not page.get("thesis"):
+        sys.exit(f"{page['href']} has no figure: give it a thesis or a cardLine in src/documents.ts")
+    text = page.get("thesis") or page.get("cardLine") or page["description"]
+    one_line = bool(page.get("cardLine")) and not page.get("thesis")
     url = f"happy.engineering{page['href']}".rstrip("/")
     wordmark = (PUBLIC / "brand/happy-engineering-inline-light.svg").read_text()
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
@@ -174,7 +175,7 @@ p.line {{ display: block; white-space: nowrap; }}
 </style></head><body><div class="card">
 <div class="copy">
   <div class="wordmark">{wordmark}<div class="descriptor">{DESCRIPTOR}</div></div>
-  <div class="text"><h1>{html.escape(page['heading'])}</h1><p{' class="line"' if page.get("cardLine") else ''}>{html.escape(text)}</p></div>
+  <div class="text"><h1>{html.escape(page['heading'])}</h1><p{' class="line"' if one_line else ''}>{html.escape(text)}</p></div>
   <div class="url">{html.escape(url)}</div>
 </div>
 {figure}

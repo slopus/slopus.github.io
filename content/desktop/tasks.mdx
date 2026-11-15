@@ -1,0 +1,38 @@
+# Tasks
+
+A task is a piece of work with a name, an owner, and a conversation. You start one by saying what you want. That is all a task is, and it replaces a surprising number of meetings.
+
+## You see it start
+
+A teammate's new task appears at the top of your sidebar with their face on it. Open it and you are reading along, live. If you have something to add, type; your message goes in under your name. If it is not your business, leave the task and it drops out of your list. Your sidebar is yours: you order it, and moving a task there moves it for nobody else.
+
+![The Tasks section of the sidebar, each task with its owner's face: Offline Drafts, Desktop Alerts, Voice waveform (selected), Message Retry Queue, Bot Permissions, Sidebar Unread Dots and Task List Speed, with its List cache subtask showing 290 lines added.](/img/docs/tasks-sidebar-faces.webp)
+
+Nobody has to write a status update for this to work. We build Happy in Happy, and there are two of us, Kirill and Steve. In November 2026 one of Kirill's tasks, on slow reconnects, published the page that framed its main decision, and Steve had joined the task within the hour. Two days earlier Kirill had joined Steve's task building Happy Cloud. Neither was asked to.
+
+The agents notice each other too. A reviewer agent in Steve's task saw a commit Kirill had pushed straight to main, reviewed it without being asked, and caught a deployment step that would have broken a new model. Another was about to start a release, found one already running from the other person's account, and stood down.
+
+## One task, several repositories
+
+Real work rarely fits in one repository. A task opens subtasks, each in its own copy of a repository on its own branch, each with its own list of changes, nested under the task that asked for it.
+
+![Steve asks to plan the team server sign-in across three repositories; the agent opens iOS server codes in happy, Desktop sign-in in happy-desktop and Agent sign-in in happy-agent, and later reports all three ready for review.](/img/docs/tasks-three-repos.webp)
+
+One reply from Kirill in that reconnect task became a benchmark and eleven fixes, four in a networking library and seven in the phone app. Each ran in its own checkout, they took turns on the one Mac that builds iOS, and a twelfth agent merged the branches.
+
+Each subtask can run on a different model. Plan on one, build on another, review on a third. → [Models on your subscriptions](/models/)
+
+## It finds you when it's your call
+
+Tell Happy what you look after ("billing, invoices, Stripe webhooks") and agents know who to bring in. When a task touches your area, its agent loops you in with a one-line reason. When a decision is yours, it asks you by name and waits.
+
+![Kirill asks for a muted state on the voice waveform and says to ask Steve which color; the agent asks @Steve whether it should be gray or red, Steve answers under his own name and photo that red reads like an error, and the agent goes with gray.](/img/docs/permissions-asks-by-name.webp)
+
+Set yourself to away and agents stop waiting: they make the call, keep going, and leave you a note.
+
+## Tasks don't die
+
+Close the app, restart the machine, come back next week. The task is where you left it and still knows what it was doing.
+
+It can also keep going without you. Kirill signed off one night asking for proof by morning. The task woke itself every 45 minutes, and the report was there at breakfast: returning to a busy chat took 0.31 seconds, down from 6.7. → [Agents That Never Die](/agents/)
+

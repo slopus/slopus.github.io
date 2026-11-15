@@ -2,9 +2,10 @@
 title: "Vision"
 ---
 
-Everyone is going to need a way to talk to AI. We think this is one of the most important problems to be solving today, and we want to get it right.
+Everyone is going to need a way to talk to AI, and every team is going to need a place where its people and its agents work together. We think this is one of the most important problems to be solving today, and we want to get it right.
 
 - **Make people happy.** ![A small, very happy pig](/thesis/pig.png) We want to make something nice. Polished UX, open source, any model, no lock-in. If people are happy using us, the rest follows.
+- **One app for the whole company.** Tasks, bots, a feed, lists, docs, and calendars are here now. Messages and calls are next.
 - **One primary agent.** You'll run lots of agents, but only one talks back to you.
 - **Chat left the chat.** When was the last time you scrolled up in a chat? The sidebar (your task tracker) and the chat (your deep focus) are both prime to become generated artifacts.
 - **Fiddle less, understand more.** The busy work of the interface is leaving. Your comprehension is the bottleneck now.
@@ -19,6 +20,22 @@ We want to make something nice. Polished UX. Open source. Any model from any pro
 How will we make money? We're not focusing on it right now. Today the only paid thing is voice: 20 free minutes every 30 days through ElevenLabs, then up to 5 hours per 30 days on a paid tier in the mobile app. Later, probably a referral code with the VPS providers you host your Happy agents on, or our own hosting and extra features. The question right now is whether people get genuinely excited and become hardcore fans. We're going after the top of the funnel: the main agent you talk to for work, and later for the rest of your life.
 
 Meta got in touch about an internal pilot because their engineers kept asking to use Happy at work. We hope enough people agree with these bets to give Happy a shot.
+
+# One app for the whole company
+
+**Chat tools were built for people talking to people. Most of your coworkers are agents now.**
+
+Look at what a small team pays for: a chat app, a call app, a tracker, a docs tool, a calendar, and then a separate product for each kind of agent. None of them know about each other, and the agents can reach almost none of it.
+
+We think that stack collapses into one app. Happy already has the work: tasks, bots, the feed, shared todo lists, documents, and calendars, all of which agents can read and change. What is missing is the talking.
+
+So that is what we are building next. **These are not shipped:**
+
+- **Direct messages**, between people and between people and bots, in the same sidebar as the work.
+- **Calls**, where an agent can listen, take the notes, and start the task before you hang up.
+- **Compute you can rent in a click**, for teams that do not want to own a machine.
+
+The goal is a team that needs nothing else installed. Zero dependencies, open source, on your own computers if you want it that way.
 
 # One primary agent
 

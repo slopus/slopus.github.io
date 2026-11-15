@@ -1,46 +1,70 @@
 # Quick Start
 
-You need macOS, Windows, or Linux, and at least one of Claude Code, Codex, or the Grok CLI signed in on the machine.
+<Download />
 
-## Install
+You need macOS, Windows, or Linux, and one of Claude Code, Codex, or the Grok CLI signed in. There is no Happy account to create and no key to paste. Open the app and it finds your sign-ins.
 
-Download from the [latest release](https://github.com/slopus/happy-desktop/releases/latest) (macOS, Windows, or Linux), or use Homebrew on macOS or Linux:
+Happy has three things in it: repositories, tasks, and bots. A few minutes with each and you know the app.
 
-```sh
-brew install --cask slopus/tap/happy
-```
+## Repositories
 
-On macOS, open **Happy** from Applications or Spotlight. On Linux, launch it with `happy-desktop`; it needs a graphical session and FUSE.
+A repository is where your code is. Add one and Happy can check it out. That is all it is for.
 
-If Windows SmartScreen says "Windows protected your PC", click **More info → Run anyway**. The installer is signed; SmartScreen warns about new releases until they build up reputation.
-
-Open the app. It starts its own agent runtime and finds the provider sign-ins. There is no key to paste.
-
-## First project
-
-After you sign in to a model and pair your phone or skip it, onboarding opens the [Chief of Staff](/chief-of-staff/) with a draft ready to send. Send it, or ask in your own words:
+You don't add it in a settings screen. Once you have signed in to a model, the app opens the [Chief of Staff](/chief-of-staff/) with a draft ready to send:
 
 ```chief-of-staff get set up
 Help me get started with Happy
 ```
 
-With your go-ahead it lists recent Claude Code and Codex project folders (paths only, no conversation text), imports the one you pick or creates a new project, and agrees one small first change with you. It does not commit, push, or deploy on its own.
+It finds the folders you already work in with Claude Code or Codex and offers them. Pick one and you are working in it. Add as many as you like. In the app a connected repository is called a project.
 
-## First session
+Switching agent tools has never been easier, and we think that is a good thing in both directions. Your code stays in your own folders, the models stay on your own subscriptions, and Happy is MIT licensed. So thanks for giving it your time. We hope it becomes a happy place for you, and if it doesn't, we won't make leaving hard.
 
-Open the project and start a session with any model you are signed in to. New sessions run in **Auto**: reads and workspace edits are free, everything else is sandboxed, and actions that cross the boundary are reviewed automatically. The session belongs to the runtime; closing the app does not stop it.
+## Tasks
 
-## Pair your phone
+A task is a piece of work you hand to an agent: one conversation, with a name and an owner. Say what you want, pick any model you are signed in to, and send.
 
-**Settings → Mobile Access**, or accept the offer during onboarding. Install the [Happy phone app](/mobile-app/) from the App Store or Google Play, scan the device QR, approve on the phone.
+When two tasks work in the same repository at once, each gets its own copy on its own branch, so ten things can go on in the same code without touching each other. A task keeps running when you close the app. It runs in **Auto**: reading and editing inside its copy is free, and anything that reaches further is reviewed first.
 
-## Where things live
+One task can work in several repositories. Ask for a change that touches the phone app, the desktop app, and the docs site, and the task opens a subtask in each. They sit under it in the sidebar, each in its own repository, with the size of its change.
 
-| Path | Contents |
-| --- | --- |
-| `~/Happy/Config/happy.toml` (macOS), `~/happy/config/happy.toml` (Linux) | Configuration, written with comments on first start |
-| `AGENTS.md` beside it | Instructions every agent reads on every project |
-| `~/Happy/Workspaces` (macOS), `~/happy/workspaces` (Linux) | Managed workspaces, one worktree each |
-| `~/.happy/agent` | Runtime state: sessions, logs, socket, token |
+![](/img/docs/quick-start-task-tree "still")
 
-Do not delete `~/.happy` to fix a problem. It holds sessions, configuration, and account state.
+## Bots
+
+A bot is an agent with a standing job. A task ends when the work is done. A bot is still there tomorrow, with its own folder and one continuous conversation you keep coming back to.
+
+You have already met one. The Chief of Staff comes with the app, and its job is Happy itself. We think you should never have to click through a settings screen again, so anything you would go looking for in settings is something you can ask for:
+
+```chief-of-staff set up Happy
+Add my work Claude account and rotate between it and my personal one
+Make Codex the default for new sessions
+Pair my phone
+Create a bot called Release Notes that drafts our weekly release notes
+```
+
+It does the thing, checks that it worked, and tells you. It stops only for what is yours to decide: a sign-in, an approval, a choice.
+
+![](/img/docs/quick-start-chief-of-staff "still")
+
+Make a bot for any job that never ends: releases, alerts, the weekly notes. The ones we run are on [Bots that own a job](/bots/).
+
+## Then bring your team
+
+Everything above works alone. It is better with the people you work with in it:
+
+```chief-of-staff bring your team
+Create a team called Acme on my server ubuntu@203.0.113.10 and invite alice@example.com
+```
+
+The Chief of Staff sets the team up on that machine, checks that it works, and sends the invitations. Each person signs in as themselves. From then on you share one sidebar: their tasks show up in yours as they start, and the bots answer all of you.
+
+What that is like day to day is the next page: [One place for the team](/multiplayer/).
+
+## Install notes
+
+- Homebrew works on macOS and Linux: `brew install --cask slopus/tap/happy`.
+- On Linux, launch it with `happy-desktop`; it needs a graphical session and FUSE.
+- If Windows SmartScreen says "Windows protected your PC", click **More info → Run anyway**. The installer is signed; SmartScreen warns about new releases until they build up reputation.
+- Pair your phone during onboarding, from **Settings → Mobile Access**, or by asking the Chief of Staff. See [Happy on your phone](/mobile/).
+- Where Happy keeps its configuration, workspaces, and runtime state on disk is in [Configuration](/guides/configuration/#where-the-files-live).

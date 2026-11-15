@@ -1,10 +1,14 @@
 # Agents That Never Die
 
-Every conversation in Happy is a durable session that survives a closed window and a restart. A subagent that finished is not gone; send it a follow-up and it resumes with its full context. A question asked while you were away is still waiting when you return.
+Every task in Happy survives a closed window and a restart. A subagent that finished is not gone; send it a follow-up and it resumes with its full context. A question asked while you were away is still waiting when you return.
 
 ```chief-of-staff schedule a reminder
 Tomorrow at 9am, remind me to review the open pull requests on acme/api
 ```
+
+![Kirill asks to be told when the Windows installer is green; the agent says it is still compiling and it will check again in 20 minutes, then waits, with the wait counting down: 30s, Wait for 19m 30s.](/img/docs/agents-wait.webp)
+
+## The details
 
 ## What a session is
 
@@ -12,7 +16,7 @@ A session has a working directory, a model, an effort, a permission mode, and a 
 
 ## Subagents: delegate work to other models
 
-An agent delegates bounded work to subagents, background by default. Depth is capped at three; a tree holds at most five, finished ones included.
+An agent delegates bounded work to subagents, background by default. Depth is capped at three, and at most eight run at once in a tree.
 
 - Each child picks its own model and effort. Nothing is inherited.
 - A child starts with only its task.

@@ -1,49 +1,35 @@
 # Multiplayer
 
-One place for you, your team, and your agents. Today most of our tasks start as conversations with agents, and Happy is built around this: your teammates' tasks appear as they start, and what their agents publish lands in Activity.
-
 ![A silent, 68-second recording of Happy Desktop on a team server. Two centred lines hold: Today most tasks start as conversations with agents. Happy is built around this idea. The text fades out and the app fades in. Scoteezy's and Steve's tasks arrive in the sidebar with their faces. Kirill opens Steve's Offline Drafts, returns to his own task, then chooses Leave task for a teammate's task; it disappears from his sidebar. Team Servers opens subtasks across the happy, happy-desktop, and happy-agent repositories: iOS server codes, Desktop sign-in, and Agent sign-in. Their change counts appear and grow beneath the parent. A subtask finishes and an Activity badge appears. Activity holds on the team's feed with a Task list, 3× faster report preview, without scrolling. Shared bots own the recurring work: Kirill opens Desktop Releases, Growth, and Product Health, showing their conversations with a build-status table, a signup chart, and a crash-free trend. The desktop fades to a running iPhone under On all platforms. The phone continues beside the Happy end card: One place for you, your team, and your agents. Free and open source.](/video/multiplayer/ "autoplay")
 
-## See who's working on what
+A lot of a team's work now starts as a conversation with an agent. Those conversations sit in separate windows on separate machines, and the usual way to learn what a teammate's agent did is to ask the teammate.
 
-Every task on the team server is in your sidebar with its owner's face. A teammate's new task appears at the top as it starts. Open it to read along, then go back to your own. Leave a teammate's task you're not interested in, and it drops out of your sidebar.
+In Happy the team has one place. Everyone signs in as themselves and sees the same four things:
 
-One task can open subtasks across several repositories, each nested under it with its own changes. Tasks run on Claude, Codex, Grok, and more, using the subscriptions signed in on the server.
+- [Tasks](/tasks/): every piece of work, with its owner's face, at the top of your sidebar as it starts.
+- [Bots](/bots/): the standing jobs, owned by bots every member can see and talk to.
+- [The feed](/feed/): what agents publish, in one stream, grouped by day.
+- [Shared lists, documents, and calendars](#shared-todo-lists-documents-and-calendars): beside the tasks, edited by people and agents alike.
 
-## See the most important updates from the team
+## It asks the right person
 
-When a teammate's agent publishes a review, a report, a design, or a screenshot, it arrives in Activity as an artifact card with a summary and a cover that previews it. Each new version folds into the same card. New tasks and shared lists are there too, grouped by day, with faces. An entry stays unread until you open it or mark all read.
+When a decision belongs to you, the agent asks you by name, and your teammates see your answer under your name and photo. If a task touches something you follow, an agent can loop you in: the task jumps into your sidebar, marked, on your desktop and your phone.
 
-## Shared bots for the standing jobs
+## Who can do what, and where it runs
 
-![The full Happy Desktop window on a team server. Six bots are visible: Chief of Staff, Desktop Releases, Mobile Releases, Alerts, Growth, and Product Health. Desktop Releases is selected. Kirill asks how the next preview's builds are going. The bot shows an inline build receipt: macOS ready, signed and notarized; Windows building; Linux passed its AppImage smoke check. It will post the preview when all three are green. In the sidebar, Team Servers has nested iOS server codes, Desktop sign-in, and Agent sign-in tasks, each with its own change counts.](/video/multiplayer/bots/still.webp "window chrome")
+Every agent works inside a sandbox, and a bot holds only the keys its job needs: [Exactly enough access](/permissions/). The work runs on computers you choose, yours or one the team shares: [Your computers, the team's](/computers/).
 
-For recurring work like releases, a shared bot helps own an area of your product, such as growth or product health. Every member sees the same bots and writes into the same conversation. Each bot keeps a conversation, a name, a picture, and a folder of its own.
+## The details
 
-On our team server we run Desktop & Agent Releases, Mobile Releases, Growth Hacking, a Digital Ocean Watcher, and Product Health. Any member can start one from New bot in the sidebar. Bots publish their work into Activity too.
+## Shared todo lists, documents, and calendars
 
-## Also
+They live on the team's server, appear in every member's sidebar, and agents read and edit them too.
 
-**Step in when it's your call.** When the decision is yours, the agent asks you by name. Your teammates see your answer under your name and photo.
+![The shared Launch checklist with three members' faces: five open todos, each with the face of who added it, and one completed, Re-run QA on Windows, struck through.](/img/docs/multiplayer-todo-list.webp)
 
-**On your phone.** Pair your phone with the team server to read Activity and tasks, or to answer an agent. See [Mobile Access](/mobile/).
+## Use it from your phone
 
-**Shared todo lists, documents, and calendars.** They live on the server, appear in every member's sidebar, and agents read and edit them too.
-
-## Happy vs Cursor Projects, Claude Projects, ChatGPT projects, and Capy AI
-
-| | Cursor Projects | Claude Projects, Team plan | ChatGPT shared projects | Capy AI | Happy |
-| --- | --- | --- | --- | --- | --- |
-| Working together | "work together in one unified workspace" | Chats stay "private … unless you manually share them" | "members see and interact with the project’s chats" | Members "can read every shared thread"; private sharing too | Every member sees every task and bot, and whose each task is |
-| Models | "Plus includes Grok models only"; third-party ones "at API list price" | Claude | OpenAI's | Claude, GPT, Grok, Gemini; "your own subscriptions and API keys" | Claude, Codex, and Grok; Gemini and ACP agents in beta |
-| Runs on | "its own computer in the cloud" | Anthropic's service | OpenAI's service | "cloud and your machines"; Enterprise BYOC on request; proprietary platform | A server you run; open source, MIT |
-| A team pays | "Teams $30+/user/month" | "$20 Per seat / month if billed annually" | "Project sharing is available on ChatGPT Free" | "no per-seat charge"; Lite $20/mo or pay-as-you-go credits | Nothing to us: your server, and the subscriptions signed in on it, which every member's work runs on |
-
-Quoted from Cursor's [announcement](https://x.com/cursor_ai/status/2120295553309565139) (Nov 10, 2026), [Projects changelog](https://cursor.com/changelog/projects) (Sep 10, 2026), and [pricing](https://cursor.com/pricing); Claude's [project sharing article](https://support.claude.com/en/articles/9519189-project-visibility-and-sharing) (updated Nov 6, 2026) and [pricing](https://claude.com/pricing); and ChatGPT's [Projects article](https://help.openai.com/en/articles/10169521-projects-in-chatgpt). Pricing and help pages read Nov 10, 2026. Capy's [projects](https://docs.capy.ai/projects), [models](https://docs.capy.ai/models-and-pricing), [pricing](https://capy.ai/pricing), [desktop](https://docs.capy.ai/desktop), [Enterprise](https://capy.ai/enterprise), and [terms](https://capy.ai/terms-of-service) (updated Oct 24, 2026) read Nov 13, 2026.
-
-Where they are better: there is no server to run, and ChatGPT shares a project from a link on its free plan. Claude and ChatGPT invite from a Share button, ChatGPT's project owner can remove a member, and Claude's Team plan adds single sign-on and central billing.
-
-Capy supplies cloud VMs and pull-request reviews without a per-seat charge.
+Pair your phone with the team server to read the feed and tasks, or to answer an agent. See [Happy on your phone](/mobile/).
 
 ## Run your own team server
 

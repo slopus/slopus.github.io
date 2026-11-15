@@ -30,7 +30,7 @@ Immediate and irreversible: the workspace leaves the list, the worktree and fold
 
 An agent never edits another workspace by path. Work runs from inside the workspace:
 
-- **Subtask**: a full conversation in your session list, in its own new workspace, with the creating agent as its coordinator. Only bots and their subtasks create them.
+- **Subtask**: a full conversation in your session list, in its own new workspace, with the creating agent as its coordinator. Tasks, bots, and their subtasks create them.
 
 Only the creating session may archive a workspace.
 
@@ -39,6 +39,8 @@ Only the creating session may archive a workspace.
 When work will run alongside other work and their changes could collide. That is the only reason. A subtask of what you are already doing, however many subagents help, stays in the current workspace.
 
 ## Which changes a workspace shows
+
+![VoiceBars.tsx open in a tab beside the Muted bars task, in a unified diff: a new muted prop and default added, and the animation now running only while active and not muted.](/img/docs/workspaces-diff.webp)
 
 Measured against the branch's merge base with the remote default branch (`origin/main`), falling back to the local one only when there is no remote. Desktop shows changed files beside the conversation.
 

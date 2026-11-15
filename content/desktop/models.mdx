@@ -1,10 +1,14 @@
 # Models & Subscriptions
 
-Happy runs Claude, Codex, and Grok on the subscriptions you already pay for. Sign in to Claude Code, Codex, or the Grok CLI on the machine and Happy uses those credentials: no Happy plan for model access, no key to paste. Gemini runs through Google's Antigravity on your Google sign-in, and OpenCode or any Agent Client Protocol (ACP) agent on its own login (beta); see [Harnesses](/recepies/harnesses/).
+Claude for the hard part, GPT for the long part, Grok for the search, in one task. Happy runs each model with its vendor's own prompts and tools, on the plan you already have. There is no Happy plan for model access and no key to paste. Gemini runs through Google's Antigravity on your Google sign-in, and OpenCode or any Agent Client Protocol (ACP) agent on its own login (beta); see [Harnesses](/recepies/harnesses/).
+
+![The model picker over the composer: Claude with Opus 5.5 1M (checked) and Sonnet 5.5, Codex with GPT-6.1 Terra and GPT-6 Astra, Grok with Grok 4.7, and Manage accounts, beside the Model and Effort menu.](/img/docs/models-picker.webp)
 
 ```chief-of-staff add an account
 Add my work Codex account and rotate between it and my personal one
 ```
+
+## The details
 
 ## Supported providers and where their credentials come from
 
@@ -26,6 +30,8 @@ Change a session's model or reasoning effort at any time, from the app or the ph
 ## Use several models in one task
 
 Subagents each pick their own model and effort; nothing is inherited. One task can plan on one provider, implement on another, and review on a third. See [Agents That Never Die](/agents/).
+
+![Kirill asks for a pricing page redesign; the agent, on Opus 5.5 1M, splits the work so Grok searches competitor pricing and GPT builds the page, then both subtasks report back and GPT builds from Grok's research.](/img/docs/models-subtasks.webp)
 
 ## How compaction works
 

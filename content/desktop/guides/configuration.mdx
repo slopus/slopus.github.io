@@ -12,10 +12,15 @@ Let sandboxed commands reach api.github.com and registry.npmjs.org
 | --- | --- |
 | Machine | `~/Happy/Config/happy.toml` (macOS), `~/happy/config/happy.toml` (Linux) |
 | Repository | `happy.toml` at the repository root |
+| Every project | `AGENTS.md` beside the machine file: instructions every agent reads on every project |
+| Workspaces | `~/Happy/Workspaces` (macOS), `~/happy/workspaces` (Linux): managed workspaces, one worktree each |
+| Runtime state | `~/.happy/agent`: sessions, logs, socket, token |
 
 The machine file is written with comments on first start and never overwritten. Your global `AGENTS.md` sits beside it. The repository file wins where it is allowed to; providers, Docker, and anything that exposes the machine are machine-only. Agents see the repository file read-only.
 
 MCP servers go in `mcp.toml` in the same two places. See [Skills & MCP](/extending/).
+
+Do not delete `~/.happy` to fix a problem. It holds sessions, configuration, and account state.
 
 ## Default permission mode
 

@@ -1,0 +1,33 @@
+# Computers
+
+An agent needs somewhere to run commands. Most products answer that with a virtual machine they rent you. We think you already own the right computers, and that your code is safer on them.
+
+## Yours
+
+Install Happy and your own computer is the first one. Agents work in your real checkout with your real tools. Your phone reaches them end-to-end encrypted, through a relay that sees only ciphertext or over a direct connection.
+
+## The team's
+
+A team shares computers. We build Happy with Happy, and ours are a Mac mini with an iPhone plugged into it for iOS builds and a 20-core Linux machine that does nothing but run Android emulators. Any agent on the team can use them, and nobody has to keep a laptop open.
+
+Agents treat a shared computer the way a good colleague would. Ours name their simulators after their task, keep their files in a folder of their own, and queue for the Mac instead of fighting over it. One refused to run a desktop browser test there because the rule says the Mac is for phone builds.
+
+On a server you run yourself, a runner gives the team's agents a separate machine to work on, apart from the one that holds the team's credentials: [add a runner](/recepies/runner/).
+
+## Self-hosted, all the way down
+
+Everything above runs with no cloud of ours involved: one Happy on a machine you control, the team signing in to it. → [Bring your team](/guides/team-server/), [Run it on a remote machine](/guides/remote-server/)
+
+## Coming with Happy Cloud
+
+Adding a computer takes a single command. It dials out to the team and never accepts an inbound connection, so there is no port to open and nothing to expose. Each computer is shared in one of four ways:
+
+| Mode | What it means |
+| --- | --- |
+| **Sandbox** | Every agent gets its own sealed space, with no direct network. Team secrets are applied on the way out, so the agent never holds them. |
+| **Shared** | Agents run side by side on the machine, kept apart from each other. |
+| **Exclusive** | One agent at a time has the whole machine. For the phone farm, the GPU, the thing with a license dongle. |
+| **Private** | Your own computer. Only your agents, and only after you say yes. |
+
+Your repository credentials stay with the team and are not copied onto the machines that do the work.
+

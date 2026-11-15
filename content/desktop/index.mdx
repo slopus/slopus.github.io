@@ -1,31 +1,28 @@
 # Welcome
 
-**Happy** is an open-source harness for orchestrating coding agents: Claude, Codex, Grok, Gemini, and more in one [desktop app](/desktop-app/), reusing the subscriptions you already pay for. Agents hand work to subagents on other models, run under one permission model and sandbox, and keep going through restarts. The phone app, remote servers, and teams are parts of it.
+A year ago most of us had one agent in one terminal. Now a team runs dozens, and a lot of the work starts as a message to one of them. More gets done. It also got harder to see what everyone else is working on, and to keep track of your own.
 
-Download it for [macOS, Windows, or Linux](/#download) and open it. Happy starts its own agent runtime and picks up the Claude, Codex, and Grok sign-ins on the machine.
+The way teams work is adjusting, and the tools with it: agent apps are growing team features, and team tools are growing agents. What a team is for hasn't changed, though. People form the mission, and the team and its agents exist to carry it out. In effect you are building one organism to do that, and we think it deserves a home of its own, with four things in it:
 
-## What you get
+- **Your focus.** What needs you today, and nothing else. An agent asks you by name only when a decision is yours, and shared todo lists and calendars sit next to your tasks. What a calendar and a sidebar should be when agents do most of the work is something we are still working out.
+- **Your agents.** Claude, Codex, Grok, and more in one window, on the subscriptions you already have. Tasks keep running when you close the app, and you can pick them up from your phone.
+- **Alignment with your team.** A teammate's task appears in your sidebar when it starts, and what agents make is posted to a feed. You know where the mission stands without calling a meeting.
+- **The team's always-on bots.** A task ends when the work is done. A bot keeps going and can own a whole area the way a person does: the release cycle, CI, research into where to distribute next. Everyone on the team asks the same one, and each bot gets only the keys its job needs.
 
-- **Every model, native.** Claude gets Claude Code's prompts and tools, GPT models get Codex's, Grok gets Grok Build's. Gemini runs in Google's Antigravity, and any Agent Client Protocol (ACP) agent can run too (beta). Switch models and the transcript stays.
-- **Orchestration.** Subagents on any model, agents that message each other, scheduled messages, and persistent bots.
-- **Your subscriptions.** No Happy account for model access. Credentials come from the Claude Code, Codex, and Grok CLI sign-ins already on the machine.
-- **Chief of Staff.** The first bot in the app. It sets Happy up in conversation: adds model accounts, imports projects, pairs your phone, deploys a remote agent, creates a team, upgrades Happy.
-- **Durable sessions.** Every conversation and subagent survives a closed window and a restart, and takes the next message with full context.
-- **Auto mode.** Reads and workspace edits run freely. Everything else is sandboxed by the OS. The few actions that cross the boundary are reviewed automatically, never by prompting you.
-- **Workspaces.** Parallel work gets its own Git worktree on its own branch.
-- **Phone.** The same sessions in the [Happy app for iPhone and Android](/mobile-app/), end-to-end encrypted. The relay carries ciphertext only.
-- **Multiplayer.** Deploy a [team server](/guides/team-server/) and [work together](/multiplayer/). Everyone signs in as themselves and shares the same projects and sessions.
-- **Skills, MCP.** Markdown files and TOML entries. An agent can write both.
-- **MIT.** Read it, fork it, ship your own build.
+![The full Happy Desktop window on a team server: the sidebar lists Activity, Artifacts, the Launch checklist, six bots and the team's tasks with their owners' faces, and Kirill's Voice waveform task is open, where he asks for an animated waveform and the agent says it is reading the voice bar components first.](/img/docs/welcome-window.webp "window chrome")
+
+Happy is that home, built as a zero-dependency, open productivity stack. By that we mean a team should be able to do its work without stitching five other products together, and without depending on us. It is free and MIT licensed, it runs on your own computers and the ones your team connects, and the models run on the subscriptions you already pay for. You can read all of it, fork it, and host it yourself. How far along that is, and what comes next, is in [Vision](/vision/).
+
+Three things are in the app. A **repository** is where your code is. A **task** is a piece of work you hand to an agent: one conversation, with a name and an owner. A **bot** is an agent that keeps a standing job. [Quick Start](/quick-start/) walks through all three.
+
+**We use it to build it.** Happy is built by two people. Between 10 October and 14 November 2026 the two of us opened 419 tasks, and our agents worked in 491 separate checkouts across 16 repositories. The examples in these docs are ours.
+
+## Where to go next
+
+- Alone and curious: [Quick Start](/quick-start/). Five minutes, no account.
+- Bringing a team: read the next five pages in order, starting with [One place for the team](/multiplayer/). They are short.
+- Want the wiring first: [How It Works](/how-it-works/).
 
 ## What does Happy cost?
 
 Happy is free and MIT licensed, and the models run on your own Claude, Codex, and Grok subscriptions. Voice in the phone app is the only thing we charge for: 20 free minutes per 30 days, then up to 5 hours per 30 days on the in-app subscription. With your own ElevenLabs agent there is no limit from Happy. See [Voice](/voice/).
-
-## Next
-
-- [Quick Start](/quick-start/)
-- [Run agents on a remote server](/guides/remote-server/)
-- [Chief of Staff](/chief-of-staff/)
-- [How It Works](/how-it-works/)
-- [Permissions & Sandbox](/permissions/)
