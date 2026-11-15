@@ -712,7 +712,11 @@ describe('static document pages', () => {
     }
     // Its first picture is in Tasks, below the fold: lazy, sized before it loads. Welcome's window, in its opening, loads with the page.
     expect(markup).toMatch(/<img src="\/img\/docs\/quick-start-task-tree.phone.light.avif" alt="[^"]+" width="345" height="352" loading="lazy"/)
-    expect(renderPath('/welcome/')).toMatch(/<img src="\/img\/docs\/welcome-window.webp" alt="[^"]+" width="2266" height="1600" loading="eager"/)
+    expect(renderPath('/welcome/')).toMatch(/<img src="\/img\/docs\/welcome-window.phone.light.avif" alt="[^"]+" width="345" height="634" loading="eager" fetchPriority="high"/)
+    // A still without a phone cut loads nothing on a phone, where it is hidden.
+    const feed = renderPath('/feed/')
+    expect(feed).toMatch(/<span class="doc-still" data-still="feed-post-open"><style>[^<]*\.doc-still\[data-still="feed-post-open"\] \{ display: none \}@media \(min-width: \d+px\)/)
+    expect(feed).toMatch(/data-still="feed-post-open">[\s\S]*?<img src="data:image\/gif;base64,/)
   })
 
   it('puts a copyable Chief of Staff prompt right after the intro of every page it can help with', () => {

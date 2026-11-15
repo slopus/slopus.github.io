@@ -1,4 +1,106 @@
 {
+ "welcome-window": {
+  "page": "/welcome/",
+  "section": "Welcome",
+  "desktop": {
+   "files": {
+    "light": "welcome-window.desktop.light.avif",
+    "dark": "welcome-window.desktop.dark.avif"
+   },
+   "bytes": {
+    "light": 55736,
+    "dark": 54899
+   },
+   "alt": "The Happy window: Activity, Artifacts and the Launch checklist at the top of the sidebar, three bots, and tasks with their owners' faces and subtasks. A task is open beside them, where a teammate and the agent go back and forth and the agent posts a preview.",
+   "displayWidth": 880,
+   "displayHeight": 634,
+   "pixels": [
+    1760,
+    1268
+   ],
+   "crop": [
+    0,
+    0,
+    880,
+    634
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 152,
+   "needsWidth": 715,
+   "real": [
+    "top",
+    "left"
+   ],
+   "divider": [],
+   "chrome": true,
+   "fade": {
+    "bottom": [
+     634,
+     619
+    ],
+    "right": [
+     880,
+     760
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    0,
+    0,
+    715,
+    612
+   ]
+  },
+  "phone": {
+   "files": {
+    "light": "welcome-window.phone.light.avif",
+    "dark": "welcome-window.phone.dark.avif"
+   },
+   "bytes": {
+    "light": 23817,
+    "dark": 23919
+   },
+   "alt": "The Happy sidebar: Activity, Artifacts and the Launch checklist at the top, three bots, one with two subtasks, and tasks with their owners' faces and subtasks.",
+   "displayWidth": 345,
+   "displayHeight": 634,
+   "pixels": [
+    690,
+    1268
+   ],
+   "crop": [
+    0,
+    0,
+    345,
+    634
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 345,
+   "real": [
+    "top",
+    "left"
+   ],
+   "divider": [
+    "right"
+   ],
+   "chrome": true,
+   "fade": {
+    "bottom": [
+     634,
+     619
+    ]
+   },
+   "edge": 24,
+   "focus": [
+    0,
+    0,
+    345,
+    612
+   ]
+  }
+ },
  "quick-start-task-tree": {
   "page": "/quick-start/",
   "section": "Tasks",
@@ -8,8 +110,8 @@
     "dark": "quick-start-task-tree.desktop.dark.avif"
    },
    "bytes": {
-    "light": 42357,
-    "dark": 41374
+    "light": 42687,
+    "dark": 41713
    },
    "alt": "The sidebar: three bots, one with two subtasks under it, then the Tasks list, where Team Servers has three subtasks on a tree line, iOS server codes, Desktop sign-in and Docs: sign-in page, each with a different repository icon and its added and removed line counts. Beside it the task lists the three repositories and shows its three subtasks working.",
    "displayWidth": 880,
@@ -58,8 +160,8 @@
     "dark": "quick-start-task-tree.phone.dark.avif"
    },
    "bytes": {
-    "light": 16988,
-    "dark": 16779
+    "light": 17012,
+    "dark": 16767
    },
    "alt": "The sidebar's Tasks list: Team Servers with three subtasks under it on a tree line, iOS server codes, Desktop sign-in and Docs: sign-in page, each with a different repository icon and its line counts; below it Voice waveform with a question waiting, Task List Speed with one subtask, and Message Retry Queue.",
    "displayWidth": 345,
@@ -110,8 +212,8 @@
     "dark": "quick-start-chief-of-staff.desktop.dark.avif"
    },
    "bytes": {
-    "light": 29645,
-    "dark": 29254
+    "light": 29643,
+    "dark": 29218
    },
    "alt": "The Chief of Staff's turn, steps open: it creates the Release Notes bot, sets its picture, lists the bots to check, then says Release Notes is ready and in everyone's sidebar under Bots. Beside it the sidebar's Bots list ends with the new Release Notes bot.",
    "displayWidth": 728,
@@ -163,7 +265,7 @@
     "dark": "quick-start-chief-of-staff.phone.dark.avif"
    },
    "bytes": {
-    "light": 9884,
+    "light": 9883,
     "dark": 9932
    },
    "alt": "The sidebar's Bots list: Chief of Staff, Desktop Releases, Product Health with two subtasks under it, and the new Release Notes bot last.",
@@ -218,8 +320,8 @@
     "dark": "tasks-teammate.desktop.dark.avif"
    },
    "bytes": {
-    "light": 35259,
-    "dark": 34531
+    "light": 35215,
+    "dark": 34498
    },
    "alt": "Kirill's sidebar with Steve's new task, Offline Badge, first under Tasks with Steve's face on it. The task is open beside it: Steve's request, the agent's first line and a tool step, still working.",
    "displayWidth": 880,
@@ -268,8 +370,8 @@
     "dark": "tasks-teammate.phone.dark.avif"
    },
    "bytes": {
-    "light": 16109,
-    "dark": 15887
+    "light": 16104,
+    "dark": 15849
    },
    "alt": "The sidebar's Tasks list with Steve's new task, Offline Badge, first, his face on it; below it Team Servers with its three subtasks, Voice waveform and Task List Speed.",
    "displayWidth": 345,
@@ -320,8 +422,8 @@
     "dark": "tasks-three-repos.desktop.dark.avif"
    },
    "bytes": {
-    "light": 43690,
-    "dark": 42850
+    "light": 43693,
+    "dark": 42776
    },
    "alt": "Team Servers open with its three subtasks under it in the sidebar, iOS server codes, Desktop sign-in and Docs: sign-in page, each with its repository's icon, an unread dot and its line counts. In the task, each subtask has replied with its final answer and the task says all three are ready for review.",
    "displayWidth": 880,
@@ -412,5 +514,162 @@
     327
    ]
   }
+ },
+ "feed-activity": {
+  "page": "/feed/",
+  "section": "The feed",
+  "desktop": {
+   "files": {
+    "light": "feed-activity.desktop.light.avif",
+    "dark": "feed-activity.desktop.dark.avif"
+   },
+   "bytes": {
+    "light": 33769,
+    "dark": 32331
+   },
+   "alt": "The Activity feed: a post titled Task list, 3\u00d7 faster, created by a teammate at 10:39 AM, with its summary and the report's cover: a before and after bar chart of first paint, 420 ms to 140 ms, and a table of measurements.",
+   "displayWidth": 788,
+   "displayHeight": 634,
+   "pixels": [
+    1576,
+    1268
+   ],
+   "crop": [
+    345,
+    0,
+    788,
+    634
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 60,
+   "needsWidth": 765,
+   "real": [
+    "top",
+    "right"
+   ],
+   "divider": [
+    "left"
+   ],
+   "chrome": false,
+   "fade": {
+    "bottom": [
+     634,
+     624
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    360,
+    0,
+    750,
+    622
+   ]
+  },
+  "phone": {
+   "files": {
+    "light": "feed-activity.phone.light.avif",
+    "dark": "feed-activity.phone.dark.avif"
+   },
+   "bytes": {
+    "light": 25120,
+    "dark": 23914
+   },
+   "alt": "The Activity feed: a post titled Task list, 3\u00d7 faster, created by a teammate, with its one-line summary and the left part of the report's cover: its title, a before and after bar and the first rows of a table.",
+   "displayWidth": 350,
+   "displayHeight": 634,
+   "pixels": [
+    700,
+    1268
+   ],
+   "crop": [
+    345,
+    0,
+    350,
+    634
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 350,
+   "real": [
+    "top"
+   ],
+   "divider": [
+    "left"
+   ],
+   "chrome": false,
+   "fade": {
+    "bottom": [
+     634,
+     624
+    ],
+    "right": [
+     695,
+     675
+    ]
+   },
+   "edge": 24,
+   "focus": [
+    360,
+    0,
+    300,
+    622
+   ]
+  }
+ },
+ "feed-post-open": {
+  "page": "/feed/",
+  "section": "What gets posted",
+  "desktop": {
+   "files": {
+    "light": "feed-post-open.desktop.light.avif",
+    "dark": "feed-post-open.desktop.dark.avif"
+   },
+   "bytes": {
+    "light": 29601,
+    "dark": 28136
+   },
+   "alt": "The post opened in the app as a web page: a report titled Task list, 3\u00d7 faster, with a before and after bar for first paint, 420 ms to 140 ms, and a table of three measurements with their change.",
+   "displayWidth": 788,
+   "displayHeight": 606,
+   "pixels": [
+    1576,
+    1212
+   ],
+   "crop": [
+    345,
+    0,
+    788,
+    606
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 60,
+   "needsWidth": 765,
+   "real": [
+    "top",
+    "right"
+   ],
+   "divider": [
+    "left"
+   ],
+   "chrome": false,
+   "fade": {
+    "bottom": [
+     606,
+     590
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    360,
+    0,
+    750,
+    587
+   ]
+  },
+  "phone": null,
+  "noPhone": "Hidden on phones: the report is running text and a 350 px region would cut it mid-word. The feed picture above shows the same report's cover."
  }
 }

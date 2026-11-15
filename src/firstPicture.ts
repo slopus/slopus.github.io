@@ -1,4 +1,4 @@
-import { DOC_STILLS, desktopCutMinWidth } from './DocStill'
+import { DOC_STILLS, desktopCutQuery } from './DocStill'
 import { getDocument, getDocumentSource } from './documents'
 
 /**
@@ -18,10 +18,9 @@ export function firstPictureUrl(pathname: string): string | undefined {
   if (src.endsWith('/')) return title === 'autoplay' ? `${src}poster.webp` : undefined
   const still = title === 'still' ? DOC_STILLS[src.replace(/^\/img\/docs\//, '')] : undefined
   if (!still) return /\.(webp|png|jpe?g|avif|svg)$/.test(src) ? src : undefined
-  const { desktop, phone } = still
-  const wide = window.matchMedia(`(min-width: ${desktopCutMinWidth((desktop.needsWidth ?? desktop.displayWidth) + desktop.edge)}px)`).matches
+  const cut = window.matchMedia(desktopCutQuery(still)).matches ? still.desktop : still.phone
   const dark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  return `/img/docs/${(wide ? desktop : phone).files[dark ? 'dark' : 'light']}`
+  return cut ? `/img/docs/${cut.files[dark ? 'dark' : 'light']}` : undefined
 }
 
 const fetched = new Set<string>()

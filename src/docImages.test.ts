@@ -77,7 +77,9 @@ describe('docs clips (DESIGN.md, Screenshots, rule 6a)', () => {
 describe('docs stills (DESIGN.md, Screenshots, rule 2)', () => {
   it('match their manifest: 2x files at their display size, hanging from the column by their overhang', () => {
     for (const [name, still] of Object.entries(DOC_STILLS)) {
+      // A still with no phone cut (feed-post-open) is hidden on phones, by design.
       for (const [kind, cut] of [['desktop', still.desktop], ['phone', still.phone]] as const) {
+        if (!cut) continue
         for (const file of [cut.files.light, cut.files.dark]) {
           expect(docCaptures[`/img/docs/${file}`], `${name} ${kind}: ${file}`).toEqual(cut.pixels)
         }
@@ -98,7 +100,8 @@ describe('docs stills (DESIGN.md, Screenshots, rule 2)', () => {
       const source = readFileSync(document.sourcePath.slice(1), 'utf8')
       const at = source.indexOf(`![](/img/docs/${name} "still")`)
       expect(at, `${name} is on ${page}`).toBeGreaterThan(-1)
-      expect([...source.slice(0, at).matchAll(/^## (.+)$/gm)].at(-1)?.[1], name).toBe(section)
+      // Above the first h2, the section is the page's own h1.
+      expect([...source.slice(0, at).matchAll(/^#{1,2} (.+)$/gm)].at(-1)?.[1], name).toBe(section)
     }
   })
 })

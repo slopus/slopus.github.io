@@ -31,7 +31,8 @@ export type DocStillCut = {
   needsWidth?: number
 }
 
-export const DOC_STILLS = manifest as unknown as Record<string, { page: string; section: string; desktop: DocStillCut; phone: DocStillCut }>
+/** A still without a phone cut is shown only where its desktop cut fits, and hidden elsewhere. */
+export const DOC_STILLS = manifest as unknown as Record<string, { page: string; section: string | null; desktop: DocStillCut; phone?: DocStillCut | null }>
 
 const STILL_SRC = /^\/img\/docs\/([a-z0-9-]+)$/
 
@@ -84,21 +85,34 @@ function cutCss(still: string, cut: DocStillCut) {
     + `${self} .doc-still-frame::after { border-width: ${border} }`
 }
 
-export function DocStill({ name, loading = 'lazy' }: { name: string; loading?: 'eager' | 'lazy' }) {
-  const { desktop, phone } = DOC_STILLS[name]
+/** The media query where a still shows its desktop cut. */
+export function desktopCutQuery({ desktop }: { desktop: DocStillCut }) {
   // It needs its clear width plus the edge that dissolves where the article cuts it.
-  const wide = `(min-width: ${desktopCutMinWidth((desktop.needsWidth ?? desktop.displayWidth) + desktop.edge)}px)`
+  return `(min-width: ${desktopCutMinWidth((desktop.needsWidth ?? desktop.displayWidth) + desktop.edge)}px)`
+}
+
+// What a still without a phone cut loads where it is hidden: nothing.
+const NOTHING = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+
+export function DocStill({ name, loading = 'lazy' }: { name: string; loading?: 'eager' | 'lazy' }) {
+  const still = DOC_STILLS[name]
+  const { desktop, phone } = still
+  const wide = desktopCutQuery(still)
   const dark = '(prefers-color-scheme: dark)'
+  const self = `.site-theme .document-content .doc-still[data-still="${name}"]`
+  const narrow = phone ? cutCss(name, phone) : `${self} { display: none }`
+  const shown = phone ? cutCss(name, desktop) : `${self} { display: block }${cutCss(name, desktop)}`
+  const fallback = phone ?? desktop
   return (
     <span className="doc-still" data-still={name}>
-      <style>{`${cutCss(name, phone)}@media ${wide} { ${cutCss(name, desktop)} }`}</style>
+      <style>{`${narrow}@media ${wide} { ${shown} }`}</style>
       <span className="doc-still-frame">
         <picture>
           <source media={`${dark} and ${wide}`} srcSet={`/img/docs/${desktop.files.dark}`} width={desktop.displayWidth} height={desktop.displayHeight} />
           <source media={wide} srcSet={`/img/docs/${desktop.files.light}`} width={desktop.displayWidth} height={desktop.displayHeight} />
-          <source media={dark} srcSet={`/img/docs/${phone.files.dark}`} />
+          {phone && <source media={dark} srcSet={`/img/docs/${phone.files.dark}`} />}
           {/* The desktop cut's alt: the phone cut shows a part of the same picture. */}
-          <img src={`/img/docs/${phone.files.light}`} alt={desktop.alt} width={phone.displayWidth} height={phone.displayHeight}
+          <img src={phone ? `/img/docs/${phone.files.light}` : NOTHING} alt={desktop.alt} width={fallback.displayWidth} height={fallback.displayHeight}
             loading={loading} fetchPriority={loading === 'eager' ? 'high' : undefined} decoding={loading === 'eager' ? undefined : 'async'} />
         </picture>
       </span>
