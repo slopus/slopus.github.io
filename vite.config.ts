@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import react from '@vitejs/plugin-react'
 import type { Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
-import { webpSize } from './src/webpSize'
+import { imageSize } from './src/imageSize'
 
 const DOC_CAPTURES = 'virtual:doc-captures'
 const DOC_CAPTURES_DIR = 'public/img/docs'
@@ -14,12 +14,12 @@ function docCaptures(): Plugin {
     resolveId: (id) => id === DOC_CAPTURES ? `\0${DOC_CAPTURES}` : undefined,
     load(id) {
       if (id !== `\0${DOC_CAPTURES}`) return
-      // The docs captures, and the stills beside the docs' clips (/video/<name>/still.webp, poster.webp).
+      // The docs captures and stills (WebP, and AVIF from the capture script), and the stills beside the docs' clips (/video/<name>/still.webp, poster.webp).
       const files = [
         ...readdirSync(DOC_CAPTURES_DIR).map((file) => `${DOC_CAPTURES_DIR}/${file}`),
         ...readdirSync('public/video', { recursive: true, encoding: 'utf8' }).map((file) => `public/video/${file}`),
-      ].filter((file) => file.endsWith('.webp'))
-      const sizes = Object.fromEntries(files.map((file) => [file.slice('public'.length), webpSize(readFileSync(file))]))
+      ].filter((file) => /\.(webp|avif)$/.test(file))
+      const sizes = Object.fromEntries(files.map((file) => [file.slice('public'.length), imageSize(readFileSync(file))]))
       return `export default ${JSON.stringify(sizes)}`
     },
   }

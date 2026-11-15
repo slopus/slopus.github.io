@@ -4,14 +4,14 @@
   "section": "Tasks",
   "desktop": {
    "files": {
-    "light": "quick-start-task-tree.desktop.light.webp",
-    "dark": "quick-start-task-tree.desktop.dark.webp"
+    "light": "quick-start-task-tree.desktop.light.avif",
+    "dark": "quick-start-task-tree.desktop.dark.avif"
    },
    "bytes": {
-    "light": 68518,
-    "dark": 69178
+    "light": 42357,
+    "dark": 41374
    },
-   "alt": "The sidebar's Tasks list: Team Servers with three subtasks under it on a tree line, iOS server codes, Desktop sign-in and Docs: sign-in page, each with a different repository icon and its added and removed line counts. Beside it the task names the three repositories and shows its three subtasks working.",
+   "alt": "The sidebar: three bots, one with two subtasks under it, then the Tasks list, where Team Servers has three subtasks on a tree line, iOS server codes, Desktop sign-in and Docs: sign-in page, each with a different repository icon and its added and removed line counts. Beside it the task lists the three repositories and shows its three subtasks working.",
    "displayWidth": 880,
    "displayHeight": 488,
    "pixels": [
@@ -54,25 +54,25 @@
   },
   "phone": {
    "files": {
-    "light": "quick-start-task-tree.phone.light.webp",
-    "dark": "quick-start-task-tree.phone.dark.webp"
+    "light": "quick-start-task-tree.phone.light.avif",
+    "dark": "quick-start-task-tree.phone.dark.avif"
    },
    "bytes": {
-    "light": 23682,
-    "dark": 23918
+    "light": 16988,
+    "dark": 16779
    },
-   "alt": "The sidebar's Tasks list: Team Servers with three subtasks under it on a tree line, iOS server codes, Desktop sign-in and Docs: sign-in page, each with a different repository icon and its added and removed line counts.",
+   "alt": "The sidebar's Tasks list: Team Servers with three subtasks under it on a tree line, iOS server codes, Desktop sign-in and Docs: sign-in page, each with a different repository icon and its line counts; below it Voice waveform with a question waiting, Task List Speed with one subtask, and Message Retry Queue.",
    "displayWidth": 345,
-   "displayHeight": 314,
+   "displayHeight": 352,
    "pixels": [
     690,
-    628
+    704
    ],
    "crop": [
     0,
-    486,
+    448,
     345,
-    314
+    352
    ],
    "at": "left",
    "inset": 0,
@@ -88,16 +88,16 @@
    "chrome": false,
    "fade": {
     "top": [
-     486,
-     504
+     448,
+     471
     ]
    },
    "edge": 24,
    "focus": [
     62,
-    505,
+    473,
     280,
-    295
+    327
    ]
   }
  },
@@ -106,25 +106,25 @@
   "section": "Bots",
   "desktop": {
    "files": {
-    "light": "quick-start-chief-of-staff.desktop.light.webp",
-    "dark": "quick-start-chief-of-staff.desktop.dark.webp"
+    "light": "quick-start-chief-of-staff.desktop.light.avif",
+    "dark": "quick-start-chief-of-staff.desktop.dark.avif"
    },
    "bytes": {
-    "light": 63232,
-    "dark": 61990
+    "light": 29645,
+    "dark": 29254
    },
-   "alt": "The Chief of Staff reports that the Release Notes bot is ready, listing its name, folder and shared conversation, and Release Notes is the newest entry in the sidebar's Bots list.",
+   "alt": "The Chief of Staff's turn, steps open: it creates the Release Notes bot, sets its picture, lists the bots to check, then says Release Notes is ready and in everyone's sidebar under Bots. Beside it the sidebar's Bots list ends with the new Release Notes bot.",
    "displayWidth": 728,
-   "displayHeight": 384,
+   "displayHeight": 349,
    "pixels": [
     1456,
-    768
+    698
    ],
    "crop": [
     0,
     250,
     728,
-    384
+    349
    ],
    "at": "left",
    "inset": 0,
@@ -141,8 +141,8 @@
      265
     ],
     "bottom": [
-     634,
-     618
+     599,
+     588
     ],
     "right": [
      728,
@@ -154,30 +154,30 @@
     62,
     266,
     612,
-    352
+    306
    ]
   },
   "phone": {
    "files": {
-    "light": "quick-start-chief-of-staff.phone.light.webp",
-    "dark": "quick-start-chief-of-staff.phone.dark.webp"
+    "light": "quick-start-chief-of-staff.phone.light.avif",
+    "dark": "quick-start-chief-of-staff.phone.dark.avif"
    },
    "bytes": {
-    "light": 23478,
-    "dark": 24060
+    "light": 9884,
+    "dark": 9932
    },
-   "alt": "The sidebar's Bots list with Release Notes as its newest entry, under Chief of Staff, Desktop Releases, Mobile Releases, Alerts, Growth and Product Health.",
+   "alt": "The sidebar's Bots list: Chief of Staff, Desktop Releases, Product Health with two subtasks under it, and the new Release Notes bot last.",
    "displayWidth": 345,
-   "displayHeight": 384,
+   "displayHeight": 256,
    "pixels": [
     690,
-    768
+    512
    ],
    "crop": [
     0,
     250,
     345,
-    384
+    256
    ],
    "at": "left",
    "inset": 0,
@@ -196,8 +196,8 @@
      265
     ],
     "bottom": [
-     634,
-     618
+     506,
+     485
     ]
    },
    "edge": 24,
@@ -205,7 +205,211 @@
     62,
     266,
     280,
+    218
+   ]
+  }
+ },
+ "tasks-teammate": {
+  "page": "/tasks/",
+  "section": "You see it start",
+  "desktop": {
+   "files": {
+    "light": "tasks-teammate.desktop.light.avif",
+    "dark": "tasks-teammate.desktop.dark.avif"
+   },
+   "bytes": {
+    "light": 35259,
+    "dark": 34531
+   },
+   "alt": "Kirill's sidebar with Steve's new task, Offline Badge, first under Tasks with Steve's face on it. The task is open beside it: Steve's request, the agent's first line and a tool step, still working.",
+   "displayWidth": 880,
+   "displayHeight": 488,
+   "pixels": [
+    1760,
+    976
+   ],
+   "crop": [
+    0,
+    312,
+    880,
+    488
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 152,
+   "needsWidth": 728,
+   "real": [
+    "left",
+    "bottom"
+   ],
+   "divider": [],
+   "chrome": false,
+   "fade": {
+    "top": [
+     312,
+     326
+    ],
+    "right": [
+     880,
+     760
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    62,
+    326,
+    666,
+    474
+   ]
+  },
+  "phone": {
+   "files": {
+    "light": "tasks-teammate.phone.light.avif",
+    "dark": "tasks-teammate.phone.dark.avif"
+   },
+   "bytes": {
+    "light": 16109,
+    "dark": 15887
+   },
+   "alt": "The sidebar's Tasks list with Steve's new task, Offline Badge, first, his face on it; below it Team Servers with its three subtasks, Voice waveform and Task List Speed.",
+   "displayWidth": 345,
+   "displayHeight": 352,
+   "pixels": [
+    690,
+    704
+   ],
+   "crop": [
+    0,
+    448,
+    345,
     352
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 345,
+   "real": [
+    "left",
+    "bottom"
+   ],
+   "divider": [
+    "right"
+   ],
+   "chrome": false,
+   "fade": {
+    "top": [
+     448,
+     471
+    ]
+   },
+   "edge": 24,
+   "focus": [
+    62,
+    473,
+    280,
+    327
+   ]
+  }
+ },
+ "tasks-three-repos": {
+  "page": "/tasks/",
+  "section": "One task, several repositories",
+  "desktop": {
+   "files": {
+    "light": "tasks-three-repos.desktop.light.avif",
+    "dark": "tasks-three-repos.desktop.dark.avif"
+   },
+   "bytes": {
+    "light": 43690,
+    "dark": 42850
+   },
+   "alt": "Team Servers open with its three subtasks under it in the sidebar, iOS server codes, Desktop sign-in and Docs: sign-in page, each with its repository's icon, an unread dot and its line counts. In the task, each subtask has replied with its final answer and the task says all three are ready for review.",
+   "displayWidth": 880,
+   "displayHeight": 488,
+   "pixels": [
+    1760,
+    976
+   ],
+   "crop": [
+    0,
+    312,
+    880,
+    488
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 152,
+   "needsWidth": 718,
+   "real": [
+    "left",
+    "bottom"
+   ],
+   "divider": [],
+   "chrome": false,
+   "fade": {
+    "top": [
+     312,
+     326
+    ],
+    "right": [
+     880,
+     760
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    62,
+    326,
+    656,
+    474
+   ]
+  },
+  "phone": {
+   "files": {
+    "light": "tasks-three-repos.phone.light.avif",
+    "dark": "tasks-three-repos.phone.dark.avif"
+   },
+   "bytes": {
+    "light": 17179,
+    "dark": 16754
+   },
+   "alt": "The sidebar's Tasks list: Team Servers selected, with iOS server codes, Desktop sign-in and Docs: sign-in page under it on a tree line, each with its repository's icon, an unread dot and its line counts.",
+   "displayWidth": 345,
+   "displayHeight": 352,
+   "pixels": [
+    690,
+    704
+   ],
+   "crop": [
+    0,
+    448,
+    345,
+    352
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 345,
+   "real": [
+    "left",
+    "bottom"
+   ],
+   "divider": [
+    "right"
+   ],
+   "chrome": false,
+   "fade": {
+    "top": [
+     448,
+     471
+    ]
+   },
+   "edge": 24,
+   "focus": [
+    62,
+    473,
+    280,
+    327
    ]
   }
  }

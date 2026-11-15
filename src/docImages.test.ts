@@ -4,7 +4,7 @@ import docCaptures from 'virtual:doc-captures'
 import { DOC_STILLS } from './DocStill'
 import { documentsForProduct, getDocument } from './documents'
 import { mp4VideoTiming } from './mp4Timing'
-import { webpSize } from './webpSize'
+import { imageSize, webpSize } from './imageSize'
 
 /** The docs text column on a desktop: 760px less its 2rem of right padding (src/style.css). */
 const COLUMN = 728
@@ -23,8 +23,8 @@ const uses = markdownFiles('content').flatMap((file) =>
 
 describe('docs captures (DESIGN.md, Screenshots, rule 2)', () => {
   it('reads every capture\'s size from its file', () => {
-    for (const file of readdirSync('public/img/docs').filter((name) => name.endsWith('.webp'))) {
-      expect(docCaptures[`/img/docs/${file}`]).toEqual(webpSize(readFileSync(`public/img/docs/${file}`)))
+    for (const file of readdirSync('public/img/docs').filter((name) => /\.(webp|avif)$/.test(name))) {
+      expect(docCaptures[`/img/docs/${file}`]).toEqual(imageSize(readFileSync(`public/img/docs/${file}`)))
     }
   })
 

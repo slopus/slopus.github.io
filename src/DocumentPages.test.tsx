@@ -707,11 +707,11 @@ describe('static document pages', () => {
     expect(stills.map(([, name]) => name)).toEqual(['quick-start-task-tree', 'quick-start-chief-of-staff'])
     for (const [, name, picture] of stills) {
       const files = [...picture.matchAll(/(?:srcSet|src)="\/img\/docs\/([^"]+)"/g)].map(([, file]) => file)
-      expect(files).toEqual([`${name}.desktop.dark.webp`, `${name}.desktop.light.webp`, `${name}.phone.dark.webp`, `${name}.phone.light.webp`])
+      expect(files).toEqual([`${name}.desktop.dark.avif`, `${name}.desktop.light.avif`, `${name}.phone.dark.avif`, `${name}.phone.light.avif`])
       expect(picture).toMatch(/<source media="\(prefers-color-scheme: dark\) and \(min-width: \d+px\)"/)
     }
     // Its first picture is in Tasks, below the fold: lazy, sized before it loads. Welcome's window, in its opening, loads with the page.
-    expect(markup).toMatch(/<img src="\/img\/docs\/quick-start-task-tree.phone.light.webp" alt="[^"]+" width="345" height="314" loading="lazy"/)
+    expect(markup).toMatch(/<img src="\/img\/docs\/quick-start-task-tree.phone.light.avif" alt="[^"]+" width="345" height="352" loading="lazy"/)
     expect(renderPath('/welcome/')).toMatch(/<img src="\/img\/docs\/welcome-window.webp" alt="[^"]+" width="2266" height="1600" loading="eager"/)
   })
 
