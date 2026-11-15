@@ -11,6 +11,8 @@ import { DownloadOptions } from './DownloadOptions'
 import type { MacArchitecture } from './desktopDownloads'
 import { RedditEmbed, Tweet } from './SocialEmbed'
 import { slugifyHeading } from './documents'
+import docCaptures from 'virtual:doc-captures'
+import { DocStill, docStillName } from './DocStill'
 
 function textFromNode(node: ReactNode): string {
   if (typeof node === 'string' || typeof node === 'number') {
@@ -143,6 +145,26 @@ function remarkEmbeds() {
   return (tree: MdastNode) => visit(tree)
 }
 
+/**
+ * The page's first picture loads with the page when it opens it, before the second h2, so the
+ * first screen is complete on first paint (DESIGN.md, Screenshots, rule 11); every later one is
+ * lazy, so nothing below the fold loads eagerly.
+ */
+function rehypeFirstImage() {
+  return (tree: HastNode) => {
+    let headings = 0
+    const visit = (node: HastNode): boolean => {
+      if (node.tagName === 'h2') headings++
+      if (node.tagName === 'img') {
+        if (headings < 2) node.properties = { ...node.properties, dataEager: true }
+        return true
+      }
+      return (node.children ?? []).some(visit)
+    }
+    visit(tree)
+  }
+}
+
 /** Screenshots drawn beside their caption and the paragraph after it, rather than above them. */
 const SIDE_FIGURES = new Set(['/img/stem-cell-create-menu.webp'])
 
@@ -191,8 +213,11 @@ export function MarkdownDocument({
   resolveHref,
   headingId,
   headingSuffix,
+  thesis,
 }: {
   markdown: string
+  /** The page's thesis line, the pull quote right under its h1. */
+  thesis?: string
   /** Replaces the default renderer for these elements. */
   components?: Components
   /** Resolve the original CLI docs' unprefixed links under /docs. */
@@ -207,14 +232,14 @@ export function MarkdownDocument({
   // The components keep their identity across renders: react-markdown draws each as its own
   // component type, so a new one remounts everything under it, and a remounted video flashes its
   // poster and starts again from the beginning. They read the latest props through this ref.
-  const options = useRef({ originalDocsLinks, resolveHref, headingId, headingSuffix })
-  options.current = { originalDocsLinks, resolveHref, headingId, headingSuffix }
+  const options = useRef({ originalDocsLinks, resolveHref, headingId, headingSuffix, thesis })
+  options.current = { originalDocsLinks, resolveHref, headingId, headingSuffix, thesis }
   const components = useMemo(() => documentComponents(options), [markdown])
   const allComponents = useMemo(() => ({ ...components, ...EMBEDS, ...overrides }), [components, overrides])
 
   return (
     <div className="document-content">
-      <ReactMarkdown remarkPlugins={[remarkGfm, remarkEmbeds]} rehypePlugins={[rehypeTableCards, rehypeSideFigures]} components={allComponents}>
+      <ReactMarkdown remarkPlugins={[remarkGfm, remarkEmbeds]} rehypePlugins={[rehypeTableCards, rehypeSideFigures, rehypeFirstImage]} components={allComponents}>
         {markdown}
       </ReactMarkdown>
     </div>
@@ -226,6 +251,7 @@ type DocumentOptions = {
   resolveHref?: (href: string | undefined) => string | undefined
   headingId?: (text: string, depth: 1 | 2 | 3) => string | undefined
   headingSuffix?: (text: string, depth: 1 | 2 | 3) => ReactNode
+  thesis?: string
 }
 
 function documentComponents(options: { current: DocumentOptions }): Components {
@@ -256,7 +282,7 @@ function documentComponents(options: { current: DocumentOptions }): Components {
         if (offset !== undefined) headingIdsByOffset.set(offset, id)
       }
 
-      return (
+      const heading = (
         <Heading id={id}>
           {children}
           {headingSuffix?.(text, depth)}
@@ -265,6 +291,8 @@ function documentComponents(options: { current: DocumentOptions }): Components {
           </a>
         </Heading>
       )
+      const { thesis } = options.current
+      return depth === 1 && thesis ? <>{heading}<p className="document-thesis">{thesis}</p></> : heading
     }
   }
 
@@ -305,20 +333,30 @@ function documentComponents(options: { current: DocumentOptions }): Components {
       }
       return <pre {...props}>{children}</pre>
     },
-    img: ({ alt, src, title, node: _node, ...props }) => {
+    img: ({ alt, src, title, node, ...props }) => {
+      const loading = node?.properties?.dataEager ? 'eager' : 'lazy'
+      // The page's first picture is fetched in the first round, ahead of the rest.
+      const fetchPriority = loading === 'eager' ? 'high' : undefined
+      delete (props as Record<string, unknown>)['data-eager']
       // An image whose src is a folder is a clip: titled "autoplay", a recording that loops while
       // on screen (src/AutoplayClip.tsx); titled "frame", a section's still from the page's
       // video, or "frame loop", with its frames playing (src/StopFrame.tsx);
       // otherwise one that plays on hover (src/HoverClip.tsx).
       if (typeof src === 'string' && src.endsWith('/')) {
-        if (title === 'autoplay') return <AutoplayClip folder={src} label={alt ?? ''} />
+        if (title === 'autoplay') return <AutoplayClip folder={src} label={alt ?? ''} first={loading === 'eager'} />
         if (title === 'frame' || title === 'frame loop') return <StopFrame folder={src} label={alt ?? ''} loop={title === 'frame loop'} />
         return <HoverClip folder={src} label={alt ?? ''} />
       }
+      // A docs still: a desktop and a phone cut, each light and dark (src/DocStill.tsx).
+      const still = docStillName(src, title)
+      if (still) return <DocStill name={still} loading={loading} />
       const diagram = typeof src === 'string' ? inlineDiagram(src) : undefined
       if (diagram) return <InlineDiagram svg={diagram} label={alt ?? ''} />
+      // A docs capture is 2x: shown at half its pixel size, the app's own (DESIGN.md, Screenshots),
+      // with its size set so the text around it never moves while it loads.
+      const capture = typeof src === 'string' ? docCaptures[src] : undefined
       if (typeof src === 'string' && (title === 'window' || title === 'window chrome')) {
-        return <AppWindowImage src={src} alt={alt ?? ''} addChrome={title === 'window chrome'} />
+        return <AppWindowImage src={src} alt={alt ?? ''} addChrome={title === 'window chrome'} size={capture} loading={loading} />
       }
       // A video shows its poster, `<name>-poster.webp` beside it, until it plays. The served
       // markup carries `muted`, so it autoplays before hydration; a DOM that doesn't turn that
@@ -330,18 +368,21 @@ function documentComponents(options: { current: DocumentOptions }): Components {
       }
       // The title "row" draws a cut-out of the app at its own size, sitting on the page with no frame.
       if (title === 'row') {
-        return <img {...props} className="row-image" src={src} alt={alt ?? ''} loading="lazy" />
+        return <img {...props} className="row-image" src={src} alt={alt ?? ''} width={capture && 272} height={capture && Math.round(272 * capture[1] / capture[0])} loading={loading} fetchPriority={fetchPriority} />
+      }
+      if (capture && typeof src === 'string' && src.startsWith('/img/docs/')) {
+        return <img {...props} className="doc-capture" src={src} alt={alt ?? ''} width={capture[0] / 2} height={capture[1] / 2} loading={loading} fetchPriority={fetchPriority} decoding={loading === 'eager' ? undefined : 'async'} />
       }
       // A title labels the image under it, as Before and After do side by side.
       if (title) {
         return (
           <span className="labelled-image">
-            <img {...props} src={src} alt={alt ?? ''} loading="lazy" />
+            <img {...props} src={src} alt={alt ?? ''} loading={loading} fetchPriority={fetchPriority} />
             <span className="labelled-image-label">{title}</span>
           </span>
         )
       }
-      return <img {...props} src={src} alt={alt ?? ''} loading="lazy" />
+      return <img {...props} src={src} alt={alt ?? ''} loading={loading} fetchPriority={fetchPriority} />
     },
   }
 }

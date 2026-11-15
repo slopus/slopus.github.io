@@ -265,10 +265,13 @@ export function Router({ pathname }: { pathname?: string }) {
       return url.origin === window.location.origin ? url : undefined
     }
 
-    // Reaching for a link to another page starts loading what it needs.
+    // Reaching for a link to another page starts loading what it needs, its first picture with it,
+    // so the page doesn't open with a hole where the picture will be.
     function handleReach(event: Event) {
       const url = internalLink(event.target)
-      if (url) void preparePath(url.pathname)
+      if (url && normalizedPathname(url.pathname) !== normalizedPathname(window.location.pathname)) {
+        void preparePath(url.pathname).then(() => loadedSitePages()?.prefetchFirstPicture(url.pathname))
+      }
     }
 
     function handleClick(event: MouseEvent) {

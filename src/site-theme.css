@@ -171,3 +171,55 @@
 @media (prefers-reduced-motion: reduce) {
   .site-grain > canvas { transition: none; }
 }
+
+/* A reading-path page's thesis line (DESIGN.md, Docs pages): the pull quote under the h1, with
+   the page's first paragraph after it set as the lede; and the same line, small, under the
+   page's own item in the sidebar. */
+.site-theme .document-content > .document-thesis {
+  margin: -.2rem 0 1.6rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--home-accent);
+  color: var(--home-ink);
+  font-size: 1.28rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -.01em;
+  text-wrap: balance;
+}
+.site-theme .document-content > p.document-thesis:first-of-type { color: var(--home-ink); }
+.site-theme .document-content > .document-thesis + p { color: var(--site-muted); font-size: 1.08rem; }
+.site-theme .docs-nav-children { margin: .2rem 0 0 .75rem !important; padding-left: .5rem !important; border-left: 1px solid var(--site-wash); }
+.site-theme .docs-nav-group a[aria-current='true'] { color: var(--home-ink); }
+/* "The details": a quiet label where a reading-path page's story ends and its reference begins.
+   Quick Start's "Install notes" is the same label over a small list. */
+.site-theme .document-content > :is(h2#the-details, h2#install-notes) {
+  margin: 4rem 0 0;
+  padding-top: 1.4rem;
+  color: var(--site-muted);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.site-theme .document-content > :is(h2#the-details, h2#install-notes) .heading-anchor { display: none; }
+.site-theme .document-content > h2#install-notes + ul { margin-top: 1rem; color: var(--site-muted); font-size: .9rem; }
+.site-theme .document-content > h2#the-details + h2 { border-top: 0; margin-top: .6rem; padding-top: 0; }
+.site-theme .document-content > h2#the-details + :not(h2) { margin-top: 1rem; }
+/* Docs stills (src/DocStill.tsx): at their display size from the column's left edge. The frame's
+   size, corners, hairlines and fades come from the still's own <style>, per cut. A desktop cut may run
+   past the column into the margin; the article cuts it where it ends, and the last --still-edge px
+   dissolve there. */
+.site-theme .document-content p:has(> .doc-still) { margin: 0; }
+.site-theme .document-content .doc-still { display: block; margin: 1.8rem 0; max-width: 100%; overflow: hidden; }
+.site-theme .document-content .doc-still-frame { display: block; overflow: hidden; position: relative; }
+.site-theme .document-content .doc-still-frame::after { border: 0 solid color-mix(in srgb, var(--home-ink) 16%, transparent); border-radius: inherit; content: ''; inset: 0; pointer-events: none; position: absolute; }
+.site-theme .document-content .doc-still img { border: 0; border-radius: 0; box-shadow: none; display: block; height: 100%; margin: 0; max-width: none; width: 100%; }
+@media (min-width: 761px) {
+  .docs-shell .document-article { container-type: inline-size; }
+  .site-theme .document-content .doc-still {
+    --still-cut: clamp(0px, (var(--still-width) - 100cqw) * 1000, var(--still-edge));
+    max-width: none;
+    width: min(var(--still-width), 100cqw);
+    mask-image: linear-gradient(to left, transparent 0, rgb(0 0 0 / .156) calc(var(--still-cut) * .25), rgb(0 0 0 / .5) calc(var(--still-cut) * .5), rgb(0 0 0 / .844) calc(var(--still-cut) * .75), #000 var(--still-cut));
+  }
+}

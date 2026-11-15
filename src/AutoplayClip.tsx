@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { preload } from 'react-dom'
 import { useRevealedControls } from './revealedControls'
 
 /**
@@ -11,7 +12,10 @@ import { useRevealedControls } from './revealedControls'
  * It has no autoplay attribute: Chrome pauses such a video by itself when it scrolls away or the
  * tab hides, and those pauses read as the reader's. Window focus changes nothing.
  */
-export function AutoplayClip({ folder, label }: { folder: string; label: string }) {
+export function AutoplayClip({ folder, label, first = false }: { folder: string; label: string; first?: boolean }) {
+  // A clip that opens its page has its still fetched in the first round, at high priority: a
+  // poster is otherwise fetched late and low.
+  if (first) preload(`${folder}poster.webp`, { as: 'image', fetchPriority: 'high' })
   const video = useRef<HTMLVideoElement>(null)
   const { revealControls, videoProps } = useRevealedControls()
   useEffect(() => {

@@ -1,0 +1,212 @@
+{
+ "quick-start-task-tree": {
+  "page": "/quick-start/",
+  "section": "Tasks",
+  "desktop": {
+   "files": {
+    "light": "quick-start-task-tree.desktop.light.webp",
+    "dark": "quick-start-task-tree.desktop.dark.webp"
+   },
+   "bytes": {
+    "light": 68518,
+    "dark": 69178
+   },
+   "alt": "The sidebar's Tasks list: Team Servers with three subtasks under it on a tree line, iOS server codes, Desktop sign-in and Docs: sign-in page, each with a different repository icon and its added and removed line counts. Beside it the task names the three repositories and shows its three subtasks working.",
+   "displayWidth": 880,
+   "displayHeight": 488,
+   "pixels": [
+    1760,
+    976
+   ],
+   "crop": [
+    0,
+    312,
+    880,
+    488
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 152,
+   "needsWidth": 662,
+   "real": [
+    "left",
+    "bottom"
+   ],
+   "divider": [],
+   "chrome": false,
+   "fade": {
+    "top": [
+     312,
+     326
+    ],
+    "right": [
+     880,
+     760
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    62,
+    326,
+    600,
+    474
+   ]
+  },
+  "phone": {
+   "files": {
+    "light": "quick-start-task-tree.phone.light.webp",
+    "dark": "quick-start-task-tree.phone.dark.webp"
+   },
+   "bytes": {
+    "light": 23682,
+    "dark": 23918
+   },
+   "alt": "The sidebar's Tasks list: Team Servers with three subtasks under it on a tree line, iOS server codes, Desktop sign-in and Docs: sign-in page, each with a different repository icon and its added and removed line counts.",
+   "displayWidth": 345,
+   "displayHeight": 314,
+   "pixels": [
+    690,
+    628
+   ],
+   "crop": [
+    0,
+    486,
+    345,
+    314
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 345,
+   "real": [
+    "left",
+    "bottom"
+   ],
+   "divider": [
+    "right"
+   ],
+   "chrome": false,
+   "fade": {
+    "top": [
+     486,
+     504
+    ]
+   },
+   "edge": 24,
+   "focus": [
+    62,
+    505,
+    280,
+    295
+   ]
+  }
+ },
+ "quick-start-chief-of-staff": {
+  "page": "/quick-start/",
+  "section": "Bots",
+  "desktop": {
+   "files": {
+    "light": "quick-start-chief-of-staff.desktop.light.webp",
+    "dark": "quick-start-chief-of-staff.desktop.dark.webp"
+   },
+   "bytes": {
+    "light": 63232,
+    "dark": 61990
+   },
+   "alt": "The Chief of Staff reports that the Release Notes bot is ready, listing its name, folder and shared conversation, and Release Notes is the newest entry in the sidebar's Bots list.",
+   "displayWidth": 728,
+   "displayHeight": 384,
+   "pixels": [
+    1456,
+    768
+   ],
+   "crop": [
+    0,
+    250,
+    728,
+    384
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 674,
+   "real": [
+    "left"
+   ],
+   "divider": [],
+   "chrome": false,
+   "fade": {
+    "top": [
+     250,
+     265
+    ],
+    "bottom": [
+     634,
+     618
+    ],
+    "right": [
+     728,
+     680
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    62,
+    266,
+    612,
+    352
+   ]
+  },
+  "phone": {
+   "files": {
+    "light": "quick-start-chief-of-staff.phone.light.webp",
+    "dark": "quick-start-chief-of-staff.phone.dark.webp"
+   },
+   "bytes": {
+    "light": 23478,
+    "dark": 24060
+   },
+   "alt": "The sidebar's Bots list with Release Notes as its newest entry, under Chief of Staff, Desktop Releases, Mobile Releases, Alerts, Growth and Product Health.",
+   "displayWidth": 345,
+   "displayHeight": 384,
+   "pixels": [
+    690,
+    768
+   ],
+   "crop": [
+    0,
+    250,
+    345,
+    384
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 345,
+   "real": [
+    "left"
+   ],
+   "divider": [
+    "right"
+   ],
+   "chrome": false,
+   "fade": {
+    "top": [
+     250,
+     265
+    ],
+    "bottom": [
+     634,
+     618
+    ]
+   },
+   "edge": 24,
+   "focus": [
+    62,
+    266,
+    280,
+    352
+   ]
+  }
+ }
+}
