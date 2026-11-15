@@ -13,7 +13,9 @@ LINE='rgba(24,63,56,0.16)'
 fig() {
   local name=$1 W=$2 H=$3 lights=$4 lines=$5 radius=$6 fades=$7 X=${8:-0}
   [ "$H" = 0 ] && H=$(( (W * 542 + 519) / 520 ))
+  # A still that plays (src/docClips.json) is cut from its rest, the finished state.
   local src=public/img/docs/$name.desktop.light.avif tmp=$MAGICK_TEMPORARY_PATH/fig-$name
+  [ -f public/img/docs/$name.desktop.light.rest.avif ] && src=public/img/docs/$name.desktop.light.rest.avif
   magick $src -crop ${W}x${H}+${X}+0 +repage $tmp-crop.png
   local draw=()
   if [ "$lights" = 1 ]; then

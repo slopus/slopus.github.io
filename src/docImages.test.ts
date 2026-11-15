@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import docCaptures from 'virtual:doc-captures'
+import { DOC_CLIPS } from './DocClip'
 import { DOC_STILLS } from './DocStill'
 import { documentsForProduct, getDocument } from './documents'
 import { mp4VideoTiming } from './mp4Timing'
@@ -45,12 +46,18 @@ describe('docs captures (DESIGN.md, Screenshots, rule 2)', () => {
   })
 })
 
-// The reading path's clips (src/AutoplayClip.tsx plays <folder>clip.mp4). Repeated frames need a
-// decoder, so only the frame rate is checked here.
+// The reading path's clips: <folder>clip.mp4 (src/AutoplayClip.tsx), and the stills that play
+// (src/DocClip.tsx), every cut in both schemes. Repeated frames need a decoder, so only the frame
+// rate is checked here.
 const READING_PATH = ['Start here', 'Your team', 'The app', 'Where this goes']
-const clips = documentsForProduct('desktop').filter((document) => READING_PATH.includes(document.group))
-  .flatMap((document) => [...readFileSync(document.sourcePath.slice(1), 'utf8').matchAll(/!\[[^\]]*\]\((\/[^\s)]+\/) "autoplay"\)/g)]
-    .map(([, folder]) => ({ path: document.path, file: `public${folder}clip.mp4` })))
+const clipCuts = Object.entries(DOC_CLIPS).flatMap(([name, clip]) => (['desktop', 'phone'] as const)
+  .flatMap((kind) => { const cut = clip[kind]; return cut ? (['light', 'dark'] as const).map((scheme) => ({ name: `${name} ${kind} ${scheme}`, page: clip.page, cut, files: cut.files[scheme] })) : [] }))
+const clips = [
+  ...documentsForProduct('desktop').filter((document) => READING_PATH.includes(document.group))
+    .flatMap((document) => [...readFileSync(document.sourcePath.slice(1), 'utf8').matchAll(/!\[[^\]]*\]\((\/[^\s)]+\/) "autoplay"\)/g)]
+      .map(([, folder]) => ({ path: document.path, file: `public${folder}clip.mp4` }))),
+  ...clipCuts.map(({ page, files }) => ({ path: page.replace(/^\/|\/$/g, ''), file: `public/video/docs/${files.clip}` })),
+]
 
 describe('docs clips (DESIGN.md, Screenshots, rule 6a)', () => {
   it('play at a constant 60 frames per second', () => {
@@ -66,9 +73,34 @@ describe('docs clips (DESIGN.md, Screenshots, rule 6a)', () => {
   // Its still is its own frame 0 (rule 11): same size here; the pixels are checked in a browser
   // when the still is made (DESIGN.md, Screenshots).
   it('rest on a still the size of their frames', () => {
-    for (const { path, file } of clips) {
+    for (const { path, file } of clips.filter(({ file }) => file.endsWith('/clip.mp4'))) {
       const { width, height } = mp4VideoTiming(readFileSync(file))
       expect(webpSize(readFileSync(file.replace(/clip\.mp4$/, 'poster.webp'))), `/${path}/: ${file}`).toEqual([width, height])
+    }
+  })
+})
+
+// A still that plays (src/DocClip.tsx) opens on the clip's first frame and rests on its last, both
+// the clip's size (rule 11); the pixels are checked in a browser when they are made.
+describe('docs stills that play (DESIGN.md, Screenshots, rules 2, 6 and 11)', () => {
+  it('come as a clip and its first and last frames, 2x at their display size, hanging from the column', () => {
+    expect(clipCuts.length).toBeGreaterThan(0)
+    for (const { name, cut, files } of clipCuts) {
+      const { width, height } = mp4VideoTiming(readFileSync(`public/video/docs/${files.clip}`))
+      expect([width, height], `${name}: ${files.clip}`).toEqual(cut.pixels)
+      for (const still of [files.first, files.rest]) expect(docCaptures[`/img/docs/${still}`], `${name}: ${still}`).toEqual(cut.pixels)
+      expect([cut.displayWidth * 2, cut.displayHeight * 2], name).toEqual(cut.pixels)
+      expect([cut.crop[2], cut.crop[3]], `${name}: the crop is the display size`).toEqual([cut.displayWidth, cut.displayHeight])
+      expect([cut.at, cut.inset], name).toEqual(['left', 0])
+      const column = name.includes(' desktop ') ? COLUMN : 350
+      expect(cut.overhang, `${name}: runs ${cut.displayWidth - column}px past the ${column}px column`).toBe(Math.max(0, cut.displayWidth - column))
+    }
+  })
+
+  it('replace the still of the same name, in its place', () => {
+    for (const [name, clip] of Object.entries(DOC_CLIPS)) {
+      expect(clip.replaces, name).toBe(name)
+      expect([clip.page, clip.section], name).toEqual([DOC_STILLS[name]?.page, DOC_STILLS[name]?.section])
     }
   })
 })
@@ -77,6 +109,8 @@ describe('docs clips (DESIGN.md, Screenshots, rule 6a)', () => {
 describe('docs stills (DESIGN.md, Screenshots, rule 2)', () => {
   it('match their manifest: 2x files at their display size, hanging from the column by their overhang', () => {
     for (const [name, still] of Object.entries(DOC_STILLS)) {
+      // A still that plays shows the clip's own stills instead (above).
+      if (DOC_CLIPS[name]) continue
       // A still with no phone cut (feed-post-open) is hidden on phones, by design.
       for (const [kind, cut] of [['desktop', still.desktop], ['phone', still.phone]] as const) {
         if (!cut) continue

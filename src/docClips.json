@@ -1,0 +1,141 @@
+{
+ "tasks-teammate": {
+  "page": "/tasks/",
+  "section": "You see it start",
+  "replaces": "tasks-teammate",
+  "desktop": {
+   "files": {
+    "light": {
+     "clip": "tasks-teammate.desktop.light.mp4",
+     "first": "tasks-teammate.desktop.light.first.avif",
+     "rest": "tasks-teammate.desktop.light.rest.avif"
+    },
+    "dark": {
+     "clip": "tasks-teammate.desktop.dark.mp4",
+     "first": "tasks-teammate.desktop.dark.first.avif",
+     "rest": "tasks-teammate.desktop.dark.rest.avif"
+    }
+   },
+   "bytes": {
+    "light": {
+     "clip": 208040,
+     "first": 42478,
+     "rest": 35835
+    },
+    "dark": {
+     "clip": 204981,
+     "first": 41975,
+     "rest": 35103
+    }
+   },
+   "alt": "Kirill's sidebar and an open conversation. Steve's new task, Offline Badge, appears first under Tasks with Steve's face on it. Kirill opens it and reads along: Steve's request, the agent's first line and a tool step, still working.",
+   "displayWidth": 880,
+   "displayHeight": 488,
+   "pixels": [
+    1760,
+    976
+   ],
+   "seconds": 8.633,
+   "frames": 518,
+   "fps": 60,
+   "crop": [
+    0,
+    312,
+    880,
+    488
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 152,
+   "needsWidth": 728,
+   "real": [
+    "left",
+    "bottom"
+   ],
+   "divider": [],
+   "fade": {
+    "top": [
+     312,
+     326
+    ],
+    "right": [
+     880,
+     760
+    ]
+   },
+   "edge": 48,
+   "focus": [
+    62,
+    326,
+    666,
+    474
+   ]
+  },
+  "phone": {
+   "files": {
+    "light": {
+     "clip": "tasks-teammate.phone.light.mp4",
+     "first": "tasks-teammate.phone.light.first.avif",
+     "rest": "tasks-teammate.phone.light.rest.avif"
+    },
+    "dark": {
+     "clip": "tasks-teammate.phone.dark.mp4",
+     "first": "tasks-teammate.phone.dark.first.avif",
+     "rest": "tasks-teammate.phone.dark.rest.avif"
+    }
+   },
+   "bytes": {
+    "light": {
+     "clip": 81310,
+     "first": 14289,
+     "rest": 13806
+    },
+    "dark": {
+     "clip": 82392,
+     "first": 16365,
+     "rest": 13390
+    }
+   },
+   "alt": "The sidebar's Tasks list. Steve's new task, Offline Badge, appears first, with his face on it, above Team Servers and its three subtasks, and is then opened.",
+   "displayWidth": 345,
+   "displayHeight": 352,
+   "pixels": [
+    690,
+    704
+   ],
+   "seconds": 8.633,
+   "frames": 518,
+   "fps": 60,
+   "crop": [
+    0,
+    448,
+    345,
+    352
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "needsWidth": 345,
+   "real": [
+    "left",
+    "bottom"
+   ],
+   "divider": [
+    "right"
+   ],
+   "fade": {
+    "top": [
+     448,
+     471
+    ]
+   },
+   "edge": 24,
+   "focus": [
+    62,
+    473,
+    280,
+    327
+   ]
+  }
+ }
+}

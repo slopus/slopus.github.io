@@ -13,6 +13,10 @@ type Side = 'top' | 'right' | 'bottom' | 'left'
 
 export type DocStillCut = {
   files: { light: string; dark: string }
+} & DocCut
+
+/** A cut's place on the page: what a still and a clip (src/DocClip.tsx) have in common. */
+export type DocCut = {
   alt: string
   displayWidth: number
   displayHeight: number
@@ -62,7 +66,7 @@ const TOWARD: Record<Side, string> = { top: 'to bottom', bottom: 'to top', left:
 // Smoothstep at quarter steps: the fade eases in and out.
 const EASED = [[0, 0], [0.25, 0.156], [0.5, 0.5], [0.75, 0.844], [1, 1]]
 
-function fadeMask({ crop: [x, y, width, height], fade }: DocStillCut) {
+function fadeMask({ crop: [x, y, width, height], fade }: DocCut) {
   return (Object.entries(fade) as [Side, [number, number]][]).map(([side, [from, to]]) => {
     // Distance in from that side of the picture.
     const inward = (value: number) => side === 'top' ? value - y : side === 'bottom' ? y + height - value
@@ -74,7 +78,7 @@ function fadeMask({ crop: [x, y, width, height], fade }: DocStillCut) {
 }
 
 /** One cut's frame: its size, corners, edges and fades. */
-function cutCss(still: string, cut: DocStillCut, lights = false) {
+export function cutCss(still: string, cut: DocCut, lights = false) {
   const edges = cut.real.filter((side) => !cut.divider.includes(side))
   const corner = (a: Side, b: Side) => edges.includes(a) && edges.includes(b) ? '12px' : '0'
   const lines = [...cut.real, ...cut.divider]
@@ -90,13 +94,13 @@ function cutCss(still: string, cut: DocStillCut, lights = false) {
 }
 
 /** The media query where a still shows its desktop cut. */
-export function desktopCutQuery({ desktop }: { desktop: DocStillCut }) {
+export function desktopCutQuery({ desktop }: { desktop: DocCut }) {
   // It needs its clear width plus the edge that dissolves where the article cuts it.
   return `(min-width: ${desktopCutMinWidth((desktop.needsWidth ?? desktop.displayWidth) + desktop.edge)}px)`
 }
 
 // What a still without a phone cut loads where it is hidden: nothing.
-const NOTHING = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+export const NOTHING = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
 
 export function DocStill({ name, loading = 'lazy' }: { name: string; loading?: 'eager' | 'lazy' }) {
   const still = DOC_STILLS[name]
@@ -120,15 +124,19 @@ export function DocStill({ name, loading = 'lazy' }: { name: string; loading?: '
           <img src={phone ? `/img/docs/${phone.files.light}` : NOTHING} alt={desktop.alt} width={fallback.displayWidth} height={fallback.displayHeight}
             loading={loading} fetchPriority={loading === 'eager' ? 'high' : undefined} decoding={loading === 'eager' ? undefined : 'async'} />
         </picture>
-        {lights && (
-          // The traffic lights, as src/AppWindowImage.tsx draws them on the recorder's captures.
-          <svg className="doc-still-chrome" viewBox="0 0 80 40" width="80" height="40" aria-hidden="true" focusable="false">
-            <circle cx="20" cy="20" r="6" fill="#ff5f57" stroke="#e0443e" />
-            <circle cx="40" cy="20" r="6" fill="#febc2e" stroke="#dea123" />
-            <circle cx="60" cy="20" r="6" fill="#28c840" stroke="#1aab29" />
-          </svg>
-        )}
+        {lights && <TrafficLights />}
       </span>
     </span>
+  )
+}
+
+/** The traffic lights, as src/AppWindowImage.tsx draws them on the recorder's captures. */
+export function TrafficLights() {
+  return (
+    <svg className="doc-still-chrome" viewBox="0 0 80 40" width="80" height="40" aria-hidden="true" focusable="false">
+      <circle cx="20" cy="20" r="6" fill="#ff5f57" stroke="#e0443e" />
+      <circle cx="40" cy="20" r="6" fill="#febc2e" stroke="#dea123" />
+      <circle cx="60" cy="20" r="6" fill="#28c840" stroke="#1aab29" />
+    </svg>
   )
 }

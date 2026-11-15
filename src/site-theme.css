@@ -215,6 +215,10 @@
 .site-theme .document-content .doc-still-chrome { pointer-events: none; position: absolute; }
 .site-theme .document-content .doc-still-frame::after { border: 0 solid color-mix(in srgb, var(--home-ink) 16%, transparent); border-radius: inherit; content: ''; inset: 0; pointer-events: none; position: absolute; }
 .site-theme .document-content .doc-still img { border: 0; border-radius: 0; box-shadow: none; display: block; height: 100%; margin: 0; max-width: none; width: 100%; }
+/* A clip (src/DocClip.tsx) lies over its still, hidden until it holds the still's frame; at rest a click plays it again. */
+.site-theme .document-content .doc-clip video { border: 0; border-radius: 0; box-shadow: none; display: block; height: 100%; inset: 0; margin: 0; object-fit: fill; max-width: none; position: absolute; visibility: hidden; width: 100%; }
+.site-theme .document-content .doc-clip .doc-still-frame[data-on] video { visibility: visible; }
+.site-theme .document-content .doc-clip .doc-still-frame[data-rest] { cursor: pointer; }
 @media (min-width: 761px) {
   .docs-shell .document-article { container-type: inline-size; }
   .site-theme .document-content .doc-still {

@@ -2,6 +2,7 @@ import { useMemo, useRef, useState, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { AutoplayClip } from './AutoplayClip'
+import { DOC_CLIPS, DocClip } from './DocClip'
 import { AppWindowImage } from './AppWindowImage'
 import { StopFrame } from './StopFrame'
 import { ChiefOfStaffPrompt, CHIEF_OF_STAFF_LANGUAGE } from './ChiefOfStaffPrompt'
@@ -352,9 +353,10 @@ function documentComponents(options: { current: DocumentOptions }): Components {
         if (title === 'frame' || title === 'frame loop') return <StopFrame folder={src} label={alt ?? ''} loop={title === 'frame loop'} />
         return <HoverClip folder={src} label={alt ?? ''} />
       }
-      // A docs still: a desktop and a phone cut, each light and dark (src/DocStill.tsx).
+      // A docs still: a desktop and a phone cut, each light and dark (src/DocStill.tsx), or the clip
+      // that replaces it (src/DocClip.tsx).
       const still = docStillName(src, title)
-      if (still) return <DocStill name={still} loading={loading} />
+      if (still) return DOC_CLIPS[still] ? <DocClip name={still} loading={loading} /> : <DocStill name={still} loading={loading} />
       const diagram = typeof src === 'string' ? inlineDiagram(src) : undefined
       if (diagram) return <InlineDiagram svg={diagram} label={alt ?? ''} />
       // A docs capture is 2x: shown at half its pixel size, the app's own (DESIGN.md, Screenshots),

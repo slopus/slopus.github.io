@@ -1,10 +1,12 @@
+import { DOC_CLIPS } from './DocClip'
 import { DOC_STILLS, desktopCutQuery } from './DocStill'
 import { getDocument, getDocumentSource } from './documents'
 
 /**
  * The file a docs page's first picture will load on this screen, when the page opens on it (before
  * its second h2, as rehypeFirstImage in src/MarkdownDocument.tsx decides): a still's cut for this
- * width and scheme, a capture, or a clip's poster. Never the clip itself.
+ * width and scheme, a capture, or a clip's poster. Never the clip itself: for a still that plays
+ * (src/DocClip.tsx), the still it opens on, or its rest with reduced motion.
  */
 export function firstPictureUrl(pathname: string): string | undefined {
   const path = pathname.replace(/^\/+|\/+$/g, '')
@@ -16,10 +18,17 @@ export function firstPictureUrl(pathname: string): string | undefined {
   if (!image) return undefined
   const [, src, title] = image
   if (src.endsWith('/')) return title === 'autoplay' ? `${src}poster.webp` : undefined
-  const still = title === 'still' ? DOC_STILLS[src.replace(/^\/img\/docs\//, '')] : undefined
+  const name = src.replace(/^\/img\/docs\//, '')
+  const still = title === 'still' ? DOC_STILLS[name] : undefined
   if (!still) return /\.(webp|png|jpe?g|avif|svg)$/.test(src) ? src : undefined
-  const cut = window.matchMedia(desktopCutQuery(still)).matches ? still.desktop : still.phone
   const dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  const clip = DOC_CLIPS[name]
+  if (clip) {
+    const cut = window.matchMedia(desktopCutQuery(clip)).matches ? clip.desktop : clip.phone
+    const quiet = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    return cut ? `/img/docs/${cut.files[dark ? 'dark' : 'light'][quiet ? 'rest' : 'first']}` : undefined
+  }
+  const cut = window.matchMedia(desktopCutQuery(still)).matches ? still.desktop : still.phone
   return cut ? `/img/docs/${cut.files[dark ? 'dark' : 'light']}` : undefined
 }
 
