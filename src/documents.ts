@@ -27,6 +27,8 @@ export interface DocumentEntry {
   group: DocumentGroup
   /** The page's own browser and search title, in place of its heading and the docs suffix. */
   pageTitle?: string
+  /** A shorter label for the navigation, where the title would wrap to two lines; the title stays the h1's search phrase. */
+  navLabel?: string
   /** Reachable by URL, but left out of navigation and previous/next links. */
   hidden?: boolean
   /** An essay: rendered with captioned figures, floats, and the pig in its bullet (src/DocumentPages.tsx). */
@@ -226,7 +228,7 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'welcome',
     sourcePath: '/content/desktop/index.mdx',
     title: 'Welcome',
-    description: 'Happy is the open-source app where a team and its agents work in one place: shared tasks, shared bots, a feed, and permissions, on Claude, Codex, Grok, and Gemini.',
+    description: 'Happy is the open-source app where a team and its agents work in one place: shared tasks, bots, a feed, and permissions, on Claude, Codex, Grok, and Gemini.',
     thesis: 'Work is moving into agents. It needs a home you own.',
     cardLine: 'Your team and its agents in one place',
     group: 'Start here',
@@ -236,7 +238,7 @@ const desktopDocuments: DocumentDefinition[] = [
     sourcePath: '/content/desktop/quick-start.mdx',
     title: 'Quick Start',
     pageTitle: 'Quick Start: Install Happy Desktop and Run Your First Agent',
-    description: 'Install Happy Desktop, then learn the three things in it: repositories, tasks, and bots. No account and no key to paste; the Chief of Staff does the setup when you ask.',
+    description: 'Install Happy Desktop, then learn the three things in it: repositories, tasks, and bots. No account, no key to paste; the Chief of Staff sets it up.',
     thesis: 'Install it, then ask for everything else.',
     cardLine: 'From download to your first agent',
     group: 'Start here',
@@ -455,6 +457,7 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'cursor-projects-claude-team-capy',
     sourcePath: '/content/desktop/cursor-projects-claude-team-capy.mdx',
     title: 'Happy vs Cursor Projects, Claude Team, and Capy',
+    navLabel: 'Happy vs Cursor, Claude, Capy',
     pageTitle: 'Happy vs Cursor Projects, Claude Team, ChatGPT Projects, and Capy',
     description: 'Cursor Projects, Claude Projects on the Team plan, ChatGPT shared projects, and Capy compared with Happy: working together, models, where it runs, and price.',
     thesis: 'The same idea, except you can read the source and you own the computers.',
@@ -474,6 +477,7 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'desktop-app',
     sourcePath: '/content/desktop/desktop-app.mdx',
     title: 'Desktop App for Claude Code & Codex',
+    navLabel: 'Desktop app for Claude Code',
     pageTitle: 'Open Source Desktop App for Claude Code, Codex, Grok & Gemini',
     description: 'Happy Desktop is a free, MIT-licensed desktop app for Claude Code, Codex, Grok, Gemini, and more. Download it for macOS, Windows, or Linux.',
     cardLine: 'Free on macOS, Windows and Linux',
@@ -521,6 +525,7 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'remote-server-alternatives',
     sourcePath: '/content/desktop/remote-server-alternatives.mdx',
     title: 'Happy vs tmux, Remote Control, and exe.dev',
+    navLabel: 'Happy vs tmux and exe.dev',
     pageTitle: 'Keep Claude Code Running: tmux, Remote Control, exe.dev, T3 Code, Happy',
     description: 'Keep a coding agent running while your laptop sleeps: tmux and SSH, Claude Code Remote Control, exe.dev, T3 Code, and Happy Agent on a server, compared.',
     cardLine: 'tmux, Remote Control, exe.dev, T3 Code, and Happy',
@@ -531,6 +536,7 @@ const desktopDocuments: DocumentDefinition[] = [
     path: 'hermes-agent-openclaw-secrets',
     sourcePath: '/content/desktop/hermes-agent-openclaw-secrets.mdx',
     title: 'Secrets: Happy vs Hermes Agent and OpenClaw',
+    navLabel: 'Secrets vs Hermes, OpenClaw',
     pageTitle: 'Agent Secrets Compared: Happy, Hermes Agent, and OpenClaw',
     description: "How Happy, Hermes Agent, and OpenClaw keep API keys from coding agents: where values live, how a command receives one, and scope, from each project's docs.",
     cardLine: 'Three designs for keeping keys from models',
@@ -772,7 +778,7 @@ export function adjacentDocuments(document: DocumentEntry): { previous?: Documen
  * (scripts/sync-agent-recipes.mjs rewrites it) and shows as the one Recipes link.
  */
 export function documentLabel(document: DocumentEntry) {
-  return document.product === 'desktop' && document.path === 'recepies' ? 'Recipes' : document.title
+  return document.product === 'desktop' && document.path === 'recepies' ? 'Recipes' : document.navLabel ?? document.title
 }
 
 /** A sidebar group's heading, where it differs from the group's name. */

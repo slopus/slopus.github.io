@@ -5,6 +5,7 @@ import { loadedSitePages, loadSitePages } from './sitePagesChunk'
 import { documentHeading, getDocument, normalizeDocumentPath } from './documents'
 import { documentHref, HAPPY, HAPPY_DESKTOP, type Product } from './products'
 import { changelogEntryForPath, changelogEntryMetadata } from './changelog'
+import { movedAnchor } from './movedAnchors'
 import {
   applyPageMetadata,
   docsMetadataForProduct,
@@ -225,6 +226,17 @@ export function Router({ pathname }: { pathname?: string }) {
       void document.fonts?.ready.then(() => {
         if (window.scrollY === scrolledTo) fragmentTarget.scrollIntoView({ behavior: 'instant' })
       })
+    } else {
+      followMovedAnchor(new URL(window.location.href))
+    }
+
+    // A section that moved to another page: an old link to it goes on to where it is now.
+    function followMovedAnchor(url: URL) {
+      const moved = movedAnchor(metadataForPath(url.pathname).canonicalPath, url.hash)
+      if (!moved) return false
+      const next = new URL(moved, window.location.href)
+      void preparePath(next.pathname).then(() => navigateTo(next, true))
+      return true
     }
 
     // An id can start with a digit (#2-the-server), which a CSS selector cannot.
@@ -249,12 +261,14 @@ export function Router({ pathname }: { pathname?: string }) {
         const target = fragmentElement(url.hash)
         if (target) {
           target.scrollIntoView({ behavior: 'instant' })
-        } else {
+        } else if (!followMovedAnchor(url)) {
           window.scrollTo({ top: 0 })
           document.querySelector('.document-article')?.scrollTo({ top: 0 })
         }
       } else if (url.hash) {
-        fragmentElement(url.hash)?.scrollIntoView()
+        const target = fragmentElement(url.hash)
+        if (target) target.scrollIntoView()
+        else followMovedAnchor(url)
       }
     }
 

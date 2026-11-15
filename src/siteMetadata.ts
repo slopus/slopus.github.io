@@ -75,14 +75,12 @@ export function socialVideoTags(video: NonNullable<PageMetadata['socialVideo']>)
  * read for /, and scripts/generate-static-routes.mjs in sync.
  */
 export const homepageMetadata: PageMetadata = {
-  title: 'Happy — One Place for Your Team and Its Coding Agents: Claude Code, Codex, Grok, Gemini',
+  title: 'Happy — Open-Source Team App for Claude Code, Codex, Grok, Gemini',
   description:
-    'Happy is the open-source app where a team and its coding agents work in one place. Shared tasks, shared bots, and a feed, on the Claude, Codex, Grok, and Gemini subscriptions you already pay for.',
+    'Happy (previously Happy Coder): the open-source app where a team and its Claude, Codex, Grok, and Gemini agents work in one place, on desktop and phone.',
   canonicalPath: '/',
-  // The hero line. The card image itself still shows the old headline until it is regenerated (docs/happy-one-demo.md).
+  // The hero line, as on the card image.
   socialTitle: 'One place for you, your team, and your agents.',
-  socialDescription:
-    'Happy is the open-source app where a team and its coding agents work in one place, on the Claude, Codex, Grok, and Gemini subscriptions you already pay for.',
 }
 
 /** The original Happy CLI docs. Kept at their URLs, in maintenance mode. */
@@ -94,9 +92,9 @@ export const docsMetadata: PageMetadata = {
 }
 
 export const desktopDocsMetadata: PageMetadata = {
-  title: 'Happy Docs: One Place for Your Team and Its Claude, Codex, Grok, and Gemini Agents',
+  title: 'Happy Docs: Your Team and Its Claude, Codex, Grok, Gemini Agents',
   description:
-    'Happy is the open-source app where a team and its agents work in one place: shared tasks, shared bots, a feed, and permissions, on Claude, Codex, Grok, and Gemini.',
+    'Happy is the open-source app where a team and its agents work in one place: shared tasks, bots, a feed, and permissions, on Claude, Codex, Grok, and Gemini.',
   canonicalPath: '/welcome/',
 }
 

@@ -116,14 +116,19 @@ interface MdastNode {
 
 /**
  * `<Tweet url="…" />` and `<RedditEmbed url="…" />` on a line of their own embed that post.
- * Tweets that follow one another share a row.
+ * Tweets that follow one another share a row. `<Anchor id="…" />` keeps a heading id the page
+ * used to have as an invisible target right before the block that now holds its content.
  */
 function remarkEmbeds() {
   const isTweet = (node: MdastNode | undefined) => node?.type === 'embed' && node.data?.hName === 'tweet-embed'
   const visit = (node: MdastNode) => {
     for (const child of node.children ?? []) {
       const embed = child.type === 'html' && child.value?.trim().match(/^<(Tweet|RedditEmbed)\s+url="([^"]+)"\s*\/>$/)
-      if (child.type === 'html' && child.value?.trim() === '<Download />') {
+      const anchor = child.type === 'html' && child.value?.trim().match(/^<Anchor\s+id="([^"]+)"\s*\/>$/)
+      if (anchor) {
+        child.type = 'embed'
+        child.data = { hName: 'span', hProperties: { id: anchor[1], className: 'kept-anchor' } }
+      } else if (child.type === 'html' && child.value?.trim() === '<Download />') {
         child.type = 'embed'
         child.data = { hName: 'download-embed', hProperties: {} }
       } else if (embed) {

@@ -307,6 +307,8 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
 .document-content { color: #294c45; font-size: 1rem; line-height: 1.75; }
 .document-content h1, .document-content h2, .document-content h3 { color: #183f38; font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-weight: 600; letter-spacing: -.025em; text-wrap: balance; }
 .document-content h1[id], .document-content h2[id], .document-content h3[id] { scroll-margin-top: 2rem; }
+/* An id the page used to have, kept where its content now is (<Anchor id="…" />). Empty, so the margins around it still collapse. */
+.document-content .kept-anchor { display: block; scroll-margin-top: 2rem; }
 /* A page's title is set like its section headings, so the page starts reading straight away. */
 .document-content h1 { font-size: clamp(1.75rem, 3vw, 2.25rem); line-height: 1.15; margin: 0 0 1.2rem; }
 .document-content h2 { border-top: 1px solid #ddd6c8; font-size: clamp(1.75rem, 3vw, 2.25rem); line-height: 1.15; margin: 4rem 0 1.2rem; padding-top: 2.2rem; }
@@ -630,7 +632,7 @@ h1 em, h2 em { color: #e6522c; font-style: normal; font-weight: 600; }
   .docs-shell .document-pagination { margin-bottom: 4rem; }
   .docs-shell .site-footer { margin: auto calc(50% - 50vw) 0; }
   /* The sticky header covers the top 53px of a phone screen; land anchors below it. */
-  .document-content h1[id], .document-content h2[id], .document-content h3[id] { scroll-margin-top: 72px; }
+  .document-content h1[id], .document-content h2[id], .document-content h3[id], .document-content .kept-anchor { scroll-margin-top: 72px; }
   .document-content pre { font-size: 13px; line-height: 1.65; padding: 16px; }
   .document-content h2, .document-content hr { margin-top: 3.2rem; }
   .legal-layout { padding-bottom: 5rem; padding-top: 2rem; }

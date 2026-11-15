@@ -1,0 +1,1037 @@
+{
+ "/": [
+  "one-heading",
+  "talk-heading",
+  "value-alien-monster",
+  "value-closed-lock",
+  "value-f1-car",
+  "value-open-source",
+  "value-rainbow"
+ ],
+ "/agents/": [
+  "agents-that-never-die",
+  "durable-waits-and-scheduled-messages",
+  "how-agents-message-each-other",
+  "subagents-delegate-work-to-other-models",
+  "the-inbox-and-presence",
+  "what-a-session-is",
+  "what-happy-desktop-shows-for-each-session"
+ ],
+ "/changelog/": [
+  "bots-and-tasks-can-set-up-mcp",
+  "changelog",
+  "gpt-6-1-terra",
+  "initial-core-release",
+  "more-stable-inline-pages",
+  "stem-cells",
+  "stops-survive-restarts",
+  "updates-without-interruption"
+ ],
+ "/changelog/gpt-6-1-terra/": [
+  "bots-and-tasks-can-set-up-mcp",
+  "gpt-6-1-terra",
+  "initial-core-release",
+  "more-stable-inline-pages",
+  "stem-cells",
+  "stops-survive-restarts",
+  "updates-without-interruption"
+ ],
+ "/changelog/initial-core-release/": [
+  "bots-and-tasks-can-set-up-mcp",
+  "gpt-6-1-terra",
+  "initial-core-release",
+  "more-stable-inline-pages",
+  "stem-cells",
+  "stops-survive-restarts",
+  "updates-without-interruption"
+ ],
+ "/changelog/stem-cells/": [
+  "bots-and-tasks-can-set-up-mcp",
+  "gpt-6-1-terra",
+  "initial-core-release",
+  "more-stable-inline-pages",
+  "stem-cells",
+  "stops-survive-restarts",
+  "updates-without-interruption"
+ ],
+ "/changelog/updates-without-interruption/": [
+  "bots-and-tasks-can-set-up-mcp",
+  "gpt-6-1-terra",
+  "initial-core-release",
+  "more-stable-inline-pages",
+  "stem-cells",
+  "stops-survive-restarts",
+  "updates-without-interruption"
+ ],
+ "/chief-of-staff/": [
+  "chief-of-staff",
+  "set-up-models-and-providers",
+  "what-happens-the-first-time-you-open-happy-desktop",
+  "what-only-the-chief-of-staff-can-do",
+  "what-the-chief-of-staff-won-t-do",
+  "what-you-can-ask-it"
+ ],
+ "/claude-code-remote-control/": [
+  "happy-vs-claude-code-remote-control",
+  "side-by-side",
+  "where-happy-is-different",
+  "where-remote-control-is-better",
+  "which-one"
+ ],
+ "/comparisons/buzz/": [
+  "happy-desktop-vs-buzz"
+ ],
+ "/desktop-app/": [
+  "a-claude-code-client-that-also-runs-codex",
+  "download-the-claude-code-and-codex-desktop-app",
+  "how-it-compares",
+  "one-harness-every-model-native",
+  "permissions-and-the-sandbox",
+  "sessions-that-outlive-the-window",
+  "source-code",
+  "the-open-source-desktop-app-for-claude-code-codex-grok-and-gemini",
+  "your-phone-encrypted",
+  "your-subscriptions-no-keys"
+ ],
+ "/desktop/docs/": [
+  "next",
+  "welcome",
+  "what-does-happy-cost",
+  "what-you-get"
+ ],
+ "/desktop/docs/agents/": [
+  "agents-that-never-die",
+  "durable-waits-and-scheduled-messages",
+  "how-agents-message-each-other",
+  "subagents-delegate-work-to-other-models",
+  "the-inbox-and-presence",
+  "what-a-session-is",
+  "what-happy-desktop-shows-for-each-session"
+ ],
+ "/desktop/docs/chief-of-staff/": [
+  "chief-of-staff",
+  "set-up-models-and-providers",
+  "what-happens-the-first-time-you-open-happy-desktop",
+  "what-only-the-chief-of-staff-can-do",
+  "what-the-chief-of-staff-won-t-do",
+  "what-you-can-ask-it"
+ ],
+ "/desktop/docs/comparisons/buzz/": [
+  "happy-desktop-vs-buzz"
+ ],
+ "/desktop/docs/extending/": [
+  "mcp-servers-tools-from-other-processes",
+  "skills-and-mcp",
+  "skills-instructions-loaded-on-demand"
+ ],
+ "/desktop/docs/guides/configuration/": [
+  "configuration",
+  "default-permission-mode",
+  "docker-sessions",
+  "everything-else-in-happy-toml",
+  "network-allowlist-for-sandboxed-commands",
+  "protected-paths",
+  "providers-and-accounts",
+  "where-the-files-live",
+  "workspace-setup-commands-and-synced-files"
+ ],
+ "/desktop/docs/guides/terminal/": [
+  "missing-something-from-the-cli",
+  "move-to-happy-desktop",
+  "the-original-happy-cli",
+  "use-the-cli-alongside-happy-desktop",
+  "what-the-cli-does"
+ ],
+ "/desktop/docs/how-it-works/": [
+  "clients",
+  "durable",
+  "how-it-works",
+  "is-happy-a-phone-remote-for-claude-code",
+  "native-per-model-shared-around-it",
+  "not-yet",
+  "the-runtime",
+  "what-leaves-the-machine"
+ ],
+ "/desktop/docs/mobile/": [
+  "how-the-phone-sync-is-encrypted",
+  "mobile-access",
+  "pair-your-phone-with-happy-desktop",
+  "troubleshooting-mobile-access",
+  "what-you-can-do-from-the-phone"
+ ],
+ "/desktop/docs/models/": [
+  "how-compaction-works",
+  "models-and-subscriptions",
+  "provider-usage-and-quotas",
+  "supported-providers-and-where-their-credentials-come-from",
+  "switch-models-in-the-middle-of-a-session",
+  "use-several-accounts-of-one-provider",
+  "use-several-models-in-one-task"
+ ],
+ "/desktop/docs/multiplayer/": [
+  "also",
+  "happy-vs-cursor-projects-claude-projects-chatgpt-projects-and-capy-ai",
+  "multiplayer",
+  "run-your-own-team-server",
+  "see-the-most-important-updates-from-the-team",
+  "see-who-s-working-on-what",
+  "shared-bots-for-the-standing-jobs"
+ ],
+ "/desktop/docs/permissions/": [
+  "how-auto-review-decides",
+  "mcp-tools-and-the-sandbox",
+  "permission-settings-in-happy-toml",
+  "permissions-and-sandbox",
+  "secrets-and-the-sandbox",
+  "the-four-permission-modes",
+  "what-the-os-sandbox-enforces"
+ ],
+ "/desktop/docs/quick-start/": [
+  "first-project",
+  "first-session",
+  "install",
+  "pair-your-phone",
+  "quick-start",
+  "where-things-live"
+ ],
+ "/desktop/docs/workspaces/": [
+  "add-a-project",
+  "archive-a-workspace",
+  "how-agents-work-in-another-workspace",
+  "how-happy-creates-a-workspace",
+  "projects-and-workspaces",
+  "when-to-create-a-workspace",
+  "which-changes-a-workspace-shows"
+ ],
+ "/docs/": [
+  "community",
+  "enable-push-notifications",
+  "examples",
+  "getting-started",
+  "happy-coder-original-happy-cli",
+  "managing-sessions",
+  "quick-start",
+  "resources",
+  "voice-commands",
+  "why-happy-coder"
+ ],
+ "/docs/comparisons/alternatives/": [
+  "alternatives-for-claude-code-and-codex-on-mobile-and-desktop",
+  "claude-code-remote-control",
+  "codex-in-the-chatgpt-app",
+  "conductor",
+  "happy",
+  "side-by-side",
+  "ssh-tmux-and-termius",
+  "t3-code",
+  "what-happened-to-omnara",
+  "which-one"
+ ],
+ "/docs/comparisons/diy-terminal-app/": [
+  "happy-coder-vs-diy-terminal-setup",
+  "practical-advantages"
+ ],
+ "/docs/comparisons/happy-2-vs-buzz/": [
+  "happy-desktop-vs-buzz"
+ ],
+ "/docs/distribution/": [
+  "descriptions",
+  "distribution-resources",
+  "feature-list-bullet-points-only",
+  "full-description-500-characters",
+  "installation",
+  "links",
+  "medium-description-300-400-characters",
+  "one-liner-50-80-characters",
+  "short-description-200-250-characters",
+  "the-original-happy-cli",
+  "tweet-length-100-150-characters"
+ ],
+ "/docs/faq/": [
+  "am-i-locked-in",
+  "app-features",
+  "can-happy-coder-or-the-relay-server-see-my-code",
+  "can-i-do-coding-in-a-mobile-app",
+  "can-i-review-code-changes-before-claude-code-applies-them",
+  "can-i-use-custom-claude-code-agents",
+  "can-i-use-happy-coder-with-multiple-claude-code-sessions",
+  "can-t-connect-to-relay-server",
+  "can-you-use-claude-on-mobile",
+  "claude-code-not-found-error",
+  "comparison-with-alternatives",
+  "does-claude-code-have-an-app",
+  "does-claude-have-an-apple-app",
+  "does-happy-coder-work-with-mcp-tools",
+  "general-faq",
+  "how-do-i-install-the-claude-app",
+  "how-much-does-claude-code-cost",
+  "how-to-launch-happy-daemon",
+  "how-to-use-the-claude-app",
+  "is-claude-better-than-chatgpt-for-coding",
+  "is-happy-coder-free",
+  "is-my-company-s-proprietary-code-safe",
+  "need-more-help",
+  "platform-availability",
+  "pricing-and-plans",
+  "qr-code-won-t-scan",
+  "security-and-privacy-questions",
+  "technical-questions",
+  "troubleshooting",
+  "usage-and-features",
+  "what-data-does-happy-coder-collect",
+  "what-does-happy-coder-do",
+  "what-happens-if-my-connection-drops",
+  "what-justifies-your-claim-that-happy-coder-is-simple",
+  "what-s-the-latency-between-phone-and-desktop",
+  "which-claude-is-best-for-coding",
+  "why-is-happy-coder-free-and-open-source"
+ ],
+ "/docs/features/": [
+  "1-real-time-cli-synchronization",
+  "2-multi-session-management",
+  "3-end-to-end-encryption-with-zero-trust-architecture",
+  "4-offline-first-architecture-with-encrypted-pub-sub",
+  "5-permission-prompts-for-mcp-tools-and-edit-operations",
+  "6-file-mentions",
+  "7-custom-slash-commands-and-agent-library",
+  "8-push-notification-system",
+  "9-voice-agent-integration",
+  "all-features-of-happy-coder-mobile-claude-code-client",
+  "core-architecture-features",
+  "mobile-optimized-user-experience-features",
+  "voice-coding"
+ ],
+ "/docs/features/parallel-tasks/": [
+  "parallel-tasks"
+ ],
+ "/docs/features/real-time-sync/": [
+  "a-tool-that-respects-how-we-actually-work",
+  "real-time-synchronization-just-enough-connection",
+  "the-moments-you-actually-need-this",
+  "the-technical-implementation",
+  "two-approaches-full-workflow-vs-lightweight-extension",
+  "when-mobile-makes-sense-and-when-it-doesn-t",
+  "why-happy-coder-has-real-time-synchronization",
+  "why-this-matters-in-practice"
+ ],
+ "/docs/features/voice-coding-with-claude-code/": [
+  "free-minutes-and-the-subscription",
+  "how-voice-coding-with-claude-code-works",
+  "try-it",
+  "use-your-own-elevenlabs-agent",
+  "voice-coding-with-claude-code",
+  "voice-on-happy-desktop",
+  "what-elevenlabs-hears",
+  "why-talk-to-claude-code-at-all"
+ ],
+ "/docs/guides/happy-coder-best-practices/": [
+  "1-set-up-for-success",
+  "2-remember-your-terminal-still-works",
+  "3-set-up-git-worktrees-ahead-of-time",
+  "4-build-new-habits",
+  "5-quick-workflow-patterns",
+  "a-connect-everything-everywhere",
+  "a-practice-the-instant-idea-muscle",
+  "a-the-commute-pattern",
+  "b-do-a-personal-inventory",
+  "b-start-multiple-parallel-sessions",
+  "b-the-inspiration-pattern",
+  "b-turn-on-experimental-features",
+  "c-switch-agents-freely",
+  "c-the-parallel-exploration-pattern",
+  "key-takeaway",
+  "tips-and-tricks-for-happy-coder"
+ ],
+ "/docs/guides/push-notifications/": [
+  "push-notifications"
+ ],
+ "/docs/guides/self-hosting/": [
+  "advanced-kubernetes-deployment",
+  "backup-your-data",
+  "clone-and-build",
+  "configure-your-devices",
+  "docker-compose-setup",
+  "docker-compose-with-postgres",
+  "kubernetes-secrets",
+  "monitor-your-server",
+  "next-steps",
+  "option-1-home-server",
+  "option-2-cloud-vps",
+  "option-3-corporate-network",
+  "production-setup-with-https",
+  "quick-start",
+  "run-the-server",
+  "security-notes",
+  "self-host-your-own-happy-server",
+  "system-requirements",
+  "what-still-leaves-your-server",
+  "where-to-host",
+  "why-run-your-own-server"
+ ],
+ "/docs/how-it-works/": [
+  "for-contributors",
+  "how-data-moves",
+  "how-it-works",
+  "how-your-devices-connect",
+  "run-your-own-server",
+  "summary",
+  "the-three-parts",
+  "trust-and-security",
+  "why-save-encrypted-blobs",
+  "why-you-need-the-relay-server",
+  "your-data-stays-private"
+ ],
+ "/docs/quick-start/": [
+  "download-mobile-app",
+  "first-steps",
+  "install-on-your-computer",
+  "installation",
+  "quick-start-guide",
+  "scan-the-qr-code-with-your-mobile-app"
+ ],
+ "/docs/security/": [
+  "encryption-architecture",
+  "future-sharing-with-friends",
+  "key-hierarchy",
+  "key-purpose-summary",
+  "key-state-after-authentication",
+  "legend-and-key-types",
+  "security-and-encryption",
+  "security-properties",
+  "self-hosting",
+  "session-sync-flow",
+  "the-short-version",
+  "why-this-design"
+ ],
+ "/docs/use-cases/hemingway-technique/": [
+  "hemingway-technique"
+ ],
+ "/docs/versions/known-issues/": [
+  "known-issues"
+ ],
+ "/docs/versions/release-notes/": [
+  "april-26-2026-voice-fixes-diffs-scroll",
+  "april-8-2026-gemini-models-voice-onboarding-cli-fixes",
+  "august-29-2025-github-integration",
+  "december-22-2025-agent-updates-voice-changes-tables",
+  "july-11-2026-gpt-5-6-antigravity-bugfixes",
+  "july-2-2026-fable-in-claude-code",
+  "july-28-2026-liquid-glass-opus-5",
+  "june-22-2026-goals-and-cleaner-commands",
+  "june-26-2025-qr-login-dark-mode-voice",
+  "march-19-2026-new-session-screen-git-worktrees-more-agents",
+  "may-12-2025-hello-world",
+  "may-13-2026-faster-long-chats",
+  "may-15-2026-cleaner-steadier-chat",
+  "may-7-2026-session-retention-new-sidebar-code-editor-session-branching",
+  "release-notes",
+  "september-12-2025-codex-daemon-mode-one-tap-launch"
+ ],
+ "/extending/": [
+  "mcp-servers-tools-from-other-processes",
+  "skills-and-mcp",
+  "skills-instructions-loaded-on-demand"
+ ],
+ "/guides/configuration/": [
+  "configuration",
+  "default-permission-mode",
+  "docker-sessions",
+  "everything-else-in-happy-toml",
+  "network-allowlist-for-sandboxed-commands",
+  "protected-paths",
+  "providers-and-accounts",
+  "where-the-files-live",
+  "workspace-setup-commands-and-synced-files"
+ ],
+ "/guides/remote-server/": [
+  "a-harness-not-a-remote-control",
+  "a-mac-mini-or-old-laptop-at-home",
+  "alternatives-to-a-happy-agent-server",
+  "aws-ec2-and-lightsail",
+  "digitalocean",
+  "exe-dev",
+  "google-cloud",
+  "hetzner",
+  "how-desktop-connects-to-the-server",
+  "providers",
+  "raspberry-pi-and-other-arm-boards",
+  "run-claude-code-and-codex-on-a-remote-server",
+  "share-it-with-your-team",
+  "the-deployment-recipes",
+  "what-the-chief-of-staff-asks-you-during-deployment",
+  "what-we-haven-t-built-yet",
+  "where-happy-came-from"
+ ],
+ "/guides/team-server/": [
+  "how-desktop-and-phones-reach-the-server",
+  "how-members-sign-in",
+  "join-or-leave-a-team",
+  "run-a-happy-team-server",
+  "sandbox-and-review-on-a-shared-server",
+  "set-up-a-team-server",
+  "share-your-own-computer-with-someone",
+  "what-is-shared-and-what-is-each-member-s-own",
+  "what-the-team-owner-can-do",
+  "what-we-haven-t-built-yet",
+  "whose-claude-codex-and-grok-accounts-pay"
+ ],
+ "/guides/terminal/": [
+  "missing-something-from-the-cli",
+  "move-to-happy-desktop",
+  "the-original-happy-cli",
+  "use-the-cli-alongside-happy-desktop",
+  "what-the-cli-does"
+ ],
+ "/happy2/docs/": [
+  "next",
+  "welcome",
+  "what-does-happy-cost",
+  "what-you-get"
+ ],
+ "/happy2/docs/agents/": [
+  "agents-that-never-die",
+  "durable-waits-and-scheduled-messages",
+  "how-agents-message-each-other",
+  "subagents-delegate-work-to-other-models",
+  "the-inbox-and-presence",
+  "what-a-session-is",
+  "what-happy-desktop-shows-for-each-session"
+ ],
+ "/happy2/docs/chief-of-staff/": [
+  "chief-of-staff",
+  "set-up-models-and-providers",
+  "what-happens-the-first-time-you-open-happy-desktop",
+  "what-only-the-chief-of-staff-can-do",
+  "what-the-chief-of-staff-won-t-do",
+  "what-you-can-ask-it"
+ ],
+ "/happy2/docs/comparisons/buzz/": [
+  "happy-desktop-vs-buzz"
+ ],
+ "/happy2/docs/extending/": [
+  "mcp-servers-tools-from-other-processes",
+  "skills-and-mcp",
+  "skills-instructions-loaded-on-demand"
+ ],
+ "/happy2/docs/guides/configuration/": [
+  "configuration",
+  "default-permission-mode",
+  "docker-sessions",
+  "everything-else-in-happy-toml",
+  "network-allowlist-for-sandboxed-commands",
+  "protected-paths",
+  "providers-and-accounts",
+  "where-the-files-live",
+  "workspace-setup-commands-and-synced-files"
+ ],
+ "/happy2/docs/guides/terminal/": [
+  "missing-something-from-the-cli",
+  "move-to-happy-desktop",
+  "the-original-happy-cli",
+  "use-the-cli-alongside-happy-desktop",
+  "what-the-cli-does"
+ ],
+ "/happy2/docs/how-it-works/": [
+  "clients",
+  "durable",
+  "how-it-works",
+  "is-happy-a-phone-remote-for-claude-code",
+  "native-per-model-shared-around-it",
+  "not-yet",
+  "the-runtime",
+  "what-leaves-the-machine"
+ ],
+ "/happy2/docs/mobile/": [
+  "how-the-phone-sync-is-encrypted",
+  "mobile-access",
+  "pair-your-phone-with-happy-desktop",
+  "troubleshooting-mobile-access",
+  "what-you-can-do-from-the-phone"
+ ],
+ "/happy2/docs/models/": [
+  "how-compaction-works",
+  "models-and-subscriptions",
+  "provider-usage-and-quotas",
+  "supported-providers-and-where-their-credentials-come-from",
+  "switch-models-in-the-middle-of-a-session",
+  "use-several-accounts-of-one-provider",
+  "use-several-models-in-one-task"
+ ],
+ "/happy2/docs/multiplayer/": [
+  "also",
+  "happy-vs-cursor-projects-claude-projects-chatgpt-projects-and-capy-ai",
+  "multiplayer",
+  "run-your-own-team-server",
+  "see-the-most-important-updates-from-the-team",
+  "see-who-s-working-on-what",
+  "shared-bots-for-the-standing-jobs"
+ ],
+ "/happy2/docs/permissions/": [
+  "how-auto-review-decides",
+  "mcp-tools-and-the-sandbox",
+  "permission-settings-in-happy-toml",
+  "permissions-and-sandbox",
+  "secrets-and-the-sandbox",
+  "the-four-permission-modes",
+  "what-the-os-sandbox-enforces"
+ ],
+ "/happy2/docs/quick-start/": [
+  "first-project",
+  "first-session",
+  "install",
+  "pair-your-phone",
+  "quick-start",
+  "where-things-live"
+ ],
+ "/happy2/docs/workspaces/": [
+  "add-a-project",
+  "archive-a-workspace",
+  "how-agents-work-in-another-workspace",
+  "how-happy-creates-a-workspace",
+  "projects-and-workspaces",
+  "when-to-create-a-workspace",
+  "which-changes-a-workspace-shows"
+ ],
+ "/how-it-works/": [
+  "clients",
+  "durable",
+  "how-it-works",
+  "is-happy-a-phone-remote-for-claude-code",
+  "native-per-model-shared-around-it",
+  "not-yet",
+  "the-runtime",
+  "what-leaves-the-machine"
+ ],
+ "/migrate/": [
+  "already-on-happy-agent-through-the-happy-server",
+  "get-help",
+  "move-from-the-happy-cli-to-happy-agent",
+  "on-your-computer",
+  "on-your-phone",
+  "run-happy-agent-on-a-server-or-a-headless-machine",
+  "what-changes-when-you-switch",
+  "what-happens-to-your-happy-cli-setup"
+ ],
+ "/mobile-app/": [
+  "can-happy-read-my-sessions",
+  "can-i-control-claude-code-from-my-phone",
+  "claude-code-mobile-app-for-iphone-and-android",
+  "do-i-need-a-terminal",
+  "does-my-computer-have-to-stay-on",
+  "does-the-claude-code-phone-app-work-with-codex-grok-and-gemini",
+  "is-there-an-official-claude-code-mobile-app",
+  "more",
+  "set-up-claude-code-on-your-phone",
+  "ways-to-use-claude-code-on-your-phone",
+  "what-does-it-cost",
+  "what-you-can-do-with-claude-code-from-your-phone"
+ ],
+ "/mobile/": [
+  "how-the-phone-sync-is-encrypted",
+  "mobile-access",
+  "pair-your-phone-with-happy-desktop",
+  "troubleshooting-mobile-access",
+  "what-you-can-do-from-the-phone"
+ ],
+ "/models/": [
+  "how-compaction-works",
+  "models-and-subscriptions",
+  "provider-usage-and-quotas",
+  "supported-providers-and-where-their-credentials-come-from",
+  "switch-models-in-the-middle-of-a-session",
+  "use-several-accounts-of-one-provider",
+  "use-several-models-in-one-task"
+ ],
+ "/multiplayer/": [
+  "also",
+  "happy-vs-cursor-projects-claude-projects-chatgpt-projects-and-capy-ai",
+  "multiplayer",
+  "run-your-own-team-server",
+  "see-the-most-important-updates-from-the-team",
+  "see-who-s-working-on-what",
+  "shared-bots-for-the-standing-jobs"
+ ],
+ "/permissions/": [
+  "how-auto-review-decides",
+  "mcp-tools-and-the-sandbox",
+  "permission-settings-in-happy-toml",
+  "permissions-and-sandbox",
+  "secrets-and-the-sandbox",
+  "the-four-permission-modes",
+  "what-the-os-sandbox-enforces"
+ ],
+ "/pi-durable/": [
+  "happy-vs-pi-durable",
+  "pi-durable-on-cloudflare-and-vercel",
+  "side-by-side",
+  "what-survives-a-crash-in-happy",
+  "where-happy-is-better",
+  "where-pi-durable-is-better",
+  "which-one"
+ ],
+ "/plugins/memes/": [
+  "memes-examples",
+  "memes-install",
+  "memes-what"
+ ],
+ "/plugins/privacy/": [
+  "changes-to-this-policy",
+  "chatgpt-and-codex",
+  "contact",
+  "how-happy-memes-works",
+  "independence",
+  "installing-from-github",
+  "plugin-privacy-policy",
+  "scope",
+  "summary",
+  "this-website",
+  "what-we-collect",
+  "your-controls"
+ ],
+ "/plugins/terms/": [
+  "about-happy-plugins",
+  "acceptable-use",
+  "acceptance-of-terms",
+  "built-in-limits",
+  "contact",
+  "data-and-privacy",
+  "independence",
+  "limitation-of-liability",
+  "modifications-to-terms",
+  "plugin-terms-of-use",
+  "termination",
+  "your-responsibility"
+ ],
+ "/quick-start/": [
+  "first-project",
+  "first-session",
+  "install",
+  "pair-your-phone",
+  "quick-start",
+  "where-things-live"
+ ],
+ "/recepies/": [
+  "accounts-and-models",
+  "bot-settings",
+  "enterprise-sign-in",
+  "exported-bots",
+  "happy-teams",
+  "hardening-a-node",
+  "operational-recipes",
+  "peer-messaging",
+  "runners",
+  "testing-a-deployed-node",
+  "windows-and-wsl"
+ ],
+ "/recepies/accounts-and-models/": [
+  "accounts",
+  "accounts-models-effort-and-service-tier",
+  "apply-and-verify",
+  "before-editing",
+  "effort",
+  "models",
+  "service-tier",
+  "switching-existing-sessions"
+ ],
+ "/recepies/bot-settings/": [
+  "1-resolve-the-choices",
+  "2-read-the-current-settings",
+  "3-apply-the-change",
+  "4-let-the-change-reach-running-agents",
+  "5-verify",
+  "limits",
+  "restrict-a-bot-with-bot-settings"
+ ],
+ "/recepies/chat-bridge/": [
+  "1-choose-the-bot",
+  "2-export-the-bot",
+  "3-run-a-bridge",
+  "4-let-the-user-in",
+  "5-verify",
+  "a-separate-bot-not-the-chief-of-staff",
+  "export-a-bot-to-any-chat-service",
+  "later-changes",
+  "what-the-user-does-and-what-you-do",
+  "what-the-user-should-know"
+ ],
+ "/recepies/enterprise-sign-in/": [
+  "1-choose-the-authorization-server",
+  "2-agree-the-token-contract",
+  "3-if-you-write-the-authorization-server-yourself",
+  "4-configure-the-daemon",
+  "5-verify",
+  "how-sign-in-works",
+  "set-up-enterprise-jwt-sign-in",
+  "troubleshooting"
+ ],
+ "/recepies/first-project/": [
+  "completion-checks",
+  "discover-a-short-list-read-only",
+  "import-only-the-chosen-project",
+  "make-one-small-change",
+  "start-in-conversation",
+  "start-with-one-project"
+ ],
+ "/recepies/hardening/": [
+  "1-resolve-the-choices",
+  "2-prepare-the-service-user",
+  "3-create-the-workload-user",
+  "4-allow-exactly-one-command-through-sudo",
+  "5-configure-the-daemon-and-its-service",
+  "6-give-a-bot-a-linux-user-of-its-own",
+  "7-limits-that-remain",
+  "8-verify-the-separation",
+  "harden-a-node-with-separate-linux-users"
+ ],
+ "/recepies/harnesses/": [
+  "add-harnesses",
+  "antigravity-from-happy",
+  "before-editing",
+  "check",
+  "generic-acp-agents",
+  "harnesses-claude-code-codex-cli-antigravity-opencode-and-acp-agents",
+  "models",
+  "sub-agents",
+  "what-changes-for-the-user"
+ ],
+ "/recepies/mobile-access/": [
+  "completion-checks",
+  "diagnose-without-destroying-the-existing-setup",
+  "one-guided-setup",
+  "set-up-or-repair-mobile-access",
+  "unlink-or-switch-phone-account"
+ ],
+ "/recepies/peer-messaging/": [
+  "configure-the-server-then-the-outbound-only-desktop",
+  "connect-two-happy-agents-over-one-websocket",
+  "diagnose-rotate-or-disconnect",
+  "reach-both-installations-for-administration",
+  "verify-live-health-and-both-message-directions"
+ ],
+ "/recepies/remote-agent/": [
+  "1-resolve-the-few-choices-that-matter",
+  "2-install-the-binary-and-prepare-one-service-account",
+  "3-provision-only-the-selected-provider-credentials",
+  "4-finish-remote-configuration",
+  "5-install-a-restart-safe-service",
+  "6-connect-the-primary-installation",
+  "7-set-git-identity-and-if-requested-github-authentication",
+  "8-prove-it-is-ready-and-hand-it-over",
+  "amazon-bedrock",
+  "anthropic-claude-code",
+  "automatic-by-default",
+  "deploy-a-standalone-remote-agent",
+  "exe-dev-deployment-notes",
+  "graceful-maintenance-after-deployment",
+  "openai-codex",
+  "optional-gemini-tools",
+  "strongly-recommended-a-dedicated-runner",
+  "ubuntu-namespace-permissions",
+  "xai-grok"
+ ],
+ "/recepies/rest-api/": [
+  "artifacts",
+  "bots",
+  "configuration-models-and-instructions",
+  "connect-and-authenticate",
+  "debugging",
+  "drive-happy-agent-over-its-rest-api",
+  "find-bots-tasks-projects-and-agents",
+  "message-an-agent-and-read-the-reply",
+  "pitfalls",
+  "projects-workspaces-and-agents",
+  "remote-and-team-daemons",
+  "skills-and-secrets",
+  "steer-stop-answer-and-run-commands",
+  "surfaces-todos-documents-and-calendars",
+  "tasks",
+  "what-has-no-rest-route"
+ ],
+ "/recepies/runner/": [
+  "1-resolve-the-choices",
+  "2-generate-the-runner-s-token-and-add-it-to-the-node",
+  "3-prepare-the-runner-host",
+  "4-give-the-runner-its-token-and-the-node-s-address",
+  "5-install-the-runner-service",
+  "6-verify-from-the-node",
+  "7-optional-container-workspaces",
+  "add-a-dedicated-runner",
+  "more-runners-rotation-and-removal"
+ ],
+ "/recepies/shared-app/": [
+  "a-complete-example-a-shared-to-do-list",
+  "build-a-live-shared-html-artifact",
+  "checks-before-you-publish",
+  "debugging-your-app",
+  "develop-with-happy-agent-artifact-dev",
+  "drive-it-with-a-browser",
+  "other-patterns",
+  "reproduce-a-bug-with-real-data",
+  "rules-that-are-easy-to-get-wrong",
+  "standard-styles-and-components",
+  "the-sdk",
+  "what-you-get",
+  "without-the-sdk",
+  "working-with-the-data-yourself"
+ ],
+ "/recepies/team/": [
+  "1-confirm-the-user-s-account",
+  "2-choose-the-name-and-prepare-the-endpoint",
+  "3-create-the-named-team",
+  "4-deploy-in-team-mode-and-check-the-service",
+  "5-add-the-local-connection-and-verify-it",
+  "6-ask-whom-to-invite",
+  "completion",
+  "create-and-deploy-a-happy-team",
+  "strongly-recommended-a-dedicated-runner"
+ ],
+ "/recepies/telegram/": [
+  "1-check-for-an-existing-export",
+  "2-create-the-telegram-bot",
+  "3-read-the-telegram-bot-s-name",
+  "4-create-the-happy-bot",
+  "5-match-the-pictures",
+  "6-export-the-bot",
+  "7-let-the-user-in",
+  "8-verify",
+  "a-separate-bot-not-the-chief-of-staff",
+  "access-requests-from-other-people",
+  "calling-telegram-from-your-shell",
+  "clean-up-and-tell-the-user",
+  "copy-telegram-s-picture-to-the-happy-bot",
+  "export-a-bot-to-telegram",
+  "if-telegram-cannot-be-reached-or-refuses",
+  "later-changes",
+  "matching-the-name-and-picture-again",
+  "read-the-name",
+  "upload-a-happy-picture-to-telegram",
+  "what-the-user-does-and-what-you-do",
+  "what-the-user-should-know"
+ ],
+ "/recepies/upgrade/": [
+  "1-confirm-the-target-and-maintenance-window",
+  "2-capture-a-baseline-and-stage-the-verified-release",
+  "3-drain-work-and-stop-the-existing-service",
+  "4-back-up-the-stopped-installation",
+  "5-replace-only-the-runtime-and-start-it-once",
+  "6-verify-the-upgrade-through-the-real-client-path",
+  "7-recover-safely-if-verification-fails",
+  "8-hand-off-the-result",
+  "upgrade-happy-agent"
+ ],
+ "/recepies/wsl/": [
+  "1-discover-before-installing",
+  "2-install-under-the-linux-user-s-identity",
+  "3-reuse-linux-authentication-and-choose-available-models",
+  "4-start-and-connect-the-wsl-agent",
+  "5-register-projects-on-their-owning-agent",
+  "6-prove-the-complete-path",
+  "one-installation-per-environment",
+  "set-up-wsl-projects-from-windows"
+ ],
+ "/releases/": [
+  "releases-mobile"
+ ],
+ "/secrets/": [
+  "attach-a-secret-to-an-agent-workspace-or-project",
+  "create-and-update-a-secret",
+  "how-a-command-receives-a-secret",
+  "how-happy-compares-with-hermes-agent-and-openclaw",
+  "one-secret-catalog-per-installation",
+  "secrets",
+  "secrets-in-happy-desktop",
+  "secrets-the-sandbox-and-auto-review",
+  "what-team-members-can-do-with-secrets",
+  "what-the-model-sees-and-never-sees",
+  "where-secrets-are-stored-on-disk"
+ ],
+ "/stem-cell/": [
+  "blog-download-heading",
+  "every-boomerang-comes-back",
+  "sure-gpt-i-need-another-10-different-buttons-to-start-my-work",
+  "try-it",
+  "what-happens-next",
+  "what-if-you-needed-one-button"
+ ],
+ "/t3-code/": [
+  "auto-by-default-not-full-access",
+  "contributing",
+  "drive-it-from-a-script",
+  "happy-vs-t3-code",
+  "one-harness-for-every-model",
+  "run-one-agent-server-for-your-team",
+  "side-by-side",
+  "updates-in-the-middle-of-a-turn",
+  "where-t3-code-is-better",
+  "which-one"
+ ],
+ "/tailcat/": [
+  "blog-download-heading",
+  "every-connection",
+  "no-open-ports-how-happy-reaches-your-server",
+  "the-address-is-not-the-lock",
+  "try-it-by-hand",
+  "what-happy-agent-adds",
+  "what-tailcat-is",
+  "why-tailcat",
+  "your-phone-is-different"
+ ],
+ "/team/": [
+  "kirill-dubovitskiy",
+  "steve-korshakov",
+  "team"
+ ],
+ "/updates/": [
+  "blog-download-heading",
+  "how-happy-agent-restarts-without-losing-the-turn",
+  "the-drain-boundary",
+  "updates-that-pick-up-where-they-left-off",
+  "what-you-see-in-happy-desktop",
+  "why-an-update-usually-ends-the-session"
+ ],
+ "/vision/": [
+  "chat-left-the-chat",
+  "fiddle-less-understand-more",
+  "make-people-happy",
+  "one-harness",
+  "one-primary-agent",
+  "permissions-belong-to-the-agent",
+  "phone-first",
+  "vision"
+ ],
+ "/voice/": [
+  "blog-download-heading",
+  "bring-your-own-agent",
+  "gpt-live-on-happy-desktop",
+  "how-a-conversation-starts",
+  "limits",
+  "talk-to-your-agents-voice-with-elevenlabs",
+  "what-elevenlabs-hears",
+  "what-the-voice-agent-does",
+  "why-elevenlabs"
+ ],
+ "/welcome/": [
+  "next",
+  "welcome",
+  "what-does-happy-cost",
+  "what-you-get"
+ ],
+ "/workos/": [
+  "blog-download-heading",
+  "bring-your-own-identity-provider",
+  "how-the-chief-of-staff-sets-up-a-team",
+  "team-sign-in-with-workos",
+  "what-the-server-checks",
+  "what-workos-does",
+  "why-workos"
+ ],
+ "/workspaces/": [
+  "add-a-project",
+  "archive-a-workspace",
+  "how-agents-work-in-another-workspace",
+  "how-happy-creates-a-workspace",
+  "projects-and-workspaces",
+  "when-to-create-a-workspace",
+  "which-changes-a-workspace-shows"
+ ]
+}

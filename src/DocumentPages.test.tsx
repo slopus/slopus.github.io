@@ -695,8 +695,9 @@ describe('static document pages', () => {
     expect(download).toBeLessThan(markup.indexOf('<p>You need macOS'))
     const headings = [...markup.matchAll(/<h2 id="([^"]+)"/g)].map(([, id]) => id)
     expect(headings).toEqual(['repositories', 'tasks', 'bots', 'then-bring-your-team', 'install-notes'])
-    // The app's word "project" appears once, where the reader meets it in the UI (DESIGN.md, Copy).
-    expect(markup.match(/\bproject\b/gi)).toHaveLength(1)
+    // The app's word "project" appears once, where the reader meets it in the UI (DESIGN.md, Copy);
+    // the old anchor #first-project is kept for links to it, not read.
+    expect(markup.replace(/<[^>]*>/g, ' ').match(/\bproject\b/gi)).toHaveLength(1)
     const prompts = (path: string) => [...renderPath(path).matchAll(/<p class="cos-prompt-text">([^<]+)<\/p>/g)].map(([, prompt]) => prompt)
     const documented = [...prompts('/chief-of-staff/'), ...prompts('/guides/team-server/')]
     expect(prompts('/quick-start/').filter((prompt) => !documented.includes(prompt))).toEqual([])
