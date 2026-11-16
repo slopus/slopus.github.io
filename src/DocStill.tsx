@@ -142,7 +142,9 @@ export function cutCss(still: string, cut: DocCut, lights = false) {
   return (shrinks
     // From the column's left edge to 16px short of the article's (100cqw), never wider than its display size.
     ? `${self} { --still-width: ${width}px; --still-edge: 0px; width: min(${width}px, 100cqw - 16px); mask-image: none; -webkit-mask-image: none }`
-      + `${self} .doc-still-frame { width: 100%; height: auto; aspect-ratio: ${width} / ${height}`
+      // Whole pixels tall where the browser can round: at a fractional height Chrome placed the video
+      // half a pixel off the still under it.
+      + `${self} .doc-still-frame { width: 100%; height: auto; aspect-ratio: ${width} / ${height}; height: round(nearest, min(${width}px, 100cqw - 16px) * ${height} / ${width}, 1px)`
     : `${self} { --still-width: ${width}px; --still-edge: ${cut.edge}px }`
       + `${self} .doc-still-frame { width: ${width}px; height: ${height}px`)
     + `; border-radius: ${borderRadius}`
