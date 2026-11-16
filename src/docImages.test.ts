@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import docCaptures from 'virtual:doc-captures'
 import { DOC_CLIPS } from './DocClip'
-import { DOC_STILLS } from './DocStill'
+import { cutCss, DOC_STILL_PRESETS, DOC_STILLS, isFramed } from './DocStill'
 import { documentsForProduct, getDocument } from './documents'
 import { mp4VideoTiming } from './mp4Timing'
 import { imageSize, webpSize } from './imageSize'
@@ -107,7 +107,7 @@ describe('docs stills that play (DESIGN.md, Screenshots, rules 2, 6 and 11)', ()
 
 // Stills come with the capture script's manifest (src/docStills.json): its sizes, not the column, decide.
 describe('docs stills (DESIGN.md, Screenshots, rule 2)', () => {
-  it('match their manifest: 2x files at their display size, hanging from the column by their overhang', () => {
+  it('match their manifest: files exactly twice their display size, hanging from the column by their overhang', () => {
     for (const [name, still] of Object.entries(DOC_STILLS)) {
       // A still that plays shows the clip's own stills instead (above).
       if (DOC_CLIPS[name]) continue
@@ -118,7 +118,9 @@ describe('docs stills (DESIGN.md, Screenshots, rule 2)', () => {
           expect(docCaptures[`/img/docs/${file}`], `${name} ${kind}: ${file}`).toEqual(cut.pixels)
         }
         expect([cut.displayWidth * 2, cut.displayHeight * 2], `${name} ${kind}`).toEqual(cut.pixels)
-        expect([cut.crop[2], cut.crop[3]], `${name} ${kind}: the crop is the display size`).toEqual([cut.displayWidth, cut.displayHeight])
+        // The crop, in app px, at the cut's scale (1 for phones and true-size cuts).
+        const scale = cut.scale ?? 1
+        expect([Math.round(cut.crop[2] * scale), Math.round(cut.crop[3] * scale)], `${name} ${kind}: the crop at its scale is the display size`).toEqual([cut.displayWidth, cut.displayHeight])
         // The site hangs every still from the column's left edge.
         expect([cut.at, cut.inset], `${name} ${kind}`).toEqual(['left', 0])
         const column = kind === 'desktop' ? COLUMN : 350
@@ -126,6 +128,54 @@ describe('docs stills (DESIGN.md, Screenshots, rule 2)', () => {
         if (kind === 'phone') expect(cut.overhang, `${name}: a phone cut fits the column`).toBe(0)
       }
     }
+  })
+
+  // Rules 2, 4b and 4c: one desktop scale, one of the preset frames, one fade.
+  it('are, once recut, at the one desktop scale in a preset frame with the preset fades; phones at true size', () => {
+    const framed = Object.entries(DOC_STILLS).filter(([, still]) => isFramed(still.desktop))
+    if (!framed.length) return
+    const presets = DOC_STILL_PRESETS!
+    expect(presets, 'src/docStills.json carries the manifest\'s _presets').toBeDefined()
+    for (const [name, { desktop, phone }] of framed) {
+      expect(desktop.scale, `${name}: the one desktop scale`).toBe(presets.scale)
+      const frame = presets.frames[desktop.frame ?? '']
+      expect(frame, `${name}: ${desktop.frame} is a preset frame`).toBeDefined()
+      expect([desktop.crop[0], desktop.crop[2]], `${name}: the ${desktop.frame} frame`).toEqual([frame.x, frame.w])
+      expect(desktop.displayWidth, name).toBe(Math.round(frame.w * presets.scale))
+      expect(desktop.minDisplayWidth, `${name}: ${presets.minScale * 100}% of true size`).toBe(Math.ceil(frame.w * presets.minScale))
+      const cuts = [['desktop', desktop, presets.scale, presets.rightBand * presets.scale], ['phone', phone, 1, presets.phoneRightBand]] as const
+      for (const [kind, cut, scale, rightBand] of cuts) {
+        if (!cut) continue
+        expect(cut.scale ?? 1, `${name} ${kind}`).toBe(scale)
+        expect(isFramed(cut), `${name} ${kind}: recut with the desktop cut`).toBe(true)
+        for (const [side, [from, to]] of Object.entries(cut.fadeCss!)) {
+          // Never on a real edge: a picture that reaches the window's edge shows it.
+          expect([...cut.real, ...cut.divider], `${name} ${kind}: ${side} fades and is real`).not.toContain(side)
+          const band = side === 'right' ? rightBand : presets.band * scale
+          expect(Math.abs(Math.abs(to - from) - band), `${name} ${kind}: the ${side} band is ${Math.abs(to - from)}, the preset ${band}`).toBeLessThan(0.1)
+        }
+      }
+    }
+  })
+
+  // The desktop cut's rules sit over the phone cut's, so one without fades must clear the phone's.
+  it('fade only where their own cut does', () => {
+    for (const [name, { desktop, phone }] of Object.entries(DOC_STILLS).filter(([, still]) => isFramed(still.desktop))) {
+      for (const [kind, cut] of [['desktop', desktop], ['phone', phone]] as const) {
+        if (!cut) continue
+        const frame = /\.doc-still-frame \{[^}]*\}/.exec(cutCss(name, cut))![0]
+        expect(/mask-image: (none|linear-gradient)/.test(frame), `${name} ${kind}: sets its own mask`).toBe(true)
+        expect(frame.includes('linear-gradient'), `${name} ${kind}: fades`).toBe(Object.keys(cut.fadeCss!).length > 0)
+      }
+    }
+  })
+
+  // DESIGN.md, Screenshots: a page takes recut pictures only when all of them are ready.
+  it('switch whole pages: every picture on a page is recut, or none is', () => {
+    const pages = new Map<string, boolean[]>()
+    for (const still of Object.values(DOC_STILLS)) pages.set(still.page, [...pages.get(still.page) ?? [], isFramed(still.desktop)])
+    for (const clip of Object.values(DOC_CLIPS)) pages.set(clip.page, [...pages.get(clip.page) ?? [], isFramed(clip.desktop)])
+    for (const [page, framed] of pages) expect(new Set(framed).size, `${page}: ${framed.filter(Boolean).length} of ${framed.length} recut`).toBe(1)
   })
 
   it('sit in the section their manifest names, on that page', () => {

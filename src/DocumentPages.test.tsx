@@ -17,6 +17,7 @@ import { documentHref, HAPPY, HAPPY_DESKTOP } from './products'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { recipeHref, recipeSources } from './recipeSources'
+import { DOC_STILLS } from './DocStill'
 
 // jsdom has no ResizeObserver; the painted page scrollbar only observes with it.
 beforeAll(() => {
@@ -711,11 +712,15 @@ describe('static document pages', () => {
       expect(picture).toMatch(/<source media="\(prefers-color-scheme: dark\) and \(min-width: \d+px\)"/)
     }
     // Its first picture is in Tasks, below the fold: lazy, sized before it loads. Welcome's window, in its opening, loads with the page.
-    expect(markup).toMatch(/<img src="\/img\/docs\/quick-start-task-tree.phone.light.avif" alt="[^"]+" width="345" height="352" loading="lazy"/)
-    expect(renderPath('/welcome/')).toMatch(/<img src="\/img\/docs\/welcome-window.phone.light.avif" alt="[^"]+" width="345" height="634" loading="eager" fetchPriority="high"/)
+    const tree = DOC_STILLS['quick-start-task-tree'].phone!
+    expect(markup).toMatch(new RegExp(`<img src="/img/docs/quick-start-task-tree.phone.light.avif" alt="[^"]+" width="${tree.displayWidth}" height="${tree.displayHeight}" loading="lazy"`))
+    const window = DOC_STILLS['welcome-window'].phone!
+    expect(renderPath('/welcome/')).toMatch(new RegExp(`<img src="/img/docs/welcome-window.phone.light.avif" alt="[^"]+" width="${window.displayWidth}" height="${window.displayHeight}" loading="eager" fetchPriority="high"`))
     // Its capture keeps the title bar empty (chrome in the manifest): the page draws the traffic lights there.
     expect(renderPath('/welcome/')).toMatch(/data-still="welcome-window">[\s\S]*?<\/picture><svg class="doc-still-chrome"[^>]*><circle cx="20" cy="20" r="6" fill="#ff5f57"/)
-    expect(renderPath('/quick-start/')).not.toMatch(/doc-still-chrome/)
+    // Lights only where the manifest says the capture's title bar is empty.
+    const lights = /doc-still-chrome/.test(renderPath('/quick-start/'))
+    expect(lights).toBe(['quick-start-task-tree', 'quick-start-chief-of-staff'].some((name) => DOC_STILLS[name].desktop.chrome || DOC_STILLS[name].phone?.chrome))
     // A still without a phone cut loads nothing on a phone, where it is hidden.
     const feed = renderPath('/feed/')
     expect(feed).toMatch(/<span class="doc-still" data-still="feed-post-open"><style>[^<]*\.doc-still\[data-still="feed-post-open"\] \{ display: none \}@media \(min-width: \d+px\)/)

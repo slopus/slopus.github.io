@@ -26,7 +26,7 @@ function docCaptures(): Plugin {
 
 // What the site reads of the capture script's manifests (src/DocStill.tsx, src/DocClip.tsx); the
 // rest (sizes in bytes and pixels, placement the tests check, the phone cut's alt) stays for tests.
-const CUT_FIELDS = ['files', 'alt', 'displayWidth', 'displayHeight', 'crop', 'real', 'divider', 'fade', 'edge', 'needsWidth', 'chrome']
+const CUT_FIELDS = ['files', 'alt', 'displayWidth', 'displayHeight', 'crop', 'real', 'divider', 'fade', 'edge', 'needsWidth', 'chrome', 'scale', 'minDisplayWidth', 'fadeCss']
 
 /** Ships src/docStills.json and src/docClips.json with only the fields the pages read. */
 function docManifests(): Plugin {
@@ -39,7 +39,8 @@ function docManifests(): Plugin {
         .filter((field) => field in cut && (alt || field !== 'alt')).map((field) => [field, cut[field]]))
       const manifest = JSON.parse(code) as Record<string, { desktop: Record<string, unknown>; phone?: Record<string, unknown> | null }>
       // A page shows the desktop cut's alt on either cut.
-      return JSON.stringify(Object.fromEntries(Object.entries(manifest).map(([name, { desktop, phone }]) =>
+      // The presets (`_presets`) are for the tests.
+      return JSON.stringify(Object.fromEntries(Object.entries(manifest).filter(([name]) => !name.startsWith('_')).map(([name, { desktop, phone }]) =>
         [name, { desktop: pick(desktop, true), ...(phone !== undefined && { phone: pick(phone, false) }) }])))
     },
   }
