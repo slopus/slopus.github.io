@@ -24,10 +24,12 @@ const SOURCES = {
   'open-source': { src: openSource, left: .104, right: .111, top: .07, bottom: .081 },
   'closed-lock': { src: closedLock, left: .097, right: .097, top: .099, bottom: .11 },
   'f1-car': { src: f1Car, left: .061, right: .078, top: .432, bottom: .096 },
-  // Margins estimated, not yet measured at rest like the others.
-  robot: { src: robot, left: .1, right: .1, top: .1, bottom: .1 },
-  'confetti-ball': { src: confettiBall, left: .1, right: .1, top: .1, bottom: .1 },
-  'cloud-variation': { src: cloudVariation, left: .1, right: .1, top: .15, bottom: .15 },
+  // Top and bottom measured at rest. Left and right keep their first estimates on purpose: they place
+  // the homepage's rows, which stay as they are. Measured at rest they are robot .107/.107,
+  // confetti ball .09/.082 and cloud .109/.104 (left/right).
+  robot: { src: robot, left: .1, right: .1, top: .063, bottom: .105 },
+  'confetti-ball': { src: confettiBall, left: .1, right: .1, top: .068, bottom: .088 },
+  'cloud-variation': { src: cloudVariation, left: .1, right: .1, top: .217, bottom: .254 },
 } satisfies Record<string, Source>
 export type AnimatedEmojiName = keyof typeof SOURCES
 
