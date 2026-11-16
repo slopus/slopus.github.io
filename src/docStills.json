@@ -315,28 +315,31 @@
     "dark": "tasks-teammate.desktop.dark.avif"
    },
    "bytes": {
-    "light": 35215,
-    "dark": 34498
+    "light": 30268,
+    "dark": 30072
    },
    "alt": "Kirill's sidebar with Steve's new task, Offline Badge, first under Tasks with Steve's face on it. The task is open beside it: Steve's request, the agent's first line and a tool step, still working.",
+   "scale": 0.7766990291262136,
    "displayWidth": 880,
-   "displayHeight": 488,
+   "displayHeight": 379,
+   "minDisplayWidth": 794,
    "pixels": [
     1760,
-    976
+    758
    ],
+   "frame": "full",
    "crop": [
     0,
     312,
-    880,
+    1133,
     488
    ],
    "at": "left",
    "inset": 0,
    "overhang": 152,
-   "needsWidth": 728,
    "real": [
     "left",
+    "right",
     "bottom"
    ],
    "divider": [],
@@ -345,19 +348,15 @@
     "top": [
      312,
      326
-    ],
-    "right": [
-     880,
-     760
     ]
    },
-   "edge": 48,
-   "focus": [
-    62,
-    326,
-    666,
-    474
-   ]
+   "fadeCss": {
+    "top": [
+     0,
+     10.9
+    ]
+   },
+   "edge": 48
   },
   "phone": {
    "files": {
@@ -365,26 +364,28 @@
     "dark": "tasks-teammate.phone.dark.avif"
    },
    "bytes": {
-    "light": 16104,
-    "dark": 15849
+    "light": 16820,
+    "dark": 16551
    },
    "alt": "The sidebar's Tasks list with Steve's new task, Offline Badge, first, his face on it; below it Team Servers with its three subtasks, Voice waveform and Task List Speed.",
+   "scale": 1,
    "displayWidth": 345,
-   "displayHeight": 352,
+   "displayHeight": 343,
+   "minDisplayWidth": 345,
    "pixels": [
     690,
-    704
+    686
    ],
+   "frame": "sidebar",
    "crop": [
     0,
-    448,
+    457,
     345,
-    352
+    343
    ],
    "at": "left",
    "inset": 0,
    "overhang": 0,
-   "needsWidth": 345,
    "real": [
     "left",
     "bottom"
@@ -395,17 +396,17 @@
    "chrome": false,
    "fade": {
     "top": [
-     448,
+     457,
      471
     ]
    },
-   "edge": 24,
-   "focus": [
-    62,
-    473,
-    280,
-    327
-   ]
+   "fadeCss": {
+    "top": [
+     0,
+     14
+    ]
+   },
+   "edge": 24
   }
  },
  "tasks-three-repos": {
@@ -417,28 +418,31 @@
     "dark": "tasks-three-repos.desktop.dark.avif"
    },
    "bytes": {
-    "light": 43693,
-    "dark": 42776
+    "light": 37489,
+    "dark": 37505
    },
    "alt": "Team Servers open with its three subtasks under it in the sidebar, iOS server codes, Desktop sign-in and Docs: sign-in page, each with its repository's icon, an unread dot and its line counts. In the task, each subtask has replied with its final answer and the task says all three are ready for review.",
+   "scale": 0.7766990291262136,
    "displayWidth": 880,
-   "displayHeight": 488,
+   "displayHeight": 379,
+   "minDisplayWidth": 794,
    "pixels": [
     1760,
-    976
+    758
    ],
+   "frame": "full",
    "crop": [
     0,
     312,
-    880,
+    1133,
     488
    ],
    "at": "left",
    "inset": 0,
    "overhang": 152,
-   "needsWidth": 718,
    "real": [
     "left",
+    "right",
     "bottom"
    ],
    "divider": [],
@@ -447,19 +451,15 @@
     "top": [
      312,
      326
-    ],
-    "right": [
-     880,
-     760
     ]
    },
-   "edge": 48,
-   "focus": [
-    62,
-    326,
-    656,
-    474
-   ]
+   "fadeCss": {
+    "top": [
+     0,
+     10.9
+    ]
+   },
+   "edge": 48
   },
   "phone": {
    "files": {
@@ -467,26 +467,28 @@
     "dark": "tasks-three-repos.phone.dark.avif"
    },
    "bytes": {
-    "light": 17179,
-    "dark": 16754
+    "light": 18005,
+    "dark": 17527
    },
    "alt": "The sidebar's Tasks list: Team Servers selected, with iOS server codes, Desktop sign-in and Docs: sign-in page under it on a tree line, each with its repository's icon, an unread dot and its line counts.",
+   "scale": 1,
    "displayWidth": 345,
-   "displayHeight": 352,
+   "displayHeight": 343,
+   "minDisplayWidth": 345,
    "pixels": [
     690,
-    704
+    686
    ],
+   "frame": "sidebar",
    "crop": [
     0,
-    448,
+    457,
     345,
-    352
+    343
    ],
    "at": "left",
    "inset": 0,
    "overhang": 0,
-   "needsWidth": 345,
    "real": [
     "left",
     "bottom"
@@ -497,17 +499,17 @@
    "chrome": false,
    "fade": {
     "top": [
-     448,
+     457,
      471
     ]
    },
-   "edge": 24,
-   "focus": [
-    62,
-    473,
-    280,
-    327
-   ]
+   "fadeCss": {
+    "top": [
+     0,
+     14
+    ]
+   },
+   "edge": 24
   }
  },
  "tasks-asks-by-name": {
@@ -519,47 +521,39 @@
     "dark": "tasks-asks-by-name.desktop.dark.avif"
    },
    "bytes": {
-    "light": 26347,
-    "dark": 25454
+    "light": 49092,
+    "dark": 49173
    },
-   "alt": "The Voice waveform task: the agent asks @Steve whether the muted waveform should be gray or red, with a question card offering both. Steve answers under his own name, Gray, red reads like an error, and the agent says gray it is and goes back to work.",
-   "displayWidth": 788,
-   "displayHeight": 640,
+   "alt": "The Happy window with the Voice waveform task selected in the sidebar. In it the agent asks @Steve whether the muted waveform should be gray or red, with a question card offering both. Steve answers under his own name, Gray, red reads like an error, and the agent says gray it is and goes back to work.",
+   "scale": 0.7766990291262136,
+   "displayWidth": 880,
+   "displayHeight": 621,
+   "minDisplayWidth": 794,
    "pixels": [
-    1576,
-    1280
+    1760,
+    1242
    ],
+   "frame": "full",
    "crop": [
-    345,
     0,
-    788,
-    640
+    0,
+    1133,
+    800
    ],
    "at": "left",
    "inset": 0,
-   "overhang": 60,
-   "needsWidth": 735,
+   "overhang": 152,
    "real": [
     "top",
-    "right"
+    "left",
+    "right",
+    "bottom"
    ],
-   "divider": [
-    "left"
-   ],
-   "chrome": false,
-   "fade": {
-    "bottom": [
-     640,
-     620
-    ]
-   },
-   "edge": 48,
-   "focus": [
-    360,
-    45,
-    720,
-    572
-   ]
+   "divider": [],
+   "chrome": true,
+   "fade": {},
+   "fadeCss": {},
+   "edge": 48
   },
   "phone": {
    "files": {
@@ -571,22 +565,24 @@
     "dark": 17257
    },
    "alt": "The Voice waveform task: the agent asks @Steve whether the muted waveform should be gray or red, with a question card offering both. Steve answers under his own name, Gray, red reads like an error, and the agent says gray it is and goes back to work.",
+   "scale": 1,
    "displayWidth": 350,
-   "displayHeight": 640,
+   "displayHeight": 634,
+   "minDisplayWidth": 350,
    "pixels": [
     700,
-    1280
+    1268
    ],
+   "frame": "pane",
    "crop": [
     345,
     0,
     350,
-    640
+    634
    ],
    "at": "left",
    "inset": 0,
    "overhang": 0,
-   "needsWidth": 350,
    "real": [
     "top"
    ],
@@ -596,7 +592,7 @@
    "chrome": false,
    "fade": {
     "bottom": [
-     640,
+     634,
      620
     ],
     "right": [
@@ -604,13 +600,17 @@
      675
     ]
    },
-   "edge": 24,
-   "focus": [
-    360,
-    45,
-    314,
-    572
-   ]
+   "fadeCss": {
+    "bottom": [
+     634,
+     620
+    ],
+    "right": [
+     350,
+     330
+    ]
+   },
+   "edge": 24
   }
  },
  "bots-open": {

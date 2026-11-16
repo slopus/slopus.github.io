@@ -90,7 +90,8 @@ describe('docs stills that play (DESIGN.md, Screenshots, rules 2, 6 and 11)', ()
       expect([width, height], `${name}: ${files.clip}`).toEqual(cut.pixels)
       for (const still of [files.first, files.rest]) expect(docCaptures[`/img/docs/${still}`], `${name}: ${still}`).toEqual(cut.pixels)
       expect([cut.displayWidth * 2, cut.displayHeight * 2], name).toEqual(cut.pixels)
-      expect([cut.crop[2], cut.crop[3]], `${name}: the crop is the display size`).toEqual([cut.displayWidth, cut.displayHeight])
+      const scale = cut.scale ?? 1
+      expect([Math.round(cut.crop[2] * scale), Math.round(cut.crop[3] * scale)], `${name}: the crop at its scale is the display size`).toEqual([cut.displayWidth, cut.displayHeight])
       expect([cut.at, cut.inset], name).toEqual(['left', 0])
       const column = name.includes(' desktop ') ? COLUMN : 350
       expect(cut.overhang, `${name}: runs ${cut.displayWidth - column}px past the ${column}px column`).toBe(Math.max(0, cut.displayWidth - column))
@@ -131,8 +132,8 @@ describe('docs stills (DESIGN.md, Screenshots, rule 2)', () => {
   })
 
   // Rules 2, 4b and 4c: one desktop scale, one of the preset frames, one fade.
-  it('are, once recut, at the one desktop scale in a preset frame with the preset fades; phones at true size', () => {
-    const framed = Object.entries(DOC_STILLS).filter(([, still]) => isFramed(still.desktop))
+  it('are, once recut, at the one desktop scale in a preset frame with the preset fades; phones at true size; clips too', () => {
+    const framed = [...Object.entries(DOC_STILLS), ...Object.entries(DOC_CLIPS)].filter(([, still]) => isFramed(still.desktop))
     if (!framed.length) return
     const presets = DOC_STILL_PRESETS!
     expect(presets, 'src/docStills.json carries the manifest\'s _presets').toBeDefined()
@@ -160,7 +161,7 @@ describe('docs stills (DESIGN.md, Screenshots, rule 2)', () => {
 
   // The desktop cut's rules sit over the phone cut's, so one without fades must clear the phone's.
   it('fade only where their own cut does', () => {
-    for (const [name, { desktop, phone }] of Object.entries(DOC_STILLS).filter(([, still]) => isFramed(still.desktop))) {
+    for (const [name, { desktop, phone }] of [...Object.entries(DOC_STILLS), ...Object.entries(DOC_CLIPS)].filter(([, still]) => isFramed(still.desktop))) {
       for (const [kind, cut] of [['desktop', desktop], ['phone', phone]] as const) {
         if (!cut) continue
         const frame = /\.doc-still-frame \{[^}]*\}/.exec(cutCss(name, cut))![0]

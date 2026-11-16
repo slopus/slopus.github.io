@@ -67,8 +67,9 @@ describe('docs stills that play (src/DocClip.tsx)', () => {
       ['(prefers-color-scheme: dark)', `${NAME}.phone.dark.first.avif`],
       [null, `${NAME}.phone.light.first.avif`],
     ])
-    // Its first picture, at true size; no src on the video, so a page without script never fetches the clip.
-    expect(markup).toMatch(/<img src="\/img\/docs\/tasks-teammate.phone.light.first.avif" alt="[^"]+" width="345" height="352"/)
+    // Its first picture, at its manifest size; no src on the video, so a page without script never fetches the clip.
+    const { displayWidth, displayHeight } = DOC_CLIPS[NAME].phone!
+    expect(markup).toMatch(new RegExp(`<img src="/img/docs/${NAME}.phone.light.first.avif" alt="[^"]+" width="${displayWidth}" height="${displayHeight}"`))
     const [video] = /<video[^>]*>/.exec(markup.slice(markup.indexOf('data-still="tasks-teammate"')))!
     expect(video).not.toMatch(/\ssrc=|autoplay|loop|poster/i)
     expect(video).toMatch(/muted/)
