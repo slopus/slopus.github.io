@@ -84,6 +84,41 @@ describe('docs stills that play (src/DocClip.tsx)', () => {
     expect(files(container)[7]).toBe(`${NAME}.phone.light.first.avif`)
   })
 
+  it('show the video only while it plays: the rest still when it ends, the first frame off screen and on a replay', async () => {
+    Object.defineProperty(HTMLImageElement.prototype, 'decode', { value: () => Promise.resolve(), configurable: true })
+    const play = vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined)
+    const { container } = render(<DocClip name={NAME} />)
+    const frame = container.querySelector<HTMLElement>('.doc-still-frame')!
+    const video = container.querySelector('video')!
+    const settle = (event?: string) => act(async () => {
+      if (event) video.dispatchEvent(new Event(event))
+      await new Promise((resolve) => setTimeout(resolve, 60))
+    })
+    const shown = () => files(container).slice(4)
+    await scrollToIt()
+    await settle('loadeddata')
+    expect(play).toHaveBeenCalledTimes(1)
+    expect(frame.hasAttribute('data-on')).toBe(true)
+    expect(shown().every((file) => file.endsWith('.first.avif'))).toBe(true)
+    // Ended: the rest still in the video's place.
+    await settle('ended')
+    expect(shown().every((file) => file.endsWith('.rest.avif'))).toBe(true)
+    expect([frame.hasAttribute('data-on'), frame.hasAttribute('data-rest')]).toEqual([false, true])
+    // A click: the video over the rest, back to its first frame, the first still under it.
+    await act(async () => { frame.click() })
+    expect(frame.hasAttribute('data-on')).toBe(true)
+    await settle('seeked')
+    expect(shown().every((file) => file.endsWith('.first.avif'))).toBe(true)
+    expect(play).toHaveBeenCalledTimes(2)
+    // Ended again, then off screen: the first frame, the video hidden.
+    await settle('ended')
+    const view = watching.find(({ callback }) => callback !== watching[0].callback)!
+    await act(async () => { view.callback([{ isIntersecting: false, intersectionRatio: 0, target: frame } as unknown as IntersectionObserverEntry], {} as IntersectionObserver) })
+    expect(shown().every((file) => file.endsWith('.first.avif'))).toBe(true)
+    expect([frame.hasAttribute('data-on'), frame.hasAttribute('data-rest')]).toEqual([false, false])
+    delete (HTMLImageElement.prototype as { decode?: unknown }).decode
+  })
+
   it('show the rest with reduced motion and never fetch the clip', async () => {
     reduced = true
     const { container } = render(<DocClip name={NAME} />)

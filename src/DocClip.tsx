@@ -8,10 +8,12 @@ import { cutCss, desktopCutQuery, NOTHING, TrafficLights, type DocCut } from './
  * the clip's own first frame and its last, the rest.
  *
  * The page arrives with the first frame. Once the page has loaded and the picture is within a screen,
- * the clip is fetched and laid over the still on that same frame; it plays once when 60% of it is on
- * screen and stays on its last frame. Off the screen it is emptied and made ready again, so a return
- * plays from the first picture without the finished state showing first. A click on a finished clip
- * plays it again.
+ * the clip is fetched and held on that same frame; when 60% of it is on screen it is laid over the
+ * still and plays once. The video shows only while it moves: when it ends, the rest takes its place,
+ * so the picture that stays on the page is a still, drawn like every other at any size. Off the
+ * screen it goes back to the first frame and the clip is emptied and made ready again, so a return
+ * plays from the first picture without the finished state showing first. A click on the rest plays
+ * it again.
  *
  * A reader for whom nothing will play gets the rest and never the first frame, which is the state
  * before the feature happens: reduced motion and no script by the picture's media queries, Save-Data
@@ -44,13 +46,14 @@ export function slowConnection() {
   return Boolean(connection?.saveData || /2g$/.test(connection?.effectiveType ?? ''))
 }
 
-/** Points every source of the picture that names a first frame at the rest instead. */
-function restInstead(picture: Element) {
+/** Points every source of the picture that names one still of the clip at the other. */
+function stillInstead(picture: Element, from: '.first.' | '.rest.', to: '.first.' | '.rest.') {
   for (const element of picture.children) for (const name of ['srcset', 'src']) {
     const value = element.getAttribute(name)
-    if (value?.includes('.first.')) element.setAttribute(name, value.replace('.first.', '.rest.'))
+    if (value?.includes(from)) element.setAttribute(name, value.replace(from, to))
   }
 }
+const restInstead = (picture: Element) => stillInstead(picture, '.first.', '.rest.')
 
 // restInstead, run as the served page is parsed, so a reader on Save-Data or 2G never sees the first frame.
 export const REST_ON_SLOW_CONNECTION = `(function(){var c=navigator.connection,p=document.currentScript.previousElementSibling;if(!c||!(c.saveData||/2g$/.test(c.effectiveType||'')))return;for(var e of p.children)for(var a of['srcset','src']){var v=e.getAttribute(a);if(v&&v.indexOf('.first.')>-1)e.setAttribute(a,v.replace('.first.','.rest.'))}})()`
@@ -129,7 +132,7 @@ export function playWhenSeen(frame: HTMLElement, clip: DocClipEntry) {
     let visit = 0
     let seen = false
     let gone = false
-    // Fetch the clip and lay it over the still once its first frame has painted.
+    // Fetch the clip, held on its first frame under the still until it plays.
     const prepare = () => ready ??= (async () => {
       const mine = ++loads
       await pageSettled()
@@ -143,15 +146,29 @@ export function playWhenSeen(frame: HTMLElement, clip: DocClipEntry) {
       else video.load()
       if (!(await loaded)) return false
       await painted()
-      if (gone || mine !== loads) return false
-      frame.dataset.on = ''
-      return true
+      return !gone && mine === loads
     })()
+    const img = picture.querySelector('img')!
     const start = async () => {
       const mine = ++visit
+      const again = 'rest' in frame.dataset
       delete frame.dataset.rest
       if (!(await prepare()) || mine !== visit) return
-      if (video.currentTime > 0) video.currentTime = 0
+      if (again) {
+        // From the rest: the clip over it, still on its last frame, the same picture; then back to its
+        // first frame, with the first frame under it again.
+        frame.dataset.on = ''
+        video.currentTime = 0
+        await new Promise((resolve) => video.addEventListener('seeked', resolve, { once: true }))
+        if (mine !== visit) return
+        stillInstead(picture, '.rest.', '.first.')
+      }
+      // Over the first frame, on its first frame: the video shows only while it plays.
+      frame.dataset.on = ''
+      // The rest is decoded long before the clip ends, and never competes with the page's first picture.
+      const rest = new Image()
+      rest.src = img.currentSrc.replace('.first.', '.rest.')
+      void rest.decode().catch(() => {})
       await video.play().catch((error: unknown) => {
         // Not allowed to play (Low Power Mode, a browser setting): the finished state, as a still.
         if (error instanceof DOMException && error.name === 'NotAllowedError') { blocked = true; stop(); restInstead(picture) }
@@ -163,11 +180,21 @@ export function playWhenSeen(frame: HTMLElement, clip: DocClipEntry) {
       ++visit
       delete frame.dataset.rest
       delete frame.dataset.on
+      stillInstead(picture, '.rest.', '.first.')
       video.pause()
       ready = undefined
       void prepare()
     }
-    const onEnded = () => { frame.dataset.rest = '' }
+    // The rest takes the video's place once it is drawn; the video stays loaded for a replay.
+    const onEnded = async () => {
+      const mine = visit
+      restInstead(picture)
+      await img.decode().catch(() => {})
+      await painted()
+      if (mine !== visit) return
+      delete frame.dataset.on
+      frame.dataset.rest = ''
+    }
     const onClick = () => { if ('rest' in frame.dataset) void start() }
     video.addEventListener('ended', onEnded)
     frame.addEventListener('click', onClick)
@@ -192,6 +219,7 @@ export function playWhenSeen(frame: HTMLElement, clip: DocClipEntry) {
       frame.removeEventListener('click', onClick)
       delete frame.dataset.rest
       delete frame.dataset.on
+      stillInstead(picture, '.rest.', '.first.')
       video.pause()
       video.removeAttribute('src')
       video.load()
