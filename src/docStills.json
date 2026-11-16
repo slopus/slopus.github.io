@@ -832,47 +832,39 @@
     "dark": "feed-activity.desktop.dark.avif"
    },
    "bytes": {
-    "light": 33769,
-    "dark": 32331
+    "light": 57293,
+    "dark": 63531
    },
-   "alt": "The Activity feed: a post titled Task list, 3× faster, created by a teammate at 10:39 AM, with its summary and the report's cover: a before and after bar chart of first paint, 420 ms to 140 ms, and a table of measurements.",
-   "displayWidth": 788,
-   "displayHeight": 634,
+   "alt": "The Happy window with Activity open and 1 unread. The newest post, Task list, 3× faster, was created by a teammate at 10:39 AM and shows its summary and the report's cover: a before and after bar chart of first paint, 420 ms to 140 ms, and a table of measurements. In the sidebar the Task List Speed task is marked unread.",
+   "scale": 0.7766990291262136,
+   "displayWidth": 880,
+   "displayHeight": 621,
+   "minDisplayWidth": 794,
    "pixels": [
-    1576,
-    1268
+    1760,
+    1242
    ],
+   "frame": "full",
    "crop": [
-    345,
     0,
-    788,
-    634
+    0,
+    1133,
+    800
    ],
    "at": "left",
    "inset": 0,
-   "overhang": 60,
-   "needsWidth": 765,
+   "overhang": 152,
    "real": [
     "top",
-    "right"
+    "left",
+    "right",
+    "bottom"
    ],
-   "divider": [
-    "left"
-   ],
-   "chrome": false,
-   "fade": {
-    "bottom": [
-     634,
-     624
-    ]
-   },
-   "edge": 48,
-   "focus": [
-    360,
-    0,
-    750,
-    622
-   ]
+   "divider": [],
+   "chrome": true,
+   "fade": {},
+   "fadeCss": {},
+   "edge": 48
   },
   "phone": {
    "files": {
@@ -880,26 +872,28 @@
     "dark": "feed-activity.phone.dark.avif"
    },
    "bytes": {
-    "light": 25120,
-    "dark": 23914
+    "light": 25486,
+    "dark": 24076
    },
    "alt": "The Activity feed: a post titled Task list, 3× faster, created by a teammate, with its one-line summary and the left part of the report's cover: its title, a before and after bar and the first rows of a table.",
+   "scale": 1,
    "displayWidth": 350,
-   "displayHeight": 634,
+   "displayHeight": 635,
+   "minDisplayWidth": 350,
    "pixels": [
     700,
-    1268
+    1270
    ],
+   "frame": "pane",
    "crop": [
     345,
     0,
     350,
-    634
+    635
    ],
    "at": "left",
    "inset": 0,
    "overhang": 0,
-   "needsWidth": 350,
    "real": [
     "top"
    ],
@@ -909,21 +903,25 @@
    "chrome": false,
    "fade": {
     "bottom": [
-     634,
-     624
+     635,
+     621
     ],
     "right": [
      695,
      675
     ]
    },
-   "edge": 24,
-   "focus": [
-    360,
-    0,
-    300,
-    622
-   ]
+   "fadeCss": {
+    "bottom": [
+     635,
+     621
+    ],
+    "right": [
+     350,
+     330
+    ]
+   },
+   "edge": 24
   }
  },
  "feed-post-open": {
@@ -935,50 +933,42 @@
     "dark": "feed-post-open.desktop.dark.avif"
    },
    "bytes": {
-    "light": 29601,
-    "dark": 28136
+    "light": 73078,
+    "dark": 72713
    },
-   "alt": "The post opened in the app as a web page: a report titled Task list, 3× faster, with a before and after bar for first paint, 420 ms to 140 ms, and a table of three measurements with their change.",
-   "displayWidth": 788,
-   "displayHeight": 606,
+   "alt": "The Happy window with the post open as a web page: a report titled Task list, 3× faster, with a before and after bar for first paint, 420 ms to 140 ms, and a table of three measurements with their change. Artifacts is selected in the sidebar.",
+   "scale": 0.7766990291262136,
+   "displayWidth": 880,
+   "displayHeight": 621,
+   "minDisplayWidth": 794,
    "pixels": [
-    1576,
-    1212
+    1760,
+    1242
    ],
+   "frame": "full",
    "crop": [
-    345,
     0,
-    788,
-    606
+    0,
+    1133,
+    800
    ],
    "at": "left",
    "inset": 0,
-   "overhang": 60,
-   "needsWidth": 765,
+   "overhang": 152,
    "real": [
     "top",
-    "right"
+    "left",
+    "right",
+    "bottom"
    ],
-   "divider": [
-    "left"
-   ],
-   "chrome": false,
-   "fade": {
-    "bottom": [
-     606,
-     590
-    ]
-   },
-   "edge": 48,
-   "focus": [
-    360,
-    0,
-    750,
-    587
-   ]
+   "divider": [],
+   "chrome": true,
+   "fade": {},
+   "fadeCss": {},
+   "edge": 48
   },
   "phone": null,
-  "noPhone": "Hidden on phones: the report is running text and a 350 px region would cut it mid-word. The feed picture above shows the same report's cover."
+  "noPhone": "Not shown on phones, nor on a desktop too narrow for the desktop file (below `minDisplayWidth`): the report is running text and a 350 px region would cut it mid-word. The feed picture above it shows the same report's cover."
  },
  "multiplayer-todo-list": {
   "page": "/multiplayer/",

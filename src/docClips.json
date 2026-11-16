@@ -144,5 +144,149 @@
    },
    "edge": 24
   }
+ },
+ "feed-activity": {
+  "page": "/feed/",
+  "section": "The feed",
+  "replaces": "feed-activity",
+  "desktop": {
+   "files": {
+    "light": {
+     "clip": "feed-activity.desktop.light.mp4",
+     "first": "feed-activity.desktop.light.first.avif",
+     "rest": "feed-activity.desktop.light.rest.avif"
+    },
+    "dark": {
+     "clip": "feed-activity.desktop.dark.mp4",
+     "first": "feed-activity.desktop.dark.first.avif",
+     "rest": "feed-activity.desktop.dark.rest.avif"
+    }
+   },
+   "bytes": {
+    "light": {
+     "clip": 225804,
+     "first": 62404,
+     "rest": 58860
+    },
+    "dark": {
+     "clip": 215845,
+     "first": 69451,
+     "rest": 64250
+    }
+   },
+   "alt": "The Happy window with Activity open. A new post, Task list, 3× faster, arrives at the top of the feed above an earlier review, the header changes from Up to date to 1 unread, and in the sidebar the Task List Speed task stops working and shows an unread dot.",
+   "restAlt": null,
+   "scale": 0.7766990291262136,
+   "displayWidth": 880,
+   "displayHeight": 621,
+   "minDisplayWidth": 794,
+   "pixels": [
+    1760,
+    1242
+   ],
+   "seconds": 3.217,
+   "frames": 193,
+   "fps": 60,
+   "restFrame": 192,
+   "frame": "full",
+   "crop": [
+    0,
+    0,
+    1133,
+    800
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 152,
+   "real": [
+    "top",
+    "left",
+    "right",
+    "bottom"
+   ],
+   "divider": [],
+   "chrome": true,
+   "fade": {},
+   "fadeCss": {},
+   "edge": 48
+  },
+  "phone": {
+   "files": {
+    "light": {
+     "clip": "feed-activity.phone.light.mp4",
+     "first": "feed-activity.phone.light.first.avif",
+     "rest": "feed-activity.phone.light.rest.avif"
+    },
+    "dark": {
+     "clip": "feed-activity.phone.dark.mp4",
+     "first": "feed-activity.phone.dark.first.avif",
+     "rest": "feed-activity.phone.dark.rest.avif"
+    }
+   },
+   "bytes": {
+    "light": {
+     "clip": 141611,
+     "first": 30027,
+     "rest": 27172
+    },
+    "dark": {
+     "clip": 130838,
+     "first": 29010,
+     "rest": 26145
+    }
+   },
+   "alt": "The Activity feed. A new post, Task list, 3× faster, arrives at the top above an earlier review, and the header changes to 1 unread. The left part of its cover shows: its title, a before and after bar and the first rows of a table.",
+   "restAlt": null,
+   "scale": 1,
+   "displayWidth": 350,
+   "displayHeight": 635,
+   "minDisplayWidth": 350,
+   "pixels": [
+    700,
+    1270
+   ],
+   "seconds": 3.217,
+   "frames": 193,
+   "fps": 60,
+   "restFrame": 192,
+   "frame": "pane",
+   "crop": [
+    345,
+    0,
+    350,
+    635
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "real": [
+    "top"
+   ],
+   "divider": [
+    "left"
+   ],
+   "chrome": false,
+   "fade": {
+    "bottom": [
+     635,
+     621
+    ],
+    "right": [
+     695,
+     675
+    ]
+   },
+   "fadeCss": {
+    "bottom": [
+     635,
+     621
+    ],
+    "right": [
+     350,
+     330
+    ]
+   },
+   "edge": 24
+  }
  }
 }

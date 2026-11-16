@@ -51,8 +51,8 @@ fig welcome-window 345 0 1 top,left,right 1 bottom
 fig tasks-teammate 345 0 0 left,right 0 top,bottom
 # The whole cut where it is the rail and sidebar already.
 fig computers-where 345 267 1 top,left,right 1 bottom
-# A pane: 400 app px of it, 1.3 card px per app px, its cut right edge dissolving.
-fig feed-activity 400 0 0 top,left 0 right,bottom
+# The feed's own pane, from the divider, 1.3 card px per app px, its cut right edge dissolving.
+fig feed-activity 400 0 0 top,left 0 right,bottom 345
 # The bot's own pane, from the divider, where the sidebar would repeat Welcome's card.
 fig bots-open 400 0 0 top,left 0 right,bottom 345
 # The permission menu and the composer's start, the cut's whole height, 1.7 card px per app px.

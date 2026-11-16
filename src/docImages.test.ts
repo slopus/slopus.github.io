@@ -148,6 +148,9 @@ describe('docs stills (DESIGN.md, Screenshots, rule 2)', () => {
       for (const [kind, cut, scale, rightBand] of cuts) {
         if (!cut) continue
         expect(cut.scale ?? 1, `${name} ${kind}`).toBe(scale)
+        // Whole CSS px, used as given: a size derived from crop x scale (621.36) would make the browser
+        // resample the still and the clip differently.
+        expect([cut.displayWidth, cut.displayHeight].every(Number.isInteger), `${name} ${kind}: whole display size`).toBe(true)
         expect(isFramed(cut), `${name} ${kind}: recut with the desktop cut`).toBe(true)
         for (const [side, [from, to]] of Object.entries(cut.fadeCss!)) {
           // Never on a real edge: a picture that reaches the window's edge shows it.
