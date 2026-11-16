@@ -288,5 +288,149 @@
    },
    "edge": 24
   }
+ },
+ "bots-shared-conversation": {
+  "page": "/bots/",
+  "section": "What makes a bot different",
+  "replaces": "bots-shared-conversation",
+  "desktop": {
+   "files": {
+    "light": {
+     "clip": "bots-shared-conversation.desktop.light.mp4",
+     "first": "bots-shared-conversation.desktop.light.first.avif",
+     "rest": "bots-shared-conversation.desktop.light.rest.avif"
+    },
+    "dark": {
+     "clip": "bots-shared-conversation.desktop.dark.mp4",
+     "first": "bots-shared-conversation.desktop.dark.first.avif",
+     "rest": "bots-shared-conversation.desktop.dark.rest.avif"
+    }
+   },
+   "bytes": {
+    "light": {
+     "clip": 329567,
+     "first": 57396,
+     "rest": 51296
+    },
+    "dark": {
+     "clip": 318548,
+     "first": 58137,
+     "rest": 51915
+    }
+   },
+   "alt": "The Happy window with the Desktop Releases bot's conversation open. Steve asks under his own name whether Windows is done and the bot answers him. Scoteezy writes that Windows passed QA and asks it to check the item off; the bot updates the list and confirms that five are left, and the Launch checklist in the sidebar goes from 6 to 5.",
+   "restAlt": null,
+   "scale": 0.7766990291262136,
+   "displayWidth": 880,
+   "displayHeight": 621,
+   "minDisplayWidth": 794,
+   "pixels": [
+    1760,
+    1242
+   ],
+   "seconds": 7.467,
+   "frames": 448,
+   "fps": 60,
+   "restFrame": 447,
+   "frame": "full",
+   "crop": [
+    0,
+    0,
+    1133,
+    800
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 152,
+   "real": [
+    "top",
+    "left",
+    "right",
+    "bottom"
+   ],
+   "divider": [],
+   "chrome": true,
+   "fade": {},
+   "fadeCss": {},
+   "edge": 48
+  },
+  "phone": {
+   "files": {
+    "light": {
+     "clip": "bots-shared-conversation.phone.light.mp4",
+     "first": "bots-shared-conversation.phone.light.first.avif",
+     "rest": "bots-shared-conversation.phone.light.rest.avif"
+    },
+    "dark": {
+     "clip": "bots-shared-conversation.phone.dark.mp4",
+     "first": "bots-shared-conversation.phone.dark.first.avif",
+     "rest": "bots-shared-conversation.phone.dark.rest.avif"
+    }
+   },
+   "bytes": {
+    "light": {
+     "clip": 313594,
+     "first": 33495,
+     "rest": 28593
+    },
+    "dark": {
+     "clip": 307740,
+     "first": 33040,
+     "rest": 27847
+    }
+   },
+   "alt": "The Desktop Releases bot's conversation. Steve asks under his own name whether Windows is done and the bot answers him. Scoteezy writes that Windows passed QA and asks it to check the item off; the bot updates the list and confirms.",
+   "restAlt": null,
+   "scale": 1,
+   "displayWidth": 350,
+   "displayHeight": 626,
+   "minDisplayWidth": 350,
+   "pixels": [
+    700,
+    1252
+   ],
+   "seconds": 7.467,
+   "frames": 448,
+   "fps": 60,
+   "restFrame": 447,
+   "frame": "pane",
+   "crop": [
+    345,
+    0,
+    350,
+    626
+   ],
+   "at": "left",
+   "inset": 0,
+   "overhang": 0,
+   "real": [
+    "top"
+   ],
+   "divider": [
+    "left"
+   ],
+   "chrome": false,
+   "fade": {
+    "bottom": [
+     626,
+     612
+    ],
+    "right": [
+     695,
+     675
+    ]
+   },
+   "fadeCss": {
+    "bottom": [
+     626,
+     612
+    ],
+    "right": [
+     350,
+     330
+    ]
+   },
+   "edge": 24
+  }
  }
 }

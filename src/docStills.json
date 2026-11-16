@@ -622,49 +622,48 @@
     "dark": "bots-open.desktop.dark.avif"
    },
    "bytes": {
-    "light": 34661,
-    "dark": 41109
+    "light": 32755,
+    "dark": 35065
    },
    "alt": "The Happy window with the Desktop Releases bot selected in the sidebar's Bots list, a clock beside it because it is waiting for its next check. Its conversation is open: Linux passed, Windows still building, and a build receipt listing macOS, Windows and Linux with their build and signing state.",
+   "scale": 0.7766990291262136,
    "displayWidth": 880,
-   "displayHeight": 472,
+   "displayHeight": 367,
+   "minDisplayWidth": 794,
    "pixels": [
     1760,
-    944
+    734
    ],
+   "frame": "full",
    "crop": [
     0,
     0,
-    880,
+    1133,
     472
    ],
    "at": "left",
    "inset": 0,
    "overhang": 152,
-   "needsWidth": 640,
    "real": [
     "top",
-    "left"
+    "left",
+    "right"
    ],
    "divider": [],
    "chrome": true,
    "fade": {
     "bottom": [
      472,
-     450
-    ],
-    "right": [
-     880,
-     760
+     458
     ]
    },
-   "edge": 48,
-   "focus": [
-    0,
-    0,
-    640,
-    449
-   ]
+   "fadeCss": {
+    "bottom": [
+     367,
+     356.1
+    ]
+   },
+   "edge": 48
   },
   "phone": {
    "files": {
@@ -672,26 +671,28 @@
     "dark": "bots-open.phone.dark.avif"
    },
    "bytes": {
-    "light": 15802,
-    "dark": 15851
+    "light": 15783,
+    "dark": 15927
    },
    "alt": "The Happy sidebar with the Desktop Releases bot selected in the Bots list, a clock beside it because it is waiting for its next check; Chief of Staff above it and Product Health with two subtasks below.",
+   "scale": 1,
    "displayWidth": 345,
-   "displayHeight": 472,
+   "displayHeight": 464,
+   "minDisplayWidth": 345,
    "pixels": [
     690,
-    944
+    928
    ],
+   "frame": "sidebar",
    "crop": [
     0,
     0,
     345,
-    472
+    464
    ],
    "at": "left",
    "inset": 0,
    "overhang": 0,
-   "needsWidth": 345,
    "real": [
     "top",
     "left"
@@ -702,17 +703,17 @@
    "chrome": true,
    "fade": {
     "bottom": [
-     472,
+     464,
      450
     ]
    },
-   "edge": 24,
-   "focus": [
-    0,
-    0,
-    345,
-    449
-   ]
+   "fadeCss": {
+    "bottom": [
+     464,
+     450
+    ]
+   },
+   "edge": 24
   }
  },
  "bots-shared-conversation": {
@@ -724,50 +725,39 @@
     "dark": "bots-shared-conversation.desktop.dark.avif"
    },
    "bytes": {
-    "light": 18352,
-    "dark": 17631
+    "light": 51450,
+    "dark": 51769
    },
-   "alt": "The Desktop Releases bot's conversation with two people in it. Steve asks under his own name whether Windows is done and the bot answers; Kirill says Windows passed QA and asks it to check the item off, and the bot updates the list and confirms.",
-   "displayWidth": 788,
-   "displayHeight": 418,
+   "alt": "The Happy window with the Desktop Releases bot's conversation open. Steve asks under his own name whether Windows is done and the bot answers him; Scoteezy writes that Windows passed QA and asks it to check the item off, and the bot updates the list and confirms that five are left. The Launch checklist in the sidebar reads 5.",
+   "scale": 0.7766990291262136,
+   "displayWidth": 880,
+   "displayHeight": 621,
+   "minDisplayWidth": 794,
    "pixels": [
-    1576,
-    836
+    1760,
+    1242
    ],
+   "frame": "full",
    "crop": [
-    345,
-    222,
-    788,
-    418
+    0,
+    0,
+    1133,
+    800
    ],
    "at": "left",
    "inset": 0,
-   "overhang": 60,
-   "needsWidth": 755,
+   "overhang": 152,
    "real": [
-    "right"
+    "top",
+    "left",
+    "right",
+    "bottom"
    ],
-   "divider": [
-    "left"
-   ],
-   "chrome": false,
-   "fade": {
-    "top": [
-     222,
-     240
-    ],
-    "bottom": [
-     640,
-     620
-    ]
-   },
-   "edge": 48,
-   "focus": [
-    360,
-    241,
-    740,
-    372
-   ]
+   "divider": [],
+   "chrome": true,
+   "fade": {},
+   "fadeCss": {},
+   "edge": 48
   },
   "phone": {
    "files": {
@@ -775,52 +765,56 @@
     "dark": "bots-shared-conversation.phone.dark.avif"
    },
    "bytes": {
-    "light": 9654,
-    "dark": 9270
+    "light": 28308,
+    "dark": 27298
    },
-   "alt": "The Desktop Releases bot's conversation: Steve asks under his own name whether Windows is done, and the bot answers that it is still compiling and that it will tell them both when it is green.",
+   "alt": "The Desktop Releases bot's conversation. Steve asks under his own name whether Windows is done and the bot answers him; Scoteezy writes that Windows passed QA and asks it to check the item off, and the bot updates the list and confirms.",
+   "scale": 1,
    "displayWidth": 350,
-   "displayHeight": 222,
+   "displayHeight": 626,
+   "minDisplayWidth": 350,
    "pixels": [
     700,
-    444
+    1252
    ],
+   "frame": "pane",
    "crop": [
     345,
-    222,
+    0,
     350,
-    222
+    626
    ],
    "at": "left",
    "inset": 0,
    "overhang": 0,
-   "needsWidth": 350,
-   "real": [],
+   "real": [
+    "top"
+   ],
    "divider": [
     "left"
    ],
    "chrome": false,
    "fade": {
-    "top": [
-     222,
-     240
-    ],
     "bottom": [
-     444,
-     422
+     626,
+     612
     ],
     "right": [
      695,
      675
     ]
    },
-   "edge": 24,
-   "focus": [
-    360,
-    241,
-    300,
-    178
-   ]
+   "fadeCss": {
+    "bottom": [
+     626,
+     612
+    ],
+    "right": [
+     350,
+     330
+    ]
+   },
+   "edge": 24
   }
  },
  "feed-activity": {
