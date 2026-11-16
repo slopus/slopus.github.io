@@ -8,49 +8,39 @@
     "dark": "welcome-window.desktop.dark.avif"
    },
    "bytes": {
-    "light": 55736,
-    "dark": 54899
+    "light": 54166,
+    "dark": 54542
    },
    "alt": "The Happy window: Activity, Artifacts and the Launch checklist at the top of the sidebar, three bots, and tasks with their owners' faces and subtasks. A task is open beside them, where a teammate and the agent go back and forth and the agent posts a preview.",
+   "scale": 0.7766990291262136,
    "displayWidth": 880,
-   "displayHeight": 634,
+   "displayHeight": 621,
+   "minDisplayWidth": 794,
    "pixels": [
     1760,
-    1268
+    1242
    ],
+   "frame": "full",
    "crop": [
     0,
     0,
-    880,
-    634
+    1133,
+    800
    ],
    "at": "left",
    "inset": 0,
    "overhang": 152,
-   "needsWidth": 715,
    "real": [
     "top",
-    "left"
+    "left",
+    "right",
+    "bottom"
    ],
    "divider": [],
    "chrome": true,
-   "fade": {
-    "bottom": [
-     634,
-     619
-    ],
-    "right": [
-     880,
-     760
-    ]
-   },
-   "edge": 48,
-   "focus": [
-    0,
-    0,
-    715,
-    612
-   ]
+   "fade": {},
+   "fadeCss": {},
+   "edge": 48
   },
   "phone": {
    "files": {
@@ -58,26 +48,28 @@
     "dark": "welcome-window.phone.dark.avif"
    },
    "bytes": {
-    "light": 23817,
-    "dark": 23919
+    "light": 23813,
+    "dark": 23918
    },
    "alt": "The Happy sidebar: Activity, Artifacts and the Launch checklist at the top, three bots, one with two subtasks, and tasks with their owners' faces and subtasks.",
+   "scale": 1,
    "displayWidth": 345,
-   "displayHeight": 634,
+   "displayHeight": 633,
+   "minDisplayWidth": 345,
    "pixels": [
     690,
-    1268
+    1266
    ],
+   "frame": "sidebar",
    "crop": [
     0,
     0,
     345,
-    634
+    633
    ],
    "at": "left",
    "inset": 0,
    "overhang": 0,
-   "needsWidth": 345,
    "real": [
     "top",
     "left"
@@ -88,17 +80,17 @@
    "chrome": true,
    "fade": {
     "bottom": [
-     634,
+     633,
      619
     ]
    },
-   "edge": 24,
-   "focus": [
-    0,
-    0,
-    345,
-    612
-   ]
+   "fadeCss": {
+    "bottom": [
+     633,
+     619
+    ]
+   },
+   "edge": 24
   }
  },
  "quick-start-task-tree": {
@@ -110,28 +102,31 @@
     "dark": "quick-start-task-tree.desktop.dark.avif"
    },
    "bytes": {
-    "light": 42687,
-    "dark": 41713
+    "light": 36294,
+    "dark": 36401
    },
    "alt": "The sidebar: three bots, one with two subtasks under it, then the Tasks list, where Team Servers has three subtasks on a tree line, iOS server codes, Desktop sign-in and Docs: sign-in page, each with a different repository icon and its added and removed line counts. Beside it the task lists the three repositories and shows its three subtasks working.",
+   "scale": 0.7766990291262136,
    "displayWidth": 880,
-   "displayHeight": 488,
+   "displayHeight": 379,
+   "minDisplayWidth": 794,
    "pixels": [
     1760,
-    976
+    758
    ],
+   "frame": "full",
    "crop": [
     0,
     312,
-    880,
+    1133,
     488
    ],
    "at": "left",
    "inset": 0,
    "overhang": 152,
-   "needsWidth": 662,
    "real": [
     "left",
+    "right",
     "bottom"
    ],
    "divider": [],
@@ -140,19 +135,15 @@
     "top": [
      312,
      326
-    ],
-    "right": [
-     880,
-     760
     ]
    },
-   "edge": 48,
-   "focus": [
-    62,
-    326,
-    600,
-    474
-   ]
+   "fadeCss": {
+    "top": [
+     0,
+     10.9
+    ]
+   },
+   "edge": 48
   },
   "phone": {
    "files": {
@@ -160,26 +151,28 @@
     "dark": "quick-start-task-tree.phone.dark.avif"
    },
    "bytes": {
-    "light": 17012,
-    "dark": 16767
+    "light": 17736,
+    "dark": 17499
    },
    "alt": "The sidebar's Tasks list: Team Servers with three subtasks under it on a tree line, iOS server codes, Desktop sign-in and Docs: sign-in page, each with a different repository icon and its line counts; below it Voice waveform with a question waiting, Task List Speed with one subtask, and Message Retry Queue.",
+   "scale": 1,
    "displayWidth": 345,
-   "displayHeight": 352,
+   "displayHeight": 343,
+   "minDisplayWidth": 345,
    "pixels": [
     690,
-    704
+    686
    ],
+   "frame": "sidebar",
    "crop": [
     0,
-    448,
+    457,
     345,
-    352
+    343
    ],
    "at": "left",
    "inset": 0,
    "overhang": 0,
-   "needsWidth": 345,
    "real": [
     "left",
     "bottom"
@@ -190,17 +183,17 @@
    "chrome": false,
    "fade": {
     "top": [
-     448,
+     457,
      471
     ]
    },
-   "edge": 24,
-   "focus": [
-    62,
-    473,
-    280,
-    327
-   ]
+   "fadeCss": {
+    "top": [
+     0,
+     14
+    ]
+   },
+   "edge": 24
   }
  },
  "quick-start-chief-of-staff": {
@@ -212,52 +205,48 @@
     "dark": "quick-start-chief-of-staff.desktop.dark.avif"
    },
    "bytes": {
-    "light": 29643,
-    "dark": 29218
+    "light": 36223,
+    "dark": 36523
    },
    "alt": "The Chief of Staff's turn, steps open: it creates the Release Notes bot, sets its picture, lists the bots to check, then says Release Notes is ready and in everyone's sidebar under Bots. Beside it the sidebar's Bots list ends with the new Release Notes bot.",
-   "displayWidth": 728,
-   "displayHeight": 349,
+   "scale": 0.7766990291262136,
+   "displayWidth": 880,
+   "displayHeight": 491,
+   "minDisplayWidth": 794,
    "pixels": [
-    1456,
-    698
+    1760,
+    982
    ],
+   "frame": "full",
    "crop": [
     0,
-    250,
-    728,
-    349
+    0,
+    1133,
+    632
    ],
    "at": "left",
    "inset": 0,
-   "overhang": 0,
-   "needsWidth": 674,
+   "overhang": 152,
    "real": [
-    "left"
+    "top",
+    "left",
+    "right"
    ],
    "divider": [],
-   "chrome": false,
+   "chrome": true,
    "fade": {
-    "top": [
-     250,
-     265
-    ],
     "bottom": [
-     599,
-     588
-    ],
-    "right": [
-     728,
-     680
+     632,
+     618
     ]
    },
-   "edge": 48,
-   "focus": [
-    62,
-    266,
-    612,
-    306
-   ]
+   "fadeCss": {
+    "bottom": [
+     491,
+     480.1
+    ]
+   },
+   "edge": 48
   },
   "phone": {
    "files": {
@@ -265,26 +254,28 @@
     "dark": "quick-start-chief-of-staff.phone.dark.avif"
    },
    "bytes": {
-    "light": 9883,
-    "dark": 9932
+    "light": 10304,
+    "dark": 10292
    },
    "alt": "The sidebar's Bots list: Chief of Staff, Desktop Releases, Product Health with two subtasks under it, and the new Release Notes bot last.",
+   "scale": 1,
    "displayWidth": 345,
-   "displayHeight": 256,
+   "displayHeight": 248,
+   "minDisplayWidth": 345,
    "pixels": [
     690,
-    512
+    496
    ],
+   "frame": "sidebar",
    "crop": [
     0,
-    250,
+    251,
     345,
-    256
+    248
    ],
    "at": "left",
    "inset": 0,
    "overhang": 0,
-   "needsWidth": 345,
    "real": [
     "left"
    ],
@@ -294,21 +285,25 @@
    "chrome": false,
    "fade": {
     "top": [
-     250,
+     251,
      265
     ],
     "bottom": [
-     506,
+     499,
      485
     ]
    },
-   "edge": 24,
-   "focus": [
-    62,
-    266,
-    280,
-    218
-   ]
+   "fadeCss": {
+    "top": [
+     0,
+     14
+    ],
+    "bottom": [
+     248,
+     234
+    ]
+   },
+   "edge": 24
   }
  },
  "tasks-teammate": {
@@ -840,7 +835,7 @@
     "light": 33769,
     "dark": 32331
    },
-   "alt": "The Activity feed: a post titled Task list, 3\u00d7 faster, created by a teammate at 10:39 AM, with its summary and the report's cover: a before and after bar chart of first paint, 420 ms to 140 ms, and a table of measurements.",
+   "alt": "The Activity feed: a post titled Task list, 3× faster, created by a teammate at 10:39 AM, with its summary and the report's cover: a before and after bar chart of first paint, 420 ms to 140 ms, and a table of measurements.",
    "displayWidth": 788,
    "displayHeight": 634,
    "pixels": [
@@ -888,7 +883,7 @@
     "light": 25120,
     "dark": 23914
    },
-   "alt": "The Activity feed: a post titled Task list, 3\u00d7 faster, created by a teammate, with its one-line summary and the left part of the report's cover: its title, a before and after bar and the first rows of a table.",
+   "alt": "The Activity feed: a post titled Task list, 3× faster, created by a teammate, with its one-line summary and the left part of the report's cover: its title, a before and after bar and the first rows of a table.",
    "displayWidth": 350,
    "displayHeight": 634,
    "pixels": [
@@ -943,7 +938,7 @@
     "light": 29601,
     "dark": 28136
    },
-   "alt": "The post opened in the app as a web page: a report titled Task list, 3\u00d7 faster, with a before and after bar for first paint, 420 ms to 140 ms, and a table of three measurements with their change.",
+   "alt": "The post opened in the app as a web page: a report titled Task list, 3× faster, with a before and after bar for first paint, 420 ms to 140 ms, and a table of three measurements with their change.",
    "displayWidth": 788,
    "displayHeight": 606,
    "pixels": [
@@ -994,47 +989,48 @@
     "dark": "multiplayer-todo-list.desktop.dark.avif"
    },
    "bytes": {
-    "light": 62231,
-    "dark": 48744
+    "light": 62541,
+    "dark": 52746
    },
-   "alt": "The Launch checklist, a shared list created by Steve, with three members' faces in its header. Five open items and two completed ones, each with its owner's face at the right.",
-   "displayWidth": 788,
-   "displayHeight": 500,
+   "alt": "The Happy window with the Launch checklist selected in the sidebar. The list, created by Steve, has three members' faces in its header, five open items and two completed ones, each with its owner's face at the right.",
+   "scale": 0.7766990291262136,
+   "displayWidth": 880,
+   "displayHeight": 387,
+   "minDisplayWidth": 794,
    "pixels": [
-    1576,
-    1000
+    1760,
+    774
    ],
+   "frame": "full",
    "crop": [
-    345,
     0,
-    788,
-    500
+    0,
+    1133,
+    498
    ],
    "at": "left",
    "inset": 0,
-   "overhang": 60,
-   "needsWidth": 765,
+   "overhang": 152,
    "real": [
     "top",
+    "left",
     "right"
    ],
-   "divider": [
-    "left"
-   ],
-   "chrome": false,
+   "divider": [],
+   "chrome": true,
    "fade": {
     "bottom": [
-     500,
-     476
+     498,
+     484
     ]
    },
-   "edge": 48,
-   "focus": [
-    360,
-    0,
-    750,
-    472
-   ]
+   "fadeCss": {
+    "bottom": [
+     387,
+     376.1
+    ]
+   },
+   "edge": 48
   },
   "phone": {
    "files": {
@@ -1042,26 +1038,28 @@
     "dark": "multiplayer-todo-list.phone.dark.avif"
    },
    "bytes": {
-    "light": 35220,
-    "dark": 30835
+    "light": 34313,
+    "dark": 30200
    },
    "alt": "The Launch checklist, a shared list created by Steve: five open items and two completed ones.",
+   "scale": 1,
    "displayWidth": 350,
-   "displayHeight": 500,
+   "displayHeight": 490,
+   "minDisplayWidth": 350,
    "pixels": [
     700,
-    1000
+    980
    ],
+   "frame": "pane",
    "crop": [
     345,
     0,
     350,
-    500
+    490
    ],
    "at": "left",
    "inset": 0,
    "overhang": 0,
-   "needsWidth": 350,
    "real": [
     "top"
    ],
@@ -1071,7 +1069,7 @@
    "chrome": false,
    "fade": {
     "bottom": [
-     500,
+     490,
      476
     ],
     "right": [
@@ -1079,13 +1077,17 @@
      675
     ]
    },
-   "edge": 24,
-   "focus": [
-    360,
-    0,
-    300,
-    472
-   ]
+   "fadeCss": {
+    "bottom": [
+     490,
+     476
+    ],
+    "right": [
+     350,
+     330
+    ]
+   },
+   "edge": 24
   }
  },
  "permissions-modes": {
@@ -1097,26 +1099,28 @@
     "dark": "permissions-modes.desktop.dark.avif"
    },
    "bytes": {
-    "light": 6172,
-    "dark": 5009
+    "light": 4379,
+    "dark": 4787
    },
    "alt": "The mode menu open under the composer: Auto, checked, then Workspace write, Read only and Full access.",
-   "displayWidth": 480,
-   "displayHeight": 222,
+   "scale": 0.7766990291262136,
+   "displayWidth": 400,
+   "displayHeight": 168,
+   "minDisplayWidth": 361,
    "pixels": [
-    960,
-    444
+    800,
+    336
    ],
+   "frame": "component",
    "crop": [
     345,
-    578,
-    480,
-    222
+    584,
+    515,
+    216
    ],
    "at": "left",
    "inset": 0,
    "overhang": 0,
-   "needsWidth": 230,
    "real": [
     "bottom"
    ],
@@ -1126,21 +1130,25 @@
    "chrome": false,
    "fade": {
     "top": [
-     578,
-     600
+     584,
+     598
     ],
     "right": [
-     825,
-     745
+     860,
+     706
     ]
    },
-   "edge": 48,
-   "focus": [
-    360,
-    601,
-    215,
-    190
-   ]
+   "fadeCss": {
+    "top": [
+     0,
+     10.9
+    ],
+    "right": [
+     400,
+     280.4
+    ]
+   },
+   "edge": 48
   },
   "phone": {
    "files": {
@@ -1148,26 +1156,28 @@
     "dark": "permissions-modes.phone.dark.avif"
    },
    "bytes": {
-    "light": 6160,
-    "dark": 4965
+    "light": 6143,
+    "dark": 4551
    },
    "alt": "The mode menu open under the composer: Auto, checked, then Workspace write, Read only and Full access.",
+   "scale": 1,
    "displayWidth": 350,
-   "displayHeight": 222,
+   "displayHeight": 214,
+   "minDisplayWidth": 350,
    "pixels": [
     700,
-    444
+    428
    ],
+   "frame": "pane",
    "crop": [
     345,
-    578,
+    586,
     350,
-    222
+    214
    ],
    "at": "left",
    "inset": 0,
    "overhang": 0,
-   "needsWidth": 350,
    "real": [
     "bottom"
    ],
@@ -1177,7 +1187,7 @@
    "chrome": false,
    "fade": {
     "top": [
-     578,
+     586,
      600
     ],
     "right": [
@@ -1185,13 +1195,17 @@
      675
     ]
    },
-   "edge": 24,
-   "focus": [
-    360,
-    601,
-    215,
-    190
-   ]
+   "fadeCss": {
+    "top": [
+     0,
+     14
+    ],
+    "right": [
+     350,
+     330
+    ]
+   },
+   "edge": 24
   }
  },
  "computers-where": {
@@ -1203,47 +1217,48 @@
     "dark": "computers-where.desktop.dark.avif"
    },
    "bytes": {
-    "light": 7957,
-    "dark": 8152
+    "light": 19460,
+    "dark": 19823
    },
    "alt": "The rail at the window's left edge with two buttons, one for your own computer and one for the team's server, the team's selected, beside the top of its sidebar.",
-   "displayWidth": 345,
-   "displayHeight": 267,
+   "scale": 0.7766990291262136,
+   "displayWidth": 880,
+   "displayHeight": 253,
+   "minDisplayWidth": 794,
    "pixels": [
-    690,
-    534
+    1760,
+    506
    ],
+   "frame": "full",
    "crop": [
     0,
     0,
-    345,
-    267
+    1133,
+    326
    ],
    "at": "left",
    "inset": 0,
-   "overhang": 0,
-   "needsWidth": 345,
+   "overhang": 152,
    "real": [
     "top",
-    "left"
-   ],
-   "divider": [
+    "left",
     "right"
    ],
+   "divider": [],
    "chrome": true,
    "fade": {
     "bottom": [
-     267,
-     241
+     326,
+     312
     ]
    },
-   "edge": 48,
-   "focus": [
-    0,
-    40,
-    345,
-    198
-   ]
+   "fadeCss": {
+    "bottom": [
+     253,
+     242.1
+    ]
+   },
+   "edge": 48
   },
   "phone": {
    "files": {
@@ -1251,26 +1266,28 @@
     "dark": "computers-where.phone.dark.avif"
    },
    "bytes": {
-    "light": 7957,
-    "dark": 8152
+    "light": 7971,
+    "dark": 8114
    },
    "alt": "The rail at the window's left edge with two buttons, one for your own computer and one for the team's server, the team's selected, beside the top of its sidebar.",
+   "scale": 1,
    "displayWidth": 345,
-   "displayHeight": 267,
+   "displayHeight": 255,
+   "minDisplayWidth": 345,
    "pixels": [
     690,
-    534
+    510
    ],
+   "frame": "sidebar",
    "crop": [
     0,
     0,
     345,
-    267
+    255
    ],
    "at": "left",
    "inset": 0,
    "overhang": 0,
-   "needsWidth": 345,
    "real": [
     "top",
     "left"
@@ -1281,17 +1298,44 @@
    "chrome": true,
    "fade": {
     "bottom": [
-     267,
+     255,
      241
     ]
    },
-   "edge": 24,
-   "focus": [
-    0,
-    40,
-    345,
-    198
-   ]
+   "fadeCss": {
+    "bottom": [
+     255,
+     241
+    ]
+   },
+   "edge": 24
   }
+ },
+ "_presets": {
+  "scale": 0.7766990291262136,
+  "scaleRatio": [
+   80,
+   103
+  ],
+  "band": 14,
+  "rightBand": 154,
+  "phoneRightBand": 20,
+  "minScale": 0.7,
+  "curve": "smoothstep",
+  "frames": {
+   "full": {
+    "x": 0,
+    "w": 1133
+   },
+   "emphasis": {
+    "x": 0,
+    "w": 927
+   },
+   "component": {
+    "x": 345,
+    "w": 515
+   }
+  },
+  "windowDisplayWidth": 880
  }
 }
