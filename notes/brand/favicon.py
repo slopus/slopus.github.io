@@ -115,12 +115,7 @@ def main():
     )
     render(96).save(PUBLIC / "favicon-96x96.png")
     render(180, installed=True).save(PUBLIC / "apple-touch-icon.png")
-    for size in (192, 512):
-        # A 9/16-width square fits inside the central 80%-diameter circle.
-        render(size, mark_fraction=9 / 16, installed=True).save(
-            PUBLIC / f"web-app-manifest-{size}x{size}.png"
-        )
-    print("Rendered the tile SVG, optical ICO16/32, canonical ICO48/PNG96/Apple180/maskable192/512.")
+    print("Rendered the tile SVG, optical ICO16/32, canonical ICO48/PNG96/Apple180.")
 
 
 if __name__ == "__main__":
