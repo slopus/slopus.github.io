@@ -18,8 +18,8 @@ export interface PageMetadata {
  * Every page without its own card shares it, the original CLI docs included.
  */
 export const defaultSocialImage = {
-  path: '/og/happy-home-v27.png', width: 1200, height: 630,
-  alt: 'Happy, One place for you, your team, and your agents, Free and open source, and 24k GitHub stars, beside the Happy Desktop window with the model list open and Opus hovered.',
+  path: '/og/happy-home-v28.png', width: 1200, height: 630,
+  alt: 'Happy, One place for you, your team, and your agents, Free and open source, and 24k GitHub stars, beside a large Happy Desktop window with the model list open and Opus hovered, on the homepage’s lavender gradient.',
 } as const
 
 /**

@@ -23,6 +23,15 @@ export const SITE_SURFACE: Surface = {
   phone: { topRight: 340 },
 }
 
+/**
+ * The link-preview card (`?preview=og`, 1200×630): the store screenshots' full field, colour down
+ * both sides and in every corner, so the window stands on the gradient rather than a plain page.
+ */
+export const CARD_SURFACE: Surface = {
+  wide: { sides: [1, .2, 1, .2], ends: [160, 80, 180, 80], corners: [300, 460, 460, 360], calm: 0, wavelength: 700 },
+  phone: { topRight: 0 },
+}
+
 type Corner = 'top-right' | 'bottom-left'
 const CORNERS = '/video/grain'
 const DARK = '(prefers-color-scheme: dark)'

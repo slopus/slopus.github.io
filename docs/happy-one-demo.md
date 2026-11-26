@@ -298,42 +298,49 @@ existing 47 tests and production build pass.
 
 This is an agent-run screenshot recipe, not a production script. The ordinary
 page's headline is `HOME_HEADLINE` in `src/homeVariants.ts`; `?preview=og` renders the same
-headline, “Happy” with “One place for you, your team, and your agents.” under it, without the
-gradient surface. Every route without its own card (all but
+headline, “Happy” with “One place for you, your team, and your agents.” under it, on the
+card's own Grain Gradient (`CARD_SURFACE` in `src/GrainGradient.tsx`). Every route without its own card (all but
 the desktop docs, whose cards come from `notes/og/cards.py`) uses
-`/og/happy-home-v27.png` as its social image, served with `?v=` and
+`/og/happy-home-v28.png` as its social image, served with `?v=` and
 `SOCIAL_IMAGE_VERSION` from `src/siteMetadata.ts` so link previews refetch;
-`happy-harness-v22`–`v26` stay for old shares.
+`happy-harness-v22`–`v26` and `happy-home-v27` stay for old shares.
 
-The v27 card is a horizontal composition: “Happy”, its line on two lines,
-“Free and open source”, and GitHub stars on the left; the team take 11 window,
-596px wide, with the parked phone on the right, frozen at 3.2 seconds with the
-model list open and Opus hovered.
+The v28 card follows the App Store and Google Play screenshots
+(`packages/store-assets/` in slopus/happy, “All platforms” last): a bold
+headline, the app window large, the gradient full. On the left, “Happy” in bold,
+its line in semibold on three lines, “Free and open source”, and GitHub stars;
+on the right the team take 11 window, 860px wide and running off the card's
+right edge, frozen at 3.2 seconds with the model list open and Opus hovered. The
+phone is left out. Behind both, the homepage's light palette in `CARD_SURFACE`:
+colour down both sides and in every corner, paler behind the window.
 
 1. Read the current public `https://api.github.com/repos/slopus/happy` response.
    Update the dated snapshot in `src/happyOneGithubStars.ts` using
-   `stargazers_count` (24,384 / 24k on 2026-10-28). The header and screenshot
+   `stargazers_count` (24,834 / 24k on 2026-11-25). The header and screenshot
    both link to the **original** `https://github.com/slopus/happy` repository.
    Download “All Releases” deliberately still links to `happy-desktop`.
 2. Build the website. Open `/?preview=og` in Chromium at
-   **1200×630 CSS pixels**, device scale factor **2**, with reduced motion
-   enabled. Use the registered workspace preview service; if that environment
+   **1200×630 CSS pixels**, device scale factor **2**, light colour scheme,
+   with reduced motion enabled. The gradient draws only on a GPU: launch
+   Chromium with full access (on a Mac, `--use-angle=metal`) and check that
+   WebGL reports the GPU, not SwiftShader; wait for `.home-grain[data-painted]`. Use the registered workspace preview service; if that environment
    cannot start one, fulfill browser requests directly from the built `dist/`
    files without opening a listener. Do not change or restart the product app.
 3. The explicit `preview=og` flag mounts the GitHub/stars line and selects the
    fixed social-card composition in `src/happy-one-preview.css`. Without the
    flag, the extra hero line is not mounted and the normal layout is unchanged.
    The headline is the hero's: “Happy”, then its line on two lines.
-   The copy starts at x=48px in a 440px column; a 24px gap separates it from
-   the 596px window, with the parked phone 12px right of it, cut by the card's
-   edge. Do not stack the demo below the headline in this mode.
+   The copy starts at x=56px in a 300px column; a 36px gap separates it from
+   the 860px window, vertically centred and cut by the card's right edge. Do
+   not stack the demo below the headline in this mode.
    Wait for the self-hosted fonts (`document.fonts.ready`) and the video. When
    fulfilling requests from `dist/` yourself, answer Range requests with 206, or
    the movie is not seekable and stays on frame 0. Do not capture
    fallback fonts, posters, loading indicators, or browser playback controls.
 4. Freeze the `.one-demo video` (the window; the phone seeks with it) at
    **3.2 seconds** of team take 11: pause it, set `controls = false`, and set
-   `currentTime = 3.2`. The model list is open with Opus hovered; at 2.8s the
+   `currentTime = 3.2`. Reduced motion leaves the movie unloaded on its still;
+   set `preload = 'auto'` and call `load()` before seeking. The model list is open with Opus hovered; at 2.8s the
    pointer is still on Codex. The menu is open from 0 to 4.22s (the pointer scans
    the list from 1.8s; Opus picked at 4.22s), so check the frame again whenever
    the take changes. Wait until it is paused, not seeking, decode-ready,

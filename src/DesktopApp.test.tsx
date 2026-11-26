@@ -46,7 +46,7 @@ describe('Happy Desktop landing page', () => {
     expect(stars.getAttribute('href')).toBe('https://github.com/slopus/happy')
     expect(stars.querySelector('svg')).toBeTruthy()
     expect(stars.textContent).toBe('24k')
-    expect(stars.getAttribute('aria-label')).toBe('Happy on GitHub, 24,384 stars')
+    expect(stars.getAttribute('aria-label')).toBe('Happy on GitHub, 24,834 stars')
     const lines = [...container.querySelectorAll('.one-hero-copy p')].map((line) => line.textContent!)
     expect(lines.at(-1)).toBe('Free and open source24k')
     expect(lines.length).toBeLessThanOrEqual(2)
@@ -419,7 +419,7 @@ describe('site header', () => {
 
       expect(screen.queryByRole('group', { name: 'Choose a product' })).toBeNull()
       expect(within(navigation).getAllByRole('link').map((link) => link.textContent)).toEqual(['Docs', '24k'])
-      expect(within(navigation).getByRole('link', { name: 'Happy on GitHub, 24,384 stars' })).toBeTruthy()
+      expect(within(navigation).getByRole('link', { name: 'Happy on GitHub, 24,834 stars' })).toBeTruthy()
       expect(within(navigation).getByRole('link', { name: 'Docs' }).getAttribute('href')).toBe('/welcome/')
       unmount()
     }

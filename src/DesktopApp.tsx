@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { GITHUB_HAPPY, GithubMark, SiteFooter, SiteHeader } from './SiteChrome'
 import { HAPPY_DESKTOP, HAPPY_DISCORD } from './products'
 import { HappyOneDemo } from './HappyOneDemo'
-import { GrainGradient } from './GrainGradient'
+import { CARD_SURFACE, GrainGradient, HOME_SURFACE } from './GrainGradient'
 import { HOME_HEADLINE, PALETTE_DEFAULT, homePreview, homeVariantsSearch, homeVariantsSubscribe } from './homeVariants'
 import { homeVariantsDev } from './homeVariantsDev'
 import { AnimatedEmoji, type AnimatedEmojiName } from './AnimatedEmoji'
@@ -260,7 +260,7 @@ export default function DesktopApp() {
   return (
     <div className="site-shell happy-one happy-home" data-palette={palette} data-social-preview={ogPreview ? '' : undefined}
       data-header-shown={headerShown ? '' : undefined}>
-      {!ogPreview && <GrainGradient palette={palette} />}
+      <GrainGradient palette={palette} surface={ogPreview ? CARD_SURFACE : HOME_SURFACE} />
       <SiteHeader product={HAPPY_DESKTOP} />
       <main>
         <section className="one-hero page-width" aria-labelledby="one-heading" data-name={headline.name ? '' : undefined}
