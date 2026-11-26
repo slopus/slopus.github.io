@@ -301,18 +301,19 @@ page's headline is `HOME_HEADLINE` in `src/homeVariants.ts`; `?preview=og` rende
 headline, “Happy” with “One place for you, your team, and your agents.” under it, on the
 card's own Grain Gradient (`CARD_SURFACE` in `src/GrainGradient.tsx`). Every route without its own card (all but
 the desktop docs, whose cards come from `notes/og/cards.py`) uses
-`/og/happy-home-v28.png` as its social image, served with `?v=` and
+`/og/happy-home-v29.png` as its social image, served with `?v=` and
 `SOCIAL_IMAGE_VERSION` from `src/siteMetadata.ts` so link previews refetch;
 `happy-harness-v22`–`v26` and `happy-home-v27` stay for old shares.
 
-The v28 card follows the App Store and Google Play screenshots
+The v29 card follows the App Store and Google Play screenshots
 (`packages/store-assets/` in slopus/happy, “All platforms” last): a bold
 headline, the app window large, the gradient full. On the left, “Happy” in bold,
 its line in semibold on three lines, “Free and open source”, and GitHub stars;
-on the right the team take 11 window, 860px wide and running off the card's
-right edge, frozen at 3.2 seconds with the model list open and Opus hovered. The
-phone is left out. Behind both, the homepage's light palette in `CARD_SURFACE`:
-colour down both sides and in every corner, paler behind the window.
+on the right the team take 11 window, frozen at 3.2 seconds with the model list
+open and Opus hovered, cropped to the left 79% of the recording so the chat's
+empty right is gone, and the phone standing over that cut as in the hero, on the
+same clock. Behind them, the homepage's light palette in `CARD_SURFACE`:
+colour edge to edge, with none of the plain base left between bands, so no pale slivers show.
 
 1. Read the current public `https://api.github.com/repos/slopus/happy` response.
    Update the dated snapshot in `src/happyOneGithubStars.ts` using
@@ -330,9 +331,10 @@ colour down both sides and in every corner, paler behind the window.
    fixed social-card composition in `src/happy-one-preview.css`. Without the
    flag, the extra hero line is not mounted and the normal layout is unchanged.
    The headline is the hero's: “Happy”, then its line on two lines.
-   The copy starts at x=56px in a 300px column; a 36px gap separates it from
-   the 860px window, vertically centred and cut by the card's right edge. Do
-   not stack the demo below the headline in this mode.
+   The copy starts at x=52px in a 250px column, vertically centred; the
+   window (the 880px recording, 695px of it shown) starts at 328,45 and the
+   phone, 244px wide, at 935,120. The tagline must end at least 20px short of
+   the window. Do not stack the demo below the headline in this mode.
    Wait for the self-hosted fonts (`document.fonts.ready`) and the video. When
    fulfilling requests from `dist/` yourself, answer Range requests with 206, or
    the movie is not seekable and stays on frame 0. Do not capture
@@ -340,7 +342,8 @@ colour down both sides and in every corner, paler behind the window.
 4. Freeze the `.one-demo video` (the window; the phone seeks with it) at
    **3.2 seconds** of team take 11: pause it, set `controls = false`, and set
    `currentTime = 3.2`. Reduced motion leaves the movie unloaded on its still;
-   set `preload = 'auto'` and call `load()` before seeking. The model list is open with Opus hovered; at 2.8s the
+   set `preload = 'auto'` and call `load()` before seeking, and seek the phone's
+   movie to the same time the same way. The model list is open with Opus hovered; at 2.8s the
    pointer is still on Codex. The menu is open from 0 to 4.22s (the pointer scans
    the list from 1.8s; Opus picked at 4.22s), so check the frame again whenever
    the take changes. Wait until it is paused, not seeking, decode-ready,

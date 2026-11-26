@@ -1,25 +1,30 @@
 /* Explicit screenshot composition only; the ordinary page is unchanged.
    Regeneration instructions live in docs/happy-one-demo.md.
-   In the store screenshots' style: the bold headline on the Grain Gradient (CARD_SURFACE), and the
-   window large, running off the card's right edge. */
+   In the store screenshots' style: the bold headline on the Grain Gradient (CARD_SURFACE), the
+   window large and cropped to its sidebar, chat and model list, and the phone standing beside
+   it, over the window's right edge, as in the hero. */
 html:has(.happy-one[data-social-preview]) { scrollbar-gutter: auto; overflow: hidden; }
 .happy-one[data-social-preview] { width: 1200px; height: 630px; overflow: clip; }
 .happy-one[data-social-preview] .site-header-wrap,
 .happy-one[data-social-preview] .site-footer,
 .happy-one[data-social-preview] main > :not(.one-hero),
-.happy-one[data-social-preview] .one-download-actions,
-.happy-one[data-social-preview] .one-demo-phone { display: none; }
-.happy-one[data-social-preview] .one-hero { display: flex; align-items: center; gap: 36px; width: 1200px; height: 630px; margin: 0; padding: 0 0 0 56px; text-align: left; }
-.happy-one[data-social-preview] .one-hero-copy { display: flex; flex: 0 0 300px; flex-direction: column; align-items: flex-start; gap: 18px; }
-.happy-one[data-social-preview] .one-hero h1 { font-size: 92px; font-weight: 700; line-height: 1; letter-spacing: -.035em; margin: 0 0 4px; white-space: nowrap; }
+.happy-one[data-social-preview] .one-download-actions { display: none; }
+.happy-one[data-social-preview] .one-hero { position: relative; display: block; width: 1200px; height: 630px; margin: 0; padding: 0; text-align: left; }
+.happy-one[data-social-preview] .one-hero-copy { position: absolute; left: 52px; top: 50%; translate: 0 -50%; display: flex; width: 250px; flex-direction: column; align-items: flex-start; gap: 16px; }
+.happy-one[data-social-preview] .one-hero h1 { font-size: 84px; font-weight: 700; line-height: 1; letter-spacing: -.035em; margin: 0 0 4px; white-space: nowrap; }
 .happy-one[data-social-preview] .one-hero h1 > span,
 .happy-one[data-social-preview] .one-hero h1 > em { display: block; }
 .happy-one[data-social-preview] .one-hero h1 > br { display: none; }
-.happy-one[data-social-preview] .one-hero-tagline { font-size: 30px; font-weight: 600; line-height: 38px; letter-spacing: -.01em; color: var(--home-ink); }
-.happy-one[data-social-preview] .one-hero-note { font-size: 22px; line-height: 28px; color: var(--home-ink-2); }
-.happy-one[data-social-preview] .one-social-stars { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 20px; line-height: 26px; color: var(--home-ink-2); }
-.happy-one[data-social-preview] .one-social-stars svg { width: 20px; height: 20px; }
-.happy-one[data-social-preview] .one-demo { flex: none; width: 860px; margin: 0; }
-.happy-one[data-social-preview] .one-demo-stage { --desktop-width: 100cqw; padding: 0; }
-.happy-one[data-social-preview] .one-demo-window { box-shadow: 0 40px 80px -30px #14112e80, 0 14px 32px -16px #14112e59, 0 0 0 .5px #0000003d; }
+.happy-one[data-social-preview] .one-hero-tagline { font-size: 26px; font-weight: 600; line-height: 33px; letter-spacing: -.01em; color: var(--home-ink); }
+.happy-one[data-social-preview] .one-hero-note { font-size: 19px; line-height: 25px; color: var(--home-ink-2); }
+.happy-one[data-social-preview] .one-social-stars { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 17px; line-height: 22px; color: var(--home-ink-2); }
+.happy-one[data-social-preview] .one-social-stars svg { width: 18px; height: 18px; }
+/* The recording is 880px wide; the window shows its left 79%, so the empty right of the chat
+   is gone and the phone covers the cut. */
+.happy-one[data-social-preview] .one-demo { position: absolute; left: 328px; top: 45px; width: 880px; margin: 0; }
+.happy-one[data-social-preview] .one-demo-stage { --desktop-width: 100cqw; justify-content: flex-start; padding: 0; }
+.happy-one[data-social-preview] .one-demo-window { width: 695px; box-shadow: 0 40px 80px -30px #14112e80, 0 14px 32px -16px #14112e59, 0 0 0 .5px #0000003d; }
+.happy-one[data-social-preview] .one-demo-window > video,
+.happy-one[data-social-preview] .one-demo-still > img { object-position: left top; }
+.happy-one[data-social-preview] .one-demo-phone { left: 607px; top: 75px; bottom: auto; width: 244px; translate: none; transform: none; transition: none; filter: drop-shadow(0 24px 36px #14112e66) drop-shadow(0 6px 10px #14112e33); }
 .happy-one[data-social-preview] .one-demo video { pointer-events: none; }
