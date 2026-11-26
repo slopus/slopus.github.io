@@ -40,9 +40,10 @@ const FRAME = '/video/happy-one/device/iphone-16-pro-black'
  * rests, and play over them from the same frame. A
  * phone movie on the same clock follows its play, pause, seek, and rate. The phone comes forward
  * for its part of the story, and drifts in as the page scrolls. `reach` is the line above the
- * demo the phone may grow up to when it comes forward on a phone.
+ * demo the phone may grow up to when it comes forward on a phone. The link-preview card asks for
+ * `picker`: the window's model list again, moved left over the empty chat (happy-one-preview.css).
  */
-export function HappyOneDemo({ reach }: { reach?: RefObject<HTMLElement | null> } = {}) {
+export function HappyOneDemo({ reach, picker = false }: { reach?: RefObject<HTMLElement | null>, picker?: boolean } = {}) {
   const take = DEMO_TAKE
   const figure = useRef<HTMLElement>(null)
   const stage = useRef<HTMLDivElement>(null)
@@ -281,6 +282,9 @@ export function HappyOneDemo({ reach }: { reach?: RefObject<HTMLElement | null> 
             {...videoProps} loop playsInline preload="none" aria-label={take.label}>
             <Sources movie={mac} />
           </video>
+          {picker && <span className="one-social-picker" aria-hidden="true">
+            <video width={mac.width} height={mac.height} muted playsInline preload="auto" tabIndex={-1}><Sources movie={mac} /></video>
+          </span>}
         </div>
         {/* The take's label describes both screens. */}
         <div ref={device} className="one-demo-phone" aria-hidden="true">

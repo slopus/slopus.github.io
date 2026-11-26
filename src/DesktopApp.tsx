@@ -287,7 +287,7 @@ export default function DesktopApp() {
                 <GithubMark /><span>GitHub · {HAPPY_ONE_GITHUB_STARS.compact} stars</span>
               </a>}
             </div>
-            <HappyOneDemo reach={note} />
+            <HappyOneDemo reach={note} picker={ogPreview} />
           </div>
           <DownloadOptions id="download" macArchitecture={macArchitecture} onMacArchitectureChange={setMacArchitecture} analyticsLocation="hero" />
           <FirstScreenDownloads id="download" />

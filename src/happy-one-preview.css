@@ -28,3 +28,14 @@ html:has(.happy-one[data-social-preview]) { scrollbar-gutter: auto; overflow: hi
 .happy-one[data-social-preview] .one-demo-still > img { object-position: left top; }
 .happy-one[data-social-preview] .one-demo-phone { left: 607px; top: 75px; bottom: auto; width: 244px; translate: none; transform: none; transition: none; filter: drop-shadow(0 24px 36px #14112e66) drop-shadow(0 6px 10px #14112e33); }
 .happy-one[data-social-preview] .one-demo video { pointer-events: none; }
+/* The model list is the card's subject, but the recording has it at the chat's right edge, under
+   the phone. The same movie, clipped to the list (498–665.5 × 141–469.5 of the 880px recording),
+   draws it again 80px to the left over the empty chat. Under it, the chat's own colour covers
+   where it was and the empty state's line and name field beside it, and the composer's colour
+   its top, up to the phone. The capture seeks this movie with the others. */
+.happy-one[data-social-preview] .one-social-picker { position: absolute; inset: 0; }
+.happy-one[data-social-preview] .one-social-picker::before,
+.happy-one[data-social-preview] .one-social-picker::after { content: ''; position: absolute; }
+.happy-one[data-social-preview] .one-social-picker::before { left: 395px; top: 140px; width: 226px; height: 284px; background: #212121; }
+.happy-one[data-social-preview] .one-social-picker::after { left: 497px; top: 424px; width: 124px; height: 48px; background: #303030; }
+.happy-one[data-social-preview] .one-social-picker > video { position: absolute; left: -80px; top: 0; width: 880px; height: 544px; z-index: 1; object-fit: fill; clip-path: inset(140.5px 214.5px 74.5px 498px round 10px); pointer-events: none; }

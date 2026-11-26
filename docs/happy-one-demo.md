@@ -312,7 +312,10 @@ its line in semibold on three lines, “Free and open source”, and GitHub star
 on the right the team take 11 window, frozen at 3.2 seconds with the model list
 open and Opus hovered, cropped to the left 79% of the recording so the chat's
 empty right is gone, and the phone standing over that cut as in the hero, on the
-same clock. Behind them, the homepage's light palette in `CARD_SURFACE`:
+same clock. The model list, the card's subject, sits in the recording at the
+chat's right edge under the phone; the explicit `picker` mode of `HappyOneDemo`
+draws it again 80px to the left from a third copy of the window's movie, clipped
+to the list, over the chat's own colour (`.one-social-picker`). Behind them, the homepage's light palette in `CARD_SURFACE`:
 colour edge to edge, with none of the plain base left between bands, so no pale slivers show.
 
 1. Read the current public `https://api.github.com/repos/slopus/happy` response.
@@ -343,7 +346,9 @@ colour edge to edge, with none of the plain base left between bands, so no pale 
    **3.2 seconds** of team take 11: pause it, set `controls = false`, and set
    `currentTime = 3.2`. Reduced motion leaves the movie unloaded on its still;
    set `preload = 'auto'` and call `load()` before seeking, and seek the phone's
-   movie to the same time the same way. The model list is open with Opus hovered; at 2.8s the
+   movie and the `.one-social-picker video` to the same time the same way. Zoom
+   in on the list's edges at 2×: no letters or field edges of the chat may show
+   beside it. The model list is open with Opus hovered; at 2.8s the
    pointer is still on Codex. The menu is open from 0 to 4.22s (the pointer scans
    the list from 1.8s; Opus picked at 4.22s), so check the frame again whenever
    the take changes. Wait until it is paused, not seeking, decode-ready,
