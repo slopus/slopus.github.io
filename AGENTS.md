@@ -272,7 +272,11 @@ so jitter never replays it. The pointer moving onto the drawing, or a tap on it,
 restarts it from the first frame every time; the words beside it do nothing.
 The F1 car is the exception: it loops on its own while it is on screen. The
 drawing, not its box, meets the edge and takes the hover: `AnimatedEmoji.tsx` records
-each emoji's four empty margins at rest, so measure them again when an emoji changes. Twitter means the founders' accounts (`STEVE`,
+each emoji's four empty margins at rest, so measure them again when an emoji changes. The
+canvases are served at 0×0 and get their size from CSS; dotLottie sizes the drawing when it
+starts. Don't give them `width`/`height`: Safari's Reader takes a 2D context on any sized canvas
+in the article to see if it is blank, and a canvas with a context can never go to the worker, so
+its emoji stayed blank for the visit. Twitter means the founders' accounts (`STEVE`,
 `KIRILL` in `src/Team.tsx`); we have no company account. The Discord invite is
 `HAPPY_DISCORD` in `src/products.ts`.
 

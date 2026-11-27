@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest
 import DesktopApp from './DesktopApp'
 import { HOME_HEADLINE } from './homeVariants'
 import { HERO_DEFAULT } from './homeVariantsDev'
+import { renderPath } from './prerender'
 import { Router } from './Router'
 
 /** The headline as it reads: its lines joined, without the accent marks. */
@@ -165,6 +166,15 @@ describe('Happy Desktop landing page', () => {
     // A zig-zag: the emoji starts on the left, then trades sides.
     expect(sections.map((section) => section.getAttribute('data-side'))).toEqual(['start', 'end', 'start', 'end', 'start', 'end', 'start', 'end'])
     for (const section of sections) expect(section.querySelector(':scope > canvas.one-emoji')).toBeTruthy()
+  })
+
+  it('serves the emoji canvases at zero size, so Safari Reader never takes a 2D context on one', () => {
+    const container = document.createElement('div')
+    container.innerHTML = renderPath('/')
+    const canvases = [...container.querySelectorAll('canvas.one-emoji')]
+
+    expect(canvases).toHaveLength(8)
+    for (const canvas of canvases) expect([canvas.getAttribute('width'), canvas.getAttribute('height')]).toEqual(['0', '0'])
   })
 
   it('stands on one gradient surface, with no panels', () => {
