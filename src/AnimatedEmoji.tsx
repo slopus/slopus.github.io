@@ -191,6 +191,8 @@ export function AnimatedEmoji({ name, section }: { name: AnimatedEmojiName; sect
   }, [name, section])
 
   const { left, right } = SOURCES[name]
-  return <canvas ref={canvas} className="one-emoji" width="256" height="256" aria-hidden="true"
+  // Zero-size until dotLottie sizes it from its box: Safari's Reader takes a 2D context on any
+  // sized canvas in the article to check if it is blank, and then the canvas cannot go to the worker.
+  return <canvas ref={canvas} className="one-emoji" width="0" height="0" aria-hidden="true"
     style={{ '--emoji-left': left, '--emoji-right': right } as CSSProperties} />
 }
