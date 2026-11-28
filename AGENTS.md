@@ -228,6 +228,11 @@ whole gradient on windows from about 1500px wide), and Safari's memory grew with
 it reported "out of memory": five contexts added 619MB in Safari and 332MB in Chrome at
 1512×859 on a 2x screen, one adds 379MB and 291MB, and 681MB and 610MB at 3008×1692.
 Reduced motion switched on after the load pauses the drawing.
+No check before the first paint knows how fast the GPU is, so the worker times its second
+frame, reading a pixel back to wait for it (Chromium's `finish()` only flushes): a GPU that
+needs longer than the 100ms between frames never moves the gradient, and the frame it drew
+stays. Without that, frames it cannot finish queue ahead of the page's own: a software
+renderer given 7.7 MP ten times a second left the page 18 frames in five seconds.
 It is one way: if the worker gets no context on a GPU, the shader does not compile, the
 context is lost or a draw throws, the worker stops, the canvases go, the attribute is
 removed and CSS shows the still. Nothing starts the shader again; a reload starts over.

@@ -5,7 +5,8 @@ import { grainProgram, type GrainFrame, type GrainPalette, type Rect } from './g
  * four to a worker and loses the oldest, and Safari's memory grows with each. The page
  * (grainGradientRenderer.ts) sends the scene; this draws each piece that is near the screen, ten
  * times a second while the scene moves and once when it does not, and hands each back as a
- * bitmap. Only on a GPU: where WebGL would fall back to software, the shader does not compile,
+ * bitmap. A GPU that takes longer than that over a frame never moves it: the frame stays, and
+ * frames it cannot finish do not pile up ahead of the page's own. Only on a GPU: where WebGL would fall back to software, the shader does not compile,
  * the context is lost or a draw throws, it says `lost`, and the page falls back to its still.
  */
 
@@ -36,6 +37,9 @@ let scene: Scene | undefined
 /** Seconds of motion so far: it advances only while something is drawn. */
 let time = 0
 let timer: ReturnType<typeof setTimeout> | undefined
+/** Frames drawn. The second is timed, the first having built the pipeline; too `slow`, and nothing moves. */
+let frames = 0
+let slow = false
 
 function lost() {
   scene = undefined
@@ -49,7 +53,9 @@ function tick() {
   if (!gl || !grain) return lost()
   const { id, palette, moving, pieces, ...page } = scene
   if (!pieces.some(piece => piece.near)) return
-  if (moving) timer = setTimeout(tick, INTERVAL)
+  if (moving && !slow) timer = setTimeout(tick, INTERVAL)
+  const timed = ++frames === 2
+  const started = performance.now()
   try {
     if (!grain.palette(palette)) return lost()
     for (const [index, { rect, near }] of pieces.entries()) {
@@ -57,6 +63,9 @@ function tick() {
       grain.draw({ ...page, piece: rect, time })
       // A lost context draws nothing, and says so only when asked.
       if (gl.isContextLost()) return lost()
+      // Reading a pixel waits for the GPU, for the first frame too, so the second is timed alone;
+      // Chromium's finish() only flushes.
+      if (frames <= 2) gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4))
       const bitmap = canvas.transferToImageBitmap()
       scope.postMessage({ type: 'frame', id, index, bitmap }, [bitmap])
     }
@@ -64,6 +73,11 @@ function tick() {
     return lost()
   }
   time += GRAIN_SPEED * INTERVAL / 1000
+  if (timed && performance.now() - started > INTERVAL) {
+    slow = true
+    clearTimeout(timer)
+    timer = undefined
+  }
 }
 
 scope.addEventListener('message', ({ data }) => {
