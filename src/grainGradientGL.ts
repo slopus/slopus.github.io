@@ -22,10 +22,8 @@ export type SurfaceShape = {
 /** A rectangle of the page: x and y from its top left. */
 export type Rect = { x: number; y: number; width: number; height: number }
 
-/** Rows that move, in CSS px: fully in the first `top` and last `bottom`, fading out over the `fade`s after them. */
+/** Rows with colour, in CSS px: whole in the first `top` and last `bottom`, fading out over the `fade`s after them. */
 export type Zone = readonly [top: number, topFade: number, bottom: number, bottomFade: number]
-/** No row moves. */
-export const STILL_ZONE: Zone = [-1, 1, -1, 1]
 
 /** Everything one piece of the page needs, besides the palette. */
 export type GrainFrame = {
@@ -34,12 +32,11 @@ export type GrainFrame = {
   shape: SurfaceShape
   /** Device px per CSS px. */
   ratio: number
-  /** The page's width in device px and height in CSS px. */
+  /** The page's size in CSS px. */
   width: number
   height: number
-  /** The still's moment, and how many seconds the moving rows are past it. */
-  still: number
-  elapsed: number
+  /** Seconds past the frame the page opens on, the same on every row. */
+  time: number
   zone: Zone
 }
 
@@ -58,38 +55,24 @@ function compile(gl: WebGLRenderingContext, type: number, source: string) {
 
 /**
  * The Grain Gradient's program in `gl`, whose canvas each draw sizes to its piece. Undefined if
- * it does not compile. The worker (grainGradientWorker.ts) and the main thread's fallback
- * (grainGradientRenderer.ts) both draw with it, so their pixels are the same.
+ * it does not compile.
  */
 export function grainProgram(gl: WebGLRenderingContext, canvas: { width: number; height: number }) {
   const vertex = compile(gl, gl.VERTEX_SHADER, vertexSource)
   const fragment = compile(gl, gl.FRAGMENT_SHADER, grainGradientFragmentShader)
   const program = gl.createProgram()
   const buffer = gl.createBuffer()
-  const release = () => {
-    if (vertex !== null) gl.deleteShader(vertex)
-    if (fragment !== null) gl.deleteShader(fragment)
-    if (program !== null) gl.deleteProgram(program)
-    if (buffer !== null) gl.deleteBuffer(buffer)
-  }
-  if (vertex === null || fragment === null || program === null || buffer === null) {
-    release()
-    return undefined
-  }
+  if (vertex === null || fragment === null || program === null || buffer === null) return undefined
   gl.attachShader(program, vertex)
   gl.attachShader(program, fragment)
   gl.linkProgram(program)
   const position = gl.getProgramParameter(program, gl.LINK_STATUS) ? gl.getAttribLocation(program, 'a_position') : -1
-  if (position < 0) {
-    release()
-    return undefined
-  }
+  if (position < 0) return undefined
   const at = (name: string) => gl.getUniformLocation(program, name)
   const resolution = at('u_resolution')
   const origin = at('u_origin')
   const scale = at('u_ratio')
   const time = at('u_time')
-  const elapsed = at('u_elapsed')
   const zone = at('u_zone')
   const pageWidth = at('u_width')
   const pageHeight = at('u_height')
@@ -114,7 +97,7 @@ export function grainProgram(gl: WebGLRenderingContext, canvas: { width: number;
       })
       return true
     },
-    draw({ piece, shape: current, ratio, width, height, still, elapsed: seconds, zone: rows }: GrainFrame) {
+    draw({ piece, shape: current, ratio, width, height, time: seconds, zone: rows }: GrainFrame) {
       if (canvas.width !== piece.width || canvas.height !== piece.height) {
         canvas.width = piece.width
         canvas.height = piece.height
@@ -123,10 +106,9 @@ export function grainProgram(gl: WebGLRenderingContext, canvas: { width: number;
       gl.uniform2f(resolution, piece.width, piece.height)
       gl.uniform2f(origin, piece.x, piece.y)
       gl.uniform1f(scale, ratio)
-      gl.uniform1f(time, still)
-      gl.uniform1f(elapsed, seconds)
+      gl.uniform1f(time, seconds)
       gl.uniform4f(zone, ...rows)
-      gl.uniform1f(pageWidth, width / ratio)
+      gl.uniform1f(pageWidth, width)
       gl.uniform1f(pageHeight, height)
       gl.uniform4f(sides, ...current.sides)
       gl.uniform4f(ends, ...current.ends)
@@ -134,8 +116,5 @@ export function grainProgram(gl: WebGLRenderingContext, canvas: { width: number;
       gl.uniform2f(shape, current.calm, current.wavelength)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
     },
-    release,
   }
 }
-
-export type GrainProgram = NonNullable<ReturnType<typeof grainProgram>>

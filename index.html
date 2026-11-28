@@ -79,6 +79,25 @@
         else if (/Linux/i.test(navigator.userAgent) && !/Macintosh|Mac OS X/i.test(navigator.userAgent)) document.documentElement.dataset.desktopPlatform = 'linux'
       }
     </script>
+    <script>
+      // The Grain Gradient, chosen before the first paint and kept for the visit: the shader
+      // (src/grainGradientRenderer.ts) wider than a phone, on hardware likely to draw it well;
+      // otherwise the recorded still (src/grain-gradient.css). The two numbers are estimates.
+      // Only Chromium reports memory: 2, 4, 8, 16 or 32 since Chrome 147 and at most 8 before,
+      // so an older one keeps the still. Safari and Firefox pass on cores and the probe alone.
+      {
+        const CORES = 4, MEMORY_GB = 16
+        const likely = !matchMedia('(max-width: 699.98px), (prefers-reduced-motion: reduce)').matches && window.Worker && window.OffscreenCanvas
+          && navigator.hardwareConcurrency >= CORES && !(navigator.deviceMemory < MEMORY_GB)
+        // The probe: WebGL on a GPU, its context given back at once.
+        const gl = likely && document.createElement('canvas').getContext('webgl', { failIfMajorPerformanceCaveat: true })
+        if (gl) {
+          const lose = gl.getExtension('WEBGL_lose_context')
+          if (lose) lose.loseContext()
+          document.documentElement.dataset.grain = 'shader'
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="app"></div>

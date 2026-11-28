@@ -27,14 +27,14 @@
  * one surface runs the length of the page, its colour in slow swells along the
  * sides and, by surface, the top and bottom and blobs in the corners, with a
  * plain column down the middle; each half has noise of its own, blended across
- * the middle. The page shows one moment of it, `u_time`, drawn a piece at a time:
- * `u_origin` is the piece's top left in the page in device px, `u_ratio` device
- * pixels per CSS pixel, `u_width` and `u_height` the page's size in CSS px, and
- * the rest the surface (SurfaceShape in grainGradientRenderer.ts). Near the
- * page's ends it moves on by `u_elapsed` seconds: all the way in the first and
- * last `u_zone.x` and `u_zone.z` px, and not at all past a further `u_zone.y`
- * and `u_zone.w`, so the moving rows meet the still ones without a seam. With
- * `u_elapsed` 0 every row is the still.
+ * the middle. It is drawn a piece at a time: `u_origin` is the piece's top left
+ * in the page in device px, `u_ratio` device pixels per CSS pixel, `u_width` and
+ * `u_height` the page's size in CSS px, and the rest the surface (SurfaceShape
+ * in grainGradientGL.ts). `u_time` is the moment, in seconds past the frame
+ * the page opens on, the same on every row: a time that changed down the page
+ * tore the swells into spikes. The colour is whole in the first `u_zone.x` and
+ * last `u_zone.z` px of the page and fades out over a further `u_zone.y` and
+ * `u_zone.w`: the middle of the page is the base colour.
  */
 export const grainGradientFragmentShader = `
 precision highp float;
@@ -42,7 +42,6 @@ uniform vec2 u_resolution;
 uniform vec2 u_origin;
 uniform float u_ratio;
 uniform float u_time;
-uniform float u_elapsed;
 uniform vec4 u_zone;
 uniform float u_width;
 uniform float u_height;
@@ -158,8 +157,8 @@ void main() {
   // The page in device px, x from its left edge and y down from its top; and in CSS px.
   vec2 page = vec2(u_origin.x + gl_FragCoord.x, u_origin.y + u_resolution.y - gl_FragCoord.y);
   vec2 css = page / u_ratio;
-  float moving = max(1. - smoothstep(u_zone.x, u_zone.x + u_zone.y, css.y), smoothstep(u_height - u_zone.z - u_zone.w, u_height - u_zone.z, css.y));
-  float t = .1 * (u_time + moving * u_elapsed + 7.);
+  float fade = max(1. - smoothstep(u_zone.x, u_zone.x + u_zone.y, css.y), smoothstep(u_height - u_zone.z - u_zone.w, u_height - u_zone.z, css.y));
+  float t = .1 * (u_time + 7.);
   float width = u_width;
   // 0 on the left half and 1 on the right, each half with noise of its own. Across the middle
   // the two are blended, so where colour crosses it (a corner patch on a narrow page) they never
@@ -190,6 +189,7 @@ void main() {
   colour = max(colour, blob(css, vec2(0., u_height), u_corners.z, t, 33.));
   colour = max(colour, blob(css, vec2(width, u_height), u_corners.w, t, 49.));
 
+  colour *= fade;
   // Everywhere else, the plain base colour.
   if (colour.y <= 0.) {
     gl_FragColor = vec4(u_colorBack, 1.);

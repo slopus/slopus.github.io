@@ -33,7 +33,8 @@ function load(key: string) {
         disable_session_recording: true,
         disable_surveys: true,
       })
-      posthog.register({ site: 'happy.engineering' })
+      // Which Grain Gradient the visit has: `shader`, or the still.
+      posthog.register({ site: 'happy.engineering', grain: document.documentElement.dataset.grain ?? 'still' })
       return posthog
     },
     (error: unknown) => {

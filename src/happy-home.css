@@ -44,23 +44,9 @@
 /* Room after the footer for the colour in the bottom left corner (HOME_SURFACE). */
 .happy-home:not([data-social-preview]) { padding-bottom: 120px; }
 
-/* The surface, as tall as the page; GrainGradient draws canvases into it where the colour can be,
-   and they fade in over the plain base. Without scripts the colour stands where HOME_SURFACE
-   puts it in plain CSS: the sides, the top right, and the bottom left. Phones show their
-   recorded corners instead (grain-gradient.css), with or without scripts. */
+/* The surface, as tall as the page: its recorded corners, and the shader's strips over them
+   (grain-gradient.css). */
 .home-grain {
-  --home-edge: max(24px, (100% - 960px) * .4);
-  --home-patch: color-mix(in srgb, var(--grain-0) 55%, var(--grain-back));
-  --home-stand-in:
-    radial-gradient(circle 580px at 100% 0, var(--grain-3), var(--home-patch) 45%, transparent),
-    radial-gradient(circle 500px at 0 100%, var(--grain-3), var(--home-patch) 45%, transparent),
-    linear-gradient(90deg,
-      var(--grain-3),
-      var(--home-patch) var(--home-edge),
-      var(--grain-back) calc(2 * var(--home-edge)),
-      var(--grain-back) calc(100% - 2 * var(--home-edge)),
-      var(--home-patch) calc(100% - var(--home-edge)),
-      var(--grain-3));
   position: absolute;
   z-index: -1;
   inset: 0;
@@ -69,11 +55,6 @@
   pointer-events: none;
   background: var(--grain-back);
 }
-@media (scripting: none) {
-  .home-grain::before { content: ''; position: absolute; inset: 0; background: var(--home-stand-in); }
-}
-.home-grain > canvas { position: absolute; display: block; opacity: 0; transition: opacity .6s ease; }
-.home-grain[data-painted] > canvas { opacity: 1; }
 
 /* The header lets the surface through; once the page scrolls under it, it frosts. It stays out of
    sight until the hero's name has scrolled up past it (data-header-shown, DesktopApp), then shows
@@ -205,5 +186,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-grain > canvas, .one-value > .one-emoji, .one-talk-links a { transition: none; }
+  .one-value > .one-emoji, .one-talk-links a { transition: none; }
 }

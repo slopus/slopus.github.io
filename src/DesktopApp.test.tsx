@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import DesktopApp from './DesktopApp'
@@ -228,15 +228,44 @@ describe('Happy Desktop landing page', () => {
     expect(phone).toEqual({ topRight: expect.any(Number), bottomLeft: expect.any(Number) })
   })
 
-  it('moves the gradient only near the page\'s ends, off the main thread, its two halves blended across the middle', async () => {
-    const { grainGradientFragmentShader } = await import('./grainGradientShader')
-    // The main thread draws on a resize or new scheme, never on a clock; the worker moves the ends.
+  it('chooses the shader or the still before the first paint, and never shows both', async () => {
+    const { container } = render(<DesktopApp />)
+    const corners = [...container.querySelectorAll<HTMLElement>('.home-grain > .grain-corner')]
+    const css = readFileSync('src/grain-gradient.css', 'utf8')
+    const head = readFileSync('index.html', 'utf8')
+
+    // The head decides, before the stylesheet: only on a GPU, and never with reduced motion.
+    expect(head).toMatch(/failIfMajorPerformanceCaveat: true[\s\S]*dataset\.grain = 'shader'[\s\S]*<\/head>/)
+    expect(head).toMatch(/\(max-width: 699\.98px\), \(prefers-reduced-motion: reduce\)/)
+    // The still: each corner a square of 1.8 of the shader's own radii, its recording a
+    // background the shader's pages never fetch.
+    expect(corners.map((corner) => [corner.dataset.corner, corner.style.getPropertyValue('--wide')])).toEqual([['top-right', '1044px'], ['bottom-left', '900px']])
+    const stills = [...css.matchAll(/html:not\(\[data-grain\]\) [^{]+\{ background-image: image-set\(url\((\S+)\) 1x, url\((\S+)\) 2x\); \}/g)]
+    expect(stills).toHaveLength(4)
+    for (const [, one, two] of stills) for (const file of [one, two]) expect(existsSync(`public${file}`), file).toBe(true)
+    expect(css.match(/url\(/g)).toHaveLength(8)
+    // No stand-in drawn in CSS: the still is the shader's own frame, with or without scripts.
+    expect(readFileSync('src/happy-home.css', 'utf8') + readFileSync('src/site-theme.css', 'utf8')).not.toMatch(/scripting: none|stand-in/)
+    // The worker starts only where the head chose the shader, and nothing starts another.
     const renderer = readFileSync('src/grainGradientRenderer.ts', 'utf8')
-    expect(renderer).not.toMatch(/requestAnimationFrame|setInterval/)
-    // Only on a GPU: software WebGL would spend seconds of CPU on it.
-    expect(readFileSync('src/grainGradientWorker.ts', 'utf8')).toMatch(/failIfMajorPerformanceCaveat: true/)
-    // With no time elapsed, every row is the still.
-    expect(grainGradientFragmentShader).toMatch(/float t = \.1 \* \(u_time \+ moving \* u_elapsed \+ 7\.\);/)
+    expect(renderer).toMatch(/dataset\.grain === 'shader'\s+\? new Worker\(/)
+    expect(renderer.match(/new Worker\(/g)).toHaveLength(1)
+    expect(renderer).toMatch(/delete document\.documentElement\.dataset\.grain/)
+  })
+
+  it('draws the shader near the page\'s ends, in one context off the main thread, its two halves blended across the middle', async () => {
+    const { grainGradientFragmentShader } = await import('./grainGradientShader')
+    const renderer = readFileSync('src/grainGradientRenderer.ts', 'utf8')
+    const worker = readFileSync('src/grainGradientWorker.ts', 'utf8')
+    // The main thread shows the worker's frames: it has no clock and no WebGL of its own.
+    expect(renderer).not.toMatch(/requestAnimationFrame|setInterval|'webgl'|transferControlToOffscreen/)
+    // Only on a GPU: software WebGL would spend seconds of CPU on it. And one context for the
+    // visit: Chromium loses a worker's oldest once it has more than four.
+    expect(worker).toMatch(/failIfMajorPerformanceCaveat: true/)
+    expect(worker.match(/getContext\(/g)).toHaveLength(1)
+    // The time is the same on every row, so no swell tears; the colour fades out instead.
+    expect(grainGradientFragmentShader).toMatch(/float t = \.1 \* \(u_time \+ 7\.\);/)
+    expect(grainGradientFragmentShader).toMatch(/colour \*= fade;/)
     // Drawn into canvases that scroll with the page: nothing listens to the scroll.
     expect(renderer).not.toMatch(/'scroll'/)
     // A hard switch between the halves' noise drew a vertical line wherever colour crossed the middle.

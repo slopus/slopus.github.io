@@ -160,56 +160,80 @@ native start-screen palette light or dark with the system, IBM Plex Sans, and
 Bricolage Grotesque for the wordmark (`src/happy-home.css`, scoped to `.happy-home`;
 its palette is shared with the other pages, below).
 
-The gradient is the page's one surface, top to bottom, scrolling with the content:
-never fixed, never boxed into panels, with no plain page background between grain
-areas. Its noise and grain are the apps'; only `main()` differs, working in page
-space (`HOME_SURFACE` in `src/GrainGradient.tsx`): a few big, slow swells along the
-left and right edges, a large patch in the top right corner, and one in the bottom
-left at the page's end, which may run under the footer's text, with a plain column
-down the middle in the palette's base colour. No band along the top, and nothing
-choppy: no thin jagged edges or quick wobble. On phones the colour stays out of the
-content: the top right corner and the bottom left at the footer. It never wraps
+The gradient is the page's one surface, scrolling with the content: never fixed, never
+boxed into panels. Its noise and grain are the apps'; only `main()` differs, working in
+page space (`HOME_SURFACE` in `src/GrainGradient.tsx`): a few big, slow swells along the
+left and right edges, a large patch in the top right corner, and one in the bottom left
+at the page's end, which may run under the footer's text, with a plain column down the
+middle in the palette's base colour. The colour belongs to the page's two ends: whole in
+the first and last screen, it fades out over half a screen more (`u_zone`), and the middle
+of the page is the plain base colour, with no canvas. The fade is of the colour, never of
+time: `u_time` is the same on every row, because a time that changed down the fade tore
+the swells into jagged spikes the longer the page stayed open. No band along the top, and
+nothing choppy: no thin jagged edges or quick wobble. On phones the colour stays out of
+the content: the top right corner and the bottom left at the footer. It never wraps
 around content blocks; Kirill found that claustrophobic. The page bounces as usual: turning
 the rubber band off (`overscroll-behavior-y: none`) also turned off pull-to-refresh on the
-iPhone, so the phones' corners fade out just before the page's ends instead. Text, emoji, video, and
-buttons sit directly on it, and the header is transparent until the page scrolls,
-then frosted. The field opens on the apps' field at one moment (`GRAIN_STILL`) and,
-near the page's ends, moves on slowly at the apps' speed: fully in the first and last
-screen, fading to the still over half a screen more, so the moving rows meet the still
-ones without a seam (`u_zone` and `u_elapsed` in the shader; with nothing elapsed every
-row is the still). Kirill wants it to move on phones and desktops alike. Reduced motion
-keeps the still. Phones (narrower than 700px, `PHONE`) don't run the shader: their corners
-are the shader recorded (`GrainCorner` in `src/GrainGradient.tsx`; the homepage's top right
-and bottom left, the other pages' top right, smaller), a looping H.264 movie over an AVIF of
-its own frame 0 that the page's markup carries, so the first paint already shows them; the
-movie plays over it once the page has loaded and the corner is near the screen, never on
-reduced motion, Save-Data or 2G. Everything on the page beside the layer isolates, so it
-paints over a playing corner: iOS Safari drew it above the hero's text and the docs
-breadcrumb otherwise. The corners fade before the page's top and end, so Safari's app banner
-above the page, or a rubber band past it, shows no cut.
-`notes/grain/render-corners.mjs` renders them from the shader; run it again when the shader
-or the palette changes. Wider screens draw the shader:
-`src/grainGradientRenderer.ts` draws it in page space, into canvases
-only where the shader can put colour (bounds from the shader's own reach), with the
-plain base colour between them, and draws the still again only on a resize or a new
-scheme: scrolling never draws or moves anything, so it stays on the compositor. A worker
-(`src/grainGradientWorker.ts`) does all the drawing, off the main thread, and redraws
-the moving canvases only while they are in view, at 30 fps. The moving canvases are made
-once and kept, each repaint moving and resizing them: a new context for every repaint, left
-for collection, ran Safari out of GPU memory after a few resizes of a window and it killed
-the page, and releasing them lost the worker's other context. Nothing restarts a lost
-context; a reload starts over. It draws only on a GPU (`failIfMajorPerformanceCaveat`):
-software WebGL took 1.1s of main thread for the still alone, so without a GPU the layer
-stays the plain base colour. There is no CSS stand-in except without scripts: a stand-in of
-another shape was visibly swapped, and its gradients cost a software rasterizer a tenth of a
-second a tile. The canvas that used to follow the viewport redrew 9.7 MP (12.6ms of
-GPU on an M4 Pro) every 240px of scroll. The pieces match one whole-page draw pixel for
-pixel; check that again when the shapes, the shader's reach or the moving rows change. Each half of the page has
-noise of its own, blended across the middle, so where a corner patch crosses the
-middle the halves never meet in a line. Baked images were weighed and rejected: the
-grain is one device pixel and the wide shapes follow the page's width and height, so an
-image would be resampled at every other width and pixel ratio; a phone's corners are
-squares of their own, so there a recording is the same at every width. The frosted header
+iPhone, so the phones' corners fade out just before the page's ends instead. Text, emoji,
+video, and buttons sit directly on it, and the header is transparent until the page
+scrolls, then frosted. Kirill wants it to move on phones and desktops alike, slowly: a
+fifth of the apps' speed (`GRAIN_SPEED`), ten frames a second.
+
+Something is always drawn. Phones (narrower than 700px, `PHONE`) don't run the shader:
+their corners are the shader recorded (`GrainCorner` in `src/GrainGradient.tsx`; the
+homepage's top right and bottom left, the other pages' top right, smaller), a looping H.264
+movie over an AVIF of its own frame 0 that the page's markup carries, so the first paint
+already shows them; the movie plays over it once the page has loaded and the corner is near
+the screen, never on reduced motion, Save-Data or 2G. Everything on the page beside the
+layer isolates, so it paints over a playing corner: iOS Safari drew it above the hero's
+text and the docs breadcrumb otherwise. The corners fade before the page's top and end, so
+Safari's app banner above the page, or a rubber band past it, shows no cut.
+
+Wider than a phone the gradient is the shader or its still, never both, and which is
+decided before the first paint and kept until a reload. An inline script in the head of
+`index.html`, ahead of the stylesheet, sets `data-grain="shader"` on `<html>` when the
+window is 700px or wider, motion is not reduced, `Worker` and `OffscreenCanvas` exist, the
+machine has at least `CORES` (4) cores and, where the browser says, `MEMORY_GB` (16) of
+memory, both estimates in that script, and a probe gets WebGL on a GPU
+(`failIfMajorPerformanceCaveat`), which it gives back at once. Only Chromium reports memory:
+2, 4, 8, 16 or 32 since Chrome 147 and at most 8 before, so an older one keeps the still
+(about 2% of the site's Chrome and Edge desktop sessions when this was set); Safari and
+Firefox pass on cores and the probe alone, and Safari reports at most 8 cores. The probe
+took 0-3ms in Safari and 4-7ms in Chrome on an M4 Pro, 20-30ms in the first page of a cold
+Chrome. Without the attribute, and so without scripts, the still shows:
+the corners recorded at frame 0 of the same shader, AVIF for 1x and 2x screens, as CSS
+backgrounds on `.grain-corner` (`src/grain-gradient.css`), so the first paint has them and a
+page with the attribute never fetches them. The still has the corners and no side swells,
+and the other pages use the homepage's top right, smaller. There is no stand-in drawn in
+CSS: one of another shape was visibly swapped, and its gradients cost a software rasterizer
+a tenth of a second a tile. With the attribute the layer starts as the plain base colour and
+the shader's canvases fade in over it; the two never cross-fade, since a recording cannot
+match the live field pixel for pixel. A page that loaded narrow and was widened stays on
+the still. `notes/grain/render-corners.mjs` renders every recording from the shader; run it
+again when the shader or the palette changes.
+
+`src/grainGradientRenderer.ts` places the shader in page space: each end of the page is one
+strip, a screen and a half tall, across where the shader can put colour (the homepage's
+full width; the other pages' corner). On a page shorter than three screens the two are half
+the page each and meet, so still only the end near the screen is drawn; a layer no taller
+than a screen and a half (the other pages' corner) is one strip. A strip
+is cut into equal pieces of at most 4096 device px a side, each a plain canvas showing a
+bitmap, so big displays get the full pixel ratio (`min(2, max(1, devicePixelRatio))`) and
+scrolling never draws or moves anything: it stays on the compositor. One worker
+(`src/grainGradientWorker.ts`), started only with the attribute, draws every piece in the
+visit's one WebGL context, off the main thread, and only the pieces near the screen while
+the tab is in view; the pieces are one size so its canvas is never resized between them.
+One context, because Chromium keeps four to a worker and loses the oldest (five lost the
+whole gradient on windows from about 1500px wide), and Safari's memory grew with each until
+it reported "out of memory": five contexts added 619MB in Safari and 332MB in Chrome at
+1512×859 on a 2x screen, one adds 379MB and 291MB, and 681MB and 610MB at 3008×1692.
+Reduced motion switched on after the load pauses the drawing.
+It is one way: if the worker gets no context on a GPU, the shader does not compile, the
+context is lost or a draw throws, the worker stops, the canvases go, the attribute is
+removed and CSS shows the still. Nothing starts the shader again; a reload starts over.
+Software WebGL is never used: it took 1.1s of main thread for one frame. Each half of the
+page has noise of its own, blended across the middle, so where a corner patch crosses the
+middle the halves never meet in a line. The frosted header
 makes Chrome build GPU pipelines the first time it draws, which stalled the first
 scroll for 150-230ms on a cold cache; `.one-demo-warm` sweeps the same frost, at 1%,
 down the demo once while the page rests, so that happens before the first scroll.
@@ -266,8 +290,9 @@ first) light or dark with the system, IBM
 Plex Sans and Plex Mono, Bricolage for the wordmark, and the Grain Gradient only as a
 patch in the top right corner (`SITE_SURFACE` in `src/GrainGradient.tsx`), behind the
 header and beside the title: never under the text, no side swells. Like the
-homepage's, it moves while it is in view, and phones show it recorded (`GrainCorner`). Its layer is only as tall as the patch, so the renderer
-draws it whole, once, and scrolling never redraws it.
+homepage's, it is the shader moving while it is in view, or its still (`GrainCorner`), and
+phones show it recorded. Its layer is only as tall as the patch: one piece, and scrolling
+never redraws it.
 It scrolls away with the page; wide docs scroll their article, and the patch goes up
 with it. `theme-color` is the base colour, `#f4f2ff` light and `#06050f` dark. In dark
 mode the hand-drawn diagrams are inverted with their hues kept (card diagrams, drawn inline, take the palette instead; DESIGN.md), and X and Reddit embeds
@@ -282,8 +307,8 @@ makes it jump does not ship, however it looks. Hold the homepage to what it does
 in the lab run below (phone: LCP about 1.1s, CLS 0, TBT under 150ms, under 400KB
 before the movies; desktop: LCP about 0.3s, TBT 0), and keep the rest of the site
 within the same budget. Pixel parity comes with it: whatever upgrades the first
-screen (a movie over its still, the field over the base colour) must start on the
-pixels already shown.
+screen (a movie over its still) must start on the pixels already shown; the Grain
+Gradient's shader and still are never swapped, one for the other, in view.
 
 Search ranks pages partly on Core Web Vitals from real Chrome visitors (the Chrome UX Report,
 28 days, 75th percentile), on phones and desktops separately: LCP at most 2.5s, INP at most
@@ -305,7 +330,7 @@ fonts, or the Grain Gradient, and after any report of a slow or jumpy load:
   `/fonts/` (self-hosted, `scripts/self-host-fonts.py`; no other origin draws text), and
   the store badges placed by an inline script as they are parsed. Nothing below the fold
   loads eagerly. The movies load only after the page has, while it is idle, and not on
-  Save-Data or 2G; WebGL only on a GPU, in a worker. Never block the main thread for more
+  Save-Data or 2G; the shader only on a GPU, in a worker, and otherwise its still. Never block the main thread for more
   than 50ms.
 - The homepage's script is the homepage: every other page, the docs text and react-markdown
   live in `src/sitePages.ts`, a chunk the homepage never loads (98KB gzipped for the

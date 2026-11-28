@@ -4,9 +4,9 @@ import { grainGradientRenderer, PHONE, type Surface } from './grainGradientRende
 import './grain-gradient.css'
 
 /**
- * Where the colour goes. Wide: a few big, slow swells down both sides, a large patch in the top
- * right, and one in the bottom left at the page's end, under the footer. Phones keep it out of
- * the content: the top right, and the bottom left at the footer.
+ * Where the colour goes. Wide: a few big, slow swells down both sides near the page's ends, a
+ * large patch in the top right, and one in the bottom left at the page's end, under the footer.
+ * Phones keep it out of the content: the top right, and the bottom left at the footer.
  */
 export const HOME_SURFACE: Surface = {
   wide: { sides: [.34, .58, .34, .58], ends: [0, 0, 0, 0], corners: [0, 580, 500, 0], calm: 400, wavelength: 1100 },
@@ -38,12 +38,18 @@ const DARK = '(prefers-color-scheme: dark)'
 // Wider than a phone no source matches, and the image fetches nothing.
 const NOTHING = 'data:image/gif;base64,R0lGODlhAQABAAAAACw='
 
+/** The side of the square a wide corner's still was recorded in, in blob radii. */
+const WIDE_SQUARE = 1.8
+
 /**
- * A phone's corner: the shader recorded (notes/grain/render-corners.mjs), a still of its frame 0
- * in the page's own markup, and the loop playing over it on the same pixels once the page has
- * loaded and the corner is near the screen. Reduced motion, Save-Data and 2G keep the still.
+ * A corner as the shader recorded it (notes/grain/render-corners.mjs). On a phone, a square of
+ * `size`: a still of its frame 0 in the page's own markup, and the loop playing over it on the
+ * same pixels once the page has loaded and the corner is near the screen; reduced motion,
+ * Save-Data and 2G keep the still. Wider, a square of `wide`, its blob's radius, × WIDE_SQUARE:
+ * the still of frame 0 alone, a CSS background, only where the shader is not drawn
+ * (grain-gradient.css).
  */
-function GrainCorner({ corner, size }: { corner: Corner; size: number }) {
+function GrainCorner({ corner, size, wide }: { corner: Corner; size: number; wide: number }) {
   const video = useRef<HTMLVideoElement>(null)
   useEffect(() => {
     const movie = video.current!
@@ -84,7 +90,7 @@ function GrainCorner({ corner, size }: { corner: Corner; size: number }) {
     }
   }, [corner])
   return (
-    <div className="grain-corner" data-corner={corner} style={{ '--corner': `${size}px` } as CSSProperties}>
+    <div className="grain-corner" data-corner={corner} style={{ '--phone': `${size}px`, '--wide': `${WIDE_SQUARE * wide}px` } as CSSProperties}>
       <picture>
         <source media={`${PHONE} and ${DARK}`} type="image/avif" srcSet={`${CORNERS}/${corner}-dark.avif`} />
         <source media={PHONE} type="image/avif" srcSet={`${CORNERS}/${corner}-light.avif`} />
@@ -99,12 +105,13 @@ function GrainCorner({ corner, size }: { corner: Corner; size: number }) {
 /**
  * The page's surface: the Grain Gradient from the phone apps' first screen and desktop
  * onboarding, a field that scrolls with the page, its colour where `surface` puts it. Wider than
- * a phone a worker draws it into canvases where the colour can be: still, except near the page's
- * ends, where it moves on slowly while in view (grainGradientRenderer.ts). Its palette is
- * `--grain-*` in happy-home.css, light or dark with the system; a new `palette` repaints it.
- * Without WebGL on a GPU it stays the plain base colour. Phones show recorded corners
- * (GrainCorner). A page that scrolls an element instead of the window (wide docs scroll their
- * article) names it as `scroller`, and the field goes up with it.
+ * a phone it is one of two, chosen before the first paint (index.html): on a GPU a worker draws
+ * the shader into canvases near the page's ends, moving slowly while in view
+ * (grainGradientRenderer.ts); otherwise the recorded corners stand still (GrainCorner), as they
+ * do if the shader ever fails. Phones show recorded corners, moving. Its palette is `--grain-*`
+ * in happy-home.css, light or dark with the system; a new `palette` repaints it. A page that
+ * scrolls an element instead of the window (wide docs scroll their article) names it as
+ * `scroller`, and the field goes up with it.
  */
 export function GrainGradient({
   palette,
@@ -137,8 +144,8 @@ export function GrainGradient({
   }, [scroller])
   return (
     <div ref={layer} className={className} aria-hidden="true">
-      <GrainCorner corner="top-right" size={surface.phone.topRight} />
-      {surface.phone.bottomLeft && <GrainCorner corner="bottom-left" size={surface.phone.bottomLeft} />}
+      <GrainCorner corner="top-right" size={surface.phone.topRight} wide={surface.wide.corners[1]} />
+      {surface.phone.bottomLeft && <GrainCorner corner="bottom-left" size={surface.phone.bottomLeft} wide={surface.wide.corners[2]} />}
     </div>
   )
 }

@@ -1,30 +1,47 @@
-/* Phones: the recorded corners (GrainCorner), instead of the shader and its CSS stand-in. Each
-   fades out before its square's edges, so the movie's base colour never meets the page's in a
-   line, and before the page's own edge, so Safari's app banner above the page, or a rubber band
-   past either end, shows no cut. */
-.grain-corner { display: none; position: absolute; width: var(--corner); height: var(--corner); pointer-events: none; }
+/* The recorded corners (GrainCorner): on phones, and wider wherever the shader is not drawn. Each
+   fades out before its square's edges, so the recording's base colour never meets the page's in a
+   line, and on phones before the page's own edge, so Safari's app banner above the page, or a
+   rubber band past either end, shows no cut. */
+.grain-corner { --corner: var(--phone); --edge: 48px; position: absolute; width: var(--corner); height: var(--corner); background-size: 100%; pointer-events: none; }
 .grain-corner > picture, .grain-corner img, .grain-corner > video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
 .grain-corner > video { opacity: 0; }
 .grain-corner > video[data-playing] { opacity: 1; }
 .grain-corner[data-corner='top-right'] {
   top: 0;
   right: 0;
-  -webkit-mask-image: radial-gradient(circle var(--corner) at 100% 0, #000 85%, transparent), linear-gradient(to bottom, transparent, #000 48px);
+  -webkit-mask-image: radial-gradient(circle var(--corner) at 100% 0, #000 85%, transparent), linear-gradient(to bottom, transparent, #000 var(--edge));
   -webkit-mask-composite: source-in;
-  mask-image: radial-gradient(circle var(--corner) at 100% 0, #000 85%, transparent), linear-gradient(to bottom, transparent, #000 48px);
+  mask-image: radial-gradient(circle var(--corner) at 100% 0, #000 85%, transparent), linear-gradient(to bottom, transparent, #000 var(--edge));
   mask-composite: intersect;
 }
 .grain-corner[data-corner='bottom-left'] {
   bottom: 0;
   left: 0;
-  -webkit-mask-image: radial-gradient(circle var(--corner) at 0 100%, #000 85%, transparent), linear-gradient(to top, transparent, #000 48px);
+  -webkit-mask-image: radial-gradient(circle var(--corner) at 0 100%, #000 85%, transparent), linear-gradient(to top, transparent, #000 var(--edge));
   -webkit-mask-composite: source-in;
-  mask-image: radial-gradient(circle var(--corner) at 0 100%, #000 85%, transparent), linear-gradient(to top, transparent, #000 48px);
+  mask-image: radial-gradient(circle var(--corner) at 0 100%, #000 85%, transparent), linear-gradient(to top, transparent, #000 var(--edge));
   mask-composite: intersect;
 }
+/* The shader's canvases (grainGradientRenderer.ts): each fades in over the plain base colour with
+   its first frame. */
+:is(.home-grain, .site-grain) > canvas { position: absolute; display: block; opacity: 0; }
+:is(.home-grain, .site-grain) > canvas[data-painted] { opacity: 1; animation: grain-in .6s ease; }
+@keyframes grain-in { from { opacity: 0; } }
 @media (max-width: 699.98px) {
-  .grain-corner { display: block; }
-  .home-grain > canvas, .site-grain > canvas, .home-grain::before, .site-grain::before { display: none; }
+  :is(.home-grain, .site-grain) > canvas { display: none; }
+}
+/* Wider than a phone, the still: frame 0 of each corner, unless the page's head chose the shader
+   (data-grain, index.html), and then it is never fetched. If the shader fails, the attribute
+   goes and the still is what is left. */
+@media not all and (max-width: 699.98px) {
+  .grain-corner { --corner: var(--wide); --edge: 0px; }
+  html[data-grain] .grain-corner { display: none; }
+  html:not([data-grain]) .grain-corner[data-corner='top-right'] { background-image: image-set(url(/video/grain/top-right-wide-light.avif) 1x, url(/video/grain/top-right-wide-light-2x.avif) 2x); }
+  html:not([data-grain]) .grain-corner[data-corner='bottom-left'] { background-image: image-set(url(/video/grain/bottom-left-wide-light.avif) 1x, url(/video/grain/bottom-left-wide-light-2x.avif) 2x); }
+  @media (prefers-color-scheme: dark) {
+    html:not([data-grain]) .grain-corner[data-corner='top-right'] { background-image: image-set(url(/video/grain/top-right-wide-dark.avif) 1x, url(/video/grain/top-right-wide-dark-2x.avif) 2x); }
+    html:not([data-grain]) .grain-corner[data-corner='bottom-left'] { background-image: image-set(url(/video/grain/bottom-left-wide-dark.avif) 1x, url(/video/grain/bottom-left-wide-dark-2x.avif) 2x); }
+  }
 }
 /* Everything on the page paints over its layer: iOS Safari drew a playing corner above the
    hero's text and the docs breadcrumb otherwise. */

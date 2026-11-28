@@ -325,9 +325,12 @@ colour edge to edge, with none of the plain base left between bands, so no pale 
    Download “All Releases” deliberately still links to `happy-desktop`.
 2. Build the website. Open `/?preview=og` in Chromium at
    **1200×630 CSS pixels**, device scale factor **2**, light colour scheme,
-   with reduced motion enabled. The gradient draws only on a GPU: launch
+   without reduced motion: with it the page keeps the gradient's still, two
+   corners, instead of the card's field. The shader draws only on a GPU: launch
    Chromium with full access (on a Mac, `--use-angle=metal`) and check that
-   WebGL reports the GPU, not SwiftShader; wait for `.home-grain[data-painted]`. Use the registered workspace preview service; if that environment
+   WebGL reports the GPU, not SwiftShader, and that `<html>` has
+   `data-grain="shader"`; wait for `.home-grain > canvas[data-painted]`, then
+   turn reduced motion on, which pauses the gradient and the movies. Use the registered workspace preview service; if that environment
    cannot start one, fulfill browser requests directly from the built `dist/`
    files without opening a listener. Do not change or restart the product app.
 3. The explicit `preview=og` flag mounts the GitHub/stars line and selects the
@@ -344,7 +347,7 @@ colour edge to edge, with none of the plain base left between bands, so no pale 
    fallback fonts, posters, loading indicators, or browser playback controls.
 4. Freeze the `.one-demo video` (the window; the phone seeks with it) at
    **3.2 seconds** of team take 11: pause it, set `controls = false`, and set
-   `currentTime = 3.2`. Reduced motion leaves the movie unloaded on its still;
+   `currentTime = 3.2`. If the movie is still unloaded on its still,
    set `preload = 'auto'` and call `load()` before seeking, and seek the phone's
    movie and the `.one-social-picker video` to the same time the same way. Zoom
    in on the list's edges at 2×: no letters or field edges of the chat may show
