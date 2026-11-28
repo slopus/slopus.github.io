@@ -79,13 +79,17 @@ export function grainGradientRenderer(layer: HTMLElement, surface: Surface) {
   const send = () => {
     if (scene) worker?.postMessage({ ...scene, moving: !motion.matches, pieces: rects.map((rect, index) => ({ rect, near: !document.hidden && near.has(canvases[index]) })) } satisfies Scene)
   }
+  // Near is within a quarter of a screen. At half a screen, on a page shorter than three screens,
+  // where the strips are half the page each, the far one counted as near from the other end, and
+  // both were drawn every frame: 38.6 MP at 2560×1440 on a 2x screen. At a quarter, only the end on
+  // screen is, on any page at least two and a half screens tall.
   const sight = new view.IntersectionObserver(entries => {
     for (const { target, isIntersecting } of entries) {
       if (isIntersecting) near.add(target)
       else near.delete(target)
     }
     send()
-  }, { rootMargin: '50% 0px' })
+  }, { rootMargin: '25% 0px' })
 
   const place = () => {
     const { width, height } = layer.getBoundingClientRect()
