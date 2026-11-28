@@ -87,7 +87,8 @@
       // so an older one keeps the still. Safari and Firefox pass on cores and the probe alone.
       {
         const CORES = 4, MEMORY_GB = 16
-        const likely = !matchMedia('(max-width: 699.98px), (prefers-reduced-motion: reduce)').matches && window.Worker && window.OffscreenCanvas
+        const wide = !matchMedia('(max-width: 699.98px)').matches
+        const likely = wide && !matchMedia('(prefers-reduced-motion: reduce)').matches && window.Worker && window.OffscreenCanvas
           && navigator.hardwareConcurrency >= CORES && !(navigator.deviceMemory < MEMORY_GB)
         // The probe: WebGL on a GPU, its context given back at once.
         const gl = likely && document.createElement('canvas').getContext('webgl', { failIfMajorPerformanceCaveat: true })
@@ -95,6 +96,11 @@
           const lose = gl.getExtension('WEBGL_lose_context')
           if (lose) lose.loseContext()
           document.documentElement.dataset.grain = 'shader'
+        } else if (wide) {
+          // The still's top right corner, fetched beside the stylesheet instead of after it: the
+          // one file its image-set() takes, the 2x past one device pixel a CSS pixel.
+          const still = `top-right-wide-${matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'}${devicePixelRatio > 1 ? '-2x' : ''}`
+          document.head.append(Object.assign(document.createElement('link'), { rel: 'preload', as: 'image', href: `/video/grain/${still}.avif` }))
         }
       }
     </script>

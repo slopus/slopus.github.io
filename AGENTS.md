@@ -202,8 +202,10 @@ Firefox pass on cores and the probe alone, and Safari reports at most 8 cores. T
 took 0-3ms in Safari and 4-7ms in Chrome on an M4 Pro, 20-30ms in the first page of a cold
 Chrome. Without the attribute, and so without scripts, the still shows:
 the corners recorded at frame 0 of the same shader, AVIF for 1x and 2x screens, as CSS
-backgrounds on `.grain-corner` (`src/grain-gradient.css`), so the first paint has them and a
-page with the attribute never fetches them. The still has the corners and no side swells,
+backgrounds on `.grain-corner` (`src/grain-gradient.css`), so a page with the attribute
+never fetches them. A background is found only after the stylesheet, which put the corner
+76ms after the first paint, so the same script preloads the top right one, the file the
+`image-set()` then takes (the 2x past one device pixel a CSS pixel), and it is fetched once. The still has the corners and no side swells,
 and the other pages use the homepage's top right, smaller. There is no stand-in drawn in
 CSS: one of another shape was visibly swapped, and its gradients cost a software rasterizer
 a tenth of a second a tile. With the attribute the layer starts as the plain base colour and

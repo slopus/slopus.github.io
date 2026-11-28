@@ -236,7 +236,10 @@ describe('Happy Desktop landing page', () => {
 
     // The head decides, before the stylesheet: only on a GPU, and never with reduced motion.
     expect(head).toMatch(/failIfMajorPerformanceCaveat: true[\s\S]*dataset\.grain = 'shader'[\s\S]*<\/head>/)
-    expect(head).toMatch(/\(max-width: 699\.98px\), \(prefers-reduced-motion: reduce\)/)
+    expect(head).toMatch(/\(prefers-reduced-motion: reduce\)/)
+    // Otherwise it preloads the still's top right corner, never the bottom left.
+    expect(head).toMatch(/else if \(wide\) \{[\s\S]*rel: 'preload', as: 'image', href: `\/video\/grain\/\$\{still\}\.avif`/)
+    expect(head).not.toMatch(/bottom-left/)
     // The still: each corner a square of 1.8 of the shader's own radii, its recording a
     // background the shader's pages never fetch.
     expect(corners.map((corner) => [corner.dataset.corner, corner.style.getPropertyValue('--wide')])).toEqual([['top-right', '1044px'], ['bottom-left', '900px']])
